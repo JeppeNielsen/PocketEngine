@@ -1,6 +1,6 @@
 //
 //  IOSWindow.cpp
-//  Nano
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 3/10/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
@@ -20,7 +20,7 @@
 #import <OpenGLES/ES2/glext.h>
 
 using namespace std;
-using namespace Nano;
+using namespace Pocket;
 
 
 void WindowiOS::Create(int width, int height, bool landscape) {

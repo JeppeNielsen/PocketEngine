@@ -24,7 +24,7 @@
 
 -(id) init {
     
-    bool isLandscape = Nano::IOSWindowCreator::Instance()->isLandscape;
+    bool isLandscape = Pocket::IOSWindowCreator::Instance()->isLandscape;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGRect windowBounds = screenBounds;
@@ -51,7 +51,7 @@
     
     if (shouldShow) {
         [self createKeyBoard];
-        Nano::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([text UTF8String]);
+        Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([text UTF8String]);
         keyboard.text = text;
         [keyboard becomeFirstResponder];
     } else {
@@ -62,7 +62,7 @@
         }
     }
     
-    Nano::IOSWindowCreator::Instance()->inputDevice.KeyboardActive = shouldShow;
+    Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardActive = shouldShow;
 }
 
 -(void)createKeyBoard {
@@ -78,7 +78,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    Nano::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([textView.text UTF8String]);
+    Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([textView.text UTF8String]);
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
@@ -112,13 +112,13 @@
     [gameLoopTimer setFrameInterval:1];
     [gameLoopTimer addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
 
-    Nano::IOSWindowCreator::Instance()->OnInitialize((void*)self);
+    Pocket::IOSWindowCreator::Instance()->OnInitialize((void*)self);
     
     return YES;
 }
 
 -(void) gameLoop {
-    Nano::IOSWindowCreator::Instance()->OnUpdate(true);
+    Pocket::IOSWindowCreator::Instance()->OnUpdate(true);
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -173,7 +173,7 @@
     for (UITouch *touch in touches)
     {
         CGPoint location = [self convertLocation:[touch locationInView:touch.view]];
-        Nano::IOSWindowCreator::Instance()->Down(touch.hash, location.x, location.y);
+        Pocket::IOSWindowCreator::Instance()->Down(touch.hash, location.x, location.y);
     }
 }
 
@@ -181,7 +181,7 @@
     for (UITouch *touch in touches)
     {
         CGPoint location = [self convertLocation:[touch locationInView:touch.view]];
-        Nano::IOSWindowCreator::Instance()->Move(touch.hash, location.x, location.y);
+        Pocket::IOSWindowCreator::Instance()->Move(touch.hash, location.x, location.y);
     }
 }
 
@@ -189,7 +189,7 @@
     for (UITouch *touch in touches)
     {
         CGPoint location = [self convertLocation:[touch locationInView:touch.view]];
-        Nano::IOSWindowCreator::Instance()->Up(touch.hash, location.x, location.y);
+        Pocket::IOSWindowCreator::Instance()->Up(touch.hash, location.x, location.y);
     }
 }
 
@@ -197,7 +197,7 @@
     for (UITouch *touch in touches)
     {
         CGPoint location = [self convertLocation:[touch locationInView:touch.view]];
-        Nano::IOSWindowCreator::Instance()->Up(touch.hash, location.x, location.y);
+        Pocket::IOSWindowCreator::Instance()->Up(touch.hash, location.x, location.y);
     }
 }
 

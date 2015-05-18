@@ -1,6 +1,6 @@
 //
 //  GamePadManager.cpp
-//  NanoIOS
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 4/13/15.
 //  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
@@ -8,7 +8,7 @@
 
 #include "GamePadManager.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 GamePadManager::GamePadManager() { }
 GamePadManager::~GamePadManager() { Destroy(); }
@@ -40,6 +40,6 @@ void GamePadManager::GamePadAdded(int gamePadID) { }
 
 void GamePadManager::GamePadRemoved(int gamePadID) { }
 
-void GamePadManager::GamePad::UpdateButtons(Nano::GamePadManager &manager) { }
+void GamePadManager::GamePad::UpdateButtons(Pocket::GamePadManager &manager) { }
 
 void GamePadManager::GamePad::UpdateAnalogs(GamePadManager& manager) { }

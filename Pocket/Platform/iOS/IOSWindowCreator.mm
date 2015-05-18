@@ -1,6 +1,6 @@
 //
 //  IOSWindowCreator.cpp
-//  Nano
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 3/10/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
@@ -9,7 +9,7 @@
 #include "IOSWindowCreator.h"
 #include "IOSWindow.h"
 
-using namespace Nano;
+using namespace Pocket;
 
 IOSWindowCreator::IOSWindowCreator() {
     
@@ -26,9 +26,9 @@ void IOSWindowCreator::Create() {
     UIApplicationMain(0, nil, nil, NSStringFromClass([IOSWindow class]));
 }
 
-Nano::IOSWindowCreator* IOSWindowCreator::instance = 0;
+Pocket::IOSWindowCreator* IOSWindowCreator::instance = 0;
 
-Nano::IOSWindowCreator* IOSWindowCreator::Instance() {
+Pocket::IOSWindowCreator* IOSWindowCreator::Instance() {
     if (!instance) {
         instance = new IOSWindowCreator();
     }

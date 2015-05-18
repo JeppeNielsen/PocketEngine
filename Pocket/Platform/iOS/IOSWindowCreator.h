@@ -1,6 +1,6 @@
 //
 //  IOSWindowCreator.h
-//  Nano
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 3/10/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
@@ -11,7 +11,7 @@
 #include "InputDevice.hpp"
 #include <map>
 
-namespace Nano {
+namespace Pocket {
     class IOSWindowCreator {
       
     public:

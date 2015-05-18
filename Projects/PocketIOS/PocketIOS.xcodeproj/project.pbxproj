@@ -1,0 +1,329 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		72C8D86E1B0A736B00BD4316 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D86D1B0A736B00BD4316 /* OpenAL.framework */; };
+		72C8D8701B0A736B00BD4316 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D86F1B0A736B00BD4316 /* QuartzCore.framework */; };
+		72C8D8721B0A736B00BD4316 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D8711B0A736B00BD4316 /* OpenGLES.framework */; };
+		72C8D8741B0A736B00BD4316 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D8731B0A736B00BD4316 /* UIKit.framework */; };
+		72C8D8761B0A736B00BD4316 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D8751B0A736B00BD4316 /* Foundation.framework */; };
+		72C8D8781B0A736B00BD4316 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72C8D8771B0A736B00BD4316 /* CoreGraphics.framework */; };
+		72C8D87D1B0A736B00BD4316 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C8D87C1B0A736B00BD4316 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		72C8D8681B0A736B00BD4316 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		72C8D86A1B0A736B00BD4316 /* PocketIOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketIOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		72C8D86D1B0A736B00BD4316 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		72C8D86F1B0A736B00BD4316 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		72C8D8711B0A736B00BD4316 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		72C8D8731B0A736B00BD4316 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		72C8D8751B0A736B00BD4316 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		72C8D8771B0A736B00BD4316 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		72C8D87B1B0A736B00BD4316 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		72C8D87C1B0A736B00BD4316 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		72C8D8641B0A736B00BD4316 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72C8D8781B0A736B00BD4316 /* CoreGraphics.framework in Frameworks */,
+				72C8D8761B0A736B00BD4316 /* Foundation.framework in Frameworks */,
+				72C8D8701B0A736B00BD4316 /* QuartzCore.framework in Frameworks */,
+				72C8D8741B0A736B00BD4316 /* UIKit.framework in Frameworks */,
+				72C8D86E1B0A736B00BD4316 /* OpenAL.framework in Frameworks */,
+				72C8D8721B0A736B00BD4316 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		72C8D8671B0A736B00BD4316 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		72C8D85E1B0A736B00BD4316 = {
+			isa = PBXGroup;
+			children = (
+				72C8D8791B0A736B00BD4316 /* PocketIOS */,
+				72C8D86C1B0A736B00BD4316 /* Frameworks */,
+				72C8D86B1B0A736B00BD4316 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		72C8D86B1B0A736B00BD4316 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				72C8D86A1B0A736B00BD4316 /* PocketIOS.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		72C8D86C1B0A736B00BD4316 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				72C8D86D1B0A736B00BD4316 /* OpenAL.framework */,
+				72C8D86F1B0A736B00BD4316 /* QuartzCore.framework */,
+				72C8D8711B0A736B00BD4316 /* OpenGLES.framework */,
+				72C8D8731B0A736B00BD4316 /* UIKit.framework */,
+				72C8D8751B0A736B00BD4316 /* Foundation.framework */,
+				72C8D8771B0A736B00BD4316 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		72C8D8791B0A736B00BD4316 /* PocketIOS */ = {
+			isa = PBXGroup;
+			children = (
+				72C8D87C1B0A736B00BD4316 /* main.cpp */,
+				72C8D87A1B0A736B00BD4316 /* Supporting Files */,
+			);
+			path = PocketIOS;
+			sourceTree = "<group>";
+		};
+		72C8D87A1B0A736B00BD4316 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				72C8D87B1B0A736B00BD4316 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		72C8D8691B0A736B00BD4316 /* PocketIOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 72C8D8801B0A736B00BD4316 /* Build configuration list for PBXNativeTarget "PocketIOS" */;
+			buildPhases = (
+				72C8D8631B0A736B00BD4316 /* Sources */,
+				72C8D8641B0A736B00BD4316 /* Frameworks */,
+				72C8D8651B0A736B00BD4316 /* Resources */,
+				72C8D8661B0A736B00BD4316 /* Sources */,
+				72C8D8671B0A736B00BD4316 /* Frameworks */,
+				72C8D8681B0A736B00BD4316 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PocketIOS;
+			productName = PocketIOS;
+			productReference = 72C8D86A1B0A736B00BD4316 /* PocketIOS.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		72C8D85F1B0A736B00BD4316 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "Jeppe Nielsen";
+				TargetAttributes = {
+					72C8D8691B0A736B00BD4316 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 72C8D8621B0A736B00BD4316 /* Build configuration list for PBXProject "PocketIOS" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 72C8D85E1B0A736B00BD4316;
+			productRefGroup = 72C8D86B1B0A736B00BD4316 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				72C8D8691B0A736B00BD4316 /* PocketIOS */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		72C8D8651B0A736B00BD4316 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		72C8D8631B0A736B00BD4316 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72C8D87D1B0A736B00BD4316 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		72C8D8661B0A736B00BD4316 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		72C8D87E1B0A736B00BD4316 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					IPHONE,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Pocket\"\n",
+					"\"$(SRCROOT)/../../Pocket/Zip\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Bullet\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"\n",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		72C8D87F1B0A736B00BD4316 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = IPHONE;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Pocket\"\n",
+					"\"$(SRCROOT)/../../Pocket/Zip\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Bullet\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"\n",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		72C8D8811B0A736B00BD4316 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = PocketIOS/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		72C8D8821B0A736B00BD4316 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = PocketIOS/Info.plist;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		72C8D8621B0A736B00BD4316 /* Build configuration list for PBXProject "PocketIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72C8D87E1B0A736B00BD4316 /* Debug */,
+				72C8D87F1B0A736B00BD4316 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		72C8D8801B0A736B00BD4316 /* Build configuration list for PBXNativeTarget "PocketIOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				72C8D8811B0A736B00BD4316 /* Debug */,
+				72C8D8821B0A736B00BD4316 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 72C8D85F1B0A736B00BD4316 /* Project object */;
+}

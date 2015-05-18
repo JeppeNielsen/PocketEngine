@@ -1,6 +1,6 @@
 //
 //  IOSWindow.h
-//  Nano
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 3/10/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
@@ -14,8 +14,8 @@
 #include "OpenGL.hpp"
 #include <map>
 
-namespace Nano {
-	class WindowiOS : public Nano::Window
+namespace Pocket {
+	class WindowiOS : public Pocket::Window
 	{
     public:
         void Create(int width, int height, bool landscape);

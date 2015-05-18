@@ -1,6 +1,6 @@
 //
 //  IOSViewController.m
-//  NanoIOS
+//  Pocket
 //
 //  Created by Jeppe Nielsen on 12/29/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
