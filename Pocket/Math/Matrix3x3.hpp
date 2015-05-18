@@ -9,11 +9,11 @@ namespace Pocket {
 		public:
 			
 			static Matrix3x3 CreateIdentity(); 
-			static Matrix3x3& CreateScale(float sx, float sy);
-			static Matrix3x3& CreateScale(const Vector2& scale);
-			static Matrix3x3& CreateRotation(float angle);
-			static Matrix3x3& CreateTranslation(float x, float y);
-			static Matrix3x3& CreateTranslation(const Vector2& position);
+			static Matrix3x3 CreateScale(float sx, float sy);
+			static Matrix3x3 CreateScale(const Vector2& scale);
+			static Matrix3x3 CreateRotation(float angle);
+			static Matrix3x3 CreateTranslation(float x, float y);
+			static Matrix3x3 CreateTranslation(const Vector2& position);
 
 			void Scale(float sx, float sy);
 			void Rotation(float angle);

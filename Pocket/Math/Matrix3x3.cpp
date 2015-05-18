@@ -9,34 +9,34 @@ Matrix3x3 Matrix3x3::CreateIdentity() {
 	return mat;
 }
 
-Matrix3x3& Matrix3x3::CreateRotation(float angle) {
-	Matrix3x3* mat = new Matrix3x3();
-	mat->Rotation(angle);
-	return *mat;
+Matrix3x3 Matrix3x3::CreateRotation(float angle) {
+	Matrix3x3 mat;
+	mat.Rotation(angle);
+	return mat;
 }
 
-Matrix3x3& Matrix3x3::CreateScale(float sx, float sy) {
-	Matrix3x3* mat = new Matrix3x3();
-	mat->Scale(sx,sy);
-	return *mat;
+Matrix3x3 Matrix3x3::CreateScale(float sx, float sy) {
+	Matrix3x3 mat;
+	mat.Scale(sx,sy);
+	return mat;
 }
 
-Matrix3x3& Matrix3x3::CreateScale(const Vector2& scale) {
-	Matrix3x3* mat = new Matrix3x3();
-	mat->Scale(scale.x,scale.y);
-	return *mat;
+Matrix3x3 Matrix3x3::CreateScale(const Vector2& scale) {
+	Matrix3x3 mat;
+	mat.Scale(scale.x,scale.y);
+	return mat;
 }
 
-Matrix3x3& Matrix3x3::CreateTranslation(float x, float y) {
-	Matrix3x3* mat = new Matrix3x3();
-	mat->Translation(x,y);
-	return *mat;
+Matrix3x3 Matrix3x3::CreateTranslation(float x, float y) {
+	Matrix3x3 mat;
+	mat.Translation(x,y);
+	return mat;
 }
 
-Matrix3x3& Matrix3x3::CreateTranslation(const Vector2& position) {
-	Matrix3x3* mat = new Matrix3x3();
-	mat->Translation(position.x, position.y);
-	return *mat;
+Matrix3x3 Matrix3x3::CreateTranslation(const Vector2& position) {
+	Matrix3x3 mat;
+	mat.Translation(position.x, position.y);
+	return mat;
 }
 
 void Matrix3x3::Scale(float sx, float sy) {
