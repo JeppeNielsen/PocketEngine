@@ -43,8 +43,8 @@ void Timer::Begin() {
 double Timer::End() {
     timeval t2;
     gettimeofday((struct timeval *)&t2, NULL);
-    double end = (t2.tv_sec+t2.tv_usec * 0.000001);
-    double start = (t.tv_sec+t.tv_usec * 0.000001);
+    double end = ((double)((__darwin_suseconds_t)(t2.tv_sec*1000000ULL+t2.tv_usec)))*0.000001;
+    double start = ((double)((__darwin_suseconds_t)(t.tv_sec*1000000ULL+t.tv_usec)))*0.000001;
     return end - start;
 }
 
