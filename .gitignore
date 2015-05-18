@@ -11,22 +11,10 @@
 
 Projects/PocketOSX/Build/
 
-
+*.DS_Store
 
 *.xccheckout
 
 *.xcuserstate
 
 *.xcindexdb
-
-Projects/PocketOSX/Build/PocketOSX/Index/Debug/macosx10.10-x86_64/PocketOSX.xcindex/db.xcindexdb-wal
-
-Projects/PocketOSX/PocketOSX.xcodeproj/project.xcworkspace/xcuserdata/Jeppe.xcuserdatad/UserInterfaceState.xcuserstate
-
-*.xcindexdb
-
-Projects/PocketOSX/Build/PocketOSX/Index/Debug/macosx10.10-x86_64/PocketOSX.xcindex/db.xcindexdb
-
-Projects/PocketOSX/Build/PocketOSX/Index/Debug/macosx10.10-x86_64/PocketOSX.xcindex/db.xcindexdb-wal
-
-Projects/PocketOSX/PocketOSX.xcodeproj/project.xcworkspace/xcuserdata/Jeppe.xcuserdatad/UserInterfaceState.xcuserstate
