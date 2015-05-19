@@ -7,6 +7,10 @@ Work in progress Game called Cubism:
 
 www.pocketgames.dk/cubism
 
+PocketTris:
+
+www.pocketgames.dk/pocket/examples/PocketTris.html
+
 See web example here:
 
 www.pocketgames.dk/pocket/examples/spinningcube.html
