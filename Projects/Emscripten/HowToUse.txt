@@ -22,6 +22,7 @@ PocketEngine.js
 
 Open PocketEngine.html in your favorite browser and voila c++ right there in your browser.
 It even works on modern mobile browsers such as safari and chrome.
+Please note that you might need to turn on WebGL in Safari, via Safari->Preferences->Security->Allow WebGL
 
 here is what it is supposed to look like:
 
