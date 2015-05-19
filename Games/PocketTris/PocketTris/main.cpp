@@ -4,6 +4,6 @@
 
 int main() {
     Engine e;
-    e.Start<Game>(600,600, false);
+    e.Start<Game>(600,650, false);
 	return 0;
 }

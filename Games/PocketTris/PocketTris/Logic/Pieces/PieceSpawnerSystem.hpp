@@ -13,7 +13,7 @@
 #include "PieceController.hpp"
 #include "PieceStyle.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 class PieceSpawnerSystem : public GameSystem {
 public:

@@ -15,14 +15,14 @@ void PointTransformSystem::Initialize() {
     AddComponent<PointTransform>();
 }
 
-void PointTransformSystem::ObjectAdded(Nano::GameObject *object) {
+void PointTransformSystem::ObjectAdded(Pocket::GameObject *object) {
     Transform* transform = object->GetComponent<Transform>();
     PointTransform* pieceTransform = object->GetComponent<PointTransform>();
     transform->Position = Vector3(pieceTransform->position().x, pieceTransform->position().y, 0);
     transform->Rotation = Quaternion(ToRadians(90 * pieceTransform->rotation), Vector3(0,0,1));
 }
 
-void PointTransformSystem::ObjectRemoved(Nano::GameObject *object) {
+void PointTransformSystem::ObjectRemoved(Pocket::GameObject *object) {
     
 }
 

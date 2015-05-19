@@ -12,7 +12,7 @@
 #include "PieceStyle.hpp"
 #include "Mesh.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 class PieceMeshSystem : public GameSystem {
 public:

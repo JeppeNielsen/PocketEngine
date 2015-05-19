@@ -11,7 +11,6 @@
 #include "PointGravity.hpp"
 #include "PointTransform.hpp"
 #include "Piece.hpp"
-#include "Score.hpp"
 
 class PieceLineDetectorSystem : public GameSystem {
 public:
@@ -19,8 +18,6 @@ public:
     void AddedToWorld(GameWorld& world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
-    
-    void SetScore(Score* score);
     
     void Update(float dt);
 
@@ -49,6 +46,4 @@ private:
     
     typedef std::vector<Point> PointsToCheck;
     PointsToCheck pointsToCheck;
-    
-    Score* score;
 };

@@ -14,11 +14,11 @@ void PointGravitySystem::Initialize() {
     AddComponent<PointGravity>();
 }
 
-void PointGravitySystem::ObjectAdded(Nano::GameObject *object) {
+void PointGravitySystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
-void PointGravitySystem::ObjectRemoved(Nano::GameObject *object) {
+void PointGravitySystem::ObjectRemoved(Pocket::GameObject *object) {
     
 }
 

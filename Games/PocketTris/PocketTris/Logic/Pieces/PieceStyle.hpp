@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "Colour.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(PieceStyle)
 public:

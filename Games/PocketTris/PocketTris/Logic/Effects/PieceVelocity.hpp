@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "Vector3.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(PieceVelocity)
 public:

@@ -11,7 +11,7 @@
 #include "Point.hpp"
 #include "Event.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(PieceCollider)
 public:

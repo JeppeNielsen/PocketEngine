@@ -14,15 +14,15 @@ void PieceControllerSystem::Initialize() {
     AddComponent<PieceController>();
 }
 
-void PieceControllerSystem::ObjectAdded(Nano::GameObject *object) {
+void PieceControllerSystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
-void PieceControllerSystem::ObjectRemoved(Nano::GameObject *object) {
+void PieceControllerSystem::ObjectRemoved(Pocket::GameObject *object) {
     
 }
 
-void PieceControllerSystem::SetInputManager(Nano::InputManager &input) {
+void PieceControllerSystem::SetInputManager(Pocket::InputManager &input) {
     input.ButtonDown += event_handler(this, &PieceControllerSystem::ButtonDown);
 }
 

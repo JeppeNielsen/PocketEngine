@@ -9,7 +9,7 @@
 #pragma once
 #include "GameWorld.hpp"
 #include "Point.hpp"
-using namespace Nano;
+using namespace Pocket;
 
 Component(PointGravity)
 public:

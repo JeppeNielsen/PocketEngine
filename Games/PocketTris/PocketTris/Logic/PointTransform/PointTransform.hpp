@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "Point.hpp"
 #include "Property.hpp"
-using namespace Nano;
+using namespace Pocket;
 
 Component(PointTransform)
 public:

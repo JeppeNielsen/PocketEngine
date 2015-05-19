@@ -13,11 +13,11 @@ void PieceVelocitySystem::Initialize() {
     AddComponent<PieceVelocity>();
 }
 
-void PieceVelocitySystem::ObjectAdded(Nano::GameObject *object) {
+void PieceVelocitySystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
-void PieceVelocitySystem::ObjectRemoved(Nano::GameObject *object) {
+void PieceVelocitySystem::ObjectRemoved(Pocket::GameObject *object) {
     
     
 }

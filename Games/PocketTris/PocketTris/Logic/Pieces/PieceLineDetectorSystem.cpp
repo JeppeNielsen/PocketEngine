@@ -21,20 +21,16 @@ void PieceLineDetectorSystem::Initialize() {
     AddComponent<PointTransform>();
 }
 
-void PieceLineDetectorSystem::AddedToWorld(Nano::GameWorld &world) {
+void PieceLineDetectorSystem::AddedToWorld(Pocket::GameWorld &world) {
     nodes = world.CreateSystem<PieceNodes>();
 }
 
-void PieceLineDetectorSystem::ObjectAdded(Nano::GameObject *object) {
+void PieceLineDetectorSystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
-void PieceLineDetectorSystem::ObjectRemoved(Nano::GameObject *object) {
+void PieceLineDetectorSystem::ObjectRemoved(Pocket::GameObject *object) {
     
-}
-
-void PieceLineDetectorSystem::SetScore(Score *score) {
-    this->score = score;
 }
 
 void PieceLineDetectorSystem::Update(float dt) {
@@ -52,7 +48,7 @@ void PieceLineDetectorSystem::Update(float dt) {
     }
 }
 
-void PieceLineDetectorSystem::AddPointsToCheck(Nano::GameObject *object) {
+void PieceLineDetectorSystem::AddPointsToCheck(Pocket::GameObject *object) {
     Piece* piece = object->GetComponent<Piece>();
     PointTransform* transform = object->GetComponent<PointTransform>();
     
@@ -117,11 +113,9 @@ void PieceLineDetectorSystem::DetectLines() {
             linesCounter++;
         }
     }
-    
-    score->AddLines(linesCounter);
 }
 
-void PieceLineDetectorSystem::FindAcross(Nano::Point startPosition, Nano::Point delta, ObjectCollection &piecesAcross) {
+void PieceLineDetectorSystem::FindAcross(Pocket::Point startPosition, Pocket::Point delta, ObjectCollection &piecesAcross) {
     
     Point position = startPosition;
     while (true) {
@@ -140,7 +134,7 @@ void PieceLineDetectorSystem::PieceNodes::Initialize() {
     AddComponent<PointTransform>();
 }
 
-void PieceLineDetectorSystem::PieceNodes::ObjectAdded(Nano::GameObject *object) {
+void PieceLineDetectorSystem::PieceNodes::ObjectAdded(Pocket::GameObject *object) {
     for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
         GameObject* oo = *it;
         if (!oo->GetComponent<Piece>()) {
@@ -150,7 +144,7 @@ void PieceLineDetectorSystem::PieceNodes::ObjectAdded(Nano::GameObject *object) 
     }
 }
 
-void PieceLineDetectorSystem::PieceNodes::ObjectRemoved(Nano::GameObject *object) {
+void PieceLineDetectorSystem::PieceNodes::ObjectRemoved(Pocket::GameObject *object) {
     for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
         GameObject* oo = *it;
         if (!oo->GetComponent<Piece>()) {
@@ -160,7 +154,7 @@ void PieceLineDetectorSystem::PieceNodes::ObjectRemoved(Nano::GameObject *object
     }
 }
 
-GameObject* PieceLineDetectorSystem::PieceNodes::FindNodeAtPosition(const Nano::Point &position) {
+GameObject* PieceLineDetectorSystem::PieceNodes::FindNodeAtPosition(const Pocket::Point &position) {
     for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
         GameObject* object = *it;
         Piece* piece = object->GetComponent<Piece>();

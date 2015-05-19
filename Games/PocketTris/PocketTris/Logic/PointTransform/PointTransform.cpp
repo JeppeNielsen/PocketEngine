@@ -26,12 +26,23 @@ void PointTransform::Clone(const PointTransform &other) {
 
 Point PointTransform::LocalToWorld(const Point& localPosition) {
     
+    Point p = localPosition;
+    
+    for (int i=0; i<rotation(); i++) {
+        int temp = p.x;
+        p.x = -p.y;
+        p.y = temp;
+    }
+    p.x += position().x;
+    p.y += position().y;
+    
+    /*
     Matrix4x4 world;
     world.InitTransform(Vector3(position().x, position().y, 0), 1.0f, Quaternion(ToRadians(90 * rotation()), Vector3(0,0,1)));
     Vector3 vectorWorldPosition = world.TransformPosition(Vector3(localPosition.x, localPosition.y, 0));
     Point p;
-    p.x = (int)round(vectorWorldPosition.x);
-    p.y = (int)round(vectorWorldPosition.y);
-    
+    p.x = (int)floor((double)vectorWorldPosition.x);
+    p.y = (int)floor((double)vectorWorldPosition.y);
+    */
     return p;
 }

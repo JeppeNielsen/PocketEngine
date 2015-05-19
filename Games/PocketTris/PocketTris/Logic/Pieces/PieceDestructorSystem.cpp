@@ -19,11 +19,11 @@ void PieceDestructorSystem::Initialize() {
     AddComponent<PointTransform>();
 }
 
-void PieceDestructorSystem::ObjectAdded(Nano::GameObject *object) {
+void PieceDestructorSystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
-void PieceDestructorSystem::ObjectRemoved(Nano::GameObject *object) {
+void PieceDestructorSystem::ObjectRemoved(Pocket::GameObject *object) {
     
 }
 
@@ -41,7 +41,7 @@ void PieceDestructorSystem::Update(float dt) {
     }
 }
 
-void PieceDestructorSystem::SplitPiece(Nano::GameObject *object) {
+void PieceDestructorSystem::SplitPiece(Pocket::GameObject *object) {
     Piece* piece = object->GetComponent<Piece>();
     PointTransform* transform = object->GetComponent<PointTransform>();
     for (int x = 0; x<4; x++) {
@@ -55,7 +55,7 @@ void PieceDestructorSystem::SplitPiece(Nano::GameObject *object) {
     object->Remove();
 }
 
-void PieceDestructorSystem::CreatePiece(Nano::Point& position, GameObject* source) {
+void PieceDestructorSystem::CreatePiece(Pocket::Point& position, GameObject* source) {
     GameObject* go = World()->CreateObject();
     go->AddComponent<Transform>();
     go->AddComponent<Piece>()->grid[0][0] = true;

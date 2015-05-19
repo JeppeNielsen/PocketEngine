@@ -14,7 +14,7 @@ void PieceMeshSystem::Initialize() {
     AddComponent<Mesh>();
 }
 
-void PieceMeshSystem::ObjectAdded(Nano::GameObject *object) {
+void PieceMeshSystem::ObjectAdded(Pocket::GameObject *object) {
     Piece* piece = object->GetComponent<Piece>();
     Mesh* mesh = object->GetComponent<Mesh>();
     PieceStyle* style = object->GetComponent<PieceStyle>();
@@ -30,6 +30,6 @@ void PieceMeshSystem::ObjectAdded(Nano::GameObject *object) {
     }
 }
 
-void PieceMeshSystem::ObjectRemoved(Nano::GameObject *object) {
+void PieceMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
     
 }

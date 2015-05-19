@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include <string>
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(Piece)
 public:
