@@ -13,7 +13,7 @@
 #include "FacebookUser.hpp"
 #include "HttpRequest.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 class FacebookClient {
 public:

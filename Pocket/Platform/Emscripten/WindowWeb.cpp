@@ -9,7 +9,7 @@
 #include "WindowWeb.hpp"
 #include <emscripten.h>
 
-using namespace Nano;
+using namespace Pocket;
 using namespace std;
 
 static WindowWeb* instance;

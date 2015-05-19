@@ -22,7 +22,7 @@
 #include "serializer.h"
 
 using namespace AngelScript;
-using namespace Nano;
+using namespace Pocket;
 
 ScriptWorld::ScriptWorld() {
    

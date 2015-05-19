@@ -11,7 +11,7 @@
 #include "ScriptWorld.hpp"
 #include "serializer.h"
 
-using namespace Nano;
+using namespace Pocket;
 
 void ScriptSystem::Initialize() {
     objectAddedMethod = 0;

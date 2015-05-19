@@ -8,7 +8,7 @@
 
 #include "ScriptComponentType.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 using namespace AngelScript;
 
 void* ScriptComponentType::CloneComponent(void *source) {

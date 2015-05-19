@@ -15,7 +15,7 @@
 
 using namespace AngelScript;
 
-using namespace Nano;
+using namespace Pocket;
 
 ScriptComponent::ScriptComponent() : object(0) {}
 

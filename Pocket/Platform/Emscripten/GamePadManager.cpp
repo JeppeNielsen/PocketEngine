@@ -24,7 +24,7 @@ const int LeftStickY = 49;
 const int RightStickX = 51;
 const int RightStickY = 52;
 
-using namespace Nano;
+using namespace Pocket;
 
 
 
@@ -165,7 +165,7 @@ void GamePadManager::GamePadRemoved(int gamePadPtr) {
     }
 }
 
-void GamePadManager::GamePad::UpdateButtons(Nano::GamePadManager &manager) {
+void GamePadManager::GamePad::UpdateButtons(Pocket::GamePadManager &manager) {
 
     for (ButtonValues::iterator it = buttonValues.begin(); it != buttonValues.end(); ++it) {
         bool isDown = previousButtonValues.find(it->first)==previousButtonValues.end();

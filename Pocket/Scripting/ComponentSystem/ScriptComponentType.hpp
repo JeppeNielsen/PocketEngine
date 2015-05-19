@@ -15,7 +15,7 @@ namespace AngelScript {
   class asIObjectType;
 }
 
-namespace Nano {
+namespace Pocket {
   
 class ScriptComponentType : public GameComponentType<ScriptComponent> {
     public:

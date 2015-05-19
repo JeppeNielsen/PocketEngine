@@ -13,8 +13,8 @@
 #include "OpenGL.hpp"
 #include "SDL/SDL.h"
 
-namespace Nano {
-	class WindowWeb : public Nano::Window
+namespace Pocket {
+	class WindowWeb : public Pocket::Window
 	{
     public:
         void Create(int width, int height, bool fullScreen);

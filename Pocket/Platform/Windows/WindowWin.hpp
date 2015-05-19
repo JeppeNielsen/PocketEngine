@@ -8,8 +8,8 @@
 
 
 
-namespace Nano {
-	class WindowWin : public Nano::Window
+namespace Pocket {
+	class WindowWin : public Pocket::Window
 	{
 		public:
 

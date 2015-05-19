@@ -19,6 +19,7 @@ namespace Pocket {
     class TransformAnimation {
     public:
         TransformAnimation();
+        ~TransformAnimation();
         
         BezierCurve3 position;
         BezierCurve3 rotation;

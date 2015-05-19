@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GameComponent.hpp"
+#include "GameWorld.hpp"
 #include "BezierCurve3.hpp"
 #include "TransformAnimation.hpp"
 #include <map>

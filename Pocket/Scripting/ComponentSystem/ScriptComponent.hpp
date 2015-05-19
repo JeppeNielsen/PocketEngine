@@ -17,7 +17,7 @@ namespace AngelScript {
     class CSerializer;
 }
 
-namespace Nano {
+namespace Pocket {
   
 class ScriptComponent : public GameComponent<ScriptComponent> {
 public:

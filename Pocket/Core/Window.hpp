@@ -23,7 +23,7 @@ namespace Pocket {
         
         Vector2 screenSize;
         
-        static uint Framebuffer;
+        static unsigned int Framebuffer;
         
     protected:
         

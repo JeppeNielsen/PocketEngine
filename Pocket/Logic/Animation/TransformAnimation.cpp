@@ -16,6 +16,8 @@ TransformAnimation::TransformAnimation() {
     Clear();
 }
 
+TransformAnimation::~TransformAnimation() { }
+
 void TransformAnimation::Clear() {
     position.nodes.Clear();
     rotation.nodes.Clear();

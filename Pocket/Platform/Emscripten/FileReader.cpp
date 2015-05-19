@@ -7,7 +7,7 @@
 //
 
 #include "FileReader.hpp"
-using namespace Nano;
+using namespace Pocket;
 
 std::string FileReader::GetFile(std::string localFile) {
     return "Assets/" + localFile;

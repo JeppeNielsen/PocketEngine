@@ -10,7 +10,7 @@
 
 #include <Foundation/Foundation.h>
 
-using namespace Nano;
+using namespace Pocket;
 
 FileDownloader::FileDownloader() {
 

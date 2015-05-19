@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GameComponent.hpp"
+#include "GameWorld.hpp"
 #include "TransformAnimation.hpp"
 #include "Property.hpp"
 

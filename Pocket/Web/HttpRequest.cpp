@@ -16,7 +16,7 @@
 #include <iostream>
 #include <sstream>
 
-using namespace Nano;
+using namespace Pocket;
 
 #if !EMSCRIPTEN
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);

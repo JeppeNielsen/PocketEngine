@@ -62,4 +62,4 @@ void Window::Begin() {
     }
 }
 
-uint Window::Framebuffer = 0;
+unsigned int Window::Framebuffer = 0;

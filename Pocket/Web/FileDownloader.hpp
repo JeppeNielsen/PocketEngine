@@ -11,7 +11,7 @@
 #include "Event.hpp"
 #include <vector>
 
-namespace Nano {
+namespace Pocket {
 
     struct DownloadedFile {
         std::string url;

@@ -7,11 +7,11 @@
 PFNGLMAPBUFFEROESPROC glMapBuffer;
 PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
 
-using namespace Nano;
+using namespace Pocket;
 
 
 using namespace std;
-using namespace Nano;
+using namespace Pocket;
 
 LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam );
 
@@ -206,7 +206,7 @@ void WindowWin::Create(int width, int height, bool fullScreen) {
     wc.hIcon = LoadIcon( hInstance, IDI_APPLICATION );
     wc.hInstance = hInstance;
     wc.lpfnWndProc = WndProc;
-    wc.lpszClassName = TEXT("Nano");   // name of window class .. I choose peter
+    wc.lpszClassName = TEXT("Pocket");   // name of window class
     wc.style = CS_HREDRAW | CS_VREDRAW;
 
     if (! RegisterClass( &wc ) )
@@ -233,8 +233,8 @@ void WindowWin::Create(int width, int height, bool fullScreen) {
 		height = correctSize.bottom - correctSize.top;
 	}
 
-    window = CreateWindow(  TEXT("Nano"),
-                    TEXT("Nano"),
+    window = CreateWindow(  TEXT("Pocket"),
+                    TEXT("Pocket"),
                     style,
                     100, 100, width, height,
                     NULL,   // if you make this hwndConsole, then

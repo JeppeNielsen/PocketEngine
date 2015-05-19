@@ -16,7 +16,7 @@
 #include "ScriptSystem.hpp"
 #include "serializer.h"
 
-namespace Nano {
+namespace Pocket {
   
 class GameWorld;
 

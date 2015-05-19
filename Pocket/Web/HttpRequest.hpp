@@ -11,7 +11,7 @@
 #include "Event.hpp"
 #include "Property.hpp"
 
-namespace Nano {
+namespace Pocket {
 enum class RequestType { Get, Post };
 enum class RequestStatus { Pending, OK, Failed };
     
