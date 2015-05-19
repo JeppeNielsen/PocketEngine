@@ -1,6 +1,10 @@
 # PocketEngine
 Game Engine in c++
 
+Work in progress Game called Cubism:
+
+www.pocketgames.dk/cubism
+
 See web example here:
 
 www.pocketgames.dk/pocket/examples/spinningcube.html
