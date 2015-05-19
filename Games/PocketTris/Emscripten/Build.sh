@@ -10,7 +10,7 @@ GAME_PATH="../PocketTris"
 
 #-s ALLOW_MEMORY_GROWTH=1 \
 
-python $EMSCRIPTEN_PATH/emcc -O3 -s FULL_ES2=1 -o PocketEngine.html -std=c++11 \
+python $EMSCRIPTEN_PATH/emcc -O3 -s FULL_ES2=1 -o PocketTris.html -std=c++11 \
 \
 --memory-init-file 0 \
 \
