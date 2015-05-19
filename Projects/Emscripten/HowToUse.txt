@@ -22,3 +22,7 @@ PocketEngine.js
 
 Open PocketEngine.html in your favorite browser and voila c++ right there in your browser.
 It even works on modern mobile browsers such as safari and chrome.
+
+here is what it is supposed to look like:
+
+www.pocketgames.dk/pocket/examples/spinningcube.html
