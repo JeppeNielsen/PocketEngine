@@ -15,7 +15,7 @@ next open a terminal and go to this folder and type:
 
 sh build.sh
 
-this will create 3 files (after a while):
+this will create 2 files (after a while):
 
 PocketEngine.html
 PocketEngine.js
