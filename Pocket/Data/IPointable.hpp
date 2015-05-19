@@ -17,8 +17,9 @@ namespace Pocket {
         IPointable();
         ~IPointable();
         IPointable(const IPointable<T>& other);
+        //IPointable& operator = (IPointable<T> other);
         IPointable& operator = (IPointable<T>& other);
-        IPointable& operator = (IPointable<T> other);
+        //IPointable& operator = (IPointable<T>&& other);
         
         void ClearPointers();
         
@@ -37,25 +38,34 @@ Pocket::IPointable<T>::IPointable() {
 }
 
 template<class T>
-Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (IPointable<T>& other) {
+Pocket::IPointable<T>::IPointable(const IPointable<T>& other) {
     pointers.clear();
-    return *this;
 }
-
+/*
 template<class T>
 Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (IPointable<T> other) {
     pointers.clear();
     return *this;
 }
+*/
+
+template<class T>
+Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (IPointable<T>& other) {
+    pointers.clear();
+    return *this;
+}
+
+/*
+template<class T>
+Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (IPointable<T>&& other) {
+    pointers.clear();
+    return *this;
+}
+*/
 
 template<class T>
 Pocket::IPointable<T>::~IPointable() {
     ClearPointers();
-}
-
-template<class T>
-Pocket::IPointable<T>::IPointable(const IPointable& other) {
-    pointers.clear();
 }
 
 template<class T>
