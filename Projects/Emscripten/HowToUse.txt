@@ -1,0 +1,24 @@
+Pocket Engine on the web via Emscripten
+
+Go to:
+http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html
+
+and follow the instructions to install Emscripten
+
+edit the Build.sh script in this folder to point to where you installed Emscripten:
+
+e.g:
+
+EMSCRIPTEN_PATH=“/emsdk_portable/emscripten/1.29.0/“
+
+next open a terminal and go to this folder and type:
+
+sh build.sh
+
+this will create 3 files (after a while):
+
+PocketEngine.html
+PocketEngine.js
+
+Open PocketEngine.html in your favorite browser and voila c++ right there in your browser.
+It even works on modern mobile browsers such as safari and chrome.
