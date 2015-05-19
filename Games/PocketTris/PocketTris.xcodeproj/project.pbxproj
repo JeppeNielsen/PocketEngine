@@ -1,0 +1,271 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		720B9F291B0BC9D000183DE7 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 720B9F281B0BC9D000183DE7 /* Cocoa.framework */; };
+		720B9F2B1B0BC9D000183DE7 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 720B9F2A1B0BC9D000183DE7 /* OpenGL.framework */; };
+		720B9F2D1B0BC9D000183DE7 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 720B9F2C1B0BC9D000183DE7 /* OpenAL.framework */; };
+		720B9F301B0BC9D000183DE7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B9F2F1B0BC9D000183DE7 /* main.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		720B9F231B0BC9D000183DE7 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		720B9F251B0BC9D000183DE7 /* PocketTris.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketTris.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		720B9F281B0BC9D000183DE7 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		720B9F2A1B0BC9D000183DE7 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
+		720B9F2C1B0BC9D000183DE7 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = /System/Library/Frameworks/OpenAL.framework; sourceTree = "<absolute>"; };
+		720B9F2F1B0BC9D000183DE7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		720B9F221B0BC9D000183DE7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				720B9F2D1B0BC9D000183DE7 /* OpenAL.framework in Frameworks */,
+				720B9F291B0BC9D000183DE7 /* Cocoa.framework in Frameworks */,
+				720B9F2B1B0BC9D000183DE7 /* OpenGL.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		720B9F1C1B0BC9D000183DE7 = {
+			isa = PBXGroup;
+			children = (
+				720B9F2E1B0BC9D000183DE7 /* PocketTris */,
+				720B9F271B0BC9D000183DE7 /* Frameworks */,
+				720B9F261B0BC9D000183DE7 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		720B9F261B0BC9D000183DE7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				720B9F251B0BC9D000183DE7 /* PocketTris.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		720B9F271B0BC9D000183DE7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				720B9F281B0BC9D000183DE7 /* Cocoa.framework */,
+				720B9F2A1B0BC9D000183DE7 /* OpenGL.framework */,
+				720B9F2C1B0BC9D000183DE7 /* OpenAL.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		720B9F2E1B0BC9D000183DE7 /* PocketTris */ = {
+			isa = PBXGroup;
+			children = (
+				720B9F2F1B0BC9D000183DE7 /* main.cpp */,
+			);
+			path = PocketTris;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		720B9F241B0BC9D000183DE7 /* PocketTris */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 720B9F331B0BC9D000183DE7 /* Build configuration list for PBXNativeTarget "PocketTris" */;
+			buildPhases = (
+				720B9F211B0BC9D000183DE7 /* Sources */,
+				720B9F221B0BC9D000183DE7 /* Frameworks */,
+				720B9F231B0BC9D000183DE7 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PocketTris;
+			productName = PocketTris;
+			productReference = 720B9F251B0BC9D000183DE7 /* PocketTris.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		720B9F1D1B0BC9D000183DE7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+				ORGANIZATIONNAME = "Jeppe Nielsen";
+				TargetAttributes = {
+					720B9F241B0BC9D000183DE7 = {
+						CreatedOnToolsVersion = 6.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 720B9F201B0BC9D000183DE7 /* Build configuration list for PBXProject "PocketTris" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 720B9F1C1B0BC9D000183DE7;
+			productRefGroup = 720B9F261B0BC9D000183DE7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				720B9F241B0BC9D000183DE7 /* PocketTris */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		720B9F211B0BC9D000183DE7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				720B9F301B0BC9D000183DE7 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		720B9F311B0BC9D000183DE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					OSX,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Pocket\"\n",
+					"\"$(SRCROOT)/../../Pocket/Zip\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Bullet\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"\n",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		720B9F321B0BC9D000183DE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/../../Pocket\"\n",
+					"\"$(SRCROOT)/../../Pocket/Zip\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Bullet\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"\n",
+					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"\n",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		720B9F341B0BC9D000183DE7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		720B9F351B0BC9D000183DE7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		720B9F201B0BC9D000183DE7 /* Build configuration list for PBXProject "PocketTris" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				720B9F311B0BC9D000183DE7 /* Debug */,
+				720B9F321B0BC9D000183DE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		720B9F331B0BC9D000183DE7 /* Build configuration list for PBXNativeTarget "PocketTris" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				720B9F341B0BC9D000183DE7 /* Debug */,
+				720B9F351B0BC9D000183DE7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 720B9F1D1B0BC9D000183DE7 /* Project object */;
+}
