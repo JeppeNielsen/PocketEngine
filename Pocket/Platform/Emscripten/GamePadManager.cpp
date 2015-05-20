@@ -184,17 +184,17 @@ void GamePadManager::GamePad::UpdateButtons(Pocket::GamePadManager &manager) {
 }
 
 void GamePadManager::GamePad::UpdateAnalogs(GamePadManager& manager) {
-    const float epsilon = 0.15f;
+    std::vector<GamePadButton> remove;
+    const float epsilon = 0.25f;
     for (AnalogValues::iterator current = analogValues.begin(); current!=analogValues.end(); ++current) {
-        AnalogValues::iterator prev = previousAnalogValues.find(current->first);
-        Vector2 currentValue = current->second;
-        Vector2 previousValue = prev == previousAnalogValues.end() ? Vector2(0,0) : prev->second;
-        
-        if (currentValue.Length()>=epsilon) {
-            manager.AnalogChanged({ index, current->first, Vector2(currentValue.x, -currentValue.y) });
-        } else if (previousValue.Length()>=epsilon) {
-             manager.AnalogChanged({ index, current->first, Vector2(0, 0) });
+        if (current->second.Length()>epsilon) {
+            manager.AnalogChanged({ index, current->first, Vector2(current->second.x, -current->second.y) });
+        } else {
+            manager.AnalogChanged({ index, current->first, Vector2(0,0) });
+            remove.push_back(current->first);
         }
     }
-    previousAnalogValues = analogValues;
+    for (int i=0; i<remove.size(); i++) {
+        analogValues.erase(analogValues.find(remove[i]));
+    }
 }
