@@ -69,6 +69,7 @@
 				<string>Cocoa</string>
 				<string>OpenGL</string>
 				<string>OpenAL</string>
+				<string>IOKit</string>
 			</array>
 			<key>ProductType</key>
 			<string>com.apple.product-type.application</string>
