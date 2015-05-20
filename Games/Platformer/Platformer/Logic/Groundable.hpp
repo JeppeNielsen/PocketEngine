@@ -9,7 +9,7 @@
 #include "GameWorld.hpp"
 #include "Property.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(Groundable)
     public:

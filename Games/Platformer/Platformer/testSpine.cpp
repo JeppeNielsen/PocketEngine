@@ -15,7 +15,7 @@
 #include "Timeline.hpp"
 #include "Timer.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 class TestSpine : public GameState<TestSpine> {
 public:
@@ -72,7 +72,6 @@ public:
         currentAnimation = animations.find("walk");
         
         spineBoy = spineFactory->CreateModel(atlas, skeleton);
-        spineBoy->GetComponent<SpineAnimator>()->Play(&currentAnimation->second);
         
         
         for (int x=1; x<50; x++) {
@@ -82,6 +81,9 @@ public:
             clone->GetComponent<Transform>()->Position = {(x % 15)*5.0f,(x / 15)*7.0f,0};
             clone->GetComponent<Transform>()->Scale = 1;
         }
+        
+        spineBoy->GetComponent<SpineAnimator>()->Play(&currentAnimation->second);
+       
         
         timeline.Add(0, "Zero");
         timeline.Add(1, "One");
@@ -140,9 +142,10 @@ public:
     }
 };
 
-
+/*
 int main() {
     Engine e;
     e.Start<TestSpine>();
 	return 0;
 }
+*/

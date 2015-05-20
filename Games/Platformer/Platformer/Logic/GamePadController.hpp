@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "GamePadManager.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(GamePadController)
     public:

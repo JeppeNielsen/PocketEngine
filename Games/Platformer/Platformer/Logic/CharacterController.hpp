@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "Vector2.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 Component(CharacterController)
     public:

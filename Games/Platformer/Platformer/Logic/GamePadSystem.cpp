@@ -8,16 +8,16 @@
 
 #include "GamePadSystem.hpp"
 
-void GamePadSystem::ObjectAdded(Nano::GameObject *object) {
+void GamePadSystem::ObjectAdded(Pocket::GameObject *object) {
     
 }
 
 
-void GamePadSystem::ObjectRemoved(Nano::GameObject *object) {
+void GamePadSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 }
 
-void GamePadSystem::SetInput(Nano::InputManager *input) {
+void GamePadSystem::SetInput(Pocket::InputManager *input) {
     this->input = input;
     this->input->GamePad.ButtonDown += event_handler(this, &GamePadSystem::ButtonDown);
     this->input->GamePad.ButtonUp += event_handler(this, &GamePadSystem::ButtonUp);
@@ -25,18 +25,18 @@ void GamePadSystem::SetInput(Nano::InputManager *input) {
 }
 
 
-void GamePadSystem::ButtonDown(Nano::GamePadData d) {
+void GamePadSystem::ButtonDown(Pocket::GamePadData d) {
     GameObject* g = FindObject(d.GamePad);
     if (!g) return;
     if (!g->GetComponent<Groundable>()->IsGrounded) return;
     g->GetComponent<CharacterController>()->movement += Vector2(0,40);
 }
 
-void GamePadSystem::ButtonUp(Nano::GamePadData d) {
+void GamePadSystem::ButtonUp(Pocket::GamePadData d) {
     
 }
 
-void GamePadSystem::AnalogChanged(Nano::GamePadData d) {
+void GamePadSystem::AnalogChanged(Pocket::GamePadData d) {
     if (d.Button != GamePadButton::LeftStick) return;
     movement[d.GamePad] = d.Direction;
 }

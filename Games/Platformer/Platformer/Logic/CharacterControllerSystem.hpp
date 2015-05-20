@@ -11,7 +11,7 @@
 #include "CharacterController.hpp"
 #include "RigidBody2d.hpp"
 
-using namespace Nano;
+using namespace Pocket;
 
 SYSTEM(CharacterControllerSystem, CharacterController, RigidBody2d)
 public:

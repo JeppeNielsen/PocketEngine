@@ -10,11 +10,11 @@
 
 
 
-void GroundedSystem::ObjectAdded(Nano::GameObject *object) {
+void GroundedSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Collidable>()->IsColliding.Changed += event_handler(this, &GroundedSystem::IsGroundedChanged, object);
 }
 
-void GroundedSystem::ObjectRemoved(Nano::GameObject *object) {
+void GroundedSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<Collidable>()->IsColliding.Changed -= event_handler(this, &GroundedSystem::IsGroundedChanged, object);
 }
 
@@ -22,7 +22,7 @@ void GroundedSystem::Update(float dt) {
 
 }
 
-void GroundedSystem::IsGroundedChanged(Nano::Collidable *collidable, Nano::GameObject *object) {
+void GroundedSystem::IsGroundedChanged(Pocket::Collidable *collidable, Pocket::GameObject *object) {
     object->GetComponent<Groundable>()->IsGrounded = collidable->IsColliding;
     std::cout << (collidable->IsColliding() ? "Colliding" : "Free ") << std::endl;
 }
