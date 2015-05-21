@@ -71,3 +71,11 @@ int main() {
 	return 0;
 }
 ```
+A game pad example can be found here:
+
+www.pocketgames.dk/pocket/examples/GamePad.html
+
+you can spin the cube with the analog sticks, I tested it with a Xbox360 controller
+
+
+
