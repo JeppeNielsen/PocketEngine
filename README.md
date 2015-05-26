@@ -3,6 +3,14 @@ Game Engine in c++
 
 Currently supports MacOS, iOS, Web (via Emscripten)
 
+Examples:
+
+Mac:
+
+www.pocketgames.dk/pocket/examples/SpinningCubeMac.zip
+
+Web:
+
 Work in progress Game called Cubism:
 
 www.pocketgames.dk/cubism
