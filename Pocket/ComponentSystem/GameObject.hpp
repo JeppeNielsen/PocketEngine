@@ -27,8 +27,7 @@ public:
     const ObjectCollection& Children();
     void ToFront();
     void ToBack();
-    Event<GameObject*> OrderChanged;
-    int ChildIndex();
+    Pocket::Property<GameObject*, int> Order;
     
     template<class T>
     T* AddComponent();
@@ -87,6 +86,8 @@ private:
     ComponentMask activeComponents;
     ComponentMask enabledComponents;
     ComponentMask ownedComponents;
+    int childIndex;
+    int childOrder;
     
     friend class GameWorld;
     friend class IGameComponentType;

@@ -12,9 +12,10 @@
 
 using namespace Pocket;
 
-GameObject::GameObject() : Parent(this), enabledComponents(0), activeComponents(0), ownedComponents(0) {
+GameObject::GameObject() : Parent(this), Order(this), enabledComponents(0), activeComponents(0), ownedComponents(0), childIndex(0) {
     Parent = 0;
     Parent.ChangedWithOld += Pocket::event_handler(this, &GameObject::ParentChanged);
+    Order = 0;
 }
 
 GameObject::~GameObject() {
@@ -23,40 +24,41 @@ GameObject::~GameObject() {
 }
 
 void GameObject::ParentChanged(Pocket::Property<GameObject *, GameObject *>::EventData d) {
-    if (d.Old) {
-        ObjectCollection::iterator it = std::find(d.Old->children.begin(), d.Old->children.end(), this);
-        d.Old->children.erase(it);
-    } else {
-        ObjectCollection::iterator it = std::find(world->children.begin(), world->children.end(), this);
-        world->children.erase(it);
-    }
-    if (d.Current) {
-        d.Current->children.push_back(this);
-    } else {
-        world->children.push_back(this);
-    }
+    ObjectCollection& oldChildren = d.Old ? d.Old->children : world->children;
+    GameObject* lastChild = oldChildren.back();
+    oldChildren[childIndex] = lastChild;
+    lastChild->childIndex = childIndex;
+    oldChildren.pop_back();
+    ObjectCollection& children = d.Current ? d.Current->children : world->children;
+    childIndex = (int)children.size();
+    children.push_back(this);
+    ToFront();
 }
 
 void GameObject::ToFront() {
     ObjectCollection& children = Parent() ? Parent()->children : world->children;
-    ObjectCollection::iterator it = std::find(children.begin(), children.end(), this);
-    children.erase(it);
-    children.push_back(this);
-    OrderChanged(this);
+    if (children.size()<=1) return;
+    int maxOrder = children[0]->Order();
+    for (int i=1; i<children.size(); ++i) {
+        int order = children[i]->Order;
+        if (order>maxOrder) {
+            maxOrder = order;
+        }
+    }
+    Order = (maxOrder+1);
 }
 
 void GameObject::ToBack() {
     ObjectCollection& children = Parent() ? Parent()->children : world->children;
-    ObjectCollection::iterator it = std::find(children.begin(), children.end(), this);
-    children.erase(it);
-    children.insert(children.begin(), this);
-    OrderChanged(this);
-}
-
-int GameObject::ChildIndex() {
-    ObjectCollection& children = Parent() ? Parent()->children : world->activeObjects;
-    ObjectCollection::iterator it = std::find(children.begin(), children.end(), this);
-    return (int)(it - children.begin());
+    if (children.size()<=1) return;
+    int minOrder = children[0]->Order();
+    for (int i=1; i<children.size(); ++i) {
+        int order = children[i]->Order;
+        if (order<minOrder) {
+            minOrder = order;
+        }
+    }
+    Order = (minOrder-1);
 }
 
 void GameObject::Initialize(size_t numberOfComponents) {

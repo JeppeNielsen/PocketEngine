@@ -51,6 +51,7 @@ const ObjectCollection& GameWorld::Objects() { return activeObjects; }
 const ObjectCollection& GameWorld::Children() { return children; }
 
 void GameWorld::DeleteAllObjects() {
+    children.clear();
     while (!activeObjects.empty()) {
         UpdateRemovedObject(activeObjects.back());
     }
@@ -92,13 +93,19 @@ void GameWorld::UpdateRemovedObject(GameObject *object) {
         }
     }
     
+    if (!object->Parent() && !children.empty()) {
+        GameObject* lastChild = children.back();
+        children[object->childIndex] = lastChild;
+        lastChild->childIndex = object->childIndex;
+        children.pop_back();
+    }
     object->Parent = 0;
     freeObjects.push_back(object);
     GameObject* lastObject = activeObjects.back();
     lastObject->indexInList = object->indexInList;
     activeObjects[object->indexInList] = lastObject;
     activeObjects.pop_back();
-    children.erase(std::find(children.begin(), children.end(), object));
+    
     object->ClearPointers();
 }
 

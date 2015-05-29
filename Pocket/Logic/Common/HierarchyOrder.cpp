@@ -18,12 +18,12 @@ void HierarchyOrder::Initialize() {
 
 void HierarchyOrder::ObjectAdded(Pocket::GameObject *object) {
     object->Parent.ChangedWithOld += event_handler(this, &HierarchyOrder::ParentChanged);
-    object->OrderChanged += event_handler(this, &HierarchyOrder::OrderChanged);
+    object->Order.Changed += event_handler(this, &HierarchyOrder::OrderChanged);
     orderIsDirty = true;
 }
 
 void HierarchyOrder::ObjectRemoved(Pocket::GameObject *object) {
-   object->OrderChanged -= event_handler(this, &HierarchyOrder::OrderChanged);
+   object->Order.Changed -= event_handler(this, &HierarchyOrder::OrderChanged);
 }
 
 void HierarchyOrder::ParentChanged(Property<GameObject*, GameObject*>::EventData d) {
@@ -44,16 +44,29 @@ void HierarchyOrder::Update(float dt) {
     }
 }
 
-void HierarchyOrder::CalculateOrder(int &order, Pocket::GameObject *object) {
+void HierarchyOrder::CalculateOrder(int& orderOffset, Pocket::GameObject *object) {
     
     Orderable* orderable = object->GetComponent<Orderable>();
-    if (orderable) orderable->Order = order;
-    
-    order++;
+    if (orderable) orderable->Order = orderOffset + object->Order;
     
     const ObjectCollection& children = object->Children();
+    if (children.empty()) return;
+    
+    int minOrder = children[0]->Order;
+    int maxOrder = children[0]->Order;
     
     for (ObjectCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
-        CalculateOrder(order, *it);
+        int order = (*it)->Order;
+        if (order>maxOrder) {
+            maxOrder = order;
+        }
+        if (order<minOrder) {
+            minOrder = order;
+        }
     }
+    
+    for (ObjectCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
+        CalculateOrder(orderOffset, *it);
+    }
+    orderOffset += (maxOrder - minOrder);
 }

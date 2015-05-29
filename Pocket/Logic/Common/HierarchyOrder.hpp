@@ -24,6 +24,6 @@ namespace Pocket {
         
     private:
         bool orderIsDirty;
-        void CalculateOrder(int& order, GameObject* hierarchy);
+        void CalculateOrder(int& orderOffset, GameObject* hierarchy);
     };
 }
