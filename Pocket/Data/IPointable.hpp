@@ -51,10 +51,6 @@ Pocket::IPointable<T>::~IPointable() {
 
 template<class T>
 void Pocket::IPointable<T>::ClearPointers() {
-    if (!pointers.empty()) {
-        int test = 0;
-        test++;
-    }
     for (size_t i=0; i<pointers.size(); ++i) {
         pointers[i]->object = 0;
     }
