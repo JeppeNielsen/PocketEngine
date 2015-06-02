@@ -15,9 +15,9 @@ namespace Pocket {
     class IPointable {
     public:
         IPointable();
-        ~IPointable();
+        virtual ~IPointable();
         IPointable(const IPointable<T>& other);
-        IPointable& operator = (IPointable<T>& other);
+        IPointable& operator = (const IPointable<T>& other);
         
         void ClearPointers();
         
@@ -39,7 +39,7 @@ Pocket::IPointable<T>::IPointable(const IPointable<T>& other) {
 }
 
 template<class T>
-Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (IPointable<T>& other) {
+Pocket::IPointable<T>& Pocket::IPointable<T>::operator = (const IPointable<T>& other) {
     pointers.clear();
     return *this;
 }
