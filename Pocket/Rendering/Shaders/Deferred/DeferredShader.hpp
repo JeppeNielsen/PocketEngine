@@ -15,7 +15,7 @@ namespace Pocket {
         
 		void Initialize();
         
-        float* viewMatrix;
+        const float* viewMatrix;
         
 	protected:
 

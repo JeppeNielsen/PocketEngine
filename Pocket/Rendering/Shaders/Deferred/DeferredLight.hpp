@@ -16,7 +16,7 @@ namespace Pocket {
 		void Initialize();
         void SetViewPort(Vector2 viewportSize);
         void SetLightProperties(Vector3 position, Colour color, float size, float brightness);
-        void SetInverseProjection(float* inverseProjection, float* view);
+        void SetInverseProjection(const float* inverseProjection, const float* view);
         
 	protected:
 

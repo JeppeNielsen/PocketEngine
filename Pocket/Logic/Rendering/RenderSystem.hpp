@@ -72,7 +72,7 @@ namespace Pocket {
         static bool SortOpaqueObjects(const VisibleObject* a, const VisibleObject* b);
         static bool SortTransparentObjects(const VisibleObject* a, const VisibleObject* b);
         
-        void RenderVisibleObjects(const BoundingFrustum& frustum, float* viewProjection, const VisibleObjects& visibleObjects, bool useTransparency);
+        void RenderVisibleObjects(const BoundingFrustum& frustum, const float* viewProjection, const VisibleObjects& visibleObjects, bool useTransparency);
         
         int renderedObjects;
         
