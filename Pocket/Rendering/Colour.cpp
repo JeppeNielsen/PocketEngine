@@ -30,6 +30,13 @@ Colour::Colour(Component r, Component g, Component b, Component a) {
 Colour::Colour(const Colour& other) :
 r(other.r),g(other.g),b(other.b),a(other.a) {}
 
+Colour::Colour(float r, float g, float b) {
+	this->r = (Component)(r * 255.0f);
+	this->g = (Component)(g * 255.0f);
+	this->b = (Component)(b * 255.0f);
+	this->a = 255;
+}
+
 Colour::Colour(float r, float g, float b, float a) {
 	this->r = (Component)(r * 255.0f);
 	this->g = (Component)(g * 255.0f);

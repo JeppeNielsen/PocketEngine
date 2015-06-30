@@ -19,6 +19,7 @@ namespace Pocket {
 
 		Colour(Component r, Component g, Component b);
 		Colour(Component r, Component g, Component b, Component a);
+        Colour(float r, float g, float b);
 		Colour(float r, float g, float b, float a);
         Colour(float colorValues, float a);
         Colour(float colorValues);
