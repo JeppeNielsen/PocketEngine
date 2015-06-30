@@ -1208,6 +1208,7 @@
 		72B627C91B39D481001007FC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		72B627CC1B39D968001007FC /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderSystem.h; sourceTree = "<group>"; };
 		72B627CF1B3C7529001007FC /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
+		72BD0C8C1B43237D00CF5F94 /* VertexMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexMesh.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1258,12 +1259,13 @@
 			isa = PBXGroup;
 			children = (
 				72B627C91B39D481001007FC /* main.cpp */,
-				72B627BE1B39C9F1001007FC /* Vertex.h */,
-				72B627C11B39CA9D001007FC /* Shader.h */,
-				72B627C41B39CE42001007FC /* VertexRenderer.h */,
+				72B627CF1B3C7529001007FC /* Material.h */,
 				72B627C71B39D318001007FC /* MeshComponent.h */,
 				72B627CC1B39D968001007FC /* RenderSystem.h */,
-				72B627CF1B3C7529001007FC /* Material.h */,
+				72B627C11B39CA9D001007FC /* Shader.h */,
+				72B627BE1B39C9F1001007FC /* Vertex.h */,
+				72B627C41B39CE42001007FC /* VertexRenderer.h */,
+				72BD0C8C1B43237D00CF5F94 /* VertexMesh.h */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -3203,6 +3205,7 @@
 				72B621DA1B31D6E2001007FC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
