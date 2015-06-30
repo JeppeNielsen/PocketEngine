@@ -32,3 +32,5 @@ std::ostream& operator<<(std::ostream& stream, const Vector3& v) {
     stream << v.x <<","<<v.y<<","<<v.z;
     return stream;
 }
+
+Vector3 Vector3::zero(0,0,0);

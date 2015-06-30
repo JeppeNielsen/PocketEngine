@@ -51,6 +51,8 @@ void RenderSystem::AddedToWorld(Pocket::GameWorld &world) {
     
     shaders[VisibleObject::Unlit] = new ShaderUnlitUncolored();
     shaders[VisibleObject::UnlitTextured] = new ShaderUnlitUncoloredTextured();
+    shaders[VisibleObject::Lit] = new ShaderTexturedLighting();
+    shaders[VisibleObject::LitTextured] = new ShaderTexturedLighting();
     
     for (Shaders::iterator it=shaders.begin(); it!=shaders.end(); ++it) {
         it->second->Initialize();
@@ -134,7 +136,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     particlesShader.Aspect = currentCamera->Viewport.GetValue().Aspect();
     
     Matrix4x4 viewProjection = currentCamera->Projection.GetValue()->Multiply(*transform->WorldInverse.GetValue());
-	float* viewProjectionGL = viewProjection.GetGlMatrix();
+	const float* viewProjectionGL = viewProjection.GetGlMatrix();
     
 	BoundingFrustum frustum;
 	frustum.SetFromViewProjection(viewProjection);
@@ -221,7 +223,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     */
 }
 
-void RenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, float* viewProjection, const VisibleObjects &visibleObjects, bool useTransparency) {
+void RenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, const float* viewProjection, const VisibleObjects &visibleObjects, bool useTransparency) {
 
     renderer.shader = 0;
     Shader* shader;

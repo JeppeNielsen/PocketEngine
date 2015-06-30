@@ -98,7 +98,7 @@ void DeferredLight::SetLightProperties(Pocket::Vector3 position, Pocket::Colour 
     ASSERT_GL(glUniform1f(lightBrightness, brightness));
 }
 
-void DeferredLight::SetInverseProjection(float* invProjection, float* view) {
+void DeferredLight::SetInverseProjection(const float* invProjection, const float* view) {
     ASSERT_GL( glUniformMatrix4fv(inverseProjection, 1, GL_FALSE, invProjection));
     ASSERT_GL( glUniformMatrix4fv(viewSlot, 1, GL_FALSE, view));
 }

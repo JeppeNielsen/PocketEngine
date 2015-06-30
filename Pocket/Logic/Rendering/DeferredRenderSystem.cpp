@@ -135,8 +135,8 @@ void DeferredRenderSystem::RenderCamera(GameObject* cameraObject) {
     Matrix4x4 inverseProjection = currentCamera->Projection.GetValue()->Invert();
     Matrix4x4 worldView =  *transform->World.GetValue();
     
-	float* viewProjectionGL = viewProjection.GetGlMatrix();
-    float* inverseProjectionGL = inverseProjection.GetGlMatrix();
+	const float* viewProjectionGL = viewProjection.GetGlMatrix();
+    const float* inverseProjectionGL = inverseProjection.GetGlMatrix();
     
 	BoundingFrustum frustum;
 	frustum.SetFromViewProjection(viewProjection);
@@ -268,7 +268,7 @@ void DeferredRenderSystem::RenderCamera(GameObject* cameraObject) {
     */
 }
 
-void DeferredRenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, float* viewProjection, const VisibleObjects &visibleObjects, bool useTransparency) {
+void DeferredRenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, const float* viewProjection, const VisibleObjects &visibleObjects, bool useTransparency) {
 
     renderer.shader = 0;
     Shader* shader;

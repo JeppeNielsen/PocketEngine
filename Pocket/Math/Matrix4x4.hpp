@@ -444,7 +444,7 @@ namespace Pocket {
             return r;
         }
         
-        inline float* GetGlMatrix() {
+        inline const float* GetGlMatrix() const {
             return _m;
         }
         

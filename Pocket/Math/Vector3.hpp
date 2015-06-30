@@ -171,6 +171,8 @@ namespace Pocket {
         static Vector3 Bezier(const Vector3& position0, const Vector3& tangent0, const Vector3& position1, const Vector3& tangent1, const float& t);
         
         Vector3 static Deserialize(const std::string& data, const char delim = ',');
+        
+        static Vector3 zero;
     };
 }
 
