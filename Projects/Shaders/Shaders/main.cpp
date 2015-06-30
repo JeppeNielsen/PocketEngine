@@ -46,24 +46,26 @@ class TestShader : public GameState<TestShader> {
             "attribute vec4 Position;\n"
             "attribute vec2 TexCoords; \n"
             "attribute vec4 Color; \n"
+            "attribute vec3 Normal; \n"
             "uniform mat4 ViewProjection;\n"
             "varying vec2 DestinationTexCoords;\n"
             "varying vec4 DestinationColor;\n"
+            "varying vec3 DestinationNormal;\n"
             "void main(void) {\n"
             "	DestinationTexCoords = TexCoords;\n"
-            "   vec4 pos = Position * ViewProjection;"
-            "	DestinationColor = Position;\n"
-            "	gl_Position = pos;\n"
+            "   DestinationColor = Color; \n"
+            "   DestinationNormal = Normal; \n"
+            "	gl_Position = Position * ViewProjection;\n"
             "}\n";
         
         std::string fragmentShader =
             "varying vec2 DestinationTexCoords;"
             "varying vec4 DestinationColor;"
-            //"uniform sampler2D Texture;"
-            "uniform float blue;"
+            "varying vec3 DestinationNormal;"
+            "uniform vec3 LightDirection;"
             "void main(void) {"
-            "   float l = length(DestinationColor.xy)*3.1; "
-            "	gl_FragColor = vec4(l,l,0,1.0-DestinationColor.z/DestinationColor.w*0.2);\n"  //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
+            "   float n = clamp(dot(LightDirection, DestinationNormal),0.0,1.0); "
+            "	gl_FragColor = vec4(DestinationColor * n);\n"  //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
             "}";
         
         if (!colorShader.Initialize(vertexShader,fragmentShader)) {
@@ -75,7 +77,7 @@ class TestShader : public GameState<TestShader> {
             "varying vec2 DestinationTexCoords;"
             "varying vec4 DestinationColor;"
             "void main(void) {"
-            "	gl_FragColor = vec4(1,0,0,0.15);" //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
+            "	gl_FragColor = vec4(0,0,1,0.5);" //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
             "}";
         
         if (!colorShader.Initialize(vertexShader,fragmentShader)) {
@@ -88,6 +90,9 @@ class TestShader : public GameState<TestShader> {
         
         colorShader.name = "Color Shader";
         blueShader.name = "Blue Shader";
+        
+        
+        colorShader.SetValue( "LightDirection", Vector3(1,1,1).Normalized());
     }
     
     void Initialize() {
@@ -104,9 +109,20 @@ class TestShader : public GameState<TestShader> {
         for (int i=0; i<2; i++) {
             auto o = world.CreateObject();
             o->AddComponent<Transform>()->Position = {0,0,i*-2.0f};
-            o->AddComponent<Material>()->Shader = i%2==0 ? &colorShader : &blueShader;
-            o->GetComponent<Material>()->BlendMode = i==1 ? BlendMode::Alpha : BlendMode::Opaque;
-            auto& verts = o->AddComponent<MeshComponent>()->Vertices<Vertex>();
+            o->AddComponent<Material>()->Shader = &colorShader;// i%2==0 ? &colorShader : &blueShader;
+            o->GetComponent<Material>()->BlendMode = i==1 ? BlendMode::Opaque : BlendMode::Opaque;
+            
+            auto& mesh = o->AddComponent<MeshComponent>()->Mesh<Vertex>();
+            
+            if (i==1) {
+                mesh.AddCube(0, {1,2,1});
+            } else {
+                mesh.AddGeoSphere(0, 1, 12);
+                mesh.SetColor(Colour(1.0f,0.0f,0.0f,1.0f));
+            }
+            
+            
+            /*
             verts.push_back({ {-1,-1,0 } ,0,0, {1.0f,1.0f,0.0f }});
             verts.push_back({ {1,-1,0},0,0,{1.0f,0,0}});
             verts.push_back({ {1,1,0} });
@@ -127,6 +143,7 @@ class TestShader : public GameState<TestShader> {
             triangles.push_back(0);
             triangles.push_back(3);
             triangles.push_back(2);
+            */
             
             o->AddComponent<Rotator>()->speed = -1 + i* 0.2f;
             
@@ -148,6 +165,8 @@ class TestShader : public GameState<TestShader> {
     }
     
     void Render() {
+        
+    
         timer.Begin();
         world.Render();
         double time = timer.End();

@@ -11,6 +11,7 @@
 #include <vector>
 #include "Vertex.h"
 #include "VertexRenderer.h"
+#include "VertexMesh.h"
 #include "GameObject.hpp"
 #include "Matrix4x4.hpp"
 
@@ -83,6 +84,7 @@ public:
         }
         for(auto& uniform : uniforms) {
             if (uniform.type == uniformType) {
+                glUseProgram(shaderProgram);
                 ShaderVariableType<T>::SetValue(uniform.location, value);
                 break;
             }
@@ -100,17 +102,18 @@ public:
         if (uniform == uniforms.end()) {
             std::cout << "No shader variable with name: '"<<name<<"' found, valid names are:"<<std::endl;
             for(auto u : uniforms) {
-                std::cout<<u.first<<std::endl;
+                std::cout<<u.name<<std::endl;
             }
             return false;
         }
         
         GLenum uniformType = ShaderVariableType<T>::GetType();
-        if (uniformType!=uniform->second.type) {
+        if (uniformType!=uniform->type) {
             std::cout << " Shader variable types mismatch "<< std::endl;
             return false;
         }
-        ShaderVariableType<T>::SetValue(uniform->second.location, value);
+        glUseProgram(shaderProgram);
+        ShaderVariableType<T>::SetValue(uniform->location, value);
         return true;
     }
 
@@ -247,11 +250,11 @@ public:
         glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection);
     }   
 
-    virtual void RenderObject(VertexRenderer<Vertex>& renderer, const typename VertexCollection<Vertex>::Vertices& vertices, const std::vector<short>& triangles, GameObject* object, const Matrix4x4& world) { }
+    virtual void RenderObject(VertexRenderer<Vertex>& renderer, const typename VertexMesh<Vertex>::Vertices& vertices, const IVertexMesh::Triangles& triangles, GameObject* object, const Matrix4x4& world) { }
 };
 
 template<>
-void Shader<Vertex>::RenderObject(VertexRenderer<Vertex> &renderer, const VertexCollection<Vertex>::Vertices& vertices, const std::vector<short>& triangles,Pocket::GameObject *object, const Pocket::Matrix4x4 &world) {
+void Shader<Vertex>::RenderObject(VertexRenderer<Vertex> &renderer, const VertexMesh<Vertex>::Vertices& vertices, const IVertexMesh::Triangles& triangles, Pocket::GameObject *object, const Pocket::Matrix4x4 &world) {
     
     size_t verticesSize = vertices.size();
     size_t trianglesSize = triangles.size();

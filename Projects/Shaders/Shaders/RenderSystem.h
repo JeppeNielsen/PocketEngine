@@ -74,9 +74,11 @@ public:
             currentShader->Use();
             currentShader->SetViewProjection(viewProjection);
         }
+        
+        const VertexMesh<Vertex>& mesh = visibleObject.mesh->ConstMesh<Vertex>();
         currentShader->RenderObject(renderer,
-            visibleObject.mesh->Vertices<Vertex>(),
-            visibleObject.mesh->Triangles(),
+            mesh.vertices,
+            mesh.triangles,
             visibleObject.object,
             *visibleObject.transform->World.GetValue()
             );
@@ -158,9 +160,10 @@ public:
             
             Material* material = object->GetComponent<Material>();
             if (!material->Shader()) continue; // must have shader
+            MeshComponent* mesh = object->GetComponent<MeshComponent>();
+            if (!mesh->vertexMesh) continue; // must have mesh
             
             Transform* transform = object->GetComponent<Transform>();
-            MeshComponent* mesh = object->GetComponent<MeshComponent>();
             
             const Matrix4x4& world = *transform->World.GetValue();
             distanceToCameraPosition.x = world[0][3];

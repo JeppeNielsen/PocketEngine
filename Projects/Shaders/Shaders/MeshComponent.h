@@ -8,53 +8,72 @@
 
 #pragma once
 #include "GameWorld.hpp"
-#include "Vertex.h"
+#include "VertexMesh.h"
+#include "BoundingBox.hpp"
+#include "DirtyProperty.hpp"
 
 using namespace Pocket;
 
-class MeshComponent : public GameComponent<MeshComponent> {
+class RenderSystem;
+
+Component(MeshComponent)
 public:
     
-    MeshComponent() : vertices(0), vertexType(0) {}
-    ~MeshComponent() { delete vertices; }
-    
-    virtual std::string Name() { return "Mesh"; }
-    static std::string NameStatic() { return "Mesh"; }
+    MeshComponent() : vertexMesh(0), vertexType(0), LocalBoundingBox(this) {}
+    ~MeshComponent() { delete vertexMesh; }
 
-    typedef std::vector<short> TrianglesList;
-    
     void Reset() {
-        delete vertices;
-        triangles.clear();
-        vertices = 0;
+        delete vertexMesh;
+        vertexMesh = 0;
     }
     
     template<class Vertex>
-    typename VertexCollection<Vertex>::Vertices& Vertices() {
-        if (!vertices) {
-            vertices = new VertexCollection<Vertex>();
+    class VertexMesh<Vertex>& Mesh() {
+        if (!vertexMesh) {
+            vertexMesh = new VertexMesh<Vertex>();
             vertexType = Vertex::ID;
+            RevertDefaultCalcBoundingBox();
         } else if (vertexType != Vertex::ID) {
-            VertexCollection<Vertex>::empty.clear();
-            return VertexCollection<Vertex>::empty;
+            return VertexMesh<Vertex>::empty;
         }
-        VertexCollection<Vertex>& collection = *((VertexCollection<Vertex>*)vertices);
-        return collection.vertices;
+        VertexMesh<Vertex>& mesh = *((VertexMesh<Vertex>*)vertexMesh);
+        LocalBoundingBox.MakeDirty();
+        return mesh;
+    }
+
+    template<class Vertex>
+    const VertexMesh<Vertex>& ConstMesh() const {
+        return (const VertexMesh<Vertex>&)*((VertexMesh<Vertex>*)vertexMesh);
     }
     
-    size_t Count() {
-        return vertices ? vertices->Count() : 0;
+    size_t VerticesSize() {
+        return vertexMesh ? vertexMesh->Size() : 0;
     }
     
     const Vector3& Position(size_t index) {
-        return vertices ? vertices->GetPosition(index) : Vector3::zero;
+        return vertexMesh ? vertexMesh->GetPosition(index) : Vector3::zero;
     }
     
     int VertexType() { return vertexType; }
-    TrianglesList& Triangles() { return triangles; }
     
+    IVertexMesh::Triangles& Triangles() { return vertexMesh->triangles; }
+    DirtyProperty<MeshComponent*, BoundingBox> LocalBoundingBox;
+
 private:
-    TrianglesList triangles;
-    IVertexCollection* vertices;
+    IVertexMesh* vertexMesh;
     int vertexType;
+
+
+    void RevertDefaultCalcBoundingBox() {
+        LocalBoundingBox.Method.Clear();
+        LocalBoundingBox.Method += event_handler(this, &MeshComponent::CalcBoundingBox);
+    }
+
+    void CalcBoundingBox( DirtyProperty<MeshComponent*, BoundingBox>::EventData& eventData )
+    {
+        BoundingBox& box = *eventData.Value;
+        vertexMesh->CalcBoundingBox(box);
+    }
+
+    friend class RenderSystem;
 };

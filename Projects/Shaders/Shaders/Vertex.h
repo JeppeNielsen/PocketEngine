@@ -19,32 +19,10 @@ using namespace Pocket;
 
 class IObjectRenderer;
 
-class IVertexCollection {
-public:
-    virtual ~IVertexCollection() { }
-    virtual const Vector3& GetPosition(size_t index) = 0;
-    virtual size_t Count() = 0;
-};
-
-template<class Vertex>
-class VertexCollection : public IVertexCollection {
-public:
-    typedef std::vector<Vertex> Vertices;
-    Vertices vertices;
-    const Vector3& GetPosition(size_t index) {
-        return vertices[index].Position;
-    }
-    size_t Count() { return vertices.size(); }
-    static Vertices empty;
-};
-
-template<class Vertex> typename VertexCollection<Vertex>::Vertices VertexCollection<Vertex>::empty;
-
 struct IVertexType {
     typedef std::vector<IVertexType*> TypeList;
     static TypeList typelist;
     static int counter;
-    virtual IVertexCollection* CreateCollection() = 0;
     virtual IObjectRenderer* CreateRenderer() = 0;
 };
 
@@ -60,7 +38,6 @@ struct VertexType : IVertexType {
         return id;
     }
     
-    virtual IVertexCollection* CreateCollection() { return 0; }
     virtual IObjectRenderer* CreateRenderer();
 };
 
@@ -147,15 +124,15 @@ template<> GLenum ShaderVariableType<Matrix4x4>::GetType() { return GL_FLOAT_MAT
 
 struct Vertex {
     Vector3 Position;
-    Vector3 Normal;
     Vector2 TextureCoords;
     Colour Color;
+    Vector3 Normal;
 
     void Initialize(VertexDescription<Vertex>& description) {
         description.SetAttibute(Position, "Position");
-        description.SetAttibute(Normal, "Normal");
         description.SetAttibute(TextureCoords, "TexCoords");
         description.SetAttibute(Color, "Color");
+        description.SetAttibute(Normal, "Normal");
     }
     
     static int ID;
