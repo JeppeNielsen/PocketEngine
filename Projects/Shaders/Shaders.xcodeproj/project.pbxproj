@@ -361,6 +361,7 @@
 		72B627AC1B31D734001007FC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B627AB1B31D734001007FC /* IOKit.framework */; };
 		72B627CA1B39D481001007FC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B627C91B39D481001007FC /* main.cpp */; };
 		72BD0C901B43409300CF5F94 /* MeshOctreeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BD0C8E1B43409300CF5F94 /* MeshOctreeSystem.cpp */; };
+		72BD0C951B449A1500CF5F94 /* Football.png in Resources */ = {isa = PBXBuildFile; fileRef = 72BD0C921B4499B900CF5F94 /* Football.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1212,6 +1213,7 @@
 		72BD0C8C1B43237D00CF5F94 /* VertexMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexMesh.h; sourceTree = "<group>"; };
 		72BD0C8E1B43409300CF5F94 /* MeshOctreeSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshOctreeSystem.cpp; sourceTree = "<group>"; };
 		72BD0C8F1B43409300CF5F94 /* MeshOctreeSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshOctreeSystem.h; sourceTree = "<group>"; };
+		72BD0C921B4499B900CF5F94 /* Football.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Football.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1261,6 +1263,7 @@
 		72B621D31B31D6E2001007FC /* Shaders */ = {
 			isa = PBXGroup;
 			children = (
+				72BD0C911B4499B900CF5F94 /* Gfx */,
 				72B627C91B39D481001007FC /* main.cpp */,
 				72B627CF1B3C7529001007FC /* Material.h */,
 				72B627C71B39D318001007FC /* MeshComponent.h */,
@@ -2680,6 +2683,14 @@
 			path = Zip;
 			sourceTree = "<group>";
 		};
+		72BD0C911B4499B900CF5F94 /* Gfx */ = {
+			isa = PBXGroup;
+			children = (
+				72BD0C921B4499B900CF5F94 /* Football.png */,
+			);
+			path = Gfx;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2690,6 +2701,7 @@
 				72B621C61B31D6E2001007FC /* Sources */,
 				72B621C71B31D6E2001007FC /* Frameworks */,
 				72B621C81B31D6E2001007FC /* CopyFiles */,
+				72BD0C941B449A0E00CF5F94 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -2730,6 +2742,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		72BD0C941B449A0E00CF5F94 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72BD0C951B449A1500CF5F94 /* Football.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		72B621C61B31D6E2001007FC /* Sources */ = {
