@@ -9,6 +9,7 @@
 #pragma once
 #include "GameWorld.hpp"
 #include "Shader.H"
+#include "Camera.hpp"
 
 using namespace Pocket;
 
@@ -20,12 +21,14 @@ enum class BlendMode {
 
 Component(Material)
 public:
-    Material() : Shader(this), BlendMode(this) { }
+    Material() : Shader(this), BlendMode(this), Mask(this) { }
     Property<Material*, IShader*> Shader;
     Property<Material*, BlendMode> BlendMode;
+    Property<Material*, RenderMask> Mask;
 
     void Reset() {
         Shader = 0;
         BlendMode = BlendMode::Opaque;
+        Mask = 0;
     }
 };

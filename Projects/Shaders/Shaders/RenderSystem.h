@@ -14,7 +14,7 @@
 #include <iostream>
 #include "CameraSystem.hpp"
 #include "Camera.hpp"
-#include "MeshOctreeSystem.h";
+#include "MeshOctreeSystem.h"
 
 using namespace Pocket;
 
@@ -153,6 +153,7 @@ public:
     void RenderCamera(GameObject* cameraObject) {
         Transform* cameraTransform = cameraObject->GetComponent<Transform>();
         Camera* camera = cameraObject->GetComponent<Camera>();
+        RenderMask cameraMask = camera->Mask;
         
         Matrix4x4 viewProjection = camera->Projection.GetValue()->Multiply(*cameraTransform->WorldInverse.GetValue());
         const float* viewProjectionGL = viewProjection.GetGlMatrix();
@@ -173,6 +174,11 @@ public:
             
             Material* material = object->GetComponent<Material>();
             if (!material->Shader()) continue; // must have shader
+            RenderMask mask = material->Mask;
+            if (!((cameraMask & mask) == mask)) { // must be matching camera mask
+                continue;
+            }
+            
             MeshComponent* mesh = object->GetComponent<MeshComponent>();
             if (!mesh->vertexMesh) continue; // must have mesh
             
