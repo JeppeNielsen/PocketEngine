@@ -14,6 +14,7 @@
 #include <iostream>
 #include "CameraSystem.hpp"
 #include "Camera.hpp"
+#include "MeshOctreeSystem.h";
 
 using namespace Pocket;
 
@@ -117,6 +118,9 @@ private:
     RenderInfo renderInfo;
     
     CameraSystem* cameras;
+    MeshOctreeSystem* meshOctreeSystem;
+    
+    ObjectCollection objectsInFrustum;
     
 public:
 
@@ -138,6 +142,8 @@ public:
     
     void AddedToWorld(GameWorld& world) {
         cameras = world.CreateSystem<CameraSystem>();
+        meshOctreeSystem = world.CreateSystem<MeshOctreeSystem>();
+        meshOctreeSystem->AddComponent<Material>();
     }
     
     void ObjectAdded(GameObject* object) {
@@ -151,12 +157,19 @@ public:
         Matrix4x4 viewProjection = camera->Projection.GetValue()->Multiply(*cameraTransform->WorldInverse.GetValue());
         const float* viewProjectionGL = viewProjection.GetGlMatrix();
         
+        BoundingFrustum frustum;
+        frustum.SetFromViewProjection(viewProjection);
+        meshOctreeSystem->GetObjectsInFrustum(frustum, objectsInFrustum);
+    
+        if (objectsInFrustum.empty()) return;
+        
+        
         for (auto renderer : objectRenderers) {
             renderer->viewProjection = viewProjectionGL;
         }
         
         Vector3 distanceToCameraPosition;
-        for(auto object : Objects()) {
+        for(auto object : objectsInFrustum) {
             
             Material* material = object->GetComponent<Material>();
             if (!material->Shader()) continue; // must have shader
@@ -187,7 +200,7 @@ public:
             //MeshComponent* mesh = object->GetComponent<MeshComponent>();
             //objectRenderers[mesh->VertexType()]->RenderObject(object, mesh);
         }
-        
+        objectsInFrustum.clear();
         
         glEnable(GL_DEPTH_TEST);
         

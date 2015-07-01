@@ -120,7 +120,10 @@ template<> void ShaderVariableType<Matrix4x4>::SetValue(GLint location, const Ma
 }
 template<> GLenum ShaderVariableType<Matrix4x4>::GetType() { return GL_FLOAT_MAT4; }
 
-
+template<> void ShaderVariableType<Colour>::SetValue(GLint location, const Colour &value) {
+    glUniform4f(location, value.R(), value.G(), value.B(), value.A());
+}
+template<> GLenum ShaderVariableType<Colour>::GetType() { return GL_FLOAT_VEC4; }
 
 struct Vertex {
     Vector3 Position;

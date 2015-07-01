@@ -11,6 +11,7 @@
 #include "Quaternion.hpp"
 #include "MathHelper.hpp"
 #include "BoundingBox.hpp"
+#include "Colour.hpp"
 
 using namespace Pocket;
 

@@ -360,6 +360,7 @@
 		72B627AA1B31D6EE001007FC /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 72B626001B31D6EE001007FC /* miniz.c */; };
 		72B627AC1B31D734001007FC /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B627AB1B31D734001007FC /* IOKit.framework */; };
 		72B627CA1B39D481001007FC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B627C91B39D481001007FC /* main.cpp */; };
+		72BD0C901B43409300CF5F94 /* MeshOctreeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BD0C8E1B43409300CF5F94 /* MeshOctreeSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1209,6 +1210,8 @@
 		72B627CC1B39D968001007FC /* RenderSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderSystem.h; sourceTree = "<group>"; };
 		72B627CF1B3C7529001007FC /* Material.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Material.h; sourceTree = "<group>"; };
 		72BD0C8C1B43237D00CF5F94 /* VertexMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VertexMesh.h; sourceTree = "<group>"; };
+		72BD0C8E1B43409300CF5F94 /* MeshOctreeSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MeshOctreeSystem.cpp; sourceTree = "<group>"; };
+		72BD0C8F1B43409300CF5F94 /* MeshOctreeSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MeshOctreeSystem.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1266,6 +1269,8 @@
 				72B627BE1B39C9F1001007FC /* Vertex.h */,
 				72B627C41B39CE42001007FC /* VertexRenderer.h */,
 				72BD0C8C1B43237D00CF5F94 /* VertexMesh.h */,
+				72BD0C8E1B43409300CF5F94 /* MeshOctreeSystem.cpp */,
+				72BD0C8F1B43409300CF5F94 /* MeshOctreeSystem.h */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -3074,6 +3079,7 @@
 				72B6264E1B31D6EE001007FC /* Limitable.cpp in Sources */,
 				72B626301B31D6EE001007FC /* ParticleMeshUpdater.cpp in Sources */,
 				72B627521B31D6EE001007FC /* ShaderLitUncoloredTexturedBatched.cpp in Sources */,
+				72BD0C901B43409300CF5F94 /* MeshOctreeSystem.cpp in Sources */,
 				72B626AF1B31D6EE001007FC /* btBoxBoxDetector.cpp in Sources */,
 				72B6266F1B31D6EE001007FC /* TransformHierarchy.cpp in Sources */,
 				72B626241B31D6EE001007FC /* TransformAnimation.cpp in Sources */,

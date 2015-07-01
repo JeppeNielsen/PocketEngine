@@ -40,6 +40,7 @@ class TestShader : public GameState<TestShader> {
     Timer timer;
     
     Transform* blueQuad;
+    GameObject* camera;
     
     void InitializeShaders() {
          std::string vertexShader =
@@ -63,9 +64,10 @@ class TestShader : public GameState<TestShader> {
             "varying vec4 DestinationColor;"
             "varying vec3 DestinationNormal;"
             "uniform vec3 LightDirection;"
+            "uniform vec4 AmbientLight;"
             "void main(void) {"
             "   float n = clamp(dot(LightDirection, DestinationNormal),0.0,1.0); "
-            "	gl_FragColor = vec4(DestinationColor * n);\n"  //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
+            "	gl_FragColor = vec4(AmbientLight + DestinationColor * n);\n"  //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
             "}";
         
         if (!colorShader.Initialize(vertexShader,fragmentShader)) {
@@ -92,7 +94,8 @@ class TestShader : public GameState<TestShader> {
         blueShader.name = "Blue Shader";
         
         
-        colorShader.SetValue( "LightDirection", Vector3(1,1,1).Normalized());
+        colorShader.SetValue("LightDirection", Vector3(1,1,1).Normalized());
+        colorShader.SetValue("AmbientLight", Colour(0.0f,0.0f,0.3f,1.0f));
     }
     
     void Initialize() {
@@ -102,7 +105,7 @@ class TestShader : public GameState<TestShader> {
         world.CreateSystem<RenderSystem>();
         world.CreateSystem<RotatorSystem>();
         
-        GameObject* camera = world.CreateObject();
+        camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = {0,0,5};
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
         
@@ -156,7 +159,10 @@ class TestShader : public GameState<TestShader> {
     }
     
     void Update(float dt) {
-    
+        //static float angle = 0;
+        //angle+=dt;
+        //camera->GetComponent<Transform>()->Rotation = Quaternion(angle, {0,1,0});
+        
         blueQuad->Position = {0,0,2-Input.GetTouchPosition(0).x*0.01f };
     
         //shader.SetValue<float>(Input.GetTouchPosition(0).x*0.001f);
