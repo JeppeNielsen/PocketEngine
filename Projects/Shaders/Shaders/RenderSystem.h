@@ -304,10 +304,6 @@ public:
         objectRenderers[currentVertexType]->End(renderInfo);
     }
     
-    void SetBlendMode(BlendMode blendMode) {
-       
-    }
-    
     void Render() {
         renderInfo.drawCalls = 0;
         renderInfo.verticesRendered = 0;
