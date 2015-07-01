@@ -12,6 +12,7 @@
 #include "MathHelper.hpp"
 #include "BoundingBox.hpp"
 #include "Colour.hpp"
+#include "Ray.hpp"
 
 using namespace Pocket;
 
@@ -21,7 +22,8 @@ public:
     virtual const Vector3& GetPosition(size_t index) = 0;
     virtual size_t Size() = 0;
     virtual void CalcBoundingBox(BoundingBox& box) = 0;
-    
+    virtual bool IntersectsRay(const Ray& ray,
+                         float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) = 0;
     typedef std::vector<short> Triangles;
     Triangles triangles;
 };
@@ -344,7 +346,79 @@ public:
     }
         
         
+    bool RayIntersectsTriangle(const Ray& ray,
+                                 const Vector3& tri0, const Vector3& tri1, const Vector3& tri2,
+                                 float* pickDistance, float* barycentricU, float* barycentricV) {
         
+        // Find vectors for two edges sharing vert0
+        Vector3 edge1 = tri1 - tri0;
+        Vector3 edge2 = tri2 - tri0;
+        
+        // Begin calculating determinant - also used to calculate barycentricU parameter
+        Vector3 pvec = ray.direction.Cross(edge2);
+        
+        // If determinant is near zero, ray lies in plane of triangle
+        float det = edge1.Dot(pvec);
+        if (det < 0.0001f)
+            return false;
+        
+        // Calculate distance from vert0 to ray origin
+        Vector3 tvec = ray.position - tri0;
+        
+        // Calculate barycentricU parameter and test bounds
+        *barycentricU = tvec.Dot(pvec);
+        if (*barycentricU < 0.0f || *barycentricU > det)
+            return false;
+        
+        // Prepare to test barycentricV parameter
+        Vector3 qvec = tvec.Cross(edge1);
+        
+        // Calculate barycentricV parameter and test bounds
+        *barycentricV = ray.direction.Dot(qvec);
+        if (*barycentricV < 0.0f || *barycentricU + *barycentricV > det)
+            return false;
+        
+        // Calculate pickDistance, scale parameters, ray intersects triangle
+        *pickDistance = edge2.Dot(qvec);
+        float fInvDet = 1.0f / det;
+        *pickDistance *= fInvDet;
+        *barycentricU *= fInvDet;
+        *barycentricV *= fInvDet;
+        
+        return true;
+    }
+
+
+    bool IntersectsRay(const Ray& ray,
+                             float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) {
+        if (triangles.empty()) return false;
+        
+        float minDistance = 10000000.0f;
+            
+        float distance;
+        float u,v;
+        bool hit = false;
+        
+        for (size_t i=0; i<triangles.size(); i+=3) {
+            
+            if (RayIntersectsTriangle(ray,
+                                      vertices[triangles[i]].Position, vertices[triangles[i+1]].Position, vertices[triangles[i+2]].Position,
+                                      &distance, &u, &v)) {
+            
+                if (distance<minDistance) {
+                    minDistance = distance;
+                    *pickDistance = distance;
+                    *barycentricU = u;
+                    *barycentricV = v;
+                    *triangleIndex = i;
+                }
+                
+                hit = true;
+            }
+        }
+        
+        return hit;
+    }
     
     
     

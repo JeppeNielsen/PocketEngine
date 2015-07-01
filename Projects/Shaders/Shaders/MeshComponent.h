@@ -16,15 +16,24 @@ using namespace Pocket;
 
 class RenderSystem;
 
+class MeshComponent;
+class MeshIntersector {
+    public:
+    virtual bool IntersectsRay(MeshComponent& mesh, const Ray& ray,
+                            float* pickDistance, float* barycentricU, float* barycentricV,
+                            size_t* triangleIndex, Vector3* normal) = 0;
+};
+
 Component(MeshComponent)
 public:
     
-    MeshComponent() : vertexMesh(0), vertexType(0), LocalBoundingBox(this) {}
+    MeshComponent() : vertexMesh(0), vertexType(0), LocalBoundingBox(this), customIntersector(0) {}
     ~MeshComponent() { delete vertexMesh; }
 
     void Reset() {
         delete vertexMesh;
         vertexMesh = 0;
+        customIntersector = 0;
     }
     
     template<class Vertex>
@@ -58,6 +67,16 @@ public:
     
     IVertexMesh::Triangles& Triangles() { return vertexMesh->triangles; }
     DirtyProperty<MeshComponent*, BoundingBox> LocalBoundingBox;
+
+    bool IntersectsRay(const Ray& ray, float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) {
+        if (customIntersector) {
+            return customIntersector->IntersectsRay(*this, ray, pickDistance, barycentricU, barycentricV, triangleIndex, normal);
+        }
+        if (!vertexMesh) return false;
+        return vertexMesh->IntersectsRay(ray, pickDistance, barycentricU, barycentricV, triangleIndex, normal);
+    }
+
+    MeshIntersector* customIntersector;
 
 private:
     IVertexMesh* vertexMesh;
