@@ -27,14 +27,31 @@ public:
 template<class Vertex>
 class Shader : public IShader {
 public:
-    Shader() : viewProjectionUniform(-1) { }
+    Shader() : viewProjectionUniform(-1), shaderProgram(0), vertexShader(0), fragmentShader(0) { }
+    ~Shader() { Clear(); }
+    
+    void Clear() {
+        if (vertexShader) glDeleteShader(vertexShader);
+        if (fragmentShader) glDeleteShader(fragmentShader);
+        if (shaderProgram) glDeleteProgram(shaderProgram);
+        uniforms.clear();
+        textureUniforms.clear();
+        attributes.clear();
+    }
 
-    bool Initialize(std::string vertexShader, std::string fragmentShader) {
+    bool Create(std::string vertexShader, std::string fragmentShader) {
+        Clear();
+        
         description = Vertex::Description;
         
         if (!CreateShaders(vertexShader, fragmentShader)) {
             return false;
         }
+        
+        std::cout << "Shader::Initialize()"<<std::endl;
+        
+        glUseProgram(shaderProgram);
+        
         if (!FindAttributes()) {
             return false;
         }
@@ -57,6 +74,10 @@ public:
             glEnableVertexAttribArray(a.glAttribute);
         }
        // std::cout<<"Using shader : " << name<<"  shader program " << shaderProgram<<" attributes:  " << attributes.size()<< std::endl;
+       
+        for (int i=0; i<textureUniforms.size(); ++i) {
+            glUniform1i(textureUniforms[i].location, i);
+        }
     }
     
     template<class T>
@@ -125,6 +146,8 @@ private:
         
         attributes.clear();
         
+        std::cout << "Attributes: "<< std::endl;
+        
         for (int i=0; i<numberOfAttributes; i++) {
             GLchar name[256];
             GLsizei length;
@@ -154,12 +177,15 @@ private:
             std::cout << attributeName << std::endl;
         }
         
+        std::cout << "End attributes: "<< std::endl;
+        
         return true;
     }
     
     bool FindUniforms() {
         viewProjectionUniform = -1;
         GLint numberOfUniforms;
+        std::cout<<"Uniforms : " << std::endl;
         glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &numberOfUniforms);
         for (int i=0; i<numberOfUniforms; i++) {
             GLchar name[256];
@@ -168,13 +194,20 @@ private:
             GLenum type;
             glGetActiveUniform(shaderProgram, (GLuint)i, sizeof(name), &length, &size, &type, &name[0]);
             std::string uniformName = std::string(name);
-            uniforms.push_back( { uniformName, glGetUniformLocation(shaderProgram, uniformName.c_str()), type } );
-            std::cout<<uniformName << std::endl;
+            Uniform uniform = { uniformName, glGetUniformLocation(shaderProgram, uniformName.c_str()), type };
+            uniforms.push_back( uniform );
+            if (type == GL_SAMPLER_2D) {
+                textureUniforms.push_back( uniform );
+                std::cout<<uniformName << " type: " <<type << std::endl;
+            }
+        
+            
             
             if (uniformName == ViewProjectionUniformName) {
                 viewProjectionUniform = i;
             }
         }
+        std::cout<<"End uniforms: " << textureUniforms.size() << std::endl;
         return true;
     }
     
@@ -237,6 +270,7 @@ private:
     
     typedef std::vector<Uniform> Uniforms;
     Uniforms uniforms;
+    Uniforms textureUniforms;
     
     GLuint shaderProgram;
     GLuint vertexShader;

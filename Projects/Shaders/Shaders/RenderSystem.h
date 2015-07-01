@@ -16,6 +16,7 @@
 #include "Camera.hpp"
 #include "MeshOctreeSystem.h"
 #include "Clipper.hpp"
+#include "TextureComponent.hpp"
 
 using namespace Pocket;
 
@@ -26,6 +27,7 @@ struct VisibleObject {
     IShader* shader;
     MeshComponent* mesh;
     int vertexType;
+    TextureComponent* texture;
     float distanceToCamera;
 };
 
@@ -51,9 +53,10 @@ private:
     VertexRenderer<Vertex> renderer;
     Shader<Vertex>* currentShader;
     BlendMode currentBlendMode;
-    int objectsRendered;
+    TextureComponent* currentTexture;
     Clipper clipper;
-  
+    int objectsRendered;
+    
 public:
     
     void Begin(bool isTransparent) override {
@@ -62,6 +65,7 @@ public:
         currentBlendMode = BlendMode::Opaque;
         objectsRendered = 0;
         clipper.UseDepth = !isTransparent;
+        currentTexture = (TextureComponent*)-1;
     }
     
     void End(RenderInfo& renderInfo) override {
@@ -78,6 +82,13 @@ public:
             currentShader->Use();
             currentShader->SetViewProjection(viewProjection);
         }
+        
+        if (visibleObject.texture!=currentTexture) {
+            renderer.Render();
+            currentTexture = visibleObject.texture;
+            glBindTexture(GL_TEXTURE_2D, currentTexture ? currentTexture->Texture().GetHandle() : 0);
+        }
+        
         int clip = visibleObject.material->Clip;
         bool isClipping = clip != 0;
         
@@ -223,6 +234,7 @@ public:
                 material->Shader(),
                 mesh,
                 mesh->VertexType(),
+                object->GetComponent<TextureComponent>(),
                 distanceToCamera
             });
             
@@ -325,7 +337,11 @@ private:
         }
     
         if (a.shader == b.shader) {
-            return a.distanceToCamera<b.distanceToCamera;
+            if (a.texture==b.texture) {
+                return a.distanceToCamera<b.distanceToCamera;
+            } else {
+                return a.texture<b.texture;
+            }
         } else {
             return ((size_t)a.shader)<((size_t)b.shader);
         }
