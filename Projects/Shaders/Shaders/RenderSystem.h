@@ -15,6 +15,7 @@
 #include "CameraSystem.hpp"
 #include "Camera.hpp"
 #include "MeshOctreeSystem.h"
+#include "Clipper.hpp"
 
 using namespace Pocket;
 
@@ -37,7 +38,7 @@ struct RenderInfo {
 class IObjectRenderer {
 public:
     virtual ~IObjectRenderer() {}
-    virtual void Begin() = 0;
+    virtual void Begin(bool isTransparent) = 0;
     virtual void End(RenderInfo& renderInfo) = 0;
     virtual void RenderObject(const VisibleObject& visibleObject) = 0;
     virtual void RenderTransparentObject(const VisibleObject& visibleObject) = 0;
@@ -51,14 +52,16 @@ private:
     Shader<Vertex>* currentShader;
     BlendMode currentBlendMode;
     int objectsRendered;
+    Clipper clipper;
   
 public:
     
-    void Begin() override {
+    void Begin(bool isTransparent) override {
         currentShader = 0;
         renderer.BeginLoop();
         currentBlendMode = BlendMode::Opaque;
         objectsRendered = 0;
+        clipper.UseDepth = !isTransparent;
     }
     
     void End(RenderInfo& renderInfo) override {
@@ -75,6 +78,17 @@ public:
             currentShader->Use();
             currentShader->SetViewProjection(viewProjection);
         }
+        int clip = visibleObject.material->Clip;
+        bool isClipping = clip != 0;
+        
+        if (isClipping) {
+            renderer.Render();
+            if (clip==1) {
+                clipper.PushBegin();
+            } else {
+                clipper.PopBegin();
+            }
+        }
         
         const VertexMesh<Vertex>& mesh = visibleObject.mesh->ConstMesh<Vertex>();
         currentShader->RenderObject(renderer,
@@ -84,6 +98,15 @@ public:
             *visibleObject.transform->World.GetValue()
             );
         objectsRendered++;
+        
+        if (isClipping) {
+            renderer.Render();
+            if (clip==1) {
+                clipper.PushEnd();
+            } else {
+                clipper.PopEnd();
+            }
+        }
     }
     
     void RenderTransparentObject(const VisibleObject& visibleObject) override {
@@ -251,14 +274,14 @@ public:
     
     void RenderVisibleObjects(const VisibleObjects& visibleObjects) {
         int currentVertexType = visibleObjects[0].vertexType;
-        objectRenderers[currentVertexType]->Begin();
+        objectRenderers[currentVertexType]->Begin(false);
         objectRenderers[currentVertexType]->RenderObject(visibleObjects[0]);
         for (size_t i=1; i<visibleObjects.size(); ++i) {
             const VisibleObject& visibleObject = visibleObjects[i];
             if (currentVertexType!=visibleObject.vertexType) {
                 objectRenderers[currentVertexType]->End(renderInfo);
                 currentVertexType = visibleObject.vertexType;
-                objectRenderers[currentVertexType]->Begin();
+                objectRenderers[currentVertexType]->Begin(false);
             }
             objectRenderers[currentVertexType]->RenderObject(visibleObject);
         }
@@ -267,14 +290,14 @@ public:
     
     void RenderTransparentVisibleObjects(const VisibleObjects& visibleObjects) {
         int currentVertexType = visibleObjects[0].vertexType;
-        objectRenderers[currentVertexType]->Begin();
+        objectRenderers[currentVertexType]->Begin(true);
         objectRenderers[currentVertexType]->RenderTransparentObject(visibleObjects[0]);
         for (size_t i=1; i<visibleObjects.size(); ++i) {
             const VisibleObject& visibleObject = visibleObjects[i];
             if (currentVertexType!=visibleObject.vertexType) {
                 objectRenderers[currentVertexType]->End(renderInfo);
                 currentVertexType = visibleObject.vertexType;
-                objectRenderers[currentVertexType]->Begin();
+                objectRenderers[currentVertexType]->Begin(true);
             }
             objectRenderers[currentVertexType]->RenderTransparentObject(visibleObject);
         }

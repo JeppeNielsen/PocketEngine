@@ -21,14 +21,16 @@ enum class BlendMode {
 
 Component(Material)
 public:
-    Material() : Shader(this), BlendMode(this), Mask(this) { }
+    Material() : Shader(this), BlendMode(this), Mask(this), Clip(0) { }
     Property<Material*, IShader*> Shader;
     Property<Material*, BlendMode> BlendMode;
     Property<Material*, RenderMask> Mask;
+    int Clip; // 0 == no clipping, 1 == push clip, 2 == pop clip
 
     void Reset() {
         Shader = 0;
         BlendMode = BlendMode::Opaque;
         Mask = 0;
+        Clip = 0;
     }
 };
