@@ -13,6 +13,7 @@
 #include "Material.h"
 #include "Timer.hpp"
 #include <memory>
+#include "TextureComponent.hpp"
 
 Component(Rotator)
     float speed;
@@ -41,6 +42,7 @@ class TestShader : public GameState<TestShader> {
     
     Transform* blueQuad;
     GameObject* camera;
+    GameObject* texture;
     
     void InitializeShaders() {
          std::string vertexShader =
@@ -65,15 +67,12 @@ class TestShader : public GameState<TestShader> {
             "varying vec3 DestinationNormal;"
             "uniform vec3 LightDirection;"
             "uniform vec4 AmbientLight;"
+            "uniform sampler2D Texture;"
             "void main(void) {"
             "   float n = clamp(dot(LightDirection, DestinationNormal),0.0,1.0); "
-            "	gl_FragColor = vec4(AmbientLight + DestinationColor * n);\n"  //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
+            "   vec4 color = texture2D(Texture, DestinationTexCoords) * DestinationColor; "
+            "	gl_FragColor = vec4(AmbientLight + color * n);\n"
             "}";
-        
-        if (!colorShader.Initialize(vertexShader,fragmentShader)) {
-            std::cout<< " Shader failed " << std::endl;
-        }
-        
         
         std::string fragmentShaderBlue =
             "varying vec2 DestinationTexCoords;"
@@ -82,11 +81,15 @@ class TestShader : public GameState<TestShader> {
             "	gl_FragColor = vec4(0,0,1,0.5);" //texture2D(Texture, DestinationTexCoords) * DestinationColor;"
             "}";
         
-        if (!colorShader.Initialize(vertexShader,fragmentShader)) {
+        if (!colorShader.Create(vertexShader,fragmentShader)) {
             std::cout<< " Shader failed " << std::endl;
         }
         
-        if (!blueShader.Initialize(vertexShader, fragmentShaderBlue)) {
+        //if (!colorShader.Create(vertexShader,fragmentShader)) {
+        //    std::cout<< " Shader failed " << std::endl;
+        //}
+        
+        if (!blueShader.Create(vertexShader, fragmentShaderBlue)) {
             std::cout<< " Shader failed " << std::endl;
         }
         
@@ -105,6 +108,9 @@ class TestShader : public GameState<TestShader> {
         world.CreateSystem<RenderSystem>();
         world.CreateSystem<RotatorSystem>();
         
+        texture = world.CreateObject();
+        texture->AddComponent<TextureComponent>()->Texture().LoadFromPng("Football.png");
+        
         camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = {0,0,5};
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
@@ -114,6 +120,7 @@ class TestShader : public GameState<TestShader> {
             o->AddComponent<Transform>()->Position = {0,0,i*-2.0f};
             o->AddComponent<Material>()->Shader = &colorShader;// i%2==0 ? &colorShader : &blueShader;
             o->GetComponent<Material>()->BlendMode = i==1 ? BlendMode::Opaque : BlendMode::Opaque;
+            o->AddComponent<TextureComponent>(texture);
             
             auto& mesh = o->AddComponent<MeshComponent>()->Mesh<Vertex>();
             
@@ -121,7 +128,7 @@ class TestShader : public GameState<TestShader> {
                 mesh.AddCube(0, {1,2,1});
             } else {
                 mesh.AddGeoSphere(0, 1, 12);
-                mesh.SetColor(Colour(1.0f,0.0f,0.0f,1.0f));
+                //mesh.SetColor(Colour(1.0f,0.0f,0.0f,1.0f));
             }
             
             
@@ -177,7 +184,12 @@ class TestShader : public GameState<TestShader> {
         world.Render();
         double time = timer.End();
         time = 1.0/time;
-        std::cout<<"Render Time = "<<time <<std::endl;
+        
+        static int counter = 0;
+        counter++;
+        if (counter%20==0) {
+            std::cout<<"Render Time = "<<time <<std::endl;
+        }
     }
     
     
