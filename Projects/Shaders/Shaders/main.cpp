@@ -71,7 +71,8 @@ class TestShader : public GameState<TestShader> {
             "void main(void) {"
             "   float n = clamp(dot(LightDirection, DestinationNormal),0.0,1.0); "
             "   vec4 color = texture2D(Texture, DestinationTexCoords) * DestinationColor; "
-            "	gl_FragColor = vec4(AmbientLight + color * n);\n"
+            "   vec4 fullColor = AmbientLight + color * n; "
+            "	gl_FragColor = vec4(fullColor.r, fullColor.g, fullColor.b, DestinationColor.a);\n"
             "}";
         
         std::string fragmentShaderBlue =
@@ -97,8 +98,8 @@ class TestShader : public GameState<TestShader> {
         blueShader.name = "Blue Shader";
         
         
-        colorShader.SetValue("LightDirection", Vector3(1,1,1).Normalized());
-        colorShader.SetValue("AmbientLight", Colour(0.0f,0.0f,0.3f,1.0f));
+        colorShader.SetValue("LightDirection", Vector3(-1,1,1).Normalized());
+       // colorShader.SetValue("AmbientLight", Colour(0.2f,0.2f,0.2f,1.0f));
     }
     
     void Initialize() {
@@ -128,7 +129,7 @@ class TestShader : public GameState<TestShader> {
                 mesh.AddCube(0, {1,2,1});
             } else {
                 mesh.AddGeoSphere(0, 1, 12);
-                //mesh.SetColor(Colour(1.0f,0.0f,0.0f,1.0f));
+                mesh.SetColor(Colour(0.0f,0.0f,1.0f,0.95f));
             }
             
             
