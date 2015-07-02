@@ -88,6 +88,7 @@ void Camera::Reset() {
 	Near = 0.1f;
 	Far = 512.0f;
     Orthographic = false;
+    Mask = 0;
 }
 
 void Camera::Clone(const Camera& source) {
@@ -96,6 +97,7 @@ void Camera::Clone(const Camera& source) {
     Far = source.Far;
     Viewport = source.Viewport;
     Orthographic = source.Orthographic;
+    Mask = source.Mask;
 }
 
 void Camera::Serialize(Pocket::ISerializedProperty *property) {
@@ -103,6 +105,7 @@ void Camera::Serialize(Pocket::ISerializedProperty *property) {
     property->Add("Near", Near());
     property->Add("Far", Far());
     property->Add("Orthographic", Orthographic());
+    property->Add("Mask", Mask());
 }
 
 void Camera::Deserialize(Pocket::ISerializedProperty *property) {
@@ -110,4 +113,5 @@ void Camera::Deserialize(Pocket::ISerializedProperty *property) {
     Near = property->GetValue("Near", 0.1f);
     Far = property->GetValue("Far", 1000.0f);
     Orthographic = property->GetValue("Orthographic", false);
+    Mask = property->GetValue("Mask", (RenderMask)0);
 }
