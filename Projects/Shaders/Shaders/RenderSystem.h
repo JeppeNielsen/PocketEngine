@@ -17,6 +17,7 @@
 #include "MeshOctreeSystem.h"
 #include "Clipper.hpp"
 #include "TextureComponent.hpp"
+#include "Orderable.hpp"
 
 using namespace Pocket;
 
@@ -28,6 +29,7 @@ struct VisibleObject {
     MeshComponent* mesh;
     int vertexType;
     TextureComponent* texture;
+    Orderable* orderable;
     float distanceToCamera;
 };
 
@@ -235,6 +237,7 @@ public:
                 mesh,
                 mesh->VertexType(),
                 object->GetComponent<TextureComponent>(),
+                object->GetComponent<Orderable>(),
                 distanceToCamera
             });
             
@@ -332,6 +335,15 @@ public:
     
 private:
     static bool SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b) {
+    
+        if (a.orderable && b.orderable) {
+            int orderA = a.orderable->Order.Get();
+            int orderB = b.orderable->Order.Get();
+            if (orderA!=orderB) {
+                return orderA<orderB;
+            }
+        }
+    
         if (a.vertexType != b.vertexType) {
             return a.vertexType<b.vertexType;
         }
@@ -348,6 +360,14 @@ private:
     }
     
     static bool SortTransparentObjects(const VisibleObject& a, const VisibleObject& b) {
+        if (a.orderable && b.orderable) {
+            int orderA = a.orderable->Order.Get();
+            int orderB = b.orderable->Order.Get();
+            if (orderA!=orderB) {
+                return orderA<orderB;
+            }
+        }
+    
         return a.distanceToCamera>b.distanceToCamera;
     }
     
