@@ -7,6 +7,7 @@
 //
 
 #include "TerrainSystem.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -40,8 +41,10 @@ void TerrainSystem::CreateMesh(Terrain *terrain, Mesh *mesh) {
     
     int meshPatchSize = terrain->meshPatchSize;
     
-    Mesh::VerticesList& vertices = mesh->Vertices();
-    Mesh::TrianglesList& triangles = mesh->Triangles();
+    auto& vertexMesh = mesh->GetMesh<Vertex>();
+    
+    auto& vertices = vertexMesh.vertices;
+    auto& triangles = vertexMesh.triangles;
     
     vertices.resize(meshPatchSize * meshPatchSize + meshPatchSize * 4);
     triangles.resize((meshPatchSize - 1) * (meshPatchSize - 1) * 6 + (meshPatchSize - 1) * 4 * 6);

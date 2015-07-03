@@ -7,6 +7,7 @@
 //
 
 #include "ColorSystem.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -39,7 +40,7 @@ void ColorSystem::Update(float dt) {
         for (size_t i = 0; i<changedColorables.size(); i++) {
             Colorable* colorable = changedColorables[i]->GetComponent<Colorable>();
             const Colour& color = colorable->Color.GetValue();
-            Mesh::VerticesList& verts = changedColorables[i]->GetComponent<Mesh>()->Vertices();
+            auto& verts = changedColorables[i]->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
             
             for (size_t j=0; j<verts.size(); ++j) {
                 verts[j].Color = color;

@@ -7,6 +7,7 @@
 //
 
 #include "ParticleMeshUpdater.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -39,8 +40,10 @@ void ParticleMeshUpdater::UpdateMesh(Mesh *mesh, ParticleEmitter *emitter) {
     int vertCount = (int)emitter->particles.size() * 4;
     int triCount = (int)emitter->particles.size() * 6;
     
-    Mesh::VerticesList& vertices = mesh->Vertices();
-    Mesh::TrianglesList& triangles = mesh->Triangles();
+    auto& vertexMesh = mesh->GetMesh<Vertex>();
+    
+    auto& vertices = vertexMesh.vertices;
+    auto& triangles = vertexMesh.triangles;
         
     if (triangles.size()!=triCount) {
         triangles.resize(triCount);
@@ -62,7 +65,7 @@ void ParticleMeshUpdater::UpdateMesh(Mesh *mesh, ParticleEmitter *emitter) {
         vertices.resize(vertCount);
     }
     
-    mesh->SetBufferSizes(particlesCount * 4, particlesCount * 6);
+    //mesh->SetBufferSizes(particlesCount * 4, particlesCount * 6); // not sure about this
 
     int index = 0;
     Vector3 vector;

@@ -64,13 +64,15 @@ SYSTEM(BackgroundSystem, Background, Transform, Mesh)
             Transform* transform = o->GetComponent<Transform>();
             Mesh* mesh = o->GetComponent<Mesh>();
             
-            if (mesh->Vertices().size() == 0) {
-                mesh->AddQuad(0, background->size, Colour::White());
-                SwapV(mesh->Vertices(), 0, 3);
-                SwapV(mesh->Vertices(), 1, 2);
+            auto& vertexMesh = mesh->GetMesh<Vertex>();
+            
+            if (vertexMesh.vertices.size() == 0) {
+                vertexMesh.AddQuad(0, background->size, Colour::White());
+                SwapV(vertexMesh.vertices, 0, 3);
+                SwapV(vertexMesh.vertices, 1, 2);
             }
             
-            Mesh::VerticesList& verts = mesh->Vertices();
+            auto& verts = vertexMesh.vertices;
             
             Matrix4x4 world = *transform->World.GetValue();
             world *= Matrix4x4::CreateTransform({world.Translation().x*background->parallax,0,0}, 1, Quaternion::IDENTITY);
@@ -89,7 +91,7 @@ SYSTEM(BackgroundSystem, Background, Transform, Mesh)
         }
     }
 
-    void SwapV(Mesh::VerticesList& v, int a, int b) {
+    void SwapV(VertexMesh<Vertex>::Vertices& v, int a, int b) {
         float t = v[a].TextureCoords.y;
         v[a].TextureCoords.y = v[b].TextureCoords.y;
         v[b].TextureCoords.y = t;
@@ -169,7 +171,7 @@ public:
                 GameObject* pipe = World()->CreateObject();
                 pipe->AddComponent<Transform>()->Position = topPosition;
                 pipe->GetComponent<Transform>()->Anchor = {0,topHeight*0.5f,0};
-                pipe->AddComponent<Mesh>()->AddQuad(0, {0.2f,topHeight}, Colour::White());
+                pipe->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {0.2f,topHeight}, Colour::White());
                 pipe->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
                 pipe->AddComponent<TextureComponent>(texture);
                 }
@@ -178,8 +180,8 @@ public:
                 GameObject* pipe = World()->CreateObject();
                 pipe->AddComponent<Transform>()->Position = bottomPosition;
                 pipe->GetComponent<Transform>()->Anchor = {0,-bottomHeight*0.5f,0};
-                pipe->AddComponent<Mesh>()->AddQuad(0, {0.2f,bottomHeight}, Colour::White());
-                Mesh::VerticesList& verts = pipe->GetComponent<Mesh>()->Vertices();
+                pipe->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {0.2f,bottomHeight}, Colour::White());
+                auto& verts = pipe->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
                 SwapV(verts, 0, 3);
                 SwapV(verts, 1, 2);
                 pipe->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
@@ -189,7 +191,7 @@ public:
         }
     }
 
-    void SwapV(Mesh::VerticesList& v, int a, int b) {
+    void SwapV(VertexMesh<Vertex>::Vertices& v, int a, int b) {
         float t = v[a].TextureCoords.y;
         v[a].TextureCoords.y = v[b].TextureCoords.y;
         v[b].TextureCoords.y = t;
@@ -205,7 +207,17 @@ public:
     GameObject* backgroundTexture;
     Vector2 screenSize;
     
+    Shader<Vertex> shader;
+    
     void Initialize() {
+    
+        std::string vertex =
+        "attribute vec4 Position";
+        
+        std::string fragment =
+        "";
+    
+        shader.Create(vertex, fragment);
         
         world.CreateSystem<GravitySystem>();
         world.CreateSystem<FlappySystem>()->SetInput(&Input);
@@ -237,7 +249,7 @@ public:
         
         bird = world.CreateObject();
         bird->AddComponent<Transform>()->Position = {0.5f,0.5f,0};
-        bird->AddComponent<Mesh>()->AddCube(0, {0.03f*birdPixelSize.Aspect(),0.03f,0.01f});
+        bird->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {0.03f*birdPixelSize.Aspect(),0.03f,0.01f});
         bird->AddComponent<Material>();
         bird->AddComponent<Velocity>()->velocity = {0.35f,0,0};
         bird->AddComponent<Gravity>()->gravity = 2.20f;

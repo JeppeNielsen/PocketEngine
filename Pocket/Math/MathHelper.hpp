@@ -8,8 +8,6 @@ namespace Pocket {
 
 #define ToRadians(degrees) (0.01745329251994329576923690768489 * degrees)
 #define ToDegrees(radians) (57.295779513082320876798154814105 * radians)
-#define Min(a,b) ((a)<(b) ? (a) : (b))
-#define Max(a,b) ((a)>(b) ? (a) : (b))
 
 		static float Random();
 		static float Random(float min, float max);
@@ -27,6 +25,16 @@ namespace Pocket {
         static float Bezier(const float& position0, const float& tangent0, const float& position1, const float& tangent1, const float& t);
         
         static float Clamp(float value, float min, float max);
+        
+        template<class T>
+        static T Min(const T& a, const T& b) {
+            return a<b ? a : b;
+        }
+        
+        template<class T>
+        static T Max(const T& a, const T& b) {
+            return a>b ? a : b;
+        }
         
 #define PI 3.14159265359
 #define HALF_PI 1.57079632679

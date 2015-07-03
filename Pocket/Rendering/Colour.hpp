@@ -27,10 +27,10 @@ namespace Pocket {
 		bool operator==(const Colour &other) const;
 		bool operator!=(const Colour &other) const;
 
-		float R();
-		float G();
-		float B();
-		float A();
+		float R() const;
+		float G() const;
+		float B() const;
+		float A() const;
         
         void R(float red);
 		void G(float green);

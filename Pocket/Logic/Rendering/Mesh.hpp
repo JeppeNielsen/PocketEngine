@@ -1,121 +1,109 @@
+//
+//  Mesh.h
+//  Shaders
+//
+//  Created by Jeppe Nielsen on 23/06/15.
+//  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
+//
+
 #pragma once
-#include "GameComponent.hpp"
-#include "DirtyProperty.hpp"
+#include "GameWorld.hpp"
+#include "VertexMesh.hpp"
 #include "BoundingBox.hpp"
-#include "Vertex.hpp"
-#include <vector>
-#include "Matrix3x3.hpp"
-#include "Matrix4x4.hpp"
-#include "OpenGL.hpp"
-#include "Box.hpp"
+#include "DirtyProperty.hpp"
 
 namespace Pocket {
-    class Ray;
-    class TextureAtlas;
-    class Texture;
-    
-    class Mesh;
-    class MeshIntersector {
-        public:
-        virtual bool IntersectsRay(Mesh& mesh, const Ray& ray,
-                                float* pickDistance, float* barycentricU, float* barycentricV,
-                                size_t* triangleIndex, Vector3* normal) = 0;
-    };
-    
-    Component(Mesh)
-	public:
-		Mesh();
-		~Mesh();
-        
-		typedef std::vector<Vertex> VerticesList;
-		typedef std::vector<short> TrianglesList;
-		
-		VerticesList& Vertices();
-		TrianglesList& Triangles();
 
-		virtual const VerticesList& ReadOnlyVertices();
-		virtual const TrianglesList& ReadOnlyTriangles();
+class RenderSystem;
 
-		DirtyProperty<Mesh*, BoundingBox> LocalBoundingBox;
+class Mesh;
+class MeshIntersector {
+    public:
+    virtual bool IntersectsRay(Mesh& mesh, const Ray& ray,
+                            float* pickDistance, float* barycentricU, float* barycentricV,
+                            size_t* triangleIndex, Vector3* normal) = 0;
+};
 
-		void AddQuad(Vector2 center, Vector2 size, Colour color);
-        void AddTriangle(Vector2 p1, Vector2 p2, Vector2 p3, Colour color);
-		void AddTexturedQuad(Texture* texture, const Box& textureCoords, const Matrix3x3& transform);
-		void AddTexturedQuad(TextureAtlas* atlas, const std::string& name);
-		void AddTexturedQuad(TextureAtlas* atlas, const std::string& name, float scale);
-		void AddTexturedQuad(TextureAtlas* atlas, const std::string& name, float scale, Vector2 center, float rotation);
+Component(Mesh)
+public:
+    
+    Mesh() : vertexMesh(0), vertexType(0), LocalBoundingBox(this), customIntersector(0) {}
+    ~Mesh() { delete vertexMesh; }
 
-		void SetColor(const Colour& color);
-		void SetAlpha(const float& alpha);
-        
-        void Clear();
+    void Reset() {
+        delete vertexMesh;
+        vertexMesh = 0;
+        customIntersector = 0;
+    }
+    
+    template<class Vertex>
+    class VertexMesh<Vertex>& GetMesh() {
+        if (!vertexMesh) {
+            vertexMesh = new VertexMesh<Vertex>();
+            vertexType = Vertex::ID;
+            RevertDefaultCalcBoundingBox();
+        } else if (vertexType != Vertex::ID) {
+            return VertexMesh<Vertex>::empty;
+        }
+        VertexMesh<Vertex>& mesh = *((VertexMesh<Vertex>*)vertexMesh);
+        LocalBoundingBox.MakeDirty();
+        return mesh;
+    }
 
-        void AddCube(Vector3 center, Vector3 size);
-		void AddCube(Vector3 center, Vector3 size, Colour color);
+    template<class Vertex>
+    const VertexMesh<Vertex>& ConstMesh() const {
+        return (const VertexMesh<Vertex>&)*((VertexMesh<Vertex>*)vertexMesh);
+    }
     
-        void AddPlane(const Vector3& center, const Vector2& size, const Box& textureCoords);
-        void AddPlane(const Vector3& center, const Vector2& size, const Box& textureCoords, const Colour& color);
+    size_t VerticesSize() {
+        return vertexMesh ? vertexMesh->Size() : 0;
+    }
+    
+    const Vector3& Position(size_t index) {
+        return vertexMesh ? vertexMesh->GetPosition(index) : Vector3::zero;
+    }
+    
+    int VertexType() { return vertexType; }
+    
+    IVertexMesh::Triangles& Triangles() { return vertexMesh->triangles; }
+    DirtyProperty<Mesh*, BoundingBox> LocalBoundingBox;
 
-		void AddTriangle(const Vector3& p1, const Vector3& p2, const Vector3& p3,
-			const Vector3& n1, const Vector3& n2, const Vector3& n3,
-			const Vector2& texCoord1, const Vector2& texCoord2, const Vector2& texCoord3, 
-			const Colour& color, const Matrix4x4& world);
-        
-        void AddSegmentedQuad(const Matrix4x4& world, const Vector2& size, const Vector2& blTexCoord, const Vector2& trTexCoord, int segments);
-        
-        void AddGeoSphere(const Vector3 center, float radius, int segments);
-        
-        bool IntersectsRay(const Ray& ray,
-                           float* pickDistance, float* barycentricU, float* barycentricV,
-                           size_t* triangleIndex, Vector3* normal);
-        
-        //void AddText(const Font& font, std::string text, Vector2 size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Box& textureCoords);
-    
-        bool AddObjFile(std::string objFile);
-    
-        void Center();
-    
-    
-        void Reset();
-        void Clone(const Mesh& source);
-    
-        MeshIntersector* customIntersector;
-    
-        void Flip();
-    
-	public:
-		VerticesList vertices;
-		TrianglesList triangles;
+    bool IntersectsRay(const Ray& ray, float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) {
+        if (customIntersector) {
+            return customIntersector->IntersectsRay(*this, ray, pickDistance, barycentricU, barycentricV, triangleIndex, normal);
+        }
+        if (!vertexMesh) return false;
+        return vertexMesh->IntersectsRay(ray, pickDistance, barycentricU, barycentricV, triangleIndex, normal);
+    }
 
-		void Bind();
-		void Draw();
+    MeshIntersector* customIntersector;
     
-        size_t VerticesSize() const;
-        size_t TrianglesSize() const;
+     void RevertDefaultCalcBoundingBox() {
+        LocalBoundingBox.Method.Clear();
+        LocalBoundingBox.Method += event_handler(this, &Mesh::CalcBoundingBox);
+    }
     
-        void SetBufferSizes(size_t verticesSize, size_t trianglesSize);
+    void Clear() {
+        if (!vertexMesh) return;
+        vertexMesh->Clear();
+    }
     
-        void RevertDefaultCalcBoundingBox();
-    
-    static bool RayIntersectsTriangle(const Ray& ray,
-                               const Vector3& tri0, const Vector3& tri1, const Vector3& tri2,
-                               float* pickDistance, float* barycentricU, float* barycentricV);
+    //template<class T>
+    VertexMesh<class Vertex>::Vertices& Vertices() {
+        return GetMesh<Vertex>().vertices;
+    }
 
-	private:
-		void CalcBoundingBox(DirtyProperty<Mesh*, BoundingBox>::EventData& eventData);
+private:
+    IVertexMesh* vertexMesh;
+    int vertexType;
 
+    void CalcBoundingBox( DirtyProperty<Mesh*, BoundingBox>::EventData& eventData )
+    {
+        BoundingBox& box = *eventData.Value;
+        vertexMesh->CalcBoundingBox(box);
+    }
 
-		bool vertexBufferDirty;
-		GLuint vertexBuffer;
+    friend class RenderSystem;
+};
 
-		bool indexBufferDirty;
-		GLuint indexBuffer;
-    
-    
-
-        size_t customVerticesSize;
-        size_t customTrianglesSize;
-    
-        
-    };
 }

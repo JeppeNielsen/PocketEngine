@@ -148,10 +148,10 @@ Colour Colour::Lerp(const Colour& source, const Colour& dest, const float& amoun
 		s_a + (d_a - s_a) * amount);
 }
 
-float Colour::R() { return (float)r / 255.0f; }
-float Colour::G() { return (float)g / 255.0f; }
-float Colour::B() { return (float)b / 255.0f; }
-float Colour::A() { return (float)a / 255.0f; }
+float Colour::R() const { return (float)r / 255.0f; }
+float Colour::G() const { return (float)g / 255.0f; }
+float Colour::B() const { return (float)b / 255.0f; }
+float Colour::A() const { return (float)a / 255.0f; }
 
 void Colour::R(float red) { r = (Component)(red * 255.0f); }
 void Colour::G(float green) { g = (Component)(green * 255.0f); }

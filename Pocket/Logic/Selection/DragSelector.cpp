@@ -40,7 +40,7 @@ void DragSelector::Setup(const Pocket::Box &viewport, InputManager& input) {
 
     dragRectangle = renderWorld.CreateObject();
     dragRectangle->AddComponent<Transform>();
-    dragRectangle->AddComponent<Mesh>()->AddQuad(0, 1, Colour(0.0f, 0.0f, 1.0f, 0.5f));
+    dragRectangle->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(0.0f, 0.0f, 1.0f, 0.5f));
     dragRectangle->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
     
     input.TouchDown += event_handler(this, &DragSelector::Down);
