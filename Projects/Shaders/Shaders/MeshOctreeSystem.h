@@ -11,7 +11,7 @@
 #include "GameWorld.hpp"
 #include "GameSystem.hpp"
 #include "Transform.hpp"
-#include "MeshComponent.h"
+#include "Mesh.hpp"
 #include "Octree.hpp"
 
 namespace Pocket {

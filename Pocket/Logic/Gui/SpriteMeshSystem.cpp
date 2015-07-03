@@ -7,6 +7,7 @@
 //
 
 #include "SpriteMeshSystem.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -41,15 +42,15 @@ void SpriteMeshSystem::UpdateMesh(Pocket::GameObject *object) {
     Sprite* sprite = object->GetComponent<Sprite>();
     const Vector2& wantedCornerSize = sprite->CornerSize.GetValue();
     
-    Mesh::VerticesList& vertices = mesh->Vertices();
-    Mesh::TrianglesList& triangles = mesh->Triangles();
+    auto& vertices = mesh->GetMesh<Vertex>().vertices;
+    auto& triangles = mesh->GetMesh<Vertex>().triangles;
     
     bool normal = wantedCornerSize.x<=0 && wantedCornerSize.y<=0;
     int vertCount = normal ? 4 : 16;
     int trianglesCount = normal ? 6 : 54;
     
     if (vertices.size()!=vertCount) {
-        vertices.resize(vertCount, Vertex(0));        
+        vertices.resize(vertCount, { });
     }
     
     if (triangles.size()!=trianglesCount) {

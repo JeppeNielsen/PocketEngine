@@ -41,7 +41,7 @@ GameObject* SelectionVisualizer::CreateSelection(GameObject* object) {
     GameObject* go = World()->CreateObject();
     
     go->AddComponent<Transform>(object);
-    go->AddComponent<Mesh>()->AddCube(object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->center, object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));
+    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->center, object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));
     go->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
     
     return go;

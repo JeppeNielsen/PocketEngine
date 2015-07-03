@@ -8,6 +8,7 @@
 
 #include "LabelMeshSystem.hpp"
 #include "Atlas.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -81,8 +82,8 @@ void LabelMeshSystem::SomethingChanged(GameObject* object) {
  }
      
      
-     Mesh::VerticesList& vertices = mesh.Vertices();
-     Mesh::TrianglesList& triangles = mesh.Triangles();
+     auto& vertices = mesh.Vertices();
+     auto& triangles = mesh.Triangles();
  
  size_t verticesIndex;
  

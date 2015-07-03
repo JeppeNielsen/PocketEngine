@@ -8,6 +8,7 @@
 
 #include "SpriteTextureSystem.hpp"
 #include "Atlas.hpp"
+#include "Vertex.hpp"
 
 using namespace Pocket;
 
@@ -35,7 +36,7 @@ void SpriteTextureSystem::SpriteTextureChanged(Sprite* sprite, GameObject* objec
     Atlas* atlas = object->GetComponent<Atlas>();
     Mesh* mesh = object->GetComponent<Mesh>();
     
-    Mesh::VerticesList& vertices = mesh->Vertices();
+    auto& vertices = mesh->GetMesh<Vertex>().vertices;
     Vector2 cornerSize = sprite->CornerSize.GetValue();
     
     const Atlas::Node& atlasNode = atlas->GetNode(sprite->SpriteName);
@@ -55,7 +56,7 @@ void SpriteTextureSystem::SpriteTextureChanged(Sprite* sprite, GameObject* objec
     int vertCount = normal ? 4 : 16;
     
     if (vertices.size()!=vertCount) {
-        vertices.resize(vertCount, Vertex(0));
+        vertices.resize(vertCount, { });
     }
     
     if (normal) {

@@ -479,7 +479,7 @@ void Terrain::IntersectQuad(int x, int z, int width, int depth, int level, const
                 v2.y = nodes[nodeIndex + 1 + xSegments].height;
                 v2.z = v0.z + segmentSize.y;
                 
-                if (Mesh::RayIntersectsTriangle(ray, v0, v2, v1, &distance, &u, &v)) {
+                if (IVertexMesh::RayIntersectsTriangle(ray, v0, v2, v1, &distance, &u, &v)) {
                     if (distance<intersectData.minDistance) {
                         intersectData.minDistance = distance;
                         intersectData.barycentricU = u;
@@ -496,7 +496,7 @@ void Terrain::IntersectQuad(int x, int z, int width, int depth, int level, const
                     v1.y = nodes[nodeIndex + xSegments].height;
                     v1.z = v2.z;
                     
-                    if (Mesh::RayIntersectsTriangle(ray, v0, v1, v2, &distance, &u, &v)) {
+                    if (IVertexMesh::RayIntersectsTriangle(ray, v0, v1, v2, &distance, &u, &v)) {
                         if (distance<intersectData.minDistance) {
                             intersectData.minDistance = distance;
                             intersectData.barycentricU = u;

@@ -303,9 +303,9 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         
         if (touch.WorldNormal.x == 0 && touch.WorldNormal.y == 0 && touch.WorldNormal.z == 0) {
             
-            Vector3 v0 = touchableObject->mesh->Vertices()[touchableObject->mesh->triangles[touch.TriangleIndex]].Position;
-            Vector3 v1 = touchableObject->mesh->Vertices()[touchableObject->mesh->triangles[touch.TriangleIndex + 1]].Position;
-            Vector3 v2 = touchableObject->mesh->Vertices()[touchableObject->mesh->triangles[touch.TriangleIndex + 2]].Position;
+            Vector3 v0 = touchableObject->mesh->Position(touchableObject->mesh->Triangles()[touch.TriangleIndex  ]);
+            Vector3 v1 = touchableObject->mesh->Position(touchableObject->mesh->Triangles()[touch.TriangleIndex+1]);
+            Vector3 v2 = touchableObject->mesh->Position(touchableObject->mesh->Triangles()[touch.TriangleIndex+2]);
         
             Vector3 tan1 = v1 - v0;
             Vector3 tan2 = v2 - v0;

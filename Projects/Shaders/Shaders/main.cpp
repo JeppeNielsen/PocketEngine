@@ -6,11 +6,11 @@
 //  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
 //
 #include "Engine.hpp"
-#include "Shader.h"
-#include "MeshComponent.h"
+#include "Shader.hpp"
+#include "Mesh.hpp"
 #include "GameWorld.hpp"
-#include "RenderSystem.h"
-#include "Material.h"
+#include "RenderSystem.hpp"
+#include "Material.hpp"
 #include "Timer.hpp"
 #include <memory>
 #include "TextureComponent.hpp"
@@ -123,7 +123,7 @@ class TestShader : public GameState<TestShader> {
             o->GetComponent<Material>()->BlendMode = i==1 ? BlendMode::Opaque : BlendMode::Opaque;
             o->AddComponent<TextureComponent>(texture);
             
-            auto& mesh = o->AddComponent<MeshComponent>()->Mesh<Vertex>();
+            auto& mesh = o->AddComponent<Mesh>()->GetMesh<Vertex>();
             
             if (i==1) {
                 mesh.AddCube(0, {1,2,1});
