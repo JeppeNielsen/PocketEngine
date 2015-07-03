@@ -62,10 +62,10 @@ void Box::FromMatrix(const Pocket::Matrix3x3 &matrix) {
 
 
 		for (int i = 1; i < 4; i++) {
-			left = Min(left, corners[i].x);
-			right = Max(right, corners[i].x);
-			top = Min(top, corners[i].y);
-			bottom = Max(bottom, corners[i].y);
+			left = MathHelper::Min(left, corners[i].x);
+			right = MathHelper::Max(right, corners[i].x);
+			top = MathHelper::Min(top, corners[i].y);
+			bottom = MathHelper::Max(bottom, corners[i].y);
 		}
 }
 
@@ -101,10 +101,10 @@ void Box::FromMatrix(const Pocket::Vector2 &topLeft,
 
 	
     for (int i = 1; i < 4; i++) {
-        left = Min(left, corners[i].x);
-        right = Max(right, corners[i].x);
-        top = Min(top, corners[i].y);
-        bottom = Max(bottom, corners[i].y);
+        left = MathHelper::Min(left, corners[i].x);
+        right = MathHelper::Max(right, corners[i].x);
+        top = MathHelper::Min(top, corners[i].y);
+        bottom = MathHelper::Max(bottom, corners[i].y);
     }
 }
 
