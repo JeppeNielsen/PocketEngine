@@ -8,7 +8,7 @@ LOCAL_MODULE    := PocketAndroid
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
 
-LOCAL_CPPFLAGS := -DANDROID
+LOCAL_CPPFLAGS := -DANDROID -frtti
 
 POCKET := ../../../../Pocket
 
@@ -30,6 +30,18 @@ $(LOCAL_PATH)/$(POCKET)/Logic/Gui/Menu \
 $(LOCAL_PATH)/$(POCKET)/Logic/Interaction \
 $(LOCAL_PATH)/$(POCKET)/Logic/Movement \
 $(LOCAL_PATH)/$(POCKET)/Logic/Rendering \
+$(LOCAL_PATH)/$(POCKET)/Logic/Rendering/Lights \
+$(LOCAL_PATH)/$(POCKET)/Logic/Selection \
+$(LOCAL_PATH)/$(POCKET)/Logic/Spatial \
+$(LOCAL_PATH)/$(POCKET)/Math \
+$(LOCAL_PATH)/$(POCKET)/OpenGL \
+$(LOCAL_PATH)/$(POCKET)/Platform/Android \
+$(LOCAL_PATH)/$(POCKET)/PngLib \
+$(LOCAL_PATH)/$(POCKET)/Profiler \
+$(LOCAL_PATH)/$(POCKET)/Rendering \
+$(LOCAL_PATH)/$(POCKET)/TinyXml \
+$(LOCAL_PATH)/$(POCKET)/Serialization/Json \
+/Users/Jeppe/Downloads/android-ndk-r10e/sources/cxx-stl/gnu-libstdc++/4.8/include/bits \
 
 LOCAL_SRC_FILES := \
 $(POCKET)/ComponentSystem/GameComponent.cpp \
@@ -38,7 +50,7 @@ $(POCKET)/ComponentSystem/GameFactory.cpp \
 $(POCKET)/ComponentSystem/GameObject.cpp \
 $(POCKET)/ComponentSystem/GameSystem.cpp \
 $(POCKET)/ComponentSystem/GameWorld.cpp \
-$(POCKET)/ComponentSystem/SerializedProperty \
+$(POCKET)/ComponentSystem/SerializedProperty.cpp \
 \
 $(POCKET)/Core/Engine.cpp \
 $(POCKET)/Core/GameManager.cpp \
@@ -58,8 +70,8 @@ $(POCKET)/Data/QuadTree.cpp \
 $(POCKET)/Data/StringHelper.cpp \
 $(POCKET)/Data/Triangulator.cpp \
 \
-$(POCKET)/Data/TimeMeasurer.cpp \
-$(POCKET)/Data/UnitTest.cpp \
+$(POCKET)/Debugging/TimeMeasurer.cpp \
+$(POCKET)/Debugging/UnitTest.cpp \
 \
 $(POCKET)/Logic/Animation/TouchAnimator.cpp \
 $(POCKET)/Logic/Animation/TouchAnimatorSystem.cpp \
@@ -75,7 +87,7 @@ $(POCKET)/Logic/Animation/Spine/SpineFactory.cpp \
 $(POCKET)/Logic/Animation/Spine/SpineModel.cpp \
 $(POCKET)/Logic/Animation/Spine/SpineSkeleton.cpp \
 \
-$(POCKET)/Logic/Common/HierachyOrder.cpp \
+$(POCKET)/Logic/Common/HierarchyOrder.cpp \
 $(POCKET)/Logic/Common/Orderable.cpp \
 \
 $(POCKET)/Logic/Effects/ParticleEffect.cpp \
@@ -104,7 +116,7 @@ $(POCKET)/Logic/Gui/Menu/MenuSystem.cpp \
 \
 $(POCKET)/Logic/Interaction/Touchable.cpp \
 $(POCKET)/Logic/Interaction/TouchableCanceller.cpp \
-$(POCKET)/Logic/Interaction/TouchableCancelSystem.cpp \
+$(POCKET)/Logic/Interaction/TouchCancelSystem.cpp \
 $(POCKET)/Logic/Interaction/TouchSystem.cpp \
 \
 $(POCKET)/Logic/Movement/Draggable.cpp \
@@ -118,17 +130,65 @@ $(POCKET)/Logic/Movement/LimitableSystem.cpp \
 $(POCKET)/Logic/Movement/Velocity.cpp \
 $(POCKET)/Logic/Movement/VelocitySystem.cpp \
 \
-
-
-
-
-
-
-
-
-
-
-
+$(POCKET)/Logic/Rendering/Atlas.cpp \
+$(POCKET)/Logic/Rendering/Camera.cpp \
+$(POCKET)/Logic/Rendering/CameraSystem.cpp \
+$(POCKET)/Logic/Rendering/Colorable.cpp \
+$(POCKET)/Logic/Rendering/ColorSystem.cpp \
+$(POCKET)/Logic/Rendering/RenderSystem.cpp \
+$(POCKET)/Logic/Rendering/Terrain.cpp \
+$(POCKET)/Logic/Rendering/TerrainSystem.cpp \
+$(POCKET)/Logic/Rendering/TextureComponent.cpp \
+\
+$(POCKET)/Logic/Rendering/Lights/Light.cpp \
+\
+$(POCKET)/Logic/Selection/ClickSelectorSystem.cpp \
+$(POCKET)/Logic/Selection/DragSelector.cpp \
+$(POCKET)/Logic/Selection/Selectable.cpp \
+$(POCKET)/Logic/Selection/SelectableCollection.cpp \
+$(POCKET)/Logic/Selection/SelectableDragSystem.cpp \
+$(POCKET)/Logic/Selection/SelectionVisualizer.cpp \
+\
+$(POCKET)/Logic/Spatial/OctreeSystem.cpp \
+$(POCKET)/Logic/Spatial/Transform.cpp \
+$(POCKET)/Logic/Spatial/TransformHierarchy.cpp \
+\
+$(POCKET)/Math/BoundingBox.cpp \
+$(POCKET)/Math/BoundingFrustum.cpp \
+$(POCKET)/Math/Box.cpp \
+$(POCKET)/Math/Interpolator.cpp \
+$(POCKET)/Math/MathHelper.cpp \
+$(POCKET)/Math/Matrix3x3.cpp \
+$(POCKET)/Math/Matrix4x4.cpp \
+$(POCKET)/Math/Plane.cpp \
+$(POCKET)/Math/Point.cpp \
+$(POCKET)/Math/Point3.cpp \
+$(POCKET)/Math/Quaternion.cpp \
+$(POCKET)/Math/Ray.cpp \
+$(POCKET)/Math/TransitionHelper.cpp \
+$(POCKET)/Math/Vector2.cpp \
+$(POCKET)/Math/Vector3.cpp \
+\
+$(POCKET)/Platform/Android/WindowAndroid.cpp \
+\
+$(POCKET)/PngLib/jpeg_decoder.cpp \
+$(POCKET)/PngLib/lodepng.cpp \
+\
+$(POCKET)/Profiler/Profiler.cpp \
+\
+$(POCKET)/Rendering/Clipper.cpp \
+$(POCKET)/Rendering/Colour.cpp \
+$(POCKET)/Rendering/DeferredBuffers.cpp \
+$(POCKET)/Rendering/Shader.cpp \
+$(POCKET)/Rendering/Texture.cpp \
+$(POCKET)/Rendering/TextureAtlas.cpp \
+$(POCKET)/Rendering/TexturePacker.cpp \
+$(POCKET)/Rendering/Vertex.cpp \
+\
+$(POCKET)/Profiler/TinyXml/tinystr.cpp \
+$(POCKET)/Profiler/TinyXml/tinyxml.cpp \
+$(POCKET)/Profiler/TinyXml/tinyxmlerror.cpp \
+$(POCKET)/Profiler/TinyXml/tinyxmlparser.cpp \
 
 
 
