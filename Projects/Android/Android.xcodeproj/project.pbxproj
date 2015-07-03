@@ -1,0 +1,94 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		7292945A1B470F25001191BD /* AndroidManifest.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = AndroidManifest.xml; sourceTree = "<group>"; };
+		7292945C1B470F25001191BD /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
+		7292945D1B470F25001191BD /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		7292945E1B470F25001191BD /* project.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = project.properties; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		729294521B470E97001191BD = {
+			isa = PBXGroup;
+			children = (
+				729294591B470F25001191BD /* PocketAndroid */,
+			);
+			sourceTree = "<group>";
+		};
+		729294591B470F25001191BD /* PocketAndroid */ = {
+			isa = PBXGroup;
+			children = (
+				7292945A1B470F25001191BD /* AndroidManifest.xml */,
+				7292945B1B470F25001191BD /* jni */,
+				7292945E1B470F25001191BD /* project.properties */,
+			);
+			path = PocketAndroid;
+			sourceTree = "<group>";
+		};
+		7292945B1B470F25001191BD /* jni */ = {
+			isa = PBXGroup;
+			children = (
+				7292945C1B470F25001191BD /* Android.mk */,
+				7292945D1B470F25001191BD /* main.c */,
+			);
+			path = jni;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		729294531B470E97001191BD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0630;
+			};
+			buildConfigurationList = 729294561B470E97001191BD /* Build configuration list for PBXProject "Android" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 729294521B470E97001191BD;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		729294571B470E97001191BD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		729294581B470E97001191BD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		729294561B470E97001191BD /* Build configuration list for PBXProject "Android" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				729294571B470E97001191BD /* Debug */,
+				729294581B470E97001191BD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 729294531B470E97001191BD /* Project object */;
+}
