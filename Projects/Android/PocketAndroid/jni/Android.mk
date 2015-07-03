@@ -4,9 +4,133 @@ include $(CLEAR_VARS)
 
 TARGET_PLATFORM := 17
 LOCAL_MODULE    := PocketAndroid
-LOCAL_SRC_FILES := main.c
+
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2
 LOCAL_STATIC_LIBRARIES := android_native_app_glue
+
+LOCAL_CPPFLAGS := -DANDROID
+
+POCKET := ../../../../Pocket
+
+LOCAL_C_INCLUDES := \
+$(LOCAL_PATH)/$(POCKET)/ComponentSystem/ \
+$(LOCAL_PATH)/$(POCKET)/Core/ \
+$(LOCAL_PATH)/$(POCKET)/Data/ \
+$(LOCAL_PATH)/$(POCKET)/Debugging/ \
+$(LOCAL_PATH)/$(POCKET)/Debugging/ \
+$(LOCAL_PATH)/$(POCKET)/Events/ \
+$(LOCAL_PATH)/$(POCKET)/Logic/ \
+$(LOCAL_PATH)/$(POCKET)/Logic/Animation \
+$(LOCAL_PATH)/$(POCKET)/Logic/Animation/Spine \
+$(LOCAL_PATH)/$(POCKET)/Logic/Common \
+$(LOCAL_PATH)/$(POCKET)/Logic/Effects \
+$(LOCAL_PATH)/$(POCKET)/Logic/Gui \
+$(LOCAL_PATH)/$(POCKET)/Logic/Gui/Layout \
+$(LOCAL_PATH)/$(POCKET)/Logic/Gui/Menu \
+$(LOCAL_PATH)/$(POCKET)/Logic/Interaction \
+$(LOCAL_PATH)/$(POCKET)/Logic/Movement \
+$(LOCAL_PATH)/$(POCKET)/Logic/Rendering \
+
+LOCAL_SRC_FILES := \
+$(POCKET)/ComponentSystem/GameComponent.cpp \
+$(POCKET)/ComponentSystem/GameComponentType.cpp \
+$(POCKET)/ComponentSystem/GameFactory.cpp \
+$(POCKET)/ComponentSystem/GameObject.cpp \
+$(POCKET)/ComponentSystem/GameSystem.cpp \
+$(POCKET)/ComponentSystem/GameWorld.cpp \
+$(POCKET)/ComponentSystem/SerializedProperty \
+\
+$(POCKET)/Core/Engine.cpp \
+$(POCKET)/Core/GameManager.cpp \
+$(POCKET)/Core/GameState.cpp \
+$(POCKET)/Core/InputDevice.cpp \
+$(POCKET)/Core/InputManager.cpp \
+$(POCKET)/Core/Timer.cpp \
+$(POCKET)/Core/Window.cpp \
+\
+$(POCKET)/Data/BezierCurve1.cpp \
+$(POCKET)/Data/BezierCurve3.cpp \
+$(POCKET)/Data/ICellItem.cpp \
+$(POCKET)/Data/IPointable.cpp \
+$(POCKET)/Data/Octree.cpp \
+$(POCKET)/Data/Pointer.cpp \
+$(POCKET)/Data/QuadTree.cpp \
+$(POCKET)/Data/StringHelper.cpp \
+$(POCKET)/Data/Triangulator.cpp \
+\
+$(POCKET)/Data/TimeMeasurer.cpp \
+$(POCKET)/Data/UnitTest.cpp \
+\
+$(POCKET)/Logic/Animation/TouchAnimator.cpp \
+$(POCKET)/Logic/Animation/TouchAnimatorSystem.cpp \
+$(POCKET)/Logic/Animation/TransformAnimation.cpp \
+$(POCKET)/Logic/Animation/TransformAnimationDatabase.cpp \
+$(POCKET)/Logic/Animation/TransformAnimator.cpp \
+$(POCKET)/Logic/Animation/TransformAnimatorSystem.cpp \
+\
+$(POCKET)/Logic/Animation/Spine/SpineAnimation.cpp \
+$(POCKET)/Logic/Animation/Spine/SpineAnimator.cpp \
+$(POCKET)/Logic/Animation/Spine/SpineAnimatorSystem.cpp \
+$(POCKET)/Logic/Animation/Spine/SpineFactory.cpp \
+$(POCKET)/Logic/Animation/Spine/SpineModel.cpp \
+$(POCKET)/Logic/Animation/Spine/SpineSkeleton.cpp \
+\
+$(POCKET)/Logic/Common/HierachyOrder.cpp \
+$(POCKET)/Logic/Common/Orderable.cpp \
+\
+$(POCKET)/Logic/Effects/ParticleEffect.cpp \
+$(POCKET)/Logic/Effects/ParticleEmitter.cpp \
+$(POCKET)/Logic/Effects/ParticleMeshUpdater.cpp \
+$(POCKET)/Logic/Effects/ParticleUpdaterSystem.cpp \
+\
+$(POCKET)/Logic/Gui/Font.cpp \
+$(POCKET)/Logic/Gui/Gui.cpp \
+$(POCKET)/Logic/Gui/Label.cpp \
+$(POCKET)/Logic/Gui/LabelMeshSystem.cpp \
+$(POCKET)/Logic/Gui/Sizeable.cpp \
+$(POCKET)/Logic/Gui/Sprite.cpp \
+$(POCKET)/Logic/Gui/SpriteMeshSystem.cpp \
+$(POCKET)/Logic/Gui/SpriteTextureSystem.cpp \
+$(POCKET)/Logic/Gui/TextBox.cpp \
+$(POCKET)/Logic/Gui/TextBoxLabelSystem.cpp \
+$(POCKET)/Logic/Gui/TextBoxSystem.cpp \
+$(POCKET)/Logic/Gui/Layout/Layoutable.cpp \
+$(POCKET)/Logic/Gui/Layout/LayoutSystem.cpp \
+$(POCKET)/Logic/Gui/Menu/Menu.cpp \
+$(POCKET)/Logic/Gui/Menu/MenuAnimator.cpp \
+$(POCKET)/Logic/Gui/Menu/MenuButton.cpp \
+$(POCKET)/Logic/Gui/Menu/MenuButtonSystem.cpp \
+$(POCKET)/Logic/Gui/Menu/MenuSystem.cpp \
+\
+$(POCKET)/Logic/Interaction/Touchable.cpp \
+$(POCKET)/Logic/Interaction/TouchableCanceller.cpp \
+$(POCKET)/Logic/Interaction/TouchableCancelSystem.cpp \
+$(POCKET)/Logic/Interaction/TouchSystem.cpp \
+\
+$(POCKET)/Logic/Movement/Draggable.cpp \
+$(POCKET)/Logic/Movement/DraggableMotion.cpp \
+$(POCKET)/Logic/Movement/DraggableMotionSystem.cpp \
+$(POCKET)/Logic/Movement/DraggableSystem.cpp \
+$(POCKET)/Logic/Movement/FirstPersonMover.cpp \
+$(POCKET)/Logic/Movement/FirstPersonMoverSystem.cpp \
+$(POCKET)/Logic/Movement/Limitable.cpp \
+$(POCKET)/Logic/Movement/LimitableSystem.cpp \
+$(POCKET)/Logic/Movement/Velocity.cpp \
+$(POCKET)/Logic/Movement/VelocitySystem.cpp \
+\
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 include $(BUILD_SHARED_LIBRARY) 
 
