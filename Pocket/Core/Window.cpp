@@ -12,6 +12,10 @@
 
 #include "WindowWeb.hpp"
 
+#elif ANDROID
+
+#include "WindowAndroid.hpp"
+
 #else
 
 #include "WindowWin.hpp"
@@ -44,6 +48,8 @@ Window* Window::CreatePlatformWindow() {
     return new WindowOSX();
 #elif EMSCRIPTEN
     return new WindowWeb();
+#elif ANDROID
+    return new WindowAndroid();
 #else
     return new WindowWin();
 #endif

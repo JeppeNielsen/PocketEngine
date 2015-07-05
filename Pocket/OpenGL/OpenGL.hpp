@@ -44,6 +44,11 @@ extern PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
 
     #define DISABLE_MAP_BUFFER
 
+#elif ANDROID
+
+    #include <EGL/egl.h>
+    #include <GLES2/gl2.h>
+
 #else
 
     #include <OpenGL/gl.h>
@@ -88,7 +93,9 @@ static const char* _glStatusString(GLenum error)
 #endif
         STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT);
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
         STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE);
+#endif
 #endif
         STATUS_CASE(GL_FRAMEBUFFER_UNSUPPORTED);
     }

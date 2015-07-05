@@ -8,6 +8,7 @@
 
 #include "ColorSystem.hpp"
 #include "Vertex.hpp"
+#include <algorithm>
 
 using namespace Pocket;
 

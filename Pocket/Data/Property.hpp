@@ -1,6 +1,10 @@
 #pragma once
 #include "Event.hpp"
 
+#ifdef ANDROID
+#include <ostream>
+#endif
+
 namespace Pocket {
 	template<class Owner, class T> class Property {
 	public:

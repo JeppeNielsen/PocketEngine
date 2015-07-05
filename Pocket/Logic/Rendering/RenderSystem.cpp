@@ -81,7 +81,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         float fInvW = 1.0f / ( viewProjection[3][0] * distanceToCameraPosition.x + viewProjection[3][1] * distanceToCameraPosition.y + viewProjection[3][2] * distanceToCameraPosition.z + viewProjection[3][3] );
         float distanceToCamera = ( viewProjection[2][0] * distanceToCameraPosition.x + viewProjection[2][1] * distanceToCameraPosition.y + viewProjection[2][2] * distanceToCameraPosition.z + viewProjection[2][3] ) * fInvW;
         
-        VisibleObjects& visibleObjects = material->BlendMode.GetValue() == BlendMode::Opaque ? opaqueObjects : transparentObjects;
+        VisibleObjects& visibleObjects = material->BlendMode.GetValue() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
         
         visibleObjects.push_back({
             object,

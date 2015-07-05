@@ -51,7 +51,7 @@ class ObjectRenderer : public IObjectRenderer {
 private:
     VertexRenderer<Vertex> renderer;
     Shader<Vertex>* currentShader;
-    BlendMode currentBlendMode;
+    BlendModeType currentBlendMode;
     TextureComponent* currentTexture;
     Clipper clipper;
     int objectsRendered;
@@ -61,7 +61,7 @@ public:
     void Begin(bool isTransparent) override {
         currentShader = 0;
         renderer.BeginLoop();
-        currentBlendMode = BlendMode::Opaque;
+        currentBlendMode = BlendModeType::Opaque;
         objectsRendered = 0;
         clipper.UseDepth = !isTransparent;
         currentTexture = (TextureComponent*)-1;
@@ -123,7 +123,7 @@ public:
         if (visibleObject.material->BlendMode.GetValue()!=currentBlendMode) {
             currentBlendMode = visibleObject.material->BlendMode.GetValue();
             renderer.Render();
-             if (currentBlendMode == BlendMode::Alpha ) {
+             if (currentBlendMode == BlendModeType::Alpha ) {
                 glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             } else {
                 glBlendFunc (GL_SRC_ALPHA, GL_ONE);

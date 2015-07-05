@@ -14,6 +14,8 @@
 #include "VertexMesh.hpp"
 #include "GameObject.hpp"
 #include "Matrix4x4.hpp"
+#include <algorithm>
+
 
 namespace Pocket {
 
@@ -284,7 +286,7 @@ public:
         glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection);
     }   
 
-    virtual void RenderObject(VertexRenderer<Vertex>& renderer, const typename VertexMesh<Vertex>::Vertices& vertices, const IVertexMesh::Triangles& triangles, GameObject* object, const Matrix4x4& world) { }
+    virtual void RenderObject(Pocket::VertexRenderer<Pocket::Vertex>& renderer, const typename Pocket::VertexMesh<Vertex>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles,Pocket::GameObject* object, const Pocket::Matrix4x4& world) { }
 };
 
 

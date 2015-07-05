@@ -8,10 +8,9 @@
 
 #include "Shader.hpp"
 
-using namespace Pocket;
-
+namespace Pocket {
 template<>
-void Shader<Vertex>::RenderObject(VertexRenderer<Vertex> &renderer, const VertexMesh<Vertex>::Vertices& vertices, const IVertexMesh::Triangles& triangles, Pocket::GameObject *object, const Pocket::Matrix4x4 &world) {
+void Pocket::Shader<Vertex>::RenderObject(Pocket::VertexRenderer<Pocket::Vertex>& renderer, const typename Pocket::VertexMesh<Vertex>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles,Pocket::GameObject* object, const Pocket::Matrix4x4& world) {
     
     size_t verticesSize = vertices.size();
     size_t trianglesSize = triangles.size();
@@ -31,4 +30,5 @@ void Shader<Vertex>::RenderObject(VertexRenderer<Vertex> &renderer, const Vertex
     for (size_t v = 0; v<trianglesSize; v++) {
         renderer.triangles[renderer.triangleIndex++] = (index + triangles[v]);
     }
+}
 }

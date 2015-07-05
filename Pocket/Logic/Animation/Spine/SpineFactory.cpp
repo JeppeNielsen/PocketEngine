@@ -65,7 +65,7 @@ GameObject* SpineFactory::CreateModel(Pocket::GameObject *atlas, GameObject* ske
         modelSlot.object->AddComponent<Mesh>();
         modelSlot.object->AddComponent<Atlas>(object);
         modelSlot.object->AddComponent<TextureComponent>(object);
-        modelSlot.object->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+        modelSlot.object->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
         modelSlot.object->Parent = slotBone->second.object;
         
         //assign default image

@@ -14,6 +14,8 @@ using namespace Pocket;
 int IVertexType::counter = 0;
 IVertexType::TypeList IVertexType::typelist;
 
+namespace Pocket {
+ 
 template<> const VertexAttribute VertexAttributeType<Vector3>::attribute {  3, GL_FLOAT, GL_FALSE };
 template<> const VertexAttribute VertexAttributeType<Vector2>::attribute {  2, GL_FLOAT, GL_FALSE };
 template<> const VertexAttribute VertexAttributeType<Colour>::attribute {  4, GL_UNSIGNED_BYTE, GL_TRUE };
@@ -43,9 +45,11 @@ template<> void ShaderVariableType<Colour>::SetValue(GLint location, const Colou
 }
 template<> GLenum ShaderVariableType<Colour>::GetType() { return GL_FLOAT_VEC4; }
 
-int Vertex::ID = VertexType<Vertex>::Id();
-VertexDescription<Vertex> Vertex::Description;
-
 template<> IObjectRenderer* VertexType<Vertex>::CreateRenderer() {
     return new ObjectRenderer<Vertex>();
 }
+
+}
+
+int Vertex::ID = VertexType<Vertex>::Id();
+VertexDescription<Vertex> Vertex::Description;
