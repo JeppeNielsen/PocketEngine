@@ -35,6 +35,7 @@ $(LOCAL_PATH)/$(POCKET)/Logic/Selection \
 $(LOCAL_PATH)/$(POCKET)/Logic/Spatial \
 $(LOCAL_PATH)/$(POCKET)/Math \
 $(LOCAL_PATH)/$(POCKET)/OpenGL \
+$(LOCAL_PATH)/$(POCKET)/Packing \
 $(LOCAL_PATH)/$(POCKET)/Platform/Android \
 $(LOCAL_PATH)/$(POCKET)/PngLib \
 $(LOCAL_PATH)/$(POCKET)/Profiler \
@@ -169,7 +170,11 @@ $(POCKET)/Math/TransitionHelper.cpp \
 $(POCKET)/Math/Vector2.cpp \
 $(POCKET)/Math/Vector3.cpp \
 \
+$(POCKET)/Packing/RectPacker.cpp \
+\
 $(POCKET)/Platform/Android/WindowAndroid.cpp \
+$(POCKET)/Platform/Android/FileReader.cpp \
+$(POCKET)/Platform/Android/GamePadManager.cpp \
 \
 $(POCKET)/PngLib/jpeg_decoder.cpp \
 $(POCKET)/PngLib/lodepng.cpp \
@@ -178,17 +183,16 @@ $(POCKET)/Profiler/Profiler.cpp \
 \
 $(POCKET)/Rendering/Clipper.cpp \
 $(POCKET)/Rendering/Colour.cpp \
-$(POCKET)/Rendering/DeferredBuffers.cpp \
 $(POCKET)/Rendering/Shader.cpp \
 $(POCKET)/Rendering/Texture.cpp \
 $(POCKET)/Rendering/TextureAtlas.cpp \
 $(POCKET)/Rendering/TexturePacker.cpp \
 $(POCKET)/Rendering/Vertex.cpp \
 \
-$(POCKET)/Profiler/TinyXml/tinystr.cpp \
-$(POCKET)/Profiler/TinyXml/tinyxml.cpp \
-$(POCKET)/Profiler/TinyXml/tinyxmlerror.cpp \
-$(POCKET)/Profiler/TinyXml/tinyxmlparser.cpp \
+$(POCKET)/TinyXml/tinystr.cpp \
+$(POCKET)/TinyXml/tinyxml.cpp \
+$(POCKET)/TinyXml/tinyxmlerror.cpp \
+$(POCKET)/TinyXml/tinyxmlparser.cpp \
 
 
 
