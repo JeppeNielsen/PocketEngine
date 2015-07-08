@@ -173,42 +173,72 @@ void terminate_display(struct engine* engine) {
 int32_t handle_input(struct android_app* app, AInputEvent* event) {
 	struct engine* engine = (struct engine*)app->userData;
     
-    LOGI("handle_input:: staticWindow = %i", (size_t)staticWindow);
-	
+    int numTouches = AMotionEvent_getPointerCount(event);
+    
+    int32_t iAction = AMotionEvent_getAction(event);
+    unsigned int flags = iAction & AMOTION_EVENT_ACTION_MASK;
+    
+    int32_t iIndex = (iAction & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK)
+                >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+    
+    //LOGI("TOUCH: iIndex: %d", iIndex);
+    
+    if (flags == AMOTION_EVENT_ACTION_POINTER_DOWN || flags == AMOTION_EVENT_ACTION_DOWN) {
+        int id = AMotionEvent_getPointerId(event, iIndex);
+        int xPos = AMotionEvent_getX(event, iIndex);
+        int yPos = AMotionEvent_getY(event, iIndex);
+        LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        staticWindow->inputDevice.SetTouch(id, true, staticWindow->ConvertMousePosition(xPos, yPos));
+
+    } else if (flags == AMOTION_EVENT_ACTION_POINTER_UP || flags == AMOTION_EVENT_ACTION_UP) {
+        int id = AMotionEvent_getPointerId(event, iIndex);
+        int xPos = AMotionEvent_getX(event, iIndex);
+        int yPos = AMotionEvent_getY(event, iIndex);
+        LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        staticWindow->inputDevice.SetTouch(id, false, staticWindow->ConvertMousePosition(xPos, yPos));
+    }
+    
     if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
-        int id = AMotionEvent_getPointerId(event, 0);
-		int xPos = AMotionEvent_getX(event, 0);
-		int yPos = AMotionEvent_getY(event, 0);
-		//LOGI("move: x %d\ty %d\n",engine->touchX,engine->touchY);
-        LOGI("MOVE: id: %d x:%d\ty:%d\n",id, xPos, yPos);
-        staticWindow->inputDevice.SetTouchPosition(id, staticWindow->ConvertMousePosition(xPos, yPos));
+        for (int i=0; i<numTouches; i++) {
+            int id = AMotionEvent_getPointerId(event, i);
+            int xPos = AMotionEvent_getX(event, i);
+            int yPos = AMotionEvent_getY(event, i);
+            //LOGI("move: x %d\ty %d\n",engine->touchX,engine->touchY);
+            LOGI("MOVE: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+            staticWindow->inputDevice.SetTouchPosition(id, staticWindow->ConvertMousePosition(xPos, yPos));
+        }
     }
     
     /*
-    if (AInputEvent_getType(event) == AMOTION_EVENT_ACTION_POINTER_DOWN) {
-        engine->touchX = AMotionEvent_getX(event, 0);
-		engine->touchY = AMotionEvent_getY(event, 0);
-		LOGI("DOWN: x %d\ty %d\n",engine->touchX,engine->touchY);
-    }*/
+    
+    for (int i=0; i<numTouches; i++) {
+    
+    LOGI("handle_input:: staticWindow = %i", (size_t)staticWindow);
+	
+    
     
     int32_t iAction = AMotionEvent_getAction(event);
     unsigned int flags = iAction & AMOTION_EVENT_ACTION_MASK;
     if (flags == AMOTION_EVENT_ACTION_DOWN)
     {
-        int id = AMotionEvent_getPointerId(event, 0);
-        int xPos = AMotionEvent_getX(event, 0);
-        int yPos = AMotionEvent_getY(event, 0);
+        int id = AMotionEvent_getPointerId(event, i);
+        int xPos = AMotionEvent_getX(event, i);
+        int yPos = AMotionEvent_getY(event, i);
         LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
         staticWindow->inputDevice.SetTouch(id, true, staticWindow->ConvertMousePosition(xPos, yPos));
     } else if (flags == AMOTION_EVENT_ACTION_UP) {
-        int id = AMotionEvent_getPointerId(event, 0);
-        int xPos = AMotionEvent_getX(event, 0);
-        int yPos = AMotionEvent_getY(event, 0);
+        int id = AMotionEvent_getPointerId(event, i);
+        int xPos = AMotionEvent_getX(event, i);
+        int yPos = AMotionEvent_getY(event, i);
         LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
         
         staticWindow->inputDevice.SetTouch(id, false, staticWindow->ConvertMousePosition(xPos, yPos));
         
     }
+    
+    }
+    
+    */
     
     //case AMOTION_EVENT_ACTION_UP:
     
@@ -339,14 +369,7 @@ Vector2 WindowAndroid::ConvertMousePosition(int x, int y) {
 }
 
 void WindowAndroid::Begin() {
-    LOGI("WindowAndroid-2");
-    
-    LOGI("WindowAndroid-3");
-    LOGI("WindowAndroid::Begin");
-    
-   int counter = 0;
-    
-	// Read all pending events.
+    // Read all pending events.
 	while (1) {
 		int ident;
 		int events;
@@ -365,26 +388,8 @@ void WindowAndroid::Begin() {
 				return;
 			}
 		}
-        
-        counter++;
-        if (counter<10) {
-            LOGI("loop staticWindow = %i", (size_t)staticWindow);
-        }
-        
-        if (staticWindow && counter>100) {
-           // staticWindow->Loop();
-        }
-        
-        //LOGI("WindowAndroid-5");
-        //Step();
-        // Draw the current frame
-		//draw_frame(&engine);
-        //LOGI("UPDATE");
-        
         Step();
     }
-    
-
 }
 
 void WindowAndroid::Loop() {
