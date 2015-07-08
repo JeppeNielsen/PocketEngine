@@ -12,6 +12,8 @@
 #include "InputDevice.hpp"
 #include "OpenGL.hpp"
 
+int main();
+
 namespace Pocket {
 	class WindowAndroid : public Pocket::Window
 	{
@@ -21,9 +23,6 @@ namespace Pocket {
         bool Update(IInputManagerIterator* inputManagers);
         void PreRender();
         void PostRender();
-        void Begin();
-        
-        void Loop();
         
     private:
         int frameRate;

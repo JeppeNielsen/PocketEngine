@@ -46,6 +46,9 @@ double Timer::End() {
 #ifdef IPHONE
     double end = ((double)((__darwin_suseconds_t)(t2.tv_sec*1000000ULL+t2.tv_usec)))*0.000001;
     double start = ((double)((__darwin_suseconds_t)(t.tv_sec*1000000ULL+t.tv_usec)))*0.000001;
+#elif ANDROID
+    double end = ((double)((t2.tv_sec*1000000ULL+t2.tv_usec)))*0.000001;
+    double start = ((double)((t.tv_sec*1000000ULL+t.tv_usec)))*0.000001;
 #else
     double end = (t2.tv_sec+t2.tv_usec * 0.000001);
     double start = (t.tv_sec+t.tv_usec * 0.000001);

@@ -193,7 +193,8 @@ $(POCKET)/TinyXml/tinystr.cpp \
 $(POCKET)/TinyXml/tinyxml.cpp \
 $(POCKET)/TinyXml/tinyxmlerror.cpp \
 $(POCKET)/TinyXml/tinyxmlparser.cpp \
-
+\
+main.cpp
 
 
 include $(BUILD_SHARED_LIBRARY) 

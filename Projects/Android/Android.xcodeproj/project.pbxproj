@@ -957,8 +957,6 @@
 		7292986B1B471373001191BD /* pocket.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pocket.cpp; sourceTree = "<group>"; };
 		7292986D1B47144E001191BD /* Application.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Application.mk; sourceTree = "<group>"; };
 		7292986E1B47253B001191BD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		729298701B47255D001191BD /* WindowAndroid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WindowAndroid.cpp; sourceTree = "<group>"; };
-		729298711B47255D001191BD /* WindowAndroid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WindowAndroid.hpp; sourceTree = "<group>"; };
 		729298721B49C315001191BD /* FileReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileReader.cpp; sourceTree = "<group>"; };
 		729298741B49C34A001191BD /* GamePadManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GamePadManager.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -990,8 +988,6 @@
 				7292945D1B470F25001191BD /* main.c */,
 				7292986B1B471373001191BD /* pocket.cpp */,
 				7292986E1B47253B001191BD /* main.cpp */,
-				729298701B47255D001191BD /* WindowAndroid.cpp */,
-				729298711B47255D001191BD /* WindowAndroid.hpp */,
 			);
 			path = jni;
 			sourceTree = "<group>";

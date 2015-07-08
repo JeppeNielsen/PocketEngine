@@ -28,12 +28,11 @@ namespace Pocket {
         
         struct timer_timeval
         {
-#ifdef IPHONE
+#if defined(IPHONE) || defined(ANDROID)
         
             long    tv_sec;        // seconds
             long    tv_usec;    // microSeconds
 #else
-      
             long		tv_sec;		/* seconds */
             int	tv_usec;	/* and microseconds */
 #endif

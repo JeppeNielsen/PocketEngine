@@ -198,7 +198,7 @@ class TestShader : public GameState<TestShader> {
 
 
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<TestShader>();
     return 0;

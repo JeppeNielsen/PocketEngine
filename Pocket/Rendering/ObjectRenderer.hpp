@@ -46,11 +46,11 @@ public:
     const float* viewProjection;
 };
 
-template<class Vertex>
+template<class V>
 class ObjectRenderer : public IObjectRenderer {
 private:
-    VertexRenderer<Vertex> renderer;
-    Shader<Vertex>* currentShader;
+    VertexRenderer<V> renderer;
+    Shader<V>* currentShader;
     BlendModeType currentBlendMode;
     TextureComponent* currentTexture;
     Clipper clipper;
@@ -77,7 +77,7 @@ public:
     void RenderObject(const VisibleObject& visibleObject) override {
         if (visibleObject.shader != currentShader) {
             renderer.Render();
-            currentShader = static_cast<Shader<Vertex>*>(visibleObject.shader);
+            currentShader = static_cast<Shader<V>*>(visibleObject.shader);
             currentShader->Use();
             currentShader->SetViewProjection(viewProjection);
         }
@@ -100,7 +100,7 @@ public:
             }
         }
         
-        const VertexMesh<Vertex>& mesh = visibleObject.mesh->ConstMesh<Vertex>();
+        const VertexMesh<V>& mesh = visibleObject.mesh->ConstMesh<V>();
         currentShader->RenderObject(renderer,
             mesh.vertices,
             mesh.triangles,
