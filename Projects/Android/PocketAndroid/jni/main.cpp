@@ -3,6 +3,7 @@
 #include "OpenGL.hpp"
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
+#include "FirstPersonMoverSystem.hpp"
 
 #include <android/log.h>
 
@@ -63,10 +64,12 @@ class Test : public GameState<Test> {
     
     
         world.CreateSystem<RenderSystem>();
+        world.CreateSystem<FirstPersonMoverSystem>()->Input = &Input;
 
         GameObject* cameraObject = world.CreateObject();
         cameraObject->AddComponent<Transform>()->Position = {0,0,5};
         cameraObject->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        cameraObject->AddComponent<FirstPersonMover>();
 
         Box viewPort = Manager().Viewport();
 
@@ -74,7 +77,15 @@ class Test : public GameState<Test> {
         cube->AddComponent<Transform>();
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         cube->AddComponent<Material>()->Shader = &colorShader;
+        
+        Input.TouchDown += event_handler(this, &Test::TouchDown);
     }
+    
+    void TouchDown(TouchEvent e) {
+        rotate = !rotate;
+    }
+    
+    bool rotate = false;
 
     void Update(float dt) {
         static float rot = 0;

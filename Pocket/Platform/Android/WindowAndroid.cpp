@@ -172,12 +172,47 @@ void terminate_display(struct engine* engine) {
  */
 int32_t handle_input(struct android_app* app, AInputEvent* event) {
 	struct engine* engine = (struct engine*)app->userData;
-	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
-		engine->touchX = AMotionEvent_getX(event, 0);
+    
+    LOGI("handle_input:: staticWindow = %i", (size_t)staticWindow);
+	
+    if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) {
+        int id = AMotionEvent_getPointerId(event, 0);
+		int xPos = AMotionEvent_getX(event, 0);
+		int yPos = AMotionEvent_getY(event, 0);
+		//LOGI("move: x %d\ty %d\n",engine->touchX,engine->touchY);
+        LOGI("MOVE: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        staticWindow->inputDevice.SetTouchPosition(id, staticWindow->ConvertMousePosition(xPos, yPos));
+    }
+    
+    /*
+    if (AInputEvent_getType(event) == AMOTION_EVENT_ACTION_POINTER_DOWN) {
+        engine->touchX = AMotionEvent_getX(event, 0);
 		engine->touchY = AMotionEvent_getY(event, 0);
-		LOGI("x %d\ty %d\n",engine->touchX,engine->touchY);
-		return 1;
-	}
+		LOGI("DOWN: x %d\ty %d\n",engine->touchX,engine->touchY);
+    }*/
+    
+    int32_t iAction = AMotionEvent_getAction(event);
+    unsigned int flags = iAction & AMOTION_EVENT_ACTION_MASK;
+    if (flags == AMOTION_EVENT_ACTION_DOWN)
+    {
+        int id = AMotionEvent_getPointerId(event, 0);
+        int xPos = AMotionEvent_getX(event, 0);
+        int yPos = AMotionEvent_getY(event, 0);
+        LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        staticWindow->inputDevice.SetTouch(id, true, staticWindow->ConvertMousePosition(xPos, yPos));
+    } else if (flags == AMOTION_EVENT_ACTION_UP) {
+        int id = AMotionEvent_getPointerId(event, 0);
+        int xPos = AMotionEvent_getX(event, 0);
+        int yPos = AMotionEvent_getY(event, 0);
+        LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        
+        staticWindow->inputDevice.SetTouch(id, false, staticWindow->ConvertMousePosition(xPos, yPos));
+        
+    }
+    
+    //case AMOTION_EVENT_ACTION_UP:
+    
+    
 	return 0;
 }
 
@@ -267,6 +302,7 @@ void WindowAndroid::Create(int width, int height, bool fullScreen) {
     Window::Framebuffer = 0;//currentEngine->app->window;
      
     screenSize = Vector2(currentEngine->width, currentEngine->height);
+    inputDevice.Initialize(11);
 }
 
 void WindowAndroid::Destroy() {
@@ -282,7 +318,7 @@ bool WindowAndroid::Update(IInputManagerIterator* inputManagers) {
         handleEvent (event);
     }
     */
-    //inputDevice.Update(inputManagers);
+    inputDevice.Update(inputManagers);
     return true;
 }
 
@@ -301,11 +337,6 @@ void WindowAndroid::PostRender() {
 Vector2 WindowAndroid::ConvertMousePosition(int x, int y) {
     return Vector2(x, screenSize.y - y);
 }
-
-int WindowAndroid::GetMouseButtonIndex(int index) {
-    return 0;//index == SDL_BUTTON_LEFT ? 0 : (index == SDL_BUTTON_RIGHT ? 1 : 2);
-}
-
 
 void WindowAndroid::Begin() {
     LOGI("WindowAndroid-2");

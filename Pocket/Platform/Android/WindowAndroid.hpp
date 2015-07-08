@@ -25,14 +25,8 @@ namespace Pocket {
         void PostRender();
         void Begin();
         void Loop();
-        
-    private:
-        int frameRate;
-        bool active;
-        bool paused;
-		int previousTime;
+    public:
         InputDevice inputDevice;
-        int GetMouseButtonIndex(int index);
         Vector2 ConvertMousePosition(int x, int y);
     };
 }
