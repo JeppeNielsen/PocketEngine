@@ -23,6 +23,8 @@ namespace Pocket {
         bool Update(IInputManagerIterator* inputManagers);
         void PreRender();
         void PostRender();
+        void Begin();
+        void Loop();
         
     private:
         int frameRate;

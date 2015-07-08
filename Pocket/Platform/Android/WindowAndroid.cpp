@@ -39,6 +39,8 @@ struct engine {
 	int32_t touchY;
 };
 
+static android_app* state;
+
 static engine* currentEngine = 0;
 
 
@@ -47,74 +49,6 @@ using namespace std;
 
 static WindowAndroid* staticWindow;
 
-
-void WindowAndroid::Create(int width, int height, bool fullScreen) {
-    staticWindow = this;
-    
-    LOGI("WindowAndroid::Begin %i", (size_t)staticWindow);
-    
-    
-    
- /*
-    frameRate = 60;
-    if (SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == 0) {
-		
-		SDL_Surface* screen = SDL_SetVideoMode (width, height, 0, SDL_OPENGL);
-		
-		if (screen != NULL) {
-			
-			previousTime = 0;
-			active = true;
-			paused = false;
-            screenSize = Vector2(width, height);
-            inputDevice.Initialize(3);
-			
-		} else {
-			cerr << "Could not set video mode: " << SDL_GetError () << endl;
-		}
-	} else {
-		cerr << "Could not initialize SDL: " << SDL_GetError () << endl;
-	}
-    */
-    
-    Window::Framebuffer = 0;//currentEngine->app->window;
-     
-    screenSize = Vector2(currentEngine->width, currentEngine->height);
-}
-
-void WindowAndroid::Destroy() {
-    
-}
-
-bool WindowAndroid::Update(IInputManagerIterator* inputManagers) {
-    /*SDL_Event event;
-    while (SDL_PollEvent (&event)) {
-        handleEvent (event);
-    }
-    */
-    //inputDevice.Update(inputManagers);
-    return true;
-}
-
-void WindowAndroid::PreRender() {
-    glViewport(0, 0, screenSize.x, screenSize.y);
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    //LOGI("width = %f, height = %f", screenSize.x, screenSize.y);
-}
-
-void WindowAndroid::PostRender() {
- 
-    eglSwapBuffers(currentEngine->display, currentEngine->surface);
-}
-
-Vector2 WindowAndroid::ConvertMousePosition(int x, int y) {
-    return Vector2(x, screenSize.y - y);
-}
-
-int WindowAndroid::GetMouseButtonIndex(int index) {
-    return 0;//index == SDL_BUTTON_LEFT ? 0 : (index == SDL_BUTTON_RIGHT ? 1 : 2);
-}
 
 
 
@@ -177,7 +111,7 @@ int init_display(struct engine* engine) {
 	context = eglCreateContext(display, config, NULL, attribList);
 
 	if (eglMakeCurrent(display, surface, surface, context) == EGL_FALSE) {
-		LOGW("Unable to eglMakeCurrent");
+		LOGI("Unable to eglMakeCurrent");
 		return -1;
 	}
 
@@ -276,15 +210,14 @@ void handle_cmd(struct android_app* app, int32_t cmd) {
 	}
 }
 
-
-extern "C" {
-void android_main(struct android_app* state) {
-	staticWindow = 0;
+void android_main(struct android_app* s) {
     app_dummy();
     
-    LOGI("android_main start");
+    staticWindow = 0;
     
-    engine engine;
+    state = s;
+    LOGI("WindowAndroid-1");
+     engine engine;
 
 	memset(&engine, 0, sizeof(engine));
 	state->userData = &engine;
@@ -293,6 +226,94 @@ void android_main(struct android_app* state) {
 	engine.app = state;
     
     currentEngine = &engine;
+    LOGI("WindowAndroid-4");
+    
+    main();
+    
+}
+
+//***************************
+
+
+void WindowAndroid::Create(int width, int height, bool fullScreen) {
+    staticWindow = this;
+    
+    LOGI("WindowAndroid::Begin %i", (size_t)staticWindow);
+    
+    
+    
+ /*
+    frameRate = 60;
+    if (SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == 0) {
+		
+		SDL_Surface* screen = SDL_SetVideoMode (width, height, 0, SDL_OPENGL);
+		
+		if (screen != NULL) {
+			
+			previousTime = 0;
+			active = true;
+			paused = false;
+            screenSize = Vector2(width, height);
+            inputDevice.Initialize(3);
+			
+		} else {
+			cerr << "Could not set video mode: " << SDL_GetError () << endl;
+		}
+	} else {
+		cerr << "Could not initialize SDL: " << SDL_GetError () << endl;
+	}
+    */
+    
+    Window::Framebuffer = 0;//currentEngine->app->window;
+     
+    screenSize = Vector2(currentEngine->width, currentEngine->height);
+}
+
+void WindowAndroid::Destroy() {
+    
+}
+
+
+
+
+bool WindowAndroid::Update(IInputManagerIterator* inputManagers) {
+    /*SDL_Event event;
+    while (SDL_PollEvent (&event)) {
+        handleEvent (event);
+    }
+    */
+    //inputDevice.Update(inputManagers);
+    return true;
+}
+
+void WindowAndroid::PreRender() {
+    glViewport(0, 0, screenSize.x, screenSize.y);
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+    //LOGI("width = %f, height = %f", screenSize.x, screenSize.y);
+}
+
+void WindowAndroid::PostRender() {
+ 
+    eglSwapBuffers(currentEngine->display, currentEngine->surface);
+}
+
+Vector2 WindowAndroid::ConvertMousePosition(int x, int y) {
+    return Vector2(x, screenSize.y - y);
+}
+
+int WindowAndroid::GetMouseButtonIndex(int index) {
+    return 0;//index == SDL_BUTTON_LEFT ? 0 : (index == SDL_BUTTON_RIGHT ? 1 : 2);
+}
+
+
+void WindowAndroid::Begin() {
+    LOGI("WindowAndroid-2");
+    
+    LOGI("WindowAndroid-3");
+    LOGI("WindowAndroid::Begin");
+    
+   int counter = 0;
     
 	// Read all pending events.
 	while (1) {
@@ -309,17 +330,37 @@ void android_main(struct android_app* state) {
 
 			// Check if we are exiting.
 			if (state->destroyRequested != 0) {
-				terminate_display(&engine);
+				terminate_display(currentEngine);
 				return;
 			}
 		}
+        
+        counter++;
+        if (counter<10) {
+            LOGI("loop staticWindow = %i", (size_t)staticWindow);
+        }
+        
+        if (staticWindow && counter>100) {
+           // staticWindow->Loop();
+        }
+        
+        //LOGI("WindowAndroid-5");
+        //Step();
         // Draw the current frame
 		//draw_frame(&engine);
         //LOGI("UPDATE");
+        
+        Step();
     }
-}
+    
 
 }
+
+void WindowAndroid::Loop() {
+    Step();
+}
+
+
 
 
 
