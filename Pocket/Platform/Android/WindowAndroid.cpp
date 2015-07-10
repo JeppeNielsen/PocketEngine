@@ -187,14 +187,14 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
         int id = AMotionEvent_getPointerId(event, iIndex);
         int xPos = AMotionEvent_getX(event, iIndex);
         int yPos = AMotionEvent_getY(event, iIndex);
-        LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+        //LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
         staticWindow->inputDevice.SetTouch(id, true, staticWindow->ConvertMousePosition(xPos, yPos));
 
     } else if (flags == AMOTION_EVENT_ACTION_POINTER_UP || flags == AMOTION_EVENT_ACTION_UP) {
         int id = AMotionEvent_getPointerId(event, iIndex);
         int xPos = AMotionEvent_getX(event, iIndex);
         int yPos = AMotionEvent_getY(event, iIndex);
-        LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+       // LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
         staticWindow->inputDevice.SetTouch(id, false, staticWindow->ConvertMousePosition(xPos, yPos));
     }
     
@@ -204,7 +204,7 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
             int xPos = AMotionEvent_getX(event, i);
             int yPos = AMotionEvent_getY(event, i);
             //LOGI("move: x %d\ty %d\n",engine->touchX,engine->touchY);
-            LOGI("MOVE: id: %d x:%d\ty:%d\n",id, xPos, yPos);
+            //LOGI("MOVE: id: %d x:%d\ty:%d\n",id, xPos, yPos);
             staticWindow->inputDevice.SetTouchPosition(id, staticWindow->ConvertMousePosition(xPos, yPos));
         }
     }
