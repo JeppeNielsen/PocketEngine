@@ -16,12 +16,12 @@ namespace Pocket {
         TextureComponent();
         ~TextureComponent();
         
-        Texture& Texture();
+        Pocket::Texture& Texture();
         void Reset();
     protected:
         void Clone(const TextureComponent& source);
         
     private:
-        class Texture texture;
+        class Pocket::Texture texture;
     };
 }

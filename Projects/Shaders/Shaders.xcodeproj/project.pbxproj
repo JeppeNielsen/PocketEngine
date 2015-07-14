@@ -11,6 +11,8 @@
 		720C541A1B45F9D00026FDAF /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C54181B45F9D00026FDAF /* Shader.cpp */; };
 		720C541C1B45FA230026FDAF /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C541B1B45FA230026FDAF /* Vertex.cpp */; };
 		720C541E1B45FE820026FDAF /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C541D1B45FE820026FDAF /* RenderSystem.cpp */; };
+		726883091B4C714A006FD4E1 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726883081B4C714A006FD4E1 /* test.cpp */; };
+		7268830C1B502792006FD4E1 /* ShaderCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268830A1B502792006FD4E1 /* ShaderCollection.cpp */; };
 		72B621CE1B31D6E2001007FC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B621CD1B31D6E2001007FC /* Cocoa.framework */; };
 		72B621D01B31D6E2001007FC /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B621CF1B31D6E2001007FC /* OpenGL.framework */; };
 		72B621D21B31D6E2001007FC /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B621D11B31D6E2001007FC /* OpenAL.framework */; };
@@ -370,6 +372,9 @@
 		720C541B1B45FA230026FDAF /* Vertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vertex.cpp; sourceTree = "<group>"; };
 		720C541D1B45FE820026FDAF /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystem.cpp; sourceTree = "<group>"; };
 		720C54231B46067E0026FDAF /* ObjectRenderer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjectRenderer.hpp; sourceTree = "<group>"; };
+		726883081B4C714A006FD4E1 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test.cpp; sourceTree = "<group>"; };
+		7268830A1B502792006FD4E1 /* ShaderCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCollection.cpp; sourceTree = "<group>"; };
+		7268830B1B502792006FD4E1 /* ShaderCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderCollection.hpp; sourceTree = "<group>"; };
 		72B621CA1B31D6E2001007FC /* Shaders.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Shaders.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72B621CD1B31D6E2001007FC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		72B621CF1B31D6E2001007FC /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -1212,6 +1217,7 @@
 			children = (
 				72BD0C911B4499B900CF5F94 /* Gfx */,
 				72B627C91B39D481001007FC /* main.cpp */,
+				726883081B4C714A006FD4E1 /* test.cpp */,
 			);
 			path = Shaders;
 			sourceTree = "<group>";
@@ -2497,6 +2503,8 @@
 				720C54131B45E27A0026FDAF /* VertexMesh.hpp */,
 				720C54141B45E27A0026FDAF /* VertexRenderer.hpp */,
 				720C54231B46067E0026FDAF /* ObjectRenderer.hpp */,
+				7268830A1B502792006FD4E1 /* ShaderCollection.cpp */,
+				7268830B1B502792006FD4E1 /* ShaderCollection.hpp */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -2795,6 +2803,7 @@
 				72B626E91B31D6EE001007FC /* btGImpactBvh.cpp in Sources */,
 				72B626DE1B31D6EE001007FC /* btStridingMeshInterface.cpp in Sources */,
 				72B626441B31D6EE001007FC /* Touchable.cpp in Sources */,
+				726883091B4C714A006FD4E1 /* test.cpp in Sources */,
 				72B626201B31D6EE001007FC /* SpineModel.cpp in Sources */,
 				72B626881B31D6EE001007FC /* b2PairManager.cpp in Sources */,
 				72B626B71B31D6EE001007FC /* btConvexPlaneCollisionAlgorithm.cpp in Sources */,
@@ -2926,6 +2935,7 @@
 				72B626C61B31D6EE001007FC /* btCapsuleShape.cpp in Sources */,
 				72B6270E1B31D6EE001007FC /* btSimpleDynamicsWorld.cpp in Sources */,
 				72B626C71B31D6EE001007FC /* btCollisionShape.cpp in Sources */,
+				7268830C1B502792006FD4E1 /* ShaderCollection.cpp in Sources */,
 				72B626B11B31D6EE001007FC /* btCollisionObject.cpp in Sources */,
 				72B626311B31D6EE001007FC /* ParticleUpdaterSystem.cpp in Sources */,
 				72B626581B31D6EE001007FC /* Atlas.cpp in Sources */,

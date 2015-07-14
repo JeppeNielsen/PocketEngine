@@ -9,8 +9,14 @@
 #include "StringHelper.hpp"
 #include <string>
 #include <locale>
+#ifndef ANDROID
 #include <codecvt>
+#else
+#include <stdlib.h>
+#include <bits/codecvt.h>
+#endif
 #include <iostream>
+
 using namespace Pocket;
 
 std::vector<std::string>& StringHelper::split(const std::string &s, char delim, std::vector<std::string> &elems) {

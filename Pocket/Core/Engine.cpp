@@ -5,7 +5,9 @@
 #include "../Debugging/Assert.hpp"
 #ifndef WIN32
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 #include "Thread.hpp"
+#endif
 #endif
 #endif
 #include "OpenGL.hpp"
@@ -68,7 +70,9 @@ bool Engine::Update(float dt) {
 	bool running = window->Update(rootState);
 #ifndef WIN32
 #ifndef EMSCRIPTEN
+#ifndef ANDROID
 	Thread::Update();
+#endif
 #endif
 #endif
 	rootState->DoUpdate(dt);

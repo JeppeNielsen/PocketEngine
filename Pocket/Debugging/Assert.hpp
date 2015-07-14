@@ -11,3 +11,4 @@ std::cerr << "Assertion `" #condition "` failed in " << __FUNCTION__ \
 
 					   std::exit(EXIT_FAILURE); \
 */
+

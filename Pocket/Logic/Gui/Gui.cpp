@@ -82,7 +82,7 @@ GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
 GameObject* Gui::CreateControl(GameObject* parent) {
     GameObject* control = CreatePivot(parent);
     control->AddComponent<Mesh>();
-    control->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+    control->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     control->AddComponent<Touchable>();
     control->AddComponent<Colorable>();
     control->AddComponent<Sizeable>();
@@ -115,7 +115,7 @@ GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string &sp
 GameObject* Gui::CreateClipper(Pocket::GameObject *parent, bool push) {
     GameObject* clipper = CreatePivot(parent);
     clipper->AddComponent<Mesh>(parent);
-    clipper->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+    clipper->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     clipper->GetComponent<Material>()->Clip = push ? 1 : 2;
     clipper->AddComponent<Sizeable>(parent);
     clipper->AddComponent<Sprite>(parent);
@@ -135,7 +135,7 @@ GameObject* Gui::CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &
     label->GetComponent<Transform>()->Position = position;
     label->AddComponent<Font>(font);
     label->AddComponent<Mesh>();
-    label->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+    label->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     label->AddComponent<Colorable>();
     label->AddComponent<Sizeable>()->Size = size;
     label->AddComponent<class Atlas>(atlas);

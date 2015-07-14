@@ -25,6 +25,7 @@
 		720C54631B4608500026FDAF /* TextureAtlas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C54561B4608500026FDAF /* TextureAtlas.cpp */; };
 		720C54641B4608500026FDAF /* TexturePacker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C54581B4608500026FDAF /* TexturePacker.cpp */; };
 		720C54651B4608500026FDAF /* Vertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720C545A1B4608500026FDAF /* Vertex.cpp */; };
+		7268830F1B54617D006FD4E1 /* ShaderCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268830D1B54617D006FD4E1 /* ShaderCollection.cpp */; };
 		72826F621B28CB3C00FD2B3A /* Bird.png in Resources */ = {isa = PBXBuildFile; fileRef = 72826F611B28CB3C00FD2B3A /* Bird.png */; };
 		72FFE2801B1F89F400494010 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FFE27F1B1F89F400494010 /* Cocoa.framework */; };
 		72FFE2821B1F89F400494010 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FFE2811B1F89F400494010 /* OpenGL.framework */; };
@@ -401,6 +402,8 @@
 		720C545B1B4608500026FDAF /* Vertex.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Vertex.hpp; sourceTree = "<group>"; };
 		720C545C1B4608500026FDAF /* VertexMesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VertexMesh.hpp; sourceTree = "<group>"; };
 		720C545D1B4608500026FDAF /* VertexRenderer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VertexRenderer.hpp; sourceTree = "<group>"; };
+		7268830D1B54617D006FD4E1 /* ShaderCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCollection.cpp; sourceTree = "<group>"; };
+		7268830E1B54617D006FD4E1 /* ShaderCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderCollection.hpp; sourceTree = "<group>"; };
 		72826F611B28CB3C00FD2B3A /* Bird.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Bird.png; sourceTree = "<group>"; };
 		72FFE27C1B1F89F400494010 /* FlappyBird.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlappyBird.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72FFE27F1B1F89F400494010 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -1224,6 +1227,8 @@
 				720C54511B4608500026FDAF /* ObjectRenderer.hpp */,
 				720C54521B4608500026FDAF /* Shader.cpp */,
 				720C54531B4608500026FDAF /* Shader.hpp */,
+				7268830D1B54617D006FD4E1 /* ShaderCollection.cpp */,
+				7268830E1B54617D006FD4E1 /* ShaderCollection.hpp */,
 				720C54541B4608500026FDAF /* Texture.cpp */,
 				720C54551B4608500026FDAF /* Texture.hpp */,
 				720C54561B4608500026FDAF /* TextureAtlas.cpp */,
@@ -2778,6 +2783,7 @@
 				72FFE77A1B1F8A1000494010 /* btConcaveShape.cpp in Sources */,
 				72FFE7C01B1F8A1000494010 /* Bullet-C-API.cpp in Sources */,
 				72FFE74F1B1F8A1000494010 /* b2MouseJoint.cpp in Sources */,
+				7268830F1B54617D006FD4E1 /* ShaderCollection.cpp in Sources */,
 				72FFE79F1B1F8A1000494010 /* gim_box_set.cpp in Sources */,
 				72FFE7B21B1F8A1000494010 /* btGearConstraint.cpp in Sources */,
 				72FFE7FA1B1F8A1000494010 /* jpeg_decoder.cpp in Sources */,

@@ -120,7 +120,7 @@ class TestShader : public GameState<TestShader> {
             auto o = world.CreateObject();
             o->AddComponent<Transform>()->Position = {0,0,i*-2.0f};
             o->AddComponent<Material>()->Shader = &colorShader;// i%2==0 ? &colorShader : &blueShader;
-            o->GetComponent<Material>()->BlendMode = i==1 ? BlendMode::Opaque : BlendMode::Opaque;
+            o->GetComponent<Material>()->BlendMode = i==1 ? BlendModeType::Opaque : BlendModeType::Opaque;
             o->AddComponent<TextureComponent>(texture);
             
             auto& mesh = o->AddComponent<Mesh>()->GetMesh<Vertex>();
@@ -198,7 +198,7 @@ class TestShader : public GameState<TestShader> {
 
 
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<TestShader>();
     return 0;

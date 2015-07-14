@@ -172,7 +172,7 @@ public:
                 pipe->AddComponent<Transform>()->Position = topPosition;
                 pipe->GetComponent<Transform>()->Anchor = {0,topHeight*0.5f,0};
                 pipe->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {0.2f,topHeight}, Colour::White());
-                pipe->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+                pipe->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
                 pipe->AddComponent<TextureComponent>(texture);
                 }
                 
@@ -184,7 +184,7 @@ public:
                 auto& verts = pipe->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
                 SwapV(verts, 0, 3);
                 SwapV(verts, 1, 2);
-                pipe->AddComponent<Material>()->BlendMode = BlendMode::Alpha;
+                pipe->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
                 pipe->AddComponent<TextureComponent>(texture);
                 }
             }
@@ -256,7 +256,7 @@ public:
         bird->AddComponent<Flappable>()->force = 0.85f;
         bird->AddComponent<VelocityRotator>()->LerpSpeed = 8.0f;
         bird->AddComponent<TextureComponent>()->Texture().LoadFromPng("Bird.png");
-        bird->GetComponent<Material>()->BlendMode = BlendMode::Alpha;
+        bird->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
         
         GameObject* background = world.CreateObject();
         background->Parent = camera;

@@ -14,6 +14,8 @@
 #include "VertexMesh.hpp"
 #include "GameObject.hpp"
 #include "Matrix4x4.hpp"
+#include <algorithm>
+
 
 namespace Pocket {
 
@@ -24,7 +26,7 @@ public:
     virtual ~IShader() { }
 };
 
-template<class Vertex>
+template<class V>
 class Shader : public IShader {
 public:
     Shader() : viewProjectionUniform(-1), shaderProgram(0), vertexShader(0), fragmentShader(0) { }
@@ -42,7 +44,7 @@ public:
     bool Create(std::string vertexShader, std::string fragmentShader) {
         Clear();
         
-        description = Vertex::Description;
+        description = V::Description;
         
         if (!CreateShaders(vertexShader, fragmentShader)) {
             return false;
@@ -257,7 +259,7 @@ private:
         return shader;
     }
 
-    VertexDescription<Vertex> description;
+    VertexDescription<V> description;
     
     typedef std::vector<VertexAttribute> Attributes;
     Attributes attributes;
@@ -284,9 +286,6 @@ public:
         glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection);
     }   
 
-    virtual void RenderObject(VertexRenderer<Vertex>& renderer, const typename VertexMesh<Vertex>::Vertices& vertices, const IVertexMesh::Triangles& triangles, GameObject* object, const Matrix4x4& world) { }
+    virtual void RenderObject(Pocket::VertexRenderer<V>& renderer, const typename Pocket::VertexMesh<V>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles,Pocket::GameObject* object, const Pocket::Matrix4x4& world);
 };
-
-
-
 }

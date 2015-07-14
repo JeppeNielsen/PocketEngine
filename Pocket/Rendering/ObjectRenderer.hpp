@@ -46,12 +46,12 @@ public:
     const float* viewProjection;
 };
 
-template<class Vertex>
+template<class V>
 class ObjectRenderer : public IObjectRenderer {
 private:
-    VertexRenderer<Vertex> renderer;
-    Shader<Vertex>* currentShader;
-    BlendMode currentBlendMode;
+    VertexRenderer<V> renderer;
+    Shader<V>* currentShader;
+    BlendModeType currentBlendMode;
     TextureComponent* currentTexture;
     Clipper clipper;
     int objectsRendered;
@@ -61,7 +61,7 @@ public:
     void Begin(bool isTransparent) override {
         currentShader = 0;
         renderer.BeginLoop();
-        currentBlendMode = BlendMode::Opaque;
+        currentBlendMode = BlendModeType::Opaque;
         objectsRendered = 0;
         clipper.UseDepth = !isTransparent;
         currentTexture = (TextureComponent*)-1;
@@ -77,7 +77,7 @@ public:
     void RenderObject(const VisibleObject& visibleObject) override {
         if (visibleObject.shader != currentShader) {
             renderer.Render();
-            currentShader = static_cast<Shader<Vertex>*>(visibleObject.shader);
+            currentShader = static_cast<Shader<V>*>(visibleObject.shader);
             currentShader->Use();
             currentShader->SetViewProjection(viewProjection);
         }
@@ -100,7 +100,7 @@ public:
             }
         }
         
-        const VertexMesh<Vertex>& mesh = visibleObject.mesh->ConstMesh<Vertex>();
+        const VertexMesh<V>& mesh = visibleObject.mesh->ConstMesh<V>();
         currentShader->RenderObject(renderer,
             mesh.vertices,
             mesh.triangles,
@@ -123,7 +123,7 @@ public:
         if (visibleObject.material->BlendMode.GetValue()!=currentBlendMode) {
             currentBlendMode = visibleObject.material->BlendMode.GetValue();
             renderer.Render();
-             if (currentBlendMode == BlendMode::Alpha ) {
+             if (currentBlendMode == BlendModeType::Alpha ) {
                 glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             } else {
                 glBlendFunc (GL_SRC_ALPHA, GL_ONE);

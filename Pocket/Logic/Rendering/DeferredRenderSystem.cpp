@@ -158,7 +158,7 @@ void DeferredRenderSystem::RenderCamera(GameObject* cameraObject) {
             continue;
         }
         
-        if (visibleObject->material->BlendMode.GetValue() == BlendMode::None) {
+        if (visibleObject->material->BlendMode.GetValue() == BlendModeType::None) {
             opaqueObjects.push_back(visibleObject);
         } else {
             
@@ -280,7 +280,7 @@ void DeferredRenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, 
     
     if (useTransparency) {
         blendMode = visibleObjects[0]->material->BlendMode.GetValue();
-        if (blendMode == BlendMode::Alpha ) {
+        if (blendMode == BlendModeType::Alpha ) {
             ASSERT_GL(glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         } else {
            ASSERT_GL( glBlendFunc (GL_SRC_ALPHA, GL_ONE));
@@ -322,7 +322,7 @@ void DeferredRenderSystem::RenderVisibleObjects(const BoundingFrustum& frustum, 
                 
                 renderer.Render();
                 
-                if (blendMode == BlendMode::Alpha ) {
+                if (blendMode == BlendModeType::Alpha ) {
                     ASSERT_GL(glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
                 } else {
                    ASSERT_GL( glBlendFunc (GL_SRC_ALPHA, GL_ONE));

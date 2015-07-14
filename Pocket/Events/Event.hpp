@@ -10,6 +10,10 @@
 #include <vector>
 #include "Delegate.hpp"
 
+#ifdef ANDROID
+#include <stdlib.h>
+#endif
+
 namespace Pocket {
    
 template<class T>

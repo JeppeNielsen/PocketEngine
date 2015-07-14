@@ -24,12 +24,22 @@ void RenderSystem::Initialize() {
     AddComponent<Transform>();
     AddComponent<Mesh>();
     AddComponent<Material>();
+    Shaders.Initialize();
+    DefaultShader = &Shaders.Colored;
+    DefaultTexturedShader = &Shaders.Textured;
 }
 
 void RenderSystem::AddedToWorld(GameWorld& world) {
     cameras = world.CreateSystem<CameraSystem>();
     meshOctreeSystem = world.CreateSystem<OctreeSystem>();
     meshOctreeSystem->AddComponent<Material>();
+}
+
+void RenderSystem::ObjectAdded(GameObject *object) {
+    Material* material = object->GetComponent<Material>();
+    if (!material->Shader()) {
+        material->Shader = object->GetComponent<TextureComponent>() ? DefaultTexturedShader : DefaultShader;
+    }
 }
 
 OctreeSystem& RenderSystem::Octree() {
@@ -81,7 +91,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         float fInvW = 1.0f / ( viewProjection[3][0] * distanceToCameraPosition.x + viewProjection[3][1] * distanceToCameraPosition.y + viewProjection[3][2] * distanceToCameraPosition.z + viewProjection[3][3] );
         float distanceToCamera = ( viewProjection[2][0] * distanceToCameraPosition.x + viewProjection[2][1] * distanceToCameraPosition.y + viewProjection[2][2] * distanceToCameraPosition.z + viewProjection[2][3] ) * fInvW;
         
-        VisibleObjects& visibleObjects = material->BlendMode.GetValue() == BlendMode::Opaque ? opaqueObjects : transparentObjects;
+        VisibleObjects& visibleObjects = material->BlendMode.GetValue() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
         
         visibleObjects.push_back({
             object,
