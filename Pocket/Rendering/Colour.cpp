@@ -49,7 +49,7 @@ Colour::Colour(float colorValues, float a)
     this->r = (Component)(colorValues * 255.0f);
 	this->g = (Component)(colorValues * 255.0f);
 	this->b = (Component)(colorValues * 255.0f);
-	this->a = (Component)(colorValues * 255.0f);
+	this->a = (Component)(a * 255.0f);
 }
 
 Colour::Colour(float colorValues)
