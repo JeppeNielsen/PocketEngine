@@ -24,12 +24,22 @@ void RenderSystem::Initialize() {
     AddComponent<Transform>();
     AddComponent<Mesh>();
     AddComponent<Material>();
+    Shaders.Initialize();
+    DefaultShader = &Shaders.Colored;
+    DefaultTexturedShader = &Shaders.Textured;
 }
 
 void RenderSystem::AddedToWorld(GameWorld& world) {
     cameras = world.CreateSystem<CameraSystem>();
     meshOctreeSystem = world.CreateSystem<OctreeSystem>();
     meshOctreeSystem->AddComponent<Material>();
+}
+
+void RenderSystem::ObjectAdded(GameObject *object) {
+    Material* material = object->GetComponent<Material>();
+    if (!material->Shader()) {
+        material->Shader = object->GetComponent<TextureComponent>() ? DefaultTexturedShader : DefaultShader;
+    }
 }
 
 OctreeSystem& RenderSystem::Octree() {

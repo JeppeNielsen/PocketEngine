@@ -13,6 +13,7 @@
 #include "Camera.hpp"
 #include "OctreeSystem.hpp"
 #include "ObjectRenderer.hpp"
+#include "ShaderCollection.hpp"
 
 namespace Pocket {
 
@@ -29,6 +30,12 @@ public:
     void RenderVisibleObjects(const VisibleObjects& visibleObjects);
     void RenderTransparentVisibleObjects(const VisibleObjects& visibleObjects);
     void Render();
+    
+    void ObjectAdded(GameObject* object);
+    
+    ShaderCollection Shaders;
+    IShader* DefaultShader;
+    IShader* DefaultTexturedShader;
 private:
     static bool SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b);
     static bool SortTransparentObjects(const VisibleObject& a, const VisibleObject& b);
