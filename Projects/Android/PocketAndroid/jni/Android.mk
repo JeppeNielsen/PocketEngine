@@ -172,9 +172,10 @@ $(POCKET)/Math/Vector3.cpp \
 \
 $(POCKET)/Packing/RectPacker.cpp \
 \
-$(POCKET)/Platform/Android/WindowAndroid.cpp \
+$(POCKET)/Platform/Android/File.cpp \
 $(POCKET)/Platform/Android/FileReader.cpp \
 $(POCKET)/Platform/Android/GamePadManager.cpp \
+$(POCKET)/Platform/Android/WindowAndroid.cpp \
 \
 $(POCKET)/PngLib/jpeg_decoder.cpp \
 $(POCKET)/PngLib/lodepng.cpp \
@@ -184,6 +185,7 @@ $(POCKET)/Profiler/Profiler.cpp \
 $(POCKET)/Rendering/Clipper.cpp \
 $(POCKET)/Rendering/Colour.cpp \
 $(POCKET)/Rendering/Shader.cpp \
+$(POCKET)/Rendering/ShaderCollection.cpp \
 $(POCKET)/Rendering/Texture.cpp \
 $(POCKET)/Rendering/TextureAtlas.cpp \
 $(POCKET)/Rendering/TexturePacker.cpp \
