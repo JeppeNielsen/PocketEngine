@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXFileReference section */
+		722E06BD1B558CD900E1F484 /* ShaderCollection.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCollection.cpp; sourceTree = "<group>"; };
+		722E06BE1B558CD900E1F484 /* ShaderCollection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShaderCollection.hpp; sourceTree = "<group>"; };
+		722E06C21B56C0E900E1F484 /* File.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = File.hpp; sourceTree = "<group>"; };
+		722E06CB1B56E31600E1F484 /* File.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = File.cpp; sourceTree = "<group>"; };
+		722E06CC1B56E33400E1F484 /* File.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = File.mm; sourceTree = "<group>"; };
 		7292945A1B470F25001191BD /* AndroidManifest.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = AndroidManifest.xml; sourceTree = "<group>"; };
 		7292945C1B470F25001191BD /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
-		7292945D1B470F25001191BD /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7292945E1B470F25001191BD /* project.properties */ = {isa = PBXFileReference; lastKnownFileType = text; path = project.properties; sourceTree = "<group>"; };
 		729294611B471146001191BD /* GameComponent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameComponent.cpp; sourceTree = "<group>"; };
 		729294621B471146001191BD /* GameComponent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameComponent.hpp; sourceTree = "<group>"; };
@@ -49,7 +53,6 @@
 		729294861B471146001191BD /* Collection.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Collection.hpp; sourceTree = "<group>"; };
 		729294871B471146001191BD /* DirtyProperty.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DirtyProperty.hpp; sourceTree = "<group>"; };
 		729294881B471146001191BD /* FileReader.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FileReader.hpp; sourceTree = "<group>"; };
-		729294891B471146001191BD /* FileReader.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = FileReader.mm; sourceTree = "<group>"; };
 		7292948A1B471146001191BD /* ICellItem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ICellItem.cpp; sourceTree = "<group>"; };
 		7292948B1B471146001191BD /* ICellItem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ICellItem.hpp; sourceTree = "<group>"; };
 		7292948C1B471146001191BD /* IPointable.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = IPointable.cpp; sourceTree = "<group>"; };
@@ -954,7 +957,6 @@
 		729298671B471147001191BD /* miniz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		729298691B4712F3001191BD /* WindowAndroid.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WindowAndroid.cpp; sourceTree = "<group>"; };
 		7292986A1B4712F3001191BD /* WindowAndroid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = WindowAndroid.hpp; sourceTree = "<group>"; };
-		7292986B1B471373001191BD /* pocket.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pocket.cpp; sourceTree = "<group>"; };
 		7292986D1B47144E001191BD /* Application.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Application.mk; sourceTree = "<group>"; };
 		7292986E1B47253B001191BD /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		729298721B49C315001191BD /* FileReader.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FileReader.cpp; sourceTree = "<group>"; };
@@ -985,8 +987,6 @@
 			children = (
 				7292986D1B47144E001191BD /* Application.mk */,
 				7292945C1B470F25001191BD /* Android.mk */,
-				7292945D1B470F25001191BD /* main.c */,
-				7292986B1B471373001191BD /* pocket.cpp */,
 				7292986E1B47253B001191BD /* main.cpp */,
 			);
 			path = jni;
@@ -1077,7 +1077,6 @@
 				729294861B471146001191BD /* Collection.hpp */,
 				729294871B471146001191BD /* DirtyProperty.hpp */,
 				729294881B471146001191BD /* FileReader.hpp */,
-				729294891B471146001191BD /* FileReader.mm */,
 				7292948A1B471146001191BD /* ICellItem.cpp */,
 				7292948B1B471146001191BD /* ICellItem.hpp */,
 				7292948C1B471146001191BD /* IPointable.cpp */,
@@ -1097,6 +1096,7 @@
 				7292949A1B471146001191BD /* Timeline.hpp */,
 				7292949B1B471146001191BD /* Triangulator.cpp */,
 				7292949C1B471146001191BD /* Triangulator.hpp */,
+				722E06C21B56C0E900E1F484 /* File.hpp */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -2250,6 +2250,7 @@
 		7292978E1B471147001191BD /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				722E06CC1B56E33400E1F484 /* File.mm */,
 				7292978F1B471147001191BD /* AppDelegate.h */,
 				729297901B471147001191BD /* AppDelegate.mm */,
 				729297911B471147001191BD /* BigButtonManager.cpp */,
@@ -2309,6 +2310,8 @@
 				729297AF1B471147001191BD /* ObjectRenderer.hpp */,
 				729297B01B471147001191BD /* Shader.cpp */,
 				729297B11B471147001191BD /* Shader.hpp */,
+				722E06BD1B558CD900E1F484 /* ShaderCollection.cpp */,
+				722E06BE1B558CD900E1F484 /* ShaderCollection.hpp */,
 				729297B21B471147001191BD /* Texture.cpp */,
 				729297B31B471147001191BD /* Texture.hpp */,
 				729297B41B471147001191BD /* TextureAtlas.cpp */,
@@ -2673,10 +2676,11 @@
 		729298681B4712DF001191BD /* Android */ = {
 			isa = PBXGroup;
 			children = (
-				729298691B4712F3001191BD /* WindowAndroid.cpp */,
-				7292986A1B4712F3001191BD /* WindowAndroid.hpp */,
+				722E06CB1B56E31600E1F484 /* File.cpp */,
 				729298721B49C315001191BD /* FileReader.cpp */,
 				729298741B49C34A001191BD /* GamePadManager.cpp */,
+				729298691B4712F3001191BD /* WindowAndroid.cpp */,
+				7292986A1B4712F3001191BD /* WindowAndroid.hpp */,
 			);
 			path = Android;
 			sourceTree = "<group>";
