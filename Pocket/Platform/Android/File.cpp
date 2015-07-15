@@ -47,21 +47,15 @@ bool File::Load(std::string path) {
     */
     
     LOGI("Trying to load file : %s", filename);
-    
     AAsset* asset = AAssetManager_open(mgr, filename, AASSET_MODE_BUFFER);
     if (!asset) {
         LOGI("Asset not found %s", filename);
         return false;
     }
+    LOGI("Asset loaded %s", filename);
     userData = asset;
-    
-    LOGI("GetData 1 : %s", filename);
-    
     off_t size = AAsset_getLength(asset);
-    
-    LOGI("GetData 2 : size = %i", (int)size);
     data = (unsigned char*)AAsset_getBuffer(asset);
-    LOGI("GetData 3 : %s", filename);
     this->size = (size_t)size;
     return true;
 }
