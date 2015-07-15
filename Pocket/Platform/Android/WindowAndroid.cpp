@@ -32,6 +32,7 @@ struct engine {
 	EGLDisplay display;
 	EGLSurface surface;
 	EGLContext context;
+    EGLConfig config;
 	int32_t width;
 	int32_t height;
 
@@ -49,16 +50,9 @@ using namespace std;
 
 static WindowAndroid* staticWindow;
 
-
-
-
-
+static bool isRunning;
 
 //********************************
-
-
-
-
 
 /**
  * Initialize an EGL context for the current display.
@@ -124,6 +118,7 @@ int init_display(struct engine* engine) {
 	engine->surface = surface;
 	engine->width = w;
 	engine->height = h;
+    engine->config = config;
 
 	// Initialize GL state.
 	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
@@ -171,8 +166,9 @@ void terminate_display(struct engine* engine) {
  * Process the next input event.
  */
 int32_t handle_input(struct android_app* app, AInputEvent* event) {
-	struct engine* engine = (struct engine*)app->userData;
-    
+    if (AInputEvent_getType(event) == 1) return 0; // don't use back button
+    struct engine* engine = (struct engine*)app->userData;
+
     int numTouches = AMotionEvent_getPointerCount(event);
     
     int32_t iAction = AMotionEvent_getAction(event);
@@ -250,27 +246,54 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
  * Process the next main command.
  */
 
+ static bool hasMainBeenCalled;
+
 void handle_cmd(struct android_app* app, int32_t cmd) {
 	struct engine* engine = (struct engine*)app->userData;
 	switch (cmd) {
 	case APP_CMD_SAVE_STATE:
 		break;
 	case APP_CMD_INIT_WINDOW:
-		// The window is being shown, get it ready.
-		if (engine->app->window != NULL) {
-			init_display(engine);
+        
+        // The window is being shown, get it ready.
+        if (engine->app->window != NULL) {
+            if (hasMainBeenCalled) {
+                currentEngine->surface = eglCreateWindowSurface(currentEngine->display, currentEngine->config, currentEngine->app->window, NULL);
+                if (eglMakeCurrent(currentEngine->display, currentEngine->surface, currentEngine->surface, currentEngine->context) == EGL_FALSE) {
+                    LOGI("Unable to eglMakeCurrent");
+                    return;
+                }
+                return;
+            }
+        
+            LOGI("APP_CMD_INIT_WINDOW");
+            init_display(engine);
+        }
+		break;
+    case APP_CMD_GAINED_FOCUS:
+        isRunning = true;
+        staticWindow->ResetDeltaTime = true;
+        
+        if (hasMainBeenCalled) {
+            return;
+        }
+        if (engine->app->window != NULL) {
+            hasMainBeenCalled = true;
             main();
             LOGI("main %i", (size_t)staticWindow);
 		}
-		break;
-    case APP_CMD_GAINED_FOCUS:
+        
+        
         break;
 	case APP_CMD_TERM_WINDOW:
+        if (hasMainBeenCalled) {
+            return;
+        }
 		// The window is being hidden or closed, clean it up.
-		terminate_display(engine);
+		//terminate_display(engine);
 		break;
 	case APP_CMD_LOST_FOCUS:
-		draw_frame(engine);
+        isRunning = false;
 		break;
 	}
 }
@@ -279,6 +302,8 @@ void android_main(struct android_app* s) {
     app_dummy();
     
     staticWindow = 0;
+    hasMainBeenCalled = false;
+    isRunning = false;
     
     state = s;
     LOGI("WindowAndroid-1");
@@ -290,22 +315,27 @@ void android_main(struct android_app* s) {
 	state->onInputEvent = handle_input;
 	engine.app = state;
     
+    if (engine.app->activity->assetManager) {
+        LOGI("assetManager-4");
+    }
+    
+    
     currentEngine = &engine;
     LOGI("WindowAndroid-4");
-    
     main();
-    
 }
 
 //***************************
 
+void* WindowAndroid::assetManager = 0;
 
 void WindowAndroid::Create(int width, int height, bool fullScreen) {
+
     staticWindow = this;
     
     LOGI("WindowAndroid::Begin %i", (size_t)staticWindow);
     
-    
+    assetManager = currentEngine->app->activity->assetManager;
     
  /*
     frameRate = 60;
@@ -384,11 +414,21 @@ void WindowAndroid::Begin() {
 
 			// Check if we are exiting.
 			if (state->destroyRequested != 0) {
-				terminate_display(currentEngine);
+				hasMainBeenCalled = false;
+                terminate_display(currentEngine);
 				return;
 			}
 		}
-        Step();
+        
+        static int counter = 0;
+        
+        if (counter<10) {
+            LOGI("LOOP %i", (int)this);
+        }
+        counter++;
+        if (isRunning) {
+            Step();
+        }
     }
 }
 

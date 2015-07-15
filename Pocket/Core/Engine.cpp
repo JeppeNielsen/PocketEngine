@@ -40,7 +40,7 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
 
 void Engine::Loop(bool* exit) {
         
-    float targetDelta = 1.0f / 60.0f;
+    static float targetDelta = 1.0f / 60.0f;
     
     float delta = (float)timer->End();
     if (firstFrame) {
@@ -50,6 +50,10 @@ void Engine::Loop(bool* exit) {
         firstFrame = false;
     } else {
         if (delta>0.5f) delta = 0.5f;
+    }
+    if (window->ResetDeltaTime) {
+        window->ResetDeltaTime = false;
+        delta = targetDelta;
     }
     timer->Begin();
     //if (gameStateManager->CheckForChanges()) {

@@ -25,6 +25,7 @@
 using namespace Pocket;
 
 Window::Window() {
+    ResetDeltaTime = false;
 }
 
 Window::~Window() {

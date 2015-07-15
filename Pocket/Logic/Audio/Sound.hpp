@@ -45,7 +45,7 @@ namespace Pocket {
     private:
         bool isBigEndian();
         int convertToInt(char* buffer,int len);
-        char* LoadWAV(const char* filename, int& chan, int& samplerate, int& bps, int& size);
+        char* LoadWAV(std::string filename, int& chan, int& samplerate, int& bps, int& size);
         void CreateALBuffer();
     
         char* soundData;

@@ -94,7 +94,7 @@ AddComponent<C5>(); \
 #define _SYSTEM_START(NAME) \
 class NAME : public GameSystem { \
 friend class GameWorld; \
-protected: \
+public: \
 
 #define _SYSTEM_1(NAME, C1) \
 _SYSTEM_START(NAME) \

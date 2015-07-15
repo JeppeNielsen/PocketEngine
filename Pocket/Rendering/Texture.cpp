@@ -3,6 +3,7 @@
 #include "FileReader.hpp"
 #include "jpeg_decoder.h"
 #include <iostream>
+#include "File.hpp"
 
 using namespace Pocket;
 
@@ -31,56 +32,28 @@ GLuint Texture::GetHandle() {
 
 
 void Texture::LoadFromPng(std::string filename) {
-	std::vector<unsigned char> buffer;
-	LodePNG::loadFile(buffer, FileReader::GetFile(filename));
-	if (buffer.empty()) return;
-	LodePNG::Decoder decoder;
+    File file;
+    if (!file.Load(filename)) {
+        return;
+    }
+    LodePNG::Decoder decoder;
 	std::vector<unsigned char> image;
-	decoder.decode(image, buffer);
+	decoder.decode(image, (const unsigned char*)file.Data(), file.Size());
 	CreateFromBuffer(&image[0], (int)decoder.getWidth(), (int)decoder.getHeight(), GL_RGBA);
 }
 
 
 void Texture::LoadFromJpeg(std::string filename) {
-    
-    size_t size;
-    char *buf;
-    FILE *f;
-    
-    
-    f = fopen(FileReader::GetFile(filename).c_str(), "rb");
-    if (!f) {
-        printf("Error opening the input file.\n");
+    File file;
+    if (!file.Load(filename)) {
         return;
     }
-    
-    fseek(f, 0, SEEK_END);
-    size = ftell(f);
-    buf = (char*)malloc(size);
-    fseek(f, 0, SEEK_SET);
-    fread(buf, 1, size, f);
-    fclose(f);
-    
-    /*
-    fseek (f, 0, SEEK_END);
-    size=ftell (f);
-    fseek (f, 0, SEEK_SET);
-    char* data = new char[size];
-    fread(data,size,1,f);
-    delete data;
-    fclose(f);
-     */
-    
     jpgd::jpeg_decoder_mem_stream memoryStream;
-    memoryStream.open((unsigned char*)buf, (unsigned int)size);
-    
+    memoryStream.open(file.Data(), (unsigned int)file.Size());
     int actualComps;
-    
     unsigned char* pixels = jpgd::decompress_jpeg_image_from_stream(&memoryStream, &width, &height, &actualComps, 3);
-    
     std::cout<< " trying to load jpeg image w: " << width << " h: " << height << std::endl;
     std::cout<< " pixels: " << pixels << std::endl;
-    
     CreateFromBuffer(pixels, width, height, GL_RGB);
 }
 

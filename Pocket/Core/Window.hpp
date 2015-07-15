@@ -25,6 +25,8 @@ namespace Pocket {
         
         static unsigned int Framebuffer;
         
+        bool ResetDeltaTime;
+        
     protected:
         
         bool Step();

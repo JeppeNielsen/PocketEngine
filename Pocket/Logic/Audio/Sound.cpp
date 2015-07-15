@@ -12,6 +12,10 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include "File.hpp"
 
 using namespace Pocket;
 
@@ -36,10 +40,7 @@ void Sound::Reset() {
 }
 
 bool Sound::LoadFromWav(std::string filename) {
-    
-    filename = FileReader::GetFile(filename);
-    
-    soundData = LoadWAV(filename.c_str(), channel, sampleRate, bps, size);
+    soundData = LoadWAV(filename, channel, sampleRate, bps, size);
     if (!soundData) {
         std::cout << " '" << filename << "' is not a valid WAVE file"  << std::endl;
         return false;
@@ -68,10 +69,19 @@ int Sound::convertToInt(char* buffer,int len)
     return a;
 }
 
-char* Sound::LoadWAV(const char* filename, int& chan, int& samplerate, int& bps, int& size)
+char* Sound::LoadWAV(std::string filename, int& chan, int& samplerate, int& bps, int& size)
 {
+    File file;
+    if (!file.Load(filename)) {
+        return 0;
+    }
+
     char buffer[4];
-    std::ifstream in(filename,std::ios::binary);
+
+    std::istringstream in;
+    in.rdbuf()->pubsetbuf((char*)file.Data(),file.Size());
+
+    //std::ifstream in(filename,std::ios::binary);
     in.read(buffer,4);
     if(strncmp(buffer,"RIFF",4)!=0)
     {

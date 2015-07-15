@@ -13,6 +13,7 @@
 #include "TransformHierarchy.hpp"
 #include "MathHelper.hpp"
 #include "SpineAnimatorSystem.hpp"
+#include "File.hpp"
 
 using namespace Pocket;
 
@@ -77,7 +78,10 @@ GameObject* SpineFactory::CreateModel(Pocket::GameObject *atlas, GameObject* ske
 
 GameObject* SpineFactory::LoadSkeleton(std::string filename) {
 
-    std::string json = FileReader::ReadAllText(filename);
+    File file;
+    if (!file.Load(filename)) return 0;
+
+    std::string json = file.GetDataAsText();
     
     //std::cout<<json<<std::endl;
     
@@ -215,7 +219,10 @@ void SpineFactory::ParseImage(std::string name, SpineSkeleton::Skin& skin, minij
 
 bool SpineFactory::LoadAnimations(std::string filename, SpineAnimationCollection& animations) {
     
-    std::string json = FileReader::ReadAllText(filename);
+    File file;
+    if (!file.Load(filename)) return 0;
+
+    std::string json = file.GetDataAsText();
     const char* jsonCString = json.c_str();
     
     minijson::value root;

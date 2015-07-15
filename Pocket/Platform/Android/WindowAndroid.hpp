@@ -28,5 +28,8 @@ namespace Pocket {
     public:
         InputDevice inputDevice;
         Vector2 ConvertMousePosition(int x, int y);
+        
+        static void* assetManager;
+        
     };
 }
