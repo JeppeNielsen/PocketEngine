@@ -19,17 +19,13 @@ namespace Pocket {
 	{
     public:
         void Create(int width, int height, bool fullScreen);
-        void Destroy();
         bool Update(IInputManagerIterator* inputManagers);
         void PreRender();
         void PostRender();
         void Begin();
-        void Loop();
     public:
         InputDevice inputDevice;
         Vector2 ConvertMousePosition(int x, int y);
-        
         static void* assetManager;
-        
     };
 }

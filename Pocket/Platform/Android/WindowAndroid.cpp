@@ -25,6 +25,8 @@
 
 #include "WindowAndroid.hpp"
 
+using namespace Pocket;
+using namespace std;
 
 struct engine {
     android_app* app;
@@ -41,23 +43,11 @@ struct engine {
 };
 
 static android_app* state;
-
 static engine* currentEngine = 0;
-
-
-using namespace Pocket;
-using namespace std;
-
 static WindowAndroid* staticWindow;
-
 static bool isRunning;
+static bool hasMainBeenCalled;
 
-//********************************
-
-/**
- * Initialize an EGL context for the current display.
- * TODO tidy this up, currently it's mostly Google example code
- */
 int init_display(struct engine* engine) {
 
 	// Setup OpenGL ES 2
@@ -120,32 +110,9 @@ int init_display(struct engine* engine) {
 	engine->height = h;
     engine->config = config;
 
-	// Initialize GL state.
-	//glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST);
-	//glEnable(GL_CULL_FACE);
-	//glDisable(GL_DEPTH_TEST);
-	//glViewport(0, 0, w, h);
-
 	return 0;
 }
 
-/**
- * Just the current frame in the display.
- */
-void draw_frame(struct engine* engine) {
-	// No display.
-	if (engine->display == NULL) {
-		return;
-	}
-
-	glClearColor(255,0,0, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
-	eglSwapBuffers(engine->display, engine->surface);
-}
-
-/**
- * Tear down the EGL context currently associated with the display.
- */
 void terminate_display(struct engine* engine) {
 	if (engine->display != EGL_NO_DISPLAY) {
 		eglMakeCurrent(engine->display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
@@ -162,9 +129,6 @@ void terminate_display(struct engine* engine) {
 	engine->surface = EGL_NO_SURFACE;
 }
 
-/**
- * Process the next input event.
- */
 int32_t handle_input(struct android_app* app, AInputEvent* event) {
     if (AInputEvent_getType(event) == 1) return 0; // don't use back button
     struct engine* engine = (struct engine*)app->userData;
@@ -204,49 +168,8 @@ int32_t handle_input(struct android_app* app, AInputEvent* event) {
             staticWindow->inputDevice.SetTouchPosition(id, staticWindow->ConvertMousePosition(xPos, yPos));
         }
     }
-    
-    /*
-    
-    for (int i=0; i<numTouches; i++) {
-    
-    LOGI("handle_input:: staticWindow = %i", (size_t)staticWindow);
-	
-    
-    
-    int32_t iAction = AMotionEvent_getAction(event);
-    unsigned int flags = iAction & AMOTION_EVENT_ACTION_MASK;
-    if (flags == AMOTION_EVENT_ACTION_DOWN)
-    {
-        int id = AMotionEvent_getPointerId(event, i);
-        int xPos = AMotionEvent_getX(event, i);
-        int yPos = AMotionEvent_getY(event, i);
-        LOGI("DOWN: id: %d x:%d\ty:%d\n",id, xPos, yPos);
-        staticWindow->inputDevice.SetTouch(id, true, staticWindow->ConvertMousePosition(xPos, yPos));
-    } else if (flags == AMOTION_EVENT_ACTION_UP) {
-        int id = AMotionEvent_getPointerId(event, i);
-        int xPos = AMotionEvent_getX(event, i);
-        int yPos = AMotionEvent_getY(event, i);
-        LOGI("UP: id: %d x:%d\ty:%d\n",id, xPos, yPos);
-        
-        staticWindow->inputDevice.SetTouch(id, false, staticWindow->ConvertMousePosition(xPos, yPos));
-        
-    }
-    
-    }
-    
-    */
-    
-    //case AMOTION_EVENT_ACTION_UP:
-    
-    
 	return 0;
 }
-
-/**
- * Process the next main command.
- */
-
- static bool hasMainBeenCalled;
 
 void handle_cmd(struct android_app* app, int32_t cmd) {
 	struct engine* engine = (struct engine*)app->userData;
@@ -306,78 +229,29 @@ void android_main(struct android_app* s) {
     isRunning = false;
     
     state = s;
-    LOGI("WindowAndroid-1");
-     engine engine;
+    engine engine;
 
 	memset(&engine, 0, sizeof(engine));
 	state->userData = &engine;
 	state->onAppCmd = handle_cmd;
 	state->onInputEvent = handle_input;
 	engine.app = state;
-    
-    if (engine.app->activity->assetManager) {
-        LOGI("assetManager-4");
-    }
-    
-    
     currentEngine = &engine;
-    LOGI("WindowAndroid-4");
     main();
 }
-
-//***************************
 
 void* WindowAndroid::assetManager = 0;
 
 void WindowAndroid::Create(int width, int height, bool fullScreen) {
-
     staticWindow = this;
-    
-    LOGI("WindowAndroid::Begin %i", (size_t)staticWindow);
-    
+    LOGI("WindowAndroid::Create %i", (size_t)staticWindow);
     assetManager = currentEngine->app->activity->assetManager;
-    
- /*
-    frameRate = 60;
-    if (SDL_Init (SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_TIMER) == 0) {
-		
-		SDL_Surface* screen = SDL_SetVideoMode (width, height, 0, SDL_OPENGL);
-		
-		if (screen != NULL) {
-			
-			previousTime = 0;
-			active = true;
-			paused = false;
-            screenSize = Vector2(width, height);
-            inputDevice.Initialize(3);
-			
-		} else {
-			cerr << "Could not set video mode: " << SDL_GetError () << endl;
-		}
-	} else {
-		cerr << "Could not initialize SDL: " << SDL_GetError () << endl;
-	}
-    */
-    
     Window::Framebuffer = 0;//currentEngine->app->window;
-     
     screenSize = Vector2(currentEngine->width, currentEngine->height);
     inputDevice.Initialize(11);
 }
 
-void WindowAndroid::Destroy() {
-    
-}
-
-
-
-
 bool WindowAndroid::Update(IInputManagerIterator* inputManagers) {
-    /*SDL_Event event;
-    while (SDL_PollEvent (&event)) {
-        handleEvent (event);
-    }
-    */
     inputDevice.Update(inputManagers);
     return true;
 }
@@ -386,11 +260,9 @@ void WindowAndroid::PreRender() {
     glViewport(0, 0, screenSize.x, screenSize.y);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
-    //LOGI("width = %f, height = %f", screenSize.x, screenSize.y);
 }
 
 void WindowAndroid::PostRender() {
- 
     eglSwapBuffers(currentEngine->display, currentEngine->surface);
 }
 
@@ -420,27 +292,8 @@ void WindowAndroid::Begin() {
 			}
 		}
         
-        static int counter = 0;
-        
-        if (counter<10) {
-            LOGI("LOOP %i", (int)this);
-        }
-        counter++;
         if (isRunning) {
             Step();
         }
     }
 }
-
-void WindowAndroid::Loop() {
-    Step();
-}
-
-
-
-
-
-
-
-
-
