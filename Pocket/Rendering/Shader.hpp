@@ -44,6 +44,22 @@ public:
     bool Create(std::string vertexShader, std::string fragmentShader) {
         Clear();
         
+#ifdef IPHONE
+        vertexShader =
+        "precision highp float;"
+        "precision highp int;"
+        + vertexShader;
+        
+        fragmentShader =
+        "precision highp float;"
+        "precision highp int;"
+        "precision lowp sampler2D;"
+        + fragmentShader;
+#endif
+
+        
+        
+        
         description = V::Description;
         
         if (!CreateShaders(vertexShader, fragmentShader)) {

@@ -22,25 +22,6 @@ std::string FileReader::GetFile(std::string localFile) {
     if (!path) return "";
     return [path UTF8String];
 }
-
-unsigned char* FileReader::GetData(std::string localFile, size_t *length) {
-    
-    NSString* file = [NSString stringWithUTF8String:localFile.c_str()];
-    
-    NSString* path = [[NSBundle mainBundle] pathForResource:file
-                                                     ofType:nil];
-    
-    
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    
-    NSUInteger size = [data length] / sizeof(unsigned char);
-    unsigned char* array = (unsigned char*) [data bytes];
-    
-    *length = size;
-                      
-    return array;
-}
-
 std::string FileReader::GetWritablePath() {
     NSArray *docs = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documents = [docs objectAtIndex:0];
@@ -66,11 +47,4 @@ std::string FileReader::GetBundleDir() {
         path += dirs[i] + "/";
     }
     return path;
-}
-
-std::string FileReader::ReadAllText(std::string filename) {
-    size_t size;
-    unsigned char* data = GetData(filename, &size);
-    std::string file(reinterpret_cast<char*>(data), size);
-    return file;
 }
