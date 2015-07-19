@@ -292,10 +292,10 @@ public:
         
         Vector3 normal = world.TransformVector(Vector3(0,1,0));
         size_t index = vertices.size();
-        vertices.push_back(Vertex(corners[0], texCoords[0], normal, color));
-        vertices.push_back(Vertex(corners[1], texCoords[1], normal, color));
-        vertices.push_back(Vertex(corners[2], texCoords[2], normal, color));
-        vertices.push_back(Vertex(corners[3], texCoords[3], normal, color));
+        vertices.push_back({corners[0], texCoords[0], color, normal});
+        vertices.push_back({corners[1], texCoords[1], color, normal});
+        vertices.push_back({corners[2], texCoords[2], color, normal});
+        vertices.push_back({corners[3], texCoords[3], color, normal});
         
         triangles.push_back((GLshort)index);
         triangles.push_back((GLshort)index+1);
