@@ -19,6 +19,7 @@ class GameObject;
 template<class T>
 class GameComponent : public IPointable<T> {
 public:
+    virtual ~GameComponent() { }
     static int ID;
     
     virtual void Serialize(ISerializedProperty* serializedComponent);
