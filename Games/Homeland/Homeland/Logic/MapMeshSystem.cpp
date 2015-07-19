@@ -29,24 +29,29 @@ void MapMeshSystem::Update(float dt) {
         Mesh* mesh = object->GetComponent<Mesh>();
         Transform* transform = object->GetComponent<Transform>();
         
-        Mesh::VerticesList& verts = mesh->Vertices();
-        Mesh::TrianglesList& triangles = mesh->Triangles();
+        auto& verts = mesh->GetMesh<Vertex>().vertices;
+        auto& triangles = mesh->GetMesh<Vertex>().triangles;
         
         if (verts.empty()) {
-        	int numberOfVerts = 4 * mapRenderer->width * mapRenderer->depth;
+        	int numberOfVerts = (mapRenderer->width + 1) * (mapRenderer->depth+1);
         	verts.resize(numberOfVerts);
         	int numberOfTriangles = 6 * mapRenderer->width * mapRenderer->depth;
             triangles.resize(numberOfTriangles);
             
             int index = 0;
-            for	(int i=0; i<numberOfVerts; i+=4) {
-        		triangles[index++] = i;
-                triangles[index++] = i+2;
-                triangles[index++] = i+1;
-                
-                triangles[index++] = i;
-                triangles[index++] = i+3;
-                triangles[index++] = i+2;
+            for (int z = 0; z<mapRenderer->depth; z++) {
+                for (int x = 0; x<mapRenderer->width; x++) {
+                    short vert = x + z * (mapRenderer->width + 1);
+                    short down = vert + mapRenderer->width + 1;
+                    triangles[index++] = vert;
+                    triangles[index++] = down;
+                    triangles[index++] = vert+1;
+                    
+                    
+                    triangles[index++] = vert+1;
+                    triangles[index++] = down;
+                    triangles[index++] = down+1;
+                }
             }
         }
         
@@ -57,8 +62,8 @@ void MapMeshSystem::Update(float dt) {
         
         Vector3 offset(-(position.x-posx), 0, -(position.z-posz));
         
-        for	(int z=0; z<mapRenderer->depth; z++) {
-        	for	(int x=0; x<mapRenderer->width; x++) {
+        for	(int z=0; z<=mapRenderer->depth; z++) {
+        	for	(int x=0; x<=mapRenderer->width; x++) {
             
                 int ox = x - mapRenderer->width / 2;
                 int oz = z - mapRenderer->depth / 2;
@@ -66,22 +71,15 @@ void MapMeshSystem::Update(float dt) {
                 int xx = (int)floorf(position.x) + ox;
                 int zz = (int)floorf(position.z) + oz;
                 
-                int index = x * 4 + z * mapRenderer->width * 4;
-                
-                for (int i=0; i<4; i++) {
-                    Map::Node& node = map->GetNode(xx + offsetX[i], zz + offsetZ[i]);
-                    Vertex& vertex = verts[index + i];
-                    vertex.Position = Vector3(ox + offsetX[i], node.height, oz + offsetZ[i]) + offset;
-                    //float dot = lightDirection.Dot(node.normal);
-                    //if (dot<0) dot = 0;
-                    vertex.Color = node.color;
-                    vertex.Normal = node.normal;
-                }
-                
-                
+                int index = x + z * (mapRenderer->width + 1);
+            
+                Map::Node& node = map->GetNode(xx, zz);
+                Vertex& vertex = verts[index];
+                vertex.Position = Vector3(ox, node.height, oz) + offset;
+                vertex.Color = node.color;
+                vertex.Normal = node.normal;
+                vertex.TextureCoords =Vector2(xx*0.2f, zz*0.2f);
             }
         }
-        
-        
     }
 }
