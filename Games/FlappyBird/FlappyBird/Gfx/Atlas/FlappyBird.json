@@ -1,0 +1,39 @@
+{"frames": [
+
+{
+	"filename": "Bird.png",
+	"frame": {"x":2,"y":492,"w":17,"h":12},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":12},
+	"sourceSize": {"w":17,"h":12},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "bg.png",
+	"frame": {"x":2,"y":2,"w":288,"h":384},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":288,"h":384},
+	"sourceSize": {"w":288,"h":384},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "pipe.png",
+	"frame": {"x":2,"y":388,"w":102,"h":182},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":102,"h":182},
+	"sourceSize": {"w":102,"h":182},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "FlappyBird-0.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":512},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8fc7898b5f46b2cae46ec828ad140ee1:fd733c1377ff07cc94a600ac333db9ce:c5446a5921245bb5a604ccd9a5236860$"
+}
+}

@@ -29,13 +29,13 @@ SYSTEM(GravitySystem, Velocity, Gravity)
 SYSTEM(FlappySystem, Flappable, Velocity)
 public:
     void SetInput(InputManager* input) {
-        input->ButtonDown += event_handler(this, &FlappySystem::ButtonDown);
+        input->TouchDown += event_handler(this, &FlappySystem::ButtonDown);
     }
 
-    void ButtonDown(std::string button) {
-        if (button == " ") {
+    void ButtonDown(TouchEvent d) {
+        //if (button == " ") {
             buttonDown = true;
-        }
+        //}
     }
 
     void Update(float dt) {
@@ -208,6 +208,7 @@ public:
     Vector2 screenSize;
     
     void Initialize() {
+    
         world.CreateSystem<GravitySystem>();
         world.CreateSystem<FlappySystem>()->SetInput(&Input);
         world.CreateSystem<VelocitySystem>();
@@ -264,6 +265,7 @@ public:
         pipeSpawner->GetComponent<PipeSpawner>()->yOffset = {-0.3f,0.3f};
         pipeSpawner->AddComponent<Transform>(camera);
         pipeSpawner->AddComponent<Sizeable>()->Size = screenSize;
+        
         
         Input.ButtonUp += event_handler(this, &Game::ButtonUp);
     }
