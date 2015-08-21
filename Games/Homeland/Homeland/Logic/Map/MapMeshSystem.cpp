@@ -16,10 +16,6 @@ void MapMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
 	changedTransforms.Remove(object->GetComponent<Transform>()->Position, object);
 }
 
-static int offsetX[4] = {0, 1, 1, 0};
-static int offsetZ[4] = {0, 0, 1, 1};
-static Vector3 lightDirection = Vector3(-1,-1,-1).Normalized();
-
 void MapMeshSystem::Update(float dt) {
 	if (changedTransforms.Objects().empty()) return;
     

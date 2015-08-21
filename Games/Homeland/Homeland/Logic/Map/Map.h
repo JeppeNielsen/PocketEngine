@@ -10,6 +10,7 @@
 #include "GameWorld.hpp"
 #include "Colour.hpp"
 #include "Vector3.hpp"
+#include "Point.hpp"
 
 using namespace Pocket;
 
@@ -27,6 +28,12 @@ Component(Map)
     	float height;
         Vector3 normal;
         Colour color;
+        int x;
+        int z;
+        int pathId;
+        int g;
+        int h;
+        Node* parent;
     };
 
     void CreateMap(int width, int depth);
@@ -41,11 +48,19 @@ Component(Map)
 
     void Randomize(float minHeight, float maxHeight);
     void Smooth(int iterations);
+    void SetMaxHeight(float height);
+    void AddHill(int xPos, int zPos, int radius, float height);
 
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
+    void CalculatePath(Point start, Point end, std::vector<Vector3>& path);
+
+
 private:
 	Node outOfBoundsNode;
+    void AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID);
+    bool IsNodeWalkable(Node* node);
+    static bool SortNodes(const Node* a, const Node* b);
 
 };
