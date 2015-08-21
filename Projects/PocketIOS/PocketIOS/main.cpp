@@ -23,10 +23,10 @@ public:
         
         cube = world.CreateObject();
         cube->AddComponent<Transform>();
-        cube->AddComponent<Mesh>()->AddCube(0, 1);
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         cube->AddComponent<Material>();
         
-        Mesh::VerticesList& verts = cube->GetComponent<Mesh>()->Vertices();
+        auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
