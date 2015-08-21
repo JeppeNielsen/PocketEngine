@@ -24,6 +24,8 @@ namespace Pocket {
 
         void Update(float dt);
         
+        bool FlipControls;
+        
 private:
         void InputChanged(Property<FirstPersonMoverSystem*, InputManager*>::EventData e);
 

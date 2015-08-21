@@ -15,6 +15,7 @@ FirstPersonMoverSystem::FirstPersonMoverSystem() : Input(this), draggableSystem(
     Input = 0;
     Input.ChangedWithOld += event_handler(this, &FirstPersonMoverSystem::InputChanged);
     isDraggableSystemChecked = false;
+    FlipControls = false;
 }
 
 void FirstPersonMoverSystem::Initialize() {
@@ -60,18 +61,18 @@ void FirstPersonMoverSystem::Update(float dt) {
         draggableSystem = World()->GetSystem<DraggableSystem>();
     }
     
-    if (!UpdateRotation(dt,1)) {
-        UpdateMovement(dt,0);
+    if (!UpdateRotation(dt, FlipControls ? 0 : 1)) {
+        UpdateMovement(dt,FlipControls ? 1 : 0);
     }
 }
 
 void FirstPersonMoverSystem::UpdateMovement(float dt, int touchIndex) {
     if (draggableSystem && draggableSystem->IsTouchIndexUsed(touchIndex)) return;
     
-    Touches::iterator it = touches.find(0);
+    Touches::iterator it = touches.find(touchIndex);
     if (it==touches.end()) return;
     
-    Vector2 delta = Input()->GetTouchPosition(0) - it->second;
+    Vector2 delta = Input()->GetTouchPosition(touchIndex) - it->second;
     
     const ObjectCollection& list = Objects();
     

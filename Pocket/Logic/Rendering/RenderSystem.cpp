@@ -172,7 +172,7 @@ void RenderSystem::Render() {
     }
     
     static int counter = 0;
-    if (counter++%20==0) {
+    if (counter++%300==0) {
         std::cout<<"Draw calls : " << renderInfo.drawCalls<< ", Vertices Rendered : " << renderInfo.verticesRendered<<", Objects rendered : "<< renderInfo.objectsRendered<<std::endl;
     }
 }
