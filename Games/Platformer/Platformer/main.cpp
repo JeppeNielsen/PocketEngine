@@ -39,7 +39,7 @@ public:
         
         GameObject* floor = world.CreateObject();
         floor->AddComponent<Transform>();
-        floor->AddComponent<Mesh>()->AddCube(0, {50,0.1f,50});
+        floor->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {50,0.1f,50});
         floor->AddComponent<Material>();
         auto& floorPolygon = floor->AddComponent<RigidBody2d>()->CreatePolygon(0,0.2f,0);
         floorPolygon.SetAsBox(100, 0.1f);
@@ -65,11 +65,11 @@ public:
     GameObject* CreateCube(Vector2 pos, Vector2 size, float density) {
         cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = pos;
-        cube->AddComponent<Mesh>()->AddCube(0, {size.x,size.y,1});
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {size.x,size.y,1});
         cube->AddComponent<Material>();
         cube->AddComponent<RigidBody2d>()->CreatePolygon(density,0.2f,0.0f).SetAsBox(size.x, size.y);
         
-        Mesh::VerticesList& verts = cube->GetComponent<Mesh>()->Vertices();
+        VertexMesh<Vertex>::Vertices& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
@@ -90,7 +90,7 @@ public:
 };
 
 
-int main() {
+int main_old() {
     Engine e;
     e.Start<Game>();
 	return 0;
