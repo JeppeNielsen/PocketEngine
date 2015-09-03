@@ -346,7 +346,6 @@
 		726DB9AA1B979254004FC537 /* Font.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A31B97918A004FC537 /* Font.fnt */; };
 		726DB9AB1B979254004FC537 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A71B97918A004FC537 /* images.png */; };
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
-		726DB9AF1B98D177004FC537 /* JsonPropertySerializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DB9AD1B98D177004FC537 /* JsonPropertySerializer.cpp */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
 		726DB9B51B98F9B3004FC537 /* TestJson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DB9B41B98F9B3004FC537 /* TestJson.cpp */; };
 /* End PBXBuildFile section */
@@ -364,6 +363,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7207A1801B9901BF00EEDBF9 /* minijson_writer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_writer.hpp; sourceTree = "<group>"; };
+		7207A1811B9901BF00EEDBF9 /* minijson_reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_reader.hpp; sourceTree = "<group>"; };
 		726DB3D71B978D8A004FC537 /* GUIEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GUIEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726DB3DA1B978D8A004FC537 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		726DB3DC1B978D8A004FC537 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -1166,11 +1167,7 @@
 		726DB9A31B97918A004FC537 /* Font.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Font.fnt; sourceTree = "<group>"; };
 		726DB9A71B97918A004FC537 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
-		726DB9AD1B98D177004FC537 /* JsonPropertySerializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = JsonPropertySerializer.cpp; sourceTree = "<group>"; };
-		726DB9AE1B98D177004FC537 /* JsonPropertySerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonPropertySerializer.hpp; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
-		726DB9B21B98F979004FC537 /* minijson_writer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_writer.hpp; sourceTree = "<group>"; };
-		726DB9B31B98F979004FC537 /* minijson_reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_reader.hpp; sourceTree = "<group>"; };
 		726DB9B41B98F9B3004FC537 /* TestJson.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestJson.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -2519,8 +2516,8 @@
 			isa = PBXGroup;
 			children = (
 				726DB7DF1B978D98004FC537 /* Json */,
-				726DB9AD1B98D177004FC537 /* JsonPropertySerializer.cpp */,
-				726DB9AE1B98D177004FC537 /* JsonPropertySerializer.hpp */,
+				7207A1811B9901BF00EEDBF9 /* minijson_reader.hpp */,
+				7207A1801B9901BF00EEDBF9 /* minijson_writer.hpp */,
 			);
 			path = Serialization;
 			sourceTree = "<group>";
@@ -2528,8 +2525,6 @@
 		726DB7DF1B978D98004FC537 /* Json */ = {
 			isa = PBXGroup;
 			children = (
-				726DB9B21B98F979004FC537 /* minijson_writer.hpp */,
-				726DB9B31B98F979004FC537 /* minijson_reader.hpp */,
 				726DB7E01B978D98004FC537 /* minijson.h */,
 			);
 			path = Json;
@@ -2804,7 +2799,6 @@
 				726DB91E1B978D98004FC537 /* btSoftBody.cpp in Sources */,
 				726DB80F1B978D98004FC537 /* ICellItem.cpp in Sources */,
 				726DB8971B978D98004FC537 /* b2PrismaticJoint.cpp in Sources */,
-				726DB9AF1B98D177004FC537 /* JsonPropertySerializer.cpp in Sources */,
 				726DB8701B978D98004FC537 /* Point.cpp in Sources */,
 				726DB8B81B978D98004FC537 /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				726DB91F1B978D98004FC537 /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
@@ -3102,6 +3096,7 @@
 				726DB3E91B978D8A004FC537 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
