@@ -65,8 +65,8 @@ void HierarchyOrder::CalculateOrder(int& orderOffset, Pocket::GameObject *object
         }
     }
     
+    orderOffset += (maxOrder - minOrder) + 1;
     for (ObjectCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
         CalculateOrder(orderOffset, *it);
     }
-    orderOffset += (maxOrder - minOrder);
 }
