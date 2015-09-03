@@ -140,10 +140,16 @@ void GameObject::UpdatePointers() {
 }
 
 void GameObject::Serialize(ISerializedProperty* serializedObject) {
+    serializedObject = serializedObject->Add("GameObject", this);
+    ISerializedProperty* properties = serializedObject->Add("Properties", this);
     for (size_t i=0; i<world->componentTypes.size(); i++) {
         if (this->components[i]) {
-            world->SerializeComponent(serializedObject, this, (int)i);
+            world->SerializeComponent(properties, this, (int)i);
         }
+    }
+    ISerializedProperty* children = serializedObject->Add("Children", this);
+    for (auto child : this->children) {
+        child->Serialize(children);
     }
 }
 
