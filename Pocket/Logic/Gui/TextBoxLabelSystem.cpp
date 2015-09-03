@@ -15,7 +15,7 @@
 
 using namespace Pocket;
 
-static float cursorWidth = 0.05f;
+static float cursorWidth = 1.05f;
 
 void TextBoxLabelSystem::Initialize() {
     AddComponent<TextBox>();
