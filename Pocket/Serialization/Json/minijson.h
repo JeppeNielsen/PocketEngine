@@ -45,7 +45,7 @@ typedef double number;
 typedef std::string string;
 typedef std::map<string, value> object;
 typedef std::vector<value> array;
-typedef struct {} null_t;
+//typedef struct {} null_t;
 
 class value {
 private:
@@ -307,7 +307,7 @@ parse_null(Iter& i, value& v) {
   Iter p = i;
   if (*i == 'n' && *(i+1) == 'u' && *(i+2) == 'l' && *(i+3) == 'l') {
     i += 4;
-    v = null_t();
+    v = minijson::null_t();
   }
   if (*i && NULL == strchr(":,\x7d]\r\n ", *i)) {
     i = p;
