@@ -99,19 +99,3 @@ void Camera::Clone(const Camera& source) {
     Orthographic = source.Orthographic;
     Mask = source.Mask;
 }
-
-void Camera::Serialize(Pocket::ISerializedProperty *property) {
-    property->Add("FieldOfView", FieldOfView());
-    property->Add("Near", Near());
-    property->Add("Far", Far());
-    property->Add("Orthographic", Orthographic());
-    property->Add("Mask", Mask());
-}
-
-void Camera::Deserialize(Pocket::ISerializedProperty *property) {
-    FieldOfView = property->GetValue("FieldOfView", 60.0f);
-    Near = property->GetValue("Near", 0.1f);
-    Far = property->GetValue("Far", 1000.0f);
-    Orthographic = property->GetValue("Orthographic", false);
-    Mask = property->GetValue("Mask", (RenderMask)0);
-}

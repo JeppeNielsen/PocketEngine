@@ -20,5 +20,9 @@ namespace Pocket {
     protected:
         void Clone(const Sizeable& source);
         void DebugLog(std::ostringstream& s);
+    
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(Size)
+        SERIALIZE_FIELDS_END
     };
 }

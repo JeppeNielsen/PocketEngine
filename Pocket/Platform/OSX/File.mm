@@ -28,3 +28,9 @@ bool File::Load(std::string filename) {
     this->size = size;
     return true;
 }
+
+std::string File::GetFullPath(std::string filename) {
+    NSString* file = [NSString stringWithUTF8String:filename.c_str()];
+    NSString* path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
+    return [path UTF8String];
+}

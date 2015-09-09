@@ -60,9 +60,9 @@ public:
         startOffset = (size_t)(&vertex);
         vertex.Initialize(*this);
     
-        for(auto& a : attributes) {
-            std::cout<<"Name : " << a.first<< "  offset : " <<a.second.offset<<std::endl;
-        }
+        //for(auto& a : attributes) {
+        //    std::cout<<"Name : " << a.first<< "  offset : " <<a.second.offset<<std::endl;
+        //}
     }
     
 public:

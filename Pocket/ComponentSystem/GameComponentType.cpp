@@ -21,6 +21,15 @@ int GameComponentTypeFactory::componentIdCounter = 0;
 
 GameComponentTypeFactory::GameComponentTypes* GameComponentTypeFactory::createdComponentTypes = 0;
 
+int GameComponentTypeFactory::ComponentIDFromName(std::string name) {
+    for (int i=0; i<createdComponentTypes->size(); ++i) {
+        if (createdComponentTypes->at(i)->name == name) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 IGameComponentType* GameComponentTypeFactory::CreateType(int index) {
     return createdComponentTypes->at(index)->Clone();
 }

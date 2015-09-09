@@ -21,5 +21,9 @@ namespace Pocket {
         void Reset();
     protected:
         void Clone(const Sprite& source);
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(SpriteName);
+        SERIALIZE_FIELD(CornerSize);
+        SERIALIZE_FIELDS_END
     };
 }

@@ -27,9 +27,6 @@ namespace Pocket {
 
 		void Reset();
     
-        void Serialize(ISerializedProperty* property);
-        void Deserialize(ISerializedProperty* property);
-    
     protected:
         
         void Lerp(const Transform& source, const Transform& dest, const float& t);
@@ -45,5 +42,13 @@ namespace Pocket {
 		void OtherWorldChanged(DirtyProperty<Transform*, Matrix4x4>* event);
         
         bool useEulerRotation;
+    
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(Position);
+        SERIALIZE_FIELD(Rotation);
+        SERIALIZE_FIELD(Scale);
+        SERIALIZE_FIELD(Anchor);
+        SERIALIZE_FIELD(Matrix);
+        SERIALIZE_FIELDS_END
 	};
 }

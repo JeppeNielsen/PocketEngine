@@ -18,8 +18,8 @@ namespace Pocket {
         Property<Colorable*, Colour> Color;
         void Reset();
     
-        void Serialize(ISerializedProperty* property);
-        void Deserialize(ISerializedProperty* property);
-    
+        SERIALIZE_FIELDS_BEGIN;
+        SERIALIZE_FIELD(Color);
+        SERIALIZE_FIELDS_END;
     };
 }

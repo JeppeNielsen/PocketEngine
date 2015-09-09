@@ -11,11 +11,8 @@
 #include <bitset>
 
 namespace Pocket {
-
     class GameObject;
     class SerializedComponent;
-    class ISerializedProperty;
-
 }
 
 

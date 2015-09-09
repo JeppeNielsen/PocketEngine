@@ -13,20 +13,17 @@
 
 namespace Pocket {
 
-
-  
 template<class T>
 class SerializedField;
 
 class SerializedFieldCollection;
-
-
 
 class ISerializedField {
 public:
     virtual ~ISerializedField() { }
     std::string name;
     virtual void Serialize(minijson::object_writer& writer) = 0;
+    virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
 };
 
 template<class T>
@@ -37,6 +34,11 @@ public:
     void Serialize(minijson::object_writer& writer) override {
         JsonSerializer<T>::Serialize(name, *field, writer);
     }
+    
+    void Deserialize(minijson::istream_context& context, minijson::value& value) override {
+        JsonSerializer<T>::Deserialize(value, field, context);
+    }
+    
     friend class SerializedFieldCollection;
 private:
     T* field;
@@ -71,7 +73,53 @@ public:
         }
     }
     
+    
+    
+    template<class Context>
+    void Deserialize(Context& context) {
+    
+        try {
+
+            minijson::parse_object(context, [&] (const char* name, minijson::value v) {
+                auto field = GetField(name);
+                if (field) {
+                    field->Deserialize(context, v);
+                } else if (v.type() == minijson::Object){
+                    minijson::ignore(context);
+                }
+                
+                /*
+                if (v.type() == minijson::Object)
+                {
+                    minijson::parse_object(context, [&] (const char* name, minijson::value v) {
+                        std::cout<< v.as_string()<< std::endl;
+                    });
+                } else if ( v.type() == minijson::Array) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                    
+                    
+                        std::cout<< v.as_string()<< std::endl;
+                    });
+                } else {
+                    std::cout<<"wolla"<<std::endl;
+                }
+                */
+            });
+        
+        } catch (std::exception e) {
+            //std::cout<< e.what() << std::endl;
+        }
+    }
+    
 private:
+
+    ISerializedField* GetField(std::string name) {
+        for(auto field : fields) {
+            if (field->name == name) return field;
+        }
+        return 0;
+    }
+
     typedef std::vector<ISerializedField*> Fields;
     Fields fields;
 };
@@ -96,11 +144,19 @@ struct JsonSerializer<T, typename std::enable_if< std::is_base_of<ISerializable,
         fields.Serialize(object);
         object.close();
     }
+    
+    static void Deserialize(minijson::value& value, ISerializable* field, minijson::istream_context& context) {
+        auto fields = field->GetFields();
+        fields.Deserialize(context);
+    }
 };
+
+
  
 }
 
 #define SERIALIZE_FIELDS_BEGIN \
+public: \
 SerializedFieldCollection GetFields() override { \
 SerializedFieldCollection fields;
 
@@ -109,6 +165,7 @@ fields.AddField(field, #field);
 
 #define SERIALIZE_FIELDS_END \
 return fields; \
-}
+} \
+private:
 
 

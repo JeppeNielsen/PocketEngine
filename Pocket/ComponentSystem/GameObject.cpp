@@ -9,6 +9,7 @@
 #include "GameObject.hpp"
 #include "GameComponent.hpp"
 #include "GameWorld.hpp"
+#include "minijson_writer.hpp"
 
 using namespace Pocket;
 
@@ -139,33 +140,45 @@ void GameObject::UpdatePointers() {
     }
 }
 
-void GameObject::Serialize(ISerializedProperty* serializedObject) {
-    serializedObject = serializedObject->Add("GameObject", this);
-    ISerializedProperty* properties = serializedObject->Add("Properties", this);
-    for (size_t i=0; i<world->componentTypes.size(); i++) {
-        if (this->components[i]) {
-            world->SerializeComponent(properties, this, (int)i);
-        }
-    }
-    ISerializedProperty* children = serializedObject->Add("Children", this);
-    for (auto child : this->children) {
-        child->Serialize(children);
-    }
-}
-
-void GameObject::Deserialize(ISerializedProperty* serializedObject) {
-    for (size_t i=0; i<world->componentTypes.size(); i++) {
-        if (this->components[i]) {
-            world->DeserializeComponent(serializedObject, this, (int)i);
-        }
-    }
-}
-
 void GameObject::AddComponent(int componentType) {
     world->AddComponent(this, componentType);
 }
 
 GameWorld* GameObject::World() { return world; }
+
+void GameObject::ToJson(std::ostream& stream) {
+    
+    minijson::writer_configuration config;
+    config = config.pretty_printing(true);
+
+    minijson::object_writer writer(stream, config);
+    WriteJson(writer);
+    writer.close();
+}
+
+void GameObject::WriteJson(minijson::object_writer& writer) {
+    
+    minijson::object_writer gameObject = writer.nested_object("GameObject");
+    minijson::array_writer components = gameObject.nested_array("Components");
+    
+    for (size_t i=0; i<world->componentTypes.size(); i++) {
+        if (this->components[i]) {
+            world->WriteJsonComponent(components, this, (int)i);
+        }
+    }
+    components.close();
+    
+    if (!children.empty()) {
+        minijson::array_writer children_object = gameObject.nested_array("Children");
+        for(auto child : children) {
+            minijson::object_writer child_object = children_object.nested_object();
+            child->WriteJson(child_object);
+            child_object.close();
+        }
+        children_object.close();
+    }
+    gameObject.close();
+}
 
 
 

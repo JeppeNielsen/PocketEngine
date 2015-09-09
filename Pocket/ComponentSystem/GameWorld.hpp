@@ -14,11 +14,16 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <istream>
 #if EMSCRIPTEN
 #if ENABLE_SCRIPTING
     #undef ENABLE_SCRIPTING
 #endif
 #endif
+
+namespace minijson {
+    class object_writer;
+};
 
 namespace Pocket {
 
@@ -32,6 +37,7 @@ public:
     ~GameWorld();
     
     GameObject* CreateObject();
+    GameObject* CreateObjectFromJson(std::istream& jsonStream);
     
     void Update(float dt);
     void Render();
@@ -81,9 +87,9 @@ private:
     
     void AddSystem(GameSystem* system, int componentID);
     
-    void SerializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID);
-    void DeserializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID);
-
+    void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
+    void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
+    GameObject* CreateGameObjectJson(minijson::istream_context& context);
    
     ComponentTypes componentTypes;
     ComponentTypes changedComponentTypes;

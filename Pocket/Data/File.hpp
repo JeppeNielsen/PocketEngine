@@ -23,6 +23,7 @@ namespace Pocket {
             std::string text(reinterpret_cast<char*>(data), size);
             return text;
         }
+        static std::string GetFullPath(std::string filename);
     private:
         size_t size;
         unsigned char* data;

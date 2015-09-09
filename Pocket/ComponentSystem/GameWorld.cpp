@@ -12,6 +12,9 @@
 #include "ScriptSystem.hpp"
 #endif
 
+#include "minijson_writer.hpp"
+#include <iostream>
+
 using namespace Pocket;
 
 GameWorld::GameWorld() {
@@ -224,17 +227,67 @@ void GameWorld::AddSystem(GameSystem* system, int componentID) {
     type->systems.push_back(system);
 }
 
-void GameWorld::SerializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    type->SerializeComponent(serializedObject, object->components[componentID]);
-}
-
-void GameWorld::DeserializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    type->DeserializeComponent(serializedObject, object->components[componentID]);
-}
-
 const GameWorld::ComponentTypes& GameWorld::ComponentTypesList() { return componentTypes; }
+
+void GameWorld::WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID) {
+    IGameComponentType* type = componentTypes[componentID];
+    type->WriteJson(writer, object->components[componentID]);
+}
+
+void GameWorld::ReadJsonComponent(minijson::istream_context &context, GameObject *object, int componentID) {
+    IGameComponentType* type = componentTypes[componentID];
+    type->ReadJson(context, object->components[componentID]);
+}
+
+GameObject* GameWorld::CreateObjectFromJson(std::istream &jsonStream) {
+    minijson::istream_context context(jsonStream);
+    GameObject* object = CreateGameObjectJson(context);
+    return object;
+}
+
+GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context) {
+    GameObject* object = 0;
+    
+    try {
+         minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            std::string name = n;
+            if (name == "GameObject" && v.type() == minijson::Object) {
+                object = CreateObject();
+                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                    std::string name = n;
+                    if (name == "Components" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            if (v.type() == minijson::Object) {
+                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                    std::string componentName = n;
+                                    int componentID = GameComponentTypeFactory::ComponentIDFromName(componentName);
+                                    if (componentID!=-1) {
+                                        if (!object->components[componentID]) { // only allow one type of component for each object
+                                            AddComponent(object, componentID);
+                                            ReadJsonComponent(context, object, componentID);
+                                        } else {
+                                            std::cout<<"Only one component per type allowed per object"<<std::endl;
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    } else if (name == "Children" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            GameObject* child = CreateGameObjectJson(context);
+                            if (child) {
+                                child->Parent = object;
+                            }
+                        });
+                    }
+                });
+            }
+         });
+    } catch (std::exception e) {
+  
+    }
+    return object;
+}
 
 #ifdef ENABLE_SCRIPTING
 

@@ -18,9 +18,13 @@ namespace Pocket {
     
 public:
     
-    struct Node {
+    struct Node : public ISerializable {
         Box outer;
         Box inner;
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(outer)
+        SERIALIZE_FIELD(inner)
+        SERIALIZE_FIELDS_END
     };
     
     Atlas();
@@ -38,7 +42,7 @@ public:
     
     const Vector2& TextureSize() const;
     
-private:
+public:
         typedef std::map<std::string, Node> Nodes;
         Nodes nodes;
     
@@ -46,6 +50,11 @@ private:
     
         Node defaultNode;
         Vector2 textureSize;
-        
+    
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(nodes)
+        SERIALIZE_FIELD(defaultNode)
+        SERIALIZE_FIELD(textureSize)
+        SERIALIZE_FIELDS_END
     };
 }

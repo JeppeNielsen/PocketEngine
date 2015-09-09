@@ -15,12 +15,3 @@ Colorable::Colorable() : Color(this) {}
 void Colorable::Reset() {
     Color = Colour::White();
 }
-
-
-void Colorable::Serialize(Pocket::ISerializedProperty *property) {
-    property->Add("Color", Color());
-}
-
-void Colorable::Deserialize(Pocket::ISerializedProperty *property) {
-    Color = property->GetValue("Color", Colour::White());
-}

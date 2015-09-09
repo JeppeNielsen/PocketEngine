@@ -10,7 +10,13 @@
 #include "minijson_reader.hpp"
 #include "minijson_writer.hpp"
 #include "Property.hpp"
+#include "Vector2.hpp"
+#include "Matrix4x4.hpp"
+#include "Colour.hpp"
+#include "Box.hpp"
 #include <type_traits>
+#include <sstream>
+#include <map>
 
 namespace Pocket {
 
@@ -27,6 +33,11 @@ namespace Pocket {
             s<<value;
             writer.write(s.str());
         }
+        
+        static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
+            if (value.type() != minijson::String) return;
+            (*field) = T::Deserialize(value.as_string());
+        }
     };
     
     template<>
@@ -37,6 +48,11 @@ namespace Pocket {
         
         static void Serialize(const int& value, minijson::array_writer& writer) {
             writer.write(value);
+        }
+        
+        static void Deserialize(minijson::value& value, int* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Number) return;
+            (*field) = (int)value.as_long();
         }
     };
     
@@ -49,6 +65,11 @@ namespace Pocket {
         static void Serialize(const float& value, minijson::array_writer& writer) {
             writer.write(value);
         }
+        
+        static void Deserialize(minijson::value& value, float* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Number) return;
+            (*field) = (float)value.as_double();
+        }
     };
     
     template<>
@@ -60,6 +81,11 @@ namespace Pocket {
         static void Serialize(const double& value, minijson::array_writer& writer) {
             writer.write(value);
         }
+        
+        static void Deserialize(minijson::value& value, double* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Number) return;
+            (*field) = value.as_double();
+        }
     };
     
     template<>
@@ -70,6 +96,27 @@ namespace Pocket {
         
         static void Serialize(const std::string& value, minijson::array_writer& writer) {
             writer.write(value);
+        }
+        
+        static void Deserialize(minijson::value& value, std::string* field, minijson::istream_context& context) {
+            if (value.type() != minijson::String) return;
+            (*field) = std::string(value.as_string());
+        }
+    };
+    
+    template<>
+    struct JsonSerializer<bool> {
+        static void Serialize(std::string& key, const bool& value, minijson::object_writer& writer) {
+            writer.write(key.c_str(), value);
+        }
+        
+        static void Serialize(const bool& value, minijson::array_writer& writer) {
+            writer.write(value);
+        }
+        
+        static void Deserialize(minijson::value& value, bool* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Boolean) return;
+            (*field) = value.as_bool();
         }
     };
     
@@ -90,6 +137,16 @@ namespace Pocket {
             }
             array.close();
         }
+        
+        static void Deserialize(minijson::value& value, std::vector<I>* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Array) return;
+            std::vector<I>& vector = *field;
+            minijson::parse_array(context, [&] (minijson::value v) {
+                vector.resize(vector.size() + 1);
+                I& item = vector.back();
+                JsonSerializer<I>::Deserialize(v, &item, context);
+            });
+        }
     };
     
     template<typename Owner, typename T>
@@ -97,5 +154,74 @@ namespace Pocket {
         static void Serialize(std::string& key, const Property<Owner, T>& value, minijson::object_writer& writer) {
             JsonSerializer<T>::Serialize(key, value.GetValue(), writer);
         }
+        
+        static void Deserialize(minijson::value& value, Property<Owner, T>* field, minijson::istream_context& context) {
+           T data;
+           JsonSerializer<T>::Deserialize(value, &data, context);
+           field->Set(data);
+        }
     };
+    
+    
+    template<typename Key, typename Value>
+    struct JsonSerializer<std::map<Key, Value>> {
+        static void Serialize(std::string& key, const std::map<Key, Value>& value, minijson::object_writer& writer) {
+            minijson::array_writer array = writer.nested_array(key.c_str());
+            for (auto it = value.begin(); it!=value.end(); ++it) {
+                minijson::array_writer keyValueArray = array.nested_array();
+                const Key* keyPointer = (const Key*)(&it->first);
+                JsonSerializer<Key>::Serialize(*keyPointer, keyValueArray);
+                const Value* valuePointer = (const Value*)(&it->second);
+                JsonSerializer<Value>::Serialize(*valuePointer, keyValueArray);
+                keyValueArray.close();
+            }
+            array.close();
+        }
+        
+        static void Serialize(const std::map<Key, Value>& value, minijson::array_writer& writer) {
+            minijson::array_writer array = writer.nested_array();
+            for (auto it = value.begin(); it!=value.end(); ++it) {
+                minijson::array_writer keyValueArray = array.nested_array();
+                const Key* keyPointer = (const Key*)(&it->first);
+                JsonSerializer<Key>::Serialize(*keyPointer, keyValueArray);
+                const Value* valuePointer = (const Value*)(&it->second);
+                JsonSerializer<Value>::Serialize(*valuePointer, keyValueArray);
+                keyValueArray.close();
+            }
+            array.close();
+        }
+        
+        static void Deserialize(minijson::value& value, std::map<Key, Value>* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Array) return;
+            std::map<Key, Value>& map = *field;
+            minijson::parse_array(context, [&] (minijson::value v) {
+                if (v.type() != minijson::Array) {
+                    minijson::ignore(context);
+                } else {
+                    int counter = 0;
+                    Key key;
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        if (counter == 0) {
+                            JsonSerializer<Key>::Deserialize(v, &key, context);
+                        } else if (counter == 1) {
+                            Value& mapValue = map[key];
+                            JsonSerializer<Value>::Deserialize(v, &mapValue, context);
+                        }
+                        counter++;
+                    });
+                }
+            });
+            
+        }
+    };
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }
