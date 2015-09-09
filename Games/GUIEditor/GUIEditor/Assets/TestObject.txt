@@ -1,0 +1,35 @@
+{
+    "GameObject": {
+        "Components": [
+            {
+                "Transform": {
+                    "Position": "1,2,3",
+                    "Rotation": "1,0,0,0",
+                    "Scale": "1,1,1",
+                    "Anchor": "0,0,0",
+                    "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                }
+            }
+        ],
+        "Children": [
+            {
+                "GameObject": {
+                    "Components": [
+                        {
+                            "Transform": {
+                                "Position": "10,20,30",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Mesh": {}
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
