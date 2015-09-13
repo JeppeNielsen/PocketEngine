@@ -33,6 +33,12 @@ public:
         Mask = 0;
         Clip = 0;
     }
+    
+    SERIALIZE_FIELDS_BEGIN
+    //SERIALIZE_FIELD(Shader)
+    SERIALIZE_FIELD(BlendMode)
+    SERIALIZE_FIELD(Mask)
+    SERIALIZE_FIELDS_END
 };
 
 }

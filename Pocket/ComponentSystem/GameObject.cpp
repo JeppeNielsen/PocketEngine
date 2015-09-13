@@ -161,9 +161,9 @@ void GameObject::WriteJson(minijson::object_writer& writer) {
     minijson::object_writer gameObject = writer.nested_object("GameObject");
     minijson::array_writer components = gameObject.nested_array("Components");
     
-    for (size_t i=0; i<world->componentTypes.size(); i++) {
+    for (int i=0; i<world->componentTypes.size(); i++) {
         if (this->components[i]) {
-            world->WriteJsonComponent(components, this, (int)i);
+            world->WriteJsonComponent(components, this, i);
         }
     }
     components.close();
@@ -180,5 +180,17 @@ void GameObject::WriteJson(minijson::object_writer& writer) {
     gameObject.close();
 }
 
+bool GameObject::IsComponentReference(int componentID) {
+    ComponentMask mask = world->componentTypes[componentID]->mask;
+    return !((ownedComponents & mask) == mask);
+}
 
+std::string GameObject::GetID() {
+    std::string* id = world->FindIDFromObject(this);
+    return id ? *id : "";
+}
+
+void GameObject::SetID(const std::string &id) {
+    world->CreateObjectID(this, id);
+}
 

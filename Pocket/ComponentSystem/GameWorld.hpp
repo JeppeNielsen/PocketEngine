@@ -90,6 +90,11 @@ private:
     void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
     void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
     GameObject* CreateGameObjectJson(minijson::istream_context& context);
+    void CreateObjectID(GameObject* object, const std::string& id);
+    GameObject* FindObjectFromID(const std::string& id);
+    std::string* FindIDFromObject(GameObject* object);
+    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
+    GameObject* FindFirstObjectWithComponentID(int componentID);
    
     ComponentTypes componentTypes;
     ComponentTypes changedComponentTypes;
@@ -110,6 +115,15 @@ private:
     PointerMap pointerMap;
     typedef std::map<void*, int> PointerCounter;
     PointerCounter pointerCounter;
+    
+    struct ObjectID {
+        GameObject* object;
+        std::string id;
+    };
+    
+    typedef std::vector<ObjectID> ObjectIDs;
+    ObjectIDs objectIDs;
+    
 };
 
 }
@@ -197,8 +211,7 @@ T* Pocket::GameObject::CloneComponent(GameObject* source) {
 
 template<class T>
 bool Pocket::GameObject::IsComponentReference() {
-    ComponentMask mask = world->componentTypes[T::ID]->mask;
-    return !((ownedComponents & mask) == mask);
+    return IsComponentReference(T::ID);
 }
 
 //--------------------------- </GameObject> -----------------------------

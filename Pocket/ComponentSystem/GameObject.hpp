@@ -70,6 +70,9 @@ public:
     void ToJson(std::ostream& stream);
     void WriteJson(minijson::object_writer& writer);
     
+    std::string GetID();
+    void SetID(const std::string& id);
+    
 private:
     GameObject();
     ~GameObject();
@@ -78,7 +81,8 @@ private:
     void CountPointers();
     GameObject* CloneInternal(GameObject* parent);
     void UpdatePointers();
-    
+    bool IsComponentReference(int componentID);
+   
     ObjectCollection children;
     GameWorld* world;
     typedef void* Components;

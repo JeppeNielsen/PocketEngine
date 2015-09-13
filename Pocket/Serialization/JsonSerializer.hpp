@@ -120,6 +120,22 @@ namespace Pocket {
         }
     };
     
+    template<>
+    struct JsonSerializer<uint64_t> {
+        static void Serialize(std::string& key, const uint64_t& value, minijson::object_writer& writer) {
+            writer.write(key.c_str(), value);
+        }
+        
+        static void Serialize(const uint64_t& value, minijson::array_writer& writer) {
+            writer.write(value);
+        }
+        
+        static void Deserialize(minijson::value& value, uint64_t* field, minijson::istream_context& context) {
+            if (value.type() != minijson::Number) return;
+            (*field) = ((uint64_t)value.as_long());
+        }
+    };
+    
     template<typename I>
     struct JsonSerializer<std::vector<I>> {
         static void Serialize(std::string& key, const std::vector<I>& value, minijson::object_writer& writer) {
@@ -215,13 +231,23 @@ namespace Pocket {
         }
     };
 
-    
-    
-    
-    
-    
-    
-    
+    template<typename T>
+    struct JsonSerializer<T, typename std::enable_if< std::is_enum<T>::value >::type> {
+        static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
+            writer.write(key.c_str(), (int)value);
+        }
+        
+        static void Serialize(const T& value, minijson::array_writer& writer) {
+            writer.write((int)value);
+        }
+        
+        static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
+            if (value.type()!=minijson::Number) return;
+            T enumValue = (T)value.as_long();
+            (*field) = enumValue;
+        }
+    };
+        
     
     
 }
