@@ -51,24 +51,6 @@ public:
         std::ifstream myfile (File::GetFullPath("GameObjectJson.txt"));
         box = world.CreateObjectFromJson(myfile);
         myfile.close();
-        
-        
-        //boxCopy->RemoveComponent<TextureComponent>();
-        //boxCopy->AddComponent<TextureComponent>(gui->Atlas());
-        //boxCopy->Children()[0]->AddComponent<TextureComponent>(gui->Atlas());
-        //myfile.close();
-        
-        /*
-        std::ifstream myfile (File::GetFullPath("TestObject.txt"));
-        GameObject* instance = world.CreateObjectFromJson(myfile);
-        myfile.close();
-        
-        Transform* transform = instance->GetComponent<Transform>();
-        
-        Transform* transformChild = instance->Children()[0]->GetComponent<Transform>();
-        */
-        
-        
     }
     
     void Update(float dt) {
@@ -80,7 +62,7 @@ public:
     }
 };
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<TestSerialization>();
 	return 0;

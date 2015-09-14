@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		7207A1831B99110400EEDBF9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7207A1821B99110400EEDBF9 /* main.cpp */; };
-		7207A1881B9CC64100EEDBF9 /* testIsBaseOf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7207A1861B9CC64100EEDBF9 /* testIsBaseOf.cpp */; };
 		7207A18A1B9E510E00EEDBF9 /* TestObject.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7207A1891B9E510E00EEDBF9 /* TestObject.txt */; };
 		726DB3DB1B978D8A004FC537 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DA1B978D8A004FC537 /* Cocoa.framework */; };
 		726DB3DD1B978D8A004FC537 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DC1B978D8A004FC537 /* OpenGL.framework */; };
@@ -343,8 +342,6 @@
 		726DB9AB1B979254004FC537 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A71B97918A004FC537 /* images.png */; };
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
-		726DB9B51B98F9B3004FC537 /* TestJson.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DB9B41B98F9B3004FC537 /* TestJson.cpp */; };
-		728A70A91BA0BE9F00E60E5B /* serialization.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728A70A81BA0BE9F00E60E5B /* serialization.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -366,7 +363,6 @@
 		7207A1821B99110400EEDBF9 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7207A1841B9C89E700EEDBF9 /* JsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonSerializer.hpp; sourceTree = "<group>"; };
 		7207A1851B9CAEBB00EEDBF9 /* Serializable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Serializable.hpp; sourceTree = "<group>"; };
-		7207A1861B9CC64100EEDBF9 /* testIsBaseOf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testIsBaseOf.cpp; sourceTree = "<group>"; };
 		7207A1891B9E510E00EEDBF9 /* TestObject.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestObject.txt; sourceTree = "<group>"; };
 		726DB3D71B978D8A004FC537 /* GUIEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GUIEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726DB3DA1B978D8A004FC537 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -1157,8 +1153,6 @@
 		726DB9A71B97918A004FC537 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
-		726DB9B41B98F9B3004FC537 /* TestJson.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestJson.cpp; sourceTree = "<group>"; };
-		728A70A81BA0BE9F00E60E5B /* serialization.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = serialization.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1210,9 +1204,6 @@
 			children = (
 				726DB9A11B97918A004FC537 /* Assets */,
 				7207A1821B99110400EEDBF9 /* main.cpp */,
-				728A70A81BA0BE9F00E60E5B /* serialization.cpp */,
-				726DB9B41B98F9B3004FC537 /* TestJson.cpp */,
-				7207A1861B9CC64100EEDBF9 /* testIsBaseOf.cpp */,
 			);
 			path = GUIEditor;
 			sourceTree = "<group>";
@@ -2727,7 +2718,6 @@
 				726DB8091B978D98004FC537 /* InputDevice.cpp in Sources */,
 				726DB9411B978D98004FC537 /* FileReader.mm in Sources */,
 				726DB80B1B978D98004FC537 /* Timer.cpp in Sources */,
-				726DB9B51B98F9B3004FC537 /* TestJson.cpp in Sources */,
 				726DB8301B978D98004FC537 /* Label.cpp in Sources */,
 				726DB8001B978D98004FC537 /* GameComponentType.cpp in Sources */,
 				726DB8641B978D98004FC537 /* SelectionVisualizer.cpp in Sources */,
@@ -2761,7 +2751,6 @@
 				726DB8A91B978D98004FC537 /* btCollisionObject.cpp in Sources */,
 				726DB8CF1B978D98004FC537 /* btMultiSphereShape.cpp in Sources */,
 				726DB84C1B978D98004FC537 /* Velocity.cpp in Sources */,
-				728A70A91BA0BE9F00E60E5B /* serialization.cpp in Sources */,
 				726DB8D31B978D98004FC537 /* btShapeHull.cpp in Sources */,
 				726DB83F1B978D98004FC537 /* TextBoxSystem.cpp in Sources */,
 				726DB8151B978D98004FC537 /* Triangulator.cpp in Sources */,
@@ -2808,7 +2797,6 @@
 				726DB8801B978D98004FC537 /* b2PairManager.cpp in Sources */,
 				726DB8E41B978D98004FC537 /* btGImpactShape.cpp in Sources */,
 				726DB8911B978D98004FC537 /* b2PolyAndCircleContact.cpp in Sources */,
-				7207A1881B9CC64100EEDBF9 /* testIsBaseOf.cpp in Sources */,
 				726DB9221B978D98004FC537 /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				726DB87E1B978D98004FC537 /* b2Collision.cpp in Sources */,
 				726DB8361B978D98004FC537 /* MenuButton.cpp in Sources */,
