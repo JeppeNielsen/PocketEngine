@@ -19,24 +19,44 @@ public:
     GameObject* label;
     
     void Initialize() {
+    
         
         gui = world.CreateFactory<Gui>();
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         font = gui->CreateFont("Font.fnt", "Font");
         
-        box = gui->CreateControl(0, "Box", 100, 200);
-        box->AddComponent<Draggable>();
+       // box = gui->CreateControl(0, "Box", 100, 200);
+       // box->AddComponent<Draggable>();
         
         //label = gui->CreateLabel(box, {0,0}, 200, font, "Testing new Gui Editor, yay \n line break", 11);
         //label->AddComponent<TextBox>()->Text = "Hvad er dit navn?";
         //label->AddComponent<Touchable>(box);
         
-        
-        
         //box->ToJson(std::cout);
         
-        gui->Atlas()->ToJson(std::cout);
+        //GameObject* child = box->Clone();
+        //child->Parent = box;
         
+        //std::ofstream saveFile("GameObjectJson.txt");
+        //box->ToJson(saveFile);
+        //saveFile.close();
+        
+        
+        
+        //std::stringstream s;
+        //box->ToJson(s);
+        //world.CreateObjectFromJson(s);
+        
+        
+        std::ifstream myfile (File::GetFullPath("GameObjectJson.txt"));
+        box = world.CreateObjectFromJson(myfile);
+        myfile.close();
+        
+        
+        //boxCopy->RemoveComponent<TextureComponent>();
+        //boxCopy->AddComponent<TextureComponent>(gui->Atlas());
+        //boxCopy->Children()[0]->AddComponent<TextureComponent>(gui->Atlas());
+        //myfile.close();
         
         /*
         std::ifstream myfile (File::GetFullPath("TestObject.txt"));

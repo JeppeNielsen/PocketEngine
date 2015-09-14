@@ -2,32 +2,61 @@
     "GameObject": {
         "Components": [
             {
-                "Atlas": {
-                    "nodes": [
-                        [
-                            "Box",
-                            {
-                                "outer": "0.000488281,0.50293,0.00927734,0.520508",
-                                "inner": "0.00341797,0.508789,0.00537109,0.512695"
-                            }
-                        ],
-                        [
-                            "Font",
-                            {
-                                "outer": "0.000488281,0.000976562,0.499512,0.499023",
-                                "inner": "0.00341797,0.00683594,0.495605,0.491211"
-                            }
-                        ]
-                    ],
-                    "defaultNode": {
-                        "outer": "0,0,1,1",
-                        "inner": "0,0,1,1"
-                    },
-                    "textureSize": "1024,512"
+                "Transform": {
+                    "Position": "100,100,0",
+                    "Rotation": "1,0,0,0",
+                    "Scale": "1,1,1",
+                    "Anchor": "0,0,0",
+                    "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                 }
             },
             {
-                "TextureComponent": {}
+                "Draggable": {}
+            },
+            {
+                "Touchable": {
+                    "ClickThrough": false
+                }
+            },
+            {
+                "Mesh": {}
+            },
+            {
+                "Colorable": {
+                    "Color": "255,255,255,255"
+                }
+            },
+            {
+                "Sprite": {
+                    "SpriteName": "Box",
+                    "CornerSize": "0,0"
+                }
+            },
+            {
+                "Sizeable": {
+                    "Size": "400,100"
+                }
+            },
+            {
+                "Atlas:ref": {
+                    "id": "Gui.Atlas"
+                }
+            },
+            {
+                "TextureComponent:ref": {
+                    "id": "Gui.Atlas"
+                }
+            },
+            {
+                "Orderable": {
+                    "Order": 0
+                }
+            },
+            {
+                "Material": {
+                    "BlendMode": 1,
+                    "Mask": 0
+                }
             }
         ]
     }

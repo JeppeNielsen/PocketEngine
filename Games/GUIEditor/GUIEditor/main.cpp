@@ -168,13 +168,9 @@ public:
         box = gui->CreateControl(0, "Box", 100, 200);
         box->AddComponent<Draggable>();
         
-        
-        
         label = gui->CreateLabel(box, {0,0}, 200, font, "Testing new Gui Editor, yay \n line break", 11);
-        
         label->AddComponent<TextBox>()->Text = "Hvad er dit navn?";
         label->AddComponent<Touchable>(box);
-        
         
         GameObject* parent = world.CreateObject();
         parent->AddComponent<Transform>()->Position = {1,2,3};
