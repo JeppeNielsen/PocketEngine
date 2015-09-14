@@ -11,6 +11,11 @@
 #include "Property.hpp"
 #include "TypeDefs.hpp"
 #include "IPointable.hpp"
+#include <ostream>
+
+namespace minijson {
+  class object_writer;
+}
 
 namespace Pocket {
 
@@ -60,10 +65,13 @@ public:
     GameObject* Clone();
     GameObject* Clone(GameObject* parent);
     
-    void Serialize(ISerializedProperty* serializedObject);
-    void Deserialize(ISerializedProperty* serializedObject);
-    
     GameWorld* World();
+    
+    void ToJson(std::ostream& stream);
+    void WriteJson(minijson::object_writer& writer);
+    
+    std::string GetID();
+    void SetID(const std::string& id);
     
 private:
     GameObject();
@@ -73,7 +81,8 @@ private:
     void CountPointers();
     GameObject* CloneInternal(GameObject* parent);
     void UpdatePointers();
-    
+    bool IsComponentReference(int componentID);
+   
     ObjectCollection children;
     GameWorld* world;
     typedef void* Components;

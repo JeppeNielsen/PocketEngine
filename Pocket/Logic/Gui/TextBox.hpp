@@ -20,5 +20,9 @@ public:
     Property<TextBox*, std::string> Text;
     Property<TextBox*, bool> Active;
     
+    SERIALIZE_FIELDS_BEGIN
+    SERIALIZE_FIELD(Text);
+    SERIALIZE_FIELD(Active);
+    SERIALIZE_FIELDS_END
     };
 }

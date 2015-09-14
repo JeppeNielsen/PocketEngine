@@ -50,7 +50,8 @@ namespace Pocket {
     
         void Cancel();
     
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(ClickThrough);
+        SERIALIZE_FIELDS_END
 	};
-    
-    
 }

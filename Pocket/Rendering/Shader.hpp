@@ -66,7 +66,7 @@ public:
             return false;
         }
         
-        std::cout << "Shader::Initialize()"<<std::endl;
+        //std::cout << "Shader::Initialize()"<<std::endl;
         
         glUseProgram(shaderProgram);
         
@@ -91,7 +91,7 @@ public:
         for (auto& a : attributes) {
             glEnableVertexAttribArray(a.glAttribute);
         }
-       // std::cout<<"Using shader : " << name<<"  shader program " << shaderProgram<<" attributes:  " << attributes.size()<< std::endl;
+       // //std::cout<<"Using shader : " << name<<"  shader program " << shaderProgram<<" attributes:  " << attributes.size()<< std::endl;
        
         for (int i=0; i<textureUniforms.size(); ++i) {
             glUniform1i(textureUniforms[i].location, i);
@@ -109,16 +109,16 @@ public:
             }
         }
         if (counter==0) {
-            std::cout << "No matching shader value found " << std::endl;
+            //std::cout << "No matching shader value found " << std::endl;
             return false;
         } else if (counter>1) {
-            std::cout << "Two or more matching shader values found: " << std::endl;
+            //std::cout << "Two or more matching shader values found: " << std::endl;
             for(auto uniform : uniforms) {
                 if (uniform.type == uniformType) {
-                    std::cout << uniform.name << std::endl;
+                    //std::cout << uniform.name << std::endl;
                 }
             }
-            std::cout<<std::endl;
+            //std::cout<<std::endl;
             return false;
         }
         for(auto& uniform : uniforms) {
@@ -139,16 +139,16 @@ public:
         });
     
         if (uniform == uniforms.end()) {
-            std::cout << "No shader variable with name: '"<<name<<"' found, valid names are:"<<std::endl;
+            //std::cout << "No shader variable with name: '"<<name<<"' found, valid names are:"<<std::endl;
             for(auto u : uniforms) {
-                std::cout<<u.name<<std::endl;
+                //std::cout<<u.name<<std::endl;
             }
             return false;
         }
         
         GLenum uniformType = ShaderVariableType<T>::GetType();
         if (uniformType!=uniform->type) {
-            std::cout << " Shader variable types mismatch "<< std::endl;
+            //std::cout << " Shader variable types mismatch "<< std::endl;
             return false;
         }
         glUseProgram(shaderProgram);
@@ -164,7 +164,7 @@ private:
         
         attributes.clear();
         
-        std::cout << "Attributes: "<< std::endl;
+        //std::cout << "Attributes: "<< std::endl;
         
         for (int i=0; i<numberOfAttributes; i++) {
             GLchar name[256];
@@ -179,11 +179,11 @@ private:
             auto it = description.Attributes().find(attributeName);
             if (it == description.Attributes().end()) {
             
-                std::cout<< "Vertex attribute not found: "<< attributeName << std::endl;
-                std::cout<< "Valid vertex attributes are: "<< std::endl;
+                //std::cout<< "Vertex attribute not found: "<< attributeName << std::endl;
+                //std::cout<< "Valid vertex attributes are: "<< std::endl;
                 
                 for(auto a : description.Attributes()) {
-                    std::cout<<a.first<<std::endl;
+                    //std::cout<<a.first<<std::endl;
                 }
                 
                 return false;
@@ -192,10 +192,10 @@ private:
             VertexAttribute attribute = it->second;
             attribute.glAttribute = glGetAttribLocation(shaderProgram, attributeName.c_str());
             attributes.push_back(attribute);
-            std::cout << attributeName << std::endl;
+            //std::cout << attributeName << std::endl;
         }
         
-        std::cout << "End attributes: "<< std::endl;
+        //std::cout << "End attributes: "<< std::endl;
         
         return true;
     }
@@ -203,7 +203,7 @@ private:
     bool FindUniforms() {
         viewProjectionUniform = -1;
         GLint numberOfUniforms;
-        std::cout<<"Uniforms : " << std::endl;
+        //std::cout<<"Uniforms : " << std::endl;
         glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &numberOfUniforms);
         for (int i=0; i<numberOfUniforms; i++) {
             GLchar name[256];
@@ -216,7 +216,7 @@ private:
             uniforms.push_back( uniform );
             if (type == GL_SAMPLER_2D) {
                 textureUniforms.push_back( uniform );
-                std::cout<<uniformName << " type: " <<type << std::endl;
+                //std::cout<<uniformName << " type: " <<type << std::endl;
             }
         
             
@@ -225,7 +225,7 @@ private:
                 viewProjectionUniform = i;
             }
         }
-        std::cout<<"End uniforms: " << textureUniforms.size() << std::endl;
+        //std::cout<<"End uniforms: " << textureUniforms.size() << std::endl;
         return true;
     }
     
@@ -246,7 +246,7 @@ private:
         if (linkSuccess == GL_FALSE) {
             GLchar messages[256];
             glGetProgramInfoLog(shaderProgram, sizeof(messages), 0, &messages[0]);
-            std::cout<<messages<<std::endl;
+            //std::cout<<messages<<std::endl;
             return false;
         }
         
@@ -268,7 +268,7 @@ private:
         if (compileSuccess == GL_FALSE) {
             GLchar messages[256];
             glGetShaderInfoLog(shader, sizeof(messages), 0, &messages[0]);
-            std::cout<<messages<<std::endl;
+            //std::cout<<messages<<std::endl;
             return 0;
         }
         

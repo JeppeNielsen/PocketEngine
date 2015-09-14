@@ -11,8 +11,9 @@
 #include <set>
 #include "TypeDefs.hpp"
 #include "GameObject.hpp"
-#include "SerializedProperty.hpp"
 #include <map>
+#include "minijson_writer.hpp"
+#include "minijson_reader.hpp"
 
 namespace Pocket {
   
@@ -51,8 +52,8 @@ public:
     virtual void StorePointerCounts(void* component, std::map<void*, int>& pointerCounter) = 0;
     virtual void UpdatePointers(void* component, std::map<void*, void*>& pointerMap, std::map<void*, int>& pointerCounter) = 0;
     virtual void* AddComponent() = 0;
-    virtual void SerializeComponent(ISerializedProperty* serializedObject, void* component) = 0;
-    virtual void DeserializeComponent(ISerializedProperty* serializedObject, void* component) = 0;
+    virtual void WriteJson(minijson::array_writer& writer, void* component, bool isReference, std::string* referenceID) = 0;
+    virtual void ReadJson(minijson::istream_context& context, void* component) = 0;
 };
 
 template<class T>
@@ -71,8 +72,8 @@ public:
     void AddReference(void* source);
     void StorePointerCounts(void* component, std::map<void*, int>& pointerCounter);
     void UpdatePointers(void* component, std::map<void*, void*>& pointerMap, std::map<void*, int>& pointerCounter);
-    void SerializeComponent(ISerializedProperty* serializedObject, void* component);
-    void DeserializeComponent(ISerializedProperty* serializedObject, void* component);
+    void WriteJson(minijson::array_writer& writer, void* component, bool isReference, std::string* referenceID);
+    void ReadJson(minijson::istream_context& context, void* component);
     
     void UpdateRemovedObject(GameObject* object);
     
@@ -179,20 +180,33 @@ void Pocket::GameComponentType<T>::UpdateRemovedObject(GameObject *object) {
     object->ownedComponents &= maskInverse;
     object->enabledComponents &= maskInverse;
 }
-
 template<class T>
-void Pocket::GameComponentType<T>::SerializeComponent(ISerializedProperty* serializedObject, void* component) {
-    T* referenceComponent = (T*)component;
-    referenceComponent->Serialize(serializedObject->Add(referenceComponent->Name(), referenceComponent));
+void Pocket::GameComponentType<T>::WriteJson(minijson::array_writer& writer, void *componentPtr, bool isReference, std::string* referenceID ) {
+    T* component = (T*)componentPtr;
+    minijson::object_writer componentWriter = writer.nested_object();
+    if (!isReference) {
+        minijson::object_writer jsonComponent = componentWriter.nested_object(component->Name().c_str());
+        auto fields = component->GetFields();
+        fields.Serialize(jsonComponent);
+        jsonComponent.close();
+    } else {
+        std::string referenceName = component->Name() + ":ref";
+        minijson::object_writer jsonComponent = componentWriter.nested_object(referenceName.c_str());
+        if (!referenceID) {
+            jsonComponent.write("id", "");
+        } else {
+            jsonComponent.write("id", *referenceID);
+        }
+        jsonComponent.close();
+    }
+    componentWriter.close();
 }
 
 template<class T>
-void Pocket::GameComponentType<T>::DeserializeComponent(ISerializedProperty* serializedObject, void* component) {
+void Pocket::GameComponentType<T>::ReadJson(minijson::istream_context &context, void *component) {
     T* referenceComponent = (T*)component;
-    ISerializedProperty* property = serializedObject->Get(referenceComponent->Name());
-    if (property) {
-        referenceComponent->Deserialize(property);
-    }
+    auto fields = referenceComponent->GetFields();
+    fields.Deserialize(context);
 }
 
 template<class T>
@@ -231,6 +245,8 @@ public:
     static int GetID();
     
     static IGameComponentType* CreateType(int index);
+    
+    static int ComponentIDFromName(std::string name);
 };
 
 }

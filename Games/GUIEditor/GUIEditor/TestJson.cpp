@@ -16,14 +16,17 @@
 
 using namespace minijson;
 
-int main_write() {
+int main_writer() {
 
     std::ofstream myfile;
     myfile.open ("example.txt");
 
     std::stringstream s;
+    
+    minijson::writer_configuration config;
+    
 
-    minijson::object_writer writer(myfile);
+    minijson::object_writer writer(myfile, config);
     writer.write("name", "Los Angeles");
     {
         minijson::object_writer position_writer = writer.nested_object("position");
@@ -46,7 +49,7 @@ int main_write() {
 }
 
 
-int main() {
+int main_reader() {
 
     std::ifstream myfile ("example.txt");
 

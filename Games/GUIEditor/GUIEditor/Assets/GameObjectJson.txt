@@ -1,2 +1,63 @@
-
-
+{
+    "GameObject": {
+        "Components": [
+            {
+                "Transform": {
+                    "Position": "100,100,0",
+                    "Rotation": "1,0,0,0",
+                    "Scale": "1,1,1",
+                    "Anchor": "0,0,0",
+                    "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                }
+            },
+            {
+                "Draggable": {}
+            },
+            {
+                "Touchable": {
+                    "ClickThrough": false
+                }
+            },
+            {
+                "Mesh": {}
+            },
+            {
+                "Colorable": {
+                    "Color": "255,255,255,255"
+                }
+            },
+            {
+                "Sprite": {
+                    "SpriteName": "Box",
+                    "CornerSize": "0,0"
+                }
+            },
+            {
+                "Sizeable": {
+                    "Size": "400,100"
+                }
+            },
+            {
+                "Atlas:ref": {
+                    "id": "Gui.Atlas"
+                }
+            },
+            {
+                "TextureComponent:ref": {
+                    "id": "Gui.Atlas"
+                }
+            },
+            {
+                "Orderable": {
+                    "Order": 0
+                }
+            },
+            {
+                "Material": {
+                    "BlendMode": 1,
+                    "Mask": 0
+                }
+            }
+        ]
+    }
+}

@@ -14,11 +14,16 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <istream>
 #if EMSCRIPTEN
 #if ENABLE_SCRIPTING
     #undef ENABLE_SCRIPTING
 #endif
 #endif
+
+namespace minijson {
+    class object_writer;
+};
 
 namespace Pocket {
 
@@ -32,6 +37,7 @@ public:
     ~GameWorld();
     
     GameObject* CreateObject();
+    GameObject* CreateObjectFromJson(std::istream& jsonStream);
     
     void Update(float dt);
     void Render();
@@ -81,9 +87,14 @@ private:
     
     void AddSystem(GameSystem* system, int componentID);
     
-    void SerializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID);
-    void DeserializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID);
-
+    void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
+    void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
+    GameObject* CreateGameObjectJson(minijson::istream_context& context);
+    void CreateObjectID(GameObject* object, const std::string& id);
+    GameObject* FindObjectFromID(const std::string& id);
+    std::string* FindIDFromObject(GameObject* object);
+    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
+    GameObject* FindFirstObjectWithComponentID(int componentID);
    
     ComponentTypes componentTypes;
     ComponentTypes changedComponentTypes;
@@ -104,6 +115,15 @@ private:
     PointerMap pointerMap;
     typedef std::map<void*, int> PointerCounter;
     PointerCounter pointerCounter;
+    
+    struct ObjectID {
+        GameObject* object;
+        std::string id;
+    };
+    
+    typedef std::vector<ObjectID> ObjectIDs;
+    ObjectIDs objectIDs;
+    
 };
 
 }
@@ -191,8 +211,7 @@ T* Pocket::GameObject::CloneComponent(GameObject* source) {
 
 template<class T>
 bool Pocket::GameObject::IsComponentReference() {
-    ComponentMask mask = world->componentTypes[T::ID]->mask;
-    return !((ownedComponents & mask) == mask);
+    return IsComponentReference(T::ID);
 }
 
 //--------------------------- </GameObject> -----------------------------

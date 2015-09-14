@@ -18,5 +18,8 @@ namespace Pocket {
         void Reset();
         void Clone(const Orderable& source);
     
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(Order)
+        SERIALIZE_FIELDS_END
     };
 }

@@ -12,6 +12,9 @@
 #include "ScriptSystem.hpp"
 #endif
 
+#include "minijson_writer.hpp"
+#include <iostream>
+
 using namespace Pocket;
 
 GameWorld::GameWorld() {
@@ -105,7 +108,12 @@ void GameWorld::UpdateRemovedObject(GameObject *object) {
     lastObject->indexInList = object->indexInList;
     activeObjects[object->indexInList] = lastObject;
     activeObjects.pop_back();
-    
+    for (int i=0; i<objectIDs.size(); ++i) {
+        if (objectIDs[i].object == object) {
+            objectIDs.erase(objectIDs.begin() + i);
+            break;
+        }
+    }
     object->ClearPointers();
 }
 
@@ -224,17 +232,144 @@ void GameWorld::AddSystem(GameSystem* system, int componentID) {
     type->systems.push_back(system);
 }
 
-void GameWorld::SerializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    type->SerializeComponent(serializedObject, object->components[componentID]);
-}
-
-void GameWorld::DeserializeComponent(ISerializedProperty* serializedObject, GameObject* object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    type->DeserializeComponent(serializedObject, object->components[componentID]);
-}
-
 const GameWorld::ComponentTypes& GameWorld::ComponentTypesList() { return componentTypes; }
+
+void GameWorld::WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID) {
+    IGameComponentType* type = componentTypes[componentID];
+    std::string* referenceID;
+    bool isReference = object->IsComponentReference(componentID);
+    if (isReference) {
+        referenceID = FindIDFromReferenceObject(object, componentID);
+    } else {
+        referenceID = 0;
+    }
+    type->WriteJson(writer, object->components[componentID], isReference, referenceID);
+}
+
+void GameWorld::ReadJsonComponent(minijson::istream_context &context, GameObject *object, int componentID) {
+    IGameComponentType* type = componentTypes[componentID];
+    type->ReadJson(context, object->components[componentID]);
+}
+
+GameObject* GameWorld::CreateObjectFromJson(std::istream &jsonStream) {
+    minijson::istream_context context(jsonStream);
+    GameObject* object = CreateGameObjectJson(context);
+    return object;
+}
+
+GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context) {
+    GameObject* object = 0;
+    
+    try {
+         minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            std::string name = n;
+            if (name == "GameObject" && v.type() == minijson::Object) {
+                object = CreateObject();
+                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                    std::string name = n;
+                    if (name == "Components" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            if (v.type() == minijson::Object) {
+                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                    std::string componentName = n;
+                                    int componentID = GameComponentTypeFactory::ComponentIDFromName(componentName);
+                                    if (componentID!=-1) {
+                                        if (!object->components[componentID]) { // only allow one type of component for each object
+                                            AddComponent(object, componentID);
+                                            ReadJsonComponent(context, object, componentID);
+                                        } else {
+                                            std::cout<<"Only one component per type allowed per object"<<std::endl;
+                                            minijson::ignore(context);
+                                        }
+                                    } else if(componentName.size()>4) {
+                                        size_t refLocation = componentName.rfind(":ref");
+                                        if (refLocation!=-1) {
+                                            componentName = componentName.substr(0, refLocation);
+                                            componentID = GameComponentTypeFactory::ComponentIDFromName(componentName);
+                                            if (componentID!=-1) {
+                                                std::string referenceID = "";
+                                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                                    std::string id = n;
+                                                    if (id == "id" && v.type()==minijson::String) {
+                                                        referenceID = v.as_string();
+                                                        GameObject* referenceObject = FindObjectFromID(referenceID);
+                                                        if (!referenceObject) {
+                                                            //object not found with id, try assign first object with this component
+                                                            referenceObject = FindFirstObjectWithComponentID(componentID);
+                                                        }
+                                                        if (referenceObject) {
+                                                            AddComponent(object, componentID, referenceObject);
+                                                        }
+                                                    } else {
+                                                        minijson::ignore(context);
+                                                    }
+                                                });
+                                                std::cout << "component reference found for component : " <<componentName<<std::endl;
+                                            }
+                                            minijson::ignore(context);
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    } else if (name == "Children" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            GameObject* child = CreateGameObjectJson(context);
+                            if (child) {
+                                child->Parent = object;
+                            }
+                        });
+                    }
+                });
+            }
+         });
+    } catch (std::exception e) {
+  
+    }
+    return object;
+}
+
+void GameWorld::CreateObjectID(GameObject *object, const std::string &id) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.object == object)  {
+            objectID.id = id;
+            return;
+        }
+    }
+    objectIDs.push_back({object, id});
+}
+
+GameObject* GameWorld::FindObjectFromID(const std::string &id) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.id == id) return objectID.object;
+    }
+    return 0;
+}
+
+std::string* GameWorld::FindIDFromObject(GameObject *object) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.object == object) return &objectID.id;
+    }
+    return 0;
+}
+
+std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.object->components[componentID] &&
+            objectID.object->components[componentID] == referenceObject->components[componentID] &&
+            !objectID.object->IsComponentReference(componentID)) {
+            return &objectID.id;
+        }
+    }
+    return 0;
+}
+
+GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
+    for(GameObject* object : activeObjects) {
+        if (object->components[componentID]) return object;
+    }
+    return 0;
+}
 
 #ifdef ENABLE_SCRIPTING
 

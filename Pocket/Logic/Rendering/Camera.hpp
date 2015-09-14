@@ -35,9 +35,6 @@ namespace Pocket {
     
         void Reset();
     
-        void Serialize(ISerializedProperty* property);
-        void Deserialize(ISerializedProperty* property);
-    
     protected:
         void Clone(const Camera& source);
     

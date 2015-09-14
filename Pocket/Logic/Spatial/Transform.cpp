@@ -125,15 +125,3 @@ void Transform::Relative(const Pocket::Transform &a, const Pocket::Transform &b)
         Matrix = Matrix4x4::CreateTransform(b.Position, b.Scale, b.Rotation) * b.Matrix;
     }
 }
-
-void Transform::Serialize(Pocket::ISerializedProperty *property) {
-    property->Add("Position", Position());
-    property->Add("Rotation", Rotation());
-    property->Add("Scale", Scale());
-}
-
-void Transform::Deserialize(Pocket::ISerializedProperty *property) {
-    Position = property->GetValue<Vector3>("Position", Vector3(0,0,0));
-    Rotation = property->GetValue<Quaternion>("Rotation", Quaternion::IDENTITY);
-    Scale = property->GetValue<Vector3>("Scale", Vector3(1,1,1));
-}
