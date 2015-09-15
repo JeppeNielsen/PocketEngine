@@ -27,7 +27,7 @@ namespace Pocket {
         
         void SomethingChanged(GameObject* object);
     
-        void AddText(Mesh& mesh, const Pocket::Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Box& t);
+        void AddText(Mesh& mesh, const Pocket::Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Box& t, const Colour& color);
         
     };
 }

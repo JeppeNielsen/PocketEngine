@@ -20,19 +20,17 @@ public:
     void Clone(const Draggable& other);
 
     
-    struct MovementMode {
-        enum Type {
-            Normal,
-            XAxis,
-            YAxis,
-            ZAxis,
-            XYPlane,
-            YZPlane,
-            XZPlane,
-        };
+    enum class MovementMode {
+        Normal,
+        XAxis,
+        YAxis,
+        ZAxis,
+        XYPlane,
+        YZPlane,
+        XZPlane,
     };
     
-    MovementMode::Type Movement;
+    MovementMode Movement;
     Property<Draggable*, bool> IsDragging;
     
     };

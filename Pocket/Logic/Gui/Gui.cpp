@@ -11,7 +11,7 @@
 #include "OctreeSystem.hpp"
 #include "HierarchyOrder.hpp"
 #include "TextBoxLabelSystem.hpp"
-#include "Colorable.hpp"
+#include "ColorSystem.hpp"
 
 using namespace Pocket;
 
@@ -34,6 +34,7 @@ void Gui::Initialize() {
     CreateSystem<TextBoxLabelSystem>();
     CreateSystem<MenuSystem>();
     CreateSystem<MenuButtonSystem>();
+    CreateSystem<ColorSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {

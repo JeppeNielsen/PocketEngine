@@ -9,6 +9,7 @@
 #include "LabelMeshSystem.hpp"
 #include "Atlas.hpp"
 #include "Vertex.hpp"
+#include "Colorable.hpp"
 
 using namespace Pocket;
 
@@ -61,12 +62,12 @@ void LabelMeshSystem::SomethingChanged(GameObject* object) {
     const Box& texCoords = atlas ? atlas->GetNode(font->FontAtlasNode).outer : Box(0,0,1,1);
     
     mesh->Clear();
-    AddText(*mesh, *font, label->Text, size, label->FontSize, label->HAlignment, label->VAlignment, label->WordWrap, texCoords);
+    
+    Colour color = object->GetComponent<Colorable>()!=0 ? object->GetComponent<Colorable>()->Color() : Colour::White();
+    AddText(*mesh, *font, label->Text, size, label->FontSize, label->HAlignment, label->VAlignment, label->WordWrap, texCoords, color);
 }
 
-
-
- void LabelMeshSystem::AddText(Mesh& mesh, const Pocket::Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Box& t) {
+ void LabelMeshSystem::AddText(Mesh& mesh, const Pocket::Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Box& t, const Colour& color) {
  
  std::vector<Font::Letter> letters;
  font.CreateText(letters, text, size, fontSize, hAlign, vAlign, wordWrap, true);
@@ -90,8 +91,6 @@ void LabelMeshSystem::SomethingChanged(GameObject* object) {
  verticesIndex = vertices.size();
  
  vertices.resize(vertices.size() + letters.size() * 4);
- 
- const Colour color = Colour::White();
  
  Vector2 of = -0.5f / 1024.0f;
  
