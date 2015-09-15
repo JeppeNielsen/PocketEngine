@@ -17,11 +17,11 @@ namespace Pocket {
 public:
     Layoutable();
     
-    struct HAlignment { enum Type { None, Left, Center, Right, Relative }; };
-    struct VAlignment { enum Type { None, Top, Center, Bottom, Relative }; };
+    enum class HAlignment { None, Left, Center, Right, Relative };
+    enum class VAlignment { None, Top, Center, Bottom, Relative };
     
-    Property<Layoutable*, HAlignment::Type> HorizontalAlignment;
-    Property<Layoutable*, VAlignment::Type> VerticalAlignment;
+    Property<Layoutable*, HAlignment> HorizontalAlignment;
+    Property<Layoutable*, VAlignment> VerticalAlignment;
     
     void Reset();
     void Clone(const Layoutable& other);

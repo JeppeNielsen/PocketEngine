@@ -95,7 +95,7 @@ void LayoutSystem::LayoutObject::Update() {
     }
     
     switch (layoutable->VerticalAlignment()) {
-        case Layoutable::HAlignment::None:
+        case Layoutable::VAlignment::None:
         case Layoutable::VAlignment::Bottom: {
             break;
         }
