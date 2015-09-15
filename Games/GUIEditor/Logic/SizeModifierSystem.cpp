@@ -35,9 +35,6 @@ void SizeModifierSystem::SelectionChanged(Selectable *selectable, GameObject* ob
 
 GameObject* SizeModifierSystem::CreateNode(GameObject *object, int cornerIndex, Draggable::MovementMode movementMode) {
     GameObject* go = World()->CreateObject();
-    if (go == object) {
-        std::cout<<"NONON";
-    }
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 10, Colour::White());
     go->AddComponent<Material>();

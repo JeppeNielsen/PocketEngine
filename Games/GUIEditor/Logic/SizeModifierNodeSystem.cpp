@@ -50,8 +50,6 @@ void SizeModifierNodeSystem::Update(float dt) {
             
             node->transformTarget->Position = node->transformTarget->Local.GetValue()->TransformPosition(localPivotPosition);
             node->sizableTarget->Size = size;
-            
-            std::cout << size<<"  ";
         }
     }
     draggingObjects.Clear();

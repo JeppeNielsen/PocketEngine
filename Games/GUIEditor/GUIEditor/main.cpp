@@ -22,17 +22,11 @@ public:
     
     void Initialize() {
         
-        
-        
         gui = world.CreateFactory<Gui>();
-        
         world.CreateSystem<ClickSelectorSystem>();
         world.CreateSystem<SizeModifierSystem>();
         world.CreateSystem<SizeModifierNodeSystem>();
-        
-        
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
-        
         font = gui->CreateFont("Font.fnt", "Font");
         
         /*
