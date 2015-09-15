@@ -9,6 +9,15 @@
 /* Begin PBXBuildFile section */
 		7207A1831B99110400EEDBF9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7207A1821B99110400EEDBF9 /* main.cpp */; };
 		7207A18A1B9E510E00EEDBF9 /* TestObject.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7207A1891B9E510E00EEDBF9 /* TestObject.txt */; };
+		7224B4881BA73656002737EB /* Gizmo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4861BA73656002737EB /* Gizmo.cpp */; };
+		7224B48B1BA736E4002737EB /* GizmoSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4891BA736E4002737EB /* GizmoSystem.cpp */; };
+		7224B48E1BA7389F002737EB /* GizmoCreatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B48C1BA7389F002737EB /* GizmoCreatorSystem.cpp */; };
+		7224B4911BA748EF002737EB /* GizmoPositionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B48F1BA748EF002737EB /* GizmoPositionSystem.cpp */; };
+		7224B4941BA75FE4002737EB /* GizmoModifierSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4921BA75FE4002737EB /* GizmoModifierSystem.cpp */; };
+		7224B4A11BA7754B002737EB /* SizeModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4981BA7754B002737EB /* SizeModifier.cpp */; };
+		7224B4A21BA7754B002737EB /* SizeModifierNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */; };
+		7224B4A31BA7754B002737EB /* SizeModifierNodeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49D1BA7754B002737EB /* SizeModifierNodeSystem.cpp */; };
+		7224B4A41BA7754B002737EB /* SizeModifierSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */; };
 		726DB3DB1B978D8A004FC537 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DA1B978D8A004FC537 /* Cocoa.framework */; };
 		726DB3DD1B978D8A004FC537 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DC1B978D8A004FC537 /* OpenGL.framework */; };
 		726DB3DF1B978D8A004FC537 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DE1B978D8A004FC537 /* OpenAL.framework */; };
@@ -364,6 +373,24 @@
 		7207A1841B9C89E700EEDBF9 /* JsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonSerializer.hpp; sourceTree = "<group>"; };
 		7207A1851B9CAEBB00EEDBF9 /* Serializable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Serializable.hpp; sourceTree = "<group>"; };
 		7207A1891B9E510E00EEDBF9 /* TestObject.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestObject.txt; sourceTree = "<group>"; };
+		7224B4861BA73656002737EB /* Gizmo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gizmo.cpp; sourceTree = "<group>"; };
+		7224B4871BA73656002737EB /* Gizmo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gizmo.h; sourceTree = "<group>"; };
+		7224B4891BA736E4002737EB /* GizmoSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GizmoSystem.cpp; sourceTree = "<group>"; };
+		7224B48A1BA736E4002737EB /* GizmoSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GizmoSystem.h; sourceTree = "<group>"; };
+		7224B48C1BA7389F002737EB /* GizmoCreatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GizmoCreatorSystem.cpp; sourceTree = "<group>"; };
+		7224B48D1BA7389F002737EB /* GizmoCreatorSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GizmoCreatorSystem.h; sourceTree = "<group>"; };
+		7224B48F1BA748EF002737EB /* GizmoPositionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GizmoPositionSystem.cpp; sourceTree = "<group>"; };
+		7224B4901BA748EF002737EB /* GizmoPositionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GizmoPositionSystem.h; sourceTree = "<group>"; };
+		7224B4921BA75FE4002737EB /* GizmoModifierSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GizmoModifierSystem.cpp; sourceTree = "<group>"; };
+		7224B4931BA75FE4002737EB /* GizmoModifierSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GizmoModifierSystem.h; sourceTree = "<group>"; };
+		7224B4981BA7754B002737EB /* SizeModifier.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifier.cpp; sourceTree = "<group>"; };
+		7224B49A1BA7754B002737EB /* SizeModifier.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifier.hpp; sourceTree = "<group>"; };
+		7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierNode.cpp; sourceTree = "<group>"; };
+		7224B49C1BA7754B002737EB /* SizeModifierNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifierNode.hpp; sourceTree = "<group>"; };
+		7224B49D1BA7754B002737EB /* SizeModifierNodeSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierNodeSystem.cpp; sourceTree = "<group>"; };
+		7224B49E1BA7754B002737EB /* SizeModifierNodeSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifierNodeSystem.hpp; sourceTree = "<group>"; };
+		7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierSystem.cpp; sourceTree = "<group>"; };
+		7224B4A01BA7754B002737EB /* SizeModifierSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifierSystem.hpp; sourceTree = "<group>"; };
 		726DB3D71B978D8A004FC537 /* GUIEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GUIEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726DB3DA1B978D8A004FC537 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		726DB3DC1B978D8A004FC537 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -1170,6 +1197,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7224B4851BA7338E002737EB /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				7224B4861BA73656002737EB /* Gizmo.cpp */,
+				7224B4871BA73656002737EB /* Gizmo.h */,
+				7224B48C1BA7389F002737EB /* GizmoCreatorSystem.cpp */,
+				7224B48D1BA7389F002737EB /* GizmoCreatorSystem.h */,
+				7224B4921BA75FE4002737EB /* GizmoModifierSystem.cpp */,
+				7224B4931BA75FE4002737EB /* GizmoModifierSystem.h */,
+				7224B48F1BA748EF002737EB /* GizmoPositionSystem.cpp */,
+				7224B4901BA748EF002737EB /* GizmoPositionSystem.h */,
+				7224B4891BA736E4002737EB /* GizmoSystem.cpp */,
+				7224B48A1BA736E4002737EB /* GizmoSystem.h */,
+				7224B4981BA7754B002737EB /* SizeModifier.cpp */,
+				7224B49A1BA7754B002737EB /* SizeModifier.hpp */,
+				7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */,
+				7224B49C1BA7754B002737EB /* SizeModifierNode.hpp */,
+				7224B49D1BA7754B002737EB /* SizeModifierNodeSystem.cpp */,
+				7224B49E1BA7754B002737EB /* SizeModifierNodeSystem.hpp */,
+				7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */,
+				7224B4A01BA7754B002737EB /* SizeModifierSystem.hpp */,
+			);
+			path = Logic;
+			sourceTree = SOURCE_ROOT;
+		};
 		726DB3CE1B978D8A004FC537 = {
 			isa = PBXGroup;
 			children = (
@@ -1202,6 +1254,7 @@
 		726DB3E21B978D8A004FC537 /* GUIEditor */ = {
 			isa = PBXGroup;
 			children = (
+				7224B4851BA7338E002737EB /* Logic */,
 				726DB9A11B97918A004FC537 /* Assets */,
 				7207A1821B99110400EEDBF9 /* main.cpp */,
 			);
@@ -2672,6 +2725,7 @@
 				726DB8311B978D98004FC537 /* LabelMeshSystem.cpp in Sources */,
 				726DB8FF1B978D98004FC537 /* btSequentialImpulseConstraintSolver.cpp in Sources */,
 				726DB9211B978D98004FC537 /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
+				7224B4A21BA7754B002737EB /* SizeModifierNode.cpp in Sources */,
 				726DB8A31B978D98004FC537 /* btSimpleBroadphase.cpp in Sources */,
 				726DB8E11B978D98004FC537 /* btGImpactBvh.cpp in Sources */,
 				726DB9531B978D98004FC537 /* TexturePacker.cpp in Sources */,
@@ -2715,6 +2769,7 @@
 				726DB8731B978D98004FC537 /* Ray.cpp in Sources */,
 				726DB89A1B978D98004FC537 /* btAxisSweep3.cpp in Sources */,
 				726DB92A1B978D98004FC537 /* btQuickprof.cpp in Sources */,
+				7224B4A31BA7754B002737EB /* SizeModifierNodeSystem.cpp in Sources */,
 				726DB8091B978D98004FC537 /* InputDevice.cpp in Sources */,
 				726DB9411B978D98004FC537 /* FileReader.mm in Sources */,
 				726DB80B1B978D98004FC537 /* Timer.cpp in Sources */,
@@ -2736,6 +2791,7 @@
 				726DB94B1B978D98004FC537 /* Profiler.cpp in Sources */,
 				726DB86D1B978D98004FC537 /* Matrix3x3.cpp in Sources */,
 				726DB8271B978D98004FC537 /* SoundSystem.cpp in Sources */,
+				7224B4911BA748EF002737EB /* GizmoPositionSystem.cpp in Sources */,
 				726DB8A11B978D98004FC537 /* btOverlappingPairCache.cpp in Sources */,
 				726DB8201B978D98004FC537 /* TransformAnimation.cpp in Sources */,
 				726DB8761B978D98004FC537 /* Vector3.cpp in Sources */,
@@ -2766,6 +2822,7 @@
 				726DB91F1B978D98004FC537 /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
 				726DB90B1B978D98004FC537 /* btParallelConstraintSolver.cpp in Sources */,
 				726DB9061B978D98004FC537 /* btSimpleDynamicsWorld.cpp in Sources */,
+				7224B4A41BA7754B002737EB /* SizeModifierSystem.cpp in Sources */,
 				726DB8D01B978D98004FC537 /* btOptimizedBvh.cpp in Sources */,
 				726DB88A1B978D98004FC537 /* b2ContactManager.cpp in Sources */,
 				726DB9451B978D98004FC537 /* OSXWindowCreator.mm in Sources */,
@@ -2774,6 +2831,8 @@
 				726DB8D81B978D98004FC537 /* btTriangleBuffer.cpp in Sources */,
 				726DB92E1B978D98004FC537 /* MiniCLTask.cpp in Sources */,
 				726DB9191B978D98004FC537 /* SpuMinkowskiPenetrationDepthSolver.cpp in Sources */,
+				7224B4881BA73656002737EB /* Gizmo.cpp in Sources */,
+				7224B48B1BA736E4002737EB /* GizmoSystem.cpp in Sources */,
 				726DB8101B978D98004FC537 /* IPointable.cpp in Sources */,
 				726DB9491B978D98004FC537 /* jpeg_decoder.cpp in Sources */,
 				726DB9071B978D98004FC537 /* Bullet-C-API.cpp in Sources */,
@@ -2806,11 +2865,13 @@
 				726DB84A1B978D98004FC537 /* Limitable.cpp in Sources */,
 				726DB8F61B978D98004FC537 /* btKinematicCharacterController.cpp in Sources */,
 				726DB8F01B978D98004FC537 /* btMinkowskiPenetrationDepthSolver.cpp in Sources */,
+				7224B4941BA75FE4002737EB /* GizmoModifierSystem.cpp in Sources */,
 				726DB8D41B978D98004FC537 /* btSphereShape.cpp in Sources */,
 				726DB82B1B978D98004FC537 /* ParticleEmitter.cpp in Sources */,
 				726DB9081B978D98004FC537 /* btRaycastVehicle.cpp in Sources */,
 				726DB8CC1B978D98004FC537 /* btHeightfieldTerrainShape.cpp in Sources */,
 				726DB81F1B978D98004FC537 /* TouchAnimatorSystem.cpp in Sources */,
+				7224B48E1BA7389F002737EB /* GizmoCreatorSystem.cpp in Sources */,
 				726DB8861B978D98004FC537 /* b2Math.cpp in Sources */,
 				726DB8991B978D98004FC537 /* b2RevoluteJoint.cpp in Sources */,
 				726DB8DD1B978D98004FC537 /* btTriangleMeshShape.cpp in Sources */,
@@ -2820,6 +2881,7 @@
 				726DB8A61B978D98004FC537 /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
 				726DB8651B978D98004FC537 /* OctreeSystem.cpp in Sources */,
 				726DB83E1B978D98004FC537 /* TextBoxLabelSystem.cpp in Sources */,
+				7224B4A11BA7754B002737EB /* SizeModifier.cpp in Sources */,
 				726DB8951B978D98004FC537 /* b2Joint.cpp in Sources */,
 				726DB8841B978D98004FC537 /* b2Shape.cpp in Sources */,
 				726DB8291B978D98004FC537 /* Orderable.cpp in Sources */,

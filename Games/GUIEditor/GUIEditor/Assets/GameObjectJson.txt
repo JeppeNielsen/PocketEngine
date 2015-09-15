@@ -3,20 +3,26 @@
         "Components": [
             {
                 "Transform": {
-                    "Position": "100,100,0",
-                    "Rotation": "1,0,0,0",
+                    "Position": "581.339,205.426,0",
+                    "Rotation": "0.885723,0,0,0.464214",
                     "Scale": "1,1,1",
-                    "Anchor": "0,0,0",
+                    "Anchor": "100,100,0",
                     "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                 }
             },
             {
-                "Draggable": {}
+                "SizeModifier": {}
             },
             {
-                "Touchable": {
-                    "ClickThrough": false
+                "Selectable": {}
+            },
+            {
+                "Sizeable": {
+                    "Size": "454.297,200"
                 }
+            },
+            {
+                "Draggable": {}
             },
             {
                 "Mesh": {}
@@ -29,12 +35,7 @@
             {
                 "Sprite": {
                     "SpriteName": "Box",
-                    "CornerSize": "0,0"
-                }
-            },
-            {
-                "Sizeable": {
-                    "Size": "400,100"
+                    "CornerSize": "3.5,3.5"
                 }
             },
             {
@@ -56,6 +57,82 @@
                 "Material": {
                     "BlendMode": 1,
                     "Mask": 0
+                }
+            },
+            {
+                "Touchable": {
+                    "ClickThrough": false
+                }
+            }
+        ],
+        "Children": [
+            {
+                "GameObject": {
+                    "Components": [
+                        {
+                            "Transform": {
+                                "Position": "257.767,205.498,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "SizeModifier": {}
+                        },
+                        {
+                            "Selectable": {}
+                        },
+                        {
+                            "Sizeable": {
+                                "Size": "200,200"
+                            }
+                        },
+                        {
+                            "Draggable": {}
+                        },
+                        {
+                            "Mesh": {}
+                        },
+                        {
+                            "Colorable": {
+                                "Color": "255,255,255,255"
+                            }
+                        },
+                        {
+                            "Sprite": {
+                                "SpriteName": "Box",
+                                "CornerSize": "3.5,3.5"
+                            }
+                        },
+                        {
+                            "Atlas:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "TextureComponent:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "Orderable": {
+                                "Order": 1
+                            }
+                        },
+                        {
+                            "Material": {
+                                "BlendMode": 1,
+                                "Mask": 0
+                            }
+                        },
+                        {
+                            "Touchable": {
+                                "ClickThrough": false
+                            }
+                        }
+                    ]
                 }
             }
         ]
