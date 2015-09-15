@@ -97,6 +97,7 @@ private:
     ComponentMask ownedComponents;
     int childIndex;
     int childOrder;
+    bool isRemoved;
     
     friend class GameWorld;
     friend class IGameComponentType;

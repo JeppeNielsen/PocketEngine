@@ -70,7 +70,9 @@ void GameObject::Initialize(size_t numberOfComponents) {
 }
 
 void GameObject::Remove() {
-    world->removedObjects.insert(this);
+    if (isRemoved) return;
+    isRemoved = true;
+    world->removedObjects.push_back(this);
     for (size_t i=0; i<children.size(); i++) {
         children[i]->Remove();
     }

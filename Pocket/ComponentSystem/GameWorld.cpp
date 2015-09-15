@@ -72,6 +72,7 @@ GameObject* GameWorld::CreateObject() {
     }
     GameObject* object = freeObjects.back();
     object->indexInList = (unsigned)activeObjects.size();
+    object->isRemoved = false;
     freeObjects.pop_back();
     activeObjects.push_back(object);
     children.push_back(object);
@@ -79,13 +80,10 @@ GameObject* GameWorld::CreateObject() {
 }
 
 void GameWorld::UpdateRemovedObjects() {
-    while (!removedObjects.empty()) {
-        RemovedObjects temp = removedObjects;
-        removedObjects.clear();
-        for (RemovedObjects::iterator it = temp.begin(); it!=temp.end(); ++it) {
-            UpdateRemovedObject(*it);
-        }
+    for (int i=0; i<removedObjects.size(); ++i) {
+        UpdateRemovedObject(removedObjects[i]);
     }
+    removedObjects.clear();
 }
 
 void GameWorld::UpdateRemovedObject(GameObject *object) {

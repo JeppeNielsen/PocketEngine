@@ -102,7 +102,7 @@ private:
     
     ObjectCollection activeObjects;
     ObjectCollection freeObjects;
-    typedef std::set<GameObject*> RemovedObjects;
+    typedef std::vector<GameObject*> RemovedObjects;
     RemovedObjects removedObjects;
     
     typedef std::vector<GameSystem*> Systems;
