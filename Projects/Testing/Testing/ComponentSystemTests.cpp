@@ -792,5 +792,51 @@ void ComponentSystemTests::Run() {
         object->GetComponent<Mover>() == moverObject->GetComponent<Mover>() &&
         clone->GetComponent<Mover>() == moverObject->GetComponent<Mover>();
     });
+    
+   UnitTest("Test creation and deletion in System::ObjectAdded/Removed", [] () {
+        Component(Parentable)
+            GameObject* child;
+        };
+        SYSTEM(ParentSystem, Parentable)
+            void ObjectAdded(GameObject* object) {
+                GameObject* child =World()->CreateObject();
+                child->Parent = object;
+                object->AddComponent<Parentable>()->child = child;
+            }
+            void ObjectRemoved(GameObject* object) {
+                object->GetComponent<Parentable>()->child->Remove();
+            }
+        };
+        
+        GameWorld world;
+        world.CreateSystem<ParentSystem>();
+        GameObject* object = world.CreateObject();
+        object->AddComponent<Parentable>();
+        world.Update(0);
+        bool wasTwoObjectsCreated = world.Objects().size() == 2;
+        bool childWasCreated = object->GetComponent<Parentable>()->child == world.Objects()[1];
+        object->Remove();
+        world.Update(0);
+        bool noneLeft = world.Objects().empty();
+        return
+        wasTwoObjectsCreated && childWasCreated && noneLeft;
+    });
+    
+     UnitTest("Test double deletion of GameObject", [] () {
+        GameWorld world;
+        GameObject* object = world.CreateObject();
+        world.Update(0);
+        bool wasObjectCreated = world.Objects().size() == 1;
+        object->Remove();
+        world.Update(0);
+        bool wasObjectRemoved = world.Objects().size() == 0;
+        object->Remove();
+        world.Update(0);
+        object->Remove();
+        bool wasObjectRemoved2 = world.Objects().size() == 0;
+        return
+        wasObjectCreated && wasObjectRemoved && wasObjectRemoved2;
+    });
+    
 
 }
