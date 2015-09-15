@@ -55,25 +55,11 @@ void SizeModifierNodeSystem::Update(float dt) {
     draggingObjects.Clear();
     
     for (GameObject* go : Objects()) {
-
         Draggable* draggable = go->GetComponent<Draggable>();
         if (draggable->IsDragging) continue;
-        
         SizeModifierNode* node = go->GetComponent<SizeModifierNode>();
         Vector2 cornerPosition = node->GetCornerPosition();
         go->GetComponent<Transform>()->Position = cornerPosition * node->sizableTarget->Size();
-        continue;
-
-        const Matrix4x4& world = *node->transformTarget->World.GetValue();
-        Vector3 position = world.TransformPosition(
-                                                   Vector3(node->sizableTarget->Size().x * cornerPosition.x,
-                                                           node->sizableTarget->Size().y * cornerPosition.y,
-                                                           0
-                                                           ));
-        go->GetComponent<Transform>()->Position = position;
-        Quaternion q;
-        q.FromRotationMatrix(world);
-        go->GetComponent<Transform>()->Rotation = q;
     }
 
 }
