@@ -302,7 +302,7 @@ GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context) 
                                                         minijson::ignore(context);
                                                     }
                                                 });
-                                                std::cout << "component reference found for component : " <<componentName<<std::endl;
+                                                //std::cout << "component reference found for component : " <<componentName<<std::endl;
                                             }
                                             minijson::ignore(context);
                                         }
