@@ -282,7 +282,7 @@ void ComponentSystemTests::Run() {
     UnitTest("AddComponent() and AddComponent(ref) multiple times same frame", []()->bool {
         Component(Data)
         public:
-            void Reset() { something = 1; }
+            void Reset() { something = 1; }
             int something;
         };
         GameWorld world;
