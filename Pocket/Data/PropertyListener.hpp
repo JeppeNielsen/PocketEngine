@@ -22,6 +22,10 @@ namespace Pocket {
             template<class Owner, class T>
         	void Remove(Property<Owner, T>& property, Context object) {
             	property.Changed -= event_handler(this, &PropertyListener::PropertyChanged<Owner>, object);
+                auto it = changedObjects.find(object);
+                if (it!=changedObjects.end()) {
+                    changedObjects.erase(it);
+                }
             }
         	typedef std::set<Context> ChangedObjects;
             const ChangedObjects& Objects() { return changedObjects; }
