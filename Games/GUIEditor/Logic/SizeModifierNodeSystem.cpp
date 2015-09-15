@@ -18,13 +18,17 @@ void SizeModifierNodeSystem::ObjectRemoved(GameObject *object) {
 
 void SizeModifierNodeSystem::Update(float dt) {
 
+    const Vector2 gridSize = 10;
+    
     for (GameObject* go : draggingObjects.Objects()) {
         Draggable* draggable = go->GetComponent<Draggable>();
-        if (!draggable) continue;
-        
         if (draggable->IsDragging) {
             SizeModifierNode* node = go->GetComponent<SizeModifierNode>();
             Vector3 position = go->GetComponent<Transform>()->World.GetValue()->TransformPosition(0);
+            position.x = roundf(position.x / gridSize.x) * gridSize.x;
+            position.y = roundf(position.y / gridSize.y) * gridSize.y;
+            
+            
             const Matrix4x4& worldInverse = *node->transformTarget->WorldInverse.GetValue();
             Vector3 localPosition = worldInverse.TransformPosition(position);
             
@@ -32,6 +36,8 @@ void SizeModifierNodeSystem::Update(float dt) {
             
             Vector2 size = node->sizableTarget->Size;
             Vector3 localPivotPosition = localInverse.TransformPosition(node->transformTarget->Position);
+            localPivotPosition.x = roundf(localPivotPosition.x / gridSize.x) * gridSize.x;
+            localPivotPosition.y = roundf(localPivotPosition.y / gridSize.y) * gridSize.y;
             
             
             if (node->cornerIndex == 0 || node->cornerIndex == 1 || node->cornerIndex == 2) {
@@ -48,7 +54,13 @@ void SizeModifierNodeSystem::Update(float dt) {
                 size.y = localPosition.y;
             }
             
-            node->transformTarget->Position = node->transformTarget->Local.GetValue()->TransformPosition(localPivotPosition);
+            
+            Vector3 targetPosition = node->transformTarget->Local.GetValue()->TransformPosition(localPivotPosition);
+            
+            size.x = roundf(size.x / gridSize.x) * gridSize.x;
+            size.y = roundf(size.y / gridSize.y) * gridSize.y;
+            
+            node->transformTarget->Position = targetPosition;
             node->sizableTarget->Size = size;
         }
     }

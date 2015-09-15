@@ -13,6 +13,10 @@
 		7224B4A21BA7754B002737EB /* SizeModifierNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */; };
 		7224B4A31BA7754B002737EB /* SizeModifierNodeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49D1BA7754B002737EB /* SizeModifierNodeSystem.cpp */; };
 		7224B4A41BA7754B002737EB /* SizeModifierSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */; };
+		7224B4F91BA8A7B4002737EB /* Gridable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4F71BA8A7B4002737EB /* Gridable.cpp */; };
+		7224B4FC1BA8A853002737EB /* GridSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4FA1BA8A853002737EB /* GridSystem.cpp */; };
+		7224B4FF1BA8BD65002737EB /* SizeModifierLineSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4FD1BA8BD65002737EB /* SizeModifierLineSystem.cpp */; };
+		7224B5021BA8BDFF002737EB /* SizeModifierLine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B5001BA8BDFF002737EB /* SizeModifierLine.cpp */; };
 		726DB3DB1B978D8A004FC537 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DA1B978D8A004FC537 /* Cocoa.framework */; };
 		726DB3DD1B978D8A004FC537 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DC1B978D8A004FC537 /* OpenGL.framework */; };
 		726DB3DF1B978D8A004FC537 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 726DB3DE1B978D8A004FC537 /* OpenAL.framework */; };
@@ -376,6 +380,14 @@
 		7224B49E1BA7754B002737EB /* SizeModifierNodeSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifierNodeSystem.hpp; sourceTree = "<group>"; };
 		7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierSystem.cpp; sourceTree = "<group>"; };
 		7224B4A01BA7754B002737EB /* SizeModifierSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SizeModifierSystem.hpp; sourceTree = "<group>"; };
+		7224B4F71BA8A7B4002737EB /* Gridable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gridable.cpp; sourceTree = "<group>"; };
+		7224B4F81BA8A7B4002737EB /* Gridable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Gridable.h; sourceTree = "<group>"; };
+		7224B4FA1BA8A853002737EB /* GridSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GridSystem.cpp; sourceTree = "<group>"; };
+		7224B4FB1BA8A853002737EB /* GridSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridSystem.h; sourceTree = "<group>"; };
+		7224B4FD1BA8BD65002737EB /* SizeModifierLineSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierLineSystem.cpp; sourceTree = "<group>"; };
+		7224B4FE1BA8BD65002737EB /* SizeModifierLineSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SizeModifierLineSystem.h; sourceTree = "<group>"; };
+		7224B5001BA8BDFF002737EB /* SizeModifierLine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SizeModifierLine.cpp; sourceTree = "<group>"; };
+		7224B5011BA8BDFF002737EB /* SizeModifierLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SizeModifierLine.h; sourceTree = "<group>"; };
 		726DB3D71B978D8A004FC537 /* GUIEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GUIEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		726DB3DA1B978D8A004FC537 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		726DB3DC1B978D8A004FC537 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -1185,8 +1197,16 @@
 		7224B4851BA7338E002737EB /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7224B4F71BA8A7B4002737EB /* Gridable.cpp */,
+				7224B4F81BA8A7B4002737EB /* Gridable.h */,
+				7224B4FA1BA8A853002737EB /* GridSystem.cpp */,
+				7224B4FB1BA8A853002737EB /* GridSystem.h */,
 				7224B4981BA7754B002737EB /* SizeModifier.cpp */,
 				7224B49A1BA7754B002737EB /* SizeModifier.hpp */,
+				7224B5001BA8BDFF002737EB /* SizeModifierLine.cpp */,
+				7224B5011BA8BDFF002737EB /* SizeModifierLine.h */,
+				7224B4FD1BA8BD65002737EB /* SizeModifierLineSystem.cpp */,
+				7224B4FE1BA8BD65002737EB /* SizeModifierLineSystem.h */,
 				7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */,
 				7224B49C1BA7754B002737EB /* SizeModifierNode.hpp */,
 				7224B49D1BA7754B002737EB /* SizeModifierNodeSystem.cpp */,
@@ -2696,6 +2716,7 @@
 				726DB8781B978D98004FC537 /* ChromecastReceiver.cpp in Sources */,
 				726DB8EF1B978D98004FC537 /* btGjkPairDetector.cpp in Sources */,
 				726DB8D61B978D98004FC537 /* btStridingMeshInterface.cpp in Sources */,
+				7224B4F91BA8A7B4002737EB /* Gridable.cpp in Sources */,
 				726DB9441B978D98004FC537 /* OSXWindow.mm in Sources */,
 				726DB8311B978D98004FC537 /* LabelMeshSystem.cpp in Sources */,
 				726DB8FF1B978D98004FC537 /* btSequentialImpulseConstraintSolver.cpp in Sources */,
@@ -2729,6 +2750,7 @@
 				726DB89C1B978D98004FC537 /* btCollisionAlgorithm.cpp in Sources */,
 				726DB8B01B978D98004FC537 /* btDefaultCollisionConfiguration.cpp in Sources */,
 				726DB8421B978D98004FC537 /* TouchCancelSystem.cpp in Sources */,
+				7224B4FC1BA8A853002737EB /* GridSystem.cpp in Sources */,
 				726DB9231B978D98004FC537 /* btSoftRigidDynamicsWorld.cpp in Sources */,
 				726DB8DE1B978D98004FC537 /* btUniformScalingShape.cpp in Sources */,
 				726DB8B21B978D98004FC537 /* btGhostObject.cpp in Sources */,
@@ -2803,6 +2825,7 @@
 				726DB8E81B978D98004FC537 /* gim_memory.cpp in Sources */,
 				726DB88F1B978D98004FC537 /* b2Contact.cpp in Sources */,
 				726DB8D81B978D98004FC537 /* btTriangleBuffer.cpp in Sources */,
+				7224B5021BA8BDFF002737EB /* SizeModifierLine.cpp in Sources */,
 				726DB92E1B978D98004FC537 /* MiniCLTask.cpp in Sources */,
 				726DB9191B978D98004FC537 /* SpuMinkowskiPenetrationDepthSolver.cpp in Sources */,
 				726DB8101B978D98004FC537 /* IPointable.cpp in Sources */,
@@ -2827,6 +2850,7 @@
 				726DB8F41B978D98004FC537 /* btSubSimplexConvexCast.cpp in Sources */,
 				726DB8801B978D98004FC537 /* b2PairManager.cpp in Sources */,
 				726DB8E41B978D98004FC537 /* btGImpactShape.cpp in Sources */,
+				7224B4FF1BA8BD65002737EB /* SizeModifierLineSystem.cpp in Sources */,
 				726DB8911B978D98004FC537 /* b2PolyAndCircleContact.cpp in Sources */,
 				726DB9221B978D98004FC537 /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				726DB87E1B978D98004FC537 /* b2Collision.cpp in Sources */,

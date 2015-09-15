@@ -22,5 +22,5 @@ public:
 private:
     void SelectionChanged(Selectable* selectable, GameObject* object);
     GameObject* CreateNode(GameObject* object, int cornerIndex, Draggable::MovementMode movementMode);
-    
+    GameObject* CreateLine(GameObject* object, int index);
 };

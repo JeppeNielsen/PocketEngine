@@ -3,10 +3,10 @@
         "Components": [
             {
                 "Transform": {
-                    "Position": "581.339,205.426,0",
-                    "Rotation": "0.885723,0,0,0.464214",
+                    "Position": "100,100,0",
+                    "Rotation": "1,0,0,0",
                     "Scale": "1,1,1",
-                    "Anchor": "100,100,0",
+                    "Anchor": "0,0,0",
                     "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                 }
             },
@@ -18,19 +18,33 @@
             },
             {
                 "Sizeable": {
-                    "Size": "454.297,200"
+                    "Size": "200,200"
                 }
             },
             {
                 "Draggable": {}
             },
             {
-                "Mesh": {}
+                "Gridable": {}
+            },
+            {
+                "Layoutable": {
+                    "HorizontalAlignment": 4,
+                    "VerticalAlignment": 4
+                }
             },
             {
                 "Colorable": {
                     "Color": "255,255,255,255"
                 }
+            },
+            {
+                "Touchable": {
+                    "ClickThrough": false
+                }
+            },
+            {
+                "Mesh": {}
             },
             {
                 "Sprite": {
@@ -50,18 +64,13 @@
             },
             {
                 "Orderable": {
-                    "Order": 0
+                    "Order": 2
                 }
             },
             {
                 "Material": {
                     "BlendMode": 1,
                     "Mask": 0
-                }
-            },
-            {
-                "Touchable": {
-                    "ClickThrough": false
                 }
             }
         ],
@@ -71,7 +80,7 @@
                     "Components": [
                         {
                             "Transform": {
-                                "Position": "257.767,205.498,0",
+                                "Position": "0,0,0",
                                 "Rotation": "1,0,0,0",
                                 "Scale": "1,1,1",
                                 "Anchor": "0,0,0",
@@ -93,12 +102,192 @@
                             "Draggable": {}
                         },
                         {
+                            "Layoutable": {
+                                "HorizontalAlignment": 4,
+                                "VerticalAlignment": 4
+                            }
+                        },
+                        {
+                            "Colorable": {
+                                "Color": "0,0,0,255"
+                            }
+                        },
+                        {
+                            "Label": {
+                                "FontSize": 12,
+                                "Text": "Testing label control",
+                                "HAlignment": 1,
+                                "VAlignment": 1,
+                                "WordWrap": true
+                            }
+                        },
+                        {
+                            "Touchable": {
+                                "ClickThrough": false
+                            }
+                        },
+                        {
                             "Mesh": {}
+                        },
+                        {
+                            "Atlas:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "Font:ref": {
+                                "id": ""
+                            }
+                        },
+                        {
+                            "TextureComponent:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "Orderable": {
+                                "Order": 5
+                            }
+                        },
+                        {
+                            "Material": {
+                                "BlendMode": 1,
+                                "Mask": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "Components": [
+                        {
+                            "Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "SizeModifier": {}
+                        },
+                        {
+                            "Selectable": {}
+                        },
+                        {
+                            "Sizeable": {
+                                "Size": "200,200"
+                            }
+                        },
+                        {
+                            "Draggable": {}
+                        },
+                        {
+                            "Layoutable": {
+                                "HorizontalAlignment": 4,
+                                "VerticalAlignment": 4
+                            }
+                        },
+                        {
+                            "Colorable": {
+                                "Color": "0,0,0,255"
+                            }
+                        },
+                        {
+                            "Label": {
+                                "FontSize": 12,
+                                "Text": "Testing label control",
+                                "HAlignment": 1,
+                                "VAlignment": 1,
+                                "WordWrap": true
+                            }
+                        },
+                        {
+                            "Touchable": {
+                                "ClickThrough": false
+                            }
+                        },
+                        {
+                            "Mesh": {}
+                        },
+                        {
+                            "Atlas:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "Font:ref": {
+                                "id": ""
+                            }
+                        },
+                        {
+                            "TextureComponent:ref": {
+                                "id": "Gui.Atlas"
+                            }
+                        },
+                        {
+                            "Orderable": {
+                                "Order": 6
+                            }
+                        },
+                        {
+                            "Material": {
+                                "BlendMode": 1,
+                                "Mask": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "Components": [
+                        {
+                            "Transform": {
+                                "Position": "100,100,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "SizeModifier": {}
+                        },
+                        {
+                            "Selectable": {}
+                        },
+                        {
+                            "Sizeable": {
+                                "Size": "200,200"
+                            }
+                        },
+                        {
+                            "Draggable": {}
+                        },
+                        {
+                            "Gridable": {}
+                        },
+                        {
+                            "Layoutable": {
+                                "HorizontalAlignment": 4,
+                                "VerticalAlignment": 4
+                            }
                         },
                         {
                             "Colorable": {
                                 "Color": "255,255,255,255"
                             }
+                        },
+                        {
+                            "Touchable": {
+                                "ClickThrough": false
+                            }
+                        },
+                        {
+                            "Mesh": {}
                         },
                         {
                             "Sprite": {
@@ -118,7 +307,7 @@
                         },
                         {
                             "Orderable": {
-                                "Order": 1
+                                "Order": 7
                             }
                         },
                         {
@@ -126,10 +315,173 @@
                                 "BlendMode": 1,
                                 "Mask": 0
                             }
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "GameObject": {
+                                "Components": [
+                                    {
+                                        "Transform": {
+                                            "Position": "0,0,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "SizeModifier": {}
+                                    },
+                                    {
+                                        "Selectable": {}
+                                    },
+                                    {
+                                        "Sizeable": {
+                                            "Size": "200,200"
+                                        }
+                                    },
+                                    {
+                                        "Draggable": {}
+                                    },
+                                    {
+                                        "Layoutable": {
+                                            "HorizontalAlignment": 4,
+                                            "VerticalAlignment": 4
+                                        }
+                                    },
+                                    {
+                                        "Colorable": {
+                                            "Color": "0,0,0,255"
+                                        }
+                                    },
+                                    {
+                                        "Label": {
+                                            "FontSize": 12,
+                                            "Text": "Testing label control",
+                                            "HAlignment": 1,
+                                            "VAlignment": 1,
+                                            "WordWrap": true
+                                        }
+                                    },
+                                    {
+                                        "Touchable": {
+                                            "ClickThrough": false
+                                        }
+                                    },
+                                    {
+                                        "Mesh": {}
+                                    },
+                                    {
+                                        "Atlas:ref": {
+                                            "id": "Gui.Atlas"
+                                        }
+                                    },
+                                    {
+                                        "Font:ref": {
+                                            "id": ""
+                                        }
+                                    },
+                                    {
+                                        "TextureComponent:ref": {
+                                            "id": "Gui.Atlas"
+                                        }
+                                    },
+                                    {
+                                        "Orderable": {
+                                            "Order": 7
+                                        }
+                                    },
+                                    {
+                                        "Material": {
+                                            "BlendMode": 1,
+                                            "Mask": 0
+                                        }
+                                    }
+                                ]
+                            }
                         },
                         {
-                            "Touchable": {
-                                "ClickThrough": false
+                            "GameObject": {
+                                "Components": [
+                                    {
+                                        "Transform": {
+                                            "Position": "0,0,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "SizeModifier": {}
+                                    },
+                                    {
+                                        "Selectable": {}
+                                    },
+                                    {
+                                        "Sizeable": {
+                                            "Size": "200,200"
+                                        }
+                                    },
+                                    {
+                                        "Draggable": {}
+                                    },
+                                    {
+                                        "Layoutable": {
+                                            "HorizontalAlignment": 4,
+                                            "VerticalAlignment": 4
+                                        }
+                                    },
+                                    {
+                                        "Colorable": {
+                                            "Color": "0,0,0,255"
+                                        }
+                                    },
+                                    {
+                                        "Label": {
+                                            "FontSize": 12,
+                                            "Text": "Haha Jeppe Nielsen er den bedste",
+                                            "HAlignment": 1,
+                                            "VAlignment": 1,
+                                            "WordWrap": true
+                                        }
+                                    },
+                                    {
+                                        "Touchable": {
+                                            "ClickThrough": false
+                                        }
+                                    },
+                                    {
+                                        "Mesh": {}
+                                    },
+                                    {
+                                        "Atlas:ref": {
+                                            "id": "Gui.Atlas"
+                                        }
+                                    },
+                                    {
+                                        "Font:ref": {
+                                            "id": ""
+                                        }
+                                    },
+                                    {
+                                        "TextureComponent:ref": {
+                                            "id": "Gui.Atlas"
+                                        }
+                                    },
+                                    {
+                                        "Orderable": {
+                                            "Order": 8
+                                        }
+                                    },
+                                    {
+                                        "Material": {
+                                            "BlendMode": 1,
+                                            "Mask": 0
+                                        }
+                                    }
+                                ]
                             }
                         }
                     ]

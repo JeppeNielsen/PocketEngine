@@ -13,6 +13,9 @@ void SizeModifier::Reset() {
     for (int i=0; i<8; i++) {
         Nodes[i] = 0;
     }
+    for (int i=0; i<4; ++i) {
+        Lines[i]=0;
+    }
 }
 
 void SizeModifier::DeleteNodes() {
@@ -21,5 +24,8 @@ void SizeModifier::DeleteNodes() {
             Nodes[i]->Remove();
             Nodes[i] = 0;
         }
+    }
+    for (int i=0; i<4; i++) {
+        Lines[i]->Remove();
     }
 }
