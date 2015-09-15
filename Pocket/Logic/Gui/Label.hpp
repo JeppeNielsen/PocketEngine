@@ -24,6 +24,13 @@ namespace Pocket {
         
         void Reset();
         void Clone(const Label& source);
-        
+    
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(FontSize);
+        SERIALIZE_FIELD(Text);
+        SERIALIZE_FIELD(HAlignment);
+        SERIALIZE_FIELD(VAlignment);
+        SERIALIZE_FIELD(WordWrap);
+        SERIALIZE_FIELDS_END
     };
 }

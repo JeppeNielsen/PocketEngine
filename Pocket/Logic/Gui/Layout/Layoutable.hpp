@@ -26,5 +26,9 @@ public:
     void Reset();
     void Clone(const Layoutable& other);
     
+    SERIALIZE_FIELDS_BEGIN
+    SERIALIZE_FIELD(HorizontalAlignment);
+    SERIALIZE_FIELD(VerticalAlignment);
+    SERIALIZE_FIELDS_END
     };
 }
