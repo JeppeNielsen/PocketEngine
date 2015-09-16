@@ -32,6 +32,7 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     sizeable = object->GetComponent<Sizeable>();
     layoutable = object->GetComponent<Layoutable>();
     transform = object->GetComponent<Transform>();
+    parentSizeable = 0;
     object->Parent.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentChanged);
     Property<GameObject*, GameObject*>::EventData d;
     d.Old = 0;
@@ -45,24 +46,25 @@ LayoutSystem::LayoutObject::~LayoutObject() {
     d.Old = object->Parent;
     d.Current = 0;
     ParentChanged(d);
+    auto it = layoutSystem->dirtyObjects.find(this);
+    if (it!=layoutSystem->dirtyObjects.end()) {
+        layoutSystem->dirtyObjects.erase(it);
+    }
 }
 
 void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*>::EventData d) {
     
-    if (d.Old) {
-        Sizeable* sizeable = d.Old->GetComponent<Sizeable>();
-        if (sizeable) {
-            sizeable->Size.ChangedWithOld -= event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
-        }
+    if (parentSizeable) {
+        parentSizeable->Size.ChangedWithOld -= event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable = 0;
     }
     
     if (d.Current) {
-        Sizeable* sizeable = d.Current->GetComponent<Sizeable>();
-        if (sizeable) {
-            sizeable->Size.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable = d.Current->GetComponent<Sizeable>();
+        if (parentSizeable) {
+            parentSizeable->Size.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
         }
     }
-    
 }
 
 void LayoutSystem::LayoutObject::ParentSizeChanged(Property<Sizeable*, Vector2>::EventData d){

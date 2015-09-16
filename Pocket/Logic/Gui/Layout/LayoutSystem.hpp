@@ -37,6 +37,7 @@ namespace Pocket {
             Transform* transform;
             Vector2 deltaSize;
             Vector2 oldSize;
+            Sizeable* parentSizeable;
             
             void Update();
             
