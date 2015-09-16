@@ -46,27 +46,20 @@ void HierarchyOrder::Update(float dt) {
 
 void HierarchyOrder::CalculateOrder(int& orderOffset, Pocket::GameObject *object) {
     
+    orderOffset++;
+    
     Orderable* orderable = object->GetComponent<Orderable>();
-    if (orderable) orderable->Order = orderOffset + object->Order;
+    if (orderable) orderable->Order = orderOffset;
     
     const ObjectCollection& children = object->Children();
     if (children.empty()) return;
     
-    int minOrder = children[0]->Order;
-    int maxOrder = children[0]->Order;
+    ObjectCollection sortedChildren = children;
+    std::sort(sortedChildren.begin(), sortedChildren.end(), [] (GameObject* a, GameObject* b) {
+        return a->Order()<b->Order();
+    });
     
-    for (ObjectCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
-        int order = (*it)->Order;
-        if (order>maxOrder) {
-            maxOrder = order;
-        }
-        if (order<minOrder) {
-            minOrder = order;
-        }
-    }
-    
-    orderOffset += (maxOrder - minOrder) + 1;
-    for (ObjectCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
-        CalculateOrder(orderOffset, *it);
+    for(auto child : sortedChildren) {
+        CalculateOrder(orderOffset, child);
     }
 }
