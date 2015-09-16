@@ -36,6 +36,12 @@ public:
         customIntersector = 0;
     }
     
+    void operator=(const Mesh& other) {
+        if (other.vertexMesh) {
+            vertexMesh = other.vertexMesh->Clone();
+        }
+    }
+    
     template<class Vertex>
     class VertexMesh<Vertex>& GetMesh() {
         if (!vertexMesh) {

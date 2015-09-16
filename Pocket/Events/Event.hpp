@@ -24,6 +24,7 @@ public:
     
     Event(const Event<T>& other);
     
+    void operator = (const Event<T>& other);
     void operator ()(T value);
     void operator += (IDelegate<T>* delegate);
     void operator -= (IDelegate<T>* delegate);
@@ -48,11 +49,10 @@ Event<T>::~Event() {
 }
 
 template<class T>
-Event<T>::Event(const Event<T>& other) {
-    for (size_t i=0; i<other.delegates.size(); i++) {
-        delegates.push_back(other.delegates[i]->Clone());
-    }
-}
+Event<T>::Event(const Event<T>& other) { }
+
+template<class T>
+void Event<T>::operator=(const Event<T>& other) { }
 
 template<class T>
 void Event<T>::operator()(T value) {

@@ -28,6 +28,7 @@ void LayoutSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layoutSystem) {
     this->layoutSystem = layoutSystem;
+    this->object = object;
     sizeable = object->GetComponent<Sizeable>();
     layoutable = object->GetComponent<Layoutable>();
     transform = object->GetComponent<Transform>();

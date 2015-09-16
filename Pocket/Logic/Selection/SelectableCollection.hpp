@@ -15,6 +15,13 @@ namespace Pocket {
     class SelectableCollection : public GameSystem {
     public:
         void Initialize();
+        void ObjectAdded(GameObject* object);
+        void ObjectRemoved(GameObject* object);
         void ClearSelection();
+        const ObjectCollection& Selected();
+    private:
+        void SelectedChanged(Selectable* selectable, GameObject* object);
+        ObjectCollection selectedObjects;
+        void RemoveObject(GameObject* object);
     };
 }

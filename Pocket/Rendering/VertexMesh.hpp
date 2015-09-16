@@ -26,6 +26,7 @@ public:
     virtual bool IntersectsRay(const Ray& ray,
                          float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) = 0;
     virtual void Clear() = 0;
+    virtual IVertexMesh* Clone() = 0;
     typedef std::vector<short> Triangles;
     Triangles triangles;
     
@@ -83,6 +84,12 @@ public:
         return vertices[index].Position;
     }
     size_t Size() { return vertices.size(); }
+    
+    IVertexMesh* Clone() {
+        VertexMesh<Vertex>* clone = new VertexMesh<Vertex>();
+        clone->operator=(*this);
+        return clone;
+    }
     
     void CalcBoundingBox(BoundingBox& box) {
         size_t size = vertices.size();
