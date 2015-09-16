@@ -26,6 +26,8 @@ void SizeModifier::DeleteNodes() {
         }
     }
     for (int i=0; i<4; i++) {
-        Lines[i]->Remove();
+        if (Lines[i]) {
+            Lines[i]->Remove();
+        }
     }
 }

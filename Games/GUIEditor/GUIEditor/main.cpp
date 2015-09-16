@@ -12,6 +12,7 @@
 #include "SizeModifierLineSystem.h"
 #include "ClickSelectorSystem.hpp"
 #include "GridSystem.h"
+#include "SelectableCollection.hpp"
 
 using namespace Pocket;
 
@@ -21,6 +22,7 @@ public:
     Gui* gui;
     GameObject* font;
     GameObject* box;
+    SelectableCollection* selected;
     
     void Initialize() {
         
@@ -29,6 +31,7 @@ public:
         world.CreateSystem<SizeModifierSystem>();
         world.CreateSystem<SizeModifierNodeSystem>();
         world.CreateSystem<SizeModifierLineSystem>();
+        selected = world.CreateSystem<SelectableCollection>();
         
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         font = gui->CreateFont("Font.fnt", "Font");
@@ -100,10 +103,15 @@ public:
             std::ifstream file(File::GetFullPath("GameObjectJson.txt"));
             box = world.CreateObjectFromJson(file);
             file.close();
-        } else if (box && button == "d") {
-            //box->Remove();
-            //box = 0;
-        }
+        } else if (button == "d") {
+            if (!selected->Selected().empty()) {
+                selected->Selected()[0]->Clone();
+            }
+       } else if (button == "\x7f") {
+            if (!selected->Selected().empty()) {
+                selected->Selected()[0]->Remove();
+            }
+       }
     }
     
     
@@ -114,6 +122,7 @@ public:
         world.Update(dt*0.5f);
         world.Update(dt*0.5f);
       
+      std::cout<<world.Objects().size()<<std::endl;
         
     }
     

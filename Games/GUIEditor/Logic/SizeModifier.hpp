@@ -13,8 +13,8 @@ using namespace Pocket;
 
 Component(SizeModifier)
 public:
-    GameObject* Nodes[8];
-    GameObject* Lines[4];
+    Pointer<GameObject> Nodes[8];
+    Pointer<GameObject> Lines[4];
     
     void Reset();
     void DeleteNodes();
