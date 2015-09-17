@@ -15,6 +15,7 @@
 #include <memory>
 #include <string>
 #include <istream>
+#include "Assert.hpp"
 #if EMSCRIPTEN
 #if ENABLE_SCRIPTING
     #undef ENABLE_SCRIPTING
@@ -132,6 +133,8 @@ private:
 
 template<class T>
 T* Pocket::GameWorld::CreateSystem() {
+    ASSERT(activeObjects.size()==0 && freeObjects.size()==0, "Systems cannot be created if Objects have been created.");
+    
     T* system = new T();
     system->indexInList = (unsigned)systems.size();
     systems.push_back(system);
