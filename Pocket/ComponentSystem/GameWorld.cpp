@@ -75,6 +75,7 @@ GameObject* GameWorld::CreateObject() {
     object->isRemoved = false;
     freeObjects.pop_back();
     activeObjects.push_back(object);
+    object->childIndex = children.size();
     children.push_back(object);
     return object;
 }
@@ -94,13 +95,14 @@ void GameWorld::UpdateRemovedObject(GameObject *object) {
         }
     }
     
+    object->Parent = 0;
     if (!object->Parent() && !children.empty()) {
         GameObject* lastChild = children.back();
         children[object->childIndex] = lastChild;
         lastChild->childIndex = object->childIndex;
         children.pop_back();
     }
-    object->Parent = 0;
+    
     freeObjects.push_back(object);
     GameObject* lastObject = activeObjects.back();
     lastObject->indexInList = object->indexInList;

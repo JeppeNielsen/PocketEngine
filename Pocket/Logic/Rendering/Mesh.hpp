@@ -39,6 +39,9 @@ public:
     void operator=(const Mesh& other) {
         if (other.vertexMesh) {
             vertexMesh = other.vertexMesh->Clone();
+            vertexType = other.vertexType;
+            RevertDefaultCalcBoundingBox();
+            LocalBoundingBox.MakeDirty();
         }
     }
     
