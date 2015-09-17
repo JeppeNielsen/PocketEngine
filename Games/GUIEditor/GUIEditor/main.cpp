@@ -53,8 +53,8 @@ public:
         box->AddComponent<Draggable>();
         box->AddComponent<Selectable>();
         box->AddComponent<SizeModifier>();
-         //box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-        //box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+        box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+        box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
         
         box->Clone()->Parent = box;
         
@@ -149,19 +149,29 @@ public:
         world.Update(dt*0.5f);
         world.Update(dt*0.5f);
     
-        static bool creating = true;
+
+        static int state = 0;
+        static int currentBoxIndex = 0;
         
-        if (creating) {
+        if (state == 0) {
             GameObject* newBox = box->Clone();
             Vector2 position = MathHelper::Random({boxes.size()*5.0f,0}, {boxes.size()*5.0f,800});
             
             newBox->GetComponent<Transform>()->Position = position;
             boxes.push_back(newBox);
             if (boxes.size() == 200) {
-                creating = false;
+                state = 1;
+                currentBoxIndex = 0;
             }
-        } else {
-            
+        } else if (state == 1){
+            if (currentBoxIndex<boxes.size()) {
+                boxes[currentBoxIndex]->GetComponent<Selectable>()->Selected = true;
+                currentBoxIndex++;
+            } else {
+                state = 2;
+            }
+        } else if (state == 2) {
+        
             std::sort(boxes.begin(), boxes.end(), [](GameObject* a, GameObject*b) -> bool {
                 return MathHelper::Random()<0.5f;
             });
@@ -171,7 +181,7 @@ public:
             newBox->Remove();
             
             if (boxes.empty()) {
-                creating = true;
+                state = 0;
             }
         }
         
