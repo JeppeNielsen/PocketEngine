@@ -37,6 +37,7 @@ void Transform::Reset() {
 	Anchor = 0;
 	Matrix = Matrix4x4::IDENTITY;
     useEulerRotation = false;
+    World.HasBecomeDirty.Clear();
 }
 
 void Transform::PropertyChanged(Transform* transform) {
