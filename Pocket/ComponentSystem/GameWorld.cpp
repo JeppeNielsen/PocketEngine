@@ -75,7 +75,7 @@ GameObject* GameWorld::CreateObject() {
     object->isRemoved = false;
     freeObjects.pop_back();
     activeObjects.push_back(object);
-    object->childIndex = children.size();
+    object->childIndex = (unsigned)children.size();
     children.push_back(object);
     return object;
 }
