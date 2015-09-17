@@ -11,8 +11,9 @@
 #include "SizeModifierNodeSystem.hpp"
 #include "SizeModifierLineSystem.h"
 #include "ClickSelectorSystem.hpp"
-#include "GridSystem.h"
 #include "SelectableCollection.hpp"
+#include "GridSystem.h"
+#include <vector>
 
 using namespace Pocket;
 
@@ -24,6 +25,9 @@ public:
     GameObject* box;
     SelectableCollection* selected;
     
+    typedef std::vector<GameObject*> Boxes;
+    Boxes boxes;
+    
     void Initialize() {
         
         gui = world.CreateFactory<Gui>();
@@ -32,23 +36,31 @@ public:
         world.CreateSystem<SizeModifierNodeSystem>();
         world.CreateSystem<SizeModifierLineSystem>();
         selected = world.CreateSystem<SelectableCollection>();
+        world.CreateSystem<GridSystem>();
         
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         font = gui->CreateFont("Font.fnt", "Font");
-        world.CreateSystem<GridSystem>();
         
         
+        CreateBox();
         
+        Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+    }
+    
+    void CreateBox() {
+    
         box = gui->CreateControl(0, "Box", 100, 200);
         box->AddComponent<Draggable>();
         box->AddComponent<Selectable>();
         box->AddComponent<SizeModifier>();
-        box->AddComponent<Gridable>()->Size = 10;
-        box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-        box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+         //box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+        //box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+        
+        box->Clone()->Parent = box;
         
         
-        GameObject* label = gui->CreateLabel(box, 0, 200, font, "Testing label control", 12);
+        for (int i=0; i<6; ++i) {
+            GameObject* label = gui->CreateLabel(box, 0, 200, font, "Testing label control", 12);
         label->GetComponent<Colorable>()->Color = Colour::Black();
         label->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         label->GetComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
@@ -60,10 +72,8 @@ public:
         label->AddComponent<Touchable>();
         label->AddComponent<SizeModifier>();
         label->AddComponent<Draggable>();
-        
-        label->Clone();
-        
-        box->Clone()->Parent = box;
+            
+        }
         
         
         /*
@@ -88,7 +98,7 @@ public:
         //label->AddComponent<TextBox>()->Text = "Hvad er dit navn?";
         //label->AddComponent<Touchable>(box);
         //label->GetComponent<Colorable>()->Color = Colour::Black();
-        Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+        
         
        // box->GetComponent<Transform>()->Rotation = 0.2f;
     }
@@ -112,7 +122,24 @@ public:
                 selected->Selected()[0]->Remove();
             }
        }
+       /*
+       
+        static bool useDelete = true;
+        
+        useDelete =!useDelete;
+        
+        if (useDelete) {
+            box->Remove();
+        } else {
+            CreateBox();
+        }
+        world.Update(0.01f);
+        std::cout<<world.Objects().size()<<std::endl;
+       */
     }
+    
+   
+    
     
     
     void Update(float dt) {
@@ -121,8 +148,32 @@ public:
         
         world.Update(dt*0.5f);
         world.Update(dt*0.5f);
-      
-      std::cout<<world.Objects().size()<<std::endl;
+    
+        static bool creating = true;
+        
+        if (creating) {
+            GameObject* newBox = box->Clone();
+            Vector2 position = MathHelper::Random({boxes.size()*5.0f,0}, {boxes.size()*5.0f,800});
+            
+            newBox->GetComponent<Transform>()->Position = position;
+            boxes.push_back(newBox);
+            if (boxes.size() == 200) {
+                creating = false;
+            }
+        } else {
+            
+            std::sort(boxes.begin(), boxes.end(), [](GameObject* a, GameObject*b) -> bool {
+                return MathHelper::Random()<0.5f;
+            });
+            
+            GameObject* newBox = boxes.back();
+            boxes.pop_back();
+            newBox->Remove();
+            
+            if (boxes.empty()) {
+                creating = true;
+            }
+        }
         
     }
     
