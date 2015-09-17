@@ -13,7 +13,7 @@
 
 using namespace Pocket;
 
-GameObject::GameObject() : Parent(this), Order(this), enabledComponents(0), activeComponents(0), ownedComponents(0), childIndex(0) {
+GameObject::GameObject() : Parent(this), Order(this), enabledComponents(0), activeComponents(0), ownedComponents(0), childIndex(0), components(0), systemIndicies(0) {
     Parent = 0;
     Parent.ChangedWithOld += Pocket::event_handler(this, &GameObject::ParentChanged);
     Order = 0;
