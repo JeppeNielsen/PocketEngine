@@ -28,6 +28,9 @@ void DraggableSystem::ObjectRemoved(Pocket::GameObject *object) {
     Touchable* touchable = object->GetComponent<Touchable>();
     touchable->Down -= event_handler(this, &DraggableSystem::Down, object);
     touchable->Up -= event_handler(this, &DraggableSystem::Up, object);
+    TouchData d;
+    d.Touchable = touchable;
+    Up(d, object);
 }
 
 void DraggableSystem::Down(Pocket::TouchData d, GameObject* object) {
