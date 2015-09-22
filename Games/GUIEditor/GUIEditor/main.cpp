@@ -194,7 +194,7 @@ public:
     }
 };
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<Game>();
 	return 0;

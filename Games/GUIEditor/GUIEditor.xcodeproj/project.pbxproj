@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7207A1831B99110400EEDBF9 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7207A1821B99110400EEDBF9 /* main.cpp */; };
 		7207A18A1B9E510E00EEDBF9 /* TestObject.txt in Resources */ = {isa = PBXBuildFile; fileRef = 7207A1891B9E510E00EEDBF9 /* TestObject.txt */; };
 		7224B4A11BA7754B002737EB /* SizeModifier.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B4981BA7754B002737EB /* SizeModifier.cpp */; };
 		7224B4A21BA7754B002737EB /* SizeModifierNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7224B49B1BA7754B002737EB /* SizeModifierNode.cpp */; };
@@ -350,6 +349,7 @@
 		726DB9AB1B979254004FC537 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A71B97918A004FC537 /* images.png */; };
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
+		7279F84D1BAF3EBC009345C0 /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7279F84B1BAF3EBC009345C0 /* Editor.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -368,7 +368,6 @@
 /* Begin PBXFileReference section */
 		7207A1801B9901BF00EEDBF9 /* minijson_writer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_writer.hpp; sourceTree = "<group>"; };
 		7207A1811B9901BF00EEDBF9 /* minijson_reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_reader.hpp; sourceTree = "<group>"; };
-		7207A1821B99110400EEDBF9 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7207A1841B9C89E700EEDBF9 /* JsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonSerializer.hpp; sourceTree = "<group>"; };
 		7207A1851B9CAEBB00EEDBF9 /* Serializable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Serializable.hpp; sourceTree = "<group>"; };
 		7207A1891B9E510E00EEDBF9 /* TestObject.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TestObject.txt; sourceTree = "<group>"; };
@@ -1177,6 +1176,8 @@
 		726DB9A71B97918A004FC537 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
+		7279F84B1BAF3EBC009345C0 /* Editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		729BBB681BB0A16E00CF4BEC /* FieldEditors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldEditors.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1213,6 +1214,7 @@
 				7224B49E1BA7754B002737EB /* SizeModifierNodeSystem.hpp */,
 				7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */,
 				7224B4A01BA7754B002737EB /* SizeModifierSystem.hpp */,
+				729BBB681BB0A16E00CF4BEC /* FieldEditors.h */,
 			);
 			path = Logic;
 			sourceTree = SOURCE_ROOT;
@@ -1251,7 +1253,7 @@
 			children = (
 				7224B4851BA7338E002737EB /* Logic */,
 				726DB9A11B97918A004FC537 /* Assets */,
-				7207A1821B99110400EEDBF9 /* main.cpp */,
+				7279F84B1BAF3EBC009345C0 /* Editor.cpp */,
 			);
 			path = GUIEditor;
 			sourceTree = "<group>";
@@ -2665,7 +2667,6 @@
 				726DB94C1B978D98004FC537 /* Clipper.cpp in Sources */,
 				726DB91C1B978D98004FC537 /* Win32ThreadSupport.cpp in Sources */,
 				726DB8511B978D98004FC537 /* PhysicsSystem2d.cpp in Sources */,
-				7207A1831B99110400EEDBF9 /* main.cpp in Sources */,
 				726DB8711B978D98004FC537 /* Point3.cpp in Sources */,
 				726DB8581B978D98004FC537 /* ColorSystem.cpp in Sources */,
 				726DB8111B978D98004FC537 /* Octree.cpp in Sources */,
@@ -2775,6 +2776,7 @@
 				726DB8641B978D98004FC537 /* SelectionVisualizer.cpp in Sources */,
 				726DB9051B978D98004FC537 /* btRigidBody.cpp in Sources */,
 				726DB8BC1B978D98004FC537 /* btBoxShape.cpp in Sources */,
+				7279F84D1BAF3EBC009345C0 /* Editor.cpp in Sources */,
 				726DB8AE1B978D98004FC537 /* btConvexConvexAlgorithm.cpp in Sources */,
 				726DB8B31B978D98004FC537 /* btInternalEdgeUtility.cpp in Sources */,
 				726DB94D1B978D98004FC537 /* Colour.cpp in Sources */,
