@@ -129,10 +129,14 @@ GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& font
     GameObject* font = World()->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
+    fonts.push_back(font);
     return font;
 }
 
 GameObject* Gui::CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize) {
+    if (!font && !fonts.empty()) {
+        font = fonts[0];
+    }
     GameObject* label = CreatePivot(parent);
     label->GetComponent<Transform>()->Position = position;
     label->AddComponent<Font>(font);
@@ -154,6 +158,18 @@ GameObject* Gui::CreateLabelControl(Pocket::GameObject *parent, const std::strin
     Label* label = labelGO->GetComponent<Label>();
     label->HAlignment = Font::Center;
     label->VAlignment = Font::Middle;
+    
+    return control;
+}
+
+GameObject* Gui::CreateTextBox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, std::string text, float fontSize) {
+    GameObject* control = CreateControl(parent, spriteName, position, size);
+    GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
+    Label* label = labelGO->GetComponent<Label>();
+    label->HAlignment = Font::Center;
+    label->VAlignment = Font::Middle;
+    labelGO->AddComponent<TextBox>();
+    labelGO->AddComponent<Touchable>(control);
     
     return control;
 }

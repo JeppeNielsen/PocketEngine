@@ -40,6 +40,7 @@ namespace Pocket {
         GameObject* CreateControl(GameObject* parent, const std::string& spriteName);
         GameObject* CreateControl(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size);
         GameObject* CreateLabelControl(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size, GameObject* font, std::string text, float fontSize);
+        GameObject* CreateTextBox(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size, GameObject* font, std::string text, float fontSize);
         
         
         GameObject* CreateFont(const std::string& fontFile, const std::string& fontAtlasName);
@@ -59,5 +60,7 @@ namespace Pocket {
         GameObject* atlas;
         TouchSystem* touchSystem;
         TextBoxSystem* textboxSystem;
+        typedef std::vector<GameObject*> Fonts;
+        Fonts fonts;
     };
 }

@@ -54,14 +54,14 @@ void TextBoxSystem::ActiveTextBoxChanged(TextBox* textBox) {
         
         Input->KeyboardActive.Changed += event_handler(this, &TextBoxSystem::KeyboardActiveChanged);
         Input->KeyboardText.Changed += event_handler(this, &TextBoxSystem::KeyboardTextChanged);
-        Input->TouchUp += event_handler(this, &TextBoxSystem::TouchInputUp);
+        Input->TouchDown += event_handler(this, &TextBoxSystem::TouchInputUp);
         
     } else {
         if (textBox == activeTextBox) {
             activeTextBox = 0;
             Input->KeyboardActive.Changed -= event_handler(this, &TextBoxSystem::KeyboardActiveChanged);
             Input->KeyboardText.Changed -= event_handler(this, &TextBoxSystem::KeyboardTextChanged);
-            Input->TouchUp -= event_handler(this, &TextBoxSystem::TouchInputUp);
+            Input->TouchDown -= event_handler(this, &TextBoxSystem::TouchInputUp);
             Input->KeyboardActive = false;
         }
     }

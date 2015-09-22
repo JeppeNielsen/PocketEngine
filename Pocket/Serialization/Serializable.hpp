@@ -18,12 +18,79 @@ class SerializedField;
 
 class SerializedFieldCollection;
 
+struct ISerializedFieldEditor {
+    virtual ~ISerializedFieldEditor() { }
+    virtual void Create(void* field, void* context, void* parent) { }
+    virtual void Destroy() { }
+    virtual void Update(float dt) { }
+};
+
+template<typename Field, typename Context, typename Parent>
+struct SerializedFieldEditor : public ISerializedFieldEditor {
+    void Create(void* field, void* context, void* parent) {
+        this->field = (Field*)field;
+        Initialize((Context*)context, (Parent*)parent);
+    }
+    virtual void Initialize(Context* context, Parent* parent) { }
+    virtual void Update(float dt) { }
+    Field* field;
+};
+
+template<typename Field>
+struct SerializedFieldEditorCreator {
+    static ISerializedFieldEditor* Create() { return 0; }
+};
+
+
+template<typename Owner, typename T>
+struct FieldEditorProperty : public SerializedFieldEditor<Property<Owner, T>, void, void> {
+    ISerializedFieldEditor* editor;
+    
+    void Initialize(void* context, void* parent) {
+        editor = SerializedField<T>::Editor ? SerializedField<T>::Editor() : 0;
+        if (editor) {
+            editor->Create(&currentValue, context, parent);
+        }
+    }
+    
+    void Destroy() {
+        if (editor) {
+            editor->Destroy();
+        }
+    }
+    
+    void Update(float dt) {
+        if (!editor) return;
+        
+        if (currentValue!=prevValue) {
+            prevValue = currentValue;
+            this->field->Set(currentValue);
+        } else {
+            currentValue = this->field->GetValue();
+            prevValue = currentValue;
+        }
+        editor->Update(dt);
+    }
+    
+    T currentValue;
+    T prevValue;
+};
+
+
+template<typename Owner, typename T>
+struct SerializedFieldEditorCreator<Property<Owner, T>> {
+    static ISerializedFieldEditor* Create() {
+        return new FieldEditorProperty<Owner, T>();
+    }
+};
+
 class ISerializedField {
 public:
     virtual ~ISerializedField() { }
     std::string name;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
+    virtual ISerializedFieldEditor* CreateEditor(void* context, void* parent) = 0;
 };
 
 template<class T>
@@ -39,10 +106,25 @@ public:
         JsonSerializer<T>::Deserialize(value, field, context);
     }
     
+    ISerializedFieldEditor* CreateEditor(void* context, void* parent) {
+        ISerializedFieldEditor* editor = Editor ? Editor() : 0;
+        if (!editor) {
+            editor = SerializedFieldEditorCreator<T>::Create();
+        }
+        if (!editor) return 0;
+        editor->Create(field, context, parent);
+        return editor;
+    }
+    
+    static std::function<ISerializedFieldEditor*()> Editor;
+    
     friend class SerializedFieldCollection;
-private:
+public:
     T* field;
 };
+
+template<class T>
+std::function<ISerializedFieldEditor*()> SerializedField<T>::Editor = 0;
   
 class SerializedFieldCollection {
 public:
@@ -87,31 +169,14 @@ public:
                 } else if (v.type() == minijson::Object){
                     minijson::ignore(context);
                 }
-                
-                /*
-                if (v.type() == minijson::Object)
-                {
-                    minijson::parse_object(context, [&] (const char* name, minijson::value v) {
-                        std::cout<< v.as_string()<< std::endl;
-                    });
-                } else if ( v.type() == minijson::Array) {
-                    minijson::parse_array(context, [&] (minijson::value v) {
-                    
-                    
-                        std::cout<< v.as_string()<< std::endl;
-                    });
-                } else {
-                    std::cout<<"wolla"<<std::endl;
-                }
-                */
             });
         
         } catch (std::exception e) {
-            //std::cout<< e.what() << std::endl;
+            std::cout<< e.what() << std::endl;
         }
     }
     
-private:
+public:
 
     ISerializedField* GetField(std::string name) {
         for(auto field : fields) {
