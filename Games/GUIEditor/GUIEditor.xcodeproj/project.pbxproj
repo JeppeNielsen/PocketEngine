@@ -350,6 +350,9 @@
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
 		7279F84D1BAF3EBC009345C0 /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7279F84B1BAF3EBC009345C0 /* Editor.cpp */; };
+		72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14781BB4769B004F2D79 /* FieldEditor.cpp */; };
+		72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */; };
+		72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1177,7 +1180,12 @@
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
 		7279F84B1BAF3EBC009345C0 /* Editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
-		729BBB681BB0A16E00CF4BEC /* FieldEditors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FieldEditors.h; sourceTree = "<group>"; };
+		72CA14781BB4769B004F2D79 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
+		72CA14791BB4769B004F2D79 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
+		72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
+		72CA147C1BB47803004F2D79 /* FieldEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditorSystem.hpp; sourceTree = "<group>"; };
+		72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializedFieldEditors.cpp; sourceTree = "<group>"; };
+		72CA147F1BB47B7F004F2D79 /* SerializedFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializedFieldEditors.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1214,7 +1222,6 @@
 				7224B49E1BA7754B002737EB /* SizeModifierNodeSystem.hpp */,
 				7224B49F1BA7754B002737EB /* SizeModifierSystem.cpp */,
 				7224B4A01BA7754B002737EB /* SizeModifierSystem.hpp */,
-				729BBB681BB0A16E00CF4BEC /* FieldEditors.h */,
 			);
 			path = Logic;
 			sourceTree = SOURCE_ROOT;
@@ -1388,6 +1395,7 @@
 				726DB4321B978D97004FC537 /* Animation */,
 				726DB44C1B978D97004FC537 /* Audio */,
 				726DB4551B978D97004FC537 /* Common */,
+				72CA14771BB47663004F2D79 /* Editor */,
 				726DB45A1B978D97004FC537 /* Effects */,
 				726DB4631B978D97004FC537 /* Gui */,
 				726DB48A1B978D97004FC537 /* Interaction */,
@@ -2582,6 +2590,19 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		72CA14771BB47663004F2D79 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				72CA14781BB4769B004F2D79 /* FieldEditor.cpp */,
+				72CA14791BB4769B004F2D79 /* FieldEditor.hpp */,
+				72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */,
+				72CA147C1BB47803004F2D79 /* FieldEditorSystem.hpp */,
+				72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */,
+				72CA147F1BB47B7F004F2D79 /* SerializedFieldEditors.hpp */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2735,6 +2756,7 @@
 				726DB8071B978D98004FC537 /* GameManager.cpp in Sources */,
 				726DB9431B978D98004FC537 /* OSXView.mm in Sources */,
 				726DB8721B978D98004FC537 /* Quaternion.cpp in Sources */,
+				72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */,
 				726DB9961B978D98004FC537 /* Thread.cpp in Sources */,
 				726DB8081B978D98004FC537 /* GameState.cpp in Sources */,
 				726DB88B1B978D98004FC537 /* b2Island.cpp in Sources */,
@@ -2755,6 +2777,7 @@
 				726DB9231B978D98004FC537 /* btSoftRigidDynamicsWorld.cpp in Sources */,
 				726DB8DE1B978D98004FC537 /* btUniformScalingShape.cpp in Sources */,
 				726DB8B21B978D98004FC537 /* btGhostObject.cpp in Sources */,
+				72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */,
 				726DB8621B978D98004FC537 /* SelectableCollection.cpp in Sources */,
 				726DB85F1B978D98004FC537 /* ClickSelectorSystem.cpp in Sources */,
 				726DB8791B978D98004FC537 /* ChromecastUser.cpp in Sources */,
@@ -2876,6 +2899,7 @@
 				726DB85E1B978D98004FC537 /* TextureComponent.cpp in Sources */,
 				726DB8A61B978D98004FC537 /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
 				726DB8651B978D98004FC537 /* OctreeSystem.cpp in Sources */,
+				72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */,
 				726DB83E1B978D98004FC537 /* TextBoxLabelSystem.cpp in Sources */,
 				7224B4A11BA7754B002737EB /* SizeModifier.cpp in Sources */,
 				726DB8951B978D98004FC537 /* b2Joint.cpp in Sources */,

@@ -20,6 +20,6 @@ void SizeModifierLineSystem::Update(float dt) {
         int i=line->index;
         Transform* t = object->GetComponent<Transform>();
         t->Position = positions[i] * sizeable->Size;
-        t->Scale = i==0 || i==2 ? Vector3(1, sizeable->Size().y,1) : Vector3(sizeable->Size().x, 1,1);
+        t->Scale = i==0 || i==2 ? Vector3(2, sizeable->Size().y,1) : Vector3(sizeable->Size().x, 2,1);
     }
 }
