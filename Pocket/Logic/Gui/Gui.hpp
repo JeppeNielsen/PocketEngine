@@ -22,6 +22,7 @@
 #include "TextBoxSystem.hpp"
 #include "MenuButtonSystem.hpp"
 #include "MenuSystem.hpp"
+#include "ColorSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameFactory {

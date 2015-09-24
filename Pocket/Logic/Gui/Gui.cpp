@@ -11,7 +11,6 @@
 #include "OctreeSystem.hpp"
 #include "HierarchyOrder.hpp"
 #include "TextBoxLabelSystem.hpp"
-#include "ColorSystem.hpp"
 
 using namespace Pocket;
 
