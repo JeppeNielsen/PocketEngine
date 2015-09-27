@@ -196,3 +196,13 @@ void GameObject::SetID(const std::string &id) {
     world->CreateObjectID(this, id);
 }
 
+SerializableCollection GameObject::SerializableComponents() {
+    SerializableCollection collection;
+     for (int i=0; i<world->componentTypes.size(); i++) {
+        if (components[i]) {
+            collection.push_back(world->componentTypes[i]->ConvertComponent(components[i]));
+        }
+    }
+    return collection;
+}
+

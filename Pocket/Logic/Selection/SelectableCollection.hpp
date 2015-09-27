@@ -17,11 +17,14 @@ namespace Pocket {
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
+        void Update(float dt);
         void ClearSelection();
         const ObjectCollection& Selected();
+        Event<SelectableCollection*> SelectionChanged;
     private:
         void SelectedChanged(Selectable* selectable, GameObject* object);
         ObjectCollection selectedObjects;
         void RemoveObject(GameObject* object);
+        bool hasChanged;
     };
 }

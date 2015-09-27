@@ -8,6 +8,37 @@
 
 #include "SerializedFieldEditors.hpp"
 
+//-------- float ---------
+void SerializedFieldEditorFloat::Initialize(Gui* context, GameObject* parent) {
+    Vector2 size = parent->GetComponent<Sizeable>()->Size;
+    textBox = context->CreateTextBox(parent, "Box", 0, size, 0, "", 15.0f);
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorFloat::TextChanged);
+    textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+    prev = (*field) - 1;
+}
+
+void SerializedFieldEditorFloat::Destroy() {
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed -= event_handler(this, &SerializedFieldEditorFloat::TextChanged);
+    textBox->Remove();
+}
+
+void SerializedFieldEditorFloat::TextChanged(TextBox* textBox) {
+    if (textBox->Active) return;
+    float value = (float)atof(textBox->Text().c_str());
+    (*field) = value;
+    //prev = (*field);
+}
+
+void SerializedFieldEditorFloat::Update(float dt) {
+    bool changed = prev!=(*field);
+    if (changed && !textBox->Children()[0]->GetComponent<TextBox>()->Active()) {
+        std::stringstream s;
+        s<<(*field);
+        textBox->Children()[0]->GetComponent<TextBox>()->Text = s.str();
+    }
+    prev = (*field);
+}
+
 //-------- Vector2 ---------
 void SerializedFieldEditorVector2::Initialize(Gui* context, GameObject* parent) {
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
@@ -17,6 +48,7 @@ void SerializedFieldEditorVector2::Initialize(Gui* context, GameObject* parent) 
         textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorVector2::TextChanged,  textBox[i]);
         textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     }
+    prev = (*field) - 1;
 }
 
 void SerializedFieldEditorVector2::Destroy() {
@@ -59,6 +91,7 @@ void SerializedFieldEditorVector3::Initialize(Gui* context, GameObject* parent) 
         textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorVector3::TextChanged,  textBox[i]);
         textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     }
+    prev = (*field) - 1;
 }
 
 void SerializedFieldEditorVector3::Destroy() {
@@ -93,10 +126,66 @@ void SerializedFieldEditorVector3::Update(float dt) {
     prev = (*field);
 }
 
-void Pocket::CreateDefaultSerializedEditors() {
-    SerializedField<Vector3>::Editor = [] () { return new SerializedFieldEditorVector3(); };
-    SerializedField<Vector2>::Editor = [] () { return new SerializedFieldEditorVector2(); };
+//-------- std::string ---------
+void SerializedFieldEditorString::Initialize(Gui* context, GameObject* parent) {
+    Vector2 size = parent->GetComponent<Sizeable>()->Size;
+
+    textBox = context->CreateTextBox(parent, "Box", 0, size, 0, "", 15.0f);
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorString::TextChanged);
+    textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
 }
 
+void SerializedFieldEditorString::Destroy() {
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed -= event_handler(this, &SerializedFieldEditorString::TextChanged);
+    textBox->Remove();
+}
 
+void SerializedFieldEditorString::TextChanged(TextBox* textBox) {
+    if (textBox->Active) return;
+    (*field) = textBox->Text();
+}
 
+void SerializedFieldEditorString::Update(float dt) {
+    bool changed = prev!=(*field);
+    if (changed && !textBox->Children()[0]->GetComponent<TextBox>()->Active()) {
+        textBox->Children()[0]->GetComponent<TextBox>()->Text = (*field);
+    }
+    prev = (*field);
+}
+
+//-------- bool ---------
+void SerializedFieldEditorBool::Initialize(Gui* context, GameObject* parent) {
+    Vector2 size = parent->GetComponent<Sizeable>()->Size;
+
+    box = context->CreateControl(parent, "Box", 0, size);
+    box->GetComponent<Touchable>()->Click += event_handler(this, &SerializedFieldEditorBool::Clicked);
+    tick = context->CreateControl(box, "Box", size*0.1f, size*0.8f);
+    tick->RemoveComponent<Touchable>();
+    tick->GetComponent<Colorable>()->Color = Colour::Black();
+    prev = !(*field);
+}
+
+void SerializedFieldEditorBool::Destroy() {
+   box->GetComponent<Touchable>()->Click -= event_handler(this, &SerializedFieldEditorBool::Clicked);
+   box->Remove();
+}
+
+void SerializedFieldEditorBool::Clicked(TouchData touch) {
+    (*field) = !(*field);
+}
+
+void SerializedFieldEditorBool::Update(float dt) {
+    bool changed = prev!=(*field);
+    if (changed) {
+        tick->EnableComponent<Material>(*field);
+    }
+    prev = (*field);
+}
+
+void Pocket::CreateDefaultSerializedEditors() {
+    SerializedField<float>::Editor = [] () { return new SerializedFieldEditorFloat(); };
+    SerializedField<Vector2>::Editor = [] () { return new SerializedFieldEditorVector2(); };
+    SerializedField<Vector3>::Editor = [] () { return new SerializedFieldEditorVector3(); };
+    SerializedField<std::string>::Editor = [] () { return new SerializedFieldEditorString(); };
+    SerializedField<bool>::Editor = [] () { return new SerializedFieldEditorBool(); };
+}

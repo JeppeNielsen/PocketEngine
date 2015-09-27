@@ -25,6 +25,7 @@ class IGameComponentType;
 template<class T>
 class GameComponentType;
 class ScriptWorld;
+class ISerializable;
 
 class GameObject : public IPointable<GameObject> {
 public:
@@ -72,6 +73,8 @@ public:
     
     std::string GetID();
     void SetID(const std::string& id);
+    
+    SerializableCollection SerializableComponents();
     
 private:
     GameObject();

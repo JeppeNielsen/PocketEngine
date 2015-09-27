@@ -46,6 +46,9 @@ template<typename Owner, typename T>
 struct FieldEditorProperty : public SerializedFieldEditor<Property<Owner, T>, void, void> {
     ISerializedFieldEditor* editor;
     
+    FieldEditorProperty() : editor(0) {}
+    ~FieldEditorProperty() { delete editor; }
+    
     void Initialize(void* context, void* parent) {
         editor = SerializedField<T>::Editor ? SerializedField<T>::Editor() : 0;
         if (editor) {
@@ -80,6 +83,12 @@ struct FieldEditorProperty : public SerializedFieldEditor<Property<Owner, T>, vo
 template<typename Owner, typename T>
 struct SerializedFieldEditorCreator<Property<Owner, T>> {
     static ISerializedFieldEditor* Create() {
+        ISerializedFieldEditor* editor = SerializedField<T>::Editor ? SerializedField<T>::Editor() : 0;
+        if (!editor) {
+            return 0;
+        } else {
+            delete editor;
+        }
         return new FieldEditorProperty<Owner, T>();
     }
 };
@@ -91,6 +100,7 @@ public:
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
     virtual ISerializedFieldEditor* CreateEditor(void* context, void* parent) = 0;
+    virtual bool HasEditor() = 0;
 };
 
 template<class T>
@@ -114,6 +124,17 @@ public:
         if (!editor) return 0;
         editor->Create(field, context, parent);
         return editor;
+    }
+    
+    bool HasEditor() {
+        if (Editor) return true;
+        auto editor = SerializedFieldEditorCreator<T>::Create();
+        if (editor) {
+            delete editor;
+            return true;
+        } else {
+            return false;
+        }
     }
     
     static std::function<ISerializedFieldEditor*()> Editor;

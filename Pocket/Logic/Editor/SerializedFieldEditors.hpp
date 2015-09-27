@@ -11,6 +11,15 @@
 #include "TextBox.hpp"
 
 namespace Pocket {
+    struct SerializedFieldEditorFloat : public SerializedFieldEditor<float, Gui, GameObject> {
+        void Initialize(Gui* context, GameObject* parent);
+        void Destroy();
+        void TextChanged(TextBox* textBox);
+        void Update(float dt);
+        GameObject* textBox;
+        float prev;
+    };
+    
     struct SerializedFieldEditorVector2 : public SerializedFieldEditor<Vector2, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
@@ -27,6 +36,25 @@ namespace Pocket {
         void Update(float dt);
         GameObject* textBox[3];
         Vector3 prev;
+    };
+    
+    struct SerializedFieldEditorString : public SerializedFieldEditor<std::string, Gui, GameObject> {
+        void Initialize(Gui* context, GameObject* parent);
+        void Destroy();
+        void TextChanged(TextBox* textBox);
+        void Update(float dt);
+        GameObject* textBox;
+        std::string prev;
+    };
+    
+    struct SerializedFieldEditorBool : public SerializedFieldEditor<bool, Gui, GameObject> {
+        void Initialize(Gui* context, GameObject* parent);
+        void Destroy();
+        void Clicked(TouchData touch);
+        void Update(float dt);
+        GameObject* box;
+        GameObject* tick;
+        bool prev;
     };
     
     void CreateDefaultSerializedEditors();

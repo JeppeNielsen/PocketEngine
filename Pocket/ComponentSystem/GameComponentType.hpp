@@ -54,6 +54,7 @@ public:
     virtual void* AddComponent() = 0;
     virtual void WriteJson(minijson::array_writer& writer, void* component, bool isReference, std::string* referenceID) = 0;
     virtual void ReadJson(minijson::istream_context& context, void* component) = 0;
+    virtual ISerializable* ConvertComponent(void* component) = 0;
 };
 
 template<class T>
@@ -74,6 +75,7 @@ public:
     void UpdatePointers(void* component, std::map<void*, void*>& pointerMap, std::map<void*, int>& pointerCounter);
     void WriteJson(minijson::array_writer& writer, void* component, bool isReference, std::string* referenceID);
     void ReadJson(minijson::istream_context& context, void* component);
+    virtual ISerializable* ConvertComponent(void* component);
     
     void UpdateRemovedObject(GameObject* object);
     
@@ -156,6 +158,11 @@ T* Pocket::GameComponentType<T>::CloneComponent(T* sourceComponent) {
 template<class T>
 void* Pocket::GameComponentType<T>::CloneComponent(void* source) {
     return CloneComponent((T*)source);
+}
+
+template<class T>
+Pocket::ISerializable* Pocket::GameComponentType<T>::ConvertComponent(void *component) {
+    return (T*)component;
 }
 
 template<class T>
