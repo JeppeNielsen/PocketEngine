@@ -39,6 +39,10 @@ namespace Pocket {
 #define PI 3.14159265359
 #define HALF_PI 1.57079632679
 #define DOUBLE_PI 6.28318530718
+
+        static constexpr float Pi = 3.14159265359;
+        static constexpr float RadToDeg = 180.0f / Pi;
+        static constexpr float DegToRad = Pi / 180.0f;
 	};
 }
 

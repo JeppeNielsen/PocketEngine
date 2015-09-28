@@ -57,5 +57,14 @@ namespace Pocket {
         bool prev;
     };
     
+    struct SerializedFieldEditorQuaternion : public SerializedFieldEditor<Quaternion, Gui, GameObject> {
+        void Initialize(Gui* context, GameObject* parent);
+        void Destroy();
+        void TextChanged(TextBox* textBox, GameObject* object);
+        void Update(float dt);
+        GameObject* textBox[3];
+        Vector3 prev;
+    };
+    
     void CreateDefaultSerializedEditors();
 }

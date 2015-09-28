@@ -182,10 +182,63 @@ void SerializedFieldEditorBool::Update(float dt) {
     prev = (*field);
 }
 
+
+//-------- Quaternion ---------
+void SerializedFieldEditorQuaternion::Initialize(Gui* context, GameObject* parent) {
+    Vector2 size = parent->GetComponent<Sizeable>()->Size;
+    size.x /= 3.0f;
+    for (int i=0; i<3; ++i) {
+        textBox[i] = context->CreateTextBox(parent, "Box", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorQuaternion::TextChanged,  textBox[i]);
+        textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+    }
+    prev = (*field).ToEuler()-1;
+}
+
+void SerializedFieldEditorQuaternion::Destroy() {
+    for (int i=0; i<3; ++i) {
+        textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed -= event_handler(this, &SerializedFieldEditorQuaternion::TextChanged, textBox[i]);
+        textBox[i]->Remove();
+    }
+}
+
+void SerializedFieldEditorQuaternion::TextChanged(TextBox* textBox, GameObject* object) {
+    if (textBox->Active) return;
+    float value = (float)atof(textBox->Text().c_str());
+    Vector3 euler = (*field).ToEuler();
+    euler *= MathHelper::RadToDeg;
+    if (object == this->textBox[0]) {
+        euler.x = value;
+    } else if (object == this->textBox[1]) {
+        euler.y = value;
+    } else {
+        euler.z = value;
+    }
+    euler *= MathHelper::DegToRad;
+    (*field) = Quaternion(euler);
+    //prev = (*field);
+}
+
+void SerializedFieldEditorQuaternion::Update(float dt) {
+    Vector3 euler = (*field).ToEuler();
+    euler *= MathHelper::RadToDeg;
+    for (int i=0; i<3; ++i) {
+        bool changed = prev[i]!=(*field)[i];
+        if (changed && !textBox[i]->Children()[0]->GetComponent<TextBox>()->Active()) {
+            std::stringstream s;
+            s<<euler[i];
+            textBox[i]->Children()[0]->GetComponent<TextBox>()->Text = s.str();
+        }
+    }
+    prev = euler;
+}
+
+
 void Pocket::CreateDefaultSerializedEditors() {
     SerializedField<float>::Editor = [] () { return new SerializedFieldEditorFloat(); };
     SerializedField<Vector2>::Editor = [] () { return new SerializedFieldEditorVector2(); };
     SerializedField<Vector3>::Editor = [] () { return new SerializedFieldEditorVector3(); };
     SerializedField<std::string>::Editor = [] () { return new SerializedFieldEditorString(); };
     SerializedField<bool>::Editor = [] () { return new SerializedFieldEditorBool(); };
+    SerializedField<Quaternion>::Editor = [] () { return new SerializedFieldEditorQuaternion(); };
 }
