@@ -11,6 +11,10 @@
 #include "OctreeSystem.hpp"
 #include "HierarchyOrder.hpp"
 #include "TextBoxLabelSystem.hpp"
+#include "DraggableMotionSystem.hpp"
+#include "VelocitySystem.hpp"
+#include "LimitableSystem.hpp"
+#include "LimitableSizeSystem.hpp"
 
 using namespace Pocket;
 
@@ -34,6 +38,10 @@ void Gui::Initialize() {
     CreateSystem<MenuSystem>();
     CreateSystem<MenuButtonSystem>();
     CreateSystem<ColorSystem>();
+    CreateSystem<DraggableMotionSystem>();
+    CreateSystem<VelocitySystem>();
+    CreateSystem<LimitableSizeSystem>();
+    CreateSystem<LimitableSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
@@ -104,12 +112,11 @@ GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string& sp
     return control;
 }
 
-GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string &spriteName) {
+GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string &spriteName, const Vector2& size) {
     GameObject* control = CreateControl(parent);
-
     control->GetComponent<Sprite>()->SpriteName = spriteName;
+    control->GetComponent<Sizeable>()->Size = size;
     control->AddComponent<Layoutable>();
-
     return control;
 }
 
@@ -189,6 +196,25 @@ void Gui::AddMenuAnimator(Pocket::GameObject *control, Pocket::GameObject *menu,
     menuAnimator->FadeInAnimation = fadeInAnimation;
     menuAnimator->FadeOutAnimation = fadeOutAnimation;
     control->AddComponent<TransformAnimationDatabase>(animations);
+}
+
+GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, GameObject** pivot) {
+    GameObject* listbox = CreateControl(parent, spriteName, position, size);
+    listbox->AddComponent<Layoutable>();
+    CreateClipper(listbox, true);
+    GameObject* p = CreatePivot(listbox);
+    p->AddComponent<Sizeable>();
+    p->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
+    p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+    p->AddComponent<Touchable>(listbox);
+    p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
+    p->AddComponent<DraggableMotion>();
+    p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 2;
+    p->GetComponent<Velocity>()->Friction = 10;
+    p->AddComponent<Limitable>();
+    CreateClipper(listbox, false);
+    (*pivot)=p;
+    return listbox;
 }
 
 /*

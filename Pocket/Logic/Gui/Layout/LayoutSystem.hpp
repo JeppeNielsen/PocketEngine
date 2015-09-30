@@ -26,8 +26,7 @@ namespace Pocket {
 
     private:
         
-        class LayoutObject {
-        public:
+        struct LayoutObject {
             LayoutObject(GameObject* object, LayoutSystem* layoutSystem);
             ~LayoutObject();
             LayoutSystem* layoutSystem;
@@ -38,15 +37,19 @@ namespace Pocket {
             Vector2 deltaSize;
             Vector2 oldSize;
             Sizeable* parentSizeable;
+            LayoutObject* parentLayoutObject;
             
             void Update();
+            void UpdateChildren();
             
             void ParentChanged(Property<GameObject*, GameObject*>::EventData d);
             void ParentSizeChanged(Property<Sizeable*, Vector2>::EventData d);
+            
+            void IterateChildren(std::function<void(Transform* transform, Sizeable* sizeable)> function);
         };
         
         typedef std::set<LayoutObject*> DirtyObjects;
         DirtyObjects dirtyObjects;
-        
+        DirtyObjects dirtyChildLayoutables;
     };
 }

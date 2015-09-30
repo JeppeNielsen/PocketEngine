@@ -23,6 +23,7 @@ void Clipper::PushBegin() {
     
     stackCount++;
     
+    glClear(GL_STENCIL_BUFFER_BIT);
     glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     glDepthMask(GL_FALSE);
     glStencilFunc(GL_ALWAYS, stackCount, stackCount);

@@ -38,7 +38,7 @@ namespace Pocket {
         
         GameObject* CreatePivot(GameObject* parent = 0, const Vector2& position = Vector2(0,0));
         GameObject* CreateControl(GameObject* parent = 0);
-        GameObject* CreateControl(GameObject* parent, const std::string& spriteName);
+        GameObject* CreateControl(GameObject* parent, const std::string& spriteName, const Vector2& size = Vector2(1,1));
         GameObject* CreateControl(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size);
         GameObject* CreateLabelControl(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size, GameObject* font, std::string text, float fontSize);
         GameObject* CreateTextBox(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size, GameObject* font, std::string text, float fontSize);
@@ -51,6 +51,8 @@ namespace Pocket {
         
         GameObject* CreateMenu(GameObject* parent, const Vector2& position);
         void AddMenuAnimator(GameObject* control, GameObject* menu, std::string activeMenu, GameObject* animations, const std::string& fadeInAnimation, const std::string& fadeOutAnimation);
+        
+        GameObject* CreateListbox(GameObject* parent, const std::string& spriteName, const Vector2& position, const Vector2& size, GameObject** pivot);
         
     public:
         void Initialize();

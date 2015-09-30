@@ -23,12 +23,29 @@ public:
     Property<Layoutable*, HAlignment> HorizontalAlignment;
     Property<Layoutable*, VAlignment> VerticalAlignment;
     
+    enum class ChildLayouting {
+        None,
+        HorizontalStackedFit,
+        HorizontalStackedLeft,
+        HorizontalStackedCenter,
+        HorizontalStackedRight,
+        HorizontalCentered, HorizontalEvenlySized,
+        VerticalStackedFit,
+        VerticalStackedTop,
+        VerticalStackedCenter,
+        VerticalStackedBottom,
+        VerticalCentered, VerticalEvenlySized,
+    };
+    
+    Property<Layoutable*, ChildLayouting> ChildLayouting;
+    
     void Reset();
     void Clone(const Layoutable& other);
     
     SERIALIZE_FIELDS_BEGIN
     SERIALIZE_FIELD(HorizontalAlignment);
     SERIALIZE_FIELD(VerticalAlignment);
+    SERIALIZE_FIELD(ChildLayouting);
     SERIALIZE_FIELDS_END
     };
 }
