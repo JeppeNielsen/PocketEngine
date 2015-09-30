@@ -838,5 +838,29 @@ void ComponentSystemTests::Run() {
         wasObjectCreated && wasObjectRemoved && wasObjectRemoved2;
     });
     
+    UnitTest("Delete and create object, test hierarchy", [] () {
+        GameWorld world;
+        GameObject* object = world.CreateObject();
+        GameObject* child = world.CreateObject();
+        child->Parent = object;
+        world.Update(0);
+        bool wasObjectCreated = world.Objects().size() == 2;
+        bool childrenCountIsOne = world.Children().size() == 1;
+        object->Remove();
+        world.Update(0);
+        
+        bool wasObjectRemoved = world.Objects().size() == 0;
+        bool childrenCountWasZero = world.Children().size() == 0;
+        object = world.CreateObject();
+        child = world.CreateObject();
+        child->Parent = object;
+        object->Clone();
+        world.Update(0);
+        bool wasObjectCreated2 = world.Objects().size() == 4;
+        bool childrenCountIsOne2 = world.Children().size() == 2;
+        
+        return wasObjectCreated && childrenCountIsOne && wasObjectRemoved && childrenCountWasZero && wasObjectCreated2 && childrenCountIsOne2;
+    });
+
 
 }
