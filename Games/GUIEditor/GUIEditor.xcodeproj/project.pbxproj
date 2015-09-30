@@ -350,9 +350,12 @@
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
 		7279F84D1BAF3EBC009345C0 /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7279F84B1BAF3EBC009345C0 /* Editor.cpp */; };
+		72B670341BBC7B1700ED2391 /* LimitableSizeSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670321BBC7B1700ED2391 /* LimitableSizeSystem.cpp */; };
 		72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14781BB4769B004F2D79 /* FieldEditor.cpp */; };
 		72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */; };
 		72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */; };
+		72CA14831BB494FF004F2D79 /* GameObjectEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14811BB494FF004F2D79 /* GameObjectEditor.cpp */; };
+		72CA14861BB4959A004F2D79 /* GameObjectEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14841BB4959A004F2D79 /* GameObjectEditorSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1180,12 +1183,18 @@
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
 		7279F84B1BAF3EBC009345C0 /* Editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		72B670321BBC7B1700ED2391 /* LimitableSizeSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LimitableSizeSystem.cpp; sourceTree = "<group>"; };
+		72B670331BBC7B1700ED2391 /* LimitableSizeSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LimitableSizeSystem.hpp; sourceTree = "<group>"; };
 		72CA14781BB4769B004F2D79 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
 		72CA14791BB4769B004F2D79 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
 		72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
 		72CA147C1BB47803004F2D79 /* FieldEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditorSystem.hpp; sourceTree = "<group>"; };
 		72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializedFieldEditors.cpp; sourceTree = "<group>"; };
 		72CA147F1BB47B7F004F2D79 /* SerializedFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializedFieldEditors.hpp; sourceTree = "<group>"; };
+		72CA14811BB494FF004F2D79 /* GameObjectEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectEditor.cpp; sourceTree = "<group>"; };
+		72CA14821BB494FF004F2D79 /* GameObjectEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectEditor.hpp; sourceTree = "<group>"; };
+		72CA14841BB4959A004F2D79 /* GameObjectEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectEditorSystem.cpp; sourceTree = "<group>"; };
+		72CA14851BB4959A004F2D79 /* GameObjectEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectEditorSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1565,6 +1574,8 @@
 				726DB4A51B978D97004FC537 /* Velocity.hpp */,
 				726DB4A61B978D97004FC537 /* VelocitySystem.cpp */,
 				726DB4A71B978D97004FC537 /* VelocitySystem.hpp */,
+				72B670321BBC7B1700ED2391 /* LimitableSizeSystem.cpp */,
+				72B670331BBC7B1700ED2391 /* LimitableSizeSystem.hpp */,
 			);
 			path = Movement;
 			sourceTree = "<group>";
@@ -2599,6 +2610,10 @@
 				72CA147C1BB47803004F2D79 /* FieldEditorSystem.hpp */,
 				72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */,
 				72CA147F1BB47B7F004F2D79 /* SerializedFieldEditors.hpp */,
+				72CA14811BB494FF004F2D79 /* GameObjectEditor.cpp */,
+				72CA14821BB494FF004F2D79 /* GameObjectEditor.hpp */,
+				72CA14841BB4959A004F2D79 /* GameObjectEditorSystem.cpp */,
+				72CA14851BB4959A004F2D79 /* GameObjectEditorSystem.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -2814,6 +2829,7 @@
 				726DB86D1B978D98004FC537 /* Matrix3x3.cpp in Sources */,
 				726DB8271B978D98004FC537 /* SoundSystem.cpp in Sources */,
 				726DB8A11B978D98004FC537 /* btOverlappingPairCache.cpp in Sources */,
+				72B670341BBC7B1700ED2391 /* LimitableSizeSystem.cpp in Sources */,
 				726DB8201B978D98004FC537 /* TransformAnimation.cpp in Sources */,
 				726DB8761B978D98004FC537 /* Vector3.cpp in Sources */,
 				726DB8611B978D98004FC537 /* Selectable.cpp in Sources */,
@@ -2859,6 +2875,7 @@
 				726DB9201B978D98004FC537 /* btSoftBodyHelpers.cpp in Sources */,
 				726DB8CD1B978D98004FC537 /* btMinkowskiSumShape.cpp in Sources */,
 				726DB8461B978D98004FC537 /* DraggableMotionSystem.cpp in Sources */,
+				72CA14861BB4959A004F2D79 /* GameObjectEditorSystem.cpp in Sources */,
 				726DB8261B978D98004FC537 /* SoundListener.cpp in Sources */,
 				726DB9401B978D98004FC537 /* File.mm in Sources */,
 				726DB8AA1B978D98004FC537 /* btCollisionWorld.cpp in Sources */,
@@ -3012,6 +3029,7 @@
 				726DB84B1B978D98004FC537 /* LimitableSystem.cpp in Sources */,
 				726DB8241B978D98004FC537 /* Sound.cpp in Sources */,
 				726DB90D1B978D98004FC537 /* PosixThreadSupport.cpp in Sources */,
+				72CA14831BB494FF004F2D79 /* GameObjectEditor.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
