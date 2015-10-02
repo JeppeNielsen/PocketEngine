@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
 <Texture>
-<Image name="Box" position="0,257" size="10,10"/>
+<Image name="Box" position="0,257" size="10,10" offset ="2,2" />
 <Image name="Font" position="0,0" size="512,256"/>
+<Image name="TextBox" position="513,0" size="10,10" offset ="2,2"/>
 </Texture>

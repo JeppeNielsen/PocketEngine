@@ -40,6 +40,8 @@ public:
     GameObject* editor;
     
     GameObject* colorBox;
+    GameObject* listbox;
+    GameObject* listBoxPivot;
     
     void Initialize() {
     
@@ -58,7 +60,7 @@ public:
         selected = world.CreateSystem<SelectableCollection>();
         selected->SelectionChanged += event_handler(this, &Editor::SelectionChanged);
         //world.CreateSystem<GridSystem>();
-        world.CreateSystem<GameObjectEditorSystem>();
+        world.CreateSystem<GameObjectEditorSystem>()->gui = gui;
         world.CreateSystem<FieldEditorSystem>()->gui = gui;
         
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
@@ -79,49 +81,15 @@ public:
         label->AddComponent<SizeModifier>();
         label->AddComponent<Draggable>();
         
+        GameObject* window = gui->CreatePivot();
+        GameObject* windowBar = gui->CreateControl(window, "TextBox", {0,400},{200,20});
+        window->AddComponent<Draggable>();
+        window->AddComponent<Touchable>(windowBar);
         
-        //GameObject* textBox = gui->CreateTextBox(0, "Box", {500,100}, {200,50}, 0, "Testing Editor", 10);
-        
-        editor = world.CreateObject();
-        editor->AddComponent<Transform>();
-        editor->AddComponent<Sizeable>()->Size = {200,700};
-        editor->AddComponent<GameObjectEditor>()->Object = label;
-        
-        
-        if (false)
-        {
-            colorBox = gui->CreateControl(0, "Box", 100, 300);
-            colorBox->AddComponent<Touchable>();
-            colorBox->AddComponent<Selectable>();
-            colorBox->AddComponent<SizeModifier>();
-            colorBox->AddComponent<Draggable>();
-            colorBox->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedBottom;
-            gui->CreateClipper(colorBox, true);
-            for (int i=0; i<20; i++) {
-                GameObject* child = gui->CreateControl(colorBox, "Box", 0, {300,30});
-                child->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-                child->GetComponent<Colorable>()->Color = Colour::HslToRgb(i*18, 1, 1, 1);
-                child->GetComponent<Touchable>()->ClickThrough = true;
-                GameObject* close = gui->CreateControl(child, "Box", {300-30,0}, {30});
-                close->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Right;
-                close->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-                close->GetComponent<Touchable>()->Click += event_handler(this, &Editor::CloseClicked, child);
-            }
-            gui->CreateClipper(colorBox, false);
-        }
-        
-        GameObject* listBoxPivot;
-        GameObject* listbox = gui->CreateListbox(0, "Box", {600,100}, 300, &listBoxPivot);
-        //listbox->AddComponent<Draggable>();
-        //listBoxPivot->AddComponent<Touchable>(listbox);
-        //listBoxPivot->AddComponent<Draggable>();
+        listbox = gui->CreateListbox(window, "Box", 0, {200,400}, &listBoxPivot);
         listbox->AddComponent<Draggable>();
-        listbox->AddComponent<SizeModifier>();
-        listbox->AddComponent<Selectable>();
         
         editor = listBoxPivot;
-        editor->AddComponent<Transform>();
-        editor->AddComponent<Sizeable>()->Size = {200,700};
         editor->AddComponent<GameObjectEditor>()->Object = label;
         
         for (int i=0; i<0; i++) {
@@ -135,32 +103,11 @@ public:
             close->GetComponent<Touchable>()->Click += event_handler(this, &Editor::CloseClicked, child);
         }
         
-        
-        
-        
-        
-        /*
-        {
-        editor = world.CreateObject();//gui->CreateControl(0, "Box", 300, {300,50});
-        editor->AddComponent<Transform>()->Position = {0,0};
-        editor->AddComponent<Sizeable>()->Size = {200,100};
-        auto e = editor->AddComponent<FieldEditor>();
-        e->Object = box->GetComponent<Transform>();
-        e->Field = "Position";
-        }
-        {
-        GameObject* editor = gui->CreateControl(0, "Box", {300,350}, {300,50});
-        auto e = editor->AddComponent<FieldEditor>();
-        e->Object = box->GetComponent<Sizeable>();
-        e->Field = "Size";
-        }
-        */
-        
         Input.ButtonDown += event_handler(this, &Editor::ButtonDown);
     }
     
     void CloseClicked(TouchData d, GameObject* object) {
-        object->Parent = object->Parent() ? 0 : colorBox;
+        object->Parent = object->Parent() ? 0 : listBoxPivot;
         
     }
     
