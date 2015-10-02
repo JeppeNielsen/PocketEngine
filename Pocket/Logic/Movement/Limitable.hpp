@@ -9,6 +9,7 @@
 #pragma once
 #include "GameComponent.hpp"
 #include "Vector3.hpp"
+#include "Sizeable.hpp"
 
 namespace Pocket {
     Component(Limitable)
@@ -16,5 +17,8 @@ namespace Pocket {
         void Reset();
         Vector3 min;
         Vector3 max;
+    
+        Pointer<Sizeable> Size;
+        Pointer<Sizeable> View;
     };
 }

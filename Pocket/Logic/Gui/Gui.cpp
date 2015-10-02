@@ -14,7 +14,6 @@
 #include "DraggableMotionSystem.hpp"
 #include "VelocitySystem.hpp"
 #include "LimitableSystem.hpp"
-#include "LimitableSizeSystem.hpp"
 
 using namespace Pocket;
 
@@ -40,7 +39,6 @@ void Gui::Initialize() {
     CreateSystem<ColorSystem>();
     CreateSystem<DraggableMotionSystem>();
     CreateSystem<VelocitySystem>();
-    CreateSystem<LimitableSizeSystem>();
     CreateSystem<LimitableSystem>();
 }
 
@@ -201,6 +199,7 @@ void Gui::AddMenuAnimator(Pocket::GameObject *control, Pocket::GameObject *menu,
 GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, GameObject** pivot) {
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
     listbox->AddComponent<Layoutable>();
+    listbox->GetComponent<Touchable>()->ClickThrough = true;
     CreateClipper(listbox, true);
     GameObject* p = CreatePivot(listbox);
     p->AddComponent<Sizeable>();
@@ -209,9 +208,11 @@ GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &sp
     p->AddComponent<Touchable>(listbox);
     p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
     p->AddComponent<DraggableMotion>();
-    p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 2;
-    p->GetComponent<Velocity>()->Friction = 10;
-    p->AddComponent<Limitable>();
+    p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
+    p->GetComponent<Velocity>()->Friction = 5;
+    Limitable* limitable = p->AddComponent<Limitable>();
+    limitable->Size = p->GetComponent<Sizeable>();
+    limitable->View = listbox->GetComponent<Sizeable>();
     CreateClipper(listbox, false);
     (*pivot)=p;
     return listbox;

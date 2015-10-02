@@ -75,6 +75,7 @@ public:
     void SetID(const std::string& id);
     
     SerializableCollection SerializableComponents();
+    std::vector<std::string> ComponentNames();
     
 private:
     GameObject();

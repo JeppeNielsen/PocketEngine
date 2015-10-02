@@ -11,10 +11,12 @@
 #include "GameObjectEditor.hpp"
 #include "Transform.hpp"
 #include "Sizeable.hpp"
+#include "Gui.hpp"
 
 namespace Pocket {
     SYSTEM(GameObjectEditorSystem, GameObjectEditor, Transform, Sizeable)
         public:
+            Gui* gui;
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
         private:

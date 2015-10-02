@@ -44,6 +44,7 @@ namespace Pocket {
 		T operator -= (T value);
 		T operator *= (T value);
 		T operator /= (T value);
+        T operator - ();
 
 	private:
 		T value;
@@ -142,6 +143,10 @@ template<class Owner, class T> T Pocket::Property<Owner, T>::operator *= (T valu
 template<class Owner, class T> T Pocket::Property<Owner, T>::operator /= (T value) {
 	Set(this->value / value);
 	return Get();
+}
+
+template<class Owner, class T> T Pocket::Property<Owner, T>::operator - () {
+	return -Get();
 }
 
 template<class Owner, class T>

@@ -198,11 +198,21 @@ void GameObject::SetID(const std::string &id) {
 
 SerializableCollection GameObject::SerializableComponents() {
     SerializableCollection collection;
-     for (int i=0; i<world->componentTypes.size(); i++) {
+    for (int i=0; i<world->componentTypes.size(); i++) {
         if (components[i]) {
             collection.push_back(world->componentTypes[i]->ConvertComponent(components[i]));
         }
     }
     return collection;
+}
+
+std::vector<std::string> GameObject::ComponentNames() {
+    std::vector<std::string> names;
+    for (int i=0; i<world->componentTypes.size(); i++) {
+        if (components[i]) {
+            names.push_back(world->componentTypes[i]->name);
+        }
+    }
+    return names;
 }
 

@@ -21,6 +21,10 @@ void LimitableSystem::Update(float dt) {
         Transform* transform = object->GetComponent<Transform>();
         Limitable* limitable = object->GetComponent<Limitable>();
         Vector3 position = transform->Position;
+        if (limitable->Size && limitable->View) {
+            limitable->min = -limitable->Size()->Size + limitable->View->Size;
+            limitable->min = limitable->min.Min(limitable->max);
+        }
         
         if (position.x<limitable->min.x) {
             position.x = limitable->min.x;

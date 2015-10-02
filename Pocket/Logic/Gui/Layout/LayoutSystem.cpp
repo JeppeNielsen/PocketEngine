@@ -23,6 +23,12 @@ void LayoutSystem::ObjectAdded(Pocket::GameObject *object) {
 
 void LayoutSystem::ObjectRemoved(Pocket::GameObject *object) {
     LayoutObject* layoutObject = (LayoutObject*)GetMetaData(object);
+    for (auto o : Objects()) {
+        LayoutObject* l = (LayoutObject*)GetMetaData(o);
+        if (l && l->parentLayoutObject == layoutObject) {
+            l->parentLayoutObject = 0;
+        }
+    }
     delete layoutObject;
 }
 
@@ -32,6 +38,10 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     sizeable = object->GetComponent<Sizeable>();
     layoutable = object->GetComponent<Layoutable>();
     transform = object->GetComponent<Transform>();
+    if (!layoutable) {
+        int hej = 6;
+        hej++;
+    }
     parentSizeable = 0;
     parentLayoutObject = 0;
     object->Parent.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentChanged);
@@ -51,6 +61,10 @@ LayoutSystem::LayoutObject::~LayoutObject() {
     if (it!=layoutSystem->dirtyObjects.end()) {
         layoutSystem->dirtyObjects.erase(it);
     }
+    auto it2 = layoutSystem->dirtyChildLayoutables.find(this);
+    if (it2!=layoutSystem->dirtyChildLayoutables.end()) {
+        layoutSystem->dirtyChildLayoutables.erase(it2);
+    }
 }
 
 void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*>::EventData d) {
@@ -61,19 +75,25 @@ void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*
         if (parentLayoutObject) {
             layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
         }
+        parentLayoutObject = 0;
     }
     
     if (d.Current) {
         parentSizeable = d.Current->GetComponent<Sizeable>();
         if (parentSizeable) {
             parentSizeable->Size.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
-            parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(d.Current);
-            if (parentLayoutObject) {
-                if (parentLayoutObject->layoutable->ChildLayouting==Layoutable::ChildLayouting::None) {
-                    parentLayoutObject = 0;
-                } else {
-                    layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
+            
+            if (d.Current->GetComponent<Layoutable>()) {
+                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(d.Current);
+                if (parentLayoutObject) {
+                    if (parentLayoutObject->layoutable->ChildLayouting==Layoutable::ChildLayouting::None) {
+                        parentLayoutObject = 0;
+                    } else {
+                        layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
+                    }
                 }
+            } else {
+                parentLayoutObject = 0;
             }
         }
     }

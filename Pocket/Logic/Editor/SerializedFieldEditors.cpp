@@ -11,7 +11,8 @@
 //-------- float ---------
 void SerializedFieldEditorFloat::Initialize(Gui* context, GameObject* parent) {
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
-    textBox = context->CreateTextBox(parent, "Box", 0, size, 0, "", 15.0f);
+    textBox = context->CreateTextBox(parent, "TextBox", 0, size, 0, "", 15.0f);
+    textBox->GetComponent<Touchable>()->ClickThrough = true;
     textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorFloat::TextChanged);
     textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     prev = (*field) - 1;
@@ -44,7 +45,8 @@ void SerializedFieldEditorVector2::Initialize(Gui* context, GameObject* parent) 
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
     size.x /= 2.0f;
     for (int i=0; i<2; ++i) {
-        textBox[i] = context->CreateTextBox(parent, "Box", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i] = context->CreateTextBox(parent, "TextBox", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i]->GetComponent<Touchable>()->ClickThrough = true;
         textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorVector2::TextChanged,  textBox[i]);
         textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     }
@@ -87,7 +89,8 @@ void SerializedFieldEditorVector3::Initialize(Gui* context, GameObject* parent) 
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
     size.x /= 3.0f;
     for (int i=0; i<3; ++i) {
-        textBox[i] = context->CreateTextBox(parent, "Box", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i] = context->CreateTextBox(parent, "TextBox", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i]->GetComponent<Touchable>()->ClickThrough = true;
         textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorVector3::TextChanged,  textBox[i]);
         textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     }
@@ -130,7 +133,8 @@ void SerializedFieldEditorVector3::Update(float dt) {
 void SerializedFieldEditorString::Initialize(Gui* context, GameObject* parent) {
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
 
-    textBox = context->CreateTextBox(parent, "Box", 0, size, 0, "", 15.0f);
+    textBox = context->CreateTextBox(parent, "TextBox", 0, size, 0, "", 15.0f);
+    textBox->GetComponent<Touchable>()->ClickThrough = true;
     textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorString::TextChanged);
     textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
 }
@@ -157,9 +161,10 @@ void SerializedFieldEditorString::Update(float dt) {
 void SerializedFieldEditorBool::Initialize(Gui* context, GameObject* parent) {
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
 
-    box = context->CreateControl(parent, "Box", 0, size);
+    box = context->CreateControl(parent, "TextBox", 0, size);
+    box->GetComponent<Touchable>()->ClickThrough = true;
     box->GetComponent<Touchable>()->Click += event_handler(this, &SerializedFieldEditorBool::Clicked);
-    tick = context->CreateControl(box, "Box", size*0.1f, size*0.8f);
+    tick = context->CreateControl(box, "TextBox", size*0.1f, size*0.8f);
     tick->RemoveComponent<Touchable>();
     tick->GetComponent<Colorable>()->Color = Colour::Black();
     prev = !(*field);
@@ -188,7 +193,8 @@ void SerializedFieldEditorQuaternion::Initialize(Gui* context, GameObject* paren
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
     size.x /= 3.0f;
     for (int i=0; i<3; ++i) {
-        textBox[i] = context->CreateTextBox(parent, "Box", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i] = context->CreateTextBox(parent, "TextBox", {i*size.x,0}, size, 0, "", 15.0f);
+        textBox[i]->GetComponent<Touchable>()->ClickThrough = true;
         textBox[i]->Children()[0]->GetComponent<TextBox>()->Active.Changed += event_handler(this, &SerializedFieldEditorQuaternion::TextChanged,  textBox[i]);
         textBox[i]->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     }

@@ -173,6 +173,14 @@ namespace Pocket {
         Vector3 static Deserialize(const std::string& data, const char delim = ',');
         
         static Vector3 zero;
+        
+        inline Vector3 Min(const Vector3& other) {
+            return Vector3(x<other.x ? x : other.x, y<other.y ? y : other.y, z<other.z ? z : other.z);
+        }
+        
+        inline Vector3 Max(const Vector3& other) {
+            return Vector3(x>other.x ? x : other.x, y>other.y ? y : other.y, z>other.z ? z : other.z);
+        }
     };
 }
 
