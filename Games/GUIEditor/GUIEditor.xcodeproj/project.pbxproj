@@ -350,6 +350,10 @@
 		726DB9AC1B979254004FC537 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9A81B97918A004FC537 /* images.xml */; };
 		726DB9B11B98D98D004FC537 /* GameObjectJson.txt in Resources */ = {isa = PBXBuildFile; fileRef = 726DB9B01B98D98D004FC537 /* GameObjectJson.txt */; };
 		7279F84D1BAF3EBC009345C0 /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7279F84B1BAF3EBC009345C0 /* Editor.cpp */; };
+		72B670371BBEE7D100ED2391 /* HierarchyEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670351BBEE7D100ED2391 /* HierarchyEditor.cpp */; };
+		72B6703A1BBEE83600ED2391 /* HierarchyEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670381BBEE83600ED2391 /* HierarchyEditorSystem.cpp */; };
+		72B6703D1BBFF19500ED2391 /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6703B1BBFF19500ED2391 /* SelectedColorer.cpp */; };
+		72B670401BBFF23200ED2391 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */; };
 		72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14781BB4769B004F2D79 /* FieldEditor.cpp */; };
 		72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */; };
 		72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */; };
@@ -1182,6 +1186,14 @@
 		726DB9A81B97918A004FC537 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		726DB9B01B98D98D004FC537 /* GameObjectJson.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = GameObjectJson.txt; sourceTree = "<group>"; };
 		7279F84B1BAF3EBC009345C0 /* Editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		72B670351BBEE7D100ED2391 /* HierarchyEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyEditor.cpp; sourceTree = "<group>"; };
+		72B670361BBEE7D100ED2391 /* HierarchyEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditor.hpp; sourceTree = "<group>"; };
+		72B670381BBEE83600ED2391 /* HierarchyEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyEditorSystem.cpp; sourceTree = "<group>"; };
+		72B670391BBEE83600ED2391 /* HierarchyEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditorSystem.hpp; sourceTree = "<group>"; };
+		72B6703B1BBFF19500ED2391 /* SelectedColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorer.cpp; sourceTree = "<group>"; };
+		72B6703C1BBFF19500ED2391 /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
+		72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
+		72B6703F1BBFF23200ED2391 /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
 		72CA14781BB4769B004F2D79 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
 		72CA14791BB4769B004F2D79 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
 		72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
@@ -1646,6 +1658,10 @@
 				726DB4D91B978D97004FC537 /* SelectableDragSystem.hpp */,
 				726DB4DA1B978D97004FC537 /* SelectionVisualizer.cpp */,
 				726DB4DB1B978D97004FC537 /* SelectionVisualizer.hpp */,
+				72B6703B1BBFF19500ED2391 /* SelectedColorer.cpp */,
+				72B6703C1BBFF19500ED2391 /* SelectedColorer.hpp */,
+				72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */,
+				72B6703F1BBFF23200ED2391 /* SelectedColorerSystem.hpp */,
 			);
 			path = Selection;
 			sourceTree = "<group>";
@@ -2609,6 +2625,10 @@
 				72CA14821BB494FF004F2D79 /* GameObjectEditor.hpp */,
 				72CA14841BB4959A004F2D79 /* GameObjectEditorSystem.cpp */,
 				72CA14851BB4959A004F2D79 /* GameObjectEditorSystem.hpp */,
+				72B670351BBEE7D100ED2391 /* HierarchyEditor.cpp */,
+				72B670361BBEE7D100ED2391 /* HierarchyEditor.hpp */,
+				72B670381BBEE83600ED2391 /* HierarchyEditorSystem.cpp */,
+				72B670391BBEE83600ED2391 /* HierarchyEditorSystem.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -2688,6 +2708,7 @@
 				726DB93E1B978D98004FC537 /* AppDelegate.mm in Sources */,
 				726DB9151B978D98004FC537 /* boxBoxDistance.cpp in Sources */,
 				726DB8661B978D98004FC537 /* Transform.cpp in Sources */,
+				72B6703A1BBEE83600ED2391 /* HierarchyEditorSystem.cpp in Sources */,
 				726DB93F1B978D98004FC537 /* BigButtonManager.cpp in Sources */,
 				726DB9101B978D98004FC537 /* SpuCollisionTaskProcess.cpp in Sources */,
 				726DB89D1B978D98004FC537 /* btDbvt.cpp in Sources */,
@@ -2735,6 +2756,7 @@
 				726DB8501B978D98004FC537 /* PhysicsSystem.cpp in Sources */,
 				726DB83A1B978D98004FC537 /* Sprite.cpp in Sources */,
 				726DB89F1B978D98004FC537 /* btDispatcher.cpp in Sources */,
+				72B670371BBEE7D100ED2391 /* HierarchyEditor.cpp in Sources */,
 				726DB8DB1B978D98004FC537 /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
 				726DB82A1B978D98004FC537 /* ParticleEffect.cpp in Sources */,
 				726DB99B1B978D98004FC537 /* tinyxmlerror.cpp in Sources */,
@@ -2840,6 +2862,7 @@
 				726DB84C1B978D98004FC537 /* Velocity.cpp in Sources */,
 				726DB8D31B978D98004FC537 /* btShapeHull.cpp in Sources */,
 				726DB83F1B978D98004FC537 /* TextBoxSystem.cpp in Sources */,
+				72B6703D1BBFF19500ED2391 /* SelectedColorer.cpp in Sources */,
 				726DB8151B978D98004FC537 /* Triangulator.cpp in Sources */,
 				726DB8411B978D98004FC537 /* TouchableCanceller.cpp in Sources */,
 				726DB8681B978D98004FC537 /* BoundingBox.cpp in Sources */,
@@ -2859,6 +2882,7 @@
 				726DB9451B978D98004FC537 /* OSXWindowCreator.mm in Sources */,
 				726DB8E81B978D98004FC537 /* gim_memory.cpp in Sources */,
 				726DB88F1B978D98004FC537 /* b2Contact.cpp in Sources */,
+				72B670401BBFF23200ED2391 /* SelectedColorerSystem.cpp in Sources */,
 				726DB8D81B978D98004FC537 /* btTriangleBuffer.cpp in Sources */,
 				7224B5021BA8BDFF002737EB /* SizeModifierLine.cpp in Sources */,
 				726DB92E1B978D98004FC537 /* MiniCLTask.cpp in Sources */,

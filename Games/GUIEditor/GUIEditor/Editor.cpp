@@ -16,6 +16,7 @@
 #include <vector>
 #include "FieldEditorSystem.hpp"
 #include "GameObjectEditorSystem.hpp"
+#include "HierarchyEditorSystem.hpp"
 
 using namespace Pocket;
 
@@ -33,26 +34,23 @@ class Editor : public GameState<Editor> {
 public:
     GameWorld world;
     Gui* gui;
-    GameObject* font;
-    GameObject* box;
     SelectableCollection* selected;
-    Transform* transform;
-    GameObject* editor;
+    TextBoxSystem* textboxSystem;
     
+    GameObject* editor;
     GameObject* colorBox;
     GameObject* listbox;
     GameObject* listBoxPivot;
+    GameObject* root;
+    GameObject* label;
+    GameObject* box;
     
     void Initialize() {
-    
-               
-    
-        //SerializedFieldEditor<float> floatT;
-        //floatT.Initialize((float*)0,(void*)0);
         
-        
+        HierarchyEditorSystem* hierarchyEditorSystem = world.CreateSystem<HierarchyEditorSystem>();
         
         gui = world.CreateFactory<Gui>();
+        textboxSystem = world.GetSystem<TextBoxSystem>();
         world.CreateSystem<ClickSelectorSystem>();
         world.CreateSystem<SizeModifierSystem>();
         world.CreateSystem<SizeModifierNodeSystem>();
@@ -60,13 +58,20 @@ public:
         selected = world.CreateSystem<SelectableCollection>();
         selected->SelectionChanged += event_handler(this, &Editor::SelectionChanged);
         //world.CreateSystem<GridSystem>();
-        world.CreateSystem<GameObjectEditorSystem>()->gui = gui;
+        GameObjectEditorSystem* gameObjectEditorSystem = world.CreateSystem<GameObjectEditorSystem>();
+        gameObjectEditorSystem->gui = gui;
+        gameObjectEditorSystem->IgnoreComponent<Atlas>();
+        gameObjectEditorSystem->IgnoreComponent<Touchable>();
+        
         world.CreateSystem<FieldEditorSystem>()->gui = gui;
+        hierarchyEditorSystem->gui = gui;
         
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
-        font = gui->CreateFont("Font.fnt", "Font");
+        gui->CreateFont("Font.fnt", "Font");
         
-        box = gui->CreateControl(0, "Box", 200, 200);
+        root = gui->CreatePivot();
+        
+        box = gui->CreateControl(root, "Box", 200, 200);
         box->AddComponent<Draggable>();
         box->AddComponent<Selectable>();
         box->AddComponent<SizeModifier>();
@@ -74,34 +79,81 @@ public:
         box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
         box->AddComponent<Speed>()->speed = {10,23};
         
-        GameObject* label = gui->CreateLabel(0, {200,200}, {200,200}, 0, "Testing label", 20);
+        
+        for (int i=0; i<2; i++) {
+    
+            GameObject* child = gui->CreateControl(box, "TextBox", {i*20.0f,0}, 50);
+            child->AddComponent<Draggable>();
+            child->AddComponent<Selectable>();
+            child->AddComponent<SizeModifier>();
+            child->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+            child->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+            
+        
+        
+            GameObject* subChild = gui->CreateControl(child, "Box", {i*10.0f,0}, 30);
+            subChild->AddComponent<Draggable>();
+            subChild->AddComponent<Selectable>();
+            subChild->AddComponent<SizeModifier>();
+            subChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+            subChild->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+            
+        }
+        
+        
+        label = gui->CreateLabel(root, {200,200}, {200,200}, 0, "Testing label", 20);
         label->GetComponent<Colorable>()->Color = Colour::Black();
         label->AddComponent<Touchable>();
         label->AddComponent<Selectable>();
         label->AddComponent<SizeModifier>();
         label->AddComponent<Draggable>();
         
-        GameObject* window = gui->CreatePivot();
-        GameObject* windowBar = gui->CreateControl(window, "TextBox", {0,400},{200,20});
-        window->AddComponent<Draggable>();
-        window->AddComponent<Touchable>(windowBar);
         
-        listbox = gui->CreateListbox(window, "Box", 0, {200,400}, &listBoxPivot);
-        listbox->AddComponent<Draggable>();
-        
-        editor = listBoxPivot;
-        editor->AddComponent<GameObjectEditor>()->Object = label;
-        
-        for (int i=0; i<0; i++) {
-            GameObject* child = gui->CreateControl(listBoxPivot, "Box", 0, {300,30});
-            child->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-            child->GetComponent<Colorable>()->Color = Colour::HslToRgb(i*18, 1, 1, 1);
-            child->GetComponent<Touchable>()->ClickThrough = true;
-            GameObject* close = gui->CreateControl(child, "Box", {300-30,0}, {30});
-            close->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Right;
-            close->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-            close->GetComponent<Touchable>()->Click += event_handler(this, &Editor::CloseClicked, child);
+        {
+            GameObject* window = gui->CreatePivot();
+            GameObject* windowBar = gui->CreateControl(window, "TextBox", {0,400},{200,20});
+            window->AddComponent<Draggable>();
+            window->AddComponent<Touchable>(windowBar);
+            
+            listbox = gui->CreateListbox(window, "Box", 0, {200,400}, &listBoxPivot);
+            listbox->AddComponent<Draggable>();
+            
+            editor = listBoxPivot;
+            editor->AddComponent<GameObjectEditor>()->Object = box;
+            
+            for (int i=0; i<0; i++) {
+                GameObject* child = gui->CreateControl(listBoxPivot, "Box", 0, {300,30});
+                child->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+                child->GetComponent<Colorable>()->Color = Colour::HslToRgb(i*18, 1, 1, 1);
+                child->GetComponent<Touchable>()->ClickThrough = true;
+                GameObject* close = gui->CreateControl(child, "Box", {300-30,0}, {30});
+                close->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Right;
+                close->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+                close->GetComponent<Touchable>()->Click += event_handler(this, &Editor::CloseClicked, child);
+            }
         }
+        
+        {
+            GameObject* window = gui->CreatePivot();
+            window->GetComponent<Transform>()->Position = {500,200};
+            GameObject* windowBar = gui->CreateControl(window, "TextBox", {0,400},{200,20});
+            window->AddComponent<Draggable>();
+            window->AddComponent<Touchable>(windowBar);
+        
+            GameObject* listboxPivot;
+            GameObject* listbox = gui->CreateListbox(window, "Box", 0, {200,400}, &listboxPivot);
+            listbox->AddComponent<Draggable>();
+            
+            
+            GameObject* hierarchyEditor = gui->CreatePivot(listboxPivot);
+            hierarchyEditor->AddComponent<Sizeable>()->Size = {200,50};
+            hierarchyEditor->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
+            hierarchyEditor->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+            hierarchyEditor->AddComponent<HierarchyEditor>()->Object = root;
+        }
+        
+        
+        
         
         Input.ButtonDown += event_handler(this, &Editor::ButtonDown);
     }
@@ -120,15 +172,25 @@ public:
     }
     
     void ButtonDown(std::string button) {
-        //editor->GetComponent<FieldEditor>()->Field = "Scale";
+        if (textboxSystem->ActiveTextBox()) return;
+        
+        if (button == "\x7f") {
+            for (auto o : selected->Selected()) {
+                o->Remove();
+            }
+        } else if (button == "p") {
+            label->Parent = box;
+            label->GetComponent<Transform>()->Position = 0;
+        } else if (button == "d") {
+            for (auto o : selected->Selected()) {
+                o->Clone();
+            }
+        }
     }
     
     void Update(float dt) {
         world.Update(dt*0.5f);
         world.Update(dt*0.5f);
-        //box->GetComponent<Speed>()->speed += {0,0.01f};
-        //box->GetComponent<Transform>()->Position += {10 * dt,0,0};
-        //std::cout<<box->GetComponent<Speed>()->speed<<std::endl;
     }
     
     void Render() {
