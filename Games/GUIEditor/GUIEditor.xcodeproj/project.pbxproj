@@ -354,6 +354,8 @@
 		72B6703A1BBEE83600ED2391 /* HierarchyEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670381BBEE83600ED2391 /* HierarchyEditorSystem.cpp */; };
 		72B6703D1BBFF19500ED2391 /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6703B1BBFF19500ED2391 /* SelectedColorer.cpp */; };
 		72B670401BBFF23200ED2391 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */; };
+		72B670461BC04D2200ED2391 /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670441BC04D2200ED2391 /* Droppable.cpp */; };
+		72B670491BC04DFD00ED2391 /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670471BC04DFD00ED2391 /* DroppableSystem.cpp */; };
 		72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14781BB4769B004F2D79 /* FieldEditor.cpp */; };
 		72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */; };
 		72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */; };
@@ -1194,6 +1196,10 @@
 		72B6703C1BBFF19500ED2391 /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
 		72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
 		72B6703F1BBFF23200ED2391 /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
+		72B670441BC04D2200ED2391 /* Droppable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Droppable.cpp; sourceTree = "<group>"; };
+		72B670451BC04D2200ED2391 /* Droppable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Droppable.hpp; sourceTree = "<group>"; };
+		72B670471BC04DFD00ED2391 /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
+		72B670481BC04DFD00ED2391 /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
 		72CA14781BB4769B004F2D79 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
 		72CA14791BB4769B004F2D79 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
 		72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
@@ -1513,6 +1519,10 @@
 				726DB4871B978D97004FC537 /* TextBoxLabelSystem.hpp */,
 				726DB4881B978D97004FC537 /* TextBoxSystem.cpp */,
 				726DB4891B978D97004FC537 /* TextBoxSystem.hpp */,
+				72B670441BC04D2200ED2391 /* Droppable.cpp */,
+				72B670451BC04D2200ED2391 /* Droppable.hpp */,
+				72B670471BC04DFD00ED2391 /* DroppableSystem.cpp */,
+				72B670481BC04DFD00ED2391 /* DroppableSystem.hpp */,
 			);
 			path = Gui;
 			sourceTree = "<group>";
@@ -2718,6 +2728,7 @@
 				726DB8221B978D98004FC537 /* TransformAnimator.cpp in Sources */,
 				726DB94C1B978D98004FC537 /* Clipper.cpp in Sources */,
 				726DB91C1B978D98004FC537 /* Win32ThreadSupport.cpp in Sources */,
+				72B670491BC04DFD00ED2391 /* DroppableSystem.cpp in Sources */,
 				726DB8511B978D98004FC537 /* PhysicsSystem2d.cpp in Sources */,
 				726DB8711B978D98004FC537 /* Point3.cpp in Sources */,
 				726DB8581B978D98004FC537 /* ColorSystem.cpp in Sources */,
@@ -3016,6 +3027,7 @@
 				726DB91B1B978D98004FC537 /* SpuSampleTaskProcess.cpp in Sources */,
 				726DB8021B978D98004FC537 /* GameObject.cpp in Sources */,
 				726DB80A1B978D98004FC537 /* InputManager.cpp in Sources */,
+				72B670461BC04D2200ED2391 /* Droppable.cpp in Sources */,
 				726DB8EA1B978D98004FC537 /* btContinuousConvexCollision.cpp in Sources */,
 				726DB92B1B978D98004FC537 /* btSerializer.cpp in Sources */,
 				726DB8EE1B978D98004FC537 /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
