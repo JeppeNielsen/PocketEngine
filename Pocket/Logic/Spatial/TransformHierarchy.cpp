@@ -29,8 +29,13 @@ void TransformHierarchy::CalcWorld( DirtyProperty<Transform*, Matrix4x4>::EventD
 {
 	Matrix4x4& world = *event.Value;
 	if (object->Parent) {
-		world = object->Parent()->GetComponent<Transform>()->World.GetValue()->Multiply(*event.owner->Local.GetValue());
-	}
+        Transform* parentTransform = object->Parent()->GetComponent<Transform>();
+        if (!parentTransform) {
+            world = *event.owner->Local.GetValue();
+        } else {
+            world = parentTransform->World.GetValue()->Multiply(*event.owner->Local.GetValue());
+        }
+    }
 }
 
 void TransformHierarchy::ParentChanged( Property<GameObject*, GameObject*>::EventData event, GameObject* object ) {

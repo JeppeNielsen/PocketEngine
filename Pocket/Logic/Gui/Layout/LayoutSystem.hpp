@@ -44,8 +44,9 @@ namespace Pocket {
             
             void ParentChanged(Property<GameObject*, GameObject*>::EventData d);
             void ParentSizeChanged(Property<Sizeable*, Vector2>::EventData d);
+            void SizeChanged(Sizeable* sizeable);
             
-            void IterateChildren(std::function<void(Transform* transform, Sizeable* sizeable)> function);
+            void IterateChildren(const ObjectCollection& children, std::function<void(Transform* transform, Sizeable* sizeable)> function);
         };
         
         typedef std::set<LayoutObject*> DirtyObjects;

@@ -36,6 +36,7 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     this->layoutSystem = layoutSystem;
     this->object = object;
     sizeable = object->GetComponent<Sizeable>();
+    sizeable->Size.Changed += event_handler(this, &LayoutSystem::LayoutObject::SizeChanged);
     layoutable = object->GetComponent<Layoutable>();
     transform = object->GetComponent<Transform>();
     if (!layoutable) {
@@ -49,6 +50,9 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     d.Old = 0;
     d.Current = object->Parent;
     ParentChanged(d);
+    if (layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
+        layoutSystem->dirtyChildLayoutables.insert(this);
+    }
 }
 
 LayoutSystem::LayoutObject::~LayoutObject() {
@@ -64,6 +68,14 @@ LayoutSystem::LayoutObject::~LayoutObject() {
     auto it2 = layoutSystem->dirtyChildLayoutables.find(this);
     if (it2!=layoutSystem->dirtyChildLayoutables.end()) {
         layoutSystem->dirtyChildLayoutables.erase(it2);
+    }
+    sizeable->Size.Changed -= event_handler(this, &LayoutSystem::LayoutObject::SizeChanged);
+}
+
+void LayoutSystem::LayoutObject::SizeChanged(Pocket::Sizeable *sizeable) {
+    if (!parentLayoutObject) return;
+    if (parentLayoutObject->layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
+        layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
     }
 }
 
@@ -152,36 +164,35 @@ void LayoutSystem::LayoutObject::Update() {
         }
     }
     
-    if (sizeable->Size()!=size) {
-        sizeable->Size = size;
-        if (parentLayoutObject) {
-            layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
-        }
-    }
+    sizeable->Size = size;
     transform->Position = position;
 }
 
 void LayoutSystem::LayoutObject::UpdateChildren() {
+    ObjectCollection children = object->Children();
+    std::sort(children.begin(), children.end(), [] (GameObject* a, GameObject* b) {
+        return a->Order()<b->Order();
+    });
     switch (layoutable->ChildLayouting()) {
         case Layoutable::ChildLayouting::HorizontalStackedLeft:
         case Layoutable::ChildLayouting::HorizontalStackedCenter:
         case Layoutable::ChildLayouting::HorizontalStackedRight:
         case Layoutable::ChildLayouting::HorizontalStackedFit: {
             Vector2 position(0,0);
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 t->Position = position;
                 position.x += s->Size().x;
             });
             if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::HorizontalStackedCenter) {
                 float offset = sizeable->Size().x * 0.5f - position.x * 0.5f;
-                IterateChildren([&](Transform* t, Sizeable* s) {
+                IterateChildren(children, [&](Transform* t, Sizeable* s) {
                     Vector3 position = t->Position;
                     position.x+=offset;
                     t->Position = position;
                 });
             } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::HorizontalStackedRight) {
                 float offset = sizeable->Size().x - position.x;
-                IterateChildren([&](Transform* t, Sizeable* s) {
+                IterateChildren(children, [&](Transform* t, Sizeable* s) {
                     Vector3 position = t->Position;
                     position.x+=offset;
                     t->Position = position;
@@ -197,12 +208,12 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
         case Layoutable::ChildLayouting::HorizontalEvenlySized: {
             Vector2 position(0,0);
             int count = 0;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 count++;
             });
             if (count == 0) return;
             float width = sizeable->Size().x / count;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 t->Position = position;
                 s->Size = Vector2(width, s->Size().y);
                 position.x += width;
@@ -212,13 +223,13 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
         case Layoutable::ChildLayouting::HorizontalCentered: {
             float offset = 0;;
             std::map<Transform*, float> offsets;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 offsets[t] = offset + s->Size().x * 0.5f;
                 offset+=s->Size().x;
             });
             if (offsets.empty()) return;
             float ratio = sizeable->Size().x / offset;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 Vector3 p = t->Position;
                 p.x = offsets[t] * ratio - s->Size().x * 0.5f;
                 t->Position = p;
@@ -230,20 +241,22 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
         case Layoutable::ChildLayouting::VerticalStackedBottom:
         case Layoutable::ChildLayouting::VerticalStackedFit: {
             Vector2 position(0,0);
-            IterateChildren([&](Transform* t, Sizeable* s) {
-                t->Position = position;
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
+                Vector3 p = t->Position;
+                p.y = position.y;
+                t->Position = p;
                 position.y += s->Size().y;
             });
             if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::VerticalStackedCenter) {
                 float offset = sizeable->Size().y * 0.5f - position.y * 0.5f;
-                IterateChildren([&](Transform* t, Sizeable* s) {
+                IterateChildren(children, [&](Transform* t, Sizeable* s) {
                     Vector3 position = t->Position;
                     position.y+=offset;
                     t->Position = position;
                 });
             } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::VerticalStackedTop) {
                 float offset = sizeable->Size().y - position.y;
-                IterateChildren([&](Transform* t, Sizeable* s) {
+                IterateChildren(children, [&](Transform* t, Sizeable* s) {
                     Vector3 position = t->Position;
                     position.y+=offset;
                     t->Position = position;
@@ -258,12 +271,12 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
         case Layoutable::ChildLayouting::VerticalEvenlySized: {
             Vector2 position(0,0);
             int count = 0;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 count++;
             });
             if (count == 0) return;
             float height = sizeable->Size().y / count;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 t->Position = position;
                 s->Size = Vector2(s->Size().x,height);
                 position.y += height;
@@ -273,13 +286,13 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
         case Layoutable::ChildLayouting::VerticalCentered: {
             float offset = 0;
             std::map<Transform*, float> offsets;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 offsets[t] = offset + s->Size().y * 0.5f;
                 offset+=s->Size().y;
             });
             if (offsets.empty()) return;
             float ratio = sizeable->Size().y / offset;
-            IterateChildren([&](Transform* t, Sizeable* s) {
+            IterateChildren(children, [&](Transform* t, Sizeable* s) {
                 Vector3 p = t->Position;
                 p.y = offsets[t] * ratio - s->Size().y * 0.5f;
                 t->Position = p;
@@ -291,8 +304,8 @@ void LayoutSystem::LayoutObject::UpdateChildren() {
     }
 }
 
-void LayoutSystem::LayoutObject::IterateChildren(std::function<void (Transform *, Sizeable *)> function) {
-    for(auto child : object->Children()) {
+void LayoutSystem::LayoutObject::IterateChildren(const ObjectCollection& children, std::function<void (Transform *, Sizeable *)> function) {
+    for(auto child : children) {
         Layoutable* childLayoutable = child->GetComponent<Layoutable>();
         if (!childLayoutable) continue;
         Transform* transform = child->GetComponent<Transform>();

@@ -168,6 +168,7 @@ void SerializedFieldEditorBool::Initialize(Gui* context, GameObject* parent) {
     tick->RemoveComponent<Touchable>();
     tick->GetComponent<Colorable>()->Color = Colour::Black();
     prev = !(*field);
+    Update(0);
 }
 
 void SerializedFieldEditorBool::Destroy() {

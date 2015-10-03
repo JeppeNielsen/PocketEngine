@@ -25,6 +25,7 @@ GameObject::~GameObject() {
 }
 
 void GameObject::ParentChanged(Pocket::Property<GameObject *, GameObject *>::EventData d) {
+    ASSERT(!d.Current || !d.Current->isRemoved, "Parent cannot be removed");
     ObjectCollection& oldChildren = d.Old ? d.Old->children : world->children;
     GameObject* lastChild = oldChildren.back();
     oldChildren[childIndex] = lastChild;
@@ -77,6 +78,8 @@ void GameObject::Remove() {
         children[i]->Remove();
     }
 }
+
+bool GameObject::IsRemoved() const { return isRemoved; }
 
 const ObjectCollection& GameObject::Children() { return children; }
 
@@ -216,3 +219,12 @@ std::vector<std::string> GameObject::ComponentNames() {
     return names;
 }
 
+std::vector<int> GameObject::ComponentTypes() {
+    std::vector<int> types;
+    for (int i=0; i<world->componentTypes.size(); i++) {
+        if (components[i]) {
+            types.push_back(i);
+        }
+    }
+    return types;
+}

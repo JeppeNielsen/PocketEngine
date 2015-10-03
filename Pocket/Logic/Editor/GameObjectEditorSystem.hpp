@@ -19,8 +19,13 @@ namespace Pocket {
             Gui* gui;
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
+            template<class T>
+            void IgnoreComponent() {
+                ignoredComponents.push_back(T::ID);
+            }
         private:
             void ObjectChanged(GameObjectEditor* editor, GameObject* object);
-    
+            typedef std::vector<int> IgnoredComponents;
+            IgnoredComponents ignoredComponents;
     };
 }

@@ -11,8 +11,10 @@
 
 using namespace Pocket;
 
+TextBoxSystem::TextBoxSystem() : ActiveTextBox(this) { }
+
 void TextBoxSystem::Initialize() {
-    activeTextBox = 0;
+    ActiveTextBox = 0;
     AddComponent<TextBox>();
     AddComponent<Touchable>();
 }
@@ -41,7 +43,7 @@ void TextBoxSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void TextBoxSystem::ActiveTextBoxChanged(TextBox* textBox) {
     if (textBox->Active) {
-        activeTextBox = textBox;
+        ActiveTextBox = textBox;
         for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
             TextBox* textBoxToDisable = (*it)->GetComponent<TextBox>();
             if (textBox!=textBoxToDisable) {
@@ -57,8 +59,8 @@ void TextBoxSystem::ActiveTextBoxChanged(TextBox* textBox) {
         Input->TouchDown += event_handler(this, &TextBoxSystem::TouchInputUp);
         
     } else {
-        if (textBox == activeTextBox) {
-            activeTextBox = 0;
+        if (textBox == ActiveTextBox()) {
+            ActiveTextBox = 0;
             Input->KeyboardActive.Changed -= event_handler(this, &TextBoxSystem::KeyboardActiveChanged);
             Input->KeyboardText.Changed -= event_handler(this, &TextBoxSystem::KeyboardTextChanged);
             Input->TouchDown -= event_handler(this, &TextBoxSystem::TouchInputUp);
@@ -95,8 +97,8 @@ void TextBoxSystem::TouchClick(Pocket::TouchData d, Pocket::GameObject *object) 
 void TextBoxSystem::Update(float dt) {
     
     if (touchWasUp && !anyTextboxUp) {
-        if (activeTextBox) {
-            activeTextBox->Active = false;
+        if (ActiveTextBox()) {
+            ActiveTextBox()->Active = false;
         }
     }
     touchWasUp = false;
@@ -113,16 +115,13 @@ void TextBoxSystem::Update(float dt) {
 }
 
 void TextBoxSystem::KeyboardActiveChanged(Pocket::InputManager *input) {
-    if (!input->KeyboardActive && activeTextBox) {
-        activeTextBox->Active = false;
+    if (!input->KeyboardActive && ActiveTextBox()) {
+        ActiveTextBox()->Active = false;
     }
 }
 
 void TextBoxSystem::KeyboardTextChanged(Pocket::InputManager *input) {
-    if (activeTextBox) {
-        activeTextBox->Text = input->KeyboardText;
+    if (ActiveTextBox()) {
+        ActiveTextBox()->Text = input->KeyboardText;
     }
 }
-
-
-

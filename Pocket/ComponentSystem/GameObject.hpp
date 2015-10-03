@@ -76,6 +76,8 @@ public:
     
     SerializableCollection SerializableComponents();
     std::vector<std::string> ComponentNames();
+    std::vector<int> ComponentTypes();
+    bool IsRemoved() const;
     
 private:
     GameObject();

@@ -14,6 +14,7 @@
 #include "DraggableMotionSystem.hpp"
 #include "VelocitySystem.hpp"
 #include "LimitableSystem.hpp"
+#include "SelectedColorerSystem.hpp"
 
 using namespace Pocket;
 
@@ -40,6 +41,7 @@ void Gui::Initialize() {
     CreateSystem<DraggableMotionSystem>();
     CreateSystem<VelocitySystem>();
     CreateSystem<LimitableSystem>();
+    CreateSystem<SelectedColorerSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
@@ -172,7 +174,7 @@ GameObject* Gui::CreateTextBox(Pocket::GameObject *parent, const std::string &sp
     Label* label = labelGO->GetComponent<Label>();
     label->HAlignment = Font::Center;
     label->VAlignment = Font::Middle;
-    labelGO->AddComponent<TextBox>();
+    labelGO->AddComponent<TextBox>()->Text = text;
     labelGO->AddComponent<Touchable>(control);
     
     return control;
@@ -199,7 +201,7 @@ void Gui::AddMenuAnimator(Pocket::GameObject *control, Pocket::GameObject *menu,
 GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, GameObject** pivot) {
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
     listbox->AddComponent<Layoutable>();
-    listbox->GetComponent<Touchable>()->ClickThrough = true;
+    listbox->GetComponent<Touchable>()->ClickThrough = false;
     CreateClipper(listbox, true);
     GameObject* p = CreatePivot(listbox);
     p->AddComponent<Sizeable>();

@@ -28,8 +28,15 @@ void GameObjectEditorSystem::ObjectChanged(GameObjectEditor *editor, GameObject*
     
     SerializableCollection components = editor->Object()->SerializableComponents();
     std::vector<std::string> componentNames = editor->Object()->ComponentNames();
+    std::vector<int> componentTypes = editor->Object()->ComponentTypes();
     Vector2 size = {200,50};
     for (int i=0; i<components.size(); ++i) {
+        
+        auto isIgnoredComponent = std::find(ignoredComponents.begin(), ignoredComponents.end(), componentTypes[i]);
+        if (isIgnoredComponent!=ignoredComponents.end()) {
+            continue;
+        }
+        
         ISerializable* component = components[i];
     
         bool hasNoEditors = true;
@@ -50,6 +57,12 @@ void GameObjectEditorSystem::ObjectChanged(GameObjectEditor *editor, GameObject*
         componentChild->AddComponent<Sizeable>()->Size = size;
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
+        
+        GameObject* space = World()->CreateObject();
+        space->Parent = componentChild;
+        space->AddComponent<Transform>();
+        space->AddComponent<Sizeable>()->Size = {size.x, 10};
+        space->AddComponent<Layoutable>();
         
         for (auto field : fields.fields) {
             if (!field->HasEditor()) continue;

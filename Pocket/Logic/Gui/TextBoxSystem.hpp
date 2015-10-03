@@ -16,7 +16,7 @@
 namespace Pocket {
     class TextBoxSystem : public GameSystem {
     public:
-
+        TextBoxSystem();
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
@@ -24,8 +24,9 @@ namespace Pocket {
         
         InputManager* Input;
         
+        Property<TextBoxSystem*, TextBox*> ActiveTextBox;
     private:
-        TextBox* activeTextBox;
+        
         
         void ActiveTextBoxChanged(TextBox* textBox);
         

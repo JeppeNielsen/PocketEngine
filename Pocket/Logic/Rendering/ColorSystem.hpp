@@ -22,7 +22,7 @@ namespace Pocket {
             void ColorChanged(Colorable* colorable, GameObject* object);
             void Update(float dt);
         private:
-            std::vector<GameObject*> changedColorables;
+            std::set<GameObject*> changedColorables;
         };
   
 }
