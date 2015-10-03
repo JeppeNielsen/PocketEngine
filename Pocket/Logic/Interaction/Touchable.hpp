@@ -29,6 +29,7 @@ namespace Pocket {
         Pocket::GameObject* CameraObject;
         Pocket::Camera* Camera;
         Pocket::Vector3 WorldNormal;
+        Pocket::Ray Ray;
     };
     
 	Component(Touchable)

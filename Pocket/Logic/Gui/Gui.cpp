@@ -15,6 +15,7 @@
 #include "VelocitySystem.hpp"
 #include "LimitableSystem.hpp"
 #include "SelectedColorerSystem.hpp"
+#include "DroppableSystem.hpp"
 
 using namespace Pocket;
 
@@ -42,6 +43,7 @@ void Gui::Initialize() {
     CreateSystem<VelocitySystem>();
     CreateSystem<LimitableSystem>();
     CreateSystem<SelectedColorerSystem>();
+    CreateSystem<DroppableSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
@@ -176,7 +178,6 @@ GameObject* Gui::CreateTextBox(Pocket::GameObject *parent, const std::string &sp
     label->VAlignment = Font::Middle;
     labelGO->AddComponent<TextBox>()->Text = text;
     labelGO->AddComponent<Touchable>(control);
-    
     return control;
 }
 

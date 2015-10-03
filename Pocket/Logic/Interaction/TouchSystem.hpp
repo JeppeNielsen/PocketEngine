@@ -98,8 +98,10 @@ namespace Pocket {
         Touched clicks;
         Touched ups;
         
-        void FindTouchedObjects(Touched& list, const TouchEvent& e);
-        void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e);
+    public:
+        void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
+    private:
+        void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);
         void AddToTouchList(Touched& from, Touched& to);
         bool IsTouchInList(const TouchData& touchData, const Touched& list);
         

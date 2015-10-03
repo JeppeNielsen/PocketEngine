@@ -12,6 +12,7 @@
 #include "Transform.hpp"
 #include "Sizeable.hpp"
 #include "Gui.hpp"
+#include "Droppable.hpp"
 
 namespace Pocket {
     SYSTEM(HierarchyEditorSystem, HierarchyEditor, Transform, Sizeable)
@@ -23,6 +24,8 @@ namespace Pocket {
         private:
             void ObjectChanged(HierarchyEditor* editor, GameObject* object);
             int CountDepth(GameObject* object);
+            void OnDropped(DroppedData* d, GameObject* editorObject);
+            bool IsParentLegal(GameObject* parent, GameObject* ancestor);
     
     };
 }

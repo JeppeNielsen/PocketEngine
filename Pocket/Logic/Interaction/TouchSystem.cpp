@@ -148,14 +148,14 @@ void TouchSystem::TouchUp(Pocket::TouchEvent e) {
     touchList.clear();
 }
 
-void TouchSystem::FindTouchedObjects(Touched& list, const TouchEvent& e) {
+void TouchSystem::FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough) {
     const ObjectCollection& cameras = cameraSystem->Objects();
     for (ObjectCollection::const_iterator it = cameras.begin(); it!=cameras.end(); ++it) {
-        FindTouchedObjectsFromCamera(*it, list, e);
+        FindTouchedObjectsFromCamera(*it, list, e, forceClickThrough);
     }
 }
 
-void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e) {
+void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough) {
     Camera* camera = cameraObject->GetComponent<Camera>();
     
     Ray ray = camera->GetRay(cameraObject->GetComponent<Transform>(), e.Position);
@@ -243,9 +243,10 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         TouchableObject* clipper = FindClipper(intersection.touchable);
         if (!clipper) {
             foundIntersections.push_back(intersection);
-            if (!intersection.touchable->touchable->ClickThrough) {
+            if (!forceClickThrough && !intersection.touchable->touchable->ClickThrough) {
                 break;
             }
+            //continue;
         }
     
         bool foundClipper = false;
@@ -268,7 +269,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         
         
         foundIntersections.push_back(intersection);
-        if (!intersection.touchable->touchable->ClickThrough) {
+        if (!forceClickThrough && !intersection.touchable->touchable->ClickThrough) {
             break;
         }
     }
@@ -292,6 +293,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         touch.Touchable = foundIntersection->touchable->touchable;
         touch.Index = e.Index;
         touch.Position = e.Position;
+        touch.Ray = ray;
         
         const Matrix4x4* world = touchableObject->transform->World.GetValue();
         

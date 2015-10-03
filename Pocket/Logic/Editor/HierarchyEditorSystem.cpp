@@ -71,7 +71,7 @@ void HierarchyEditorSystem::ObjectChanged(HierarchyEditor *editor, GameObject* o
     gameObjectName->GetComponent<Colorable>()->Color = Colour::White(0.5f);
     gameObjectName->AddComponent<SelectedColorer>()->Selected = Colour(0.5f, 0.5f, 0.5f, 1.0f);
     gameObjectName->AddComponent<Draggable>();
-    
+    gameObjectName->AddComponent<Droppable>()->Dropped += event_handler(this, &HierarchyEditorSystem::OnDropped, editor->Object);
 }
 
 int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
@@ -81,4 +81,32 @@ int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
         object = object->Parent;
     }
     return depth;
+}
+
+void HierarchyEditorSystem::OnDropped(Pocket::DroppedData* d, Pocket::GameObject *editorObject) {
+    for (TouchData& touchData : d->droppedTouches) {
+        if (!touchData.object->Parent()) continue;
+        HierarchyEditor* editor = touchData.object->Parent()->GetComponent<HierarchyEditor>();
+        if (!editor) continue;
+        GameObject* newParent = editor->Object;
+        
+        if (!IsParentLegal(newParent, editorObject)) {
+            return;
+        }
+        Transform* transform = editorObject->GetComponent<Transform>();
+        Vector3 worldPosition = transform->World.GetValue()->TransformPosition(0);
+        editorObject->Parent = newParent;
+        Vector3 localPosition = transform->World.GetValue()->Invert().TransformPosition(worldPosition);
+        transform->Position = transform->Local.GetValue()->TransformPosition(localPosition);
+        
+        break;
+    }
+}
+
+bool HierarchyEditorSystem::IsParentLegal(Pocket::GameObject *parent, Pocket::GameObject *ancestor) {
+    while (parent) {
+        if (parent == ancestor) return false;
+        parent = parent->Parent;
+    }
+    return true;
 }
