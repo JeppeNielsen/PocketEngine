@@ -83,8 +83,8 @@ int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
     return depth;
 }
 
-void HierarchyEditorSystem::OnDropped(Pocket::DroppedData* d, Pocket::GameObject *editorObject) {
-    for (TouchData& touchData : d->droppedTouches) {
+void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject *editorObject) {
+    for (TouchData& touchData : d.droppedTouches) {
         if (!touchData.object->Parent()) continue;
         HierarchyEditor* editor = touchData.object->Parent()->GetComponent<HierarchyEditor>();
         if (!editor) continue;

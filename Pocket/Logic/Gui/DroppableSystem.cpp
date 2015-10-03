@@ -33,5 +33,5 @@ void DroppableSystem::TouchUp(Pocket::TouchData d, GameObject* object) {
             break;
         }
     }
-    object->GetComponent<Droppable>()->Dropped(&droppedData);
+    object->GetComponent<Droppable>()->Dropped(droppedData);
 }

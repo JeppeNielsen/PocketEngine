@@ -18,6 +18,6 @@ namespace Pocket {
 
     Component(Droppable)
         void Reset();
-        Event<DroppedData*> Dropped;
+        Event<DroppedData> Dropped;
     };
 }

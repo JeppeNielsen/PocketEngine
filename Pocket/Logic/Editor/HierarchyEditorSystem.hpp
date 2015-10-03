@@ -24,7 +24,7 @@ namespace Pocket {
         private:
             void ObjectChanged(HierarchyEditor* editor, GameObject* object);
             int CountDepth(GameObject* object);
-            void OnDropped(DroppedData* d, GameObject* editorObject);
+            void OnDropped(DroppedData d, GameObject* editorObject);
             bool IsParentLegal(GameObject* parent, GameObject* ancestor);
     
     };
