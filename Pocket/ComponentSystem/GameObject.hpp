@@ -68,8 +68,9 @@ public:
     
     GameWorld* World();
     
-    void ToJson(std::ostream& stream);
-    void WriteJson(minijson::object_writer& writer);
+    typedef std::function<bool(GameObject*, int)> SerializePredicate;
+    
+    void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
     
     std::string GetID();
     void SetID(const std::string& id);
@@ -88,6 +89,7 @@ private:
     GameObject* CloneInternal(GameObject* parent);
     void UpdatePointers();
     bool IsComponentReference(int componentID);
+    void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
    
     ObjectCollection children;
     GameWorld* world;

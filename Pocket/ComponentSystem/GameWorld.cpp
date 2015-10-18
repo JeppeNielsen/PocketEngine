@@ -251,13 +251,13 @@ void GameWorld::ReadJsonComponent(minijson::istream_context &context, GameObject
     type->ReadJson(context, object->components[componentID]);
 }
 
-GameObject* GameWorld::CreateObjectFromJson(std::istream &jsonStream) {
+GameObject* GameWorld::CreateObjectFromJson(std::istream &jsonStream, std::function<void(GameObject*)> iterator) {
     minijson::istream_context context(jsonStream);
-    GameObject* object = CreateGameObjectJson(context);
+    GameObject* object = CreateGameObjectJson(context, iterator);
     return object;
 }
 
-GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context) {
+GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context, std::function<void(GameObject*)> iterator) {
     GameObject* object = 0;
     
     try {
@@ -314,17 +314,20 @@ GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context) 
                         });
                     } else if (name == "Children" && v.type() == minijson::Array && object) {
                         minijson::parse_array(context, [&] (minijson::value v) {
-                            GameObject* child = CreateGameObjectJson(context);
+                            GameObject* child = CreateGameObjectJson(context, iterator);
                             if (child) {
                                 child->Parent = object;
                             }
                         });
                     }
+                    if (iterator) {
+                        iterator(object);
+                    }
                 });
             }
          });
     } catch (std::exception e) {
-  
+        std::cout << e.what() << std::endl;
     }
     return object;
 }

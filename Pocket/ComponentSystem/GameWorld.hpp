@@ -38,7 +38,7 @@ public:
     ~GameWorld();
     
     GameObject* CreateObject();
-    GameObject* CreateObjectFromJson(std::istream& jsonStream);
+    GameObject* CreateObjectFromJson(std::istream& jsonStream, std::function<void(GameObject*)> iterator = 0);
     
     void Update(float dt);
     void Render();
@@ -90,7 +90,7 @@ private:
     
     void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
     void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
-    GameObject* CreateGameObjectJson(minijson::istream_context& context);
+    GameObject* CreateGameObjectJson(minijson::istream_context& context, std::function<void(GameObject*)> iterator);
     void CreateObjectID(GameObject* object, const std::string& id);
     GameObject* FindObjectFromID(const std::string& id);
     std::string* FindIDFromObject(GameObject* object);
