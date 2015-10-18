@@ -37,7 +37,31 @@ void NavMesh::Build(const std::vector<Vector2>& points) {
         for (int c=0; c<3; c++) {
             triangle.corners[c] = points[i * 3 + c];
         }
-        
+    
+    /*
+    //find neighbors
+    for (int i=0; i<numTriangles; i++) {
+        NavTriangle& current = triangles[i];
+        for (int j=0; j<numTriangles; j++) {
+            if (j==i) continue;
+            NavTriangle& other = triangles[j];
+            int dummy;
+            if (other.hasCorner(current.corners[0], dummy) && other.hasCorner(current.corners[1], dummy)){
+                current.neighbors[0]=&other;
+                continue;
+            }
+            if (other.hasCorner(current.corners[1], dummy) && other.hasCorner(current.corners[2], dummy)){
+                current.neighbors[1]=&other;
+                continue;
+            }
+            if (other.hasCorner(current.corners[2], dummy) && other.hasCorner(current.corners[0], dummy)){
+                current.neighbors[2]=&other;
+                continue;
+            }
+        }
+    }
+    */
+ 
         //check for neighbors
         for (int j=0; j<i; j++) {
             NavTriangle& other = triangles[j];
@@ -69,13 +93,9 @@ std::vector<NavTriangle*> NavMesh::FindPath(NavTriangle* startTriangle, const Po
     
     std::vector<NavTriangle*> path;
     
-    if (startTriangle == endTriangle) {
-        path.push_back(startTriangle);
-        return path;
-    }
-    
     std::vector<NavTriangle*> openList;
     startTriangle->position = start;
+    startTriangle->parent = 0;
     openList.push_back(startTriangle);
     
     NavTriangle* targetNode = 0;
@@ -150,9 +170,133 @@ NavTriangle* NavMesh::FindTriangle(const Pocket::Vector2 &position) {
     return 0;
 }
 
+std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> &path) {
+    std::vector<Vector2> straightPath;
+    
+    if (path.empty()) {
+        return straightPath;
+    }
+    
+    std::vector<Vector2> portalsLeft;
+    std::vector<Vector2> portalsRight;
+    
+    
+    //path is reversed
+    
+    portalsLeft.push_back(path[path.size()-1]->position);
+    portalsRight.push_back(path[path.size()-1]->position);
+    
+    
+    for (int i=(int)path.size()-1; i>=1; i--) {
+        NavTriangle* current = path[i];
+        NavTriangle* next = path[i-1];
+        int forwardIndex = current->FindNeighborIndex(next);
+        
+        portalsRight.push_back(current->corners[forwardIndex]);
+        portalsLeft.push_back(forwardIndex<2 ? current->corners[forwardIndex + 1] : current->corners[0]);
+        /*
+        if (!doesListContainPoint(leftSides, current->corners[forwardIndex])) {
+            leftSides.push_back();
+        }
+        
+        if (forwardIndex < 2) {
+            if (!doesListContainPoint(rightSides, current->corners[forwardIndex + 1])) {
+                rightSides.push_back(current->corners[forwardIndex + 1]);
+            }
+        } else {
+            if (!doesListContainPoint(rightSides, current->corners[0])) {
+                rightSides.push_back(current->corners[0]);
+            }
+        }
+        */
+    }
+    
+    portalsLeft.push_back(path[0]->position);
+    portalsRight.push_back(path[0]->position);
+    
+    
+    Vector2 portalApex = portalsLeft[0];
+    Vector2 portalLeft = portalsLeft[0];
+    Vector2 portalRight = portalsRight[0];
+    int apexIndex = 0, leftIndex = 0, rightIndex = 0;
+    
+    straightPath.push_back(portalApex);
+    
+    for (int i=1; i<portalsLeft.size(); i++) {
+        Vector2 left = portalsLeft[i];
+        Vector2 right = portalsRight[i];
+    
+         // Update right vertex.
+        if (triangleArea(portalApex, portalRight, right) <= 0.0f)
+        {
+            if (portalApex.EqualEpsilon(portalRight) || triangleArea(portalApex, portalLeft, right) > 0.0f) {
+                // Tighten the funnel.
+                portalRight = right;
+                rightIndex = i;
+            }
+            else
+            {
+                // Right over left, insert left to path and restart scan from portal left point.
+                 straightPath.push_back(portalLeft);
+                 
+                 // Make current left the new apex.
+                 portalApex = portalLeft;
+                 apexIndex = leftIndex;
+                 // Reset portal
+                 portalLeft = portalApex;
+                 portalRight = portalApex;
+                 leftIndex = apexIndex;
+                 rightIndex = apexIndex;
+                 // Restart scan
+                 i = apexIndex;
+                 continue;
+            }
+        }
 
+        // Update left vertex.
+        if (triangleArea(portalApex, portalLeft, left) >= 0.0f)
+        {
+             if (portalApex.EqualEpsilon(portalLeft) || triangleArea(portalApex, portalRight, left) < 0.0f)
+             {
+                 portalLeft = left;
+                 // Tighten the funnel.
+                 leftIndex = i;
+             }
+             else
+             {
+                  // Left over right, insert right to path and restart scan from portal right point.
+                 straightPath.push_back(portalRight);
+                 
+                 // Make current right the new apex.
+                 portalApex = portalRight;
+                 apexIndex = rightIndex;
+                     // Reset portal
+                 portalLeft = portalApex;
+                 portalRight = portalApex;
+                 leftIndex = apexIndex;
+                 rightIndex = apexIndex;
+                 // Restart scan
+                 i = apexIndex;
+                 continue;
+             }
+         }
+    }
+    straightPath.push_back(path[0]->position);
+    return straightPath;
+}
 
+float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c) {
+    const Vector2 ab = b-a;
+    const Vector2 ac = c-a;
+    return ac.x*ab.y - ab.x*ac.y;
+}
 
+bool NavMesh::doesListContainPoint(const std::vector<Vector2> &list, const Pocket::Vector2 &point) {
+    for(auto& p : list) {
+        if (p==point) return true;
+    }
+    return false;
+}
 
 
 

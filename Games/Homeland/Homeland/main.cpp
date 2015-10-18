@@ -27,7 +27,6 @@ public:
     float rotation;
     GameObject* map;
     GameObject* cameraObject;
-    NavMesh navMesh;
     
     void Initialize() {
         
@@ -53,12 +52,12 @@ public:
         
         
         map->AddComponent<Map>()->CreateMap(64, 64);
-        //map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
-        //map->GetComponent<Map>()->Smooth(4);
-        //map->GetComponent<Map>()->SetMaxHeight(1.0f);
-        map->GetComponent<Map>()->SetHeight(0.5f);
+        map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
+        map->GetComponent<Map>()->Smooth(5);
+        map->GetComponent<Map>()->SetMaxHeight(1.0f);
+        //map->GetComponent<Map>()->SetHeight(0.5f);
         
-        map->GetComponent<Map>()->AddHill(35, 45, 8, -3.0f);
+       // map->GetComponent<Map>()->AddHill(35, 45, 8, -3.0f);
         
         /*
         map->GetComponent<Map>()->SetHeight(1.0f);
@@ -77,8 +76,7 @@ public:
         
         
         auto mesh = map->GetComponent<Map>()->CreateNavigationMesh();
-        
-        navMesh.Build(mesh);
+        map->GetComponent<Map>()->renderSystem = renderer;
         
         GameObject* navMesh = world.CreateObject();
         navMesh->AddComponent<Transform>();
@@ -132,6 +130,7 @@ public:
         cube->AddComponent<Selectable>();
         cube->AddComponent<Groundable>();
         cube->AddComponent<Movable>()->Speed = 10.0f;
+        cube->GetComponent<Movable>()->Target = cube->GetComponent<Transform>()->Position;
         
         GameObject* turret = world.CreateObject();
         turret->Parent = cube;
@@ -189,7 +188,7 @@ public:
     bool wireframe;
 };
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<Game>();
 	return 0;

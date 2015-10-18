@@ -31,6 +31,13 @@ struct NavTriangle {
         return false;
     }
     
+    inline int FindNeighborIndex(NavTriangle* neighbor) {
+        for (int i=0; i<3; i++) {
+            if (neighbors[i]==neighbor) return i;
+        }
+        return -1;
+    }
+    
     inline Vector2 GetMidpoint(int neighborIndex) {
         if (neighborIndex<2) {
             return (corners[neighborIndex] + corners[neighborIndex + 1]) * 0.5f;
@@ -62,9 +69,9 @@ struct NavTriangle {
     }
     
     bool PointInside(const Vector2& p) {
-        if (side(corners[0], corners[1], p)>=0) return false;
-        if (side(corners[1], corners[2], p)>=0) return false;
-        if (side(corners[2], corners[0], p)>=0) return false;
+        if (side(corners[0], corners[1], p)>0) return false;
+        if (side(corners[1], corners[2], p)>0) return false;
+        if (side(corners[2], corners[0], p)>0) return false;
         return true;
     
     
@@ -95,9 +102,10 @@ public:
     void Build(const std::vector<Vector2>& points);
     std::vector<NavTriangle*> FindPath(NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
     NavTriangle* FindTriangle(const Vector2& position);
-    
+    std::vector<Vector2> FindStraightPath(const std::vector<NavTriangle*>& path);
 private:
-
+    bool doesListContainPoint(const std::vector<Vector2>& list, const Vector2& point);
+    float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
     typedef std::vector<NavTriangle> Triangles;
     Triangles triangles;
 };

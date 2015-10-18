@@ -10,6 +10,9 @@
 #include "MathHelper.hpp"
 #include "clipper.hpp"
 #include "clip2tri.h"
+#include "Transform.hpp"
+#include "Mesh.hpp"
+#include "Material.hpp"
 
 void Map::CreateMap(int width, int depth) {
 	nodes.resize(width);
@@ -187,68 +190,39 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
     CalcNormals({xPos - radius, zPos - radius, radius + radius, radius + radius});
 }
 
-void Map::CalculatePath(Point start, Point end, std::vector<Vector3> &path) {
-
-    static const Point directions[] = {
-        {1,0}, {1,1}, {0,1}, {-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}
-    };
-    static const int directionCosts[] = {
-        10,14,10,14,10,14,10,14
-    };
-
-    static int pathId = 0;
-    std::vector<Node*> openList;
-    AddToOpenList(start.x, start.y, openList, pathId);
+void Map::CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3> &path, GameWorld* world) {
     
-    Node* targetNode = 0;
+    Vector2 startPosition = {start.x, start.z};
+    Vector2 endPosition = {end.x, end.z};
     
-    int inClosedListID = pathId + 1;
+    NavTriangle* startTriangle = navMesh.FindTriangle(startPosition);
+    if (!startTriangle) return;
     
-    while (true) {
-        if (openList.empty()) break;
-        
-        std::sort(openList.begin(), openList.end(), SortNodes);
-        
-        Node* currentNode = openList.back();
-        currentNode->pathId = inClosedListID;
-        openList.pop_back();
-        if (currentNode->x == end.x && currentNode->z == end.y) {
-            targetNode = currentNode;
-            break;
-        }
-        
-        for (int i=0; i<8; i++) {
-            int x = currentNode->x + directions[i].x;
-            int z = currentNode->z + directions[i].y;
-            
-            Node* neighbor = &GetNode(x, z);
-            if (!IsNodeWalkable(neighbor)) continue;
-            if (neighbor->pathId == inClosedListID) continue;
-            
-            
-            if (neighbor->pathId < pathId) {//not in open list
-                AddToOpenList(x,z, openList, pathId);
-                neighbor->parent = currentNode;
-                neighbor->h = abs(end.x - x) * 10 + abs(end.y - z) * 10;
-                neighbor->g = currentNode->g + directionCosts[i];
-            } else {// in the open list
-            
-                int tempCost = (abs(x-currentNode->x) == 1 && abs(z - currentNode->z) == 1) ? 14 : 10;
-                tempCost += currentNode->g;
-            
-                if (tempCost<neighbor->g) {
-                    neighbor->parent = currentNode;
-                    neighbor->g = tempCost;
-                }
-            }
-        }
+    NavTriangle* endTriangle = navMesh.FindTriangle(endPosition);
+    if (!endTriangle) return;
+    
+    auto trianglePath = navMesh.FindPath(startTriangle, startPosition, endTriangle, endPosition);
+    auto straightPath = navMesh.FindStraightPath(trianglePath);
+    
+    for(int i=((int)straightPath.size())-1; i>=0; --i) {
+        path.push_back({ straightPath[i].x,0, straightPath[i].y});
     }
-    
-    while (targetNode) {
-        path.push_back({ (float)targetNode->x, targetNode->height, (float)targetNode->z });
-        targetNode = targetNode->parent;
+}
+
+void Map::CreateTriangleObject(NavTriangle *tri, GameWorld* world) {
+    GameObject* go = world->CreateObject();
+    go->AddComponent<Transform>();
+    auto& mesh = go->AddComponent<Mesh>()->GetMesh<Vertex>();
+    for (int i=0; i<3; i++) {
+        Vertex v;
+        v.Position = {tri->corners[i].x, 2.0f, tri->corners[i].y};
+        v.Color = Colour::Red();
+        mesh.vertices.push_back(v);
     }
-    pathId+=2;
+    mesh.triangles.push_back(0);
+    mesh.triangles.push_back(2);
+    mesh.triangles.push_back(1);
+    go->AddComponent<Material>()->Shader = &renderSystem->Shaders.Colored;
 }
 
 void Map::AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID) {
@@ -276,23 +250,7 @@ bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
 
 std::vector<Vector2> Map::CreateNavigationMesh() {
     
-    //auto islands = FindIslands();
-    
-    /*
-    vector<vector<c2t::Point>> inputPolygons(islands.size());
-    
-    for (int i=0; i<islands.size(); i++) {
-        auto& hole = inputPolygons[i];
-        hole.resize(islands[i].size());
-        for (int j=0; j<hole.size(); j++) {
-            hole[j].x = islands[i][j]->x;
-            hole[j].y = islands[i][j]->z;
-        }
-    }
-    */
-    
     vector<vector<c2t::Point>> inputPolygons;
-    
     
     for (int z=0; z<Depth(); z++) {
         for (int x=0; x<Width(); x++) {
@@ -323,107 +281,6 @@ std::vector<Vector2> Map::CreateNavigationMesh() {
         mesh[i].y = navigationMesh[i].y;
     }
 
+    navMesh.Build(mesh);
     return mesh;
 }
-
-std::vector<std::vector<Map::Node*>> Map::FindIslands() {
-    const Point dirs[] = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
-
-    int islandIndex = 1;
-    std::vector<std::vector<Node*>> islands;
-    for (int z=0; z<Depth(); z++) {
-        for (int x=0; x<Width(); x++) {
-            const Node& node = GetNode(x, z);
-            if (node.islandID>0) continue;
-            if (IsNodeWalkable(node)) continue; //walkable
-            
-            bool allBlocked = true;
-            for (int i=0; i<8; i++) {
-                const Point& p = dirs[i];
-                const Node& neighbor = GetNode(x + p.x, z + p.y);
-                if (!IsNodeWalkable(neighbor) || &neighbor == &outOfBoundsNode) {
-                    allBlocked = false;
-                    break;
-                }
-            }
-            if (!allBlocked) {
-                auto island = TraceIsland(x, z, islandIndex);
-                islands.push_back(island);
-                islandIndex++;
-            }
-        }
-    }
-    for (int z=0; z<Depth(); z++) {
-        for (int x=0; x<Width(); x++) {
-            GetNode(x, z).islandID = 0;
-        }
-    }
-    
-    return islands;
-}
-
-std::vector<Map::Node*> Map::TraceIsland(int x, int z, int& islandIndex) {
-    std::vector<Node*> contour;
-    
-    const Point fourOffsets[] = {{-1,-1}, {0,-1},{-1,0},{0,0}};
-    const Point contourDirs[] = {
-        {0,0},//0
-        {0,-1},//1
-        {1,0},//2
-        {1,0},//3
-        {-1,0},//4
-        {0,-1},//5
-        {-1,0},//6
-        {1,0},//7
-        {0,1},//8
-        {0,-1},//9
-        {0,1},//10
-        {0,1},//11
-        {-1,0},//12
-        {0,-1},//13
-        {-1,0},//14
-        {0,0},//15
-    };
-    
-    int endX = x;
-    int endZ = z;
-    //std::cout <<" end pos : "<< endX << "," << endZ<< std::endl;
-    int maxIter = 0;
-    while (true) {
-        int contourIndex = 0;
-        for (int i=0; i<4; i++) {
-            int xx = x + fourOffsets[i].x;
-            int zz = z + fourOffsets[i].y;
-            Node& node = GetNode(xx,zz);
-            if (!IsNodeWalkable(node) || &node == &outOfBoundsNode) { // not walkable
-                contourIndex |= 1<<i;
-            } else {
-                if (node.islandID==0) {
-                    node.x = xx;
-                    node.z = zz;
-                    contour.push_back(&node);
-                }
-            }
-            node.islandID = islandIndex;
-        }
-        
-        const Point dir = contourDirs[contourIndex];
-        x+=dir.x;
-        z+=dir.y;
-        
-        //std::cout << x << "," << z<< std::endl;
-        if (x == endX && z == endZ) {
-            break;
-        }
-        maxIter++;
-        if (maxIter>50) {
-            break;
-        }
-    }
-    for (Node* node : contour) {
-        node->islandID = 0;
-    }
-    return contour;
-}
-
-

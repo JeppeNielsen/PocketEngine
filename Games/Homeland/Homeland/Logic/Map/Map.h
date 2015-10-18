@@ -11,6 +11,8 @@
 #include "Colour.hpp"
 #include "Vector3.hpp"
 #include "Point.hpp"
+#include "NavMesh.hpp"
+#include "RenderSystem.hpp"
 
 using namespace Pocket;
 
@@ -22,6 +24,8 @@ struct MapRect {
 };
 
 Component(Map)
+
+    RenderSystem* renderSystem;
 
 	struct Node {
     	Node() : height(0), normal(0,1,0), islandID(0) {}
@@ -57,20 +61,17 @@ Component(Map)
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
-    void CalculatePath(Point start, Point end, std::vector<Vector3>& path);
+    void CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3>& path, GameWorld* world);
 
     std::vector<Vector2> CreateNavigationMesh();
-
-    std::vector<std::vector<Node*>> FindIslands();
-
-    std::vector<Node*> TraceIsland(int x, int z, int& islandIndex);
-
     bool IsNodeWalkable(const Node& node);
+
+    void CreateTriangleObject(NavTriangle* tri, GameWorld* world);
 
 private:
 	Node outOfBoundsNode;
     void AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID);
     bool IsNodeWalkable(Node* node);
     static bool SortNodes(const Node* a, const Node* b);
-
+    NavMesh navMesh;
 };
