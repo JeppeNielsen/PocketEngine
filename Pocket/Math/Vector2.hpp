@@ -145,9 +145,12 @@ namespace Pocket {
         }
         
         inline bool EqualEpsilon(const Vector2& other, const float epsilon = 0.0001f) {
-            #define ABS(x) ((x<0) ? (-x) : (x))
-            if (ABS(other.x - x) > epsilon) return false;
-            if (ABS(other.y - y) > epsilon) return false;
+            float abs = other.x - x;
+            if (abs<0) abs = -abs;
+            if (abs > epsilon) return false;
+            abs = other.y - y;
+            if (abs < 0) abs = -abs;
+            if (abs > epsilon) return false;
             return true;
         }
     };
