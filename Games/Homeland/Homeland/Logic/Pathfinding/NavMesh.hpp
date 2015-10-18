@@ -62,8 +62,6 @@ struct NavTriangle {
     Vector2 position;
     int pathID;
     
-    
-    
     inline float side(const Vector2& p1, const Vector2& p2, const Vector2& p) {
         return (p2.y - p1.y) * (p.x - p1.x) + (-p2.x + p1.x)*(p.y - p1.y);
     }
@@ -73,25 +71,7 @@ struct NavTriangle {
         if (side(corners[1], corners[2], p)>0) return false;
         if (side(corners[2], corners[0], p)>0) return false;
         return true;
-    
-    
-        /*
-        
-            function side(x1, y1, x2, y2, x, y:Number):Number
-            {
-            return (y2 - y1)*(x - x1) + (-x2 + x1)*(y - y1);
-            }
-        
-            function pointInTriangle(x1, y1, x2, y2, x3, y3, x, y:Number):Boolean
-            {
-             var checkSide1:Boolean = side(x1, y1, x2, y2, x, y) >= 0;
-             var checkSide2:Boolean = side(x2, y2, x3, y3, x, y) >= 0;
-             var checkSide3:Boolean = side(x3, y3, x1, y1, x, y) >= 0;
-             return checkSide1 && checkSide2 && checkSide3;
-            }
-            */
     }
-    
 };
 
 class NavMesh {
@@ -104,7 +84,6 @@ public:
     NavTriangle* FindTriangle(const Vector2& position);
     std::vector<Vector2> FindStraightPath(const std::vector<NavTriangle*>& path);
 private:
-    bool doesListContainPoint(const std::vector<Vector2>& list, const Vector2& point);
     float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
     typedef std::vector<NavTriangle> Triangles;
     Triangles triangles;

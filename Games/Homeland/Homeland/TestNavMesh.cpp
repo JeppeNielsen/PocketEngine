@@ -32,7 +32,7 @@ int main() {
     
     auto path = navMesh.FindPath(startTri, start, endTri, end);
     auto straightPath = navMesh.FindStraightPath(path);
-
+    
 
     return 0;
 }

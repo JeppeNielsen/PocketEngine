@@ -180,12 +180,8 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
     std::vector<Vector2> portalsLeft;
     std::vector<Vector2> portalsRight;
     
-    
-    //path is reversed
-    
     portalsLeft.push_back(path[path.size()-1]->position);
     portalsRight.push_back(path[path.size()-1]->position);
-    
     
     for (int i=(int)path.size()-1; i>=1; i--) {
         NavTriangle* current = path[i];
@@ -194,21 +190,6 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
         
         portalsRight.push_back(current->corners[forwardIndex]);
         portalsLeft.push_back(forwardIndex<2 ? current->corners[forwardIndex + 1] : current->corners[0]);
-        /*
-        if (!doesListContainPoint(leftSides, current->corners[forwardIndex])) {
-            leftSides.push_back();
-        }
-        
-        if (forwardIndex < 2) {
-            if (!doesListContainPoint(rightSides, current->corners[forwardIndex + 1])) {
-                rightSides.push_back(current->corners[forwardIndex + 1]);
-            }
-        } else {
-            if (!doesListContainPoint(rightSides, current->corners[0])) {
-                rightSides.push_back(current->corners[0]);
-            }
-        }
-        */
     }
     
     portalsLeft.push_back(path[0]->position);
@@ -289,13 +270,6 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
     const Vector2 ab = b-a;
     const Vector2 ac = c-a;
     return ac.x*ab.y - ab.x*ac.y;
-}
-
-bool NavMesh::doesListContainPoint(const std::vector<Vector2> &list, const Pocket::Vector2 &point) {
-    for(auto& p : list) {
-        if (p==point) return true;
-    }
-    return false;
 }
 
 
