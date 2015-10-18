@@ -71,6 +71,7 @@ void SizeModifierNodeSystem::Update(float dt) {
         if (draggable->IsDragging) continue;
         SizeModifierNode* node = go->GetComponent<SizeModifierNode>();
         Vector2 cornerPosition = node->GetCornerPosition();
+        if (!node->sizableTarget) continue;
         go->GetComponent<Transform>()->Position = cornerPosition * node->sizableTarget->Size();
     }
 

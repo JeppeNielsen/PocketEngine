@@ -34,12 +34,13 @@ void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     Vector3 position = transform->Position;
     Vector3 target = movable->Target;
     
-    Point start = { (int)position.x, (int)position.z};
-    Point end = { (int)target.x, (int)target.z };
     movable->path.clear();
     Timer t;
     t.Begin();
-    map->CalculatePath(start, end, movable->path);
+    
     double time = t.End();
     std::cout<< " Path finding took : " << time<<std::endl;
+    if (!movable->path.empty()) {
+        movable->currentTarget = movable->path.back();
+    }
 }

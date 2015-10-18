@@ -44,6 +44,7 @@ public:
     GameObject* root;
     GameObject* label;
     GameObject* box;
+    GameObject* hierarchyEditor;
     
     void Initialize() {
         
@@ -89,15 +90,12 @@ public:
             child->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
             child->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
             
-        
-        
             GameObject* subChild = gui->CreateControl(child, "Box", {i*10.0f,0}, 30);
             subChild->AddComponent<Draggable>();
             subChild->AddComponent<Selectable>();
             subChild->AddComponent<SizeModifier>();
             subChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
             subChild->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-            
         }
         
         
@@ -145,7 +143,7 @@ public:
             listbox->AddComponent<Draggable>();
             
             
-            GameObject* hierarchyEditor = gui->CreatePivot(listboxPivot);
+            hierarchyEditor = gui->CreatePivot(listboxPivot);
             hierarchyEditor->AddComponent<Sizeable>()->Size = {200,50};
             hierarchyEditor->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
             hierarchyEditor->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
@@ -185,6 +183,30 @@ public:
             for (auto o : selected->Selected()) {
                 o->Clone();
             }
+        } else if (button == "s") {
+            std::ofstream file;
+            file.open ("Gui.txt");
+            root->ToJson(file, [] (GameObject* o, int componentType) {
+                if (o->GetComponent<SizeModifierNode>()) return false;
+                if (o->GetComponent<SizeModifierLine>()) return false;
+                if (componentType==Draggable::ID) return false;
+                if (componentType == SizeModifier::ID) return false;
+                if (componentType == Selectable::ID) return false;
+                return true;
+            });
+            file.close();
+        } else if (button == "l") {
+            std::ifstream file;
+            file.open("Gui.txt");
+            root->Remove();
+            root = world.CreateObjectFromJson(file, [] (GameObject* o) {
+                o->AddComponent<Selectable>();
+                o->AddComponent<Draggable>();
+                o->AddComponent<SizeModifier>();
+            });
+            hierarchyEditor->GetComponent<HierarchyEditor>()->Object = root;
+            hierarchyEditor->GetComponent<HierarchyEditor>()->prevChildrenCount = -1;
+            file.close();
         }
     }
     
@@ -200,7 +222,7 @@ public:
     }
 };
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<Editor>();
 	return 0;

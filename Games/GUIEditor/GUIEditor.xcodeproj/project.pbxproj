@@ -356,6 +356,8 @@
 		72B670401BBFF23200ED2391 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6703E1BBFF23200ED2391 /* SelectedColorerSystem.cpp */; };
 		72B670461BC04D2200ED2391 /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670441BC04D2200ED2391 /* Droppable.cpp */; };
 		72B670491BC04DFD00ED2391 /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670471BC04DFD00ED2391 /* DroppableSystem.cpp */; };
+		72B6704C1BC1924C00ED2391 /* TestLoadGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B6704A1BC1924C00ED2391 /* TestLoadGui.cpp */; };
+		72B670521BC70A2900ED2391 /* CustomStateMachine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B670511BC70A2900ED2391 /* CustomStateMachine.cpp */; };
 		72CA147A1BB4769B004F2D79 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA14781BB4769B004F2D79 /* FieldEditor.cpp */; };
 		72CA147D1BB47803004F2D79 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */; };
 		72CA14801BB47B7F004F2D79 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CA147E1BB47B7F004F2D79 /* SerializedFieldEditors.cpp */; };
@@ -1200,6 +1202,8 @@
 		72B670451BC04D2200ED2391 /* Droppable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Droppable.hpp; sourceTree = "<group>"; };
 		72B670471BC04DFD00ED2391 /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
 		72B670481BC04DFD00ED2391 /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
+		72B6704A1BC1924C00ED2391 /* TestLoadGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestLoadGui.cpp; sourceTree = "<group>"; };
+		72B670511BC70A2900ED2391 /* CustomStateMachine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomStateMachine.cpp; sourceTree = "<group>"; };
 		72CA14781BB4769B004F2D79 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
 		72CA14791BB4769B004F2D79 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
 		72CA147B1BB47803004F2D79 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
@@ -1285,6 +1289,8 @@
 				7224B4851BA7338E002737EB /* Logic */,
 				726DB9A11B97918A004FC537 /* Assets */,
 				7279F84B1BAF3EBC009345C0 /* Editor.cpp */,
+				72B6704A1BC1924C00ED2391 /* TestLoadGui.cpp */,
+				72B670511BC70A2900ED2391 /* CustomStateMachine.cpp */,
 			);
 			path = GUIEditor;
 			sourceTree = "<group>";
@@ -2848,8 +2854,10 @@
 				726DB94D1B978D98004FC537 /* Colour.cpp in Sources */,
 				726DB8231B978D98004FC537 /* TransformAnimatorSystem.cpp in Sources */,
 				726DB9271B978D98004FC537 /* btConvexHullComputer.cpp in Sources */,
+				72B670521BC70A2900ED2391 /* CustomStateMachine.cpp in Sources */,
 				726DB8C31B978D98004FC537 /* btConvex2dShape.cpp in Sources */,
 				726DB8821B978D98004FC537 /* b2CircleShape.cpp in Sources */,
+				72B6704C1BC1924C00ED2391 /* TestLoadGui.cpp in Sources */,
 				726DB80E1B978D98004FC537 /* BezierCurve3.cpp in Sources */,
 				726DB8491B978D98004FC537 /* FirstPersonMoverSystem.cpp in Sources */,
 				726DB8CB1B978D98004FC537 /* btEmptyShape.cpp in Sources */,

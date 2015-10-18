@@ -8,6 +8,8 @@
 
 #include "Map.h"
 #include "MathHelper.hpp"
+#include "clipper.hpp"
+#include "clip2tri.h"
 
 void Map::CreateMap(int width, int depth) {
 	nodes.resize(width);
@@ -50,6 +52,27 @@ void Map::SetMaxHeight(float height) {
         for (int x=0; x<Width(); x++) {
             Node& node = GetNode(x, z);
             if (node.height>height) node.height = height;
+        }
+    }
+    CalcNormals();
+}
+
+void Map::SetHeight(float height) {
+ for (int z =0; z<Depth(); z++) {
+        for (int x=0; x<Width(); x++) {
+            Node& node = GetNode(x, z);
+            node.height = height;
+        }
+    }
+    CalcNormals();
+}
+
+void Map::SetEdges(float height) {
+ for (int z = 0; z<Depth(); z++) {
+        for (int x=0; x<Width(); x++) {
+            if (x>0 && z>0 && x<Width() -1 && z<Depth()-1) continue;
+            Node& node = GetNode(x, z);
+            node.height = height;
         }
     }
     CalcNormals();
@@ -240,9 +263,167 @@ void Map::AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID) 
 }
 
 bool Map::IsNodeWalkable(Map::Node *node) {
-    return node->height>0.48f;
+    return node->height>0.48f;// && node->height<1.0f;
+}
+
+bool Map::IsNodeWalkable(const Map::Node& node) {
+    return node.height>0.48f && node.height<1.3f;
 }
 
 bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
     return (a->g + a->h)>(b->g+b->h);
 }
+
+std::vector<Vector2> Map::CreateNavigationMesh() {
+    
+    //auto islands = FindIslands();
+    
+    /*
+    vector<vector<c2t::Point>> inputPolygons(islands.size());
+    
+    for (int i=0; i<islands.size(); i++) {
+        auto& hole = inputPolygons[i];
+        hole.resize(islands[i].size());
+        for (int j=0; j<hole.size(); j++) {
+            hole[j].x = islands[i][j]->x;
+            hole[j].y = islands[i][j]->z;
+        }
+    }
+    */
+    
+    vector<vector<c2t::Point>> inputPolygons;
+    
+    
+    for (int z=0; z<Depth(); z++) {
+        for (int x=0; x<Width(); x++) {
+            const Node& node = GetNode(x, z);
+            if (!IsNodeWalkable(node)) {
+                inputPolygons.push_back({
+                    { (float)x, (float)z },
+                    { (float)x + 1.0f, (float)z },
+                    { (float)x + 1.0f, (float)z + 1.0f },
+                    { (float)x, (float)z + 1.0f },
+                });
+            }
+        }
+    }
+    
+    const float epsilon = 0.0f;
+    vector<c2t::Point> outer { { epsilon,epsilon }, {epsilon,(float)Depth()-epsilon}, {(float)Width()-epsilon,(float)Depth()-epsilon}, {(float)Width()-epsilon,epsilon}};
+    
+    c2t::clip2tri clipper;
+    
+    vector<c2t::Point> navigationMesh;
+    
+    clipper.triangulate(inputPolygons, navigationMesh, outer);
+
+    std::vector<Vector2> mesh(navigationMesh.size());
+    for (int i=0; i<mesh.size(); i++) {
+        mesh[i].x = navigationMesh[i].x;
+        mesh[i].y = navigationMesh[i].y;
+    }
+
+    return mesh;
+}
+
+std::vector<std::vector<Map::Node*>> Map::FindIslands() {
+    const Point dirs[] = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
+
+    int islandIndex = 1;
+    std::vector<std::vector<Node*>> islands;
+    for (int z=0; z<Depth(); z++) {
+        for (int x=0; x<Width(); x++) {
+            const Node& node = GetNode(x, z);
+            if (node.islandID>0) continue;
+            if (IsNodeWalkable(node)) continue; //walkable
+            
+            bool allBlocked = true;
+            for (int i=0; i<8; i++) {
+                const Point& p = dirs[i];
+                const Node& neighbor = GetNode(x + p.x, z + p.y);
+                if (!IsNodeWalkable(neighbor) || &neighbor == &outOfBoundsNode) {
+                    allBlocked = false;
+                    break;
+                }
+            }
+            if (!allBlocked) {
+                auto island = TraceIsland(x, z, islandIndex);
+                islands.push_back(island);
+                islandIndex++;
+            }
+        }
+    }
+    for (int z=0; z<Depth(); z++) {
+        for (int x=0; x<Width(); x++) {
+            GetNode(x, z).islandID = 0;
+        }
+    }
+    
+    return islands;
+}
+
+std::vector<Map::Node*> Map::TraceIsland(int x, int z, int& islandIndex) {
+    std::vector<Node*> contour;
+    
+    const Point fourOffsets[] = {{-1,-1}, {0,-1},{-1,0},{0,0}};
+    const Point contourDirs[] = {
+        {0,0},//0
+        {0,-1},//1
+        {1,0},//2
+        {1,0},//3
+        {-1,0},//4
+        {0,-1},//5
+        {-1,0},//6
+        {1,0},//7
+        {0,1},//8
+        {0,-1},//9
+        {0,1},//10
+        {0,1},//11
+        {-1,0},//12
+        {0,-1},//13
+        {-1,0},//14
+        {0,0},//15
+    };
+    
+    int endX = x;
+    int endZ = z;
+    //std::cout <<" end pos : "<< endX << "," << endZ<< std::endl;
+    int maxIter = 0;
+    while (true) {
+        int contourIndex = 0;
+        for (int i=0; i<4; i++) {
+            int xx = x + fourOffsets[i].x;
+            int zz = z + fourOffsets[i].y;
+            Node& node = GetNode(xx,zz);
+            if (!IsNodeWalkable(node) || &node == &outOfBoundsNode) { // not walkable
+                contourIndex |= 1<<i;
+            } else {
+                if (node.islandID==0) {
+                    node.x = xx;
+                    node.z = zz;
+                    contour.push_back(&node);
+                }
+            }
+            node.islandID = islandIndex;
+        }
+        
+        const Point dir = contourDirs[contourIndex];
+        x+=dir.x;
+        z+=dir.y;
+        
+        //std::cout << x << "," << z<< std::endl;
+        if (x == endX && z == endZ) {
+            break;
+        }
+        maxIter++;
+        if (maxIter>50) {
+            break;
+        }
+    }
+    for (Node* node : contour) {
+        node->islandID = 0;
+    }
+    return contour;
+}
+
+

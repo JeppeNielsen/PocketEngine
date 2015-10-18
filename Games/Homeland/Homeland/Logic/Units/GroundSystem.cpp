@@ -64,18 +64,21 @@ void GroundSystem::UpdateObject(float dt, Pocket::GameObject *object) {
         normal += (n2.normal - n1.normal) * dz;
         normal += (n2.normal - n3.normal) * dx;
     }
-    position.y = height;
+    position.y += (height - position.y) * dt * 5.0f;
     
     Vector3 forward = transform->World.GetValue()->TransformVector({0,0,1});
     normal.Normalize();
     
     
     Vector3 sideways = normal.Cross(forward);
-    forward = sideways.Cross(normal);
     
     sideways.Normalize();
     forward.Normalize();
     
-    transform->Rotation = Quaternion(sideways, normal, forward);
+    Quaternion target = Quaternion::LookAt(0, forward, normal);
+    Quaternion target2 = Quaternion::Slerp(dt * 4.0f, transform->Rotation, target, true);
+    target2.Normalize();
+    
+    //transform->Rotation = target2;
     transform->Position = position;
 }

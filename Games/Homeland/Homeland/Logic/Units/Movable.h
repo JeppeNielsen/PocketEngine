@@ -21,4 +21,7 @@ public:
     Path path;
     void Reset();
     Property<Movable*, Vector3> Target;
+
+    Vector3 currentTarget;
+    Vector3 prevPosition;
 };

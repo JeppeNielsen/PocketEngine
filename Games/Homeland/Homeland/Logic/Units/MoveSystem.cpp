@@ -17,11 +17,13 @@ void MoveSystem::Update(float dt) {
         Transform* transform = object->GetComponent<Transform>();
         Vector3& target = path.back();
         
-        Vector3 toTarget = target - transform->Position;
+        movable->currentTarget = Vector3::Lerp(movable->currentTarget, target, 20.0f * dt);
+        
+        Vector3 toTarget = movable->currentTarget - transform->Position;
         toTarget.y = 0;
         
         float length = toTarget.Length();
-        if (length<0.4f) {
+        if (length<0.7f) {
             path.pop_back();
         } else {
             toTarget *= 1.0f / length;
