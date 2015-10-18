@@ -143,6 +143,13 @@ namespace Pocket {
         inline Vector2 Max(const Vector2& other) {
             return Vector2(x>other.x ? x : other.x, y>other.y ? y : other.y);
         }
+        
+        inline bool EqualEpsilon(const Vector2& other, const float epsilon = 0.0001f) {
+            #define ABS(x) ((x<0) ? (-x) : (x))
+            if (ABS(other.x - x) > epsilon) return false;
+            if (ABS(other.y - y) > epsilon) return false;
+            return true;
+        }
     };
 }
 
