@@ -67,6 +67,7 @@ Component(Map)
     bool IsNodeWalkable(const Node& node);
 
     void CreateTriangleObject(NavTriangle* tri, GameWorld* world);
+    Vector3 FindNearestValidPosition(const Vector3& position);
 
 private:
 	Node outOfBoundsNode;

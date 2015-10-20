@@ -195,13 +195,15 @@ void Map::CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3> &path, 
     Vector2 startPosition = {start.x, start.z};
     Vector2 endPosition = {end.x, end.z};
     
-    NavTriangle* startTriangle = navMesh.FindTriangle(startPosition);
+    Vector2 nearestStartPosition;
+    NavTriangle* startTriangle = navMesh.FindNearestTriangle(startPosition, nearestStartPosition);
     if (!startTriangle) return;
     
-    NavTriangle* endTriangle = navMesh.FindTriangle(endPosition);
+    Vector2 nearestEndPosition;
+    NavTriangle* endTriangle = navMesh.FindNearestTriangle(endPosition, nearestEndPosition);
     if (!endTriangle) return;
     
-    auto trianglePath = navMesh.FindPath(startTriangle, startPosition, endTriangle, endPosition);
+    auto trianglePath = navMesh.FindPath(startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
     auto straightPath = navMesh.FindStraightPath(trianglePath);
     
     for(int i=((int)straightPath.size())-1; i>=0; --i) {
@@ -249,7 +251,7 @@ bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
 }
 
 std::vector<Vector2> Map::CreateNavigationMesh() {
-    
+/*
     vector<vector<c2t::Point>> inputPolygons;
     
     for (int z=0; z<Depth(); z++) {
@@ -282,5 +284,17 @@ std::vector<Vector2> Map::CreateNavigationMesh() {
     }
 
     navMesh.Build(mesh);
+    */
+    
+    std::vector<Vector2> mesh = navMesh.BuildPoints(Width(), Depth(), [this] (int x, int z) -> bool {
+        return !IsNodeWalkable(GetNode(x, z));
+    });
+    
     return mesh;
+}
+
+Vector3 Map::FindNearestValidPosition(const Pocket::Vector3 &position) {
+    Vector2 nearest;
+    navMesh.FindNearestTriangle({position.x, position.z}, nearest);
+    return { nearest.x, 0, nearest.y };
 }

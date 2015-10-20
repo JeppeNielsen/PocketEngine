@@ -15,6 +15,7 @@
 #include "MovableAlignmentSystem.h"
 #include "MovableCollisionSystem.h"
 #include "NavMesh.hpp"
+#include "Timer.hpp"
 
 using namespace Pocket;
 
@@ -51,7 +52,7 @@ public:
         map = world.CreateObject();
         
         
-        map->AddComponent<Map>()->CreateMap(64, 64);
+        map->AddComponent<Map>()->CreateMap(128, 128);
         map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
         map->GetComponent<Map>()->Smooth(5);
         map->GetComponent<Map>()->SetMaxHeight(1.0f);
@@ -75,24 +76,32 @@ public:
         //map->GetComponent<Map>()->SetEdges(1.0f);
         
         
+        Timer timer;
+        timer.Begin();
         auto mesh = map->GetComponent<Map>()->CreateNavigationMesh();
+        double time = timer.End();
+        std::cout << "Nav mesh generation time = " << time << std::endl;
+        
         map->GetComponent<Map>()->renderSystem = renderer;
+        
         
         GameObject* navMesh = world.CreateObject();
         navMesh->AddComponent<Transform>();
         navMesh->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
+        navMesh->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
         auto& navMeshMesh = navMesh->AddComponent<Mesh>()->GetMesh<Vertex>();
         
         int i=0;
         for (auto p : mesh) {
             Vertex v;
             v.Position = {p.x, 1.05f, p.y};
-            v.Color = Colour::White();
+            v.Color = Colour::White(0.3f);
             navMeshMesh.vertices.push_back(v);
             navMeshMesh.triangles.push_back(i);
             i++;
         }
         navMeshMesh.Flip();
+        
         
         cameraObject = world.CreateObject();
         cameraObject->AddComponent<Transform>()->Position = {0,0,0};
@@ -188,7 +197,7 @@ public:
     bool wireframe;
 };
 
-int main_nono() {
+int main_blassss() {
     Engine e;
     e.Start<Game>();
 	return 0;

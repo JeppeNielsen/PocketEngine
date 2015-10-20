@@ -8,6 +8,7 @@
 
 #include "NavMesh.hpp"
 #include <assert.h>
+#include "tesselator.h"
 
 NavMesh::NavMesh() {}
 NavMesh::~NavMesh() {}
@@ -20,6 +21,93 @@ int findCornerIndexFromNeighborIndex(int corner1, int corner2) {
     } else {
         return corner2 == 1 ? 1 : 2;
     }
+}
+
+std::vector<Vector2> NavMesh::BuildPoints(int width, int depth, std::function<bool (int, int)> predicate) {
+    
+    const int Scaling = 100;
+    
+    Clipper clipper;
+    ClipperLib::Path outer;
+    outer.push_back({0, 0});
+    outer.push_back({0, depth * Scaling});
+    outer.push_back({width * Scaling, depth * Scaling});
+    outer.push_back({width * Scaling, 0});
+    
+    clipper.AddPath(outer, ClipperLib::ptSubject, true);
+    
+    ClipperLib::Path obstruction;
+    obstruction.resize(4);
+    
+    for (int z=0; z<depth; ++z) {
+        for (int x=0; x<width; ++x) {
+            if (predicate(x,z)) {
+                int xx = x * Scaling;
+                int zz = z * Scaling;
+                
+                obstruction[0].X = xx;
+                obstruction[0].Y = zz;
+                
+                obstruction[1].X = xx + Scaling;
+                obstruction[1].Y = zz;
+                
+                obstruction[2].X = xx + Scaling;
+                obstruction[2].Y = zz + Scaling;
+                
+                obstruction[3].X = xx;
+                obstruction[3].Y = zz + Scaling;
+                
+                clipper.AddPath(obstruction, ClipperLib::ptClip, true);
+            }
+        }
+    }
+    
+    ClipperLib::Paths solution;
+    clipper.Execute(ClipperLib::ctDifference, solution);
+    
+    std::vector<Vector2> points;
+    TesselateSolution(solution, points);
+    Build(points);
+    return points;
+}
+
+void NavMesh::TesselateSolution(const ClipperLib::Paths &solution, std::vector<Vector2> &points) {
+    
+    const float InvScaling = 1.0f / 100.0f;
+    
+    TESStesselator* tess = tessNewTess(0);
+    
+    for (const ClipperLib::Path& path : solution) {
+        std::vector<float> contour(path.size()*2);
+        for (int i=0; i<path.size(); ++i) {
+            contour[i*2] = path[i].X * InvScaling;
+            contour[i*2 + 1] = path[i].Y * InvScaling;
+        }
+        tessAddContour(tess, 2, &contour[0], sizeof(float)*2, (int)path.size());
+    }
+    
+    int polySize = 3;
+    //int error = tessTesselate(tess, TESS_WINDING_NONZERO, polySize, 3, 2, NULL);
+    // ( TESStesselator *tess, int windingRule, int elementType, int polySize, int vertexSize, const TESSreal* normal );
+
+    int succes = tessTesselate(tess, TESS_WINDING_POSITIVE, TESS_POLYGONS, polySize, 2, NULL);
+
+    if (succes) {
+        const TESSreal* verts = tessGetVertices( tess );
+        const int nelems = tessGetElementCount(tess);
+        const TESSindex* elems = tessGetElements(tess);
+     
+        for (int i = 0; i < nelems; i++) {
+            const TESSindex* poly = &elems[i * polySize];
+            for (int j = 0; j < polySize; j++) {
+                if (poly[j] == TESS_UNDEF) break;
+                const TESSreal* pos = &verts[poly[j]*2];
+                points.push_back({pos[0], pos[1]});
+            }
+        }
+    }
+    
+    tessDeleteTess(tess);
 }
 
 void NavMesh::Build(const std::vector<Vector2>& points) {
@@ -272,11 +360,30 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
     return ac.x*ab.y - ab.x*ac.y;
 }
 
+NavTriangle* NavMesh::FindNearestTriangle(const Pocket::Vector2 &position, Vector2& nearestPosition) {
+    float minDistance = 1000000.0f;
+    Vector2 ret;
+    NavTriangle* foundTriangle = 0;
+    for (int i=0; i<triangles.size(); i++) {
+        float distance = triangles[i].GetDistance(position, ret);
+        if (distance<minDistance) {
+            minDistance = distance;
+            nearestPosition = ret;
+            foundTriangle = &triangles[i];
+        }
+    }
+    return foundTriangle;
+}
 
 
 
-
-
+std::vector<Vector2> NavMesh::Cut(const std::vector<Vector2> &points) {
+    std::vector<Vector2> cut;
+    for(NavTriangle& triangle : triangles) {
+        triangle.Cut(points, cut);
+    }
+    return cut;
+}
 
 
 

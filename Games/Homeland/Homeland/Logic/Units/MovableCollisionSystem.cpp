@@ -26,12 +26,18 @@ void MovableCollisionSystem::Update(float dt) {
     for (int iteration = 0; iteration<2; iteration++) {
     
     for (int i=0; i<Objects().size(); i++) {
+        Mappable* mappable = Objects()[i]->GetComponent<Mappable>();
+        Transform* t1 = Objects()[i]->GetComponent<Transform>();
+        Vector3 p1 = t1->Position;
+        
+        Vector3 validPosition = mappable->Map->FindNearestValidPosition(p1);
+        Vector3 offset = validPosition-p1;
+        offset.y = 0;
+        p1 += offset;
+        
         for (int j=i+1; j<Objects().size(); j++) {
             
-            Mappable* mappable = Objects()[i]->GetComponent<Mappable>();
-            Transform* t1 = Objects()[i]->GetComponent<Transform>();
             Transform* t2 = Objects()[j]->GetComponent<Transform>();
-            Vector3 p1 = t1->Position;
             Vector3 p2 = t2->Position;
             Vector3 vector = p2-p1;
             vector.y = 0;
@@ -67,7 +73,7 @@ void MovableCollisionSystem::Update(float dt) {
             
         }
     }
-    }
+}
 /*
     for (auto o : Objects()) {
         Transform* t = o->GetComponent<Transform>();

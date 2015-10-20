@@ -64,7 +64,7 @@ void GroundSystem::UpdateObject(float dt, Pocket::GameObject *object) {
         normal += (n2.normal - n1.normal) * dz;
         normal += (n2.normal - n3.normal) * dx;
     }
-    position.y += (height - position.y) * dt * 5.0f;
+    position.y += (height - position.y) * dt * 15.0f;
     
     Vector3 forward = transform->World.GetValue()->TransformVector({0,0,1});
     normal.Normalize();

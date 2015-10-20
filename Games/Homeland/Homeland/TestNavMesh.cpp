@@ -11,7 +11,7 @@
 
 using namespace Pocket;
 
-int main() {
+int main_works() {
     
     std::vector<Vector2> points {
         { 0,0 }, {5,0}, {0,5},
