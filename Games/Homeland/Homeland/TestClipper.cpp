@@ -86,7 +86,7 @@ public:
         ClipperLib::Clipper c;
         c.AddPath(outer, ClipperLib::ptSubject, true);
         c.AddPath(inner, ClipperLib::ptClip, true);
-        c.AddPath(inner2, ClipperLib::ptClip, true);
+        //c.AddPath(inner2, ClipperLib::ptClip, true);
         
         
         ClipperLib::Paths solution;
@@ -102,12 +102,11 @@ public:
         
         for (ClipperLib::Path& path : solution) {
             std::vector<float> contour;
-            for(auto& v : path) {
-                contour.push_back(v.X);
-                contour.push_back(v.Y);
+            for (int i=0; i<path.size(); i++) {
+                contour.push_back(path[i].X);
+                contour.push_back(path[i].Y);
             }
-            
-            tessAddContour(tess, 2, &contour[0], sizeof(float)*2, (int)contour.size()/2);
+            tessAddContour(tess, 2, &contour[0], sizeof(float)*2, (int)path.size());
         }
         
         int polySize = 3;
@@ -115,7 +114,7 @@ public:
 //        ( TESStesselator *tess, int windingRule, int elementType, int polySize, int vertexSize, const TESSreal* normal );
 
 
-        int error = tessTesselate(tess, TESS_WINDING_NONZERO, TESS_POLYGONS, polySize, 2, NULL);
+        int error = tessTesselate(tess, TESS_WINDING_ODD, TESS_CONNECTED_POLYGONS, polySize, 2, NULL);
         
          GameObject* go = world.CreateObject();
         go->AddComponent<Transform>();
@@ -124,39 +123,35 @@ public:
         
         const TESSreal* verts = tessGetVertices( tess );
         const int nelems = tessGetElementCount(tess);
-     const TESSindex* elems = tessGetElements(tess);
-     
-     int indexCounter = 0;
-     for (int i = 0; i < nelems; i++) {
-         const TESSindex* poly = &elems[i * polySize];
-         //glBegin(GL_POLYGON);
-         for (int j = 0; j < polySize; j++) {
-             if (poly[j] == TESS_UNDEF) break;
-             
-             const TESSreal* pos = &verts[poly[j]*2];
-             
-             std::cout<<pos[0]<<", "<<pos[1]<<std::endl;
-             
-              Vertex v;
-            v.Position = {pos[0]*0.01f, pos[1]*0.01f,0};
-            v.Color = Colour::HslToRgb(i*20, 1, 1, 1);
-            mesh.vertices.push_back(v);
-            mesh.triangles.push_back(indexCounter++);
-             
-             //glVertex2fv(&);
-         }
-         std::cout<<"-----"<<std::endl;
-        //glEnd();
-     }
-        
-        {
-            int bla = 4;
-            
-            bla++;
-        
-        }
+        const TESSindex* elems = tessGetElements(tess);
 
-        
+        int indexCounter = 0;
+        for (int i = 0; i < nelems; i++) {
+            const TESSindex* poly = &elems[i * polySize*2];
+            const TESSindex* nei = &poly[polySize];
+            
+            //glBegin(GL_POLYGON);
+            for (int j = 0; j < polySize; j++) {
+                // if (poly[j] == TESS_UNDEF) break;
+
+                const TESSreal* pos = &verts[poly[j]*2];
+
+                std::cout<<pos[0]<<", "<<pos[1]<<std::endl;
+
+                Vertex v;
+                v.Position = {pos[0]*0.01f, pos[1]*0.01f,0};
+                v.Color = Colour::HslToRgb(i*20, 1, 1, 1);
+                mesh.vertices.push_back(v);
+                mesh.triangles.push_back(indexCounter++);
+
+                //glVertex2fv(&);
+            }
+            std::cout<<" neighbors: " << nei[0]<<std::endl;
+            std::cout<<" neighbors: " << nei[1]<<std::endl;
+            std::cout<<" neighbors: " << nei[2]<<std::endl;
+            std::cout<<"-----"<<std::endl;
+            //glEnd();
+        }
         
         
         
@@ -301,7 +296,7 @@ public:
     }
 };
 
-int main() {
+int main_wefwef() {
     Engine e;
     e.Start<TestClipper>();
 	return 0;

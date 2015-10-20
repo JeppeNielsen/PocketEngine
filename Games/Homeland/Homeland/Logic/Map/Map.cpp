@@ -251,7 +251,8 @@ bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
 }
 
 std::vector<Vector2> Map::CreateNavigationMesh() {
-/*
+    
+    
     vector<vector<c2t::Point>> inputPolygons;
     
     for (int z=0; z<Depth(); z++) {
@@ -284,11 +285,13 @@ std::vector<Vector2> Map::CreateNavigationMesh() {
     }
 
     navMesh.Build(mesh);
-    */
     
+ 
+    /*
     std::vector<Vector2> mesh = navMesh.BuildPoints(Width(), Depth(), [this] (int x, int z) -> bool {
         return !IsNodeWalkable(GetNode(x, z));
     });
+    */
     
     return mesh;
 }

@@ -48,14 +48,14 @@ std::vector<Vector2> NavMesh::BuildPoints(int width, int depth, std::function<bo
                 obstruction[0].X = xx;
                 obstruction[0].Y = zz;
                 
-                obstruction[1].X = xx + Scaling;
-                obstruction[1].Y = zz;
+                obstruction[1].X = xx;
+                obstruction[1].Y = zz + Scaling;
                 
                 obstruction[2].X = xx + Scaling;
                 obstruction[2].Y = zz + Scaling;
                 
-                obstruction[3].X = xx;
-                obstruction[3].Y = zz + Scaling;
+                obstruction[3].X = xx + Scaling;
+                obstruction[3].Y = zz;
                 
                 clipper.AddPath(obstruction, ClipperLib::ptClip, true);
             }
@@ -67,7 +67,6 @@ std::vector<Vector2> NavMesh::BuildPoints(int width, int depth, std::function<bo
     
     std::vector<Vector2> points;
     TesselateSolution(solution, points);
-    Build(points);
     return points;
 }
 
@@ -90,7 +89,7 @@ void NavMesh::TesselateSolution(const ClipperLib::Paths &solution, std::vector<V
     //int error = tessTesselate(tess, TESS_WINDING_NONZERO, polySize, 3, 2, NULL);
     // ( TESStesselator *tess, int windingRule, int elementType, int polySize, int vertexSize, const TESSreal* normal );
 
-    int succes = tessTesselate(tess, TESS_WINDING_POSITIVE, TESS_POLYGONS, polySize, 2, NULL);
+    int succes = tessTesselate(tess, TESS_WINDING_NONZERO, TESS_CONNECTED_POLYGONS, polySize, 2, NULL);
 
     if (succes) {
         const TESSreal* verts = tessGetVertices( tess );
@@ -98,11 +97,25 @@ void NavMesh::TesselateSolution(const ClipperLib::Paths &solution, std::vector<V
         const TESSindex* elems = tessGetElements(tess);
      
         for (int i = 0; i < nelems; i++) {
-            const TESSindex* poly = &elems[i * polySize];
+            const TESSindex* poly = &elems[i * polySize*2];
+            NavTriangle triangle;
+            
             for (int j = 0; j < polySize; j++) {
                 if (poly[j] == TESS_UNDEF) break;
                 const TESSreal* pos = &verts[poly[j]*2];
                 points.push_back({pos[0], pos[1]});
+                triangle.corners[j] = { pos[0], pos[1] };
+            }
+            triangle.Reset();
+            triangles.push_back(triangle);
+        }
+        
+        for (int i = 0; i < nelems; i++) {
+            const TESSindex* poly = &elems[i * polySize*2];
+            NavTriangle& triangle = triangles[i];
+            const TESSindex* nei = &poly[polySize];
+            for (int j=0; j<polySize; j++) {
+                triangle.neighbors[j]= nei[j]==-1 ? 0 : &triangles[nei[j]];
             }
         }
     }

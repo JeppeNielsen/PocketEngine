@@ -52,7 +52,7 @@ public:
         map = world.CreateObject();
         
         
-        map->AddComponent<Map>()->CreateMap(128, 128);
+        map->AddComponent<Map>()->CreateMap(64, 64);
         map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
         map->GetComponent<Map>()->Smooth(5);
         map->GetComponent<Map>()->SetMaxHeight(1.0f);
@@ -93,9 +93,10 @@ public:
         
         int i=0;
         for (auto p : mesh) {
+            
             Vertex v;
             v.Position = {p.x, 1.05f, p.y};
-            v.Color = Colour::White(0.3f);
+            v.Color = Colour::HslToRgb((i/3)*10, 1, 1, 1);
             navMeshMesh.vertices.push_back(v);
             navMeshMesh.triangles.push_back(i);
             i++;
@@ -197,7 +198,7 @@ public:
     bool wireframe;
 };
 
-int main_blassss() {
+int main_behes() {
     Engine e;
     e.Start<Game>();
 	return 0;
