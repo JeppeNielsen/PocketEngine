@@ -23,10 +23,6 @@ public:
         3,0,
         0,3,
         3,3,
-         1,1,
-        2,1,
-        1,2,
-        2,2
         };
         
         std::vector<int> segments = {
@@ -35,20 +31,14 @@ public:
             3,2,
             2,0,
             
-            4,5,
-            5,7,
-            7,6,
-            6,4,
         };
         
-        std::vector<int> segmentMarker = {
-            1,1,1,1,
-            2,2,2,2,
-        };
+        std::vector<double> holes;
         
-        std::vector<double> hole = {
-            1.5,1.5
-        };
+        AddHole(outer, segments, holes, 0, 1);
+        AddHole(outer, segments, holes, {1,0}, 1);
+        AddHole(outer, segments, holes, {1.5f,1.5f}, 1);
+        
         
     /*
     
@@ -60,11 +50,9 @@ public:
         memset(&in, 0, sizeof(triangulateio));
         in.numberofpoints = outer.size()/2;
         in.pointlist = &outer[0];
-        //in.pointattributelist = &outerAttr[0];
-        //in.pointmarkerlist = &pointMarkerList[0];
         
-        in.holelist = &hole[0];
-        in.numberofholes = hole.size()/2;
+        in.holelist = &holes[0];
+        in.numberofholes = holes.size()/2;
         
         in.segmentlist = &segments[0];
         //in.segmentmarkerlist = &segmentMarker[0];
@@ -104,7 +92,7 @@ public:
     }
     
     void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size) {
-        int index = points.size();
+        int index = points.size()/2;
         points.push_back(p.x);
         points.push_back(p.y);
         
