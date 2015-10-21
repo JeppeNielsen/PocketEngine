@@ -9,7 +9,6 @@
 #pragma once
 #include "Vector2.hpp"
 #include <vector>
-#include "clip2tri.h"
 #include <functional>
 
 using namespace Pocket;
@@ -190,44 +189,17 @@ struct NavTriangle {
  
       return d;
     }
-    
-    void Cut(const std::vector<Vector2>& points, std::vector<Vector2>& cutPoints) {
-            c2t::clip2tri clipper;
-    
-        std::vector<std::vector<c2t::Point>> inputPolygons;
-        
-        for(int i=0;i<points.size();i+=3) {
-            inputPolygons.push_back({
-                { points[i].x, points[i].y},
-                { points[i+1].x, points[i+1].y},
-                { points[i+2].x, points[i+2].y},
-            });
-        }
-        
-        std::vector<c2t::Point> outer {
-            { corners[0].x, corners[0].y },
-            { corners[1].x, corners[1].y },
-            { corners[2].x, corners[2].y }
-        };
-        
-        std::vector<c2t::Point> mesh;
-        
-        clipper.triangulate(inputPolygons, mesh, outer);
-
-        for (int i=0; i<mesh.size(); i++) {
-            cutPoints.push_back({ mesh[i].x, mesh[i].y });
-        }
-    }
-    
 };
 
 class NavMesh {
 public:
+
+    typedef std::vector<NavTriangle> Triangles;
+
     NavMesh();
     ~NavMesh();
     
-    std::vector<Vector2> BuildPoints(int width, int depth, std::function<bool(int x, int z)> predicate);
-    
+    void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
     void Build(const std::vector<Vector2>& points);
     std::vector<NavTriangle*> FindPath(NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
     NavTriangle* FindTriangle(const Vector2& position);
@@ -235,9 +207,10 @@ public:
     NavTriangle* FindNearestTriangle(const Vector2& position, Vector2& nearestPosition);
     
     std::vector<Vector2> Cut(const std::vector<Vector2>& points);
+    
+    const Triangles& GetTriangles() const;
 private:
     float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
-    void TesselateSolution(const ClipperLib::Paths& solution, std::vector<Vector2>& points);
-    typedef std::vector<NavTriangle> Triangles;
+    void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
     Triangles triangles;
 };

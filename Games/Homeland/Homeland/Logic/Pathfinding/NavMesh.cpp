@@ -8,7 +8,7 @@
 
 #include "NavMesh.hpp"
 #include <assert.h>
-#include "tesselator.h"
+#include "triangle.h"
 
 NavMesh::NavMesh() {}
 NavMesh::~NavMesh() {}
@@ -23,6 +23,114 @@ int findCornerIndexFromNeighborIndex(int corner1, int corner2) {
     }
 }
 
+void NavMesh::AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size) {
+      int index = points.size()/2;
+        points.push_back(p.x);
+        points.push_back(p.y);
+        
+        points.push_back(p.x+size.x);
+        points.push_back(p.y);
+        
+        points.push_back(p.x);
+        points.push_back(p.y+size.y);
+        
+        points.push_back(p.x+size.x);
+        points.push_back(p.y+size.y);
+        
+        segments.push_back(index+0);
+        segments.push_back(index+1);
+        
+        segments.push_back(index+1);
+        segments.push_back(index+3);
+        
+        segments.push_back(index+3);
+        segments.push_back(index+2);
+        
+        segments.push_back(index+2);
+        segments.push_back(index+0);
+        
+        holes.push_back(p.x + size.x * 0.5f);
+        holes.push_back(p.y + size.y * 0.5f);
+}
+
+void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int, int)> predicate) {
+    
+    std::vector<double> outer = {
+        0,0,
+        (double)width,0,
+        0,(double)depth,
+        (double)width,(double)depth,
+        };
+    
+    std::vector<int> segments = {
+        0,1,
+        1,3,
+        3,2,
+        2,0,
+    };
+    
+    std::vector<double> holes;
+
+    for (int z=0; z<depth; ++z) {
+        for (int x=0; x<width; ++x) {
+            if (predicate(x,z)) {
+                AddHole(outer, segments, holes, {(float)x,(float)z}, 1.0f);
+            }
+        }
+    }
+
+    triangulateio in;
+    memset(&in, 0, sizeof(triangulateio));
+    in.numberofpoints = outer.size()/2;
+    in.pointlist = &outer[0];
+    
+    in.holelist = &holes[0];
+    in.numberofholes = holes.size()/2;
+    
+    in.segmentlist = &segments[0];
+    //in.segmentmarkerlist = &segmentMarker[0];
+    in.numberofsegments = segments.size()/2;
+    
+    triangulateio out;
+    memset(&out, 0, sizeof(triangulateio));
+    
+    triangulate("zpnQ", &in, &out, NULL );
+    
+    for (int i=0; i<out.numberofpoints; i++) {
+        double* p = &out.pointlist[i*2];
+       // std::cout<<p[0]<<","<<p[1]<<std::endl;
+    }
+    
+    triangles.resize(out.numberoftriangles);
+    
+    std::cout<<"-------------"<<std::endl;
+    for (int i=0; i<out.numberoftriangles; i++) {
+        int* triangleIndex = &out.trianglelist[i*3];
+        //std::cout<<triangle[0]<<", "<<triangle[1]<<", " <<triangle[2]<<std::endl;
+        
+        double* pos1 = &out.pointlist[triangleIndex[0]*2];
+        double* pos2 = &out.pointlist[triangleIndex[1]*2];
+        double* pos3 = &out.pointlist[triangleIndex[2]*2];
+        
+        NavTriangle& tri = triangles[i];
+        tri.corners[0]= { (float)pos1[0], (float)pos1[1]};
+        tri.corners[1]= { (float)pos2[0], (float)pos2[1]};
+        tri.corners[2]= { (float)pos3[0], (float)pos3[1]};
+        
+        
+        int* neighbor = &out.neighborlist[i*3];
+        
+        tri.neighbors[1] = neighbor[0]>=0 ? &triangles[neighbor[0]] : 0;
+        tri.neighbors[2] = neighbor[1]>=0 ? &triangles[neighbor[1]] : 0;
+        tri.neighbors[0] = neighbor[2]>=0 ? &triangles[neighbor[2]] : 0;
+        
+        
+       // std::cout<<"neightbor"<<std::endl;
+       // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
+    }
+}
+
+/*
 std::vector<Vector2> NavMesh::BuildPoints(int width, int depth, std::function<bool (int, int)> predicate) {
     
     const int Scaling = 100;
@@ -122,7 +230,7 @@ void NavMesh::TesselateSolution(const ClipperLib::Paths &solution, std::vector<V
     
     tessDeleteTess(tess);
 }
-
+*/
 void NavMesh::Build(const std::vector<Vector2>& points) {
     assert(points.size() % 3 == 0);//, "Points must be multiply of three");
     int numTriangles = (int)points.size() / 3;
@@ -393,12 +501,12 @@ NavTriangle* NavMesh::FindNearestTriangle(const Pocket::Vector2 &position, Vecto
 std::vector<Vector2> NavMesh::Cut(const std::vector<Vector2> &points) {
     std::vector<Vector2> cut;
     for(NavTriangle& triangle : triangles) {
-        triangle.Cut(points, cut);
+        //triangle.Cut(points, cut);
     }
     return cut;
 }
 
-
+const NavMesh::Triangles& NavMesh::GetTriangles() const { return triangles; }
 
 
 

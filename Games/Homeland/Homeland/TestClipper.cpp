@@ -1,10 +1,6 @@
 #include "Engine.hpp"
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
-#include "clipper.hpp"
-#include "clip2tri.h"
-//#include "gpc.h"
-#include "tesselator.h"
 
 using namespace Pocket;
 

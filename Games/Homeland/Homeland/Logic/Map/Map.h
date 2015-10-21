@@ -63,16 +63,17 @@ Component(Map)
 
     void CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3>& path, GameWorld* world);
 
-    std::vector<Vector2> CreateNavigationMesh();
+    void CreateNavigationMesh();
     bool IsNodeWalkable(const Node& node);
 
     void CreateTriangleObject(NavTriangle* tri, GameWorld* world);
     Vector3 FindNearestValidPosition(const Vector3& position);
 
+    const NavMesh& NavMesh();
 private:
 	Node outOfBoundsNode;
     void AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID);
     bool IsNodeWalkable(Node* node);
     static bool SortNodes(const Node* a, const Node* b);
-    NavMesh navMesh;
+    class NavMesh navMesh;
 };

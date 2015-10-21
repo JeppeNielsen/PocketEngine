@@ -2,6 +2,7 @@
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
 #include "triangle.h"
+#include "MathHelper.hpp"
 
 using namespace Pocket;
 
@@ -15,14 +16,17 @@ public:
         RenderSystem* renderSystem = world.CreateSystem<RenderSystem>();
         
         GameObject* camera = world.CreateObject();
-        camera->AddComponent<Transform>()->Position = {0,0,10};
+        camera->AddComponent<Transform>()->Position = {30,30,80};
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        
+        int width = 64;
+        int height = 64;
         
         std::vector<double> outer = {
         0,0,
-        3,0,
-        0,3,
-        3,3,
+        (double)width,0,
+        0,(double)height,
+        (double)width,(double)height,
         };
         
         std::vector<int> segments = {
@@ -30,14 +34,21 @@ public:
             1,3,
             3,2,
             2,0,
-            
         };
         
         std::vector<double> holes;
         
-        AddHole(outer, segments, holes, 0, 1);
-        AddHole(outer, segments, holes, {1,0}, 1);
-        AddHole(outer, segments, holes, {1.5f,1.5f}, 1);
+        for (int x=0; x<width; x++) {
+            for (int z=0; z<height; z++) {
+                if (MathHelper::Random()<0.5f) {
+                    AddHole(outer, segments, holes, {(float)x,(float)z}, 1.0f);
+                }
+            }
+        }
+        
+        
+        //AddHole(outer, segments, holes, {1,0}, 1);
+        //AddHole(outer, segments, holes, {1.5f,1.5f}, {1,1});
         
         
     /*
@@ -61,7 +72,7 @@ public:
         triangulateio out;
         memset(&out, 0, sizeof(triangulateio));
         
-        triangulate("zVp", &in, &out, NULL );
+        triangulate("zVpn", &in, &out, NULL );
         
         GameObject* go = world.CreateObject();
         go->AddComponent<Transform>();
@@ -83,6 +94,9 @@ public:
             mesh.triangles.push_back(triangle[0]);
             mesh.triangles.push_back(triangle[1]);
             mesh.triangles.push_back(triangle[2]);
+            int* neighbor = &out.neighborlist[i];
+            std::cout<<"neightbor"<<std::endl;
+            std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
         }
         std::cout<<"-------------"<<std::endl;
         
@@ -143,7 +157,7 @@ public:
     }
 };
 
-int main() {
+int main_efwefw() {
     Engine e;
     e.Start<TestTriangle>();
 	return 0;

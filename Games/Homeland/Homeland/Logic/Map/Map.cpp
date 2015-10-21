@@ -8,8 +8,6 @@
 
 #include "Map.h"
 #include "MathHelper.hpp"
-#include "clipper.hpp"
-#include "clip2tri.h"
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "Material.hpp"
@@ -250,9 +248,9 @@ bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
     return (a->g + a->h)>(b->g+b->h);
 }
 
-std::vector<Vector2> Map::CreateNavigationMesh() {
+void Map::CreateNavigationMesh() {
     
-    
+    /*
     vector<vector<c2t::Point>> inputPolygons;
     
     for (int z=0; z<Depth(); z++) {
@@ -285,7 +283,7 @@ std::vector<Vector2> Map::CreateNavigationMesh() {
     }
 
     navMesh.Build(mesh);
-    
+    */
  
     /*
     std::vector<Vector2> mesh = navMesh.BuildPoints(Width(), Depth(), [this] (int x, int z) -> bool {
@@ -293,8 +291,12 @@ std::vector<Vector2> Map::CreateNavigationMesh() {
     });
     */
     
-    return mesh;
+    navMesh.BuildPointsTriangle(Width(), Depth(), [this] (int x, int z) -> bool {
+        return !IsNodeWalkable(GetNode(x, z));
+    });
 }
+
+const NavMesh& Map::NavMesh() { return navMesh; }
 
 Vector3 Map::FindNearestValidPosition(const Pocket::Vector3 &position) {
     Vector2 nearest;

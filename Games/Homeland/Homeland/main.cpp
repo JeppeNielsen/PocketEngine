@@ -78,7 +78,9 @@ public:
         
         Timer timer;
         timer.Begin();
-        auto mesh = map->GetComponent<Map>()->CreateNavigationMesh();
+        map->GetComponent<Map>()->CreateNavigationMesh();
+        const NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
+        
         double time = timer.End();
         std::cout << "Nav mesh generation time = " << time << std::endl;
         
@@ -91,15 +93,16 @@ public:
         navMesh->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
         auto& navMeshMesh = navMesh->AddComponent<Mesh>()->GetMesh<Vertex>();
         
-        int i=0;
-        for (auto p : mesh) {
-            
-            Vertex v;
-            v.Position = {p.x, 1.05f, p.y};
-            v.Color = Colour::HslToRgb((i/3)*10, 1, 1, 1);
-            navMeshMesh.vertices.push_back(v);
-            navMeshMesh.triangles.push_back(i);
-            i++;
+        int indicies=0;
+        for (auto& p : mesh.GetTriangles()) {
+            for (int i=0; i<3; i++) {
+                Vector2 pos = p.corners[i];
+                Vertex v;
+                v.Position = {pos.x, 1.05f, pos.y};
+                v.Color = Colour::HslToRgb((i/3)*10, 1, 1, 1);
+                navMeshMesh.vertices.push_back(v);
+                navMeshMesh.triangles.push_back(indicies++);
+            }
         }
         navMeshMesh.Flip();
         
@@ -198,7 +201,7 @@ public:
     bool wireframe;
 };
 
-int main_behes() {
+int main() {
     Engine e;
     e.Start<Game>();
 	return 0;
