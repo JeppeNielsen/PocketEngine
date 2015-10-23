@@ -27,8 +27,12 @@ void ParticleCollisionSystem::Update(float dt) {
             if (length<radius) {
                 vector *= (1.0f / length);
                 float penetration = radius - length;
-                a->position -= vector * penetration * 0.5f;
-                b->position += vector * penetration * 0.5f;
+                if (!a->immovable) {
+                    a->position -= vector * penetration * 0.5f;
+                }
+                if (!b->immovable) {
+                    b->position += vector * penetration * 0.5f;
+                }
             }
         }
     }

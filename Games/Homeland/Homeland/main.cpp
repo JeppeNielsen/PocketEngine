@@ -61,14 +61,19 @@ public:
         //map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
         //map->GetComponent<Map>()->Smooth(5);
         
-        map->GetComponent<Map>()->Randomize(-2.1f, 4.0f);
-        map->GetComponent<Map>()->Smooth(2);
+        map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
+        map->GetComponent<Map>()->Smooth(1);
         
         //map->GetComponent<Map>()->SetMaxHeight(1.0f);
         //map->GetComponent<Map>()->SetHeight(0.5f);
         
-        map->GetComponent<Map>()->AddHill(35, 45, 8, 5.0f);
+        for (int i=0; i<40; i++) {
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 4, 5.0f);
+        }
         
+        for (int i=0; i<40; i++) {
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 6, -2.0f);
+        }
         /*
         map->GetComponent<Map>()->SetHeight(1.0f);
         map->GetComponent<Map>()->AddHill(32, 32, 16, 5.0f);
@@ -159,6 +164,10 @@ public:
         turret->AddComponent<Transform>()->Position = {0,0.4f,0};
         turret->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.0f,0,0.5f}, {0.04f, 0.04f, 0.8f});
         turret->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
+        
+        if (i==5) {
+            cube->GetComponent<Particle>()->immovable = true;
+        }
         
         }
         

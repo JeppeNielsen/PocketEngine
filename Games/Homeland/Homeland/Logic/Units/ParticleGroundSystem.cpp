@@ -100,8 +100,8 @@ void ParticleGroundSystem::UpdateObject(float dt, Pocket::GameObject *object) {
         //sideways.Normalize();
         //forward.Normalize();
         
-        Quaternion rotation2d = Quaternion(Vector3(0,atan2f(direction.x, direction.y),0));
-        Quaternion normalRotation = Quaternion(sideways, -normal, forward);
+        Quaternion rotation2d = Quaternion(Vector3(0,atan2f(direction.x, direction.y) + MathHelper::Pi,0));
+        Quaternion normalRotation = Quaternion(sideways, -normal, -forward);
         Quaternion target = normalRotation * rotation2d;
         
         

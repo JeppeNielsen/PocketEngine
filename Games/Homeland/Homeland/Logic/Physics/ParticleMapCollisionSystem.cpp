@@ -11,6 +11,7 @@
 void ParticleMapCollisionSystem::Update(float dt) {
     for(GameObject* go : Objects()) {
         Particle* particle = go->GetComponent<Particle>();
+        if (particle->immovable) continue;
         Mappable* mappable = go->GetComponent<Mappable>();
         Map* map = mappable->Map;
         

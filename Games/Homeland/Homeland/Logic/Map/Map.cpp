@@ -223,7 +223,7 @@ bool Map::IsNodeWalkable(Map::Node *node) {
 
 bool Map::IsNodeWalkable(const Map::Node& node) {
     float angle = MathHelper::RadToDeg * acosf(node.normal.Dot({0,1,0}));
-    return angle>160.0f && node.height>0.05f;
+    return angle>160.0f && node.height>0.02f;
     
     //return node.height>0.6f && node.height<1.05f;
 }
