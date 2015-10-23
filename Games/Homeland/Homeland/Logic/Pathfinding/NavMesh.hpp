@@ -10,6 +10,7 @@
 #include "Vector2.hpp"
 #include <vector>
 #include <functional>
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 
@@ -54,6 +55,7 @@ struct NavTriangle {
         total = 0;
         parent = 0;
         position = 0;
+        islandID = 0;
     }
     int index;
     float h;
@@ -62,6 +64,7 @@ struct NavTriangle {
     NavTriangle* parent;
     Vector2 position;
     int pathID;
+    int islandID;
     
     inline float side(const Vector2& p1, const Vector2& p2, const Vector2& p) {
         return (p2.y - p1.y) * (p.x - p1.x) + (-p2.x + p1.x)*(p.y - p1.y);
@@ -189,12 +192,64 @@ struct NavTriangle {
  
       return d;
     }
+    
+    
+        /* Check whether P and Q lie on the same side of line AB */
+    inline float Side(const Vector2& p, const Vector2& q, const Vector2& a, const Vector2& b) {
+        float z1 = (b.x - a.x) * (p.y - a.y) - (p.x - a.x) * (b.y - a.y);
+        float z2 = (b.x - a.x) * (q.y - a.y) - (q.x - a.x) * (b.y - a.y);
+        return z1 * z2;
+    }
+
+    /* Check whether segment P0P1 intersects with triangle corners[0]corners[1]corners[2] */
+    bool SegmentTouching(const Vector2& p0, const Vector2& p1)
+    {
+        /* Check whether segment is outside one of the three half-planes
+         * delimited by the triangle. */
+        float f1 = Side(p0, corners[2], corners[0], corners[1]), f2 = Side(p1, corners[2], corners[0], corners[1]);
+        float f3 = Side(p0, corners[0], corners[1], corners[2]), f4 = Side(p1, corners[0], corners[1], corners[2]);
+        float f5 = Side(p0, corners[1], corners[2], corners[0]), f6 = Side(p1, corners[1], corners[2], corners[0]);
+        /* Check whether triangle is totally inside one of the two half-planes
+         * delimited by the segment. */
+        float f7 = Side(corners[0], corners[1], p0, p1);
+        float f8 = Side(corners[1], corners[2], p0, p1);
+
+        /* If segment is strictly outside triangle, or triangle is strictly
+         * apart from the line, we're not intersecting */
+        if ((f1 < 0 && f2 < 0) || (f3 < 0 && f4 < 0) || (f5 < 0 && f6 < 0)
+              || (f7 > 0 && f8 > 0))
+            return false;//NOT_INTERSECTING;
+
+        /* If segment is aligned with one of the edges, we're overlapping */
+        if ((f1 == 0 && f2 == 0) || (f3 == 0 && f4 == 0) || (f5 == 0 && f6 == 0))
+            return true;//OVERLAPPING;
+
+        /* If segment is outside but not strictly, or triangle is apart but
+         * not strictly, we're touching */
+        if ((f1 <= 0 && f2 <= 0) || (f3 <= 0 && f4 <= 0) || (f5 <= 0 && f6 <= 0)
+              || (f7 >= 0 && f8 >= 0))
+            return true;// TOUCHING;
+
+        /* If both segment points are strictly inside the triangle, we
+         * are not intersecting either */
+        if (f1 > 0 && f2 > 0 && f3 > 0 && f4 > 0 && f5 > 0 && f6 > 0)
+            return true;//NOT_INTERSECTING;
+
+        /* Otherwise we're intersecting with at least one edge */
+        return true;//INTERSECTING;
+    }
+};
+
+struct NavBlocker {
+    typedef std::vector<Vector2> Points;
+    Points points;
 };
 
 class NavMesh {
 public:
 
     typedef std::vector<NavTriangle> Triangles;
+    typedef std::vector<NavBlocker*> Blockers;
 
     NavMesh();
     ~NavMesh();
@@ -209,8 +264,16 @@ public:
     std::vector<Vector2> Cut(const std::vector<Vector2>& points);
     
     const Triangles& GetTriangles() const;
+    
+    NavBlocker* CreateBlocker();
+    void DeleteBlocker(NavBlocker* blocker);
+    void UpdateBlockers(GameWorld* world);
+    
 private:
     float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
     void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
+    void AddTriangle(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2& p1, Vector2& p2, Vector2& p3);
+    void AddPoly(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, std::vector<Vector2>& polyPoints);
     Triangles triangles;
+    Blockers blockers;
 };

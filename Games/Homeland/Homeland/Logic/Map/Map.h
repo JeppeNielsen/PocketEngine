@@ -69,7 +69,7 @@ Component(Map)
     void CreateTriangleObject(NavTriangle* tri, GameWorld* world);
     Vector3 FindNearestValidPosition(const Vector3& position);
 
-    const NavMesh& NavMesh();
+    NavMesh& NavMesh();
 private:
 	Node outOfBoundsNode;
     void AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID);

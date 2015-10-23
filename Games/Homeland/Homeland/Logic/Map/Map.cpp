@@ -296,7 +296,7 @@ void Map::CreateNavigationMesh() {
     });
 }
 
-const NavMesh& Map::NavMesh() { return navMesh; }
+NavMesh& Map::NavMesh() { return navMesh; }
 
 Vector3 Map::FindNearestValidPosition(const Pocket::Vector3 &position) {
     Vector2 nearest;

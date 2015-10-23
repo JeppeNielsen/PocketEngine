@@ -52,7 +52,7 @@ public:
         map = world.CreateObject();
         
         
-        map->AddComponent<Map>()->CreateMap(64, 64);
+        map->AddComponent<Map>()->CreateMap(128, 128);
         map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
         map->GetComponent<Map>()->Smooth(5);
         map->GetComponent<Map>()->SetMaxHeight(1.0f);
@@ -79,12 +79,26 @@ public:
         Timer timer;
         timer.Begin();
         map->GetComponent<Map>()->CreateNavigationMesh();
-        const NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
-        
         double time = timer.End();
         std::cout << "Nav mesh generation time = " << time << std::endl;
         
+        NavMesh& navigationMesh = map->GetComponent<Map>()->NavMesh();
+    
+        NavBlocker* blocker = navigationMesh.CreateBlocker();
+        
+        
+        {
+            blocker->points.push_back({40,40});
+            blocker->points.push_back({50,40});
+            blocker->points.push_back({50,50});
+            blocker->points.push_back({40,50});
+            
+        }
+        
+        navigationMesh.UpdateBlockers(&world);
+        
         map->GetComponent<Map>()->renderSystem = renderer;
+        
         
         
         GameObject* navMesh = world.CreateObject();
@@ -93,6 +107,7 @@ public:
         navMesh->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
         auto& navMeshMesh = navMesh->AddComponent<Mesh>()->GetMesh<Vertex>();
         
+        const NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
         int indicies=0;
         for (auto& p : mesh.GetTriangles()) {
             for (int i=0; i<3; i++) {
@@ -105,7 +120,6 @@ public:
             }
         }
         navMeshMesh.Flip();
-        
         
         cameraObject = world.CreateObject();
         cameraObject->AddComponent<Transform>()->Position = {0,0,0};
