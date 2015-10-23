@@ -25,8 +25,6 @@ struct MapRect {
 
 Component(Map)
 
-    RenderSystem* renderSystem;
-
 	struct Node {
     	Node() : height(0), normal(0,1,0), islandID(0) {}
     	float height;
@@ -61,13 +59,12 @@ Component(Map)
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
-    void CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3>& path, GameWorld* world);
+    void CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path, GameWorld* world);
 
     void CreateNavigationMesh();
     bool IsNodeWalkable(const Node& node);
 
-    void CreateTriangleObject(NavTriangle* tri, GameWorld* world);
-    Vector3 FindNearestValidPosition(const Vector3& position);
+    Vector2 FindNearestValidPosition(const Vector2& position);
 
     NavMesh& NavMesh();
 private:

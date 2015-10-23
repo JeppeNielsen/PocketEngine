@@ -14,20 +14,17 @@ void MoveSystem::Update(float dt) {
         Movable::Path& path = movable->path;
         if (path.empty()) continue;
         
-        Transform* transform = object->GetComponent<Transform>();
-        Vector3& target = path.back();
+        Particle* particle = object->GetComponent<Particle>();
+        Vector2& target = path.back();
         
-        movable->currentTarget = Vector3::Lerp(movable->currentTarget, target, 20.0f * dt);
-        
-        Vector3 toTarget = movable->currentTarget - transform->Position;
-        toTarget.y = 0;
+        Vector2 toTarget = target - particle->position;
         
         float length = toTarget.Length();
-        if (length<0.7f) {
+        if (length<2.0f) {
             path.pop_back();
         } else {
             toTarget *= 1.0f / length;
-            transform->Position += toTarget * movable->Speed * dt;
+            particle->position += toTarget * movable->Speed * dt;
         }
     }
 }

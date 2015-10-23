@@ -14,11 +14,11 @@ void MovableAlignmentSystem::Update(float dt) {
         Movable::Path& path = movable->path;
         if (path.empty()) continue;
         Transform* transform = object->GetComponent<Transform>();
-        Vector3& target = path.back();
+        Vector2& target = path.back();
         Vector3 toTarget = target - transform->Position;
         toTarget.y = 0;
         if (toTarget.LengthSqaured()<0.02f) continue;
-        Quaternion targetRot = Quaternion(atan2f(toTarget.x, toTarget.z), {0,1,0});
+        Quaternion targetRot = Quaternion(atan2f(toTarget.x, toTarget.y), {0,1,0});
         Quaternion sourceRot = transform->Rotation;
         sourceRot.Normalize();
         targetRot = Quaternion::Slerp(4.0f * dt, sourceRot, targetRot, true);

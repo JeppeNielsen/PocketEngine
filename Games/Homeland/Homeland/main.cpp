@@ -7,15 +7,17 @@
 #include "DragSelector.hpp"
 #include "SelectionVisualizer.hpp"
 #include "VelocitySystem.hpp"
-#include "GroundSystem.h"
 #include "MoveSystem.h"
 #include "PathFinderSystem.h"
 #include "ClickTargetSystem.h"
 #include "TouchSystem.hpp"
-#include "MovableAlignmentSystem.h"
-#include "MovableCollisionSystem.h"
 #include "NavMesh.hpp"
 #include "Timer.hpp"
+#include "ParticleUpdaterSystem.h"
+#include "ParticleTransformSystem.h"
+#include "ParticleMapCollisionSystem.h"
+#include "ParticleCollisionSystem.h"
+#include "ParticleGroundSystem.h"
 
 using namespace Pocket;
 
@@ -28,6 +30,7 @@ public:
     float rotation;
     GameObject* map;
     GameObject* cameraObject;
+    GameObject* navMesh;
     
     void Initialize() {
         
@@ -43,22 +46,28 @@ public:
         world.CreateSystem<SelectionVisualizer>();
         world.CreateSystem<VelocitySystem>();
         world.CreateSystem<PathFinderSystem>();
-        world.CreateSystem<MoveSystem>();
-        world.CreateSystem<MovableAlignmentSystem>();
-        world.CreateSystem<GroundSystem>();
         world.CreateSystem<ClickTargetSystem>();
-        world.CreateSystem<MovableCollisionSystem>();
+        
+        world.CreateSystem<MoveSystem>();
+        world.CreateSystem<ParticleCollisionSystem>();
+        world.CreateSystem<ParticleMapCollisionSystem>();
+        world.CreateSystem<ParticleUpdaterSystem>();
+        //world.CreateSystem<ParticleTransformSystem>();
+        world.CreateSystem<ParticleGroundSystem>();
         
         map = world.CreateObject();
         
-        
         map->AddComponent<Map>()->CreateMap(128, 128);
-        map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
-        map->GetComponent<Map>()->Smooth(5);
-        map->GetComponent<Map>()->SetMaxHeight(1.0f);
+        //map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
+        //map->GetComponent<Map>()->Smooth(5);
+        
+        map->GetComponent<Map>()->Randomize(-2.1f, 4.0f);
+        map->GetComponent<Map>()->Smooth(2);
+        
+        //map->GetComponent<Map>()->SetMaxHeight(1.0f);
         //map->GetComponent<Map>()->SetHeight(0.5f);
         
-       // map->GetComponent<Map>()->AddHill(35, 45, 8, -3.0f);
+        map->GetComponent<Map>()->AddHill(35, 45, 8, 5.0f);
         
         /*
         map->GetComponent<Map>()->SetHeight(1.0f);
@@ -82,29 +91,13 @@ public:
         double time = timer.End();
         std::cout << "Nav mesh generation time = " << time << std::endl;
         
-        NavMesh& navigationMesh = map->GetComponent<Map>()->NavMesh();
-    
-        NavBlocker* blocker = navigationMesh.CreateBlocker();
         
         
-        {
-            blocker->points.push_back({40,40});
-            blocker->points.push_back({50,40});
-            blocker->points.push_back({50,50});
-            blocker->points.push_back({40,50});
-            
-        }
-        
-        navigationMesh.UpdateBlockers(&world);
-        
-        map->GetComponent<Map>()->renderSystem = renderer;
-        
-        
-        
-        GameObject* navMesh = world.CreateObject();
+        navMesh = world.CreateObject();
         navMesh->AddComponent<Transform>();
         navMesh->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
         navMesh->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        navMesh->EnableComponent<Material>(false);
         auto& navMeshMesh = navMesh->AddComponent<Mesh>()->GetMesh<Vertex>();
         
         const NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
@@ -113,13 +106,14 @@ public:
             for (int i=0; i<3; i++) {
                 Vector2 pos = p.corners[i];
                 Vertex v;
-                v.Position = {pos.x, 1.05f, pos.y};
+                v.Position = {pos.x, 1.50f, pos.y};
                 v.Color = Colour::HslToRgb((i/3)*10, 1, 1, 1);
                 navMeshMesh.vertices.push_back(v);
                 navMeshMesh.triangles.push_back(indicies++);
             }
         }
         navMeshMesh.Flip();
+        
         
         cameraObject = world.CreateObject();
         cameraObject->AddComponent<Transform>()->Position = {0,0,0};
@@ -148,16 +142,17 @@ public:
         waterPlane->GetComponent<Material>()->Shader = &renderer->Shaders.Colored;
         
         for (int i=0; i<10; i++) {
-    
+        Vector2 position ={15.0f+i*2.0f,20.0f};
         cube = world.CreateObject();
         cube->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
-        cube->AddComponent<Transform>()->Position = {15.0f+i*2.0f,1.0f,20.0f};
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {0.95f,0.2f,1.0f});
+        cube->AddComponent<Transform>()->Position ={position.x,1.0f, position.y};
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.95f,0.2f,1.0f});
         cube->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
         cube->AddComponent<Selectable>();
-        cube->AddComponent<Groundable>();
-        cube->AddComponent<Movable>()->Speed = 10.0f;
-        cube->GetComponent<Movable>()->Target = cube->GetComponent<Transform>()->Position;
+        cube->AddComponent<Movable>()->Speed = 3.0f;
+        cube->AddComponent<Particle>()->SetPosition(position);
+        cube->GetComponent<Movable>()->Target = position;
+        cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
         
         GameObject* turret = world.CreateObject();
         turret->Parent = cube;
@@ -182,16 +177,13 @@ public:
     bool follow;
     
     void ButtonDown(std::string b) {
-        if (b == "m") {
-            cube->GetComponent<Movable>()->Target = {155,0,155};
-        } else if (b == "n") {
-            cube->GetComponent<Movable>()->Target = {15,0,20};
-        } else if (b=="f") {
+        if (b=="f") {
             follow = !follow;
         } else if (b=="w") {
             wireframe = !wireframe;
+        } else if (b=="m") {
+            navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
         }
-        
     }
     
     void Update(float dt) {

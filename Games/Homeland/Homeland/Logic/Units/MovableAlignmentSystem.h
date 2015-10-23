@@ -13,7 +13,7 @@
 
 using namespace Pocket;
 
-SYSTEM(MovableAlignmentSystem, Movable, Transform)
+SYSTEM(MovableAlignmentSystem, Movable, Particle)
     public:
         void Update(float dt);
 };

@@ -14,4 +14,5 @@ using namespace Pocket;
 
 Component(Groundable)
     float alignmentSpeed;
+    std::vector<Vector2> positions;
 };

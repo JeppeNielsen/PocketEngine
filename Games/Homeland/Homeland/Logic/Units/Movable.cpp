@@ -11,6 +11,6 @@
 Movable::Movable() : Target(this) {}
 
 void Movable::Reset() {
-    Speed = 1.0f;
+    Speed = 0.2f;
     path.clear();
 }

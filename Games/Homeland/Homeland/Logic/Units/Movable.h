@@ -17,11 +17,8 @@ Component(Movable)
 public:
     Movable();
     float Speed;
-    typedef std::vector<Vector3> Path;
+    typedef std::vector<Vector2> Path;
     Path path;
     void Reset();
-    Property<Movable*, Vector3> Target;
-
-    Vector3 currentTarget;
-    Vector3 prevPosition;
+    Property<Movable*, Vector2> Target;
 };

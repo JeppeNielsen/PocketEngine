@@ -36,10 +36,15 @@
 		723E7E151B5EECED00007AEA /* MapRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E101B5EECED00007AEA /* MapRenderer.cpp */; };
 		723E7E181B615F9100007AEA /* Mappable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E161B615F9100007AEA /* Mappable.cpp */; };
 		723E7E1B1B6186BB00007AEA /* Movable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E191B6186BA00007AEA /* Movable.cpp */; };
-		723E7E1E1B61873000007AEA /* GroundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E1C1B61873000007AEA /* GroundSystem.cpp */; };
+		723E7E1E1B61873000007AEA /* ParticleGroundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E1C1B61873000007AEA /* ParticleGroundSystem.cpp */; };
 		723E7E211B6188A600007AEA /* Groundable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E7E1F1B6188A600007AEA /* Groundable.cpp */; };
 		72411D431BD6D07800269FFB /* TestTriangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D421BD6D07800269FFB /* TestTriangle.cpp */; };
 		72411D461BDA7D7900269FFB /* clipper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D441BDA7D7900269FFB /* clipper.cpp */; };
+		72411D4C1BDAAAEB00269FFB /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D481BDAAAEB00269FFB /* Particle.cpp */; };
+		72411D4D1BDAAAEB00269FFB /* ParticleUpdaterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D4A1BDAAAEB00269FFB /* ParticleUpdaterSystem.cpp */; };
+		72411D501BDAABA100269FFB /* ParticleMapCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D4E1BDAABA100269FFB /* ParticleMapCollisionSystem.cpp */; };
+		72411D531BDAAFF800269FFB /* ParticleTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D511BDAAFF800269FFB /* ParticleTransformSystem.cpp */; };
+		72411D561BDAB2BC00269FFB /* ParticleCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */; };
 		727847351B79184300FCA232 /* MoveSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847331B79184300FCA232 /* MoveSystem.cpp */; };
 		727847381B79526D00FCA232 /* PathFinderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847361B79526D00FCA232 /* PathFinderSystem.cpp */; };
 		727FB7561BCAE343004D2C9E /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7521BCAE343004D2C9E /* SelectedColorer.cpp */; };
@@ -47,8 +52,6 @@
 		727FB75C1BCAE44C004D2C9E /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7581BCAE44C004D2C9E /* Droppable.cpp */; };
 		727FB75D1BCAE44C004D2C9E /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB75A1BCAE44C004D2C9E /* DroppableSystem.cpp */; };
 		727FB7601BCAF411004D2C9E /* ClickTargetSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB75E1BCAF411004D2C9E /* ClickTargetSystem.cpp */; };
-		727FB7631BCB016D004D2C9E /* MovableAlignmentSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7611BCB016D004D2C9E /* MovableAlignmentSystem.cpp */; };
-		727FB7661BCC429B004D2C9E /* MovableCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7641BCC429B004D2C9E /* MovableCollisionSystem.cpp */; };
 		727FB7B71BD2621E004D2C9E /* NavMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7B51BD2621E004D2C9E /* NavMesh.cpp */; };
 		727FB7BB1BD26AD1004D2C9E /* TestNavMesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7BA1BD26AD1004D2C9E /* TestNavMesh.cpp */; };
 		727FB7BE1BD55692004D2C9E /* NavMeshTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7BC1BD55692004D2C9E /* NavMeshTest.cpp */; };
@@ -437,13 +440,23 @@
 		723E7E171B615F9100007AEA /* Mappable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mappable.h; sourceTree = "<group>"; };
 		723E7E191B6186BA00007AEA /* Movable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Movable.cpp; sourceTree = "<group>"; };
 		723E7E1A1B6186BA00007AEA /* Movable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Movable.h; sourceTree = "<group>"; };
-		723E7E1C1B61873000007AEA /* GroundSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GroundSystem.cpp; sourceTree = "<group>"; };
-		723E7E1D1B61873000007AEA /* GroundSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroundSystem.h; sourceTree = "<group>"; };
+		723E7E1C1B61873000007AEA /* ParticleGroundSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleGroundSystem.cpp; sourceTree = "<group>"; };
+		723E7E1D1B61873000007AEA /* ParticleGroundSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleGroundSystem.h; sourceTree = "<group>"; };
 		723E7E1F1B6188A600007AEA /* Groundable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Groundable.cpp; sourceTree = "<group>"; };
 		723E7E201B6188A600007AEA /* Groundable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Groundable.h; sourceTree = "<group>"; };
 		72411D421BD6D07800269FFB /* TestTriangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestTriangle.cpp; sourceTree = "<group>"; };
 		72411D441BDA7D7900269FFB /* clipper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clipper.cpp; sourceTree = "<group>"; };
 		72411D451BDA7D7900269FFB /* clipper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = clipper.hpp; sourceTree = "<group>"; };
+		72411D481BDAAAEB00269FFB /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
+		72411D491BDAAAEB00269FFB /* Particle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Particle.h; sourceTree = "<group>"; };
+		72411D4A1BDAAAEB00269FFB /* ParticleUpdaterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleUpdaterSystem.cpp; sourceTree = "<group>"; };
+		72411D4B1BDAAAEB00269FFB /* ParticleUpdaterSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleUpdaterSystem.h; sourceTree = "<group>"; };
+		72411D4E1BDAABA100269FFB /* ParticleMapCollisionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleMapCollisionSystem.cpp; sourceTree = "<group>"; };
+		72411D4F1BDAABA100269FFB /* ParticleMapCollisionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleMapCollisionSystem.h; sourceTree = "<group>"; };
+		72411D511BDAAFF800269FFB /* ParticleTransformSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleTransformSystem.cpp; sourceTree = "<group>"; };
+		72411D521BDAAFF800269FFB /* ParticleTransformSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleTransformSystem.h; sourceTree = "<group>"; };
+		72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleCollisionSystem.cpp; sourceTree = "<group>"; };
+		72411D551BDAB2BC00269FFB /* ParticleCollisionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleCollisionSystem.h; sourceTree = "<group>"; };
 		727847331B79184300FCA232 /* MoveSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveSystem.cpp; sourceTree = "<group>"; };
 		727847341B79184300FCA232 /* MoveSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveSystem.h; sourceTree = "<group>"; };
 		727847361B79526D00FCA232 /* PathFinderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathFinderSystem.cpp; sourceTree = "<group>"; };
@@ -462,10 +475,6 @@
 		727FB75B1BCAE44C004D2C9E /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
 		727FB75E1BCAF411004D2C9E /* ClickTargetSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClickTargetSystem.cpp; sourceTree = "<group>"; };
 		727FB75F1BCAF411004D2C9E /* ClickTargetSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClickTargetSystem.h; sourceTree = "<group>"; };
-		727FB7611BCB016D004D2C9E /* MovableAlignmentSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovableAlignmentSystem.cpp; sourceTree = "<group>"; };
-		727FB7621BCB016D004D2C9E /* MovableAlignmentSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovableAlignmentSystem.h; sourceTree = "<group>"; };
-		727FB7641BCC429B004D2C9E /* MovableCollisionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MovableCollisionSystem.cpp; sourceTree = "<group>"; };
-		727FB7651BCC429B004D2C9E /* MovableCollisionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MovableCollisionSystem.h; sourceTree = "<group>"; };
 		727FB7B51BD2621E004D2C9E /* NavMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NavMesh.cpp; sourceTree = "<group>"; };
 		727FB7B61BD2621E004D2C9E /* NavMesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = NavMesh.hpp; sourceTree = "<group>"; };
 		727FB7BA1BD26AD1004D2C9E /* TestNavMesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestNavMesh.cpp; sourceTree = "<group>"; };
@@ -1326,8 +1335,8 @@
 			children = (
 				723E7E191B6186BA00007AEA /* Movable.cpp */,
 				723E7E1A1B6186BA00007AEA /* Movable.h */,
-				723E7E1C1B61873000007AEA /* GroundSystem.cpp */,
-				723E7E1D1B61873000007AEA /* GroundSystem.h */,
+				723E7E1C1B61873000007AEA /* ParticleGroundSystem.cpp */,
+				723E7E1D1B61873000007AEA /* ParticleGroundSystem.h */,
 				723E7E1F1B6188A600007AEA /* Groundable.cpp */,
 				723E7E201B6188A600007AEA /* Groundable.h */,
 				727847331B79184300FCA232 /* MoveSystem.cpp */,
@@ -1336,12 +1345,25 @@
 				727847371B79526D00FCA232 /* PathFinderSystem.h */,
 				727FB75E1BCAF411004D2C9E /* ClickTargetSystem.cpp */,
 				727FB75F1BCAF411004D2C9E /* ClickTargetSystem.h */,
-				727FB7611BCB016D004D2C9E /* MovableAlignmentSystem.cpp */,
-				727FB7621BCB016D004D2C9E /* MovableAlignmentSystem.h */,
-				727FB7641BCC429B004D2C9E /* MovableCollisionSystem.cpp */,
-				727FB7651BCC429B004D2C9E /* MovableCollisionSystem.h */,
 			);
 			path = Units;
+			sourceTree = "<group>";
+		};
+		72411D471BDAAA5100269FFB /* Physics */ = {
+			isa = PBXGroup;
+			children = (
+				72411D481BDAAAEB00269FFB /* Particle.cpp */,
+				72411D491BDAAAEB00269FFB /* Particle.h */,
+				72411D4E1BDAABA100269FFB /* ParticleMapCollisionSystem.cpp */,
+				72411D4F1BDAABA100269FFB /* ParticleMapCollisionSystem.h */,
+				72411D511BDAAFF800269FFB /* ParticleTransformSystem.cpp */,
+				72411D521BDAAFF800269FFB /* ParticleTransformSystem.h */,
+				72411D4A1BDAAAEB00269FFB /* ParticleUpdaterSystem.cpp */,
+				72411D4B1BDAAAEB00269FFB /* ParticleUpdaterSystem.h */,
+				72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */,
+				72411D551BDAB2BC00269FFB /* ParticleCollisionSystem.h */,
+			);
+			path = Physics;
 			sourceTree = "<group>";
 		};
 		727FB7711BCD9A6C004D2C9E /* Clipping */ = {
@@ -2683,6 +2705,7 @@
 		72B621B11B2F5D4A001007FC /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72411D471BDAAA5100269FFB /* Physics */,
 				723E7E0B1B5EECED00007AEA /* Map */,
 				727FB7B41BD2620B004D2C9E /* Pathfinding */,
 				723E7E121B5EECED00007AEA /* Units */,
@@ -2775,9 +2798,9 @@
 				72B620B41B2F56CB001007FC /* btCollisionDispatcher.cpp in Sources */,
 				723E77DF1B5A92D700007AEA /* Clipper.cpp in Sources */,
 				72B620C01B2F56CB001007FC /* btManifoldResult.cpp in Sources */,
-				727FB7631BCB016D004D2C9E /* MovableAlignmentSystem.cpp in Sources */,
 				72B621311B2F56CB001007FC /* btAlignedAllocator.cpp in Sources */,
 				72B620E81B2F56CB001007FC /* btTriangleMesh.cpp in Sources */,
+				72411D501BDAABA100269FFB /* ParticleMapCollisionSystem.cpp in Sources */,
 				72B6201D1B2F56CB001007FC /* Triangulator.cpp in Sources */,
 				72B620821B2F56CB001007FC /* Vector3.cpp in Sources */,
 				72B621441B2F56CB001007FC /* AppDelegate.mm in Sources */,
@@ -2809,6 +2832,7 @@
 				72B620AB1B2F56CB001007FC /* btDispatcher.cpp in Sources */,
 				72B620741B2F56CB001007FC /* BoundingBox.cpp in Sources */,
 				72B621461B2F56CB001007FC /* GamePadManager.mm in Sources */,
+				72411D561BDAB2BC00269FFB /* ParticleCollisionSystem.cpp in Sources */,
 				72B620401B2F56CB001007FC /* MenuSystem.cpp in Sources */,
 				72B620DB1B2F56CB001007FC /* btMultiSphereShape.cpp in Sources */,
 				72B620261B2F56CB001007FC /* TouchAnimator.cpp in Sources */,
@@ -2875,6 +2899,7 @@
 				72B620D41B2F56CB001007FC /* btConvexShape.cpp in Sources */,
 				72B620311B2F56CB001007FC /* Orderable.cpp in Sources */,
 				72B620461B2F56CB001007FC /* TextBoxLabelSystem.cpp in Sources */,
+				72411D4D1BDAAAEB00269FFB /* ParticleUpdaterSystem.cpp in Sources */,
 				723E77C81B5A92BB00007AEA /* FileReader.mm in Sources */,
 				72B620291B2F56CB001007FC /* TransformAnimationDatabase.cpp in Sources */,
 				72B621011B2F56CB001007FC /* btVoronoiSimplexSolver.cpp in Sources */,
@@ -2917,6 +2942,7 @@
 				72B6214E1B2F56CB001007FC /* lodepng.cpp in Sources */,
 				72B6211B1B2F56CB001007FC /* SpuCollisionObjectWrapper.cpp in Sources */,
 				72B620771B2F56CB001007FC /* Interpolator.cpp in Sources */,
+				72411D531BDAAFF800269FFB /* ParticleTransformSystem.cpp in Sources */,
 				72B6202B1B2F56CB001007FC /* TransformAnimatorSystem.cpp in Sources */,
 				72B6200E1B2F56CB001007FC /* GameManager.cpp in Sources */,
 				72B620D91B2F56CB001007FC /* btMinkowskiSumShape.cpp in Sources */,
@@ -2950,7 +2976,7 @@
 				72B6214F1B2F56CB001007FC /* Profiler.cpp in Sources */,
 				72B620271B2F56CB001007FC /* TouchAnimatorSystem.cpp in Sources */,
 				72B620841B2F56CB001007FC /* ChromecastReceiver.cpp in Sources */,
-				723E7E1E1B61873000007AEA /* GroundSystem.cpp in Sources */,
+				723E7E1E1B61873000007AEA /* ParticleGroundSystem.cpp in Sources */,
 				72B620BE1B2F56CB001007FC /* btGhostObject.cpp in Sources */,
 				72B6204A1B2F56CB001007FC /* TouchCancelSystem.cpp in Sources */,
 				72B621171B2F56CB001007FC /* btParallelConstraintSolver.cpp in Sources */,
@@ -2991,6 +3017,7 @@
 				72B620901B2F56CB001007FC /* b2Shape.cpp in Sources */,
 				72B620931B2F56CB001007FC /* b2Settings.cpp in Sources */,
 				72B620DE1B2F56CB001007FC /* btScaledBvhTriangleMeshShape.cpp in Sources */,
+				72411D4C1BDAAAEB00269FFB /* Particle.cpp in Sources */,
 				72B6210C1B2F56CB001007FC /* btSliderConstraint.cpp in Sources */,
 				72B620EE1B2F56CB001007FC /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				72B6204B1B2F56CB001007FC /* TouchSystem.cpp in Sources */,
@@ -3048,7 +3075,6 @@
 				72B620921B2F56CB001007FC /* b2Math.cpp in Sources */,
 				72B620B21B2F56CB001007FC /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
 				72B620D01B2F56CB001007FC /* btConvexHullShape.cpp in Sources */,
-				727FB7661BCC429B004D2C9E /* MovableCollisionSystem.cpp in Sources */,
 				723E7E141B5EECED00007AEA /* MapMeshSystem.cpp in Sources */,
 				72B620081B2F56CB001007FC /* GameFactory.cpp in Sources */,
 				72B620541B2F56CB001007FC /* Velocity.cpp in Sources */,

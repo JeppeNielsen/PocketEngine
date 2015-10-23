@@ -30,16 +30,11 @@ void PathFinderSystem::Update(float dt) {
 void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     Map* map = object->GetComponent<Mappable>()->Map;
     Movable* movable = object->GetComponent<Movable>();
-    Transform* transform = object->GetComponent<Transform>();
-    Vector3 position = transform->Position;
-    Vector3 target = movable->Target;
+    Particle* particle = object->GetComponent<Particle>();
     movable->path.clear();
     Timer t;
     t.Begin();
-    map->CalculatePath(position, target, movable->path, World());
+    map->CalculatePath(particle->position, movable->Target, movable->path, World());
     double time = t.End();
     std::cout<< " Path finding took : " << time<<std::endl;
-    if (!movable->path.empty()) {
-        movable->currentTarget = movable->path.back();
-    }
 }

@@ -188,41 +188,22 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
     CalcNormals({xPos - radius, zPos - radius, radius + radius, radius + radius});
 }
 
-void Map::CalculatePath(Vector3 start, Vector3 end, std::vector<Vector3> &path, GameWorld* world) {
-    
-    Vector2 startPosition = {start.x, start.z};
-    Vector2 endPosition = {end.x, end.z};
+void Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, GameWorld* world) {
     
     Vector2 nearestStartPosition;
-    NavTriangle* startTriangle = navMesh.FindNearestTriangle(startPosition, nearestStartPosition);
+    NavTriangle* startTriangle = navMesh.FindNearestTriangle(start, nearestStartPosition);
     if (!startTriangle) return;
     
     Vector2 nearestEndPosition;
-    NavTriangle* endTriangle = navMesh.FindNearestTriangle(endPosition, nearestEndPosition);
+    NavTriangle* endTriangle = navMesh.FindNearestTriangle(end, nearestEndPosition);
     if (!endTriangle) return;
     
     auto trianglePath = navMesh.FindPath(startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
     auto straightPath = navMesh.FindStraightPath(trianglePath);
     
     for(int i=((int)straightPath.size())-1; i>=0; --i) {
-        path.push_back({ straightPath[i].x,0, straightPath[i].y});
+        path.push_back(straightPath[i]);
     }
-}
-
-void Map::CreateTriangleObject(NavTriangle *tri, GameWorld* world) {
-    GameObject* go = world->CreateObject();
-    go->AddComponent<Transform>();
-    auto& mesh = go->AddComponent<Mesh>()->GetMesh<Vertex>();
-    for (int i=0; i<3; i++) {
-        Vertex v;
-        v.Position = {tri->corners[i].x, 2.0f, tri->corners[i].y};
-        v.Color = Colour::Red();
-        mesh.vertices.push_back(v);
-    }
-    mesh.triangles.push_back(0);
-    mesh.triangles.push_back(2);
-    mesh.triangles.push_back(1);
-    go->AddComponent<Material>()->Shader = &renderSystem->Shaders.Colored;
 }
 
 void Map::AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID) {
@@ -241,7 +222,10 @@ bool Map::IsNodeWalkable(Map::Node *node) {
 }
 
 bool Map::IsNodeWalkable(const Map::Node& node) {
-    return node.height>0.48f && node.height<1.3f;
+    float angle = MathHelper::RadToDeg * acosf(node.normal.Dot({0,1,0}));
+    return angle>160.0f && node.height>0.05f;
+    
+    //return node.height>0.6f && node.height<1.05f;
 }
 
 bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
@@ -249,48 +233,6 @@ bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
 }
 
 void Map::CreateNavigationMesh() {
-    
-    /*
-    vector<vector<c2t::Point>> inputPolygons;
-    
-    for (int z=0; z<Depth(); z++) {
-        for (int x=0; x<Width(); x++) {
-            const Node& node = GetNode(x, z);
-            if (!IsNodeWalkable(node)) {
-                inputPolygons.push_back({
-                    { (float)x, (float)z },
-                    { (float)x + 1.0f, (float)z },
-                    { (float)x + 1.0f, (float)z + 1.0f },
-                    { (float)x, (float)z + 1.0f },
-                });
-            }
-        }
-    }
-    
-    const float epsilon = 0.0f;
-    vector<c2t::Point> outer { { epsilon,epsilon }, {epsilon,(float)Depth()-epsilon}, {(float)Width()-epsilon,(float)Depth()-epsilon}, {(float)Width()-epsilon,epsilon}};
-    
-    c2t::clip2tri clipper;
-    
-    vector<c2t::Point> navigationMesh;
-    
-    clipper.triangulate(inputPolygons, navigationMesh, outer);
-
-    std::vector<Vector2> mesh(navigationMesh.size());
-    for (int i=0; i<mesh.size(); i++) {
-        mesh[i].x = navigationMesh[i].x;
-        mesh[i].y = navigationMesh[i].y;
-    }
-
-    navMesh.Build(mesh);
-    */
- 
-    /*
-    std::vector<Vector2> mesh = navMesh.BuildPoints(Width(), Depth(), [this] (int x, int z) -> bool {
-        return !IsNodeWalkable(GetNode(x, z));
-    });
-    */
-    
     navMesh.BuildPointsTriangle(Width(), Depth(), [this] (int x, int z) -> bool {
         return !IsNodeWalkable(GetNode(x, z));
     });
@@ -298,8 +240,8 @@ void Map::CreateNavigationMesh() {
 
 NavMesh& Map::NavMesh() { return navMesh; }
 
-Vector3 Map::FindNearestValidPosition(const Pocket::Vector3 &position) {
+Vector2 Map::FindNearestValidPosition(const Pocket::Vector2 &position) {
     Vector2 nearest;
-    navMesh.FindNearestTriangle({position.x, position.z}, nearest);
-    return { nearest.x, 0, nearest.y };
+    navMesh.FindNearestTriangle(position, nearest);
+    return nearest;
 }

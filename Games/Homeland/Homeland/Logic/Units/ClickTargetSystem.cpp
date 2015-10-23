@@ -25,6 +25,6 @@ void ClickTargetSystem::ObjectClicked(Pocket::TouchData d) {
     if (d.Index != 1) return;
     for(auto o : selectables->Objects()) {
         if (!o->GetComponent<Selectable>()->Selected()) continue;
-        o->GetComponent<Movable>()->Target = d.WorldPosition;
+        o->GetComponent<Movable>()->Target = {d.WorldPosition.x, d.WorldPosition.z };
     }
 }

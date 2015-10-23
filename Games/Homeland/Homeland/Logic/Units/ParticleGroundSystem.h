@@ -12,10 +12,11 @@
 #include "Mappable.h"
 #include "Groundable.h"
 #include "PropertyListener.hpp"
+#include "Particle.h"
 
 using namespace Pocket;
 
-SYSTEM(GroundSystem, Transform, Mappable, Groundable)
+SYSTEM(ParticleGroundSystem, Transform, Mappable, Groundable, Particle)
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

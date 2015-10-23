@@ -10,10 +10,10 @@
 
 #include "GameWorld.hpp"
 #include "Movable.h"
-#include "Transform.hpp"
+#include "Particle.h"
 
 using namespace Pocket;
 
-SYSTEM(MoveSystem, Movable, Transform)
+SYSTEM(MoveSystem, Movable, Particle)
     void Update(float dt);
 };
