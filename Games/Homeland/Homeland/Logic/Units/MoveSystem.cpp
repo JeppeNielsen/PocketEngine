@@ -18,11 +18,27 @@ void MoveSystem::Update(float dt) {
         Vector2& target = path.back();
         
         Vector2 toTarget = target - particle->position;
+        //Vector2 toNextPath = target - movable->prevPathPosition;
+        //Vector2 orthogonal = Vector2(-toNextPath.y, toNextPath.x);
+        //float dot = toTarget.Dot(-toNextPath);
         
-        float length = toTarget.Length();
-        if (length<2.0f) {
+        float length = toTarget.SquareLength();
+        
+        
+        if (particle->position.EqualEpsilon(movable->prevPosition, 0.01f) && path.size()>1 && length>4*4) {
+            movable->stillFrames++;
+            if (movable->stillFrames>10) {
+                movable->Target += Vector2(0.05f,0);
+            }
+        }
+        movable->prevPosition = particle->position;
+        
+        
+        if (length<4.0f) {// || dot>0.0f) {
+            movable->prevPathPosition = path.back();
             path.pop_back();
         } else {
+            length = sqrtf(length);
             toTarget *= 1.0f / length;
             particle->position += toTarget * movable->Speed * dt;
         }

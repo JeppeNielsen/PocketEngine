@@ -428,7 +428,24 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
          }
     }
     straightPath.push_back(path[0]->position);
-    return straightPath;
+    
+    const float radius = 1.0f;
+    
+    std::vector<Vector2> offsetedPath;
+    offsetedPath.push_back(straightPath[0]);
+    
+    for (int i=1; i<straightPath.size()-1; i++) {
+        Vector2 forward = straightPath[i] - straightPath[i-1];
+        Vector2 backwards = straightPath[i] - straightPath[i+1];
+        forward.Normalize();
+        backwards.Normalize();
+        Vector2 normal = forward + backwards;
+        normal.Normalize();
+        offsetedPath.push_back(straightPath[i]+normal * radius);
+    }
+    offsetedPath.push_back(straightPath[straightPath.size() - 1]);
+    
+    return offsetedPath;
 }
 
 float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c) {

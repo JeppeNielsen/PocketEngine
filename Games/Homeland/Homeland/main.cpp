@@ -31,6 +31,7 @@ public:
     GameObject* map;
     GameObject* cameraObject;
     GameObject* navMesh;
+    GameObject* marker;
     
     void Initialize() {
         
@@ -58,14 +59,10 @@ public:
         map = world.CreateObject();
         
         map->AddComponent<Map>()->CreateMap(128, 128);
-        //map->GetComponent<Map>()->Randomize(-13.1f, 15.0f);
-        //map->GetComponent<Map>()->Smooth(5);
         
+        /*
         map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
         map->GetComponent<Map>()->Smooth(1);
-        
-        //map->GetComponent<Map>()->SetMaxHeight(1.0f);
-        //map->GetComponent<Map>()->SetHeight(0.5f);
         
         for (int i=0; i<40; i++) {
            map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 4, 5.0f);
@@ -74,6 +71,21 @@ public:
         for (int i=0; i<40; i++) {
            map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 6, -2.0f);
         }
+        */
+        
+        map->GetComponent<Map>()->SetHeight(1.0f);
+        //map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
+        //map->GetComponent<Map>()->Smooth(1);
+        
+        for (int i=0; i<60; i++) {
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), MathHelper::Random(4, 6), 5.0f);
+        }
+        
+        for (int i=0; i<60; i++) {
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), MathHelper::Random(4, 6), -2.0f);
+        }
+        
+        
         /*
         map->GetComponent<Map>()->SetHeight(1.0f);
         map->GetComponent<Map>()->AddHill(32, 32, 16, 5.0f);
@@ -172,15 +184,26 @@ public:
         }
         
         
-        GameObject* obj = world.CreateObject();
-        obj->AddComponent<Transform>()->Position = {155,0,155};
-        obj->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-        obj->AddComponent<Material>();
+        marker= world.CreateObject();
+        marker->AddComponent<Transform>()->Position = {155,0,155};
+        marker->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.4f);
+        marker->AddComponent<Material>();
     
         follow = false;
     
         Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+        cameraObject->GetComponent<Touchable>()->Down += event_handler(this, &Game::TerrainDown);
         wireframe = false;
+    }
+    
+    void TerrainDown(TouchData d) {
+        
+        Vector2 pos = { d.WorldPosition.x, d.WorldPosition.z};
+        
+        Vector2 nearestPosition;
+        cameraObject->GetComponent<Map>()->NavMesh().FindNearestTriangle(pos, nearestPosition);
+        
+        marker->GetComponent<Transform>()->Position = {nearestPosition.x, 1.5f, nearestPosition.y};
     }
     
     bool follow;

@@ -11,18 +11,20 @@
 void ParticleMapCollisionSystem::Update(float dt) {
     for(GameObject* go : Objects()) {
         Particle* particle = go->GetComponent<Particle>();
-        if (particle->immovable) continue;
         Mappable* mappable = go->GetComponent<Mappable>();
         Map* map = mappable->Map;
         
         Vector2 nearestPosition = map->FindNearestValidPosition(particle->position);
-        const float radius = 1.0f;
+        particle->position = nearestPosition;
+        continue;
+        const float radius = 0.01f;
+        
         Vector2 vector = nearestPosition - particle->position;
         float length = vector.Length();
         if (length>radius) {
             vector *= (1.0f / length);
             float penetration = length - radius;
-            particle->position += vector * penetration;
+            particle->position += vector * 0.5f;
         }
         //particle->position = ;
     }

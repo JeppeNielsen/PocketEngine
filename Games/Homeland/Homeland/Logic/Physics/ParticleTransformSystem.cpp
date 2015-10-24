@@ -17,6 +17,6 @@ void ParticleTransformSystem::Initialize() {
 void ParticleTransformSystem::Update(float dt) {
     for (GameObject* go : Objects()) {
         Vector2 position = go->GetComponent<Particle>()->position;
-        go->GetComponent<Transform>()->Position = { position.x, 1.5f, position.y};
+        go->GetComponent<Transform>()->Position = { position.x, position.y, 0};
     }
 }

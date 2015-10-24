@@ -33,7 +33,7 @@ void ParticleGroundSystem::UpdateObject(float dt, Pocket::GameObject *object) {
     if (groundable->positions.empty()) {
         groundable->positions.push_back(particlePosition);
     } else {
-        if (!particlePosition.EqualEpsilon(groundable->positions.back())) {
+        if (!particlePosition.EqualEpsilon(groundable->positions.back(), 0.01f)) {
             groundable->positions.push_back(particlePosition);
         }
     }

@@ -45,6 +45,7 @@
 		72411D501BDAABA100269FFB /* ParticleMapCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D4E1BDAABA100269FFB /* ParticleMapCollisionSystem.cpp */; };
 		72411D531BDAAFF800269FFB /* ParticleTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D511BDAAFF800269FFB /* ParticleTransformSystem.cpp */; };
 		72411D561BDAB2BC00269FFB /* ParticleCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */; };
+		72411D581BDBA55F00269FFB /* TestOutOfBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */; };
 		727847351B79184300FCA232 /* MoveSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847331B79184300FCA232 /* MoveSystem.cpp */; };
 		727847381B79526D00FCA232 /* PathFinderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847361B79526D00FCA232 /* PathFinderSystem.cpp */; };
 		727FB7561BCAE343004D2C9E /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7521BCAE343004D2C9E /* SelectedColorer.cpp */; };
@@ -457,6 +458,7 @@
 		72411D521BDAAFF800269FFB /* ParticleTransformSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleTransformSystem.h; sourceTree = "<group>"; };
 		72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleCollisionSystem.cpp; sourceTree = "<group>"; };
 		72411D551BDAB2BC00269FFB /* ParticleCollisionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleCollisionSystem.h; sourceTree = "<group>"; };
+		72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestOutOfBounds.cpp; sourceTree = "<group>"; };
 		727847331B79184300FCA232 /* MoveSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveSystem.cpp; sourceTree = "<group>"; };
 		727847341B79184300FCA232 /* MoveSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveSystem.h; sourceTree = "<group>"; };
 		727847361B79526D00FCA232 /* PathFinderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathFinderSystem.cpp; sourceTree = "<group>"; };
@@ -1431,6 +1433,7 @@
 				72B61BD91B2F56B9001007FC /* main.cpp */,
 				727FB7BA1BD26AD1004D2C9E /* TestNavMesh.cpp */,
 				727FB7BC1BD55692004D2C9E /* NavMeshTest.cpp */,
+				72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */,
 				72411D421BD6D07800269FFB /* TestTriangle.cpp */,
 			);
 			path = Homeland;
@@ -2906,6 +2909,7 @@
 				727FB7601BCAF411004D2C9E /* ClickTargetSystem.cpp in Sources */,
 				72B621061B2F56CB001007FC /* btGeneric6DofConstraint.cpp in Sources */,
 				72B6203A1B2F56CB001007FC /* Layoutable.cpp in Sources */,
+				72411D581BDBA55F00269FFB /* TestOutOfBounds.cpp in Sources */,
 				72B620D51B2F56CB001007FC /* btConvexTriangleMeshShape.cpp in Sources */,
 				72B620B71B2F56CB001007FC /* btCompoundCollisionAlgorithm.cpp in Sources */,
 				723E78091B5A930700007AEA /* RenderSystem.cpp in Sources */,

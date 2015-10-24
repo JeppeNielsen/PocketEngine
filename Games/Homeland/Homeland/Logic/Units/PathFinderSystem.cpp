@@ -12,7 +12,6 @@
 
 void PathFinderSystem::ObjectAdded(Pocket::GameObject *object) {
     objectTargetsChanged.Add(object->GetComponent<Movable>()->Target, object);
-    
 }
 
 void PathFinderSystem::ObjectRemoved(Pocket::GameObject *object) {
@@ -36,5 +35,8 @@ void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     t.Begin();
     map->CalculatePath(particle->position, movable->Target, movable->path, World());
     double time = t.End();
+    movable->prevPathPosition = particle->position;
+    movable->stillFrames = 0;
+    movable->prevPosition = particle->position;
     std::cout<< " Path finding took : " << time<<std::endl;
 }
