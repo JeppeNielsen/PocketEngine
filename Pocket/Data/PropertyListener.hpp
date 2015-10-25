@@ -15,9 +15,11 @@ namespace Pocket {
     class PropertyListener {
 		public:
             template<class Owner, class Value>
-            void Add(Property<Owner, Value>& property, Context context) {
+            void Add(Property<Owner, Value>& property, Context context, bool insert = true) {
             	property.Changed += event_handler(this, &PropertyListener::PropertyChanged<Owner>, context);
-                changedObjects.insert(context);
+                if (insert) {
+                    changedObjects.insert(context);
+                }
             }
             template<class Owner, class T>
         	void Remove(Property<Owner, T>& property, Context object) {
