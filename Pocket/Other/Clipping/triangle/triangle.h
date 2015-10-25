@@ -1,3 +1,11 @@
+
+#define REDUCED  
+#define ANSI_DECLARATORS  
+#define TRILIBRARY  
+#define CDT_ONLY  
+#define NO_TIMER  
+#define CYGWIN
+
 /*****************************************************************************/
 /*                                                                           */
 /*  (triangle.h)                                                             */

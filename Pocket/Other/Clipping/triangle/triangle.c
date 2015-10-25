@@ -1,5 +1,9 @@
-#define TRILIBRARY
-#define ANSI_DECLARATORS
+#define REDUCED  
+#define ANSI_DECLARATORS  
+#define TRILIBRARY  
+#define CDT_ONLY  
+#define NO_TIMER  
+#define CYGWIN
 
 /*****************************************************************************/
 /*                                                                           */
@@ -12278,7 +12282,7 @@ int newmark;
   encodedtri = vertex2tri(endpoint1);
   if (encodedtri != (triangle) NULL) {
     decode(encodedtri, searchtri1);
-    org(searchtri1, checkvertex);
+    //org(searchtri1, checkvertex);
   }
   if (checkvertex != endpoint1) {
     /* Find a boundary triangle to search from. */
