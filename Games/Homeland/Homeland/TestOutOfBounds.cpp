@@ -31,7 +31,7 @@ public:
         particle->AddComponent<Transform>();
         particle->AddComponent<Material>();
         particle->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-        
+        /*
         triangle = new NavTriangle();
         triangle->corners[0]=Vector2(0,0);
         triangle->corners[2]=Vector2(-50,50);
@@ -51,7 +51,7 @@ public:
         mesh.triangles.push_back(1);
         mesh.triangles.push_back(2);
         
-        
+        */
         
         
         Input.ButtonDown += event_handler(this, &TestOutOfBounds::ButtonDown);
@@ -67,8 +67,8 @@ public:
     void Update(float dt) {
         particle->GetComponent<Particle>()->position += Vector2(0,-10 * dt);
         Vector2 position;
-        triangle->GetDistance(particle->GetComponent<Particle>()->position, position);
-        particle->GetComponent<Particle>()->position = position;
+        //triangle->GetDistance( particle->GetComponent<Particle>()->position, position);
+        //particle->GetComponent<Particle>()->position = position;
         
         world.Update(dt);
     }

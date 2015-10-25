@@ -34,7 +34,7 @@ void MoveSystem::Update(float dt) {
         movable->prevPosition = particle->position;
         
         
-        if (length<4.0f) {// || dot>0.0f) {
+        if (length<(1.2f*1.2f)) {// || dot>0.0f) {
             movable->prevPathPosition = path.back();
             path.pop_back();
         } else {

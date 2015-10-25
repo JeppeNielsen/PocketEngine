@@ -44,7 +44,7 @@ public:
             //{ 5,5 }, {10,5}, {10,10},
         };
 
-        navMesh.Build(points);
+        //navMesh.Build(points);
         
         hole.push_back({-2,5});
         hole.push_back({10,7.5f});
@@ -116,27 +116,7 @@ public:
         }
         */
         
-        
-        {
-            
-            auto cut = navMesh.Cut(hole);
-        
-            GameObject* go = world.CreateObject();
-            go->AddComponent<Transform>();
-            go->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
-            auto& mesh = go->AddComponent<Mesh>()->GetMesh<Vertex>();
-            
-            for (int i=0; i<cut.size(); i++) {
-                Vertex v;
-                v.Position = {cut[i].x, cut[i].y, 0.4f};
-                v.Color = Colour::Green();
-                mesh.vertices.push_back(v);
-                mesh.triangles.push_back(i);
-            }
-            
-           // mesh.Flip();
-        }
-        
+                
        
         Input.ButtonDown += event_handler(this, &NavMeshTest::ButtonDown);
         wireframe = false;

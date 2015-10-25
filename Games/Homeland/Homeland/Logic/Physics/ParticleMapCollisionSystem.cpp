@@ -14,7 +14,8 @@ void ParticleMapCollisionSystem::Update(float dt) {
         Mappable* mappable = go->GetComponent<Mappable>();
         Map* map = mappable->Map;
         
-        Vector2 nearestPosition = map->FindNearestValidPosition(particle->position);
+        Vector2 nearestPosition;
+        navMesh.FindNearestTriangle(particle->position, nearestPosition); //map->FindNearestValidPosition(particle->position);
         particle->position = nearestPosition;
         continue;
         const float radius = 0.01f;

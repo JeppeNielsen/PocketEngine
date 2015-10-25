@@ -22,7 +22,7 @@ int main_works() {
     };
 
     NavMesh navMesh;
-    navMesh.Build(points);
+    //navMesh.Build(points);
     
     Vector2 start(0.5f,4);
     Vector2 end(9.5f,8);
@@ -49,7 +49,7 @@ int main__otherTest() {
     };
 
     NavMesh navMesh;
-    navMesh.Build(points);
+    //navMesh.Build(points);
     
     Vector2 start(1,3);
     Vector2 end(9,8);

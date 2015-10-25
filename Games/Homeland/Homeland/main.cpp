@@ -31,6 +31,8 @@ public:
     GameObject* map;
     GameObject* cameraObject;
     GameObject* navMesh;
+    GameObject* collisionMesh;
+    
     GameObject* marker;
     
     void Initialize() {
@@ -51,7 +53,7 @@ public:
         
         world.CreateSystem<MoveSystem>();
         world.CreateSystem<ParticleCollisionSystem>();
-        world.CreateSystem<ParticleMapCollisionSystem>();
+        ParticleMapCollisionSystem* mapCollision = world.CreateSystem<ParticleMapCollisionSystem>();
         world.CreateSystem<ParticleUpdaterSystem>();
         //world.CreateSystem<ParticleTransformSystem>();
         world.CreateSystem<ParticleGroundSystem>();
@@ -109,27 +111,48 @@ public:
         std::cout << "Nav mesh generation time = " << time << std::endl;
         
         
+        NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
         
-        navMesh = world.CreateObject();
-        navMesh->AddComponent<Transform>();
-        navMesh->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
-        navMesh->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
-        navMesh->EnableComponent<Material>(false);
-        auto& navMeshMesh = navMesh->AddComponent<Mesh>()->GetMesh<Vertex>();
+        mapCollision->navMesh = mesh;
+        //mapCollision->navMesh.Grow(-0.5f);
         
-        const NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
-        int indicies=0;
-        for (auto& p : mesh.GetTriangles()) {
-            for (int i=0; i<3; i++) {
-                Vector2 pos = p.corners[i];
+        mesh.Grow(1.0f);
+        
+        NavMesh meshes[2];
+        meshes[0]=mesh;
+        meshes[1]=mapCollision->navMesh;
+        
+        for (int i=0; i<2; i++) {
+        
+            
+    
+            GameObject* meshObject = world.CreateObject();
+            meshObject->AddComponent<Transform>();
+            meshObject->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
+            meshObject->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
+            meshObject->EnableComponent<Material>(false);
+            auto& navMeshMesh = meshObject->AddComponent<Mesh>()->GetMesh<Vertex>();
+            
+            for(auto& p : meshes[i].GetVertices()) {
                 Vertex v;
-                v.Position = {pos.x, 1.50f, pos.y};
-                v.Color = Colour::HslToRgb((i/3)*10, 1, 1, 1);
+                v.Position = {p.x, 1.50f+i*0.1f, p.y};
+                v.Color = i==0 ? Colour::Red() : Colour::Green(); //Colour::HslToRgb(i*180, 1, 1, 1);
                 navMeshMesh.vertices.push_back(v);
-                navMeshMesh.triangles.push_back(indicies++);
+            }
+            
+            for (auto& p : meshes[i].GetTriangles()) {
+                for (int i=0; i<3; i++) {
+                    navMeshMesh.triangles.push_back(p.corners[i]);
+                }
+            }
+            navMeshMesh.Flip();
+            
+            if (i==0) {
+                navMesh = meshObject;
+            } else {
+                collisionMesh = meshObject;
             }
         }
-        navMeshMesh.Flip();
         
         
         cameraObject = world.CreateObject();
@@ -213,8 +236,10 @@ public:
             follow = !follow;
         } else if (b=="w") {
             wireframe = !wireframe;
-        } else if (b=="m") {
+        } else if (b=="n") {
             navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
+        }else if (b=="c") {
+            collisionMesh->EnableComponent<Material>(!collisionMesh->IsComponentEnabled<Material>());
         }
     }
     

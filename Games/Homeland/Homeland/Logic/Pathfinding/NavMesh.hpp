@@ -14,23 +14,46 @@
 
 using namespace Pocket;
 
+class NavTriangle;
+
+class NavMesh {
+public:
+    typedef std::vector<NavTriangle> Triangles;
+    typedef std::vector<Vector2> Vertices;
+    
+    NavMesh();
+    ~NavMesh();
+    
+    void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
+    std::vector<NavTriangle*> FindPath(NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
+    NavTriangle* FindTriangle(const Vector2& position);
+    std::vector<Vector2> FindStraightPath(const std::vector<NavTriangle*>& path);
+    NavTriangle* FindNearestTriangle(const Vector2& position, Vector2& nearestPosition);
+    const Triangles& GetTriangles() const;
+    const Vertices& GetVertices() const;
+    void Grow(float amount);
+private:
+    float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
+    void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
+    void AddTriangle(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2& p1, Vector2& p2, Vector2& p3);
+    void AddPoly(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, std::vector<Vector2>& polyPoints);
+    Triangles triangles;
+    Vertices vertices;
+};
+
+
+
+
 struct NavTriangle {
-    Vector2 corners[3];
+    short corners[3];
     NavTriangle* neighbors[3];
-    inline bool hasCorner(const Vector2& corner, int& cornerIndex) {
-        if (corners[0].EqualEpsilon(corner)) {
-            cornerIndex = 0;
-            return true;
+    
+    inline Vector2 GetMidpoint(const NavMesh::Vertices& vertices, int neighborIndex) {
+        if (neighborIndex<2) {
+            return (vertices[corners[neighborIndex]] + vertices[corners[neighborIndex + 1]]) * 0.5f;
+        } else {
+            return (vertices[corners[2]] + vertices[corners[0]]) * 0.5f;
         }
-        if (corners[1].EqualEpsilon(corner)) {
-            cornerIndex = 1;
-            return true;
-        }
-        if (corners[2].EqualEpsilon(corner)) {
-            cornerIndex = 2;
-            return true;
-        }
-        return false;
     }
     
     inline int FindNeighborIndex(NavTriangle* neighbor) {
@@ -38,14 +61,6 @@ struct NavTriangle {
             if (neighbors[i]==neighbor) return i;
         }
         return -1;
-    }
-    
-    inline Vector2 GetMidpoint(int neighborIndex) {
-        if (neighborIndex<2) {
-            return (corners[neighborIndex] + corners[neighborIndex + 1]) * 0.5f;
-        } else {
-            return (corners[2] + corners[0]) * 0.5f;
-        }
     }
     
     void Reset() {
@@ -70,6 +85,13 @@ struct NavTriangle {
         return (p2.y - p1.y) * (p.x - p1.x) + (-p2.x + p1.x)*(p.y - p1.y);
     }
     
+    inline float area(const NavMesh::Vertices& vertices) {
+        const Vector2& a = vertices[corners[0]];
+        const Vector2& b = vertices[corners[1]];
+        const Vector2& c = vertices[corners[2]];
+        return (a.x * (b.y - c.y)+b.x*(c.y-a.y)+c.x*(a.y - b.y)) * 0.5f;
+    }
+    
     bool PointInside(const Vector2& p) {
         if (side(corners[0], corners[1], p)>0) return false;
         if (side(corners[1], corners[2], p)>0) return false;
@@ -77,7 +99,7 @@ struct NavTriangle {
         return true;
     }
     
-    float GetDistance(const Vector2& w, Vector2& ret) {
+    float GetDistance(const NavMesh::Vertices& vertices, const Vector2& w, Vector2& ret) {
     
     float ax0;    float ay0;
       float bx0;    float by0;
@@ -106,7 +128,11 @@ struct NavTriangle {
       // here its handled by assuming that a point on the edge is front of it
       // aka a point on a vertex is considered inside the triangle
    
-     
+        Vector2 corners[3];
+        corners[0] = vertices[this->corners[0]];
+        corners[1] = vertices[this->corners[1]];
+        corners[2] = vertices[this->corners[2]];
+        
 
 
       ax0 = corners[1].x - corners[0].x;
@@ -202,8 +228,13 @@ struct NavTriangle {
     }
 
     /* Check whether segment P0P1 intersects with triangle corners[0]corners[1]corners[2] */
-    bool SegmentTouching(const Vector2& p0, const Vector2& p1)
+    bool SegmentTouching(const NavMesh::Vertices& vertices, const Vector2& p0, const Vector2& p1)
     {
+        Vector2 corners[3];
+        corners[0] = vertices[this->corners[0]];
+        corners[1] = vertices[this->corners[1]];
+        corners[2] = vertices[this->corners[2]];
+    
         /* Check whether segment is outside one of the three half-planes
          * delimited by the triangle. */
         float f1 = Side(p0, corners[2], corners[0], corners[1]), f2 = Side(p1, corners[2], corners[0], corners[1]);
@@ -238,42 +269,4 @@ struct NavTriangle {
         /* Otherwise we're intersecting with at least one edge */
         return true;//INTERSECTING;
     }
-};
-
-struct NavBlocker {
-    typedef std::vector<Vector2> Points;
-    Points points;
-};
-
-class NavMesh {
-public:
-
-    typedef std::vector<NavTriangle> Triangles;
-    typedef std::vector<NavBlocker*> Blockers;
-
-    NavMesh();
-    ~NavMesh();
-    
-    void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
-    void Build(const std::vector<Vector2>& points);
-    std::vector<NavTriangle*> FindPath(NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
-    NavTriangle* FindTriangle(const Vector2& position);
-    std::vector<Vector2> FindStraightPath(const std::vector<NavTriangle*>& path);
-    NavTriangle* FindNearestTriangle(const Vector2& position, Vector2& nearestPosition);
-    
-    std::vector<Vector2> Cut(const std::vector<Vector2>& points);
-    
-    const Triangles& GetTriangles() const;
-    
-    NavBlocker* CreateBlocker();
-    void DeleteBlocker(NavBlocker* blocker);
-    void UpdateBlockers(GameWorld* world);
-    
-private:
-    float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
-    void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
-    void AddTriangle(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2& p1, Vector2& p2, Vector2& p3);
-    void AddPoly(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, std::vector<Vector2>& polyPoints);
-    Triangles triangles;
-    Blockers blockers;
 };

@@ -16,9 +16,7 @@
 #include "clipper.hpp"
 
 NavMesh::NavMesh() {}
-NavMesh::~NavMesh() {
-    for(NavBlocker* b : blockers) delete b;
-}
+NavMesh::~NavMesh() {}
 
 int findCornerIndexFromNeighborIndex(int corner1, int corner2) {
     if (corner1 == 0) {
@@ -161,20 +159,23 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     triangulate("zpnQ", &in, &out, NULL );
     
     triangles.resize(out.numberoftriangles);
+    vertices.resize(out.numberofpoints);
+    
+    for (int i=0; i<out.numberofpoints; i++) {
+        double* pos = &out.pointlist[i*2];
+        vertices[i].x = (float)pos[0];
+        vertices[i].y = (float)pos[1];
+    }
     
     std::cout<<"-------------"<<std::endl;
     for (int i=0; i<out.numberoftriangles; i++) {
         int* triangleIndex = &out.trianglelist[i*3];
         //std::cout<<triangle[0]<<", "<<triangle[1]<<", " <<triangle[2]<<std::endl;
         
-        double* pos1 = &out.pointlist[triangleIndex[0]*2];
-        double* pos2 = &out.pointlist[triangleIndex[1]*2];
-        double* pos3 = &out.pointlist[triangleIndex[2]*2];
-        
         NavTriangle& tri = triangles[i];
-        tri.corners[0]= { (float)pos1[0], (float)pos1[1]};
-        tri.corners[1]= { (float)pos2[0], (float)pos2[1]};
-        tri.corners[2]= { (float)pos3[0], (float)pos3[1]};
+        tri.corners[0]= triangleIndex[0];
+        tri.corners[1]= triangleIndex[1];
+        tri.corners[2]= triangleIndex[2];
         
         int* neighbor = &out.neighborlist[i*3];
         
@@ -184,73 +185,6 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
         
        // std::cout<<"neightbor"<<std::endl;
        // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
-    }
-}
-
-void NavMesh::Build(const std::vector<Vector2>& points) {
-    assert(points.size() % 3 == 0);//, "Points must be multiply of three");
-    int numTriangles = (int)points.size() / 3;
-    triangles.resize(numTriangles);
-    
-    for (int i=0; i<numTriangles; i++) {
-        NavTriangle& triangle = triangles[i];
-        triangle.neighbors[0]=0;
-        triangle.neighbors[1]=0;
-        triangle.neighbors[2]=0;
-        triangle.Reset();
-        triangle.index = i;
-        for (int c=0; c<3; c++) {
-            triangle.corners[c] = points[i * 3 + c];
-        }
-    
-    /*
-    //find neighbors
-    for (int i=0; i<numTriangles; i++) {
-        NavTriangle& current = triangles[i];
-        for (int j=0; j<numTriangles; j++) {
-            if (j==i) continue;
-            NavTriangle& other = triangles[j];
-            int dummy;
-            if (other.hasCorner(current.corners[0], dummy) && other.hasCorner(current.corners[1], dummy)){
-                current.neighbors[0]=&other;
-                continue;
-            }
-            if (other.hasCorner(current.corners[1], dummy) && other.hasCorner(current.corners[2], dummy)){
-                current.neighbors[1]=&other;
-                continue;
-            }
-            if (other.hasCorner(current.corners[2], dummy) && other.hasCorner(current.corners[0], dummy)){
-                current.neighbors[2]=&other;
-                continue;
-            }
-        }
-    }
-    */
- 
-        //check for neighbors
-        for (int j=0; j<i; j++) {
-            NavTriangle& other = triangles[j];
-            int corner1;
-            int corner2;
-            
-            if (other.hasCorner(triangle.corners[0], corner1) && other.hasCorner(triangle.corners[1], corner2)) {
-                triangle.neighbors[0] = &other;
-                other.neighbors[findCornerIndexFromNeighborIndex(corner1, corner2)]=&triangle;
-                continue;
-            }
-            
-            if (other.hasCorner(triangle.corners[1], corner1) && other.hasCorner(triangle.corners[2], corner2)) {
-                triangle.neighbors[1] = &other;
-                other.neighbors[findCornerIndexFromNeighborIndex(corner1, corner2)]=&triangle;
-                continue;
-            }
-            
-             if (other.hasCorner(triangle.corners[2], corner1) && other.hasCorner(triangle.corners[0], corner2)) {
-                triangle.neighbors[2] = &other;
-                other.neighbors[findCornerIndexFromNeighborIndex(corner1, corner2)]=&triangle;
-                continue;
-            }
-        }
     }
 }
 
@@ -294,7 +228,7 @@ std::vector<NavTriangle*> NavMesh::FindPath(NavTriangle* startTriangle, const Po
             if (!neighbor) continue;
             if (neighbor->pathID == inClosedListID) continue; // in closed list
             
-            Vector2 midPoint = current->GetMidpoint(n);
+            Vector2 midPoint = current->GetMidpoint(vertices, n);
             Vector2 toEnd = end - midPoint;
             Vector2 toParent = current->position - midPoint;
             
@@ -353,8 +287,8 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
         NavTriangle* next = path[i-1];
         int forwardIndex = current->FindNeighborIndex(next);
         
-        portalsRight.push_back(current->corners[forwardIndex]);
-        portalsLeft.push_back(forwardIndex<2 ? current->corners[forwardIndex + 1] : current->corners[0]);
+        portalsRight.push_back(vertices[current->corners[forwardIndex]]);
+        portalsLeft.push_back(forwardIndex<2 ? vertices[current->corners[forwardIndex + 1]] : vertices[current->corners[0]]);
     }
     
     portalsLeft.push_back(path[0]->position);
@@ -429,6 +363,7 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
     }
     straightPath.push_back(path[0]->position);
     
+    /*
     const float radius = 1.0f;
     
     std::vector<Vector2> offsetedPath;
@@ -444,8 +379,8 @@ std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> 
         offsetedPath.push_back(straightPath[i]+normal * radius);
     }
     offsetedPath.push_back(straightPath[straightPath.size() - 1]);
-    
-    return offsetedPath;
+    */
+    return straightPath;
 }
 
 float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c) {
@@ -459,7 +394,7 @@ NavTriangle* NavMesh::FindNearestTriangle(const Pocket::Vector2 &position, Vecto
     Vector2 ret;
     NavTriangle* foundTriangle = 0;
     for (int i=0; i<triangles.size(); i++) {
-        float distance = triangles[i].GetDistance(position, ret);
+        float distance = triangles[i].GetDistance(vertices, position, ret);
         if (distance<minDistance) {
             minDistance = distance;
             nearestPosition = ret;
@@ -469,268 +404,47 @@ NavTriangle* NavMesh::FindNearestTriangle(const Pocket::Vector2 &position, Vecto
     return foundTriangle;
 }
 
-
-
-std::vector<Vector2> NavMesh::Cut(const std::vector<Vector2> &points) {
-    std::vector<Vector2> cut;
-    for(NavTriangle& triangle : triangles) {
-        //triangle.Cut(points, cut);
-    }
-    return cut;
-}
-
 const NavMesh::Triangles& NavMesh::GetTriangles() const { return triangles; }
+const NavMesh::Vertices& NavMesh::GetVertices() const { return vertices; }
 
-NavBlocker* NavMesh::CreateBlocker() {
-    NavBlocker* blocker = new NavBlocker();
-    blockers.push_back(blocker);
-    return blocker;
-}
-
-void NavMesh::DeleteBlocker(NavBlocker *blocker) {
-    auto it = std::find(blockers.begin(), blockers.end(), blocker);
-    if (it!=blockers.end()) {
-        blockers.erase(it);
-        delete blocker;
-    }
-}
-
-void NavMesh::UpdateBlockers(GameWorld* world) {
-    
-    for(NavBlocker* blocker : blockers) {
-        GameObject* go = world->CreateObject();
-        go->AddComponent<Transform>();
-        go->AddComponent<Material>();
-        auto& vertices = go->AddComponent<Mesh>()->GetMesh<Vertex>();
-        
-        Triangulator::IndiciesVector indicies;
-        Triangulator::Triangulate(blocker->points, indicies);
-        
-        for(auto& p : blocker->points) {
-            Vertex vertex;
-            vertex.Position = {p.x,0.95f,p.y};
-            vertex.Color = Colour::Blue();
-            vertices.vertices.push_back(vertex);
-        }
-        
-        for (auto index : indicies) {
-            vertices.triangles.push_back(index);
-        }
-        vertices.Flip();
-    }
-    
-    static int islandIndexer = 1;
-    
-    std::vector<NavTriangle*> foundTriangles;
-    for(NavBlocker* blocker : blockers) {
-        for (int i=0; i<blocker->points.size(); i++) {
-            Vector2& p1 = blocker->points[i];
-            Vector2& p2 = blocker->points[(i==blocker->points.size()-1) ? 0 : i+1];
-        
-            for (auto& triangle : triangles) {
-                if (triangle.islandID == islandIndexer) continue;
-                if (triangle.SegmentTouching(p1, p2)) {
-                    foundTriangles.push_back(&triangle);
-                    triangle.islandID = islandIndexer;
-                }
-            }
-        }
-    }
-    
-    for(NavTriangle* triangle : foundTriangles) {
-        GameObject* go = world->CreateObject();
-        go->AddComponent<Transform>();
-        go->AddComponent<Material>();
-        auto& vertices = go->AddComponent<Mesh>()->GetMesh<Vertex>();
-
-        for (int i=0; i<3; i++) {
-            Vector2 p = triangle->corners[i];
-            Vertex vertex;
-            vertex.Position = {p.x,1.05f,p.y};
-            vertex.Color = Colour::Yellow();
-            vertices.vertices.push_back(vertex);
-            vertices.triangles.push_back(i);
-        }
-        
-        vertices.Flip();
-    }
-    
-    int numberOfIslands = 0;
-    
-    while (true) {
-        NavTriangle* currentTriangle = 0;
-        for (int i=0; i<foundTriangles.size(); i++) {
-            if (foundTriangles[i]->islandID == islandIndexer) {
-                currentTriangle = foundTriangles[i];
-                break;
-            }
-        }
-        if (!currentTriangle) break;
-        numberOfIslands++;
-        int islandID = islandIndexer + numberOfIslands;
-        
-        std::vector<NavTriangle*> trianglesToCheck;
-        trianglesToCheck.push_back(currentTriangle);
-        while(true) {
-            currentTriangle = trianglesToCheck[trianglesToCheck.size()-1];
-            currentTriangle->islandID = islandID;
-            trianglesToCheck.pop_back();
-            for (int i=0; i<3; i++) {
-                if (!currentTriangle->neighbors[i]) continue;
-                if (currentTriangle->neighbors[i]->islandID == islandIndexer) {
-                    trianglesToCheck.push_back(currentTriangle->neighbors[i]);
-                }
-            }
-            if (trianglesToCheck.empty()) break;
-        }
-    }
-
-
-    for (int island=0; island<numberOfIslands; island++) {
-    if (island != 1) continue;
-    
-    ClipperLib::Clipper clipper;
-    clipper.StrictlySimple(false);
-    
-    const float GAME_TO_CLIPPER = 1000.0f;
-    const float CLIPPER_TO_GAME = 0.001f;
-    
+void NavMesh::Grow(float amount) {
     /*
-    for(NavTriangle* triangle : foundTriangles) {
-        if (triangle->islandID == islandIndexer + island + 1) {
-            //AddTriangle(outer, segments, holes, triangle->corners[0], triangle->corners[1], triangle->corners[2]);
-            ClipperLib::Path path;
-            path.push_back( { (ClipperLib::cInt)(triangle->corners[0].x * GAME_TO_CLIPPER), (ClipperLib::cInt)(triangle->corners[0].y * GAME_TO_CLIPPER)});
-            path.push_back( { (ClipperLib::cInt)(triangle->corners[1].x * GAME_TO_CLIPPER), (ClipperLib::cInt)(triangle->corners[1].y * GAME_TO_CLIPPER)});
-            path.push_back( { (ClipperLib::cInt)(triangle->corners[2].x * GAME_TO_CLIPPER), (ClipperLib::cInt)(triangle->corners[2].y * GAME_TO_CLIPPER)});
-            clipper.AddPath(path, ClipperLib::PolyType::ptSubject, true);
+    for (int i=0; i<triangles.size(); i++) {
+        
+        if (triangles[i].area(vertices)<1.0f) {
+            for (int j=0; j<triangles.size(); j++) {
+                for (int n=0; n<3; n++) {
+                    if (triangles[j].neighbors[n] == &triangles[i]) {
+                        triangles[j].neighbors[n]=0;
+                    }
+                }
+            }
+        
+            triangles.erase(triangles.begin()+i);
+            i--;
         }
     }
-    */
-    ClipperLib::Path path;
-    path.push_back( { (ClipperLib::cInt)(45 * GAME_TO_CLIPPER), (ClipperLib::cInt)(45 * GAME_TO_CLIPPER)});
-    path.push_back( { (ClipperLib::cInt)(55 * GAME_TO_CLIPPER), (ClipperLib::cInt)(45 * GAME_TO_CLIPPER)});
-    path.push_back( { (ClipperLib::cInt)(55 * GAME_TO_CLIPPER), (ClipperLib::cInt)(55 * GAME_TO_CLIPPER)});
-    path.push_back( { (ClipperLib::cInt)(45 * GAME_TO_CLIPPER), (ClipperLib::cInt)(55 * GAME_TO_CLIPPER)});
-    clipper.AddPath(path, ClipperLib::PolyType::ptSubject, true);
+*/
     
-    //ctIntersection, ctUnion, ctDifference, ctXor
-    
-    ClipperLib::Paths solution;
-    clipper.Execute(ClipperLib::ClipType::ctUnion, solution);
-    
-    clipper.Clear();
-    clipper.AddPaths(solution, ClipperLib::PolyType::ptSubject, true);
-    
-     for(NavBlocker* blocker : blockers) {
-        ClipperLib::Path path;
-        for (int i=0; i<blocker->points.size(); i++) {
-            path.push_back( { (ClipperLib::cInt)(blocker->points[i].x * GAME_TO_CLIPPER), (ClipperLib::cInt)(blocker->points[i].y * GAME_TO_CLIPPER)});
-        }
-        clipper.AddPath(path, ClipperLib::PolyType::ptClip, true);
-    }
-    solution.clear();
-    
-    
-    //clipper.Execute(ClipperLib::ClipType::ctUnion, solution);
-    clipper.Execute(ClipperLib::ClipType::ctDifference, solution);
-    //clipper.Execute(ClipperLib::ClipType::ctXor, solution);
-    
-    std::vector<double> outer;
-    std::vector<int> segments;
-    std::vector<double> holes;
-    
-    for (auto& path : solution) {
-        int index = (int)outer.size()/2;
-        for (int i=0; i<path.size(); i++) {
-            outer.push_back(path[i].X * CLIPPER_TO_GAME);
-            outer.push_back(path[i].Y * CLIPPER_TO_GAME);
-           // segments.push_back(index + i);
-           // segments.push_back(i==(path.size()-1) ? index : index + i + 1);
+    std::vector<Vector2> normals;
+    normals.resize(vertices.size(), Vector2(0,0));
+    for(auto& t : triangles) {
+        for (int i=0; i<3; i++) {
+            if (!t.neighbors[i]) {
+                short index0 = t.corners[i];
+                short index1 = t.corners[i<2 ? i + 1 : 0];
+                Vector2 direction = vertices[index1] - vertices[index0];
+                Vector2 normal = { -direction.y, direction.x };
+                normal.Normalize();
+                normals[index0] += normal;
+                normals[index1] += normal;
+            }
         }
     }
-    
-    triangulateio in;
-    memset(&in, 0, sizeof(triangulateio));
-    in.numberofpoints = (int)outer.size()/2;
-    in.pointlist = &outer[0];
-    
-    in.holelist = &holes[0];
-    in.numberofholes = (int)holes.size()/2;
-    
-    in.segmentlist = &segments[0];
-    //in.segmentmarkerlist = &segmentMarker[0];
-    in.numberofsegments = (int)segments.size()/2;
-    
-    triangulateio out;
-    memset(&out, 0, sizeof(triangulateio));
-    
-    triangulate("znQ", &in, &out, NULL );
-    
-    
-    GameObject* go = world->CreateObject();
-    go->AddComponent<Transform>();
-    go->AddComponent<Material>();
-    auto& vertices = go->AddComponent<Mesh>()->GetMesh<Vertex>();
 
-    int vertIndex = 0;
-    std::cout<<"-------------"<<std::endl;
-    for (int i=0; i<out.numberoftriangles; i++) {
-        int* triangleIndex = &out.trianglelist[i*3];
-        //std::cout<<triangle[0]<<", "<<triangle[1]<<", " <<triangle[2]<<std::endl;
-        
-        //double* pos1 = &out.pointlist[triangleIndex[0]*2];
-        //double* pos2 = &out.pointlist[triangleIndex[1]*2];
-        //double* pos3 = &out.pointlist[triangleIndex[2]*2];
-        
-        for (int j=0; j<3; j++) {
-            double* pos1 = &out.pointlist[triangleIndex[j]*2];
-            Vertex v1;
-            v1.Position = { (float)pos1[0], 3.5f, (float)pos1[1]};
-            v1.Color = Colour::White();
-            vertices.vertices.push_back(v1);
-            vertices.triangles.push_back(vertIndex++);
-        }
-        
-        //int* neighbor = &out.neighborlist[i*3];
-        
-        //tri.neighbors[1] = neighbor[0]>=0 ? &triangles[neighbor[0]] : 0;
-        //tri.neighbors[2] = neighbor[1]>=0 ? &triangles[neighbor[1]] : 0;
-        //tri.neighbors[0] = neighbor[2]>=0 ? &triangles[neighbor[2]] : 0;
-        
-       // std::cout<<"neightbor"<<std::endl;
-       // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
+    for (int i=0; i<vertices.size(); i++) {
+        vertices[i] += normals[i].Normalized() * amount;
     }
-    vertices.Flip();
-    
-    
-    
-    }
-    
-    
-    
-    islandIndexer+=numberOfIslands;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 }
-
-
-
-
-
-
-
-
-
