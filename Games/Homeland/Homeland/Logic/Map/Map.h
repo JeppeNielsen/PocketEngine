@@ -26,17 +26,11 @@ struct MapRect {
 Component(Map)
 
 	struct Node {
-    	Node() : height(0), normal(0,1,0), islandID(0) {}
+    	Node() : height(0), normal(0,1,0), obstacles(0) {}
     	float height;
         Vector3 normal;
         Colour color;
-        int x;
-        int z;
-        int pathId;
-        int g;
-        int h;
-        Node* parent;
-        int islandID;
+        int obstacles;
     };
 
     void CreateMap(int width, int depth);
@@ -65,10 +59,9 @@ Component(Map)
     bool IsNodeWalkable(const Node& node);
 
     NavMesh& NavMesh();
+
+    Event<Map*> NavigationUpdated;
 private:
 	Node outOfBoundsNode;
-    void AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID);
-    bool IsNodeWalkable(Node* node);
-    static bool SortNodes(const Node* a, const Node* b);
     class NavMesh navMesh;
 };

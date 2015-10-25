@@ -8,9 +8,7 @@
 
 #include "Map.h"
 #include "MathHelper.hpp"
-#include "Transform.hpp"
-#include "Mesh.hpp"
-#include "Material.hpp"
+#include "Timer.hpp"
 
 void Map::CreateMap(int width, int depth) {
 	nodes.resize(width);
@@ -208,36 +206,23 @@ NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>
     return startTriangle;
 }
 
-void Map::AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID) {
-    Node& node = GetNode(x, z);
-    node.pathId = pathID;
-    node.x = x;
-    node.z = z;
-    node.g = 0;
-    node.h = 0;
-    node.parent = 0;
-    openList.push_back(&node);
-}
-
-bool Map::IsNodeWalkable(Map::Node *node) {
-    return node->height>0.48f;// && node->height<1.0f;
-}
-
 bool Map::IsNodeWalkable(const Map::Node& node) {
+    if (node.obstacles>0) {
+        return false;
+    }
     float angle = MathHelper::RadToDeg * acosf(node.normal.Dot({0,1,0}));
     return angle>160.0f && node.height>0.02f;
-    
-    //return node.height>0.6f && node.height<1.05f;
-}
-
-bool Map::SortNodes(const Map::Node* a, const Map::Node* b) {
-    return (a->g + a->h)>(b->g+b->h);
 }
 
 void Map::CreateNavigationMesh() {
+    Timer timer;
+    timer.Begin();
     navMesh.BuildPointsTriangle(Width(), Depth(), [this] (int x, int z) -> bool {
         return !IsNodeWalkable(GetNode(x, z));
     });
+    double time = timer.End();
+    std::cout << "Nav mesh generation time = " << time << std::endl;
+    NavigationUpdated(this);
 }
 
 NavMesh& Map::NavMesh() { return navMesh; }

@@ -18,6 +18,7 @@
 #include "ParticleMapCollisionSystem.h"
 #include "ParticleCollisionSystem.h"
 #include "ParticleGroundSystem.h"
+#include "ObstacleSystem.h"
 
 using namespace Pocket;
 
@@ -36,6 +37,8 @@ public:
     GameObject* marker;
     
     void Initialize() {
+        navMesh = 0;
+        collisionMesh = 0;
         
         auto fpm = world.CreateSystem<FirstPersonMoverSystem>();
         fpm->Input = &Input;
@@ -57,11 +60,11 @@ public:
         world.CreateSystem<ParticleUpdaterSystem>();
         //world.CreateSystem<ParticleTransformSystem>();
         world.CreateSystem<ParticleGroundSystem>();
+        ObstacleSystem* obstacleSystem = world.CreateSystem<ObstacleSystem>();
         
         map = world.CreateObject();
         
         map->AddComponent<Map>()->CreateMap(128, 128);
-        
         
         map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
         map->GetComponent<Map>()->Smooth(1);
@@ -107,14 +110,94 @@ public:
         //map->GetComponent<Map>()->SetEdges(1.0f);
         
         
-        Timer timer;
-        timer.Begin();
-        map->GetComponent<Map>()->CreateNavigationMesh();
-        double time = timer.End();
-        std::cout << "Nav mesh generation time = " << time << std::endl;
         
         
-        NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
+        
+        
+        
+        cameraObject = world.CreateObject();
+        cameraObject->AddComponent<Transform>()->Position = {0,0,0};
+        cameraObject->AddComponent<Mesh>();
+        cameraObject->AddComponent<MapRenderer>()->width = 70;
+        cameraObject->GetComponent<MapRenderer>()->depth = 48;
+        cameraObject->AddComponent<Map>(map);
+        cameraObject->AddComponent<TextureComponent>()->Texture().LoadFromPng("grass.png");
+        cameraObject->AddComponent<Material>()->Shader = &renderer->Shaders.LitTextured;
+        cameraObject->AddComponent<FirstPersonMover>()->RotationSpeed = 0;
+        cameraObject->AddComponent<Touchable>();
+        
+        camera = world.CreateObject();
+        camera->Parent = cameraObject;
+        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->AddComponent<Transform>()->Position = Vector3(0, 10, 5) * 1.5f;
+        camera->GetComponent<Transform>()->Rotation = Quaternion::LookAt(camera->GetComponent<Transform>()->Position, {0,0,0}, Vector3(0,1,0));
+        camera->GetComponent<Camera>()->FieldOfView = 70;
+        
+        GameObject* waterPlane = world.CreateObject();
+        waterPlane->Parent = cameraObject;
+        waterPlane->AddComponent<Transform>()->Position = {0,0.1f,0};
+        waterPlane->AddComponent<Mesh>()->GetMesh<Vertex>().AddPlane(0, {76, 48}, {0,0,1,1});
+        waterPlane->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f,0.5f));
+        waterPlane->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        waterPlane->GetComponent<Material>()->Shader = &renderer->Shaders.Colored;
+        
+        for (int i=0; i<100; i++) {
+        Vector2 position ={15.0f+(i%10)*2.0f,20.0f + floorf(i/10) *2.0f};
+        cube = world.CreateObject();
+        cube->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
+        cube->AddComponent<Transform>()->Position ={position.x,1.0f, position.y};
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.55f,0.2f,1.0f});
+        cube->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
+        cube->AddComponent<Selectable>();
+        cube->AddComponent<Movable>()->Speed = 3.0f;
+        cube->AddComponent<Particle>()->SetPosition(position);
+        cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
+        
+        GameObject* turret = world.CreateObject();
+        turret->Parent = cube;
+        turret->AddComponent<Transform>()->Position = {0,0.4f,0};
+        turret->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.0f,0,0.5f}, {0.04f, 0.04f, 0.8f});
+        turret->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
+        
+        //if (i==5) {
+        //    cube->GetComponent<Particle>()->immovable = true;
+        //}
+        
+        }
+        
+        for (int i=0; i<30; i++) {
+            Point size(1 + MathHelper::Random(5), 1 + MathHelper::Random(5));
+            GameObject* building = world.CreateObject();
+            building->AddComponent<Transform>()->Position = {(float)MathHelper::Random(128),1.0f,(float)MathHelper::Random(128)};
+            building->GetComponent<Transform>()->Rotation = Quaternion(MathHelper::Random(0, MathHelper::DegToRad * 360.0f), {0,1,0});
+            building->AddComponent<Obstacle>()->size = size;
+            building->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
+            building->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
+            auto& mesh = building->AddComponent<Mesh>()->GetMesh<Vertex>();
+            mesh.AddCube({0,1,0}, {(float)size.x,1,(float)size.y});
+        }
+        
+        
+        marker= world.CreateObject();
+        marker->AddComponent<Transform>()->Position = {155,0,155};
+        marker->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.4f);
+        marker->AddComponent<Material>();
+    
+        follow = false;
+    
+        Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+        cameraObject->GetComponent<Touchable>()->Down += event_handler(this, &Game::TerrainDown);
+        wireframe = false;
+        
+        map->GetComponent<Map>()->NavigationUpdated += event_handler(this, &Game::NavigationMeshUpdated);
+    }
+    
+    void NavigationMeshUpdated(Map* map) {
+        if (navMesh) navMesh->Remove();
+        if (collisionMesh) collisionMesh->Remove();
+        
+    
+        NavMesh& mesh = map->NavMesh();
         
         for (int i=0; i<2; i++) {
         
@@ -147,69 +230,6 @@ public:
                 collisionMesh = meshObject;
             }
         }
-        
-        
-        cameraObject = world.CreateObject();
-        cameraObject->AddComponent<Transform>()->Position = {0,0,0};
-        cameraObject->AddComponent<Mesh>();
-        cameraObject->AddComponent<MapRenderer>()->width = 70;
-        cameraObject->GetComponent<MapRenderer>()->depth = 48;
-        cameraObject->AddComponent<Map>(map);
-        cameraObject->AddComponent<TextureComponent>()->Texture().LoadFromPng("grass.png");
-        cameraObject->AddComponent<Material>()->Shader = &renderer->Shaders.LitTextured;
-        cameraObject->AddComponent<FirstPersonMover>()->RotationSpeed = 0;
-        cameraObject->AddComponent<Touchable>();
-        
-        camera = world.CreateObject();
-        camera->Parent = cameraObject;
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
-        camera->AddComponent<Transform>()->Position = Vector3(0, 10, 5) * 1.5f;
-        camera->GetComponent<Transform>()->Rotation = Quaternion::LookAt(camera->GetComponent<Transform>()->Position, {0,0,0}, Vector3(0,1,0));
-        camera->GetComponent<Camera>()->FieldOfView = 70;
-        
-        GameObject* waterPlane = world.CreateObject();
-        waterPlane->Parent = cameraObject;
-        waterPlane->AddComponent<Transform>()->Position = {0,0.1f,0};
-        waterPlane->AddComponent<Mesh>()->GetMesh<Vertex>().AddPlane(0, {76, 48}, {0,0,1,1});
-        waterPlane->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f,0.5f));
-        waterPlane->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
-        waterPlane->GetComponent<Material>()->Shader = &renderer->Shaders.Colored;
-        
-        for (int i=0; i<300; i++) {
-        Vector2 position ={15.0f+(i%10)*2.0f,20.0f + floorf(i/10) *2.0f};
-        cube = world.CreateObject();
-        cube->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
-        cube->AddComponent<Transform>()->Position ={position.x,1.0f, position.y};
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.55f,0.2f,1.0f});
-        cube->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
-        cube->AddComponent<Selectable>();
-        cube->AddComponent<Movable>()->Speed = 3.0f;
-        cube->AddComponent<Particle>()->SetPosition(position);
-        cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
-        
-        GameObject* turret = world.CreateObject();
-        turret->Parent = cube;
-        turret->AddComponent<Transform>()->Position = {0,0.4f,0};
-        turret->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.0f,0,0.5f}, {0.04f, 0.04f, 0.8f});
-        turret->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
-        
-        //if (i==5) {
-        //    cube->GetComponent<Particle>()->immovable = true;
-        //}
-        
-        }
-        
-        
-        marker= world.CreateObject();
-        marker->AddComponent<Transform>()->Position = {155,0,155};
-        marker->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.4f);
-        marker->AddComponent<Material>();
-    
-        follow = false;
-    
-        Input.ButtonDown += event_handler(this, &Game::ButtonDown);
-        cameraObject->GetComponent<Touchable>()->Down += event_handler(this, &Game::TerrainDown);
-        wireframe = false;
     }
     
     void TerrainDown(TouchData d) {

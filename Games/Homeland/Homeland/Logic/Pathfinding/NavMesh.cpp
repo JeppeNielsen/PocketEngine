@@ -106,6 +106,13 @@ void NavMesh::AddHole(std::vector<double>& points, std::vector<int>& segments, s
 }
 
 void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int, int)> predicate) {
+    for (int i=0; i<triangles.size(); i++) {
+        delete triangles[i];
+    }
+    triangles.clear();
+    navigation.clear();
+    collision.clear();
+    trianglesPerVertex.clear();
     
     std::vector<double> outer = {
         0,0,
@@ -123,11 +130,17 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     
     std::vector<double> holes;
 
+    
     int lastPos = width - 1;
     for (int z=0; z<depth; ++z) {
         int unblockPos = 0;
         for (int x=0; x<width; ++x) {
             bool blocked = predicate(x,z);
+            if (blocked) {
+                AddHole(outer, segments, holes, {(float)x,(float)z}, {1.0f, 1.0f});
+            }
+            continue;
+            
             if (!blocked || x == lastPos) {
                 int size = x - unblockPos;
                 if (x == lastPos ) {
@@ -140,7 +153,7 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
             }
         }
     }
-
+    
     triangulateio in;
     memset(&in, 0, sizeof(triangulateio));
     in.numberofpoints = (int)outer.size()/2;
@@ -150,13 +163,12 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     in.numberofholes = (int)holes.size()/2;
     
     in.segmentlist = &segments[0];
-    //in.segmentmarkerlist = &segmentMarker[0];
     in.numberofsegments = (int)segments.size()/2;
     
     triangulateio out;
     memset(&out, 0, sizeof(triangulateio));
     
-    triangulate("zpnQ", &in, &out, NULL );
+    triangulate("zpnQ", &in, &out, (struct triangulateio *) NULL );
     
     triangles.resize(out.numberoftriangles);
     for (int i=0; i<out.numberoftriangles; i++) {
@@ -172,6 +184,8 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
         collision[i].y = (float)pos[1];
     }
     navigation = collision;
+    
+   
     
     std::cout<<"-------------"<<std::endl;
     for (int i=0; i<out.numberoftriangles; i++) {
@@ -192,6 +206,10 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
        // std::cout<<"neightbor"<<std::endl;
        // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
     }
+    
+    trifree(out.pointlist);
+    trifree(out.neighborlist);
+    trifree(out.trianglelist);
     
     TrimSmallTriangles();
     Grow(navigation, -0.5f);
@@ -390,6 +408,11 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
 }
 
 NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition, NavTriangle* hintTriangle) {
+    if (triangles.empty()) {
+        nearestPosition = position;
+        return 0;
+    }
+
     float minDistance = 1000000.0f;
     Vector2 ret;
     NavTriangle* foundTriangle = 0;

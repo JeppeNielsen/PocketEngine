@@ -46,6 +46,8 @@
 		72411D531BDAAFF800269FFB /* ParticleTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D511BDAAFF800269FFB /* ParticleTransformSystem.cpp */; };
 		72411D561BDAB2BC00269FFB /* ParticleCollisionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */; };
 		72411D581BDBA55F00269FFB /* TestOutOfBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */; };
+		72411D5B1BDD711A00269FFB /* Obstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D591BDD711A00269FFB /* Obstacle.cpp */; };
+		72411D5E1BDD716800269FFB /* ObstacleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */; };
 		727847351B79184300FCA232 /* MoveSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847331B79184300FCA232 /* MoveSystem.cpp */; };
 		727847381B79526D00FCA232 /* PathFinderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847361B79526D00FCA232 /* PathFinderSystem.cpp */; };
 		727FB7561BCAE343004D2C9E /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7521BCAE343004D2C9E /* SelectedColorer.cpp */; };
@@ -459,6 +461,10 @@
 		72411D541BDAB2BC00269FFB /* ParticleCollisionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleCollisionSystem.cpp; sourceTree = "<group>"; };
 		72411D551BDAB2BC00269FFB /* ParticleCollisionSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleCollisionSystem.h; sourceTree = "<group>"; };
 		72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TestOutOfBounds.cpp; sourceTree = "<group>"; };
+		72411D591BDD711A00269FFB /* Obstacle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Obstacle.cpp; sourceTree = "<group>"; };
+		72411D5A1BDD711A00269FFB /* Obstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obstacle.h; sourceTree = "<group>"; };
+		72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObstacleSystem.cpp; sourceTree = "<group>"; };
+		72411D5D1BDD716800269FFB /* ObstacleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObstacleSystem.h; sourceTree = "<group>"; };
 		727847331B79184300FCA232 /* MoveSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveSystem.cpp; sourceTree = "<group>"; };
 		727847341B79184300FCA232 /* MoveSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveSystem.h; sourceTree = "<group>"; };
 		727847361B79526D00FCA232 /* PathFinderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathFinderSystem.cpp; sourceTree = "<group>"; };
@@ -1347,6 +1353,10 @@
 				727847371B79526D00FCA232 /* PathFinderSystem.h */,
 				727FB75E1BCAF411004D2C9E /* ClickTargetSystem.cpp */,
 				727FB75F1BCAF411004D2C9E /* ClickTargetSystem.h */,
+				72411D591BDD711A00269FFB /* Obstacle.cpp */,
+				72411D5A1BDD711A00269FFB /* Obstacle.h */,
+				72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */,
+				72411D5D1BDD716800269FFB /* ObstacleSystem.h */,
 			);
 			path = Units;
 			sourceTree = "<group>";
@@ -2824,6 +2834,7 @@
 				72B620181B2F56CB001007FC /* IPointable.cpp in Sources */,
 				72B6212E1B2F56CB001007FC /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				72B6201A1B2F56CB001007FC /* Pointer.cpp in Sources */,
+				72411D5B1BDD711A00269FFB /* Obstacle.cpp in Sources */,
 				72B620DD1B2F56CB001007FC /* btPolyhedralConvexShape.cpp in Sources */,
 				72B6207C1B2F56CB001007FC /* Point.cpp in Sources */,
 				72B621261B2F56CB001007FC /* SpuSampleTask.cpp in Sources */,
@@ -3017,6 +3028,7 @@
 				72B620121B2F56CB001007FC /* Timer.cpp in Sources */,
 				72B620321B2F56CB001007FC /* ParticleEffect.cpp in Sources */,
 				72B621241B2F56CB001007FC /* SpuGatheringCollisionTask.cpp in Sources */,
+				72411D5E1BDD716800269FFB /* ObstacleSystem.cpp in Sources */,
 				72B6207D1B2F56CB001007FC /* Point3.cpp in Sources */,
 				72B620901B2F56CB001007FC /* b2Shape.cpp in Sources */,
 				72B620931B2F56CB001007FC /* b2Settings.cpp in Sources */,
