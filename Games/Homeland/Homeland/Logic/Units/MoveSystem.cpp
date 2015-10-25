@@ -12,15 +12,19 @@ void MoveSystem::Update(float dt) {
     for(GameObject* object : Objects()) {
         Movable* movable = object->GetComponent<Movable>();
         Movable::Path& path = movable->path;
-        if (path.empty()) continue;
+        if (path.size()<2) continue;
         
         Particle* particle = object->GetComponent<Particle>();
-        Vector2& target = path.back();
+        
+        Vector2 source = path[path.size()-1];
+        Vector2 target = path[path.size()-2];
         
         Vector2 toTarget = target - particle->position;
+        Vector2 delta = source - target;
+        
         //Vector2 toNextPath = target - movable->prevPathPosition;
         //Vector2 orthogonal = Vector2(-toNextPath.y, toNextPath.x);
-        //float dot = toTarget.Dot(-toNextPath);
+        float dot = delta.Dot(-toTarget);
         
         float length = toTarget.SquareLength();
         
@@ -33,9 +37,8 @@ void MoveSystem::Update(float dt) {
         }
         movable->prevPosition = particle->position;
         
-        
-        if (length<(1.5f*1.5f)) {// || dot>0.0f) {
-            movable->prevPathPosition = path.back();
+        if (length<(1.5f*1.5f) || dot<0.0f) {
+            movable->prevPathPosition = target;
             path.pop_back();
         } else {
             length = sqrtf(length);
