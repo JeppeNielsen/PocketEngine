@@ -20,7 +20,7 @@ void ParticleCollisionSystem::Update(float dt) {
         for (int j=i+1; j<Objects().size(); j++) {
             Particle* b = Objects()[j]->GetComponent<Particle>();
             
-            const float radius = 2.0f;
+            const float radius = 2.05f;
             
             Vector2 vector = b->position - a->position;
             float length = vector.Length();

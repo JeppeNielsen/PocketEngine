@@ -191,15 +191,15 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
 void Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, GameWorld* world) {
     
     Vector2 nearestStartPosition;
-    NavTriangle* startTriangle = navMesh.FindNearestTriangle(start, nearestStartPosition);
+    NavTriangle* startTriangle = navMesh.FindNearestTriangle(navMesh.navigation, start, nearestStartPosition);
     if (!startTriangle) return;
     
     Vector2 nearestEndPosition;
-    NavTriangle* endTriangle = navMesh.FindNearestTriangle(end, nearestEndPosition);
+    NavTriangle* endTriangle = navMesh.FindNearestTriangle(navMesh.navigation, end, nearestEndPosition);
     if (!endTriangle) return;
     
-    auto trianglePath = navMesh.FindPath(startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
-    auto straightPath = navMesh.FindStraightPath(trianglePath);
+    auto trianglePath = navMesh.FindPath(navMesh.navigation, startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
+    auto straightPath = navMesh.FindStraightPath(navMesh.navigation, trianglePath);
     
     for(int i=((int)straightPath.size())-1; i>=0; --i) {
         path.push_back(straightPath[i]);
@@ -242,6 +242,6 @@ NavMesh& Map::NavMesh() { return navMesh; }
 
 Vector2 Map::FindNearestValidPosition(const Pocket::Vector2 &position) {
     Vector2 nearest;
-    navMesh.FindNearestTriangle(position, nearest);
+    navMesh.FindNearestTriangle(navMesh.collision, position, nearest);
     return nearest;
 }

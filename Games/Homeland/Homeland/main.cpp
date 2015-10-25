@@ -62,7 +62,7 @@ public:
         
         map->AddComponent<Map>()->CreateMap(128, 128);
         
-        /*
+        
         map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
         map->GetComponent<Map>()->Smooth(1);
         
@@ -73,7 +73,8 @@ public:
         for (int i=0; i<40; i++) {
            map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 6, -2.0f);
         }
-        */
+        
+        /*
         
         map->GetComponent<Map>()->SetHeight(1.0f);
         //map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
@@ -86,6 +87,7 @@ public:
         for (int i=0; i<60; i++) {
            map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), MathHelper::Random(4, 6), -2.0f);
         }
+        */
         
         
         /*
@@ -113,19 +115,8 @@ public:
         
         NavMesh& mesh = map->GetComponent<Map>()->NavMesh();
         
-        mapCollision->navMesh = mesh;
-        //mapCollision->navMesh.Grow(-0.5f);
-        
-        mesh.Grow(1.0f);
-        
-        NavMesh meshes[2];
-        meshes[0]=mesh;
-        meshes[1]=mapCollision->navMesh;
-        
         for (int i=0; i<2; i++) {
         
-            
-    
             GameObject* meshObject = world.CreateObject();
             meshObject->AddComponent<Transform>();
             meshObject->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
@@ -133,16 +124,18 @@ public:
             meshObject->EnableComponent<Material>(false);
             auto& navMeshMesh = meshObject->AddComponent<Mesh>()->GetMesh<Vertex>();
             
-            for(auto& p : meshes[i].GetVertices()) {
+            NavMesh::Vertices& vertices = i==0 ? mesh.navigation : mesh.collision;
+            
+            for(auto& p : vertices) {
                 Vertex v;
                 v.Position = {p.x, 1.50f+i*0.1f, p.y};
                 v.Color = i==0 ? Colour::Red() : Colour::Green(); //Colour::HslToRgb(i*180, 1, 1, 1);
                 navMeshMesh.vertices.push_back(v);
             }
             
-            for (auto& p : meshes[i].GetTriangles()) {
+            for (auto& p : mesh.GetTriangles()) {
                 for (int i=0; i<3; i++) {
-                    navMeshMesh.triangles.push_back(p.corners[i]);
+                    navMeshMesh.triangles.push_back(p->corners[i]);
                 }
             }
             navMeshMesh.Flip();
@@ -224,7 +217,7 @@ public:
         Vector2 pos = { d.WorldPosition.x, d.WorldPosition.z};
         
         Vector2 nearestPosition;
-        cameraObject->GetComponent<Map>()->NavMesh().FindNearestTriangle(pos, nearestPosition);
+        cameraObject->GetComponent<Map>()->NavMesh().FindNearestTriangle(cameraObject->GetComponent<Map>()->NavMesh().navigation, pos, nearestPosition);
         
         marker->GetComponent<Transform>()->Position = {nearestPosition.x, 1.5f, nearestPosition.y};
     }

@@ -27,12 +27,13 @@ int main_works() {
     Vector2 start(0.5f,4);
     Vector2 end(9.5f,8);
 
+/*
     NavTriangle* startTri = navMesh.FindTriangle(start);
     NavTriangle* endTri = navMesh.FindTriangle(end);
     
     auto path = navMesh.FindPath(startTri, start, endTri, end);
     auto straightPath = navMesh.FindStraightPath(path);
-    
+  */
 
     return 0;
 }
@@ -53,12 +54,14 @@ int main__otherTest() {
     
     Vector2 start(1,3);
     Vector2 end(9,8);
+    
+    /*
 
     NavTriangle* startTri = navMesh.FindTriangle(start);
     NavTriangle* endTri = navMesh.FindTriangle(end);
     
     auto path = navMesh.FindPath(startTri, start, endTri, end);
-
+*/
 
     return 0;
 }

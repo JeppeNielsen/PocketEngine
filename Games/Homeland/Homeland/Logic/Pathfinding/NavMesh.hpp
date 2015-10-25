@@ -18,30 +18,32 @@ class NavTriangle;
 
 class NavMesh {
 public:
-    typedef std::vector<NavTriangle> Triangles;
     typedef std::vector<Vector2> Vertices;
+    typedef std::vector<NavTriangle*> Triangles;
+    
     
     NavMesh();
     ~NavMesh();
     
     void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
-    std::vector<NavTriangle*> FindPath(NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
-    NavTriangle* FindTriangle(const Vector2& position);
-    std::vector<Vector2> FindStraightPath(const std::vector<NavTriangle*>& path);
-    NavTriangle* FindNearestTriangle(const Vector2& position, Vector2& nearestPosition);
+    std::vector<NavTriangle*> FindPath(const Vertices& vertices, NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
+    std::vector<Vector2> FindStraightPath(const Vertices& vertices, const std::vector<NavTriangle*>& path);
+    NavTriangle* FindNearestTriangle(const Vertices& vertices, const Vector2& position, Vector2& nearestPosition);
     const Triangles& GetTriangles() const;
-    const Vertices& GetVertices() const;
-    void Grow(float amount);
+
+    void TrimSmallTriangles();
+    void Grow(Vertices& vertices, float amount);
+    
+    Vertices collision;
+    Vertices navigation;
+    
 private:
     float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
     void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
     void AddTriangle(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2& p1, Vector2& p2, Vector2& p3);
     void AddPoly(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, std::vector<Vector2>& polyPoints);
     Triangles triangles;
-    Vertices vertices;
 };
-
-
 
 
 struct NavTriangle {
@@ -92,12 +94,6 @@ struct NavTriangle {
         return (a.x * (b.y - c.y)+b.x*(c.y-a.y)+c.x*(a.y - b.y)) * 0.5f;
     }
     
-    bool PointInside(const Vector2& p) {
-        if (side(corners[0], corners[1], p)>0) return false;
-        if (side(corners[1], corners[2], p)>0) return false;
-        if (side(corners[2], corners[0], p)>0) return false;
-        return true;
-    }
     
     float GetDistance(const NavMesh::Vertices& vertices, const Vector2& w, Vector2& ret) {
     

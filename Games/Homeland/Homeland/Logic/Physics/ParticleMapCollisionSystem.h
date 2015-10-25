@@ -14,5 +14,4 @@
 SYSTEM(ParticleMapCollisionSystem, Particle, Mappable)
     public:
         void Update(float dt);
-        NavMesh navMesh;
 };

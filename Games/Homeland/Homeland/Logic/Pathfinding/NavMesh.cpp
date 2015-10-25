@@ -159,36 +159,43 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     triangulate("zpnQ", &in, &out, NULL );
     
     triangles.resize(out.numberoftriangles);
-    vertices.resize(out.numberofpoints);
+    for (int i=0; i<out.numberoftriangles; i++) {
+        triangles[i] = new NavTriangle();
+    }
+    
+    collision.resize(out.numberofpoints);
     
     for (int i=0; i<out.numberofpoints; i++) {
         double* pos = &out.pointlist[i*2];
-        vertices[i].x = (float)pos[0];
-        vertices[i].y = (float)pos[1];
+        collision[i].x = (float)pos[0];
+        collision[i].y = (float)pos[1];
     }
+    navigation = collision;
     
     std::cout<<"-------------"<<std::endl;
     for (int i=0; i<out.numberoftriangles; i++) {
         int* triangleIndex = &out.trianglelist[i*3];
         //std::cout<<triangle[0]<<", "<<triangle[1]<<", " <<triangle[2]<<std::endl;
-        
-        NavTriangle& tri = triangles[i];
+        NavTriangle& tri = *triangles[i];
         tri.corners[0]= triangleIndex[0];
         tri.corners[1]= triangleIndex[1];
         tri.corners[2]= triangleIndex[2];
         
         int* neighbor = &out.neighborlist[i*3];
         
-        tri.neighbors[1] = neighbor[0]>=0 ? &triangles[neighbor[0]] : 0;
-        tri.neighbors[2] = neighbor[1]>=0 ? &triangles[neighbor[1]] : 0;
-        tri.neighbors[0] = neighbor[2]>=0 ? &triangles[neighbor[2]] : 0;
+        tri.neighbors[1] = neighbor[0]>=0 ? triangles[neighbor[0]] : 0;
+        tri.neighbors[2] = neighbor[1]>=0 ? triangles[neighbor[1]] : 0;
+        tri.neighbors[0] = neighbor[2]>=0 ? triangles[neighbor[2]] : 0;
         
        // std::cout<<"neightbor"<<std::endl;
        // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
     }
+    
+    TrimSmallTriangles();
+    Grow(navigation, -0.5f);
 }
 
-std::vector<NavTriangle*> NavMesh::FindPath(NavTriangle* startTriangle, const Pocket::Vector2 &start, NavTriangle* endTriangle, const Pocket::Vector2 &end) {
+std::vector<NavTriangle*> NavMesh::FindPath(const Vertices& vertices, NavTriangle* startTriangle, const Pocket::Vector2 &start, NavTriangle* endTriangle, const Pocket::Vector2 &end) {
     
     std::vector<NavTriangle*> path;
     
@@ -260,16 +267,7 @@ std::vector<NavTriangle*> NavMesh::FindPath(NavTriangle* startTriangle, const Po
     return path;
 }
 
-NavTriangle* NavMesh::FindTriangle(const Pocket::Vector2 &position) {
-    for (NavTriangle& triangle : triangles) {
-        if (triangle.PointInside(position)) {
-            return &triangle;
-        }
-    }
-    return 0;
-}
-
-std::vector<Vector2> NavMesh::FindStraightPath(const std::vector<NavTriangle *> &path) {
+std::vector<Vector2> NavMesh::FindStraightPath(const Vertices& vertices, const std::vector<NavTriangle *> &path) {
     std::vector<Vector2> straightPath;
     
     if (path.empty()) {
@@ -389,50 +387,69 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
     return ac.x*ab.y - ab.x*ac.y;
 }
 
-NavTriangle* NavMesh::FindNearestTriangle(const Pocket::Vector2 &position, Vector2& nearestPosition) {
+NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition) {
     float minDistance = 1000000.0f;
     Vector2 ret;
     NavTriangle* foundTriangle = 0;
     for (int i=0; i<triangles.size(); i++) {
-        float distance = triangles[i].GetDistance(vertices, position, ret);
+        float distance = triangles[i]->GetDistance(vertices, position, ret);
         if (distance<minDistance) {
             minDistance = distance;
             nearestPosition = ret;
-            foundTriangle = &triangles[i];
+            foundTriangle = triangles[i];
         }
     }
     return foundTriangle;
 }
 
 const NavMesh::Triangles& NavMesh::GetTriangles() const { return triangles; }
-const NavMesh::Vertices& NavMesh::GetVertices() const { return vertices; }
 
-void NavMesh::Grow(float amount) {
-    /*
+void NavMesh::TrimSmallTriangles() {
+    
     for (int i=0; i<triangles.size(); i++) {
+        NavTriangle* t = triangles[i];
+        int numEdges = 0;
+        for (int n=0; n<3; n++) {
+            if (!t->neighbors[n]) numEdges++;
+        }
         
-        if (triangles[i].area(vertices)<1.0f) {
-            for (int j=0; j<triangles.size(); j++) {
-                for (int n=0; n<3; n++) {
-                    if (triangles[j].neighbors[n] == &triangles[i]) {
-                        triangles[j].neighbors[n]=0;
-                    }
-                }
+        if (numEdges>=2) {
+            for (int n=0; n<3; n++) {
+                NavTriangle* neighbor = t->neighbors[n];
+                if (!neighbor) continue;
+                int neighborIndex = neighbor->FindNeighborIndex(t);
+                neighbor->neighbors[neighborIndex] = 0;
+                break;
             }
-        
+            
             triangles.erase(triangles.begin()+i);
             i--;
         }
     }
-*/
+    
+     for (int i=0; i<triangles.size(); i++) {
+        NavTriangle* t = triangles[i];
+        int numEdges = 0;
+        for (int n=0; n<3; n++) {
+            if (!t->neighbors[n]) numEdges++;
+        }
+        if (numEdges==3) {
+            triangles.erase(triangles.begin()+i);
+            i--;
+        }
+    }
+    
+}
+
+void NavMesh::Grow(Vertices& vertices, float amount) {
     
     std::vector<Vector2> normals;
     normals.resize(vertices.size(), Vector2(0,0));
-    for(auto& t : triangles) {
+    for(NavTriangle* t : triangles) {
         for (int i=0; i<3; i++) {
-            if (!t.neighbors[i]) {
-                short index0 = t.corners[i];
-                short index1 = t.corners[i<2 ? i + 1 : 0];
+            if (!t->neighbors[i]) {
+                short index0 = t->corners[i];
+                short index1 = t->corners[i<2 ? i + 1 : 0];
                 Vector2 direction = vertices[index1] - vertices[index0];
                 Vector2 normal = { -direction.y, direction.x };
                 normal.Normalize();
@@ -443,8 +460,6 @@ void NavMesh::Grow(float amount) {
     }
 
     for (int i=0; i<vertices.size(); i++) {
-        vertices[i] += normals[i].Normalized() * amount;
+        vertices[i] -= normals[i].Normalized() * amount;
     }
-    
-    
 }
