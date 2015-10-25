@@ -20,7 +20,7 @@ class NavMesh {
 public:
     typedef std::vector<Vector2> Vertices;
     typedef std::vector<NavTriangle*> Triangles;
-    
+    typedef std::vector<Triangles> TrianglesPerVertex;
     
     NavMesh();
     ~NavMesh();
@@ -28,7 +28,7 @@ public:
     void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
     std::vector<NavTriangle*> FindPath(const Vertices& vertices, NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
     std::vector<Vector2> FindStraightPath(const Vertices& vertices, const std::vector<NavTriangle*>& path);
-    NavTriangle* FindNearestTriangle(const Vertices& vertices, const Vector2& position, Vector2& nearestPosition);
+    NavTriangle* FindNearestTriangle(const Vertices& vertices, const Vector2& position, Vector2& nearestPosition, NavTriangle* hintTriangle = 0);
     const Triangles& GetTriangles() const;
 
     void TrimSmallTriangles();
@@ -43,6 +43,7 @@ private:
     void AddTriangle(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2& p1, Vector2& p2, Vector2& p3);
     void AddPoly(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, std::vector<Vector2>& polyPoints);
     Triangles triangles;
+    TrianglesPerVertex trianglesPerVertex;
 };
 
 

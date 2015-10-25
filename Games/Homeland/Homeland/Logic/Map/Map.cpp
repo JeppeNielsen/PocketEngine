@@ -188,15 +188,15 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
     CalcNormals({xPos - radius, zPos - radius, radius + radius, radius + radius});
 }
 
-void Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, GameWorld* world) {
+NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path) {
     
     Vector2 nearestStartPosition;
     NavTriangle* startTriangle = navMesh.FindNearestTriangle(navMesh.navigation, start, nearestStartPosition);
-    if (!startTriangle) return;
+    if (!startTriangle) return 0;
     
     Vector2 nearestEndPosition;
     NavTriangle* endTriangle = navMesh.FindNearestTriangle(navMesh.navigation, end, nearestEndPosition);
-    if (!endTriangle) return;
+    if (!endTriangle) return 0;
     
     auto trianglePath = navMesh.FindPath(navMesh.navigation, startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
     auto straightPath = navMesh.FindStraightPath(navMesh.navigation, trianglePath);
@@ -204,6 +204,8 @@ void Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, 
     for(int i=((int)straightPath.size())-1; i>=0; --i) {
         path.push_back(straightPath[i]);
     }
+    
+    return startTriangle;
 }
 
 void Map::AddToOpenList(int x, int z, std::vector<Node*>& openList, int pathID) {
@@ -239,9 +241,3 @@ void Map::CreateNavigationMesh() {
 }
 
 NavMesh& Map::NavMesh() { return navMesh; }
-
-Vector2 Map::FindNearestValidPosition(const Pocket::Vector2 &position) {
-    Vector2 nearest;
-    navMesh.FindNearestTriangle(navMesh.collision, position, nearest);
-    return nearest;
-}

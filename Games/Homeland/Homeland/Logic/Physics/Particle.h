@@ -9,6 +9,7 @@
 #pragma once
 #include "GameWorld.hpp"
 #include "Vector2.hpp"
+#include "NavMesh.hpp"
 
 using namespace Pocket;
 
@@ -21,5 +22,7 @@ Component(Particle)
         bool immovable;
 
         void SetPosition(Vector2 position);
+
+        NavTriangle* lastTriangle;
 
 };

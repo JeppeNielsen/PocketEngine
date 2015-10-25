@@ -59,12 +59,10 @@ Component(Map)
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
-    void CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path, GameWorld* world);
+    NavTriangle* CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path);
 
     void CreateNavigationMesh();
     bool IsNodeWalkable(const Node& node);
-
-    Vector2 FindNearestValidPosition(const Vector2& position);
 
     NavMesh& NavMesh();
 private:

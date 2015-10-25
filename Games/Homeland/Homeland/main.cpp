@@ -174,12 +174,12 @@ public:
         waterPlane->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
         waterPlane->GetComponent<Material>()->Shader = &renderer->Shaders.Colored;
         
-        for (int i=0; i<10; i++) {
-        Vector2 position ={15.0f+i*2.0f,20.0f};
+        for (int i=0; i<250; i++) {
+        Vector2 position ={15.0f+(i%10)*2.0f,20.0f + floorf(i/10) *2.0f};
         cube = world.CreateObject();
         cube->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
         cube->AddComponent<Transform>()->Position ={position.x,1.0f, position.y};
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.95f,0.2f,1.0f});
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.55f,0.2f,1.0f});
         cube->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
         cube->AddComponent<Selectable>();
         cube->AddComponent<Movable>()->Speed = 3.0f;
@@ -193,9 +193,9 @@ public:
         turret->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.0f,0,0.5f}, {0.04f, 0.04f, 0.8f});
         turret->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
         
-        if (i==5) {
-            cube->GetComponent<Particle>()->immovable = true;
-        }
+        //if (i==5) {
+        //    cube->GetComponent<Particle>()->immovable = true;
+        //}
         
         }
         

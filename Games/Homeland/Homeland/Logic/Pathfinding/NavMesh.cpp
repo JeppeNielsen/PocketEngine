@@ -164,6 +164,7 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     }
     
     collision.resize(out.numberofpoints);
+    trianglesPerVertex.resize(out.numberofpoints);
     
     for (int i=0; i<out.numberofpoints; i++) {
         double* pos = &out.pointlist[i*2];
@@ -186,6 +187,7 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
         tri.neighbors[1] = neighbor[0]>=0 ? triangles[neighbor[0]] : 0;
         tri.neighbors[2] = neighbor[1]>=0 ? triangles[neighbor[1]] : 0;
         tri.neighbors[0] = neighbor[2]>=0 ? triangles[neighbor[2]] : 0;
+        
         
        // std::cout<<"neightbor"<<std::endl;
        // std::cout<<neighbor[0]<<", "<<neighbor[1]<<", " <<neighbor[2]<<std::endl;
@@ -387,16 +389,32 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
     return ac.x*ab.y - ab.x*ac.y;
 }
 
-NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition) {
+NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition, NavTriangle* hintTriangle) {
     float minDistance = 1000000.0f;
     Vector2 ret;
     NavTriangle* foundTriangle = 0;
-    for (int i=0; i<triangles.size(); i++) {
-        float distance = triangles[i]->GetDistance(vertices, position, ret);
-        if (distance<minDistance) {
-            minDistance = distance;
-            nearestPosition = ret;
-            foundTriangle = triangles[i];
+    if (!hintTriangle) {
+        for (int i=0; i<triangles.size(); i++) {
+            float distance = triangles[i]->GetDistance(vertices, position, ret);
+            if (distance<minDistance) {
+                minDistance = distance;
+                nearestPosition = ret;
+                foundTriangle = triangles[i];
+                if (minDistance<0.001f) return foundTriangle;
+            }
+        }
+    } else {
+        for (int n=0; n<3; n++) {
+            Triangles& triangles = trianglesPerVertex[hintTriangle->corners[n]];
+            for (int i=0; i<triangles.size(); i++) {
+                float distance = triangles[i]->GetDistance(vertices, position, ret);
+                if (distance<minDistance) {
+                    minDistance = distance;
+                    nearestPosition = ret;
+                    foundTriangle = triangles[i];
+                    if (minDistance<0.001f) return foundTriangle;
+                }
+            }
         }
     }
     return foundTriangle;
@@ -439,6 +457,12 @@ void NavMesh::TrimSmallTriangles() {
         }
     }
     
+    for (int i=0; i<triangles.size(); i++) {
+        NavTriangle* triangle = triangles[i];
+        trianglesPerVertex[triangle->corners[0]].push_back(triangle);
+        trianglesPerVertex[triangle->corners[1]].push_back(triangle);
+        trianglesPerVertex[triangle->corners[2]].push_back(triangle);
+    }
 }
 
 void NavMesh::Grow(Vertices& vertices, float amount) {

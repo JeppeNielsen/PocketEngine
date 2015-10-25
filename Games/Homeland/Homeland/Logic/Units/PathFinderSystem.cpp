@@ -33,10 +33,11 @@ void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     movable->path.clear();
     Timer t;
     t.Begin();
-    map->CalculatePath(particle->position, movable->Target, movable->path, World());
+    particle->lastTriangle = map->CalculatePath(particle->position, movable->Target, movable->path);
     double time = t.End();
     movable->prevPathPosition = particle->position;
     movable->stillFrames = 0;
     movable->prevPosition = particle->position;
+    
     std::cout<< " Path finding took : " << time<<std::endl;
 }

@@ -13,6 +13,7 @@ void Particle::Reset() {
     position = Vector2(0,0);
     positionOld = Vector2(0,0);
     immovable = false;
+    lastTriangle = 0;
 }
 
 void Particle::SetPosition(Vector2 position) {

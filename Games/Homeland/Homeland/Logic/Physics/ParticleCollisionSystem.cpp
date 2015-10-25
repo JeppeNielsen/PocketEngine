@@ -9,6 +9,7 @@
 #include "ParticleCollisionSystem.h"
 #include <cmath>
 #include <iostream>
+#include "Movable.h"
 
 void ParticleCollisionSystem::Initialize() {
     AddComponent<Particle>();
@@ -33,6 +34,24 @@ void ParticleCollisionSystem::Update(float dt) {
                 if (!b->immovable) {
                     b->position += vector * penetration * 0.5f;
                 }
+                
+                bool isAMoving = Objects()[i]->GetComponent<Movable>() ? Objects()[i]->GetComponent<Movable>()->path.size()>0 : false;
+                bool isBMoving = Objects()[j]->GetComponent<Movable>() ? Objects()[j]->GetComponent<Movable>()->path.size()>0 : false;
+            
+                if (isAMoving && !isBMoving) {
+                    Vector2 normal = Vector2(-vector.y, vector.x);
+                    if (normal.Dot(a->position - a->positionOld)>0) {
+                        normal = -normal;
+                    }
+                    b->position += normal * penetration * 0.5f;
+                } else if (!isAMoving && isBMoving) {
+                    Vector2 normal = Vector2(-vector.y, vector.x);
+                     if (normal.Dot(b->position -b->positionOld)>0) {
+                        normal = -normal;
+                    }
+                    a->position += normal * penetration * 0.5f;
+                }
+            
             }
         }
     }
