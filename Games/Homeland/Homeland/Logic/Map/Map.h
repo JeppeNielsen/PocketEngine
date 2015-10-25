@@ -59,7 +59,7 @@ Component(Map)
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
-    NavTriangle* CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path);
+    NavTriangle* CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path, NavTriangle* hintStartTriangle);
 
     void CreateNavigationMesh();
     bool IsNodeWalkable(const Node& node);

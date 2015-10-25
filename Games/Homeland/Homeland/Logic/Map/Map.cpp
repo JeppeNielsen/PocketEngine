@@ -188,10 +188,10 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
     CalcNormals({xPos - radius, zPos - radius, radius + radius, radius + radius});
 }
 
-NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path) {
+NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, NavTriangle* hintStartTriangle) {
     
     Vector2 nearestStartPosition;
-    NavTriangle* startTriangle = navMesh.FindNearestTriangle(navMesh.navigation, start, nearestStartPosition);
+    NavTriangle* startTriangle = navMesh.FindNearestTriangle(navMesh.navigation, start, nearestStartPosition, hintStartTriangle);
     if (!startTriangle) return 0;
     
     Vector2 nearestEndPosition;

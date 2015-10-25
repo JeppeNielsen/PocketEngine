@@ -175,7 +175,7 @@ public:
         waterPlane->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
         waterPlane->GetComponent<Material>()->Shader = &renderer->Shaders.Colored;
         
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<300; i++) {
         Vector2 position ={15.0f+(i%10)*2.0f,20.0f + floorf(i/10) *2.0f};
         cube = world.CreateObject();
         cube->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
@@ -185,7 +185,6 @@ public:
         cube->AddComponent<Selectable>();
         cube->AddComponent<Movable>()->Speed = 3.0f;
         cube->AddComponent<Particle>()->SetPosition(position);
-        cube->GetComponent<Movable>()->Target = position;
         cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
         
         GameObject* turret = world.CreateObject();
