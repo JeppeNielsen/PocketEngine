@@ -10,6 +10,10 @@
 #include "MathHelper.hpp"
 #include "Timer.hpp"
 
+void Map::Reset() {
+    navMesh = 0;
+}
+
 void Map::CreateMap(int width, int depth) {
 	nodes.resize(width);
     for	(int i=0; i<width; i++) {
@@ -186,18 +190,19 @@ void Map::AddHill(int xPos, int zPos, int radius, float height)
     CalcNormals({xPos - radius, zPos - radius, radius + radius, radius + radius});
 }
 
-NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, NavTriangle* hintStartTriangle) {
+NavTriangle* Map::CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2> &path, int& navMeshVersion, NavTriangle* hintStartTriangle) {
+    if (!navMesh) return 0;
     
     Vector2 nearestStartPosition;
-    NavTriangle* startTriangle = navMesh.FindNearestTriangle(navMesh.navigation, start, nearestStartPosition, hintStartTriangle);
+    NavTriangle* startTriangle = navMesh->FindNearestTriangle(navMesh->navigation, start, nearestStartPosition, navMeshVersion, hintStartTriangle);
     if (!startTriangle) return 0;
     
     Vector2 nearestEndPosition;
-    NavTriangle* endTriangle = navMesh.FindNearestTriangle(navMesh.navigation, end, nearestEndPosition);
+    NavTriangle* endTriangle = navMesh->FindNearestTriangle(navMesh->navigation, end, nearestEndPosition, navMeshVersion);
     if (!endTriangle) return 0;
     
-    auto trianglePath = navMesh.FindPath(navMesh.navigation, startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
-    auto straightPath = navMesh.FindStraightPath(navMesh.navigation, trianglePath);
+    auto trianglePath = navMesh->FindPath(navMesh->navigation, startTriangle, nearestStartPosition, endTriangle, nearestEndPosition);
+    auto straightPath = navMesh->FindStraightPath(navMesh->navigation, trianglePath);
     
     for(int i=((int)straightPath.size())-1; i>=0; --i) {
         path.push_back(straightPath[i]);
@@ -214,15 +219,19 @@ bool Map::IsNodeWalkable(const Map::Node& node) {
     return angle>160.0f && node.height>0.02f;
 }
 
-void Map::CreateNavigationMesh() {
+void Map::CreateNavigationMesh(class NavMesh& mesh) {
     Timer timer;
     timer.Begin();
-    navMesh.BuildPointsTriangle(Width(), Depth(), [this] (int x, int z) -> bool {
+    mesh.BuildPointsTriangle(Width(), Depth(), [this] (int x, int z) -> bool {
         return !IsNodeWalkable(GetNode(x, z));
     });
     double time = timer.End();
     std::cout << "Nav mesh generation time = " << time << std::endl;
-    NavigationUpdated(this);
 }
 
-NavMesh& Map::NavMesh() { return navMesh; }
+NavMesh* Map::NavMesh() { return navMesh; }
+
+void Map::SetNavMesh(class NavMesh* navMesh) {
+    this->navMesh = navMesh;
+    NavigationUpdated(this);
+}

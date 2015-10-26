@@ -7,9 +7,15 @@
 //
 
 #include "ObstacleSystem.h"
+#include <unistd.h>
 
 void ObstacleSystem::AddedToWorld(Pocket::GameWorld &world) {
     isDirty = false;
+    isNavMeshReady = false;
+    shouldCreateNavMesh = false;
+    currentNavMesh = 0;
+    version = 0;
+    worker = std::thread([this] { CreateNavMeshWorker(); });
 }
 
 void ObstacleSystem::ObjectAdded(Pocket::GameObject *object) {
@@ -23,15 +29,21 @@ void ObstacleSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void ObstacleSystem::Update(float dt) {
-    if (!isDirty) return;
-    isDirty = false;
-    map->CreateNavigationMesh();
+    if (!isNavMeshReady) {
+        if (isDirty) {
+            isDirty = false;
+            shouldCreateNavMesh = true;
+        }
+    } else {
+        map->SetNavMesh(&navMesh[currentNavMesh]);
+        isNavMeshReady = false;
+    }
 }
 
 void ObstacleSystem::UpdateMap(Map *map, Transform* transform, const Pocket::Point &size, int addition) {
     this->map = map;
-    for (float z = -size.y-0.5f; z<(size.y+0.5f); z++) {
-        for (float x = -size.x-0.5f; x<(size.x+0.5f); x++) {
+    for (float z = -size.y-0.55f; z<(size.y+0.55f); z+=0.5f) {
+        for (float x = -size.x-0.55f; x<(size.x+0.55f); x+=0.5f) {
             Vector3 worldPosition = transform->World.GetValue()->TransformPosition({x,0,z});
             int nodeX = (int)floorf(worldPosition.x);
             int nodeZ = (int)floorf(worldPosition.z);
@@ -43,4 +55,18 @@ void ObstacleSystem::UpdateMap(Map *map, Transform* transform, const Pocket::Poi
     Vector3 transformPosition = transform->Position;
                 transformPosition.y = 1.0f;//node.height;
                 transform->Position = transformPosition;
+}
+
+void ObstacleSystem::CreateNavMeshWorker() {
+    
+    while (true) {
+        while (!shouldCreateNavMesh) {
+            usleep(2000);
+        }
+        currentNavMesh = 1 - currentNavMesh;
+        map->CreateNavigationMesh(navMesh[currentNavMesh]);
+        navMesh[currentNavMesh].version = version++;
+        shouldCreateNavMesh = false;
+        isNavMeshReady = true;
+    }
 }

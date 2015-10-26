@@ -11,6 +11,7 @@
 #include "Transform.hpp"
 #include "GameWorld.hpp"
 #include "Mappable.h"
+#include <thread>
 
 SYSTEM(ObstacleSystem, Transform, Obstacle, Mappable)
 public:
@@ -22,4 +23,11 @@ private:
     void UpdateMap(Map* map, Transform* transform, const Point& size, int addition);
     Map* map;
     bool isDirty;
+    std::thread worker;
+    bool isNavMeshReady;
+    bool shouldCreateNavMesh;
+    void CreateNavMeshWorker();
+    NavMesh navMesh[2];
+    int currentNavMesh;
+    int version;
 };

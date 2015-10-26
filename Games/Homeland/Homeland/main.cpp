@@ -40,6 +40,8 @@ public:
         navMesh = 0;
         collisionMesh = 0;
         
+        MathHelper::SeedRandom(2);
+        
         auto fpm = world.CreateSystem<FirstPersonMoverSystem>();
         fpm->Input = &Input;
         fpm->FlipControls = true;
@@ -64,17 +66,19 @@ public:
         
         map = world.CreateObject();
         
-        map->AddComponent<Map>()->CreateMap(128, 128);
+        Point mapSize(256,256);
         
-        map->GetComponent<Map>()->Randomize(-0.5f, 1.6f);
+        map->AddComponent<Map>()->CreateMap(mapSize.x, mapSize.y);
+        
+        map->GetComponent<Map>()->Randomize(-0.5f, 1.5f);
         map->GetComponent<Map>()->Smooth(1);
         
         for (int i=0; i<40; i++) {
-           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 4, 5.0f);
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(mapSize.x), MathHelper::Random(mapSize.y), 4, 5.0f);
         }
         
-        for (int i=0; i<40; i++) {
-           map->GetComponent<Map>()->AddHill(MathHelper::Random(128), MathHelper::Random(128), 6, -2.0f);
+        for (int i=0; i<50; i++) {
+           map->GetComponent<Map>()->AddHill(MathHelper::Random(mapSize.x), MathHelper::Random(mapSize.y), 6, -2.0f);
         }
         
         
@@ -197,7 +201,7 @@ public:
         if (collisionMesh) collisionMesh->Remove();
         
     
-        NavMesh& mesh = map->NavMesh();
+        NavMesh& mesh = *map->NavMesh();
         
         for (int i=0; i<2; i++) {
         
@@ -215,9 +219,19 @@ public:
                 v.Position = {p.x, 1.50f+i*0.1f, p.y};
                 v.Color = i==0 ? Colour::Red() : Colour::Green(); //Colour::HslToRgb(i*180, 1, 1, 1);
                 navMeshMesh.vertices.push_back(v);
+                if (navMeshMesh.vertices.size()>25000) break;
             }
             
             for (auto& p : mesh.GetTriangles()) {
+                bool valid = true;
+                for (int i=0; i<3; i++) {
+                    if (p->corners[i]>=navMeshMesh.vertices.size()) {
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) continue;
+            
                 for (int i=0; i<3; i++) {
                     navMeshMesh.triangles.push_back(p->corners[i]);
                 }
@@ -236,8 +250,12 @@ public:
         
         Vector2 pos = { d.WorldPosition.x, d.WorldPosition.z};
         
+        Map* map = cameraObject->GetComponent<Map>();
+        if (!map->NavMesh()) return;
+        
         Vector2 nearestPosition;
-        cameraObject->GetComponent<Map>()->NavMesh().FindNearestTriangle(cameraObject->GetComponent<Map>()->NavMesh().navigation, pos, nearestPosition);
+        int version = 0;
+        map->NavMesh()->FindNearestTriangle(map->NavMesh()->navigation, pos, nearestPosition, version);
         
         marker->GetComponent<Transform>()->Position = {nearestPosition.x, 1.5f, nearestPosition.y};
     }
@@ -253,6 +271,16 @@ public:
             navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
         }else if (b=="c") {
             collisionMesh->EnableComponent<Material>(!collisionMesh->IsComponentEnabled<Material>());
+        } else if (b=="b") {
+            Point size(1 + MathHelper::Random(3), 1 + MathHelper::Random(3));
+            GameObject* building = world.CreateObject();
+            building->AddComponent<Transform>()->Position = marker->GetComponent<Transform>()->Position;
+            building->GetComponent<Transform>()->Rotation = Quaternion(MathHelper::Random(0, MathHelper::DegToRad * 360.0f), {0,1,0});
+            building->AddComponent<Obstacle>()->size = size;
+            building->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
+            building->AddComponent<Mappable>()->Map = map->GetComponent<Map>();
+            auto& mesh = building->AddComponent<Mesh>()->GetMesh<Vertex>();
+            mesh.AddCube({0,1,0}, {(float)size.x,1,(float)size.y});
         }
     }
     

@@ -33,7 +33,7 @@ void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     movable->path.clear();
     Timer t;
     t.Begin();
-    particle->lastTriangle = map->CalculatePath(particle->position, movable->Target, movable->path, 0);//, particle->lastTriangle);
+    particle->lastTriangle = map->CalculatePath(particle->position, movable->Target, movable->path, particle->navMeshVersion, particle->lastTriangle);
     double time = t.End();
     movable->prevPathPosition = particle->position;
     movable->stillFrames = 0;

@@ -16,7 +16,15 @@
 #include "clipper.hpp"
 
 NavMesh::NavMesh() {}
-NavMesh::~NavMesh() {}
+NavMesh::~NavMesh() { ClearTriangles(); }
+
+void NavMesh::ClearTriangles() {
+    for (int i=0; i<triangles.size(); i++) {
+        delete triangles[i];
+    }
+    triangles.clear();
+    trianglesPerVertex.clear();
+}
 
 int findCornerIndexFromNeighborIndex(int corner1, int corner2) {
     if (corner1 == 0) {
@@ -213,6 +221,8 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
     
     TrimSmallTriangles();
     Grow(navigation, -0.5f);
+    
+    version++;
 }
 
 std::vector<NavTriangle*> NavMesh::FindPath(const Vertices& vertices, NavTriangle* startTriangle, const Pocket::Vector2 &start, NavTriangle* endTriangle, const Pocket::Vector2 &end) {
@@ -407,7 +417,13 @@ float NavMesh::triangleArea(const Vector2& a, const Vector2& b, const Vector2& c
     return ac.x*ab.y - ab.x*ac.y;
 }
 
-NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition, NavTriangle* hintTriangle) {
+NavTriangle* NavMesh::FindNearestTriangle(const Vertices& vertices, const Pocket::Vector2 &position, Vector2& nearestPosition, int& navMeshVersion, NavTriangle* hintTriangle) {
+
+    if (navMeshVersion!=version) {
+        hintTriangle = 0;
+        navMeshVersion = version;
+    }
+
     if (triangles.empty()) {
         nearestPosition = position;
         return 0;
@@ -495,8 +511,8 @@ void NavMesh::Grow(Vertices& vertices, float amount) {
     for(NavTriangle* t : triangles) {
         for (int i=0; i<3; i++) {
             if (!t->neighbors[i]) {
-                short index0 = t->corners[i];
-                short index1 = t->corners[i<2 ? i + 1 : 0];
+                int index0 = t->corners[i];
+                int index1 = t->corners[i<2 ? i + 1 : 0];
                 Vector2 direction = vertices[index1] - vertices[index0];
                 Vector2 normal = { -direction.y, direction.x };
                 normal.Normalize();

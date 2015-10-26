@@ -24,11 +24,13 @@ public:
     
     NavMesh();
     ~NavMesh();
+
+    void ClearTriangles();
     
     void BuildPointsTriangle(int width, int depth, std::function<bool(int x, int z)> predicate);
     std::vector<NavTriangle*> FindPath(const Vertices& vertices, NavTriangle* startTriangle, const Vector2& start, NavTriangle* endTriangle, const Vector2& end);
     std::vector<Vector2> FindStraightPath(const Vertices& vertices, const std::vector<NavTriangle*>& path);
-    NavTriangle* FindNearestTriangle(const Vertices& vertices, const Vector2& position, Vector2& nearestPosition, NavTriangle* hintTriangle = 0);
+    NavTriangle* FindNearestTriangle(const Vertices& vertices, const Vector2& position, Vector2& nearestPosition, int& navMeshVersion, NavTriangle* hintTriangle = 0);
     const Triangles& GetTriangles() const;
 
     void TrimSmallTriangles();
@@ -37,6 +39,7 @@ public:
     Vertices collision;
     Vertices navigation;
     
+    int version;
 private:
     float triangleArea(const Vector2& a, const Vector2& b, const Vector2& c);
     void AddHole(std::vector<double>& points, std::vector<int>& segments, std::vector<double>& holes, Vector2 p, Vector2 size);
@@ -48,7 +51,7 @@ private:
 
 
 struct NavTriangle {
-    short corners[3];
+    int corners[3];
     NavTriangle* neighbors[3];
     
     inline Vector2 GetMidpoint(const NavMesh::Vertices& vertices, int neighborIndex) {

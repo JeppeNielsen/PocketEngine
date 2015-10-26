@@ -33,6 +33,7 @@ Component(Map)
         int obstacles;
     };
 
+    void Reset();
     void CreateMap(int width, int depth);
 	typedef std::vector<std::vector<Node>> Nodes;
 
@@ -53,15 +54,17 @@ Component(Map)
     void CalcNormals();
     void CalcNormals(const MapRect& rect);
 
-    NavTriangle* CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path, NavTriangle* hintStartTriangle);
+    NavTriangle* CalculatePath(Vector2 start, Vector2 end, std::vector<Vector2>& path, int& navMeshVersion, NavTriangle* hintStartTriangle);
 
-    void CreateNavigationMesh();
+    void CreateNavigationMesh(class NavMesh& navMesh);
     bool IsNodeWalkable(const Node& node);
 
-    NavMesh& NavMesh();
+    NavMesh* NavMesh();
 
     Event<Map*> NavigationUpdated;
+
+    void SetNavMesh(class NavMesh* navMesh);
 private:
 	Node outOfBoundsNode;
-    class NavMesh navMesh;
+    class NavMesh* navMesh;
 };

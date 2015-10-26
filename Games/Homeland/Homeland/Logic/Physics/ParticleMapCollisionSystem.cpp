@@ -14,7 +14,8 @@ void ParticleMapCollisionSystem::Update(float dt) {
         Mappable* mappable = go->GetComponent<Mappable>();
         Map* map = mappable->Map;
         Vector2 nearestPosition;
-        particle->lastTriangle = map->NavMesh().FindNearestTriangle(map->NavMesh().collision, particle->position, nearestPosition);//, particle->lastTriangle);
+        if (!map->NavMesh()) continue;
+        particle->lastTriangle = map->NavMesh()->FindNearestTriangle(map->NavMesh()->collision, particle->position, nearestPosition, particle->navMeshVersion, particle->lastTriangle);
         particle->position = nearestPosition;
     }
 }

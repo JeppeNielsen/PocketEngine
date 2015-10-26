@@ -24,5 +24,6 @@ Component(Particle)
         void SetPosition(Vector2 position);
 
         NavTriangle* lastTriangle;
+        int navMeshVersion;
 
 };

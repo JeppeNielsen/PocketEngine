@@ -14,6 +14,7 @@ void Particle::Reset() {
     positionOld = Vector2(0,0);
     immovable = false;
     lastTriangle = 0;
+    navMeshVersion = 0;
 }
 
 void Particle::SetPosition(Vector2 position) {
