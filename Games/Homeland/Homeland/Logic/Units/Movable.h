@@ -22,7 +22,6 @@ public:
     void Reset();
     Property<Movable*, Vector2> Target;
 
-    Vector2 prevPathPosition;
     Vector2 prevPosition;
     int stillFrames;
 };

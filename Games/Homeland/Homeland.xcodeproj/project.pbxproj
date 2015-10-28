@@ -48,6 +48,7 @@
 		72411D581BDBA55F00269FFB /* TestOutOfBounds.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */; };
 		72411D5B1BDD711A00269FFB /* Obstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D591BDD711A00269FFB /* Obstacle.cpp */; };
 		72411D5E1BDD716800269FFB /* ObstacleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */; };
+		72411D611BDFE83800269FFB /* ComponentTypes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 72411D601BDFE83800269FFB /* ComponentTypes.txt */; };
 		727847351B79184300FCA232 /* MoveSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847331B79184300FCA232 /* MoveSystem.cpp */; };
 		727847381B79526D00FCA232 /* PathFinderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847361B79526D00FCA232 /* PathFinderSystem.cpp */; };
 		727FB7561BCAE343004D2C9E /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7521BCAE343004D2C9E /* SelectedColorer.cpp */; };
@@ -465,6 +466,7 @@
 		72411D5A1BDD711A00269FFB /* Obstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Obstacle.h; sourceTree = "<group>"; };
 		72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObstacleSystem.cpp; sourceTree = "<group>"; };
 		72411D5D1BDD716800269FFB /* ObstacleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObstacleSystem.h; sourceTree = "<group>"; };
+		72411D601BDFE83800269FFB /* ComponentTypes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ComponentTypes.txt; sourceTree = "<group>"; };
 		727847331B79184300FCA232 /* MoveSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveSystem.cpp; sourceTree = "<group>"; };
 		727847341B79184300FCA232 /* MoveSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveSystem.h; sourceTree = "<group>"; };
 		727847361B79526D00FCA232 /* PathFinderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathFinderSystem.cpp; sourceTree = "<group>"; };
@@ -1378,6 +1380,14 @@
 			path = Physics;
 			sourceTree = "<group>";
 		};
+		72411D5F1BDFE83800269FFB /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				72411D601BDFE83800269FFB /* ComponentTypes.txt */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
 		727FB7711BCD9A6C004D2C9E /* Clipping */ = {
 			isa = PBXGroup;
 			children = (
@@ -1439,10 +1449,11 @@
 			isa = PBXGroup;
 			children = (
 				723E78231B5BE52500007AEA /* Assets */,
+				72411D5F1BDFE83800269FFB /* Design */,
 				72B621B11B2F5D4A001007FC /* Logic */,
 				72B61BD91B2F56B9001007FC /* main.cpp */,
-				727FB7BA1BD26AD1004D2C9E /* TestNavMesh.cpp */,
 				727FB7BC1BD55692004D2C9E /* NavMeshTest.cpp */,
+				727FB7BA1BD26AD1004D2C9E /* TestNavMesh.cpp */,
 				72411D571BDBA55F00269FFB /* TestOutOfBounds.cpp */,
 				72411D421BD6D07800269FFB /* TestTriangle.cpp */,
 			);
@@ -2783,6 +2794,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72411D611BDFE83800269FFB /* ComponentTypes.txt in Resources */,
 				723E78281B5BE53C00007AEA /* grass.png in Resources */,
 				723E78291B5BE53C00007AEA /* road.png in Resources */,
 				723E782A1B5BE53C00007AEA /* rock.png in Resources */,

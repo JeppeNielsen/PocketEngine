@@ -1,0 +1,46 @@
+
+RigidBody (Particle)
+    Position
+    OldPosition
+    Radius
+
+Moveable
+    Speed
+    Target
+
+Pathfindable
+    Path
+
+Groundable
+    AlignSpeed
+    AlignToGround
+    HeightAboveGround ??
+
+Obstacle
+    Size
+
+Selectable
+
+Health
+    Hitpoints
+    MaxHitpoints
+
+Damager
+    Damage
+
+Collidable
+    OnCollision
+
+
+
+
+
+
+
+
+
+
+
+
+
+
