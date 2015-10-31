@@ -25,17 +25,13 @@ namespace Pocket {
             return sqrt(x * x + y * y);
         }
         
-        inline float Normalize() {
+        inline void Normalize() {
             float sqrLen = x * x + y * y;
             
-            if (!sqrLen) {
-                return 0;
-            } else {
-                sqrLen = sqrt(sqrLen);
-                float m = 1.0f / sqrLen;
-                x *= m;
-                y *= m;
-                return sqrLen;
+            if (sqrLen>0) {
+                sqrLen = 1.0f / sqrt(sqrLen);
+                x *= sqrLen;
+                y *= sqrLen;
             }
         }
         
