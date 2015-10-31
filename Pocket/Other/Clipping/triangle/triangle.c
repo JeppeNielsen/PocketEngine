@@ -12315,7 +12315,7 @@ int newmark;
   encodedtri = vertex2tri(endpoint2);
   if (encodedtri != (triangle) NULL) {
     decode(encodedtri, searchtri2);
-    org(searchtri2, checkvertex);
+    //org(searchtri2, checkvertex);
   }
   if (checkvertex != endpoint2) {
     /* Find a boundary triangle to search from. */
