@@ -10,8 +10,9 @@
 #include "GameWorld.hpp"
 #include "Particle.h"
 #include "Mappable.h"
+#include "Groundable.h"
 
-SYSTEM(ParticleMapCollisionSystem, Particle, Mappable)
+SYSTEM(ParticleMapCollisionSystem, Groundable, Particle, Mappable)
     public:
         void Update(float dt);
 };

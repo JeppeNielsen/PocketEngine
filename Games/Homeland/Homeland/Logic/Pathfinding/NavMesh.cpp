@@ -144,10 +144,10 @@ void NavMesh::BuildPointsTriangle(int width, int depth, std::function<bool (int,
         int unblockPos = 0;
         for (int x=0; x<width; ++x) {
             bool blocked = predicate(x,z);
-            if (blocked) {
-                AddHole(outer, segments, holes, {(float)x,(float)z}, {1.0f, 1.0f});
-            }
-            continue;
+            //if (blocked) {
+            //    AddHole(outer, segments, holes, {(float)x,(float)z}, {1.0f, 1.0f});
+            //}
+            //continue;
             
             if (!blocked || x == lastPos) {
                 int size = x - unblockPos;

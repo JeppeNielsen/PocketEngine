@@ -9,6 +9,7 @@
 #include "PathFinderSystem.h"
 #include <iostream>
 #include "Timer.hpp"
+#include "Groundable.h"
 
 void PathFinderSystem::ObjectAdded(Pocket::GameObject *object) {
     objectTargetsChanged.Add(object->GetComponent<Movable>()->Target, object, false);
@@ -31,12 +32,24 @@ void PathFinderSystem::CalculatePath(Pocket::GameObject *object) {
     Movable* movable = object->GetComponent<Movable>();
     Particle* particle = object->GetComponent<Particle>();
     movable->path.clear();
-    Timer t;
-    t.Begin();
-    particle->lastTriangle = map->CalculatePath(particle->position, movable->Target, movable->path, particle->navMeshVersion, particle->lastTriangle);
-    double time = t.End();
-    movable->stillFrames = 0;
-    movable->prevPosition = particle->position;
     
-    std::cout<< " Path finding took : " << time<<std::endl;
+    if (object->GetComponent<Groundable>()) {
+    
+        Timer t;
+        t.Begin();
+        particle->lastTriangle = map->CalculatePath(particle->position, movable->Target, movable->path, particle->navMeshVersion, particle->lastTriangle);
+        double time = t.End();
+        std::cout<< " Path finding took : " << time<<std::endl;
+        
+    } else {
+        
+        movable->path.push_back(movable->Target());
+        movable->path.push_back(particle->position);
+        
+    }
+    movable->stillFrames = 0;
+        movable->prevPosition = particle->position;
+    
+    
+    
 }

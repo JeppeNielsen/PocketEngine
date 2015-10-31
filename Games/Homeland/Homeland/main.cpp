@@ -18,6 +18,7 @@
 #include "ParticleMapCollisionSystem.h"
 #include "ParticleCollisionSystem.h"
 #include "ParticleGroundSystem.h"
+#include "ParticleAirSystem.h"
 #include "ObstacleSystem.h"
 
 using namespace Pocket;
@@ -57,12 +58,15 @@ public:
         world.CreateSystem<ClickTargetSystem>();
         
         world.CreateSystem<MoveSystem>();
-        world.CreateSystem<ParticleCollisionSystem>();
-        ParticleMapCollisionSystem* mapCollision = world.CreateSystem<ParticleMapCollisionSystem>();
+        world.CreateSystem<ParticleCollisionSystem>()->AddComponent<Groundable>();
+        world.CreateSystem<ParticleCollisionSystem>()->AddComponent<Airable>();
+        
+        world.CreateSystem<ParticleMapCollisionSystem>();
         world.CreateSystem<ParticleUpdaterSystem>();
         //world.CreateSystem<ParticleTransformSystem>();
         world.CreateSystem<ParticleGroundSystem>();
-        ObstacleSystem* obstacleSystem = world.CreateSystem<ObstacleSystem>();
+        world.CreateSystem<ParticleAirSystem>();
+        world.CreateSystem<ObstacleSystem>();
         
         map = world.CreateObject();
         
@@ -70,8 +74,8 @@ public:
         
         map->AddComponent<Map>()->CreateMap(mapSize.x, mapSize.y);
         
-        map->GetComponent<Map>()->Randomize(-0.5f, 1.5f);
-        map->GetComponent<Map>()->Smooth(1);
+        map->GetComponent<Map>()->Randomize(-6.5f, 8.5f);
+        map->GetComponent<Map>()->Smooth(5);
         
         for (int i=0; i<40; i++) {
            map->GetComponent<Map>()->AddHill(MathHelper::Random(mapSize.x), MathHelper::Random(mapSize.y), 4, 5.0f);
@@ -81,6 +85,7 @@ public:
            map->GetComponent<Map>()->AddHill(MathHelper::Random(mapSize.x), MathHelper::Random(mapSize.y), 6, -2.0f);
         }
         
+        //map->GetComponent<Map>()->AddHill(64, 64, 40, 5);
         
         /*
         
@@ -133,7 +138,7 @@ public:
         camera = world.CreateObject();
         camera->Parent = cameraObject;
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
-        camera->AddComponent<Transform>()->Position = Vector3(0, 10, 5) * 1.5f;
+        camera->AddComponent<Transform>()->Position = Vector3(0, 10, 5) * 1.8f;
         camera->GetComponent<Transform>()->Rotation = Quaternion::LookAt(camera->GetComponent<Transform>()->Position, {0,0,0}, Vector3(0,1,0));
         camera->GetComponent<Camera>()->FieldOfView = 70;
         
@@ -153,10 +158,19 @@ public:
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.2f,0}, {0.55f,0.2f,1.0f});
         cube->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
         cube->AddComponent<Selectable>();
-        cube->AddComponent<Movable>()->Speed = 3.0f;
+        cube->AddComponent<Movable>();
         cube->AddComponent<Particle>()->SetPosition(position);
-        cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
-        
+        if (i>50) {
+            cube->AddComponent<Airable>()->targetAboveGround = 4.0f;
+            cube->GetComponent<Airable>()->heightAligmentSpeed = 2.0f;
+            cube->GetComponent<Airable>()->alignmentSpeed = 2.0f;
+            cube->GetComponent<Movable>()->Speed = 6.0f;
+            //cube->GetComponent<Movable>()->Acc = 5.0f;
+        } else {
+            cube->AddComponent<Groundable>()->alignmentSpeed = 10.0f;
+            //cube->GetComponent<Movable>()->Acc = 10.0f;
+            cube->GetComponent<Movable>()->Speed = 2.0f;
+        }
         GameObject* turret = world.CreateObject();
         turret->Parent = cube;
         turret->AddComponent<Transform>()->Position = {0,0.4f,0};
@@ -308,5 +322,6 @@ public:
 int main() {
     Engine e;
     e.Start<Game>();
-	return 0;
+    //e.Start<Game>(1440, 900, true);
+    return 0;
 }

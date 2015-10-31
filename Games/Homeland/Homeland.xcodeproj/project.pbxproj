@@ -49,6 +49,9 @@
 		72411D5B1BDD711A00269FFB /* Obstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D591BDD711A00269FFB /* Obstacle.cpp */; };
 		72411D5E1BDD716800269FFB /* ObstacleSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */; };
 		72411D611BDFE83800269FFB /* ComponentTypes.txt in Resources */ = {isa = PBXBuildFile; fileRef = 72411D601BDFE83800269FFB /* ComponentTypes.txt */; };
+		72411D641BE17E0400269FFB /* Airable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D621BE17E0400269FFB /* Airable.cpp */; };
+		72411D671BE17E4400269FFB /* ParticleAirSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D651BE17E4400269FFB /* ParticleAirSystem.cpp */; };
+		72411D6B1BE2C23A00269FFB /* Constructor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72411D691BE2C23A00269FFB /* Constructor.cpp */; };
 		727847351B79184300FCA232 /* MoveSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847331B79184300FCA232 /* MoveSystem.cpp */; };
 		727847381B79526D00FCA232 /* PathFinderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727847361B79526D00FCA232 /* PathFinderSystem.cpp */; };
 		727FB7561BCAE343004D2C9E /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727FB7521BCAE343004D2C9E /* SelectedColorer.cpp */; };
@@ -467,6 +470,12 @@
 		72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ObstacleSystem.cpp; sourceTree = "<group>"; };
 		72411D5D1BDD716800269FFB /* ObstacleSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObstacleSystem.h; sourceTree = "<group>"; };
 		72411D601BDFE83800269FFB /* ComponentTypes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ComponentTypes.txt; sourceTree = "<group>"; };
+		72411D621BE17E0400269FFB /* Airable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Airable.cpp; sourceTree = "<group>"; };
+		72411D631BE17E0400269FFB /* Airable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Airable.h; sourceTree = "<group>"; };
+		72411D651BE17E4400269FFB /* ParticleAirSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleAirSystem.cpp; sourceTree = "<group>"; };
+		72411D661BE17E4400269FFB /* ParticleAirSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParticleAirSystem.h; sourceTree = "<group>"; };
+		72411D691BE2C23A00269FFB /* Constructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Constructor.cpp; sourceTree = "<group>"; };
+		72411D6A1BE2C23A00269FFB /* Constructor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constructor.h; sourceTree = "<group>"; };
 		727847331B79184300FCA232 /* MoveSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MoveSystem.cpp; sourceTree = "<group>"; };
 		727847341B79184300FCA232 /* MoveSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveSystem.h; sourceTree = "<group>"; };
 		727847361B79526D00FCA232 /* PathFinderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PathFinderSystem.cpp; sourceTree = "<group>"; };
@@ -1343,22 +1352,26 @@
 		723E7E121B5EECED00007AEA /* Units */ = {
 			isa = PBXGroup;
 			children = (
-				723E7E191B6186BA00007AEA /* Movable.cpp */,
-				723E7E1A1B6186BA00007AEA /* Movable.h */,
-				723E7E1C1B61873000007AEA /* ParticleGroundSystem.cpp */,
-				723E7E1D1B61873000007AEA /* ParticleGroundSystem.h */,
-				723E7E1F1B6188A600007AEA /* Groundable.cpp */,
-				723E7E201B6188A600007AEA /* Groundable.h */,
-				727847331B79184300FCA232 /* MoveSystem.cpp */,
-				727847341B79184300FCA232 /* MoveSystem.h */,
-				727847361B79526D00FCA232 /* PathFinderSystem.cpp */,
-				727847371B79526D00FCA232 /* PathFinderSystem.h */,
 				727FB75E1BCAF411004D2C9E /* ClickTargetSystem.cpp */,
 				727FB75F1BCAF411004D2C9E /* ClickTargetSystem.h */,
+				723E7E1F1B6188A600007AEA /* Groundable.cpp */,
+				723E7E201B6188A600007AEA /* Groundable.h */,
+				723E7E191B6186BA00007AEA /* Movable.cpp */,
+				723E7E1A1B6186BA00007AEA /* Movable.h */,
+				727847331B79184300FCA232 /* MoveSystem.cpp */,
+				727847341B79184300FCA232 /* MoveSystem.h */,
 				72411D591BDD711A00269FFB /* Obstacle.cpp */,
 				72411D5A1BDD711A00269FFB /* Obstacle.h */,
 				72411D5C1BDD716800269FFB /* ObstacleSystem.cpp */,
 				72411D5D1BDD716800269FFB /* ObstacleSystem.h */,
+				723E7E1C1B61873000007AEA /* ParticleGroundSystem.cpp */,
+				723E7E1D1B61873000007AEA /* ParticleGroundSystem.h */,
+				727847361B79526D00FCA232 /* PathFinderSystem.cpp */,
+				727847371B79526D00FCA232 /* PathFinderSystem.h */,
+				72411D621BE17E0400269FFB /* Airable.cpp */,
+				72411D631BE17E0400269FFB /* Airable.h */,
+				72411D651BE17E4400269FFB /* ParticleAirSystem.cpp */,
+				72411D661BE17E4400269FFB /* ParticleAirSystem.h */,
 			);
 			path = Units;
 			sourceTree = "<group>";
@@ -1386,6 +1399,15 @@
 				72411D601BDFE83800269FFB /* ComponentTypes.txt */,
 			);
 			path = Design;
+			sourceTree = "<group>";
+		};
+		72411D681BE2C1BE00269FFB /* Creation */ = {
+			isa = PBXGroup;
+			children = (
+				72411D691BE2C23A00269FFB /* Constructor.cpp */,
+				72411D6A1BE2C23A00269FFB /* Constructor.h */,
+			);
+			path = Creation;
 			sourceTree = "<group>";
 		};
 		727FB7711BCD9A6C004D2C9E /* Clipping */ = {
@@ -2729,6 +2751,7 @@
 		72B621B11B2F5D4A001007FC /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72411D681BE2C1BE00269FFB /* Creation */,
 				72411D471BDAAA5100269FFB /* Physics */,
 				723E7E0B1B5EECED00007AEA /* Map */,
 				727FB7B41BD2620B004D2C9E /* Pathfinding */,
@@ -2842,6 +2865,7 @@
 				72B620C71B2F56CB001007FC /* btBox2dShape.cpp in Sources */,
 				72B6206B1B2F56CB001007FC /* ClickSelectorSystem.cpp in Sources */,
 				72B620171B2F56CB001007FC /* ICellItem.cpp in Sources */,
+				72411D671BE17E4400269FFB /* ParticleAirSystem.cpp in Sources */,
 				72B6210A1B2F56CB001007FC /* btPoint2PointConstraint.cpp in Sources */,
 				72B620181B2F56CB001007FC /* IPointable.cpp in Sources */,
 				72B6212E1B2F56CB001007FC /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
@@ -2984,6 +3008,7 @@
 				72B620721B2F56CB001007FC /* Transform.cpp in Sources */,
 				72B6203D1B2F56CB001007FC /* MenuAnimator.cpp in Sources */,
 				72B620C91B2F56CB001007FC /* btBvhTriangleMeshShape.cpp in Sources */,
+				72411D641BE17E0400269FFB /* Airable.cpp in Sources */,
 				72B621391B2F56CB001007FC /* MiniCL.cpp in Sources */,
 				72B620ED1B2F56CB001007FC /* btGImpactBvh.cpp in Sources */,
 				72B620E21B2F56CB001007FC /* btStridingMeshInterface.cpp in Sources */,
@@ -3038,6 +3063,7 @@
 				72B6202F1B2F56CB001007FC /* SoundSystem.cpp in Sources */,
 				72B6212C1B2F56CB001007FC /* btSoftBodyHelpers.cpp in Sources */,
 				72B620121B2F56CB001007FC /* Timer.cpp in Sources */,
+				72411D6B1BE2C23A00269FFB /* Constructor.cpp in Sources */,
 				72B620321B2F56CB001007FC /* ParticleEffect.cpp in Sources */,
 				72B621241B2F56CB001007FC /* SpuGatheringCollisionTask.cpp in Sources */,
 				72411D5E1BDD716800269FFB /* ObstacleSystem.cpp in Sources */,

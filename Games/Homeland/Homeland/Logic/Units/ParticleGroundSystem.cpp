@@ -87,8 +87,10 @@ void ParticleGroundSystem::UpdateObject(float dt, Pocket::GameObject *object) {
     if (groundable->positions.size()>10) {
         Vector2 direction = 0;
         for (int i = 0; i<groundable->positions.size()-1; i++) {
-            direction += (groundable->positions[i+1]- groundable->positions[i]).Normalized();
+            direction += (groundable->positions[i+1]- groundable->positions[i]);//.Normalized();
         }
+        
+        direction.Normalize();
         
         //Quaternion rotation2d = Quaternion(atan2f(direction.y, direction.x) - MathHelper::Pi * 0.5f, Vector3(0,1,0));
         //Quaternion normalRotation = Quaternion(0, -normal);
