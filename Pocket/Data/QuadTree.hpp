@@ -49,8 +49,8 @@ namespace Pocket {
                     GetRecursive<T>(list);
                     return;
                 } else {
-                    for(size_t i = 0, size=nodes->size(); i<size; i++) {
-                        Node* node = nodes->at(i);
+                    for(int i = 0; i<nodes->size(); i++) {
+                        Node* node = nodes->operator[](i);
                         
                         bool outsideNode = (testMin.x > node->max.x || testMax.x < node->min.x || testMin.y > node->max.y || testMax.y < node->min.y);
                         
