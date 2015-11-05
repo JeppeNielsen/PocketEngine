@@ -14,86 +14,181 @@
 #include "TouchSystem.hpp"
 #include "DraggableSystem.hpp"
 #include "SpringTransformSystem.h"
-#include "SpringMeshSystem.h"
+#include "Orderable.hpp"
+#include "BeamMeshSystem.h"
+#include "HydralicMeshSystem.h"
+#include "ParticleMeshSystem.h"
+#include "HydralicSystem.h"
+#include "TerrainMeshSystem.h"
 
 void Game::Initialize() {
 
-    Input.TouchDown += event_handler(this, &Game::MouseDown);
-
-    world.CreateSystem<RenderSystem>();
+    renderSystem = world.CreateSystem<RenderSystem>();
     
     world.CreateSystem<TouchSystem>()->Input = &Input;
+    creatorSystem = world.CreateSystem<CreatorSystem>();
+    
     world.CreateSystem<DraggableSystem>();
     world.CreateSystem<ParticleFollowTransformSystem>();
     simulation = world.CreateSystem<SimulationSystem>();
     world.CreateSystem<ParticleTransformSystem>();
     world.CreateSystem<SpringTransformSystem>();
-    world.CreateSystem<SpringMeshSystem>();
-    world.CreateSystem<PhysicsEditor>()->SetInputManager(Input);
+    world.CreateSystem<BeamMeshSystem>();
+    world.CreateSystem<HydralicMeshSystem>();
+    world.CreateSystem<ParticleMeshSystem>();
+    world.CreateSystem<HydralicSystem>();
+    world.CreateSystem<TerrainMeshSystem>();
     
     camera = world.CreateObject();
     camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
-    camera->AddComponent<Transform>()->Position = { 0, 0, 50 };
+    camera->AddComponent<Transform>()->Position = { 0, 5, 60 };
     camera->GetComponent<Camera>()->FieldOfView = 60;
     
-    //Particle* p1 = CreateBox({0,2,0}, {2,2});
+    atlas = world.CreateObject();
+    Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
+    texture.LoadFromPng("images.png");
+    atlas->AddComponent<class Atlas>()->Load("images.xml",Vector2(texture.GetWidth(), texture.GetHeight()));
     
+    buildType = BuildType::Beam;
+    
+    creator = world.CreateObject();
+    creator->AddComponent<Creator>();
+    
+    currentHydralic = 0;
+    
+    CreateParticle({-5,0})->GetComponent<Particle>()->immovable = true;
+    CreateParticle({5,0})->GetComponent<Particle>()->immovable = true;
+    
+    
+    creatorSystem->CreateParticle = [this] () -> GameObject* {
+        return CreateParticle(0);
+    };
 
-    //CreateSpring(p1, p2, 100);
+    creatorSystem->CreateSpring = [this] () -> GameObject* {
+        GameObject* s = CreateSpring(70.0f);
+        if (buildType == BuildType::Beam) {
+            s->AddComponent<Beam>();
+        } else if (buildType == BuildType::Hydralic) {
+            currentHydralic = s->AddComponent<Hydralic>();
+        }
+        return s;
+    };
+    
+    creatorSystem->Continuous = [this] () -> bool {
+        return buildType == BuildType::Beam;
+    };
+    
+    GameObject* t = world.CreateObject();
+    Terrain* terrain = t->AddComponent<Terrain>();
+    
+    //terrain->vertices = {{40,0}, {0,20}, {-20,5}, {-40,0}, {-40,-20}, {40,-20}};
+    terrain->vertices = {{40,0}, {-40,0}, {-40,-20}, {40,-20}};
+    
     
     /*
+    int segments = 128;
+    float dAngle = -MathHelper::DegToRad * 360.0f / segments;
     
-    Particle* b1;
-
-//if (false)
-{
-    Particle* p1 = CreateParticle({-5,10});
-    Particle* p2 = CreateParticle({-1,10});
-    Particle* p3 = CreateParticle({-3,14});
-    
-    CreateSpring(p1, p2, 50);
-    CreateSpring(p2, p3, 50);
-    CreateSpring(p3, p1, 50);
-    b1 = p1;
- }
-
-//if (false)
-{
-    Particle* p1 = CreateParticle({0,16});
-    Particle* p2 = CreateParticle({4,16});
-    Particle* p3 = CreateParticle({6,20});
-    
-    CreateSpring(p1, p2, 50);
-    CreateSpring(p2, p3, 50);
-    CreateSpring(p3, p1, 50);
-    spring = CreateSpring(b1, p1, 50);
- }
-
- CreateChain({-18,5}, {18,5}, 30, 50);
- 
- CreateBox({0,20}, {3,4});
-  CreateBox({-8,20}, {2,3});
-  
-  */
- //CreateBox({0,20}, {3,4});
-  
-  CreateChain({-15,-2}, {15,-2}, 50, 20);
-  
-  /*
-  for (int y=0; y<6; y++) {
-    for (int x=0; x<10; x++) {
-        CreateBox({-10.0f+x*4.0f,y*4.0f}, {1.9f,1.9f});
+    for (int s=0; s<segments; s++) {
+        terrain->vertices.push_back({ sinf(s*dAngle)*40, cosf(s*dAngle)*5 });
     }
-  }
-  */
-
+    */
+    
+    
+    Terrain::Layer grass;
+    grass.outerDepth = -3;
+    grass.innerDepth = 0;
+    grass.textureScale  = 0.06f;
+    grass.outerV = 0.1f;
+    grass.innerV = 0.5f;
+    grass.isBevel = false;
+    terrain->layers.push_back(grass);
+    
+    Terrain::Layer dirt;
+    dirt.outerDepth = -0.35f;
+    dirt.innerDepth = 0.35f;
+    dirt.textureScale  = 0.01f;
+    dirt.outerV = 0.54f;
+    dirt.innerV = 1.0f;
+    dirt.isBevel = false;
+    
+    terrain->layers.push_back(dirt);
+    
+    Terrain::Layer bevel;
+    bevel.outerDepth = 0.3f;
+    bevel.innerDepth = 5;
+    bevel.textureScale  = 0.1f;
+    bevel.outerV = 0.02f;
+    bevel.innerV = 0.02f;
+    bevel.isBevel = true;
+    
+    terrain->layers.push_back(bevel);
+    
+    
+    
+    t->AddComponent<Transform>();
+    t->AddComponent<Mesh>();
+    t->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    t->AddComponent<TextureComponent>()->Texture().LoadFromPng("Terrain.png");
+    t->AddComponent<Orderable>()->Order = -50;
+    
+    
+    GameObject* center = world.CreateObject();
+    center->Parent = t;
+    center->AddComponent<Transform>();
+    center->AddComponent<Mesh>();
+    center->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    center->AddComponent<TextureComponent>()->Texture().LoadFromPng("Dirt.png");
+    center->AddComponent<Orderable>()->Order = -100;
+    
+    GameObject* bevelObject = world.CreateObject();
+    bevelObject->Parent = t;
+    bevelObject->AddComponent<Transform>();
+    bevelObject->AddComponent<Mesh>();
+    bevelObject->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    bevelObject->AddComponent<TextureComponent>(t);
+    bevelObject->AddComponent<Orderable>()->Order = -25;
+    
+    
+    terrain->centerMesh = center->GetComponent<Mesh>();
+    terrain->bevelMesh = bevelObject->GetComponent<Mesh>();
+    
   
-  Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+    Input.ButtonDown += event_handler(this, &Game::ButtonDown);
+    Input.ButtonUp += event_handler(this, &Game::ButtonUp);
+    wireframe = false;
+}
+
+void Game::ButtonUp(std::string button) {
+    if (button == "" && currentHydralic) {
+        currentHydralic->speed = 0.0f;
+    }
+    if (button == "" && currentHydralic) {
+        currentHydralic->speed = 0.0f;
+    }
 }
 
 void Game::ButtonDown(std::string button) {
 
+    if (button == " ") {
+        creatorSystem->Cancel();
+        simulation->Running = !simulation->Running();
+    }
 
+    if (button == "1") buildType = BuildType::Beam;
+    if (button == "2") buildType = BuildType::Hydralic;
+    
+    if (button == "" && currentHydralic) {
+        currentHydralic->speed = 3.0f;
+    }
+    
+    if (button == "" && currentHydralic) {
+        currentHydralic->speed = -3.0f;
+    }
+    
+    if (button == "w") wireframe =!wireframe;
+
+/*
     if (button == "t") {
         simulation->springCollisionSystem->UseTree = !simulation->springCollisionSystem->UseTree;
     }
@@ -106,6 +201,9 @@ void Game::ButtonDown(std::string button) {
     float dist;
     if (plane.IntersectsRay(ray, &dist)) {
        CreateBox(ray.GetPosition(dist), {3,3});
+       //Vector2 position = ray.GetPosition(dist);
+       //CreateParticle(position);
+       
     }
     }
     
@@ -119,33 +217,48 @@ void Game::ButtonDown(std::string button) {
        CreateWheel(ray.GetPosition(dist), 3,12);
     }
     }
-    
+    */
 }
 
 
-Particle* Game::CreateParticle(Pocket::Vector2 p) {
+GameObject* Game::CreateParticle(Vector2 p) {
     GameObject* p1 = world.CreateObject();
     p1->AddComponent<Transform>()->Position = p;
-    p1->AddComponent<Mesh>()->GetMesh<Vertex>().AddGeoSphere(0, 0.5f, 6);
-    p1->AddComponent<Material>();
+    p1->AddComponent<Mesh>();
+    p1->AddComponent<Atlas>(atlas);
+    p1->AddComponent<TextureComponent>(atlas);
+    p1->AddComponent<Material>();//->Shader = &renderSystem->Shaders.Textured;
+    p1->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
     p1->AddComponent<Touchable>();
+    p1->AddComponent<Creator>(creator);
+    
+    static int counter = 10000;
+    counter++;
+    
+    p1->AddComponent<Orderable>()->Order = counter;
     p1->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
     Particle* pa = p1->AddComponent<Particle>();
     pa->SetPosition(p);
-    return pa;
+    return p1;
 }
 
-Spring* Game::CreateSpring(Particle *p1, Particle *p2, float elasticity) {
+GameObject* Game::CreateSpring(float elasticity) {
     GameObject* go = world.CreateObject();
     go->AddComponent<Transform>();
-    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {4,0.3,0.01});
-    go->AddComponent<Material>();
+    go->AddComponent<Mesh>();
+    go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    go->AddComponent<Atlas>(atlas);
+    go->AddComponent<TextureComponent>(atlas);
     Spring* spring = go->AddComponent<Spring>();
-    spring->SetParticles(p1, p2);
     spring->elasticity = elasticity;
-    return spring;
+    
+    static int counter = 0;
+    counter++;
+    go->AddComponent<Orderable>()->Order = counter;
+    return go;
 }
 
+/*
 Particle* Game::CreateBox(Pocket::Vector2 center, Pocket::Vector2 size) {
 
     Vector3 corners[4] {
@@ -170,7 +283,6 @@ Particle* Game::CreateBox(Pocket::Vector2 center, Pocket::Vector2 size) {
     CreateSpring(particles[1], particles[2],e);
     CreateSpring(particles[2], particles[3],e);
     CreateSpring(particles[3], particles[0],e);
-    
     CreateSpring(particles[0], particles[2],e);
     //CreateSpring(particles[1], particles[3],e);
     
@@ -194,14 +306,6 @@ Particle* Game::CreateWheel(Vector2 center, float radius, int points) {
         CreateSpring(particles[i], particles[i+1],e);
     }
     CreateSpring(particles[0], particles[points-1],e);
-    
-/*
-    for (int i=0; i<points; i++) {
-        CreateSpring(particles[i], particles[(i + 1) % points],e);
-        CreateSpring(particles[(i + 1) % points], centerParticle,e);
-        //CreateSpring(centerParticle, particles[i],e);
-    }
-    */
     
     //for (int i=0; i<points/2; i++) {
     //    CreateSpring(particles[i], particles[(i + points/2) % points],e);
@@ -227,22 +331,18 @@ Particle* Game::CreateChain(Pocket::Vector2 start, Pocket::Vector2 end, int link
     }
     return prev;
 }
-
-void Game::MouseDown(Pocket::TouchEvent e) {
-    if (e.Index == 0) return;
-    
-}
-
+*/
 
 void Game::Update(float dt) {
-    static float time = 0;
-    time+=dt*2;
-
-    //spring->length = 5+sinf(time)*2.5f;
     world.Update(dt);
 }
 
 void Game::Render() {
+    if (wireframe) {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+        } else {
+            glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+        }
     glClearColor(100.0f / 255.0f, 149.0f / 255.0f, 237.0f/255.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     world.Render();

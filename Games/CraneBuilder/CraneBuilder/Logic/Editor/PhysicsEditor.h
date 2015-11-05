@@ -13,36 +13,36 @@
 #include "Touchable.hpp"
 #include "InputManager.hpp"
 #include "Spring.h"
+#include "Atlas.hpp"
 
 using namespace Pocket;
 
 class PhysicsEditor : public GameSystem {
 public:
-
-    void Initialize();
-
-    void ObjectAdded(GameObject* object);
-
-    void ObjectRemoved(GameObject* object);
+    PhysicsEditor();
     
+    GameObject* atlas;
+    void Initialize();
+    void ObjectAdded(GameObject* object);
+    void ObjectRemoved(GameObject* object);
     void Update(float dt);
-
-    void SetInputManager(InputManager& input);
-
+    Property<PhysicsEditor*, InputManager*> Input;
+    Property<PhysicsEditor*, bool> Enabled;
 private:
     void ParticleClicked(TouchData d, GameObject* object);
-    void TouchUp(TouchEvent e);
-    
-    GameObject* modifingParticle;
-    GameObject* createdParticle;
-    GameObject* cameraObject;
-    
-    InputManager* input;
+    void SpringClicked(TouchData d, GameObject* object);
+    void BackgroundClicked(TouchData d, GameObject* object);
     
     GameObject* CreateParticle();
     Spring* CreateSpring();
     
-    bool touchUp;
-    bool particleClicked;
-
+    GameObject* background;
+    
+    enum class State {
+        Idle,
+        ParticleClicked,
+        SpringClicked,
+    };
+    
+    State currentState;
 };

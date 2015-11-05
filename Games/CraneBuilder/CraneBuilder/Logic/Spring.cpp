@@ -27,12 +27,13 @@ void Spring::SetLengthFromParticles() {
     if (!particleA) return;
     if (!particleB) return;
     length = (particleA->position-particleB->position).Length();
+    currentLength = length;
 }
 
 #define MIN(X,Y) ((X<Y) ? (X) : (Y))
 #define MAX(X,Y) ((X>Y) ? (X) : (Y))
 
-void Spring::ProjectToAxis( Vector2& axis, float& min, float& max ) {
+void Spring::ProjectToAxis(const Vector2& axis, float& min, float& max ) {
     float dot = axis.Dot(particleA->position);
     min = max = dot;
     dot = axis.Dot(particleB->position);

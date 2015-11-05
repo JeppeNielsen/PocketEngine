@@ -18,11 +18,9 @@ using namespace Pocket;
 class Body {
 public:
     Particle* particles[3];
-    void ProjectToAxis( Vector2& axis, float& min, float& max );
+    void ProjectToAxis(const Vector2& axis, float& min, float& max );
     bool SpringNotIntersects(Spring* spring);
-    
     void CalcMinMax(Vector2& min, Vector2& max);
-    
     Quadtree::Node node;
 };
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Texture>
+<Image name="Beam" position="0,0" size="94,43"/>
+<Image name="Bolt" position="0,44" size="81,78"/>
+<Image name="HydralicHousing" position="82,44" size="33,46"/>
+<Image name="HydralicMetal" position="0,123" size="20,46"/>
+</Texture>

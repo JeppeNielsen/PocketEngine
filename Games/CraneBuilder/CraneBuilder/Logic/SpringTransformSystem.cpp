@@ -24,14 +24,9 @@ void SpringTransformSystem::Update(float dt) {
         if (!spring->particleA) continue;
         if (!spring->particleB) continue;
         
-        Vector3 position = (spring->particleA->position + spring->particleB->position) * 0.5f;
-        
-        object->GetComponent<Transform>()->Position = position;
-        
+        object->GetComponent<Transform>()->Position = spring->particleA->position;
         Vector3 delta = spring->particleB->position - spring->particleA->position;
-        
         Quaternion rotation(atan2(-delta.x, delta.y));
-        
         object->GetComponent<Transform>()->Rotation = rotation;
     }
 

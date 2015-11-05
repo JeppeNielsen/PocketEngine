@@ -13,7 +13,8 @@
 #include "Particle.h"
 #include "Spring.h"
 #include "SimulationSystem.h"
-#include "PhysicsEditor.h"
+#include "CreatorSystem.h"
+#include "Hydralic.h"
 
 using namespace Pocket;
 
@@ -25,17 +26,33 @@ class Game : public GameState<Game> {
     private:
         GameWorld world;
         GameObject* camera;
+        GameObject* atlas;
+        RenderSystem* renderSystem;
+        GameObject* creator;
     
-        Particle* CreateParticle(Vector2 p);
-        Spring* CreateSpring(Particle* p1, Particle* p2, float elasticity = 1.0f);
+        GameObject* CreateParticle(Vector2 p);
+        GameObject* CreateSpring(float elasticity);
     
+        /*
         Particle* CreateBox(Vector2 center, Vector2 size);
         Particle* CreateChain(Vector2 start, Vector2 end, int links, float elasticity = 1.0f);
         Particle* CreateWheel(Vector2 center, float radius, int points);
+        */
     
-        void MouseDown(TouchEvent e);
         void ButtonDown(std::string button);
+        void ButtonUp(std::string button);
+    
     
         SimulationSystem* simulation;
+        CreatorSystem* creatorSystem;
     
+        enum class BuildType {
+            Beam,
+            Hydralic
+        };
+    
+        BuildType buildType;
+    
+        Hydralic* currentHydralic;
+        bool wireframe;
 };

@@ -29,7 +29,7 @@ Component(Spring)
 
     void SetLengthFromParticles();
 
-    void ProjectToAxis( Vector2& axis, float& min, float& max );
+    void ProjectToAxis(const Vector2& axis, float& min, float& max );
 
     void CalcBoundingBox(Box& box);
 

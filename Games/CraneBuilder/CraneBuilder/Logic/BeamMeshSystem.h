@@ -10,10 +10,11 @@
 
 #include "Spring.h"
 #include "Mesh.hpp"
+#include "Beam.h"
 
 using namespace Pocket;
 
-class SpringMeshSystem : public GameSystem {
+class BeamMeshSystem : public GameSystem {
 public:
     void Initialize();
     void Update(float dt);

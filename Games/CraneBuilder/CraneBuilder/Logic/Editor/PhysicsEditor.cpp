@@ -14,6 +14,9 @@
 #include "Spring.h"
 #include <iostream>
 #include "Draggable.hpp"
+#include "Atlas.hpp"
+#include "TextureComponent.hpp"
+#include "Orderable.hpp"
 
 void PhysicsEditor::Initialize() {
     AddComponent<Particle>();
@@ -39,6 +42,7 @@ void PhysicsEditor::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void PhysicsEditor::ParticleClicked(Pocket::TouchData d, Pocket::GameObject *object) {
+    return;
     if (modifingParticle == object) {
         modifingParticle = 0;
         if (createdParticle) {
@@ -65,40 +69,33 @@ void PhysicsEditor::ParticleClicked(Pocket::TouchData d, Pocket::GameObject *obj
     particleClicked = true;
 }
 
+GameObject* PhysicsEditor::CreateParticle() {
+    GameObject* p1 = World()->CreateObject();
+    p1->AddComponent<Transform>();
+    p1->AddComponent<Mesh>();
+    p1->AddComponent<Atlas>(atlas);
+    p1->AddComponent<TextureComponent>(atlas);
+    p1->AddComponent<Material>();//->Shader = &renderSystem->Shaders.Textured;
+    p1->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    p1->AddComponent<Touchable>();
+    p1->AddComponent<Orderable>()->Order = 1;
+    p1->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
+    Particle* pa = p1->AddComponent<Particle>();
+    return p1;
+}
+
 Spring* PhysicsEditor::CreateSpring() {
     GameObject* go = World()->CreateObject();
     go->AddComponent<Transform>();
-    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {4,0.3,0.01});
-    go->AddComponent<Material>();
+    go->AddComponent<Mesh>();
+    go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    go->AddComponent<Atlas>(atlas);
+    go->AddComponent<TextureComponent>(atlas);
+    go->AddComponent<Orderable>()->Order = -50;
     Spring* spring = go->AddComponent<Spring>();
-    spring->elasticity = 50.0f;
     return spring;
 }
 
-GameObject* PhysicsEditor::CreateParticle() {
-    GameObject* p = World()->CreateObject();
-    p->AddComponent<Particle>()->immovable = true;
-    p->AddComponent<Transform>();
-    p->AddComponent<Mesh>()->GetMesh<Vertex>().AddGeoSphere(0, 0.5f, 6);
-    p->AddComponent<Material>();
-    p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
-    return p;
-}
-
-void PhysicsEditor::TouchUp(Pocket::TouchEvent e) {
-    if (!modifingParticle) return;
-    if (e.Index == 1) {
-        
-        modifingParticle = 0;
-        if (createdParticle) {
-            createdParticle->Remove();
-            createdParticle = 0;
-        }
-    
-        return;
-    }
-    touchUp = true;
-}
 /*
 void Dummy() {
 
@@ -126,6 +123,7 @@ void Dummy() {
 
 void PhysicsEditor::Update(float dt) {
     if (!modifingParticle) return;
+    return;
     
     Plane plane({0,0,1},0);
     

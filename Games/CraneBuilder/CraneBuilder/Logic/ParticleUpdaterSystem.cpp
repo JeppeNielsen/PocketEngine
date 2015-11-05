@@ -37,16 +37,16 @@ void ParticleUpdaterSystem::Simulate(float dt) {
     for (auto it = Objects().begin(); it!=Objects().end(); it++) {
         GameObject* object = *it;
         Particle* particle = object->GetComponent<Particle>();
-        if (particle->position.y<-10) {
-            particle->position.y = -10;
+        if (particle->position.y<0) {
+            particle->position.y = 0;
             float xVel = particle->position.x - particle->positionOld.x;
             particle->position.x -= xVel * 0.5f;
         }
-        if (particle->position.x<-30) {
-            particle->position.x = -30;
+        if (particle->position.x<-60) {
+            particle->position.x = -60;
         }
-        if (particle->position.x>30) {
-            particle->position.x = 30;
+        if (particle->position.x>60) {
+            particle->position.x = 60;
         }
         
         if (particle->immovable) {
@@ -55,8 +55,7 @@ void ParticleUpdaterSystem::Simulate(float dt) {
         
     }
 
-    std::cout<<" Particles:"<<Objects().size()<<std::endl;
-
+    //std::cout<<" Particles:"<<Objects().size()<<std::endl;
 }
 
 

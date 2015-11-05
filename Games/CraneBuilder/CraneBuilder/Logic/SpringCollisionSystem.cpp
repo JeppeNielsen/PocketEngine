@@ -12,7 +12,7 @@
 #define MIN(X,Y) ((X<Y) ? (X) : (Y))
 #define MAX(X,Y) ((X>Y) ? (X) : (Y))
 
-void Body::ProjectToAxis( Vector2& axis, float& min, float& max ) {
+void Body::ProjectToAxis(const Vector2& axis, float& min, float& max ) {
   float dot = axis.Dot(particles[0]->position);
   
   //Set the minimum and maximum values to the projection of the first vertex
@@ -206,6 +206,9 @@ void SpringCollisionSystem::Simulate(float dt) {
         info.springB = 0;
         for (int i=0; i<Objects().size(); i++) {
             Spring* spring = Objects()[i]->GetComponent<Spring>();
+            if (!spring->particleA) continue;
+            if (!spring->particleB) continue;
+            
             min = spring->particleA->position.Min(spring->particleB->position);
             max = spring->particleA->position.Max(spring->particleB->position);
             bodiesInQuery.clear();
