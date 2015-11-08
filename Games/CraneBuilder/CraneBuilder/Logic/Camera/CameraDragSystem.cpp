@@ -67,10 +67,6 @@ void CameraDragSystem::Update(float dt) {
         }
     }
     
-    //vector2f projected(const vector2f &v)
-	//{   return v * (*this * v)/(v*v);	}
-
-    
     for (GameObject* go : Objects()) {
         CameraDragger* dragger = go->GetComponent<CameraDragger>();
         Vector3 pos = go->GetComponent<Transform>()->Position;
@@ -78,9 +74,7 @@ void CameraDragSystem::Update(float dt) {
         float delta = (dragger->zPos - pos.z) * dt * 20.0f;
         
         Ray ray = go->GetComponent<Camera>()->GetRay(go->GetComponent<Transform>(), Input()->GetTouchPosition(1));
-
-        // ray.direction;
-        
+    
         Vector3 forward(0,0,delta);
         Vector3 xyDelta = (forward * ray.direction.Dot(forward));
         Vector3 projected = ray.direction * (forward.Dot(ray.direction)) / ray.direction.Dot(ray.direction);
@@ -91,26 +85,9 @@ void CameraDragSystem::Update(float dt) {
         projected = ray.direction * dist;
 
         pos.z += delta;
-
-        pos.x += projected.x;// * delta;
-        pos.y += projected.y;// * delta;
+        pos.x += projected.x;
+        pos.y += projected.y;
     
-        
-        
-        
-        
-        /*
-        
-        float zDelta = dragger->zPos - dragger->zPosPrev;
-        //if (zDelta<0) zDelta=-zDelta;
-        
-        if (zDelta>0.0001f || zDelta<-0.0001f) {
-            float dT = (pos.z - dragger->zPosPrev) / zDelta;
-            Vector3 scrollPos = dragger->scrollLocation + dragger->scrollVector * dT;
-            pos.x = scrollPos.x;
-            pos.y = scrollPos.y;
-        }
-        */
         go->GetComponent<Transform>()->Position = pos;
     }
 }
@@ -119,17 +96,7 @@ void CameraDragSystem::ScrollChanged(float delta) {
     
     for (GameObject* go : Objects()) {
         CameraDragger* dragger = go->GetComponent<CameraDragger>();
-        dragger->zPosPrev = dragger->zPos;
         dragger->zPos -= delta;
         dragger->zPos = MathHelper::Clamp(dragger->zPos, 2, 100);
-        
-        Plane plane({0,0,1},dragger->zPos);
-        Ray ray = go->GetComponent<Camera>()->GetRay(go->GetComponent<Transform>(), Input()->GetTouchPosition(1));
-
-        float dist;
-        if (plane.IntersectsRay(ray, &dist)) {
-            dragger->scrollLocation = go->GetComponent<Transform>()->Position;
-            dragger->scrollVector = ray.GetPosition(dist) - dragger->scrollLocation;
-        }
     }
 }

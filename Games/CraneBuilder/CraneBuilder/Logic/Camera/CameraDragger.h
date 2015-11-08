@@ -14,9 +14,6 @@ Component(CameraDragger)
     Vector3 startDragPosition;
     Vector3 startTransformPosition;
     float zPos;
-    float zPosPrev;
-    Vector3 scrollLocation;
-    Vector3 scrollVector;
     bool isDragging;
     void Reset();
 };
