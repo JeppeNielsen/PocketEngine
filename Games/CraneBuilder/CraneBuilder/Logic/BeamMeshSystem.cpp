@@ -75,10 +75,10 @@ void BeamMeshSystem::Update(float dt) {
             mesh.vertices[index+2].Position = {width2, position+delta,0};
             mesh.vertices[index+3].Position = {width, position,0};
             
-            mesh.vertices[index+0].TextureCoords = { node.outer.left+0.055f, node.outer.top };
-            mesh.vertices[index+1].TextureCoords = { node.outer.right-0.055f, node.outer.top };
-            mesh.vertices[index+2].TextureCoords = { node.outer.right-0.055f, node.outer.bottom };
-            mesh.vertices[index+3].TextureCoords = { node.outer.left+0.055f, node.outer.bottom };
+            mesh.vertices[index+0].TextureCoords = { node.outer.left+0.0655f, node.outer.top };
+            mesh.vertices[index+1].TextureCoords = { node.outer.right-0.0655f, node.outer.top };
+            mesh.vertices[index+2].TextureCoords = { node.outer.right-0.0655f, node.outer.bottom };
+            mesh.vertices[index+3].TextureCoords = { node.outer.left+0.0655f, node.outer.bottom };
             
             mesh.vertices[index+0].Color = color;
             mesh.vertices[index+1].Color = color;

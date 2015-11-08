@@ -10,13 +10,30 @@
 #include "GameWorld.hpp"
 #include "Terrain.h"
 #include "Mesh.hpp"
+#include <set>
 
 using namespace Pocket;
 
 SYSTEM(TerrainMeshSystem, Terrain, Mesh)
 public:
     void ObjectAdded(GameObject* object);
+    void ObjectRemoved(GameObject* object);
+    void Update(float dt);
 private:
+    void CreateMesh(GameObject* object);
     void ModifyVertices(const Terrain::Vertices& vertices, const Terrain::Vertices& normals, float distance, Terrain::Vertices& output);
     void AddLayer(const Terrain::Vertices& vertices, const Terrain::Vertices& normals, VertexMesh<Vertex>& mesh, const Terrain::Layer& layer);
+
+    float GetSlope(const Vector2 &vector, const Terrain::Vertices& normals, int index);
+    Vector2 GetVertex(int index, const Terrain::Vertices& vertices);
+
+    struct Platform {
+        int startIndex;
+        int endIndex;
+    };
+
+    void VerticesChanged(Terrain* terrain, GameObject* object);
+
+    typedef std::set<GameObject*> ChangedTerrains;
+    ChangedTerrains changedTerrains;
 };

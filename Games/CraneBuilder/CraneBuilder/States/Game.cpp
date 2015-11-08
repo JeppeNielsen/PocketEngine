@@ -41,7 +41,7 @@ void Game::Initialize() {
     
     camera = world.CreateObject();
     camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
-    camera->AddComponent<Transform>()->Position = { 0, 5, 60 };
+    camera->AddComponent<Transform>()->Position = { 0, -15, 80 };
     camera->GetComponent<Camera>()->FieldOfView = 60;
     
     atlas = world.CreateObject();
@@ -82,7 +82,11 @@ void Game::Initialize() {
     Terrain* terrain = t->AddComponent<Terrain>();
     
     //terrain->vertices = {{40,0}, {0,20}, {-20,5}, {-40,0}, {-40,-20}, {40,-20}};
-    terrain->vertices = {{40,0}, {-40,0}, {-40,-20}, {40,-20}};
+    //terrain->vertices = {{40,0}, {-40,0}, {-40,-20}, {40,-20}};
+    
+    terrain->vertices = {
+        {-50,0},{-50,-10},{-20,-10},{-20,-50},{-50,-50}, {-50,-60},{50,-60},{50,-50},{20,-50},{20,-10},{50,-10},{50,0},
+    };
     
     
     /*
@@ -99,30 +103,82 @@ void Game::Initialize() {
     grass.outerDepth = -3;
     grass.innerDepth = 0;
     grass.textureScale  = 0.06f;
-    grass.outerV = 0.1f;
-    grass.innerV = 0.5f;
+    grass.outerV = 8.0f / 256.0f;
+    grass.innerV = 67.0f / 256.0f;
     grass.isBevel = false;
+    grass.useDirection = true;
+    grass.direction = {0,1};
+    grass.directionAmount = 0;
+    
     terrain->layers.push_back(grass);
     
+    /*
     Terrain::Layer dirt;
-    dirt.outerDepth = -0.35f;
-    dirt.innerDepth = 0.35f;
-    dirt.textureScale  = 0.01f;
-    dirt.outerV = 0.54f;
-    dirt.innerV = 1.0f;
+    dirt.outerDepth = -1;
+    dirt.innerDepth = 0.4f;
+    dirt.textureScale  = -0.03f;
+    dirt.outerV = 217.0f / 256.0f;
+    dirt.innerV = 249.0f / 256.0f;
     dirt.isBevel = false;
+    dirt.useDirection = true;
+    dirt.direction = {1,0};
+    dirt.directionAmount = 0.9f;
     
     terrain->layers.push_back(dirt);
+    
+    Terrain::Layer dirt2;
+    dirt2.outerDepth = -1;
+    dirt2.innerDepth = 0.4f;
+    dirt2.textureScale  = 0.03f;
+    dirt2.outerV = 217.0f / 256.0f;
+    dirt2.innerV = 249.0f / 256.0f;
+    dirt2.isBevel = false;
+    dirt2.useDirection = true;
+    dirt2.direction = {-1,0};
+    dirt2.directionAmount = 0.9f;
+    
+    terrain->layers.push_back(dirt2);
+    
+    */
+    
+    
+    
+    Terrain::Layer shadows;
+    shadows.outerDepth = -1;
+    shadows.innerDepth = 0.25f;
+    shadows.textureScale  = 0.06f;
+    shadows.outerV = 69.0f / 256.0f;
+    shadows.innerV = 129.0f / 256.0f;
+    shadows.isBevel = false;
+    shadows.useDirection = true;
+    shadows.direction = {0,-1};
+    shadows.directionAmount = 0.4f;
+    shadows.color = Colour::White(0.5f);
+    
+    terrain->layers.push_back(shadows);
+    
+    Terrain::Layer outline;
+    outline.outerDepth = -0.35f;
+    outline.innerDepth = 0.35f;
+    outline.textureScale  = 0.1f;
+    outline.outerV = 69.0f / 256.0f;
+    outline.innerV = 118.0f / 256.0f;
+    outline.isBevel = false;
+    
+    terrain->layers.push_back(outline);
     
     Terrain::Layer bevel;
     bevel.outerDepth = 0.3f;
     bevel.innerDepth = 5;
     bevel.textureScale  = 0.1f;
-    bevel.outerV = 0.02f;
-    bevel.innerV = 0.02f;
+    bevel.outerV = 2.0f / 256.0f;
+    bevel.innerV = bevel.outerV;
     bevel.isBevel = true;
     
     terrain->layers.push_back(bevel);
+    
+    
+    
     
     
     
@@ -149,10 +205,17 @@ void Game::Initialize() {
     bevelObject->AddComponent<TextureComponent>(t);
     bevelObject->AddComponent<Orderable>()->Order = -25;
     
+    GameObject* platformObject = world.CreateObject();
+    platformObject->Parent = t;
+    platformObject->AddComponent<Transform>();
+    platformObject->AddComponent<Mesh>();
+    platformObject->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    platformObject->AddComponent<Orderable>()->Order = -20;
+    platformObject->AddComponent<TextureComponent>()->Texture().LoadFromPng("Platform.png");
     
     terrain->centerMesh = center->GetComponent<Mesh>();
     terrain->bevelMesh = bevelObject->GetComponent<Mesh>();
-    
+    terrain->platformMesh = platformObject->GetComponent<Mesh>();
   
     Input.ButtonDown += event_handler(this, &Game::ButtonDown);
     Input.ButtonUp += event_handler(this, &Game::ButtonUp);

@@ -1,10 +1,7 @@
-#include "Game.h"
-#include "TestQuadTree.h"
+#include "Editor.h"
 
 int main() {
-    TestQuadTree test;
-    test.Test();
     Engine e;
-    e.Start<Game>();
+    e.Start<Editor>();
 	return 0;
 }

@@ -34,7 +34,6 @@ Terrain::Vertices Terrain::CalculateNormals(const Terrain::Vertices& vertices) {
 }
 
 Terrain::Vertices Terrain::GetSmoothedVertices(const Terrain::Vertices& vertices, int segments) {
-    
     Vertices tangentsForward;
     tangentsForward.resize(vertices.size());
     
@@ -48,11 +47,17 @@ Terrain::Vertices Terrain::GetSmoothedVertices(const Terrain::Vertices& vertices
         const Vector2& next = vertices[i==vertices.size()-1 ? 0 : i + 1];
         const Vector2& prev = vertices[i==0 ? vertices.size()-1 : i - 1];
         
-        Vector2 toNext = (next - vertex) * amount;
-        Vector2 toPrev = (prev - vertex) * amount;
+        Vector2 toNext = (next - vertex);
+        Vector2 toPrev = (prev - vertex);
         
-        tangentsForward[i] = vertex + (-toPrev + toNext);
-        tangentsBackward[i] = vertex + (toPrev - toNext);
+        float toNextLen = toNext.Length();
+        float toPrevLen = toPrev.Length();
+        
+        toNext /= toNextLen;
+        toPrev /= toPrevLen;
+        
+        tangentsForward[i] = vertex + (-toPrev + toNext).Normalized() * toNextLen * amount;
+        tangentsBackward[i] = vertex + (toPrev - toNext).Normalized() * toPrevLen * amount;
     }
     
     Terrain::Vertices smoothedVertices;
@@ -66,4 +71,25 @@ Terrain::Vertices Terrain::GetSmoothedVertices(const Terrain::Vertices& vertices
     }
 
     return smoothedVertices;
+}
+
+void Terrain::CheckForChange() {
+    bool wasChanged = false;
+    
+    if (vertices.size()!=prevVertices.size()) {
+        wasChanged = true;
+    } else {
+        for (int i=0; i<vertices.size(); i++) {
+            if (!vertices[i].EqualEpsilon(prevVertices[i])) {
+                wasChanged = true;
+                break;
+            }
+        }
+    }
+
+    prevVertices = vertices;
+
+    if (wasChanged) {
+        VerticesChanged(this);
+    }
 }

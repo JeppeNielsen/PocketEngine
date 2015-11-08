@@ -165,12 +165,19 @@
 		724123801BE80BC000269FFB /* Hydralic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7241237E1BE80BC000269FFB /* Hydralic.cpp */; };
 		724123831BE80C5100269FFB /* HydralicMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123811BE80C5100269FFB /* HydralicMeshSystem.cpp */; };
 		724123861BE80F5200269FFB /* HydralicSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123841BE80F5200269FFB /* HydralicSystem.cpp */; };
-		724123891BE933C100269FFB /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123871BE933C100269FFB /* Terrain.cpp */; };
-		7241238F1BE9358500269FFB /* TerrainMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7241238D1BE9358500269FFB /* TerrainMeshSystem.cpp */; };
 		724123911BEAACF600269FFB /* Terrain.png in Resources */ = {isa = PBXBuildFile; fileRef = 724123901BEAACF600269FFB /* Terrain.png */; };
 		724123921BEAAD0400269FFB /* Terrain.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 724123901BEAACF600269FFB /* Terrain.png */; };
 		724123941BEBFDC900269FFB /* Dirt.png in Resources */ = {isa = PBXBuildFile; fileRef = 724123931BEBFDC900269FFB /* Dirt.png */; };
 		724123951BEBFDD900269FFB /* Dirt.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 724123931BEBFDC900269FFB /* Dirt.png */; };
+		724123971BED575200269FFB /* Platform.png in Resources */ = {isa = PBXBuildFile; fileRef = 724123961BED575200269FFB /* Platform.png */; };
+		724123981BED575D00269FFB /* Platform.png in CopyFiles */ = {isa = PBXBuildFile; fileRef = 724123961BED575200269FFB /* Platform.png */; };
+		7241239B1BEEA76700269FFB /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123991BEEA76700269FFB /* Editor.cpp */; };
+		7241239F1BEEAB7500269FFB /* CameraDragger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7241239D1BEEAB7500269FFB /* CameraDragger.cpp */; };
+		724123A21BEEAC2C00269FFB /* CameraDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123A01BEEAC2C00269FFB /* CameraDragSystem.cpp */; };
+		724123A81BEEB21500269FFB /* Terrain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123A41BEEB21500269FFB /* Terrain.cpp */; };
+		724123A91BEEB21500269FFB /* TerrainMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123A61BEEB21500269FFB /* TerrainMeshSystem.cpp */; };
+		724123AC1BEEB26E00269FFB /* TerrainEditableVertices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123AA1BEEB26E00269FFB /* TerrainEditableVertices.cpp */; };
+		724123AF1BEEB30A00269FFB /* TerrainVertexEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */; };
 		727578501A44ECE600A2D8EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7275784F1A44ECE600A2D8EF /* Cocoa.framework */; };
 		727578A51A44ED2900A2D8EF /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578871A44ED2900A2D8EF /* Particle.cpp */; };
 		727578A61A44ED2900A2D8EF /* ParticleDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578891A44ED2900A2D8EF /* ParticleDragSystem.cpp */; };
@@ -197,6 +204,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				724123981BED575D00269FFB /* Platform.png in CopyFiles */,
 				724123951BEBFDD900269FFB /* Dirt.png in CopyFiles */,
 				724123921BEAAD0400269FFB /* Terrain.png in CopyFiles */,
 				724123701BE5144400269FFB /* images.png in CopyFiles */,
@@ -537,12 +545,23 @@
 		724123821BE80C5100269FFB /* HydralicMeshSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HydralicMeshSystem.h; sourceTree = "<group>"; };
 		724123841BE80F5200269FFB /* HydralicSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HydralicSystem.cpp; sourceTree = "<group>"; };
 		724123851BE80F5200269FFB /* HydralicSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HydralicSystem.h; sourceTree = "<group>"; };
-		724123871BE933C100269FFB /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Terrain.cpp; sourceTree = "<group>"; };
-		724123881BE933C100269FFB /* Terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terrain.h; sourceTree = "<group>"; };
-		7241238D1BE9358500269FFB /* TerrainMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainMeshSystem.cpp; sourceTree = "<group>"; };
-		7241238E1BE9358500269FFB /* TerrainMeshSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainMeshSystem.h; sourceTree = "<group>"; };
 		724123901BEAACF600269FFB /* Terrain.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Terrain.png; sourceTree = "<group>"; };
 		724123931BEBFDC900269FFB /* Dirt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Dirt.png; sourceTree = "<group>"; };
+		724123961BED575200269FFB /* Platform.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Platform.png; sourceTree = "<group>"; };
+		724123991BEEA76700269FFB /* Editor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		7241239A1BEEA76700269FFB /* Editor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Editor.h; sourceTree = "<group>"; };
+		7241239D1BEEAB7500269FFB /* CameraDragger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraDragger.cpp; sourceTree = "<group>"; };
+		7241239E1BEEAB7500269FFB /* CameraDragger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraDragger.h; sourceTree = "<group>"; };
+		724123A01BEEAC2C00269FFB /* CameraDragSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraDragSystem.cpp; sourceTree = "<group>"; };
+		724123A11BEEAC2C00269FFB /* CameraDragSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraDragSystem.h; sourceTree = "<group>"; };
+		724123A41BEEB21500269FFB /* Terrain.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Terrain.cpp; sourceTree = "<group>"; };
+		724123A51BEEB21500269FFB /* Terrain.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terrain.h; sourceTree = "<group>"; };
+		724123A61BEEB21500269FFB /* TerrainMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainMeshSystem.cpp; sourceTree = "<group>"; };
+		724123A71BEEB21500269FFB /* TerrainMeshSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainMeshSystem.h; sourceTree = "<group>"; };
+		724123AA1BEEB26E00269FFB /* TerrainEditableVertices.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainEditableVertices.cpp; sourceTree = "<group>"; };
+		724123AB1BEEB26E00269FFB /* TerrainEditableVertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainEditableVertices.h; sourceTree = "<group>"; };
+		724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainVertexEditor.cpp; sourceTree = "<group>"; };
+		724123AE1BEEB30A00269FFB /* TerrainVertexEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainVertexEditor.h; sourceTree = "<group>"; };
 		7275784C1A44ECE600A2D8EF /* CraneBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CraneBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7275784F1A44ECE600A2D8EF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		727578521A44ECE600A2D8EF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1207,12 +1226,47 @@
 		724123611BE5142900269FFB /* Gfx */ = {
 			isa = PBXGroup;
 			children = (
+				724123961BED575200269FFB /* Platform.png */,
 				724123931BEBFDC900269FFB /* Dirt.png */,
 				724123901BEAACF600269FFB /* Terrain.png */,
 				724123671BE5142900269FFB /* images.png */,
 				724123681BE5142900269FFB /* images.xml */,
 			);
 			path = Gfx;
+			sourceTree = "<group>";
+		};
+		7241239C1BEEAB6200269FFB /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				7241239D1BEEAB7500269FFB /* CameraDragger.cpp */,
+				7241239E1BEEAB7500269FFB /* CameraDragger.h */,
+				724123A01BEEAC2C00269FFB /* CameraDragSystem.cpp */,
+				724123A11BEEAC2C00269FFB /* CameraDragSystem.h */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		724123A31BEEB21500269FFB /* Terrain */ = {
+			isa = PBXGroup;
+			children = (
+				724123A41BEEB21500269FFB /* Terrain.cpp */,
+				724123A51BEEB21500269FFB /* Terrain.h */,
+				724123A61BEEB21500269FFB /* TerrainMeshSystem.cpp */,
+				724123A71BEEB21500269FFB /* TerrainMeshSystem.h */,
+				724123AA1BEEB26E00269FFB /* TerrainEditableVertices.cpp */,
+				724123AB1BEEB26E00269FFB /* TerrainEditableVertices.h */,
+				724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */,
+				724123AE1BEEB30A00269FFB /* TerrainVertexEditor.h */,
+			);
+			name = Terrain;
+			path = CraneBuilder/Logic/Terrain;
+			sourceTree = SOURCE_ROOT;
+		};
+		724123B01BEFCEC400269FFB /* Background */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Background;
 			sourceTree = "<group>";
 		};
 		727578431A44ECE600A2D8EF = {
@@ -1271,11 +1325,19 @@
 		727578831A44ED2900A2D8EF /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				724123B01BEFCEC400269FFB /* Background */,
 				7241237B1BE80AA300269FFB /* Beam.cpp */,
 				7241237C1BE80AA300269FFB /* Beam.h */,
 				727578971A44ED2900A2D8EF /* BeamMeshSystem.cpp */,
 				727578981A44ED2900A2D8EF /* BeamMeshSystem.h */,
+				7241239C1BEEAB6200269FFB /* Camera */,
 				727578841A44ED2900A2D8EF /* Editor */,
+				7241237E1BE80BC000269FFB /* Hydralic.cpp */,
+				7241237F1BE80BC000269FFB /* Hydralic.h */,
+				724123811BE80C5100269FFB /* HydralicMeshSystem.cpp */,
+				724123821BE80C5100269FFB /* HydralicMeshSystem.h */,
+				724123841BE80F5200269FFB /* HydralicSystem.cpp */,
+				724123851BE80F5200269FFB /* HydralicSystem.h */,
 				727578871A44ED2900A2D8EF /* Particle.cpp */,
 				727578881A44ED2900A2D8EF /* Particle.h */,
 				727578891A44ED2900A2D8EF /* ParticleDragSystem.cpp */,
@@ -1298,16 +1360,7 @@
 				7275789A1A44ED2900A2D8EF /* SpringSystem.h */,
 				7275789B1A44ED2900A2D8EF /* SpringTransformSystem.cpp */,
 				7275789C1A44ED2900A2D8EF /* SpringTransformSystem.h */,
-				7241237E1BE80BC000269FFB /* Hydralic.cpp */,
-				7241237F1BE80BC000269FFB /* Hydralic.h */,
-				724123811BE80C5100269FFB /* HydralicMeshSystem.cpp */,
-				724123821BE80C5100269FFB /* HydralicMeshSystem.h */,
-				724123841BE80F5200269FFB /* HydralicSystem.cpp */,
-				724123851BE80F5200269FFB /* HydralicSystem.h */,
-				724123871BE933C100269FFB /* Terrain.cpp */,
-				724123881BE933C100269FFB /* Terrain.h */,
-				7241238D1BE9358500269FFB /* TerrainMeshSystem.cpp */,
-				7241238E1BE9358500269FFB /* TerrainMeshSystem.h */,
+				724123A31BEEB21500269FFB /* Terrain */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1328,6 +1381,8 @@
 			children = (
 				7275789F1A44ED2900A2D8EF /* Game.cpp */,
 				727578A01A44ED2900A2D8EF /* Game.h */,
+				724123991BEEA76700269FFB /* Editor.cpp */,
+				7241239A1BEEA76700269FFB /* Editor.h */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -1396,6 +1451,7 @@
 			files = (
 				7241236E1BE5142900269FFB /* images.xml in Resources */,
 				7241236D1BE5142900269FFB /* images.png in Resources */,
+				724123971BED575200269FFB /* Platform.png in Resources */,
 				724123941BEBFDC900269FFB /* Dirt.png in Resources */,
 				724123911BEAACF600269FFB /* Terrain.png in Resources */,
 			);
@@ -1421,6 +1477,7 @@
 				724121F21BE423B300269FFB /* TextBoxLabelSystem.cpp in Sources */,
 				724121FE1BE423B300269FFB /* Limitable.cpp in Sources */,
 				727578AF1A44ED2900A2D8EF /* SpringTransformSystem.cpp in Sources */,
+				724123A91BEEB21500269FFB /* TerrainMeshSystem.cpp in Sources */,
 				724122251BE423B400269FFB /* Plane.cpp in Sources */,
 				727578B21A44ED2900A2D8EF /* TestQuadTree.cpp in Sources */,
 				724122201BE423B400269FFB /* Box.cpp in Sources */,
@@ -1473,6 +1530,7 @@
 				7241220F1BE423B300269FFB /* RenderSystem.cpp in Sources */,
 				724121D11BE423B300269FFB /* SoundListener.cpp in Sources */,
 				7241230F1BE423B400269FFB /* DeferredBuffers.cpp in Sources */,
+				724123A81BEEB21500269FFB /* Terrain.cpp in Sources */,
 				724121D01BE423B300269FFB /* SoundEmitter.cpp in Sources */,
 				7241235C1BE423B400269FFB /* tinyxmlparser.cpp in Sources */,
 				724123591BE423B400269FFB /* tinystr.cpp in Sources */,
@@ -1509,6 +1567,7 @@
 				724121FD1BE423B300269FFB /* FirstPersonMoverSystem.cpp in Sources */,
 				7241220C1BE423B300269FFB /* ColorSystem.cpp in Sources */,
 				7241230B1BE423B400269FFB /* lodepng.cpp in Sources */,
+				724123AC1BEEB26E00269FFB /* TerrainEditableVertices.cpp in Sources */,
 				724121D21BE423B300269FFB /* SoundSystem.cpp in Sources */,
 				727578AA1A44ED2900A2D8EF /* SimulationSystem.cpp in Sources */,
 				7241230C1BE423B400269FFB /* Profiler.cpp in Sources */,
@@ -1530,15 +1589,17 @@
 				724122231BE423B400269FFB /* Matrix3x3.cpp in Sources */,
 				7241221D1BE423B400269FFB /* TransformHierarchy.cpp in Sources */,
 				724123151BE423B400269FFB /* Vertex.cpp in Sources */,
+				7241239F1BEEAB7500269FFB /* CameraDragger.cpp in Sources */,
 				724121EE1BE423B300269FFB /* Sprite.cpp in Sources */,
 				7241230A1BE423B400269FFB /* jpeg_decoder.cpp in Sources */,
+				724123AF1BEEB30A00269FFB /* TerrainVertexEditor.cpp in Sources */,
 				724121AC1BE423B300269FFB /* GameComponentType.cpp in Sources */,
 				727578A91A44ED2900A2D8EF /* ParticleUpdaterSystem.cpp in Sources */,
 				724121E21BE423B300269FFB /* Font.cpp in Sources */,
 				724121CB1BE423B300269FFB /* TransformAnimation.cpp in Sources */,
+				7241239B1BEEA76700269FFB /* Editor.cpp in Sources */,
 				724121F61BE423B300269FFB /* TouchCancelSystem.cpp in Sources */,
 				724121E61BE423B300269FFB /* Layoutable.cpp in Sources */,
-				724123891BE933C100269FFB /* Terrain.cpp in Sources */,
 				724122241BE423B400269FFB /* Matrix4x4.cpp in Sources */,
 				724121D61BE423B300269FFB /* FieldEditorSystem.cpp in Sources */,
 				724121E81BE423B300269FFB /* Menu.cpp in Sources */,
@@ -1555,6 +1616,7 @@
 				724122091BE423B300269FFB /* Camera.cpp in Sources */,
 				727578AB1A44ED2900A2D8EF /* Spring.cpp in Sources */,
 				727578A51A44ED2900A2D8EF /* Particle.cpp in Sources */,
+				724123A21BEEAC2C00269FFB /* CameraDragSystem.cpp in Sources */,
 				724121E41BE423B300269FFB /* Label.cpp in Sources */,
 				724122151BE423B300269FFB /* Selectable.cpp in Sources */,
 				727578B11A44ED2900A2D8EF /* Game.cpp in Sources */,
@@ -1569,7 +1631,6 @@
 				724121AB1BE423B300269FFB /* GameComponent.cpp in Sources */,
 				724121C11BE423B300269FFB /* TimeMeasurer.cpp in Sources */,
 				724121B91BE423B300269FFB /* BezierCurve3.cpp in Sources */,
-				7241238F1BE9358500269FFB /* TerrainMeshSystem.cpp in Sources */,
 				724121E51BE423B300269FFB /* LabelMeshSystem.cpp in Sources */,
 				724121B81BE423B300269FFB /* BezierCurve1.cpp in Sources */,
 				724121BC1BE423B300269FFB /* Octree.cpp in Sources */,
