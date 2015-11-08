@@ -67,6 +67,10 @@
     Pocket::OSXWindowCreator::Instance()->Set(2, location.x, location.y);
 }
 
+- (void)scrollWheel:(NSEvent *)theEvent {
+    Pocket::OSXWindowCreator::Instance()->SetScroll(theEvent.scrollingDeltaY);
+}
+
 -(NSPoint) convertLocation: (NSPoint) point {
     NSPoint p;
     p.x = point.x;

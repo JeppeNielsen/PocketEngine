@@ -46,6 +46,8 @@ namespace Pocket {
         Event<KeyboardEventData> KeyboardChanged;
         
         void UpdateInputManager(InputManager* inputManager);
+        
+        void SetScroll(float delta);
 
 	private:
 
@@ -64,7 +66,9 @@ namespace Pocket {
         Vector2 zero;
         
         bool updating;
-
+        
+        typedef std::vector<float> ScrollValues;
+        ScrollValues scrollValues;
 	};
 }
 

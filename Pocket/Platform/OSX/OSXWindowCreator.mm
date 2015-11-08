@@ -64,6 +64,10 @@ void OSXWindowCreator::Set(int index, int x, int y) {
     inputDevice.SetTouch(index, false, Vector2(x,y));
 }
 
+void OSXWindowCreator::SetScroll(float delta) {
+    inputDevice.SetScroll(delta);
+}
+
 void OSXWindowCreator::ButtonDown(const std::string& button) {
     inputDevice.SetButton(button, true);
 

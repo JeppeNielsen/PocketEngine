@@ -32,6 +32,8 @@ namespace Pocket {
         Property<InputManager*, std::string> KeyboardText;
         
         GamePadManager GamePad;
+        
+        Event<float> ScrollChanged;
        
 	private:
 		InputDevice* device;

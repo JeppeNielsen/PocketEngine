@@ -89,6 +89,11 @@ void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
     inputManager->KeyboardText = KeyboardText;
     
     inputManager->GamePad.Update();
+    
+    for(float v : scrollValues) {
+        inputManager->ScrollChanged(v);
+    }
+    scrollValues.clear();
 }
 
 void InputDevice::SetKeyboard(std::string text, bool active) {
@@ -96,3 +101,6 @@ void InputDevice::SetKeyboard(std::string text, bool active) {
     KeyboardChanged({text, active});
 }
 
+void InputDevice::SetScroll(float delta) {
+    scrollValues.push_back(delta);
+}
