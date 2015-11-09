@@ -83,6 +83,16 @@ Vector3 Camera::TransformPointToScreenSpace(Transform* viewTransform, Vector3 wo
     return Vector3(screenPoint.x, screenPoint.y, worldPoint.z);
 }
 
+Vector3 Camera::TransformViewportToWorld(Transform* viewTransform, Vector3 viewportPoint) {
+    Matrix4x4 viewProjection = GetViewProjection(viewTransform).Invert();
+    return viewProjection.TransformPosition(viewportPoint);
+}
+
+Vector3 Camera::TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint) {
+    Matrix4x4 viewProjection = GetViewProjection(viewTransform);
+    return viewProjection.TransformPosition(worldPoint);
+}
+
 void Camera::Reset() {
     FieldOfView = 70;
 	Near = 0.1f;
