@@ -22,6 +22,8 @@ void SelectableDragSystem::ObjectAdded(GameObject *object) {
 
 void SelectableDragSystem::ObjectRemoved(GameObject *object) {
     object->GetComponent<Draggable>()->IsDragging.Changed -= event_handler(this, &SelectableDragSystem::IsDraggingChanged, object);
+    DraggingObjects::iterator it = draggingObjects.find(object);
+    if (it!=draggingObjects.end()) draggingObjects.erase(it);
 }
 
 void SelectableDragSystem::IsDraggingChanged(Pocket::Draggable *draggable, GameObject* object) {
