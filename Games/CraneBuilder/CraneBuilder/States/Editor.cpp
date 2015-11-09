@@ -11,17 +11,44 @@
 #include "TerrainMeshSystem.h"
 #include "CameraDragSystem.h"
 #include "TerrainVertexEditor.h"
+#include "BackgroundSystem.h"
+#include "DragSelector.hpp"
+#include "SelectableDragSystem.hpp"
+#include "EditorStateSystem.h"
 
 void Editor::Initialize() {
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<TerrainMeshSystem>();
     world.CreateSystem<CameraDragSystem>()->Input = &Input;
+    world.CreateSystem<DragSelector>()->Setup(Manager().Viewport(), Input);
+    world.CreateSystem<SelectableDragSystem>();
     world.CreateSystem<TerrainVertexEditor>()->SetInput(&Input);
+    BackgroundSystem* backgroundSystem = world.CreateSystem<BackgroundSystem>();
+    
+    world.CreateSystem<EditorStateSystem<Terrain, TerrainEditableVertices>>()->OnState = EditorState::State::Terrain;
+    
+    state = world.CreateObject();
+    state->AddComponent<EditorState>();
     
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Transform>()->Position = {0,0,40};
     camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
     camera->AddComponent<CameraDragger>();
+    
+    backgroundSystem->CameraObject = camera;
+    
+    GameObject* background = world.CreateObject();
+    background->AddComponent<Transform>();
+    background->AddComponent<Material>();
+    background->AddComponent<Mesh>();
+    background->AddComponent<Orderable>()->Order = -5000;
+    Background* back = background->AddComponent<Background>();
+    back->colors[0] = Colour((Colour::Component)255, 223, 166);
+    back->colors[3]=back->colors[0];
+    back->colors[1] = Colour((Colour::Component)226, 172,102);
+    back->colors[2] = back->colors[1];
+    
+    
     
     GameObject* t = world.CreateObject();
     t->AddComponent<Transform>();
@@ -29,8 +56,8 @@ void Editor::Initialize() {
     t->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     t->AddComponent<TextureComponent>()->Texture().LoadFromPng("Terrain.png");
     t->AddComponent<Orderable>()->Order = -50;
-    t->AddComponent<TerrainEditableVertices>();
     t->AddComponent<Touchable>();
+    t->AddComponent<EditorState>(state);
     Terrain* terrain = t->AddComponent<Terrain>();
     
     terrain->vertices = {
@@ -94,6 +121,17 @@ void Editor::Initialize() {
     center->AddComponent<Touchable>(t);
     
     terrain->centerMesh = center->GetComponent<Mesh>();
+    
+    Input.ButtonDown += event_handler(this, &Editor::ButtonDown);
+}
+
+void Editor::ButtonDown(std::string button) {
+    EditorState* editorState = state->GetComponent<EditorState>();
+    if (button == "1") {
+        editorState->CurrentState = EditorState::State::None;
+    } else if (button == "2") {
+        editorState->CurrentState = EditorState::State::Terrain;
+    }
 }
 
 void Editor::Update(float dt) {

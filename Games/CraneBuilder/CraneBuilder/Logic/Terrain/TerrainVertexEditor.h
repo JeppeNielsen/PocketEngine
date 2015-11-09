@@ -12,6 +12,8 @@
 #include "TerrainEditableVertices.h"
 #include "InputManager.hpp"
 #include "TouchSystem.hpp"
+#include "Selectable.hpp"
+#include "SelectableCollection.hpp"
 
 using namespace Pocket;
 
@@ -25,7 +27,7 @@ private:
     TouchSystem* touchSystem;
     GameObject* CreateVertexObject(Vector2 position);
 
-    SYSTEM(AddVertexSystem, Terrain, Touchable, Transform)
+    SYSTEM(AddVertexSystem, Terrain, Touchable, Transform, TerrainEditableVertices)
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:
@@ -33,4 +35,8 @@ private:
         int FindInsertPosition(Terrain* terrain, const Vector2& position);
         float SegmentDistance(const Vector2& v, const Vector2& w, const Vector2& p);
     };
+
+    void ButtonDown(std::string button);
+
+    SelectableCollection* selectedVertices;
 };

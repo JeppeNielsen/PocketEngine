@@ -10,17 +10,21 @@
 #include "Transform.hpp"
 #include "TouchSystem.hpp"
 #include "DraggableSystem.hpp"
+#include "ClickSelectorSystem.hpp"
 
 void TerrainVertexEditor::AddedToWorld(Pocket::GameWorld &world) {
     touchSystem = world.CreateOrGetSystem<TouchSystem>();
     world.CreateOrGetSystem<DraggableSystem>();
     world.CreateSystem<AddVertexSystem>();
+    selectedVertices = world.CreateSystem<SelectableCollection>();
+    world.CreateSystem<ClickSelectorSystem>();
 }
 
 void TerrainVertexEditor::SetInput(Pocket::InputManager *input) {
     if (!touchSystem->Input()) {
         touchSystem->Input = input;
     }
+    input->ButtonDown += event_handler(this, &TerrainVertexEditor::ButtonDown);
 }
 
 void TerrainVertexEditor::ObjectAdded(Pocket::GameObject *object) {
@@ -36,6 +40,7 @@ void TerrainVertexEditor::ObjectRemoved(Pocket::GameObject *object) {
     for (int i=0; i<everts->vertices.size(); i++) {
         everts->vertices[i]->Remove();
     }
+    everts->vertices.clear();
 }
 
 void TerrainVertexEditor::Update(float dt) {
@@ -78,15 +83,16 @@ GameObject* TerrainVertexEditor::CreateVertexObject(Vector2 position) {
     go->AddComponent<Material>();
     go->AddComponent<Touchable>();
     go->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
+    go->AddComponent<Selectable>();
     return go;
 }
 
 void TerrainVertexEditor::AddVertexSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down += event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
+    object->GetComponent<Touchable>()->Click += event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
 }
 
 void TerrainVertexEditor::AddVertexSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down -= event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
+    object->GetComponent<Touchable>()->Click -= event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
 }
 
 void TerrainVertexEditor::AddVertexSystem::Down(Pocket::TouchData d, GameObject* object) {
@@ -130,6 +136,21 @@ float TerrainVertexEditor::AddVertexSystem::SegmentDistance(const Pocket::Vector
   return (p-projection).SquareLength();
 }
 
-
-
-
+void TerrainVertexEditor::ButtonDown(std::string button) {
+    if (button == "\x7f") {
+        for(GameObject* vertex : selectedVertices->Selected()) {
+            vertex->Remove();
+            for(GameObject* go : Objects()) {
+                Terrain* terrain = go->GetComponent<Terrain>();
+                TerrainEditableVertices* everts = go->GetComponent<TerrainEditableVertices>();
+                for (int i=0; i<everts->vertices.size(); i++) {
+                    if (everts->vertices[i] == vertex) {
+                        terrain->vertices.erase(terrain->vertices.begin() + i);
+                        everts->vertices.erase(everts->vertices.begin() + i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+}

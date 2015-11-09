@@ -178,6 +178,10 @@
 		724123A91BEEB21500269FFB /* TerrainMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123A61BEEB21500269FFB /* TerrainMeshSystem.cpp */; };
 		724123AC1BEEB26E00269FFB /* TerrainEditableVertices.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123AA1BEEB26E00269FFB /* TerrainEditableVertices.cpp */; };
 		724123AF1BEEB30A00269FFB /* TerrainVertexEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */; };
+		724123B31BEFD02500269FFB /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B11BEFD02500269FFB /* Background.cpp */; };
+		724123B61BEFE3AB00269FFB /* BackgroundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B41BEFE3AB00269FFB /* BackgroundSystem.cpp */; };
+		724123B91BF12B8500269FFB /* EditorState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B71BF12B8500269FFB /* EditorState.cpp */; };
+		724123BF1BF12D7300269FFB /* EditorStateSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */; };
 		727578501A44ECE600A2D8EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7275784F1A44ECE600A2D8EF /* Cocoa.framework */; };
 		727578A51A44ED2900A2D8EF /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578871A44ED2900A2D8EF /* Particle.cpp */; };
 		727578A61A44ED2900A2D8EF /* ParticleDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578891A44ED2900A2D8EF /* ParticleDragSystem.cpp */; };
@@ -562,6 +566,14 @@
 		724123AB1BEEB26E00269FFB /* TerrainEditableVertices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainEditableVertices.h; sourceTree = "<group>"; };
 		724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TerrainVertexEditor.cpp; sourceTree = "<group>"; };
 		724123AE1BEEB30A00269FFB /* TerrainVertexEditor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TerrainVertexEditor.h; sourceTree = "<group>"; };
+		724123B11BEFD02500269FFB /* Background.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Background.cpp; sourceTree = "<group>"; };
+		724123B21BEFD02500269FFB /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
+		724123B41BEFE3AB00269FFB /* BackgroundSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundSystem.cpp; sourceTree = "<group>"; };
+		724123B51BEFE3AB00269FFB /* BackgroundSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundSystem.h; sourceTree = "<group>"; };
+		724123B71BF12B8500269FFB /* EditorState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorState.cpp; sourceTree = "<group>"; };
+		724123B81BF12B8500269FFB /* EditorState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorState.h; sourceTree = "<group>"; };
+		724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorStateSystem.cpp; sourceTree = "<group>"; };
+		724123BE1BF12D7300269FFB /* EditorStateSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStateSystem.h; sourceTree = "<group>"; };
 		7275784C1A44ECE600A2D8EF /* CraneBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CraneBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7275784F1A44ECE600A2D8EF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		727578521A44ECE600A2D8EF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1265,6 +1277,10 @@
 		724123B01BEFCEC400269FFB /* Background */ = {
 			isa = PBXGroup;
 			children = (
+				724123B11BEFD02500269FFB /* Background.cpp */,
+				724123B21BEFD02500269FFB /* Background.h */,
+				724123B41BEFE3AB00269FFB /* BackgroundSystem.cpp */,
+				724123B51BEFE3AB00269FFB /* BackgroundSystem.h */,
 			);
 			path = Background;
 			sourceTree = "<group>";
@@ -1372,6 +1388,10 @@
 				724123761BE7E5AD00269FFB /* Creator.h */,
 				724123781BE7E7A000269FFB /* CreatorSystem.cpp */,
 				724123791BE7E7A000269FFB /* CreatorSystem.h */,
+				724123B71BF12B8500269FFB /* EditorState.cpp */,
+				724123B81BF12B8500269FFB /* EditorState.h */,
+				724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */,
+				724123BE1BF12D7300269FFB /* EditorStateSystem.h */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -1474,6 +1494,7 @@
 				724123801BE80BC000269FFB /* Hydralic.cpp in Sources */,
 				724121FA1BE423B300269FFB /* DraggableMotionSystem.cpp in Sources */,
 				724121B31BE423B300269FFB /* GameState.cpp in Sources */,
+				724123B61BEFE3AB00269FFB /* BackgroundSystem.cpp in Sources */,
 				724121F21BE423B300269FFB /* TextBoxLabelSystem.cpp in Sources */,
 				724121FE1BE423B300269FFB /* Limitable.cpp in Sources */,
 				727578AF1A44ED2900A2D8EF /* SpringTransformSystem.cpp in Sources */,
@@ -1545,6 +1566,7 @@
 				724121D51BE423B300269FFB /* FieldEditor.cpp in Sources */,
 				7241222E1BE423B400269FFB /* ChromecastReceiver.cpp in Sources */,
 				724121EC1BE423B300269FFB /* MenuSystem.cpp in Sources */,
+				724123B91BF12B8500269FFB /* EditorState.cpp in Sources */,
 				724122321BE423B400269FFB /* RectPacker.cpp in Sources */,
 				7241220E1BE423B300269FFB /* Light.cpp in Sources */,
 				724121CC1BE423B300269FFB /* TransformAnimationDatabase.cpp in Sources */,
@@ -1561,6 +1583,7 @@
 				727578AE1A44ED2900A2D8EF /* SpringSystem.cpp in Sources */,
 				724121C21BE423B300269FFB /* UnitTest.cpp in Sources */,
 				724121CD1BE423B300269FFB /* TransformAnimator.cpp in Sources */,
+				724123BF1BF12D7300269FFB /* EditorStateSystem.cpp in Sources */,
 				724122221BE423B400269FFB /* MathHelper.cpp in Sources */,
 				724121C01BE423B300269FFB /* Triangulator.cpp in Sources */,
 				724122281BE423B400269FFB /* Quaternion.cpp in Sources */,
@@ -1596,6 +1619,7 @@
 				724121AC1BE423B300269FFB /* GameComponentType.cpp in Sources */,
 				727578A91A44ED2900A2D8EF /* ParticleUpdaterSystem.cpp in Sources */,
 				724121E21BE423B300269FFB /* Font.cpp in Sources */,
+				724123B31BEFD02500269FFB /* Background.cpp in Sources */,
 				724121CB1BE423B300269FFB /* TransformAnimation.cpp in Sources */,
 				7241239B1BEEA76700269FFB /* Editor.cpp in Sources */,
 				724121F61BE423B300269FFB /* TouchCancelSystem.cpp in Sources */,
