@@ -90,3 +90,7 @@ GameObject* SimulationFactory::CreateSpring(float elasticity) {
     go->AddComponent<Orderable>()->Order = counter;
     return go;
 }
+
+SimulationSystem* SimulationFactory::Simulation() {
+    return simulation;
+}

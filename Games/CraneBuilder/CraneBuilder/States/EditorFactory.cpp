@@ -20,10 +20,10 @@
 #include "Draggable.hpp"
 #include "ComponentEnabler.h"
 #include "TerrainEditableVertices.h"
+#include "TransformHierarchy.hpp"
 
 void EditorFactory::Initialize() {
-
-
+    World()->CreateOrGetSystem<TransformHierarchy>();
 }
 
 void EditorFactory::Setup() {

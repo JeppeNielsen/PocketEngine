@@ -1,7 +1,9 @@
 #include "Editor.h"
+#include "Game.h"
 
 int main() {
     Engine e;
-    e.Start<Editor>();
-	return 0;
+    //e.Start<Editor>();
+	e.Start<Game>();
+    return 0;
 }

@@ -21,6 +21,8 @@ public:
 
     GameObject* CreateParticle(Vector2 position);
     GameObject* CreateSpring(float elasticity);
+    
+    SimulationSystem* Simulation();
 private:
     SimulationSystem* simulation;
     TouchSystem* touchSystem;

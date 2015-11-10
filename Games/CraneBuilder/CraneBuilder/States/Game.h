@@ -15,6 +15,8 @@
 #include "SimulationSystem.h"
 #include "CreatorSystem.h"
 #include "Hydralic.h"
+#include "SimulationFactory.h"
+#include "EditorFactory.h"
 
 using namespace Pocket;
 
@@ -27,23 +29,14 @@ class Game : public GameState<Game> {
         GameWorld world;
         GameObject* camera;
         GameObject* atlas;
-        RenderSystem* renderSystem;
         GameObject* creator;
-    
-        GameObject* CreateParticle(Vector2 p);
-        GameObject* CreateSpring(float elasticity);
-    
-        /*
-        Particle* CreateBox(Vector2 center, Vector2 size);
-        Particle* CreateChain(Vector2 start, Vector2 end, int links, float elasticity = 1.0f);
-        Particle* CreateWheel(Vector2 center, float radius, int points);
-        */
+        SimulationFactory* simulationFactory;
+        EditorFactory* editorFactory;
     
         void ButtonDown(std::string button);
         void ButtonUp(std::string button);
+        void LoadLevel(std::string filename);
     
-    
-        SimulationSystem* simulation;
         CreatorSystem* creatorSystem;
     
         enum class BuildType {
@@ -52,7 +45,6 @@ class Game : public GameState<Game> {
         };
     
         BuildType buildType;
-    
         Hydralic* currentHydralic;
         bool wireframe;
 };

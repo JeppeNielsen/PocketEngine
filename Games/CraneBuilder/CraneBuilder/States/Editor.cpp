@@ -21,11 +21,13 @@
 
 void Editor::Initialize() {
     world.CreateSystem<RenderSystem>();
-    world.CreateSystem<TransformHierarchy>();
+    
+    world.CreateSystem<CameraDragSystem>()->Input = &Input;
+    
     state = world.CreateSystem<ComponentEnablerSystem>();
     world.CreateSystem<EditorSpawnerSystem>()->state = state;
     world.CreateSystem<TouchCancelSystem>();
-    world.CreateSystem<CameraDragSystem>()->Input = &Input;
+    
     world.CreateSystem<DragSelector>()->Setup(Manager().Viewport(), Input);
     world.CreateSystem<SelectableDragSystem>();
     world.CreateSystem<TerrainVertexEditor>()->SetInput(&Input);
