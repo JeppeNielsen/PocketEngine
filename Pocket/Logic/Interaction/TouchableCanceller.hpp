@@ -15,5 +15,6 @@ namespace Pocket {
     public:
         void Reset();
         float MovementToCancel;
+        bool trackTouchPosition;
     };
 }

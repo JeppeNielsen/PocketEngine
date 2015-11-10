@@ -7,7 +7,7 @@
 //
 
 #include "TouchCancelSystem.hpp"
-
+#include "InputManager.hpp"
 
 using namespace Pocket;
 #include <iostream>
@@ -30,8 +30,11 @@ void TouchCancelSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void TouchCancelSystem::TouchableDown(TouchData touch, Pocket::GameObject *object) {
     Transform* transform = object->GetComponent<Transform>();
-    Vector3 lastWorldPosition = transform->World.GetValue()->TransformPosition(transform->Anchor);
-    activeTouchables[touch.Touchable] = { object->GetComponent<Touchable>(), transform, object->GetComponent<TouchableCanceller>(), 0, lastWorldPosition };
+    Vector3 startPosition = !object->GetComponent<TouchableCanceller>()->trackTouchPosition ?
+     transform->World.GetValue()->TransformPosition(transform->Anchor)
+     :
+     Vector3(touch.Position,0);
+    activeTouchables[touch.Touchable] = { object->GetComponent<Touchable>(), transform, object->GetComponent<TouchableCanceller>(), 0, startPosition, touch };
 }
 
 void TouchCancelSystem::TouchableUp(TouchData touch, Pocket::GameObject *object) {
@@ -44,11 +47,16 @@ void TouchCancelSystem::TouchableUp(TouchData touch, Pocket::GameObject *object)
 void TouchCancelSystem::Update(float dt) {
     for (ActiveTouchables::iterator it = activeTouchables.begin(); it!=activeTouchables.end(); ++it) {
         
-        Vector3 worldPosition = it->second.transform->World.GetValue()->TransformPosition(it->second.transform->Anchor);
-        Vector3 delta = worldPosition - it->second.lastWorldPosition;
-        it->second.lastWorldPosition = worldPosition;
+        Vector3 worldPosition =
+            !it->second.canceller->trackTouchPosition ?
+            it->second.transform->World.GetValue()->TransformPosition(it->second.transform->Anchor) :
+            Vector3(it->second.touch.Input->GetTouchPosition(it->second.touch.Index),0);
+        
+        Vector3 delta = worldPosition - it->second.prevPosition;
+        it->second.prevPosition = worldPosition;
     
         it->second.distanceTravelled += delta.Length();
+        std::cout<<it->second.distanceTravelled<<std::endl;
 
         if (it->second.distanceTravelled>it->second.canceller->MovementToCancel) {
             it->second.touchable->Cancel();

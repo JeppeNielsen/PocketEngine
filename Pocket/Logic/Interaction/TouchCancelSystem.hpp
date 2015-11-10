@@ -28,7 +28,8 @@ namespace Pocket {
             Transform* transform;
             TouchableCanceller* canceller;
             float distanceTravelled;
-            Vector3 lastWorldPosition;
+            Vector3 prevPosition;
+            TouchData touch;
         };
         
         typedef std::map<Touchable*, ActiveTouchable> ActiveTouchables;

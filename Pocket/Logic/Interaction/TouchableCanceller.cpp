@@ -12,5 +12,6 @@ using namespace Pocket;
 
 void TouchableCanceller::Reset() {
     MovementToCancel = 10.0f;
+    trackTouchPosition = false;
 }
 
