@@ -62,6 +62,7 @@ public:
     void Remove();
     
     void AddComponent(int componentType);
+    void EnableComponent(int componentType, bool enable);
     
     GameObject* Clone();
     GameObject* Clone(GameObject* parent);

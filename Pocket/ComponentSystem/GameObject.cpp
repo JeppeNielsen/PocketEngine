@@ -149,6 +149,10 @@ void GameObject::AddComponent(int componentType) {
     world->AddComponent(this, componentType);
 }
 
+void GameObject::EnableComponent(int componentType, bool enable) {
+    world->EnableComponent(this, componentType, enable);
+}
+
 GameWorld* GameObject::World() { return world; }
 
 void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
