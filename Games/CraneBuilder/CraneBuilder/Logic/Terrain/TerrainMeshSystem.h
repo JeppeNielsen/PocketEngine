@@ -27,11 +27,6 @@ private:
     float GetSlope(const Vector2 &vector, const Terrain::Vertices& normals, int index);
     Vector2 GetVertex(int index, const Terrain::Vertices& vertices);
 
-    struct Platform {
-        int startIndex;
-        int endIndex;
-    };
-
     void VerticesChanged(Terrain* terrain, GameObject* object);
 
     typedef std::set<GameObject*> ChangedTerrains;

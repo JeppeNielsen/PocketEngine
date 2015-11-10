@@ -17,7 +17,7 @@
 
 using namespace Pocket;
 
-SYSTEM(TerrainVertexEditor, Terrain, TerrainEditableVertices)
+SYSTEM(TerrainVertexEditor, Terrain, Transform, TerrainEditableVertices)
     void AddedToWorld(GameWorld& world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);

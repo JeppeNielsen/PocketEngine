@@ -180,8 +180,12 @@
 		724123AF1BEEB30A00269FFB /* TerrainVertexEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123AD1BEEB30A00269FFB /* TerrainVertexEditor.cpp */; };
 		724123B31BEFD02500269FFB /* Background.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B11BEFD02500269FFB /* Background.cpp */; };
 		724123B61BEFE3AB00269FFB /* BackgroundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B41BEFE3AB00269FFB /* BackgroundSystem.cpp */; };
-		724123B91BF12B8500269FFB /* EditorState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123B71BF12B8500269FFB /* EditorState.cpp */; };
-		724123BF1BF12D7300269FFB /* EditorStateSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */; };
+		724123C21BF1337100269FFB /* EditorSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123C01BF1337100269FFB /* EditorSpawner.cpp */; };
+		724123C51BF1356800269FFB /* EditorSpawnerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123C31BF1356800269FFB /* EditorSpawnerSystem.cpp */; };
+		724123C81BF1408700269FFB /* EditorFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123C61BF1408700269FFB /* EditorFactory.cpp */; };
+		724123CB1BF14EE900269FFB /* SimulationFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123C91BF14EE900269FFB /* SimulationFactory.cpp */; };
+		724123CE1BF1669C00269FFB /* ComponentEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123CC1BF1669C00269FFB /* ComponentEnabler.cpp */; };
+		724123D11BF1677F00269FFB /* ComponentEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */; };
 		727578501A44ECE600A2D8EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7275784F1A44ECE600A2D8EF /* Cocoa.framework */; };
 		727578A51A44ED2900A2D8EF /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578871A44ED2900A2D8EF /* Particle.cpp */; };
 		727578A61A44ED2900A2D8EF /* ParticleDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578891A44ED2900A2D8EF /* ParticleDragSystem.cpp */; };
@@ -570,10 +574,18 @@
 		724123B21BEFD02500269FFB /* Background.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Background.h; sourceTree = "<group>"; };
 		724123B41BEFE3AB00269FFB /* BackgroundSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundSystem.cpp; sourceTree = "<group>"; };
 		724123B51BEFE3AB00269FFB /* BackgroundSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackgroundSystem.h; sourceTree = "<group>"; };
-		724123B71BF12B8500269FFB /* EditorState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorState.cpp; sourceTree = "<group>"; };
-		724123B81BF12B8500269FFB /* EditorState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorState.h; sourceTree = "<group>"; };
-		724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorStateSystem.cpp; sourceTree = "<group>"; };
-		724123BE1BF12D7300269FFB /* EditorStateSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorStateSystem.h; sourceTree = "<group>"; };
+		724123C01BF1337100269FFB /* EditorSpawner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSpawner.cpp; sourceTree = "<group>"; };
+		724123C11BF1337100269FFB /* EditorSpawner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorSpawner.h; sourceTree = "<group>"; };
+		724123C31BF1356800269FFB /* EditorSpawnerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSpawnerSystem.cpp; sourceTree = "<group>"; };
+		724123C41BF1356800269FFB /* EditorSpawnerSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorSpawnerSystem.h; sourceTree = "<group>"; };
+		724123C61BF1408700269FFB /* EditorFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorFactory.cpp; sourceTree = "<group>"; };
+		724123C71BF1408700269FFB /* EditorFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorFactory.h; sourceTree = "<group>"; };
+		724123C91BF14EE900269FFB /* SimulationFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimulationFactory.cpp; sourceTree = "<group>"; };
+		724123CA1BF14EE900269FFB /* SimulationFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimulationFactory.h; sourceTree = "<group>"; };
+		724123CC1BF1669C00269FFB /* ComponentEnabler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentEnabler.cpp; sourceTree = "<group>"; };
+		724123CD1BF1669C00269FFB /* ComponentEnabler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentEnabler.h; sourceTree = "<group>"; };
+		724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentEnablerSystem.cpp; sourceTree = "<group>"; };
+		724123D01BF1677F00269FFB /* ComponentEnablerSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentEnablerSystem.h; sourceTree = "<group>"; };
 		7275784C1A44ECE600A2D8EF /* CraneBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CraneBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7275784F1A44ECE600A2D8EF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		727578521A44ECE600A2D8EF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1377,6 +1389,12 @@
 				7275789B1A44ED2900A2D8EF /* SpringTransformSystem.cpp */,
 				7275789C1A44ED2900A2D8EF /* SpringTransformSystem.h */,
 				724123A31BEEB21500269FFB /* Terrain */,
+				724123C91BF14EE900269FFB /* SimulationFactory.cpp */,
+				724123CA1BF14EE900269FFB /* SimulationFactory.h */,
+				724123CC1BF1669C00269FFB /* ComponentEnabler.cpp */,
+				724123CD1BF1669C00269FFB /* ComponentEnabler.h */,
+				724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */,
+				724123D01BF1677F00269FFB /* ComponentEnablerSystem.h */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1388,10 +1406,10 @@
 				724123761BE7E5AD00269FFB /* Creator.h */,
 				724123781BE7E7A000269FFB /* CreatorSystem.cpp */,
 				724123791BE7E7A000269FFB /* CreatorSystem.h */,
-				724123B71BF12B8500269FFB /* EditorState.cpp */,
-				724123B81BF12B8500269FFB /* EditorState.h */,
-				724123BD1BF12D7300269FFB /* EditorStateSystem.cpp */,
-				724123BE1BF12D7300269FFB /* EditorStateSystem.h */,
+				724123C01BF1337100269FFB /* EditorSpawner.cpp */,
+				724123C11BF1337100269FFB /* EditorSpawner.h */,
+				724123C31BF1356800269FFB /* EditorSpawnerSystem.cpp */,
+				724123C41BF1356800269FFB /* EditorSpawnerSystem.h */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -1403,6 +1421,8 @@
 				727578A01A44ED2900A2D8EF /* Game.h */,
 				724123991BEEA76700269FFB /* Editor.cpp */,
 				7241239A1BEEA76700269FFB /* Editor.h */,
+				724123C61BF1408700269FFB /* EditorFactory.cpp */,
+				724123C71BF1408700269FFB /* EditorFactory.h */,
 			);
 			path = States;
 			sourceTree = "<group>";
@@ -1497,6 +1517,7 @@
 				724123B61BEFE3AB00269FFB /* BackgroundSystem.cpp in Sources */,
 				724121F21BE423B300269FFB /* TextBoxLabelSystem.cpp in Sources */,
 				724121FE1BE423B300269FFB /* Limitable.cpp in Sources */,
+				724123CB1BF14EE900269FFB /* SimulationFactory.cpp in Sources */,
 				727578AF1A44ED2900A2D8EF /* SpringTransformSystem.cpp in Sources */,
 				724123A91BEEB21500269FFB /* TerrainMeshSystem.cpp in Sources */,
 				724122251BE423B400269FFB /* Plane.cpp in Sources */,
@@ -1506,6 +1527,7 @@
 				724121E01BE423B300269FFB /* Droppable.cpp in Sources */,
 				7241221E1BE423B400269FFB /* BoundingBox.cpp in Sources */,
 				724121BD1BE423B300269FFB /* Pointer.cpp in Sources */,
+				724123C21BF1337100269FFB /* EditorSpawner.cpp in Sources */,
 				724121F71BE423B300269FFB /* TouchSystem.cpp in Sources */,
 				727578AD1A44ED2900A2D8EF /* BeamMeshSystem.cpp in Sources */,
 				724122271BE423B400269FFB /* Point3.cpp in Sources */,
@@ -1558,6 +1580,7 @@
 				724122141BE423B300269FFB /* DragSelector.cpp in Sources */,
 				724122161BE423B300269FFB /* SelectableCollection.cpp in Sources */,
 				724121AE1BE423B300269FFB /* GameObject.cpp in Sources */,
+				724123D11BF1677F00269FFB /* ComponentEnablerSystem.cpp in Sources */,
 				7241222D1BE423B400269FFB /* ChromecastMessage.cpp in Sources */,
 				724122131BE423B300269FFB /* ClickSelectorSystem.cpp in Sources */,
 				724121BA1BE423B300269FFB /* ICellItem.cpp in Sources */,
@@ -1566,24 +1589,25 @@
 				724121D51BE423B300269FFB /* FieldEditor.cpp in Sources */,
 				7241222E1BE423B400269FFB /* ChromecastReceiver.cpp in Sources */,
 				724121EC1BE423B300269FFB /* MenuSystem.cpp in Sources */,
-				724123B91BF12B8500269FFB /* EditorState.cpp in Sources */,
 				724122321BE423B400269FFB /* RectPacker.cpp in Sources */,
 				7241220E1BE423B300269FFB /* Light.cpp in Sources */,
 				724121CC1BE423B300269FFB /* TransformAnimationDatabase.cpp in Sources */,
 				7241235A1BE423B400269FFB /* tinyxml.cpp in Sources */,
 				7241237D1BE80AA300269FFB /* Beam.cpp in Sources */,
 				724123071BE423B400269FFB /* WindowOSX.mm in Sources */,
+				724123C81BF1408700269FFB /* EditorFactory.cpp in Sources */,
+				724123CE1BF1669C00269FFB /* ComponentEnabler.cpp in Sources */,
 				7241230D1BE423B400269FFB /* Clipper.cpp in Sources */,
 				727578A71A44ED2900A2D8EF /* ParticleFollowTransformSystem.cpp in Sources */,
 				724123011BE423B400269FFB /* File.mm in Sources */,
 				724121F91BE423B300269FFB /* DraggableMotion.cpp in Sources */,
 				724122011BE423B300269FFB /* VelocitySystem.cpp in Sources */,
 				724121B51BE423B300269FFB /* InputManager.cpp in Sources */,
+				724123C51BF1356800269FFB /* EditorSpawnerSystem.cpp in Sources */,
 				724123741BE51D6E00269FFB /* ParticleMeshSystem.cpp in Sources */,
 				727578AE1A44ED2900A2D8EF /* SpringSystem.cpp in Sources */,
 				724121C21BE423B300269FFB /* UnitTest.cpp in Sources */,
 				724121CD1BE423B300269FFB /* TransformAnimator.cpp in Sources */,
-				724123BF1BF12D7300269FFB /* EditorStateSystem.cpp in Sources */,
 				724122221BE423B400269FFB /* MathHelper.cpp in Sources */,
 				724121C01BE423B300269FFB /* Triangulator.cpp in Sources */,
 				724122281BE423B400269FFB /* Quaternion.cpp in Sources */,

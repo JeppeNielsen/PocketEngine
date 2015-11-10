@@ -212,10 +212,7 @@ void Game::Initialize() {
     platformObject->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     platformObject->AddComponent<Orderable>()->Order = -20;
     platformObject->AddComponent<TextureComponent>()->Texture().LoadFromPng("Platform.png");
-    
-    terrain->centerMesh = center->GetComponent<Mesh>();
-    terrain->bevelMesh = bevelObject->GetComponent<Mesh>();
-    terrain->platformMesh = platformObject->GetComponent<Mesh>();
+
   
     Input.ButtonDown += event_handler(this, &Game::ButtonDown);
     Input.ButtonUp += event_handler(this, &Game::ButtonUp);

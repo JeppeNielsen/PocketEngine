@@ -10,7 +10,10 @@
 
 #include "Engine.hpp"
 #include "GameWorld.hpp"
-#include "EditorState.h"
+#include "EditorFactory.h"
+#include "SimulationFactory.h"
+#include "ComponentEnablerSystem.h"
+#include <fstream>
 
 using namespace Pocket;
 
@@ -21,6 +24,13 @@ public:
     void Render();
 private:
     GameWorld world;
-    GameObject* state;
+    GameObject* level;
+    ComponentEnablerSystem* state;
+    EditorFactory* factory;
+    SimulationFactory* simulationFactory;
+    
+    void SaveLevel(std::string filename);
+    void LoadLevel(std::string filename);
+    
     void ButtonDown(std::string button);
 };

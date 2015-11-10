@@ -16,6 +16,10 @@ void TerrainMeshSystem::ObjectAdded(Pocket::GameObject *object) {
 
 void TerrainMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<Terrain>()->VerticesChanged -= event_handler(this, &TerrainMeshSystem::VerticesChanged, object);
+    auto it = changedTerrains.find(object);
+    if (it!=changedTerrains.end()) {
+        changedTerrains.erase(object);
+    }
 }
 
 void TerrainMeshSystem::VerticesChanged(Terrain *terrain, Pocket::GameObject *object) {
@@ -33,6 +37,7 @@ void TerrainMeshSystem::CreateMesh(Pocket::GameObject *object) {
     Terrain* terrain = object->GetComponent<Terrain>();
     auto& mesh = object->GetComponent<Mesh>()->GetMesh<Vertex>();
     mesh.Clear();
+    if (terrain->vertices.size()<2) return;
     
     Terrain::Vertices smoothedVertices = terrain->GetSmoothedVertices(terrain->vertices, 10);
     
@@ -43,7 +48,7 @@ void TerrainMeshSystem::CreateMesh(Pocket::GameObject *object) {
     }
 
     {
-        auto& centerMesh = terrain->centerMesh->GetMesh<Vertex>();
+        auto& centerMesh = object->Children()[0]->GetComponent<Mesh>()->GetMesh<Vertex>();
         centerMesh.Clear();
 
         Triangulator::IndiciesVector indicies;
@@ -61,83 +66,6 @@ void TerrainMeshSystem::CreateMesh(Pocket::GameObject *object) {
             centerMesh.triangles.push_back((short)startIndex + indicies[i]);
         }
     }
-    
-    return;
-    
-    std::vector<Platform> platforms;
-    
-    {
-        const Vector2 down(0,1);
-        
-        float criteria = MathHelper::DegToRad * 25;
-        
-        int startIndex = 0;
-        while (GetSlope(down, normals, startIndex)<criteria) {
-            startIndex--;
-        }
-        
-        Platform platform;
-        platform.startIndex = startIndex;
-        bool isPlatform = true;
-        bool wasPlatform = isPlatform;
-        int currentIndex = startIndex+1;
-        for (int i=0; i<normals.size(); i++) {
-            
-            isPlatform = GetSlope(down, normals, currentIndex)<criteria;
-            if (!isPlatform && wasPlatform) {
-                platform.endIndex = currentIndex;
-                platforms.push_back(platform);
-            } else if (isPlatform && !wasPlatform) {
-                platform.startIndex = currentIndex;
-            }
-            wasPlatform = isPlatform;
-            currentIndex++;
-        }
-        
-        //platform.endIndex = currentIndex;
-        //platforms.push_back(platform);
-        
-        auto& platformMesh = terrain->platformMesh->GetMesh<Vertex>();
-    
-        for(auto& platform : platforms) {
-            Terrain::Vertices verts;
-            for (int v = platform.startIndex; v<=platform.endIndex; v++) {
-                Vector2 position = GetVertex(v, smoothedVertices);
-                position += GetVertex(v, normals) * 1.0f;
-                verts.push_back(position);
-            }
-            
-            for (int v = platform.endIndex; v>=platform.startIndex; v--) {
-                Vector2 position = GetVertex(v, smoothedVertices);
-                position -= GetVertex(v, normals) * 3.0f;
-                verts.push_back(position);
-            }
-            
-            Terrain::Vertices platformVertices = terrain->GetSmoothedVertices(verts, 5);
-            Terrain::Vertices platformNormals = terrain->CalculateNormals(platformVertices);
-            
-            Triangulator::IndiciesVector indicies;
-            Triangulator::Triangulate(platformVertices, indicies);
-            
-            Quaternion qaut(MathHelper::DegToRad * 45);
-            
-            int startIndex = (int)platformMesh.vertices.size();
-            for (int i=0; i<platformVertices.size(); i++) {
-                Vertex v;
-                v.TextureCoords =  qaut * platformVertices[i] * 0.6f;
-                v.Position = platformVertices[i];
-                platformMesh.vertices.push_back(v);
-            }
-            
-            for (int i=0; i<indicies.size(); i++) {
-                platformMesh.triangles.push_back((short)startIndex + indicies[i]);
-            }
-        
-        }
-    }
-    
-    
-    
 }
 
 Vector2 TerrainMeshSystem::GetVertex(int index, const Terrain::Vertices &vertices) {

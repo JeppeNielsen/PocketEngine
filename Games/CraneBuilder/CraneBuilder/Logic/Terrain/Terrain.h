@@ -24,7 +24,7 @@ Component(Terrain)
 
     Vertices GetSmoothedVertices(const Terrain::Vertices& vertices, int segments);
 
-    struct Layer {
+    struct Layer : public ISerializable{
         Layer() {
             outerDepth = 0;
             innerDepth = 0;
@@ -48,6 +48,19 @@ Component(Terrain)
         Vector2 direction;
         float directionAmount;
         Colour color;
+        
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(outerDepth);
+        SERIALIZE_FIELD(innerDepth);
+        SERIALIZE_FIELD(textureScale);
+        SERIALIZE_FIELD(outerV);
+        SERIALIZE_FIELD(innerV);
+        SERIALIZE_FIELD(isBevel);
+        SERIALIZE_FIELD(useDirection);
+        SERIALIZE_FIELD(direction);
+        SERIALIZE_FIELD(directionAmount);
+        SERIALIZE_FIELD(color);
+        SERIALIZE_FIELDS_END
     };
 
     typedef std::vector<Layer> Layers;
@@ -55,11 +68,12 @@ Component(Terrain)
 
     Vertices CalculateNormals(const Terrain::Vertices& vertices);
 
-    Pointer<Mesh> centerMesh;
-    Pointer<Mesh> bevelMesh;
-    Pointer<Mesh> platformMesh;
-
     void CheckForChange();
 
     Event<Terrain*> VerticesChanged;
+
+    SERIALIZE_FIELDS_BEGIN
+    SERIALIZE_FIELD(vertices)
+    SERIALIZE_FIELD(layers)
+    SERIALIZE_FIELDS_END
 };

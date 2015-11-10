@@ -19,6 +19,7 @@ Component(EditorState)
     enum class State {
         None,
         Terrain,
+        Physics
     };
 
     Property<EditorState*, State> CurrentState;

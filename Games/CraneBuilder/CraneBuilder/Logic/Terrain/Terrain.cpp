@@ -11,8 +11,8 @@
 
 void Terrain::Reset() {
     vertices.clear();
+    layers.clear();
 }
-
 
 Terrain::Vertices Terrain::CalculateNormals(const Terrain::Vertices& vertices) {
     Vertices normals;

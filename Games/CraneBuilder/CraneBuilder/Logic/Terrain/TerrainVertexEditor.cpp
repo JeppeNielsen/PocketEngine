@@ -17,7 +17,7 @@ void TerrainVertexEditor::AddedToWorld(Pocket::GameWorld &world) {
     world.CreateOrGetSystem<DraggableSystem>();
     world.CreateSystem<AddVertexSystem>();
     selectedVertices = world.CreateSystem<SelectableCollection>();
-    world.CreateSystem<ClickSelectorSystem>();
+    world.CreateOrGetSystem<ClickSelectorSystem>();
 }
 
 void TerrainVertexEditor::SetInput(Pocket::InputManager *input) {
@@ -31,7 +31,8 @@ void TerrainVertexEditor::ObjectAdded(Pocket::GameObject *object) {
     Terrain* terrain = object->GetComponent<Terrain>();
     TerrainEditableVertices* everts = object->GetComponent<TerrainEditableVertices>();
     for (int i=0; i<terrain->vertices.size(); i++) {
-        everts->vertices.push_back(CreateVertexObject(terrain->vertices[i]));
+        Vector3 position = object->GetComponent<Transform>()->World.GetValue()->TransformPosition(terrain->vertices[i]);
+        everts->vertices.push_back(CreateVertexObject(position));
     }
 }
 
@@ -64,22 +65,25 @@ void TerrainVertexEditor::Update(float dt) {
         }
         if (wasChanged) {
             for (int i=0; i<everts->vertices.size(); i++) {
-                Vector3 pos = everts->vertices[i]->GetComponent<Transform>()->Position = terrain->vertices[i];
+                everts->vertices[i]->GetComponent<Transform>()->Position =
+                go->GetComponent<Transform>()->World.GetValue()->TransformPosition(terrain->vertices[i]);
             }
         }
         
         for (int i=0; i<everts->vertices.size(); i++) {
             Vector3 pos = everts->vertices[i]->GetComponent<Transform>()->Position;
-            terrain->vertices[i] = pos;
+            terrain->vertices[i] = go->GetComponent<Transform>()->WorldInverse.GetValue()->TransformPosition(pos);
         }
         terrain->CheckForChange();
+        if (terrain->vertices.size()<2) go->Remove();
     }
 }
 
 GameObject* TerrainVertexEditor::CreateVertexObject(Vector2 position) {
     GameObject* go = World()->CreateObject();
     go->AddComponent<Transform>()->Position = position;
-    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {1,1,0.2f});
+    go->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour::Blue(0.8f));
     go->AddComponent<Material>();
     go->AddComponent<Touchable>();
     go->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
