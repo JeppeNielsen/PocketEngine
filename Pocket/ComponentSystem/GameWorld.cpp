@@ -185,6 +185,7 @@ void GameWorld::RemoveComponent(GameObject *object, int componentID) {
 }
 
 void GameWorld::EnableComponent(GameObject *object, int componentID, bool enable) {
+    if (!object->components[componentID]) return; // object does not have component, ignore
     IGameComponentType* type = componentTypes[componentID];
     bool isEnabled = (object->enabledComponents & type->mask) == type->mask;
     if (isEnabled == enable) return;
