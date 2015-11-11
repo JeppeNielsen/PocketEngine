@@ -20,6 +20,7 @@
 #include "TransformHierarchy.hpp"
 
 void Editor::Initialize() {
+
     world.CreateSystem<RenderSystem>();
     
     world.CreateSystem<CameraDragSystem>()->Input = &Input;
@@ -54,7 +55,7 @@ void Editor::Initialize() {
     background->AddComponent<Orderable>()->Order = -5000;
     Background* back = background->AddComponent<Background>();
     back->colors[0] = Colour((Colour::Component)255, 223, 166);
-    back->colors[3]=back->colors[0];
+    back->colors[3] = back->colors[0];
     back->colors[1] = Colour((Colour::Component)226, 172,102);
     back->colors[2] = back->colors[1];
     
@@ -138,6 +139,7 @@ void Editor::SaveLevel(std::string filename) {
             if (componentType == Touchable::ID) return false;
             if (componentType == TerrainEditableVertices::ID) return false;
         }
+        if (componentType == ComponentEnabler::ID) return false;
         return true;
     });
     file.close();

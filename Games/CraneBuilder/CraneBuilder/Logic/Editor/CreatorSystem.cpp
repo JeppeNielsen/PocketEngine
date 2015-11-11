@@ -56,7 +56,7 @@ void CreatorSystem::Update(float dt) {
 
             float dist;
             if (plane.IntersectsRay(ray, &dist)) {
-                Vector3 position =ray.GetPosition(dist);
+                Vector3 position = Grid(ray.GetPosition(dist));
                 createdParticle->GetComponent<Transform>()->Position = position;
                 createdParticle->GetComponent<Particle>()->SetPosition(position);
             }
@@ -105,6 +105,12 @@ void CreatorSystem::Update(float dt) {
     default:
         break;
     }
+}
+
+Vector3 CreatorSystem::Grid(Vector3 position) {
+    position.x = roundf(position.x / gridSize.x) * gridSize.x;
+    position.y = roundf(position.y / gridSize.y) * gridSize.y;
+    return position;
 }
 
 void CreatorSystem::Cancel() {

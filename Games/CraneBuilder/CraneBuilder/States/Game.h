@@ -17,6 +17,8 @@
 #include "Hydralic.h"
 #include "SimulationFactory.h"
 #include "EditorFactory.h"
+#include "ComponentEnablerSystem.h"
+#include "BackgroundSystem.h"
 
 using namespace Pocket;
 
@@ -32,6 +34,8 @@ class Game : public GameState<Game> {
         GameObject* creator;
         SimulationFactory* simulationFactory;
         EditorFactory* editorFactory;
+        ComponentEnablerSystem* state;
+        BackgroundSystem* backgroundSystem;
     
         void ButtonDown(std::string button);
         void ButtonUp(std::string button);

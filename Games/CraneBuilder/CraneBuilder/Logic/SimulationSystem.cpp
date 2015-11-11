@@ -43,7 +43,7 @@ void SimulationSystem::Store() {
     storedPositions.clear();
     for(GameObject* go : particleSystem->Objects()) {
         storedPositions[go->GetComponent<Particle>()] = go->GetComponent<Particle>()->position;
-        std::cout<<"stored position: " <<storedPositions[go->GetComponent<Particle>()]<<std::endl;
+        //std::cout<<"stored position: " <<storedPositions[go->GetComponent<Particle>()]<<std::endl;
     }
 }
 
@@ -52,7 +52,7 @@ void SimulationSystem::Restore() {
         Vector2 position = storedPositions[go->GetComponent<Particle>()];
         go->GetComponent<Particle>()->SetPosition(position);
         go->GetComponent<Transform>()->Position = position;
-        std::cout<<"restored position: " <<storedPositions[go->GetComponent<Particle>()]<<std::endl;
+        //std::cout<<"restored position: " <<storedPositions[go->GetComponent<Particle>()]<<std::endl;
     }
     
     for(GameObject* go : springSystem->Objects()) {

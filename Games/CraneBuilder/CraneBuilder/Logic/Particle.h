@@ -22,4 +22,7 @@ Component(Particle)
 
         void SetPosition(Vector2 position);
 
+        SERIALIZE_FIELDS_BEGIN
+        SERIALIZE_FIELD(immovable)
+        SERIALIZE_FIELDS_END
 };

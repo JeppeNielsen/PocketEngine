@@ -31,7 +31,11 @@ SYSTEM(CreatorSystem, Creator, Particle, Transform, Touchable)
 
     void Cancel();
 
+    Vector2 gridSize;
+
 private:
+
+    Vector3 Grid(Vector3 position);
 
     SYSTEM(Particles, Particle)
         GameObject* FindNearestParticle(const Vector2& position, GameObject* excludeThis, float& minDistance);

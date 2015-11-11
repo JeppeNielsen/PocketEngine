@@ -69,7 +69,7 @@ bool Box::Intersect(const Box& other) const{
 void SpringCollisionSystem::Initialize() {
     AddComponent<Spring>();
     bodiesNeedsCalculating = false;
-    quadtree.SetMinMax({-30,-40}, {30,40});
+    quadtree.SetMinMax({-130,-140}, {130,140});
     UseTree = true;
 }
 

@@ -23,15 +23,25 @@
 #include "EditorFactory.h"
 #include <fstream>
 #include "CameraDragSystem.h"
+#include "Background.h"
 
 void Game::Initialize() {
 
+    creatorSystem = world.CreateSystem<CreatorSystem>();
+    creatorSystem->gridSize = 2.0f;
+    
     simulationFactory = world.CreateFactory<SimulationFactory>();
     editorFactory = world.CreateFactory<EditorFactory>();
     
+    state = world.CreateSystem<ComponentEnablerSystem>();
+    state->CurrentState = "editor";
+    
     world.CreateSystem<CameraDragSystem>()->Input = &Input;
     
-    creatorSystem = world.CreateSystem<CreatorSystem>();
+    
+    
+    
+    backgroundSystem = world.CreateSystem<BackgroundSystem>();
     
     simulationFactory->Setup(&Input);
     editorFactory->Setup();
@@ -41,6 +51,23 @@ void Game::Initialize() {
     camera->AddComponent<Transform>()->Position = { 0, 0, 50 };
     camera->GetComponent<Camera>()->FieldOfView = 60;
     camera->AddComponent<CameraDragger>();
+    
+    
+    backgroundSystem->CameraObject = camera;
+    
+    GameObject* background = world.CreateObject();
+    background->AddComponent<Transform>();
+    background->AddComponent<Material>();
+    background->AddComponent<Mesh>();
+    background->AddComponent<Orderable>()->Order = -5000;
+    Background* back = background->AddComponent<Background>();
+    back->colors[0] = Colour((Colour::Component)255, 223, 166);
+    back->colors[3] = back->colors[0];
+    back->colors[1] = Colour((Colour::Component)226, 172,102);
+    back->colors[2] = back->colors[1];
+    
+    
+    
     
     atlas = world.CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
@@ -54,21 +81,30 @@ void Game::Initialize() {
     
     currentHydralic = 0;
     
-    creatorSystem->CreateParticle = [this] () -> GameObject* {
-        return simulationFactory->CreateParticle(0);
+    creatorSystem->CreateParticle = [this] () {
+        GameObject* go = simulationFactory->CreateParticle(0);
+        go->AddComponent<Creator>(creator);
+        go->AddComponent<ComponentEnabler>()->AddComponent<Creator>("editor");
+        go->GetComponent<ComponentEnabler>()->AddComponent<Draggable>("simulating");
+        
+        return go;
     };
 
-    creatorSystem->CreateSpring = [this] () -> GameObject* {
+    creatorSystem->CreateSpring = [this] () {
         GameObject* s = simulationFactory->CreateSpring(70.0f);
         if (buildType == BuildType::Beam) {
             s->AddComponent<Beam>();
         } else if (buildType == BuildType::Hydralic) {
             currentHydralic = s->AddComponent<Hydralic>();
         }
+        s->AddComponent<Creator>(creator);
+        s->AddComponent<ComponentEnabler>()->AddComponent<Creator>("editor");
+        s->GetComponent<ComponentEnabler>()->AddComponent<Draggable>("simulating");
+        
         return s;
     };
     
-    creatorSystem->Continuous = [this] () -> bool {
+    creatorSystem->Continuous = [this] () {
         return buildType == BuildType::Beam;
     };
     
@@ -93,6 +129,7 @@ void Game::ButtonDown(std::string button) {
     if (button == " ") {
         creatorSystem->Cancel();
         simulationFactory->Simulation()->Running = !simulationFactory->Simulation()->Running();
+        state->CurrentState = simulationFactory->Simulation()->Running() ? "simulation" : "editor";
     }
 
     if (button == "1") buildType = BuildType::Beam;
@@ -128,7 +165,7 @@ void Game::Render() {
 void Game::LoadLevel(std::string filename) {
     std::ifstream file;
     file.open(filename);
-    GameObject* level = world.CreateObjectFromJson(file, [this] (GameObject* o) {
+    world.CreateObjectFromJson(file, [this] (GameObject* o) {
         if (o->GetComponent<Particle>()) {
             o->AddComponent<Creator>(creator);
         }

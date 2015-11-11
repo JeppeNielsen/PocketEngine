@@ -42,12 +42,14 @@ void ParticleUpdaterSystem::Simulate(float dt) {
             float xVel = particle->position.x - particle->positionOld.x;
             particle->position.x -= xVel * 0.5f;
         }
+        /*
         if (particle->position.x<-60) {
             particle->position.x = -60;
         }
         if (particle->position.x>60) {
             particle->position.x = 60;
         }
+        */
         
         if (particle->immovable) {
             particle->positionOld = particle->position;
