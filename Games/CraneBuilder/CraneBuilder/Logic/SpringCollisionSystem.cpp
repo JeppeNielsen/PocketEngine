@@ -421,6 +421,10 @@ void SpringCollisionSystem::TerrainBodySystem::ObjectAdded(Pocket::GameObject *o
     Transform* transform = object->GetComponent<Transform>();
     
     Terrain::Vertices vertices = terrain->GetSmoothedVertices(terrain->vertices, 2);
+    Terrain::Vertices normals = terrain->CalculateNormals(vertices);
+    for (int i=0; i<vertices.size(); i++) {
+        vertices[i]+=normals[i] * 1.0f;
+    }
     
     Triangulator::IndiciesVector triangles;
     Triangulator::Triangulate(vertices, triangles);

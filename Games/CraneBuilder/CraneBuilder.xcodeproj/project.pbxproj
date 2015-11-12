@@ -186,6 +186,8 @@
 		724123CB1BF14EE900269FFB /* SimulationFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123C91BF14EE900269FFB /* SimulationFactory.cpp */; };
 		724123CE1BF1669C00269FFB /* ComponentEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123CC1BF1669C00269FFB /* ComponentEnabler.cpp */; };
 		724123D11BF1677F00269FFB /* ComponentEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */; };
+		724123DE1BF5111800269FFB /* Grid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123DC1BF5111800269FFB /* Grid.cpp */; };
+		724123E11BF5115300269FFB /* GridSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724123DF1BF5115300269FFB /* GridSystem.cpp */; };
 		727578501A44ECE600A2D8EF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7275784F1A44ECE600A2D8EF /* Cocoa.framework */; };
 		727578A51A44ED2900A2D8EF /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578871A44ED2900A2D8EF /* Particle.cpp */; };
 		727578A61A44ED2900A2D8EF /* ParticleDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727578891A44ED2900A2D8EF /* ParticleDragSystem.cpp */; };
@@ -586,6 +588,10 @@
 		724123CD1BF1669C00269FFB /* ComponentEnabler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentEnabler.h; sourceTree = "<group>"; };
 		724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentEnablerSystem.cpp; sourceTree = "<group>"; };
 		724123D01BF1677F00269FFB /* ComponentEnablerSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentEnablerSystem.h; sourceTree = "<group>"; };
+		724123DC1BF5111800269FFB /* Grid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Grid.cpp; sourceTree = "<group>"; };
+		724123DD1BF5111800269FFB /* Grid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Grid.h; sourceTree = "<group>"; };
+		724123DF1BF5115300269FFB /* GridSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GridSystem.cpp; sourceTree = "<group>"; };
+		724123E01BF5115300269FFB /* GridSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridSystem.h; sourceTree = "<group>"; };
 		7275784C1A44ECE600A2D8EF /* CraneBuilder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CraneBuilder.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7275784F1A44ECE600A2D8EF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		727578521A44ECE600A2D8EF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -1395,6 +1401,10 @@
 				724123CD1BF1669C00269FFB /* ComponentEnabler.h */,
 				724123CF1BF1677F00269FFB /* ComponentEnablerSystem.cpp */,
 				724123D01BF1677F00269FFB /* ComponentEnablerSystem.h */,
+				724123DC1BF5111800269FFB /* Grid.cpp */,
+				724123DD1BF5111800269FFB /* Grid.h */,
+				724123DF1BF5115300269FFB /* GridSystem.cpp */,
+				724123E01BF5115300269FFB /* GridSystem.h */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1606,6 +1616,7 @@
 				724123C51BF1356800269FFB /* EditorSpawnerSystem.cpp in Sources */,
 				724123741BE51D6E00269FFB /* ParticleMeshSystem.cpp in Sources */,
 				727578AE1A44ED2900A2D8EF /* SpringSystem.cpp in Sources */,
+				724123DE1BF5111800269FFB /* Grid.cpp in Sources */,
 				724121C21BE423B300269FFB /* UnitTest.cpp in Sources */,
 				724121CD1BE423B300269FFB /* TransformAnimator.cpp in Sources */,
 				724122221BE423B400269FFB /* MathHelper.cpp in Sources */,
@@ -1657,6 +1668,7 @@
 				7241221A1BE423B400269FFB /* SelectionVisualizer.cpp in Sources */,
 				724123121BE423B400269FFB /* Texture.cpp in Sources */,
 				724121BE1BE423B300269FFB /* QuadTree.cpp in Sources */,
+				724123E11BF5115300269FFB /* GridSystem.cpp in Sources */,
 				724122301BE423B400269FFB /* clipper.cpp in Sources */,
 				724122291BE423B400269FFB /* Ray.cpp in Sources */,
 				724121E11BE423B300269FFB /* DroppableSystem.cpp in Sources */,

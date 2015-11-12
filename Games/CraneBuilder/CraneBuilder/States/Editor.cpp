@@ -18,6 +18,7 @@
 #include "TouchCancelSystem.hpp"
 #include "EditorFactory.h"
 #include "TransformHierarchy.hpp"
+#include "GridSystem.h"
 
 void Editor::Initialize() {
 
@@ -37,6 +38,8 @@ void Editor::Initialize() {
     
     factory = world.CreateFactory<EditorFactory>();
     simulationFactory = world.CreateFactory<SimulationFactory>();
+    
+    world.CreateSystem<GridSystem>();
     
     factory->Setup();
     simulationFactory->Setup(&Input);
@@ -85,6 +88,7 @@ void Editor::Initialize() {
                 g->GetComponent<Particle>()->immovable = true;
                 g->AddComponent<ComponentEnabler>()->AddComponent<Touchable>("physics");
                 g->Parent = level;
+                g->AddComponent<Grid>()->Size = 2.0f;
                 return g;
             }}
         };
@@ -140,6 +144,7 @@ void Editor::SaveLevel(std::string filename) {
             if (componentType == TerrainEditableVertices::ID) return false;
         }
         if (componentType == ComponentEnabler::ID) return false;
+        if (componentType == Grid::ID) return false;
         return true;
     });
     file.close();
@@ -159,6 +164,7 @@ void Editor::LoadLevel(std::string filename) {
             o->AddComponent<Touchable>();
             o->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
             o->AddComponent<Selectable>();
+            o->AddComponent<Grid>()->Size = 2.0f;
         }
     });
 }
