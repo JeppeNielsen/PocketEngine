@@ -131,6 +131,19 @@ void Game::ButtonDown(std::string button) {
         simulationFactory->Simulation()->Running = !simulationFactory->Simulation()->Running();
         state->CurrentState = simulationFactory->Simulation()->Running() ? "simulation" : "editor";
     }
+    
+    if (button == "b") {
+        Plane plane({0,0,1},0);
+        Ray ray = camera->GetComponent<Camera>()->GetRay(
+                camera->GetComponent<Transform>(),
+                Input.GetTouchPosition(0));
+
+        float dist;
+        if (plane.IntersectsRay(ray, &dist)) {
+            Vector3 position = ray.GetPosition(dist);
+            CreateBox(position);
+        }
+    }
 
     if (button == "1") buildType = BuildType::Beam;
     if (button == "2") buildType = BuildType::Hydralic;
@@ -146,6 +159,27 @@ void Game::ButtonDown(std::string button) {
     if (button == "w") wireframe =!wireframe;
 }
 
+void Game::CreateBox(Pocket::Vector3 position) {
+    Vector2 size = 5.0f;
+    
+    GameObject* p1 = simulationFactory->CreateParticle(position + Vector2(-size.x, -size.y));
+    GameObject* p2 = simulationFactory->CreateParticle(position + Vector2(-size.x, size.y));
+    GameObject* p3 = simulationFactory->CreateParticle(position + Vector2(size.x, size.y));
+    GameObject* p4 = simulationFactory->CreateParticle(position + Vector2(size.x, -size.y));
+    
+    CreateSpring(p1, p2);
+    CreateSpring(p2, p3);
+    CreateSpring(p3, p4);
+    CreateSpring(p4, p1);
+    CreateSpring(p1, p3);
+    
+}
+
+void Game::CreateSpring(Pocket::GameObject *p1, Pocket::GameObject *p2) {
+    GameObject* s1 = simulationFactory->CreateSpring(50.0f);
+    s1->GetComponent<Spring>()->SetParticles(p1->GetComponent<Particle>(), p2->GetComponent<Particle>());
+    s1->AddComponent<Beam>();
+}
 
 void Game::Update(float dt) {
     world.Update(dt);

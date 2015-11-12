@@ -51,4 +51,7 @@ class Game : public GameState<Game> {
         BuildType buildType;
         Hydralic* currentHydralic;
         bool wireframe;
+    
+        void CreateBox(Vector3 position);
+        void CreateSpring(GameObject* p1, GameObject* p2);
 };

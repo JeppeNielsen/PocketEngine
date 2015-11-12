@@ -37,8 +37,8 @@ void ParticleUpdaterSystem::Simulate(float dt) {
     for (auto it = Objects().begin(); it!=Objects().end(); it++) {
         GameObject* object = *it;
         Particle* particle = object->GetComponent<Particle>();
-        if (particle->position.y<0) {
-            particle->position.y = 0;
+        if (particle->position.y<-100) {
+            particle->position.y = -100;
             float xVel = particle->position.x - particle->positionOld.x;
             particle->position.x -= xVel * 0.5f;
         }

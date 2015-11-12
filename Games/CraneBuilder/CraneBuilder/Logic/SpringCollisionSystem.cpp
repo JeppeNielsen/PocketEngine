@@ -8,6 +8,7 @@
 
 #include "SpringCollisionSystem.h"
 #include <iostream>
+#include "Triangulator.hpp"
 
 #define MIN(X,Y) ((X<Y) ? (X) : (Y))
 #define MAX(X,Y) ((X>Y) ? (X) : (Y))
@@ -71,6 +72,11 @@ void SpringCollisionSystem::Initialize() {
     bodiesNeedsCalculating = false;
     quadtree.SetMinMax({-130,-140}, {130,140});
     UseTree = true;
+}
+
+void SpringCollisionSystem::AddedToWorld(Pocket::GameWorld &world) {
+    terrain = world.CreateSystem<TerrainBodySystem>();
+    terrain->quadTree = &quadtree;
 }
 
 void SpringCollisionSystem::ObjectAdded(GameObject* object) {
@@ -408,8 +414,51 @@ bool SpringCollisionSystem::DetectCollision(Body* body, Spring* spring, Collisio
 }
 
 
+void SpringCollisionSystem::TerrainBodySystem::ObjectAdded(Pocket::GameObject *object) {
+    TerrainBody* terrainBody = new TerrainBody();
 
+    Terrain* terrain = object->GetComponent<Terrain>();
+    Transform* transform = object->GetComponent<Transform>();
+    
+    Terrain::Vertices vertices = terrain->GetSmoothedVertices(terrain->vertices, 2);
+    
+    Triangulator::IndiciesVector triangles;
+    Triangulator::Triangulate(vertices, triangles);
+    
+    terrainBody->bodies.resize(triangles.size() / 3);
+    
+    for(int i=0; i<terrainBody->bodies.size(); i++) {
+        Body* body = new Body();
+        body->node.data = body;
+        terrainBody->bodies[i] = body;
+        
+        for(int j=0; j<3; j++) {
+            body->particles[j] = new Particle();
+            body->particles[j]->mass = 1.0f;
+            body->particles[j]->immovable = true;
+            Vector3 localPosition =vertices[triangles[i*3+j]];
+            Vector3 position = transform->World.GetValue()->TransformPosition(localPosition);
+            body->particles[j]->SetPosition(position);
+        }
+        
+        body->CalcMinMax(body->node.min, body->node.max);
+        quadTree->Insert(body->node);
+    }
+    
+    SetMetaData(object, terrainBody);
+}
 
+void SpringCollisionSystem::TerrainBodySystem::ObjectRemoved(Pocket::GameObject *object) {
+   TerrainBody* terrainBody = (TerrainBody*)GetMetaData(object);
+   for(Body* body : terrainBody->bodies) {
+        quadTree->Remove(body->node);
+        for (int j=0; j<3; j++) {
+            delete body->particles[j];
+        }
+        delete body;
+   }
+   delete terrainBody;
+}
 
 
 

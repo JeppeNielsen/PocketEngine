@@ -13,6 +13,8 @@
 #include "Particle.h"
 #include <vector>
 #include "Quadtree.hpp"
+#include "Terrain.h"
+#include "Transform.hpp"
 using namespace Pocket;
 
 class Body {
@@ -35,6 +37,7 @@ struct CollisionInfo {
 class SpringCollisionSystem : public GameSystem {
 public:
     void Initialize();
+    void AddedToWorld(GameWorld& world);
     void Simulate(float dt);
     
     void ObjectAdded(GameObject* object);
@@ -61,6 +64,19 @@ private:
     typedef std::vector<Body*> Bodies;
     Bodies bodies;
     Bodies bodiesInQuery;
-    
     Quadtree quadtree;
+    
+    SYSTEM(TerrainBodySystem, Transform, Terrain)
+    
+        struct TerrainBody {
+            std::vector<Body*> bodies;
+        };
+    
+        void ObjectAdded(GameObject* object);
+        void ObjectRemoved(GameObject* object);
+    
+        Quadtree* quadTree;
+    };
+
+    TerrainBodySystem* terrain;
 };
