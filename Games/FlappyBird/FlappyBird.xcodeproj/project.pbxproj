@@ -28,6 +28,10 @@
 		722E06C01B55900A00E1F484 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722E06BF1B55900A00E1F484 /* test.cpp */; };
 		722E06C81B56C46E00E1F484 /* FileReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 722E06C71B56C46E00E1F484 /* FileReader.mm */; };
 		722E06CA1B56D3F600E1F484 /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 722E06C91B56D3F600E1F484 /* File.mm */; };
+		724417F51BFCFD4E0096A783 /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724417F11BFCFD4E0096A783 /* SelectedColorer.cpp */; };
+		724417F61BFCFD4E0096A783 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724417F31BFCFD4E0096A783 /* SelectedColorerSystem.cpp */; };
+		724417FB1BFCFE120096A783 /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724417F71BFCFE120096A783 /* Droppable.cpp */; };
+		724417FC1BFCFE120096A783 /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724417F91BFCFE120096A783 /* DroppableSystem.cpp */; };
 		7268830F1B54617D006FD4E1 /* ShaderCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268830D1B54617D006FD4E1 /* ShaderCollection.cpp */; };
 		72826F621B28CB3C00FD2B3A /* Bird.png in Resources */ = {isa = PBXBuildFile; fileRef = 72826F611B28CB3C00FD2B3A /* Bird.png */; };
 		72FFE2801B1F89F400494010 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FFE27F1B1F89F400494010 /* Cocoa.framework */; };
@@ -40,7 +44,6 @@
 		72FFE6B61B1F8A1000494010 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2951B1F8A0C00494010 /* GameObject.cpp */; };
 		72FFE6B71B1F8A1000494010 /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2971B1F8A0C00494010 /* GameSystem.cpp */; };
 		72FFE6B81B1F8A1000494010 /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2991B1F8A0C00494010 /* GameWorld.cpp */; };
-		72FFE6B91B1F8A1000494010 /* SerializedProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE29B1B1F8A0C00494010 /* SerializedProperty.cpp */; };
 		72FFE6BA1B1F8A1000494010 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE29F1B1F8A0C00494010 /* Engine.cpp */; };
 		72FFE6BB1B1F8A1000494010 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2A11B1F8A0C00494010 /* GameManager.cpp */; };
 		72FFE6BC1B1F8A1000494010 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2A41B1F8A0C00494010 /* GameState.cpp */; };
@@ -59,12 +62,6 @@
 		72FFE6CA1B1F8A1000494010 /* Triangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2C81B1F8A0C00494010 /* Triangulator.cpp */; };
 		72FFE6CB1B1F8A1000494010 /* TimeMeasurer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2CC1B1F8A0C00494010 /* TimeMeasurer.cpp */; };
 		72FFE6CC1B1F8A1000494010 /* UnitTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2CE1B1F8A0C00494010 /* UnitTest.cpp */; };
-		72FFE6CD1B1F8A1000494010 /* SpineAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2D61B1F8A0C00494010 /* SpineAnimation.cpp */; };
-		72FFE6CE1B1F8A1000494010 /* SpineAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2D81B1F8A0C00494010 /* SpineAnimator.cpp */; };
-		72FFE6CF1B1F8A1000494010 /* SpineAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2DA1B1F8A0C00494010 /* SpineAnimatorSystem.cpp */; };
-		72FFE6D01B1F8A1000494010 /* SpineFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2DC1B1F8A0C00494010 /* SpineFactory.cpp */; };
-		72FFE6D11B1F8A1000494010 /* SpineModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2DE1B1F8A0C00494010 /* SpineModel.cpp */; };
-		72FFE6D21B1F8A1000494010 /* SpineSkeleton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2E01B1F8A0C00494010 /* SpineSkeleton.cpp */; };
 		72FFE6D31B1F8A1000494010 /* TouchAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2E21B1F8A0C00494010 /* TouchAnimator.cpp */; };
 		72FFE6D41B1F8A1000494010 /* TouchAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2E41B1F8A0C00494010 /* TouchAnimatorSystem.cpp */; };
 		72FFE6D51B1F8A1000494010 /* TransformAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE2E61B1F8A0C00494010 /* TransformAnimation.cpp */; };
@@ -337,7 +334,6 @@
 		72FFE7FA1B1F8A1000494010 /* jpeg_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE5D41B1F8A0F00494010 /* jpeg_decoder.cpp */; };
 		72FFE7FB1B1F8A1000494010 /* lodepng.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE5D61B1F8A0F00494010 /* lodepng.cpp */; };
 		72FFE7FC1B1F8A1000494010 /* Profiler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE5D91B1F8A0F00494010 /* Profiler.cpp */; };
-		72FFE84E1B1F8A1000494010 /* XmlSerializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE6951B1F8A1000494010 /* XmlSerializer.cpp */; };
 		72FFE8541B1F8A1000494010 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE6A41B1F8A1000494010 /* tinystr.cpp */; };
 		72FFE8551B1F8A1000494010 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE6A61B1F8A1000494010 /* tinyxml.cpp */; };
 		72FFE8561B1F8A1000494010 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FFE6A81B1F8A1000494010 /* tinyxmlerror.cpp */; };
@@ -409,6 +405,18 @@
 		722E06C51B56C26D00E1F484 /* PropertyListener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PropertyListener.hpp; sourceTree = "<group>"; };
 		722E06C71B56C46E00E1F484 /* FileReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileReader.mm; sourceTree = "<group>"; };
 		722E06C91B56D3F600E1F484 /* File.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = File.mm; sourceTree = "<group>"; };
+		724417ED1BFCFBE80096A783 /* JsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonSerializer.hpp; sourceTree = "<group>"; };
+		724417EE1BFCFBE80096A783 /* minijson_reader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_reader.hpp; sourceTree = "<group>"; };
+		724417EF1BFCFBE80096A783 /* minijson_writer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_writer.hpp; sourceTree = "<group>"; };
+		724417F01BFCFBE80096A783 /* Serializable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Serializable.hpp; sourceTree = "<group>"; };
+		724417F11BFCFD4E0096A783 /* SelectedColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorer.cpp; sourceTree = "<group>"; };
+		724417F21BFCFD4E0096A783 /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
+		724417F31BFCFD4E0096A783 /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
+		724417F41BFCFD4E0096A783 /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
+		724417F71BFCFE120096A783 /* Droppable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Droppable.cpp; sourceTree = "<group>"; };
+		724417F81BFCFE120096A783 /* Droppable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Droppable.hpp; sourceTree = "<group>"; };
+		724417F91BFCFE120096A783 /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
+		724417FA1BFCFE120096A783 /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
 		7268830D1B54617D006FD4E1 /* ShaderCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCollection.cpp; sourceTree = "<group>"; };
 		7268830E1B54617D006FD4E1 /* ShaderCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderCollection.hpp; sourceTree = "<group>"; };
 		72826F611B28CB3C00FD2B3A /* Bird.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Bird.png; sourceTree = "<group>"; };
@@ -429,8 +437,6 @@
 		72FFE2981B1F8A0C00494010 /* GameSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameSystem.hpp; sourceTree = "<group>"; };
 		72FFE2991B1F8A0C00494010 /* GameWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameWorld.cpp; sourceTree = "<group>"; };
 		72FFE29A1B1F8A0C00494010 /* GameWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameWorld.hpp; sourceTree = "<group>"; };
-		72FFE29B1B1F8A0C00494010 /* SerializedProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializedProperty.cpp; sourceTree = "<group>"; };
-		72FFE29C1B1F8A0C00494010 /* SerializedProperty.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializedProperty.hpp; sourceTree = "<group>"; };
 		72FFE29D1B1F8A0C00494010 /* TypeDefs.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeDefs.hpp; sourceTree = "<group>"; };
 		72FFE29F1B1F8A0C00494010 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 		72FFE2A01B1F8A0C00494010 /* Engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Engine.hpp; sourceTree = "<group>"; };
@@ -480,18 +486,6 @@
 		72FFE2CF1B1F8A0C00494010 /* UnitTest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = UnitTest.hpp; sourceTree = "<group>"; };
 		72FFE2D11B1F8A0C00494010 /* Delegate.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Delegate.hpp; sourceTree = "<group>"; };
 		72FFE2D21B1F8A0C00494010 /* Event.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Event.hpp; sourceTree = "<group>"; };
-		72FFE2D61B1F8A0C00494010 /* SpineAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineAnimation.cpp; sourceTree = "<group>"; };
-		72FFE2D71B1F8A0C00494010 /* SpineAnimation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineAnimation.hpp; sourceTree = "<group>"; };
-		72FFE2D81B1F8A0C00494010 /* SpineAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineAnimator.cpp; sourceTree = "<group>"; };
-		72FFE2D91B1F8A0C00494010 /* SpineAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineAnimator.hpp; sourceTree = "<group>"; };
-		72FFE2DA1B1F8A0C00494010 /* SpineAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineAnimatorSystem.cpp; sourceTree = "<group>"; };
-		72FFE2DB1B1F8A0C00494010 /* SpineAnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineAnimatorSystem.hpp; sourceTree = "<group>"; };
-		72FFE2DC1B1F8A0C00494010 /* SpineFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineFactory.cpp; sourceTree = "<group>"; };
-		72FFE2DD1B1F8A0C00494010 /* SpineFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineFactory.hpp; sourceTree = "<group>"; };
-		72FFE2DE1B1F8A0C00494010 /* SpineModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineModel.cpp; sourceTree = "<group>"; };
-		72FFE2DF1B1F8A0C00494010 /* SpineModel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineModel.hpp; sourceTree = "<group>"; };
-		72FFE2E01B1F8A0C00494010 /* SpineSkeleton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpineSkeleton.cpp; sourceTree = "<group>"; };
-		72FFE2E11B1F8A0C00494010 /* SpineSkeleton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpineSkeleton.hpp; sourceTree = "<group>"; };
 		72FFE2E21B1F8A0C00494010 /* TouchAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchAnimator.cpp; sourceTree = "<group>"; };
 		72FFE2E31B1F8A0C00494010 /* TouchAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchAnimator.hpp; sourceTree = "<group>"; };
 		72FFE2E41B1F8A0C00494010 /* TouchAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchAnimatorSystem.cpp; sourceTree = "<group>"; };
@@ -1149,9 +1143,6 @@
 		72FFE5D71B1F8A0F00494010 /* lodepng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lodepng.h; sourceTree = "<group>"; };
 		72FFE5D91B1F8A0F00494010 /* Profiler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profiler.cpp; sourceTree = "<group>"; };
 		72FFE5DA1B1F8A0F00494010 /* Profiler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Profiler.hpp; sourceTree = "<group>"; };
-		72FFE6941B1F8A1000494010 /* minijson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = minijson.h; sourceTree = "<group>"; };
-		72FFE6951B1F8A1000494010 /* XmlSerializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XmlSerializer.cpp; sourceTree = "<group>"; };
-		72FFE6961B1F8A1000494010 /* XmlSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = XmlSerializer.hpp; sourceTree = "<group>"; };
 		72FFE6A41B1F8A1000494010 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinystr.cpp; sourceTree = "<group>"; };
 		72FFE6A51B1F8A1000494010 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinystr.h; sourceTree = "<group>"; };
 		72FFE6A61B1F8A1000494010 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
@@ -1329,8 +1320,6 @@
 				72FFE2981B1F8A0C00494010 /* GameSystem.hpp */,
 				72FFE2991B1F8A0C00494010 /* GameWorld.cpp */,
 				72FFE29A1B1F8A0C00494010 /* GameWorld.hpp */,
-				72FFE29B1B1F8A0C00494010 /* SerializedProperty.cpp */,
-				72FFE29C1B1F8A0C00494010 /* SerializedProperty.hpp */,
 				72FFE29D1B1F8A0C00494010 /* TypeDefs.hpp */,
 			);
 			path = ComponentSystem;
@@ -1435,7 +1424,6 @@
 		72FFE2D41B1F8A0C00494010 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				72FFE2D51B1F8A0C00494010 /* Spine */,
 				72FFE2E21B1F8A0C00494010 /* TouchAnimator.cpp */,
 				72FFE2E31B1F8A0C00494010 /* TouchAnimator.hpp */,
 				72FFE2E41B1F8A0C00494010 /* TouchAnimatorSystem.cpp */,
@@ -1450,25 +1438,6 @@
 				72FFE2ED1B1F8A0C00494010 /* TransformAnimatorSystem.hpp */,
 			);
 			path = Animation;
-			sourceTree = "<group>";
-		};
-		72FFE2D51B1F8A0C00494010 /* Spine */ = {
-			isa = PBXGroup;
-			children = (
-				72FFE2D61B1F8A0C00494010 /* SpineAnimation.cpp */,
-				72FFE2D71B1F8A0C00494010 /* SpineAnimation.hpp */,
-				72FFE2D81B1F8A0C00494010 /* SpineAnimator.cpp */,
-				72FFE2D91B1F8A0C00494010 /* SpineAnimator.hpp */,
-				72FFE2DA1B1F8A0C00494010 /* SpineAnimatorSystem.cpp */,
-				72FFE2DB1B1F8A0C00494010 /* SpineAnimatorSystem.hpp */,
-				72FFE2DC1B1F8A0C00494010 /* SpineFactory.cpp */,
-				72FFE2DD1B1F8A0C00494010 /* SpineFactory.hpp */,
-				72FFE2DE1B1F8A0C00494010 /* SpineModel.cpp */,
-				72FFE2DF1B1F8A0C00494010 /* SpineModel.hpp */,
-				72FFE2E01B1F8A0C00494010 /* SpineSkeleton.cpp */,
-				72FFE2E11B1F8A0C00494010 /* SpineSkeleton.hpp */,
-			);
-			path = Spine;
 			sourceTree = "<group>";
 		};
 		72FFE2EE1B1F8A0C00494010 /* Audio */ = {
@@ -1515,6 +1484,10 @@
 		72FFE3051B1F8A0C00494010 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				724417F71BFCFE120096A783 /* Droppable.cpp */,
+				724417F81BFCFE120096A783 /* Droppable.hpp */,
+				724417F91BFCFE120096A783 /* DroppableSystem.cpp */,
+				724417FA1BFCFE120096A783 /* DroppableSystem.hpp */,
 				72FFE3061B1F8A0C00494010 /* Font.cpp */,
 				72FFE3071B1F8A0C00494010 /* Font.hpp */,
 				72FFE3081B1F8A0C00494010 /* Gui.cpp */,
@@ -1635,6 +1608,10 @@
 		72FFE3771B1F8A0C00494010 /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				724417F11BFCFD4E0096A783 /* SelectedColorer.cpp */,
+				724417F21BFCFD4E0096A783 /* SelectedColorer.hpp */,
+				724417F31BFCFD4E0096A783 /* SelectedColorerSystem.cpp */,
+				724417F41BFCFD4E0096A783 /* SelectedColorerSystem.hpp */,
 				72FFE3781B1F8A0C00494010 /* ClickSelectorSystem.cpp */,
 				72FFE3791B1F8A0C00494010 /* ClickSelectorSystem.hpp */,
 				72FFE37A1B1F8A0C00494010 /* DragSelector.cpp */,
@@ -2512,19 +2489,12 @@
 		72FFE6921B1F8A1000494010 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
-				72FFE6931B1F8A1000494010 /* Json */,
-				72FFE6951B1F8A1000494010 /* XmlSerializer.cpp */,
-				72FFE6961B1F8A1000494010 /* XmlSerializer.hpp */,
+				724417ED1BFCFBE80096A783 /* JsonSerializer.hpp */,
+				724417EE1BFCFBE80096A783 /* minijson_reader.hpp */,
+				724417EF1BFCFBE80096A783 /* minijson_writer.hpp */,
+				724417F01BFCFBE80096A783 /* Serializable.hpp */,
 			);
 			path = Serialization;
-			sourceTree = "<group>";
-		};
-		72FFE6931B1F8A1000494010 /* Json */ = {
-			isa = PBXGroup;
-			children = (
-				72FFE6941B1F8A1000494010 /* minijson.h */,
-			);
-			path = Json;
 			sourceTree = "<group>";
 		};
 		72FFE6A31B1F8A1000494010 /* TinyXml */ = {
@@ -2669,10 +2639,8 @@
 				72FFE7DB1B1F8A1000494010 /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				72FFE6C71B1F8A1000494010 /* Pointer.cpp in Sources */,
 				72FFE78A1B1F8A1000494010 /* btPolyhedralConvexShape.cpp in Sources */,
-				72FFE6CF1B1F8A1000494010 /* SpineAnimatorSystem.cpp in Sources */,
 				72FFE7291B1F8A1000494010 /* Point.cpp in Sources */,
 				72FFE7D31B1F8A1000494010 /* SpuSampleTask.cpp in Sources */,
-				72FFE6B91B1F8A1000494010 /* SerializedProperty.cpp in Sources */,
 				72FFE7CD1B1F8A1000494010 /* SpuLibspe2Support.cpp in Sources */,
 				72FFE71C1B1F8A1000494010 /* SelectableDragSystem.cpp in Sources */,
 				720C54611B4608500026FDAF /* Shader.cpp in Sources */,
@@ -2767,7 +2735,6 @@
 				72FFE7BC1B1F8A1000494010 /* btUniversalConstraint.cpp in Sources */,
 				72FFE71A1B1F8A1000494010 /* Selectable.cpp in Sources */,
 				72FFE6DB1B1F8A1000494010 /* SoundListener.cpp in Sources */,
-				72FFE6CE1B1F8A1000494010 /* SpineAnimator.cpp in Sources */,
 				72FFE72B1B1F8A1000494010 /* Quaternion.cpp in Sources */,
 				72FFE7AF1B1F8A1000494010 /* btKinematicCharacterController.cpp in Sources */,
 				72FFE7431B1F8A1000494010 /* b2ContactManager.cpp in Sources */,
@@ -2776,7 +2743,6 @@
 				72FFE7281B1F8A1000494010 /* Plane.cpp in Sources */,
 				72FFE7051B1F8A1000494010 /* PhysicsSystem.cpp in Sources */,
 				72FFE7341B1F8A1000494010 /* b2BroadPhase.cpp in Sources */,
-				72FFE6CD1B1F8A1000494010 /* SpineAnimation.cpp in Sources */,
 				720C54411B46083D0026FDAF /* CameraSystem.cpp in Sources */,
 				72FFE7631B1F8A1000494010 /* btCollisionWorld.cpp in Sources */,
 				72FFE79C1B1F8A1000494010 /* btGImpactQuantizedBvh.cpp in Sources */,
@@ -2800,6 +2766,7 @@
 				72FFE7B21B1F8A1000494010 /* btGearConstraint.cpp in Sources */,
 				72FFE7FA1B1F8A1000494010 /* jpeg_decoder.cpp in Sources */,
 				720C543F1B46083D0026FDAF /* Atlas.cpp in Sources */,
+				724417F51BFCFD4E0096A783 /* SelectedColorer.cpp in Sources */,
 				72FFE7231B1F8A1000494010 /* Box.cpp in Sources */,
 				72FFE71F1B1F8A1000494010 /* Transform.cpp in Sources */,
 				72FFE6EA1B1F8A1000494010 /* MenuAnimator.cpp in Sources */,
@@ -2809,7 +2776,6 @@
 				720C54621B4608500026FDAF /* Texture.cpp in Sources */,
 				72FFE78F1B1F8A1000494010 /* btStridingMeshInterface.cpp in Sources */,
 				72FFE6F51B1F8A1000494010 /* Touchable.cpp in Sources */,
-				72FFE6D11B1F8A1000494010 /* SpineModel.cpp in Sources */,
 				72FFE7391B1F8A1000494010 /* b2PairManager.cpp in Sources */,
 				72FFE7681B1F8A1000494010 /* btConvexPlaneCollisionAlgorithm.cpp in Sources */,
 				72FFE7521B1F8A1000494010 /* b2RevoluteJoint.cpp in Sources */,
@@ -2868,6 +2834,7 @@
 				72FFE79B1B1F8A1000494010 /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				72FFE6F81B1F8A1000494010 /* TouchSystem.cpp in Sources */,
 				72FFE6D71B1F8A1000494010 /* TransformAnimator.cpp in Sources */,
+				724417FB1BFCFE120096A783 /* Droppable.cpp in Sources */,
 				72FFE74C1B1F8A1000494010 /* b2DistanceJoint.cpp in Sources */,
 				72FFE7E11B1F8A1000494010 /* btGeometryUtil.cpp in Sources */,
 				72FFE7901B1F8A1000494010 /* btTetrahedronShape.cpp in Sources */,
@@ -2905,6 +2872,7 @@
 				72FFE7BB1B1F8A1000494010 /* btTypedConstraint.cpp in Sources */,
 				72FFE71E1B1F8A1000494010 /* OctreeSystem.cpp in Sources */,
 				72FFE6CB1B1F8A1000494010 /* TimeMeasurer.cpp in Sources */,
+				724417F61BFCFD4E0096A783 /* SelectedColorerSystem.cpp in Sources */,
 				72FFE7021B1F8A1000494010 /* VelocitySystem.cpp in Sources */,
 				72FFE7C91B1F8A1000494010 /* SpuCollisionTaskProcess.cpp in Sources */,
 				72FFE2871B1F89F400494010 /* main.cpp in Sources */,
@@ -2929,7 +2897,6 @@
 				72FFE6B81B1F8A1000494010 /* GameWorld.cpp in Sources */,
 				72FFE7851B1F8A1000494010 /* btHeightfieldTerrainShape.cpp in Sources */,
 				72FFE7CB1B1F8A1000494010 /* SpuFakeDma.cpp in Sources */,
-				72FFE6D01B1F8A1000494010 /* SpineFactory.cpp in Sources */,
 				72FFE7771B1F8A1000494010 /* btCapsuleShape.cpp in Sources */,
 				72FFE7BF1B1F8A1000494010 /* btSimpleDynamicsWorld.cpp in Sources */,
 				72FFE7781B1F8A1000494010 /* btCollisionShape.cpp in Sources */,
@@ -2941,10 +2908,8 @@
 				72FFE8631B1F8B2400494010 /* Thread.cpp in Sources */,
 				72FFE6F11B1F8A1000494010 /* SpriteTextureSystem.cpp in Sources */,
 				72FFE7301B1F8A1000494010 /* ChromecastMessage.cpp in Sources */,
-				72FFE6D21B1F8A1000494010 /* SpineSkeleton.cpp in Sources */,
 				72FFE7421B1F8A1000494010 /* b2Body.cpp in Sources */,
 				72FFE7B01B1F8A1000494010 /* btConeTwistConstraint.cpp in Sources */,
-				72FFE84E1B1F8A1000494010 /* XmlSerializer.cpp in Sources */,
 				72FFE6E61B1F8A1000494010 /* LabelMeshSystem.cpp in Sources */,
 				72FFE6EC1B1F8A1000494010 /* MenuButtonSystem.cpp in Sources */,
 				72FFE8541B1F8A1000494010 /* tinystr.cpp in Sources */,
@@ -2966,6 +2931,7 @@
 				72FFE7201B1F8A1000494010 /* TransformHierarchy.cpp in Sources */,
 				72FFE6D51B1F8A1000494010 /* TransformAnimation.cpp in Sources */,
 				72FFE77C1B1F8A1000494010 /* btConvex2dShape.cpp in Sources */,
+				724417FC1BFCFE120096A783 /* DroppableSystem.cpp in Sources */,
 				72FFE7C21B1F8A1000494010 /* btWheelInfo.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
