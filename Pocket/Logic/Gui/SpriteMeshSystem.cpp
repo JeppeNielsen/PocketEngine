@@ -50,7 +50,7 @@ void SpriteMeshSystem::UpdateMesh(Pocket::GameObject *object) {
     int trianglesCount = normal ? 6 : 54;
     
     if (vertices.size()!=vertCount) {
-        vertices.resize(vertCount, { });
+        vertices.resize(vertCount);
     }
     
     if (triangles.size()!=trianglesCount) {

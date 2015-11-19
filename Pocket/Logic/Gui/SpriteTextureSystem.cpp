@@ -56,7 +56,7 @@ void SpriteTextureSystem::SpriteTextureChanged(Sprite* sprite, GameObject* objec
     int vertCount = normal ? 4 : 16;
     
     if (vertices.size()!=vertCount) {
-        vertices.resize(vertCount, { });
+        vertices.resize(vertCount);
     }
     
     if (normal) {
