@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<Texture>
+<Image name="Button" position="513,201" size="128,128" offset="28,28,28,28"/>
+<Image name="Font" position="0,201" size="512,512"/>
+<Image name="Logo" position="0,0" size="897,200"/>
+<Image name="White" position="898,0" size="32,32"/>
+</Texture>
