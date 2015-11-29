@@ -119,62 +119,49 @@ void BlockMeshSystem::CreateMesh(Block *block, Pocket::Mesh *mesh) {
         triangles.push_back((short)contour.size() + indicies[i]);
     }
 
-    size_t offset = vertices.size();
     
     for (int i=0; i<contour.size(); i++) {
         Vector2 next = i<contour.size()-1 ? contour[i + 1] : contour[0];
         Vector2 dir = next - contour[i];
         Vector2 normal = { -dir.y, dir.x};
         normal.Normalize();
-    
-        Vertex v;
-        v.Position = { contour[i].x, contour[i].y, 0.5f };
-        v.TextureCoords = { contour[i].x, contour[i].y };
-        v.Normal = {normal.x,normal.y,0};
-        v.Color = color;
-        vertices.push_back(v);
-    }
-
-    size_t size = contour.size();
-    
-    for (int i=0; i<contour.size(); i++) {
-    
-    Vector2 next = i<contour.size()-1 ? contour[i + 1] : contour[0];
-        Vector2 dir = next - contour[i];
-        Vector2 normal = { -dir.y, dir.x};
-        normal.Normalize();
-    
-        Vertex v;
-        v.Position = { contour[i].x, contour[i].y, -0.5f };
-        v.TextureCoords = { contour[i].x, contour[i].y };
-        v.Normal = {normal.x,normal.y,0};
-        v.Color = color;
-        vertices.push_back(v);
-    }
-    
-    for (int i=0; i<contour.size() - 1; i++) {
-        triangles.push_back((short)offset + i);
-        triangles.push_back((short)offset + i + 1);
-        triangles.push_back((short)offset + i + 1 + size);
         
-        triangles.push_back((short)offset + i);
-        triangles.push_back((short)offset + i + 1 + size);
-        triangles.push_back((short)offset + i + size);
+        size_t offset = vertices.size();
+    
+        Vertex v1;
+        v1.Position = { contour[i].x, contour[i].y, 0.5f };
+        v1.TextureCoords = { contour[i].x, contour[i].y };
+        v1.Normal = {normal.x,normal.y,0};
+        v1.Color = color;
+        vertices.push_back(v1);
+        
+        Vertex v2;
+        v2.Position = { contour[i].x, contour[i].y, -0.5f };
+        v2.TextureCoords = { contour[i].x, contour[i].y };
+        v2.Normal = {normal.x,normal.y,0};
+        v2.Color = color;
+        vertices.push_back(v2);
+        
+        Vertex v3;
+        v3.Position = { next.x, next.y, 0.5f };
+        v3.TextureCoords = { next.x, next.y };
+        v3.Normal = {normal.x,normal.y,0};
+        v3.Color = color;
+        vertices.push_back(v3);
+        
+        Vertex v4;
+        v4.Position = { next.x, next.y, -0.5f };
+        v4.TextureCoords = { next.x, next.y };
+        v4.Normal = {normal.x,normal.y,0};
+        v4.Color = color;
+        vertices.push_back(v4);
+        
+        triangles.push_back((short)offset + 0);
+        triangles.push_back((short)offset + 2);
+        triangles.push_back((short)offset + 1);
+        
+        triangles.push_back((short)offset + 1);
+        triangles.push_back((short)offset + 2);
+        triangles.push_back((short)offset + 3);
     }
-    
-    triangles.push_back((short)offset + contour.size()-1);
-    triangles.push_back((short)offset + 0);
-    triangles.push_back((short)offset + size);
-    
-    triangles.push_back((short)offset + contour.size()-1);
-    triangles.push_back((short)offset + size);
-    triangles.push_back((short)offset + contour.size()-1 + size);
-    
-    
-    
-    //for (int i=0; i<contour.size(); i++) {
-    //    mesh->AddQuad(contour[i], 0.1f, Colour::Blue());
-    //}
-    
-    
 }
