@@ -54,7 +54,7 @@ void PuzzleSystem::CreatePuzzle(const Puzzle& puzzle) {
         GameObject* visual = World()->CreateObject();
         visual->AddComponent<Transform>();
         visual->AddComponent<Mesh>(go);
-        visual->AddComponent<Material>();
+        visual->AddComponent<Material>()->Shader = shader;
         visual->Parent = go;
         visual->AddComponent<Touchable>();
     }

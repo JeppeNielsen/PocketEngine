@@ -27,6 +27,7 @@ void PlayingState::Initialize() {
     world.CreateSystem<BlockTransformer>();
     world.CreateSystem<TransformHierarchy>();
     puzzleSystem = world.CreateSystem<PuzzleSystem>();
+    puzzleSystem->shader = &renderer->Shaders.LitColored;
     world.CreateSystem<PuzzleCompletionChecker>()->PuzzleComplete += event_handler(this, &PlayingState::PuzzleIsComplete);
     puzzleDestructorSystem = world.CreateSystem<PuzzleDestructorSystem>();
     
@@ -162,7 +163,17 @@ void PlayingState::CreateNewPuzzle() {
 }
 
 void PlayingState::Update(float dt) {
+
+    
     world.Update(dt);
+    
+     Vector3 lightDirection = cameraPivot->GetComponent<Transform>()->World.GetValue()->TransformVector({0,0,1});
+    lightDirection.Normalize();
+    
+    renderer->Shaders.LitColored.SetValue("LightDirection", lightDirection);
+    renderer->Shaders.LitColored.SetValue("AmbientLight", Colour(0,0,0,0.0f));
+    
+   
 }
 
 void PlayingState::Render() {

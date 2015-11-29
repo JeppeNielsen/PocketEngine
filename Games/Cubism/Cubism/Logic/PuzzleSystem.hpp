@@ -12,6 +12,7 @@
 #include "Patch.hpp"
 #include "Block.hpp"
 #include "Transform.hpp"
+#include "Shader.hpp"
 
 using namespace Pocket;
 
@@ -24,6 +25,8 @@ public:
     void CreatePuzzle(const Puzzle& puzzle);
     
     void MoveBlocks(GameObject* object);
+    
+    IShader* shader;
     
 private:
     

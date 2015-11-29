@@ -91,14 +91,24 @@ void BlockMeshSystem::CreateMesh(Block *block, Pocket::Mesh *mesh) {
     
     double hue = MathHelper::Random() * 360; // = 240
     
-    Colour color = Colour::HslToRgb(hue, 0.3 + MathHelper::Random() * 0.7, 1.0, 1.0);
+    Colour color = Colour::HslToRgb(hue, MathHelper::Random(0.5f, 1.0f), 1.0, 1.0);
     
     for (int i=0; i<contour.size(); i++) {
-        vertices.push_back(Vertex(Vector3(contour[i].x, contour[i].y, 0.5f), color));
-    }
+        Vertex v;
+        v.Position = { contour[i].x, contour[i].y, 0.5f };
+        v.TextureCoords = { contour[i].x, contour[i].y };
+        v.Normal = {0,0,1};
+        v.Color = color;
+        vertices.push_back(v);
+     }
     
     for (int i=0; i<contour.size(); i++) {
-        vertices.push_back(Vertex(Vector3(contour[i].x, contour[i].y, -0.5f), color));
+        Vertex v;
+        v.Position = { contour[i].x, contour[i].y, -0.5f };
+        v.TextureCoords = { contour[i].x, contour[i].y };
+        v.Normal = {0,0,-1};
+        v.Color = color;
+        vertices.push_back(v);
     }
     
     for (int i=0; i<indicies.size(); i++) {
@@ -108,20 +118,38 @@ void BlockMeshSystem::CreateMesh(Block *block, Pocket::Mesh *mesh) {
     for (int i=indicies.size()-1; i>=0; i--) {
         triangles.push_back((short)contour.size() + indicies[i]);
     }
-    
-   color = Colour::HslToRgb(hue, 1.0, 0.5, 1.0);
-    
-    
-    int offset = vertices.size();
+
+    size_t offset = vertices.size();
     
     for (int i=0; i<contour.size(); i++) {
-        vertices.push_back(Vertex(Vector3(contour[i].x, contour[i].y, 0.5f), color));
+        Vector2 next = i<contour.size()-1 ? contour[i + 1] : contour[0];
+        Vector2 dir = next - contour[i];
+        Vector2 normal = { -dir.y, dir.x};
+        normal.Normalize();
+    
+        Vertex v;
+        v.Position = { contour[i].x, contour[i].y, 0.5f };
+        v.TextureCoords = { contour[i].x, contour[i].y };
+        v.Normal = {normal.x,normal.y,0};
+        v.Color = color;
+        vertices.push_back(v);
     }
 
-    int size = contour.size();
+    size_t size = contour.size();
     
     for (int i=0; i<contour.size(); i++) {
-        vertices.push_back(Vertex(Vector3(contour[i].x, contour[i].y, -0.5f), color));
+    
+    Vector2 next = i<contour.size()-1 ? contour[i + 1] : contour[0];
+        Vector2 dir = next - contour[i];
+        Vector2 normal = { -dir.y, dir.x};
+        normal.Normalize();
+    
+        Vertex v;
+        v.Position = { contour[i].x, contour[i].y, -0.5f };
+        v.TextureCoords = { contour[i].x, contour[i].y };
+        v.Normal = {normal.x,normal.y,0};
+        v.Color = color;
+        vertices.push_back(v);
     }
     
     for (int i=0; i<contour.size() - 1; i++) {
