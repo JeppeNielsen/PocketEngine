@@ -172,7 +172,7 @@ void PuzzleSystem::CreatePatchFromPoint(const Puzzle &puzzle, const Pocket::Poin
             transform->Position = Vector3(position.x, position.y, position.z);
             transform->Rotation = rotations[i];
             go->AddComponent<Mesh>();
-            go->AddComponent<Material>();
+            go->AddComponent<Material>()->Shader = shader;
             
             std::stringstream s;
             s<<"Patch #"<<patches.size();

@@ -30,10 +30,12 @@ void PatchMeshSystem::CreateMesh(Patch* patch, Pocket::Mesh *mesh) {
     vertices.clear();
     triangles.clear();
     
-    vertices.push_back({Vector3(1.5f, 1.5f, -0.5f), Vector2(0,0), Colour::Black(), Vector3(0,1,0)});
-    vertices.push_back({Vector3(-1.5f, 1.5f, -0.5f), Vector2(0,0), Colour::Black(), Vector3(0,1,0)});
-    vertices.push_back({Vector3(-1.5f, -1.5f, -0.5f), Vector2(0,0), Colour((Colour::Component)84,84,84), Vector3(0,1,0)});
-    vertices.push_back({Vector3(1.5f, -1.5f, -0.5f), Vector2(0,0), Colour((Colour::Component)84,84,84), Vector3(0,1,0)});
+    Colour color = Colour((Colour::Component)84,84,84);
+    
+    vertices.push_back({Vector3(1.5f, 1.5f, -0.5f), Vector2(0,0), color, Vector3(0,0,1)});
+    vertices.push_back({Vector3(-1.5f, 1.5f, -0.5f), Vector2(0,0), color, Vector3(0,0,1)});
+    vertices.push_back({Vector3(-1.5f, -1.5f, -0.5f), Vector2(0,0), color, Vector3(0,0,1)});
+    vertices.push_back({Vector3(1.5f, -1.5f, -0.5f), Vector2(0,0), color, Vector3(0,0,1)});
         
     triangles.push_back((short)0);
     triangles.push_back((short)1);
