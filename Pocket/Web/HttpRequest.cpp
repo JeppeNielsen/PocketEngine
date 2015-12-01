@@ -76,17 +76,17 @@ void HttpRequest::OnError(int error) {
 
 #if EMSCRIPTEN
 
-void HttpRequest::onLoaded(void* parent, const char * file) {
+void HttpRequest::onLoaded(unsigned int val, void* parent, const char * file) {
 	HttpRequest* req = reinterpret_cast<HttpRequest*>(parent);
 	req->OnLoaded(file);
 }
 
-void HttpRequest::onError(void* parent, int statuserror) {
+void HttpRequest::onError(unsigned int val, void* parent, int statuserror) {
 	HttpRequest* req = reinterpret_cast<HttpRequest*>(parent);
 	req->OnError(statuserror);
 }
 
-void HttpRequest::onProgress(void* parent, int progress) {
+void HttpRequest::onProgress(unsigned int val, void* parent, int progress) {
 	HttpRequest* req = reinterpret_cast<HttpRequest*>(parent);
 	req->OnProgress(progress);
 }

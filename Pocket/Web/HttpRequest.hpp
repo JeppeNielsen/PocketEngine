@@ -25,9 +25,9 @@ public:
     void AddPostParameter(std::string key, std::string value);
     void ClearPostParameters();
     
-    static void onLoaded(void* parent, const char * file);
-    static void onError(void* parent, int statuserror);
-    static void onProgress(void* parent, int progress);
+    static void onLoaded(unsigned int val, void* parent, const char * file);
+    static void onError(unsigned int val, void* parent, int statuserror);
+    static void onProgress(unsigned int val, void* parent, int progress);
       
     struct Request {
         HttpRequest* httpRequest;

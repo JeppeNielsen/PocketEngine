@@ -13,10 +13,6 @@ std::string FileReader::GetFile(std::string localFile) {
     return "Assets/" + localFile;
 }
 
-unsigned char* FileReader::GetData(std::string localFile, size_t* length) {
-    return 0;
-}
-
 std::string FileReader::GetWritablePath() {
     return "";
 }
