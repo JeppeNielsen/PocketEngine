@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7212B3421C6D0959009C29F7 /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7212B33E1C6D0959009C29F7 /* SelectedColorer.cpp */; };
+		7212B3431C6D0959009C29F7 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7212B3401C6D0959009C29F7 /* SelectedColorerSystem.cpp */; };
+		7212B3481C6D09AB009C29F7 /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7212B3441C6D09AB009C29F7 /* Droppable.cpp */; };
+		7212B3491C6D09AB009C29F7 /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7212B3461C6D09AB009C29F7 /* DroppableSystem.cpp */; };
 		723588141B0932D2008D6568 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588131B0932D2008D6568 /* Cocoa.framework */; };
 		723588161B0932D2008D6568 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588151B0932D2008D6568 /* OpenGL.framework */; };
 		723588181B0932D2008D6568 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588171B0932D2008D6568 /* OpenAL.framework */; };
@@ -352,6 +356,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7212B33E1C6D0959009C29F7 /* SelectedColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorer.cpp; sourceTree = "<group>"; };
+		7212B33F1C6D0959009C29F7 /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
+		7212B3401C6D0959009C29F7 /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
+		7212B3411C6D0959009C29F7 /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
+		7212B3441C6D09AB009C29F7 /* Droppable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Droppable.cpp; sourceTree = "<group>"; };
+		7212B3451C6D09AB009C29F7 /* Droppable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Droppable.hpp; sourceTree = "<group>"; };
+		7212B3461C6D09AB009C29F7 /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
+		7212B3471C6D09AB009C29F7 /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
 		7224B4A51BA8781C002737EB /* JsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = JsonSerializer.hpp; sourceTree = "<group>"; };
 		7224B4A61BA8781C002737EB /* Serializable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Serializable.hpp; sourceTree = "<group>"; };
 		7224B4A71BA8781C002737EB /* minijson_writer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = minijson_writer.hpp; sourceTree = "<group>"; };
@@ -1400,6 +1412,10 @@
 		723588991B0932E0008D6568 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				7212B3441C6D09AB009C29F7 /* Droppable.cpp */,
+				7212B3451C6D09AB009C29F7 /* Droppable.hpp */,
+				7212B3461C6D09AB009C29F7 /* DroppableSystem.cpp */,
+				7212B3471C6D09AB009C29F7 /* DroppableSystem.hpp */,
 				7235889A1B0932E0008D6568 /* Font.cpp */,
 				7235889B1B0932E0008D6568 /* Font.hpp */,
 				7235889C1B0932E0008D6568 /* Gui.cpp */,
@@ -1548,6 +1564,10 @@
 		7235890B1B0932E0008D6568 /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				7212B33E1C6D0959009C29F7 /* SelectedColorer.cpp */,
+				7212B33F1C6D0959009C29F7 /* SelectedColorer.hpp */,
+				7212B3401C6D0959009C29F7 /* SelectedColorerSystem.cpp */,
+				7212B3411C6D0959009C29F7 /* SelectedColorerSystem.hpp */,
 				7235890C1B0932E0008D6568 /* ClickSelectorSystem.cpp */,
 				7235890D1B0932E0008D6568 /* ClickSelectorSystem.hpp */,
 				7235890E1B0932E0008D6568 /* DragSelector.cpp */,
@@ -2803,6 +2823,7 @@
 				723590211B09338A008D6568 /* SpuContactResult.cpp in Sources */,
 				72358C971B0932E1008D6568 /* Joint2d.cpp in Sources */,
 				7235901A1B09338A008D6568 /* SpuCollisionTaskProcess.cpp in Sources */,
+				7212B3481C6D09AB009C29F7 /* Droppable.cpp in Sources */,
 				72358CCB1B0932E1008D6568 /* b2Distance.cpp in Sources */,
 				72358FE41B09338A008D6568 /* btTriangleIndexVertexArray.cpp in Sources */,
 				72358FAF1B09338A008D6568 /* btBox2dBox2dCollisionAlgorithm.cpp in Sources */,
@@ -2822,6 +2843,7 @@
 				72358CD21B0932E1008D6568 /* b2Math.cpp in Sources */,
 				72358C801B0932E1008D6568 /* MenuSystem.cpp in Sources */,
 				723590091B09338A008D6568 /* btSequentialImpulseConstraintSolver.cpp in Sources */,
+				7212B3421C6D0959009C29F7 /* SelectedColorer.cpp in Sources */,
 				72358FE81B09338A008D6568 /* btUniformScalingShape.cpp in Sources */,
 				72358CE41B0932E1008D6568 /* b2PulleyJoint.cpp in Sources */,
 				72358CDA1B0932E1008D6568 /* b2CircleContact.cpp in Sources */,
@@ -2857,6 +2879,7 @@
 				72358CD51B0932E1008D6568 /* b2Body.cpp in Sources */,
 				72358CBB1B0932E1008D6568 /* Plane.cpp in Sources */,
 				72358CC41B0932E1008D6568 /* ChromecastReceiver.cpp in Sources */,
+				7212B3431C6D0959009C29F7 /* SelectedColorerSystem.cpp in Sources */,
 				72358CAF1B0932E1008D6568 /* SelectableDragSystem.cpp in Sources */,
 				72358DE61B0932E1008D6568 /* WorkScheduler.cpp in Sources */,
 				72358FA81B09338A008D6568 /* btDbvtBroadphase.cpp in Sources */,
@@ -2897,6 +2920,7 @@
 				72358FC81B09338A008D6568 /* btCapsuleShape.cpp in Sources */,
 				72358C6C1B0932E1008D6568 /* Sound.cpp in Sources */,
 				72358FA61B09338A008D6568 /* btCollisionAlgorithm.cpp in Sources */,
+				7212B3491C6D09AB009C29F7 /* DroppableSystem.cpp in Sources */,
 				72358CC01B0932E1008D6568 /* TransitionHelper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
