@@ -19,7 +19,6 @@
 namespace Pocket {
 
 struct VisibleObject {
-    GameObject* object;
     Transform* transform;
     Material* material;
     IShader* shader;
@@ -104,7 +103,6 @@ public:
         currentShader->RenderObject(renderer,
             mesh.vertices,
             mesh.triangles,
-            visibleObject.object,
             *visibleObject.transform->World.GetValue()
             );
         objectsRendered++;

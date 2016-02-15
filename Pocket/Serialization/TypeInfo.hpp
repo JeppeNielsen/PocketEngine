@@ -1,5 +1,5 @@
 //
-//  SerializedField.hpp
+//  FieldInfo.hpp
 //  GUIEditor
 //
 //  Created by Jeppe Nielsen on 06/09/15.
@@ -8,25 +8,25 @@
 
 #pragma once
 #include <vector>
+#include <iostream>
 #include <type_traits>
 #include "JsonSerializer.hpp"
-
-namespace Pocket {
+#include "metaLib.hpp"
 
 template<class T>
-class SerializedField;
+class FieldInfo;
 
-class SerializedFieldCollection;
+class TypeInfo;
 
-struct ISerializedFieldEditor {
-    virtual ~ISerializedFieldEditor() { }
+struct IFieldInfoEditor {
+    virtual ~IFieldInfoEditor() { }
     virtual void Create(void* field, void* context, void* parent) { }
     virtual void Destroy() { }
     virtual void Update(float dt) { }
 };
 
 template<typename Field, typename Context, typename Parent>
-struct SerializedFieldEditor : public ISerializedFieldEditor {
+struct FieldInfoEditor : public IFieldInfoEditor {
     void Create(void* field, void* context, void* parent) {
         this->field = (Field*)field;
         Initialize((Context*)context, (Parent*)parent);
@@ -37,20 +37,20 @@ struct SerializedFieldEditor : public ISerializedFieldEditor {
 };
 
 template<typename Field>
-struct SerializedFieldEditorCreator {
-    static ISerializedFieldEditor* Create() { return 0; }
+struct FieldInfoEditorCreator {
+    static IFieldInfoEditor* Create() { return 0; }
 };
 
-
-template<typename Owner, typename T>
-struct FieldEditorProperty : public SerializedFieldEditor<Property<Owner, T>, void, void> {
-    ISerializedFieldEditor* editor;
+/*
+template<typename T>
+struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
+    IFieldInfoEditor* editor;
     
     FieldEditorProperty() : editor(0) {}
     ~FieldEditorProperty() { delete editor; }
     
     void Initialize(void* context, void* parent) {
-        editor = SerializedField<T>::Editor ? SerializedField<T>::Editor() : 0;
+        editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
         if (editor) {
             editor->Create(&currentValue, context, parent);
         }
@@ -80,33 +80,38 @@ struct FieldEditorProperty : public SerializedFieldEditor<Property<Owner, T>, vo
 };
 
 
-template<typename Owner, typename T>
-struct SerializedFieldEditorCreator<Property<Owner, T>> {
-    static ISerializedFieldEditor* Create() {
-        ISerializedFieldEditor* editor = SerializedField<T>::Editor ? SerializedField<T>::Editor() : 0;
+template<typename T>
+struct FieldInfoEditorCreator<Property<T>> {
+    static IFieldInfoEditor* Create() {
+        IFieldInfoEditor* editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
         if (!editor) {
             return 0;
         } else {
             delete editor;
         }
-        return new FieldEditorProperty<Owner, T>();
+        return new FieldEditorProperty<T>();
     }
 };
+*/
 
-class ISerializedField {
+class IFieldInfo {
 public:
-    virtual ~ISerializedField() { }
+    virtual ~IFieldInfo() { }
     std::string name;
+    int type;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
-    virtual ISerializedFieldEditor* CreateEditor(void* context, void* parent) = 0;
+    virtual IFieldInfoEditor* CreateEditor(void* context, void* parent) = 0;
     virtual bool HasEditor() = 0;
+    
+    
+    
 };
 
 template<class T>
-class SerializedField : public ISerializedField {
+class FieldInfo : public IFieldInfo {
 public:
-    ~SerializedField() { }
+    ~FieldInfo() { }
     
     void Serialize(minijson::object_writer& writer) override {
         JsonSerializer<T>::Serialize(name, *field, writer);
@@ -116,10 +121,10 @@ public:
         JsonSerializer<T>::Deserialize(value, field, context);
     }
     
-    ISerializedFieldEditor* CreateEditor(void* context, void* parent) {
-        ISerializedFieldEditor* editor = Editor ? Editor() : 0;
+    IFieldInfoEditor* CreateEditor(void* context, void* parent) {
+        IFieldInfoEditor* editor = Editor ? Editor() : 0;
         if (!editor) {
-            editor = SerializedFieldEditorCreator<T>::Create();
+            editor = FieldInfoEditorCreator<T>::Create();
         }
         if (!editor) return 0;
         editor->Create(field, context, parent);
@@ -128,7 +133,7 @@ public:
     
     bool HasEditor() {
         if (Editor) return true;
-        auto editor = SerializedFieldEditorCreator<T>::Create();
+        auto editor = FieldInfoEditorCreator<T>::Create();
         if (editor) {
             delete editor;
             return true;
@@ -137,36 +142,41 @@ public:
         }
     }
     
-    static std::function<ISerializedFieldEditor*()> Editor;
+    static std::function<IFieldInfoEditor*()> Editor;
     
-    friend class SerializedFieldCollection;
+    friend class TypeInfo;
 public:
     T* field;
 };
 
+
+
 template<class T>
-std::function<ISerializedFieldEditor*()> SerializedField<T>::Editor = 0;
-  
-class SerializedFieldCollection {
+std::function<IFieldInfoEditor*()> FieldInfo<T>::Editor = 0;
+
+class TypeInfo {
 public:
-    SerializedFieldCollection() { }
+
     
-    ~SerializedFieldCollection() {
+    TypeInfo() { }
+    
+    ~TypeInfo() {
         for (size_t i=0; i<fields.size(); ++i) {
             delete fields[i];
         }
     }
     
-    SerializedFieldCollection(SerializedFieldCollection&& other) {
+    TypeInfo(TypeInfo&& other) {
         fields = other.fields;
         other.fields.clear();
     }
     
     template<class T>
     void AddField(T& field, std::string name) {
-        SerializedField<T>* serializedField = new SerializedField<T>();
+        FieldInfo<T>* serializedField = new FieldInfo<T>();
         serializedField->name = name;
         serializedField->field = &field;
+        serializedField->type = 0;
         fields.push_back(serializedField);
     }
     
@@ -176,13 +186,9 @@ public:
         }
     }
     
-    
-    
     template<class Context>
     void Deserialize(Context& context) {
-    
         try {
-
             minijson::parse_object(context, [&] (const char* name, minijson::value v) {
                 auto field = GetField(name);
                 if (field) {
@@ -191,65 +197,84 @@ public:
                     minijson::ignore(context);
                 }
             });
-        
         } catch (std::exception e) {
             std::cout<< e.what() << std::endl;
         }
     }
     
-public:
-
-    ISerializedField* GetField(std::string name) {
+    IFieldInfo* GetField(std::string name) {
         for(auto field : fields) {
             if (field->name == name) return field;
         }
         return 0;
     }
 
-    typedef std::vector<ISerializedField*> Fields;
+    using Fields = std::vector<IFieldInfo*>;
     Fields fields;
-};
-
-class ISerializable {
-public:
-    virtual SerializedFieldCollection GetFields() { SerializedFieldCollection fields; return fields; }
+    std::string name;
+    
+    
+    void UpdateFromPointer(TypeInfo* info) {
+        for(auto field : info->fields) {
+            AddField(field);
+        }
+    }
+    
+    void AddField(IFieldInfo* fieldInfo) {
+        switch (fieldInfo->type) {
+            case 0: AddField(*static_cast<FieldInfo<int>*>(fieldInfo)->field, fieldInfo->name); break;
+            case 1: AddField(*static_cast<FieldInfo<float>*>(fieldInfo)->field, fieldInfo->name); break;
+            case 2: AddField(*static_cast<FieldInfo<double>*>(fieldInfo)->field, fieldInfo->name); break;
+            case 3: AddField(*static_cast<FieldInfo<std::string>*>(fieldInfo)->field, fieldInfo->name); break;
+        }
+    }
 };
 
 template<typename T>
-struct JsonSerializer<T, typename std::enable_if< std::is_base_of<ISerializable, T>::value >::type> {
-    static void Serialize(std::string& key, const ISerializable& value, minijson::object_writer& writer) {
-        auto fields = ((ISerializable&)value).GetFields();
+struct JsonSerializer<T, typename std::enable_if_t< meta::HasGetTypeFunction::apply<T>::value >> {
+    static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
+        auto type = ((T&)value).GetType();
         minijson::object_writer object = writer.nested_object(key.c_str());
-        fields.Serialize(object);
+        type.Serialize(object);
         object.close();
     }
     
-    static void Serialize(const ISerializable& value, minijson::array_writer& writer) {
-        auto fields = ((ISerializable&)value).GetFields();
+    static void Serialize(const T& value, minijson::array_writer& writer) {
+        auto type = value.GetType();
         minijson::object_writer object = writer.nested_object();
-        fields.Serialize(object);
+        type.Serialize(object);
         object.close();
     }
     
-    static void Deserialize(minijson::value& value, ISerializable* field, minijson::istream_context& context) {
-        auto fields = field->GetFields();
-        fields.Deserialize(context);
+    static void Deserialize(minijson::value& value, T* object, minijson::istream_context& context) {
+        auto type = object->GetType();
+        type.Deserialize(context);
     }
 };
 
+inline std::string className(const std::string& prettyFunction)
+{
+    size_t colons = prettyFunction.find("::");
+    if (colons == std::string::npos)
+        return "::";
+    size_t begin = prettyFunction.substr(0,colons).rfind(" ") + 1;
+    size_t end = colons - begin;
 
- 
+    return prettyFunction.substr(begin,end);
 }
 
-#define SERIALIZE_FIELDS_BEGIN \
-public: \
-SerializedFieldCollection GetFields() override { \
-SerializedFieldCollection fields;
+#define __CLASS_NAME__ className(__PRETTY_FUNCTION__)
 
-#define SERIALIZE_FIELD(field) \
+#define TYPE_FIELDS_BEGIN \
+public: \
+TypeInfo GetType() { \
+TypeInfo fields; \
+fields.name = __CLASS_NAME__;
+
+#define TYPE_FIELD(field) \
 fields.AddField(field, #field);
 
-#define SERIALIZE_FIELDS_END \
+#define TYPE_FIELDS_END \
 return fields; \
 } \
 private:

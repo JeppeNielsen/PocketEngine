@@ -1,8 +1,6 @@
 
 #include "Camera.hpp"
-#include "OpenGL.hpp"
 #include "Transform.hpp"
-#include "GameObject.hpp"
 
 using namespace Pocket;
 

@@ -7,11 +7,10 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Texture.hpp"
 
 namespace Pocket {
-    Component(TextureComponent)
+    struct TextureComponent {
     public:
         TextureComponent();
         ~TextureComponent();

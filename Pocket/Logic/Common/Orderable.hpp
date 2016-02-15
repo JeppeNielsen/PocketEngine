@@ -11,15 +11,14 @@
 #include "Property.hpp"
 
 namespace Pocket {
-    Component(Orderable)
+    struct Orderable {
     public:
         Orderable();
         Property<Orderable*, int> Order;
         void Reset();
-        void Clone(const Orderable& source);
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(Order)
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Order)
+        TYPE_FIELDS_END
     };
 }

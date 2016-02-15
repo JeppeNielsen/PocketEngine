@@ -10,15 +10,11 @@
 #include "minijson_reader.hpp"
 #include "minijson_writer.hpp"
 #include "Property.hpp"
-#include "Vector2.hpp"
-#include "Matrix4x4.hpp"
-#include "Colour.hpp"
-#include "Box.hpp"
 #include <type_traits>
 #include <sstream>
 #include <map>
 
-namespace Pocket {
+using namespace Pocket;
 
     template<class T, typename S = void>
     struct JsonSerializer {
@@ -164,20 +160,34 @@ namespace Pocket {
             });
         }
     };
-    
-    template<typename Owner, typename T>
-    struct JsonSerializer<Property<Owner, T>> {
-        static void Serialize(std::string& key, const Property<Owner, T>& value, minijson::object_writer& writer) {
+
+/*
+    template<typename T>
+    struct JsonSerializer<Property<T>> {
+        static void Serialize(std::string& key, const Property<T>& value, minijson::object_writer& writer) {
             JsonSerializer<T>::Serialize(key, value.GetValue(), writer);
         }
         
-        static void Deserialize(minijson::value& value, Property<Owner, T>* field, minijson::istream_context& context) {
+        static void Deserialize(minijson::value& value, Property<T>* field, minijson::istream_context& context) {
            T data;
            JsonSerializer<T>::Deserialize(value, &data, context);
            field->Set(data);
         }
     };
-    
+    */
+
+    template<typename Owner, typename T>
+    struct JsonSerializer<Pocket::Property<Owner, T>> {
+        static void Serialize(std::string& key, const Pocket::Property<Owner, T>& value, minijson::object_writer& writer) {
+            JsonSerializer<T>::Serialize(key, value.GetValue(), writer);
+        }
+        
+        static void Deserialize(minijson::value& value, Pocket::Property<Owner, T>* field, minijson::istream_context& context) {
+           T data;
+           JsonSerializer<T>::Deserialize(value, &data, context);
+           field->Set(data);
+        }
+    };
     
     template<typename Key, typename Value>
     struct JsonSerializer<std::map<Key, Value>> {
@@ -247,7 +257,3 @@ namespace Pocket {
             (*field) = enumValue;
         }
     };
-        
-    
-    
-}

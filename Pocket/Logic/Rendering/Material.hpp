@@ -7,38 +7,36 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "TypeInfo.hpp"
 #include "Shader.hpp"
 #include "Camera.hpp"
 
 namespace Pocket {
 
-enum class BlendModeType {
-    Opaque,
-    Alpha,
-    Add
-};
+    enum class BlendModeType {
+        Opaque,
+        Alpha,
+        Add
+    };
 
-Component(Material)
-public:
-    Material() : Shader(this), BlendMode(this), Mask(this), Clip(0) { }
-    Property<Material*, IShader*> Shader;
-    Property<Material*, BlendModeType> BlendMode;
-    Property<Material*, RenderMask> Mask;
-    int Clip; // 0 == no clipping, 1 == push clip, 2 == pop clip
+    struct Material {
+    public:
+        Material() : Shader(this), BlendMode(this), Mask(this), Clip(0) { }
+        Property<Material*, IShader*> Shader;
+        Property<Material*, BlendModeType> BlendMode;
+        Property<Material*, RenderMask> Mask;
+        int Clip; // 0 == no clipping, 1 == push clip, 2 == pop clip
 
-    void Reset() {
-        Shader = 0;
-        BlendMode = BlendModeType::Opaque;
-        Mask = 0;
-        Clip = 0;
-    }
-    
-    SERIALIZE_FIELDS_BEGIN
-    //SERIALIZE_FIELD(Shader)
-    SERIALIZE_FIELD(BlendMode)
-    SERIALIZE_FIELD(Mask)
-    SERIALIZE_FIELDS_END
-};
-
+        void Reset() {
+            Shader = 0;
+            BlendMode = BlendModeType::Opaque;
+            Mask = 0;
+            Clip = 0;
+        }
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(BlendMode)
+        TYPE_FIELD(Mask)
+        TYPE_FIELDS_END
+    };
 }

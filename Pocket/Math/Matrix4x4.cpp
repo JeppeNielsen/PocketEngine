@@ -712,6 +712,7 @@ Matrix4x4 Matrix4x4::Deserialize(const std::string &data) {
     return m;
 }
 
+/*
 std::ostream& operator<<(std::ostream& stream, const Pocket::Matrix4x4& m) {
     for (int i=0; i<16; ++i) {
         stream<<m._m[i];
@@ -719,6 +720,7 @@ std::ostream& operator<<(std::ostream& stream, const Pocket::Matrix4x4& m) {
     }
     return stream;
 }
+*/
 
 
 

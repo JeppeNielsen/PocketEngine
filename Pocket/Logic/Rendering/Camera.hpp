@@ -1,20 +1,18 @@
 
-#pragma once//;
+#pragma once
 #include "Property.hpp"
 #include "DirtyProperty.hpp"
 #include "Matrix4x4.hpp"
 #include "Box.hpp"
 #include "Ray.hpp"
-#include "GameWorld.hpp"
 #include "Transform.hpp"
 
 namespace Pocket {
     
     typedef uint64_t RenderMask;
 
-	Component(Camera)
+	class Camera {
 	public:
-		
 		Camera();
 
 		Property<Camera*, float> FieldOfView;
@@ -45,6 +43,5 @@ namespace Pocket {
 		void CalcProjectionInverseMatrix(DirtyProperty<Camera*, Matrix4x4>::EventData& event);
 		
 		void ProjectionPropertyChanged(Camera* camera);
-
 	};
 }

@@ -2,19 +2,27 @@
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
 
+struct GameWorldSettings : GameSettings<
+    RenderSystem<GameWorldSettings>
+    > {
+};
+
+
 using namespace Pocket;
 
 class Game : public GameState<Game> {
 public:
-    GameWorld world;
-    RenderSystem* renderer;
+    GameWorld<GameWorldSettings> world;
+    
+    using GameObject = GameObject<GameWorldSettings>;
+    
     GameObject* camera;
     GameObject* cube;
     float rotation;
     
     void Initialize() {
-        
-        renderer = world.CreateSystem<RenderSystem>();
+    
+        world.Initialize();
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
@@ -29,7 +37,7 @@ public:
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         
         for (int i=0; i<verts.size(); i++) {
-            verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
+            verts[i].Color = Colour::HslToRgb(i * 30, 1, 1, 1);
         }
         
         rotation = 0;
@@ -42,7 +50,7 @@ public:
     }
     
     void Render() {
-        renderer->Render();
+        world.Render();
     }
 };
 

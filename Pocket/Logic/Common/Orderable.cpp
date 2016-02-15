@@ -12,7 +12,3 @@ using namespace Pocket;
 
 Orderable::Orderable() : Order(this) {}
 void Orderable::Reset() { Order = 0; }
-
-void Orderable::Clone(const Orderable& source) {
-    Order = source.Order;
-}

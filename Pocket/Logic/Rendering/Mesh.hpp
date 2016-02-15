@@ -7,24 +7,24 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
 #include "VertexMesh.hpp"
 #include "BoundingBox.hpp"
 #include "DirtyProperty.hpp"
 
 namespace Pocket {
 
+template<typename T>
 class RenderSystem;
 
-class Mesh;
-class MeshIntersector {
+struct Mesh;
+struct MeshIntersector {
     public:
     virtual bool IntersectsRay(Mesh& mesh, const Ray& ray,
                             float* pickDistance, float* barycentricU, float* barycentricV,
                             size_t* triangleIndex, Vector3* normal) = 0;
 };
 
-Component(Mesh)
+struct Mesh {
 public:
     
     Mesh() : vertexMesh(0), vertexType(0), LocalBoundingBox(this), customIntersector(0) {}
@@ -111,7 +111,8 @@ private:
         BoundingBox& box = *eventData.Value;
         vertexMesh->CalcBoundingBox(box);
     }
-
+    
+    template<typename T>
     friend class RenderSystem;
 };
 

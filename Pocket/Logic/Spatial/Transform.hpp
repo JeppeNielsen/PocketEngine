@@ -4,10 +4,10 @@
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
 #include "Matrix4x4.hpp"
-#include "GameWorld.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-	Component(Transform)
+	class Transform {
 	public:
 		Transform();
 
@@ -43,12 +43,12 @@ namespace Pocket {
         
         bool useEulerRotation;
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(Position);
-        SERIALIZE_FIELD(Rotation);
-        SERIALIZE_FIELD(Scale);
-        SERIALIZE_FIELD(Anchor);
-        SERIALIZE_FIELD(Matrix);
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Position);
+        TYPE_FIELD(Rotation);
+        TYPE_FIELD(Scale);
+        TYPE_FIELD(Anchor);
+        TYPE_FIELD(Matrix);
+        TYPE_FIELDS_END
 	};
 }

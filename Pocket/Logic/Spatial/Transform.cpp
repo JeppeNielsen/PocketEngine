@@ -27,6 +27,8 @@ WorldInverse(this)
 	Local.Method += event_handler(this, &Transform::CalcLocal);
 	World.Method += event_handler(this, &Transform::CalcWorld);
 	WorldInverse.Method += event_handler(this, &Transform::CalcWorldInverse);
+    
+    Reset();
 }
 
 void Transform::Reset() {

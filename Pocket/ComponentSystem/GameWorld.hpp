@@ -1,243 +1,277 @@
 //
-//  World.h
+//  GameWorld.hpp
 //  ComponentSystem
 //
-//  Created by Jeppe Nielsen on 9/24/14.
-//  Copyright (c) 2014 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 27/12/15.
+//  Copyright © 2015 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-#include "GameComponent.hpp"
+#include "GameSettings.hpp"
+#include "Container.hpp"
+#include "minijson_writer.hpp"
+#include "minijson_reader.hpp"
+#include <type_traits>
+#include <assert.h>
+#include "Property.hpp"
+#ifdef SCRIPTING_ENABLED
+#include "IScriptSystem.hpp"
+#endif
 #include "GameObject.hpp"
-#include "GameSystem.hpp"
-#include "GameFactory.hpp"
-#include <vector>
-#include <memory>
-#include <string>
-#include <istream>
-#include "Assert.hpp"
-#if EMSCRIPTEN
-#if ENABLE_SCRIPTING
-    #undef ENABLE_SCRIPTING
-#endif
-#endif
 
-namespace minijson {
-    class object_writer;
-};
-
-namespace Pocket {
-
+template<typename Settings>
 class GameWorld {
-public:
-    
-    friend class GameObject;
-    friend class ScriptWorld;
-    
-    GameWorld();
-    ~GameWorld();
-    
-    GameObject* CreateObject();
-    GameObject* CreateObjectFromJson(std::istream& jsonStream, std::function<void(GameObject*)> iterator = 0);
-    
-    void Update(float dt);
-    void Render();
-    
-    void DeleteAllObjects();
-    
-    const ObjectCollection& Objects();
-    const ObjectCollection& Children();
-    
-    template<class T>
-    T* CreateSystem();
-    
-    template<class T>
-    T* CreateOrGetSystem();
-    
-    template<typename T>
-    T* GetSystem();
-    
-    template<typename T>
-    T* CreateFactory();
-    
-    typedef std::vector<IGameComponentType*> ComponentTypes;
-    const ComponentTypes& ComponentTypesList();
-    
-#ifdef ENABLE_SCRIPTING
-    void InitializeScripts();
-    bool Build(std::vector<std::string> scriptFilenames);
-    bool CallMain();
-    
-    ScriptWorld* GetScriptWorld();
-#endif
-    
 private:
+
+    friend class GameObject<Settings>;
     
+    using GameObject = GameObject<Settings>;
     
-    void UpdateRemovedObjects();
-    void UpdateRemovedObject(GameObject* object);
-    void UpdateChangedComponents();
-    void UpdateRemovedComponents();
+    using Objects = Container<GameObject>;
     
-    void* AddComponent(GameObject* object, int componentID);
-    void* AddComponent(GameObject* object, int componentID, GameObject* referenceObject);
-    void RemoveComponent(GameObject* object, int componentID);
-    void EnableComponent(GameObject* object, int componentID, bool enable);
-    void* CloneComponent(GameObject* object, int componentID, GameObject* source);
-    void UpdatePointers(GameObject* object, int componentID);
+    using Systems = typename Settings::SystemsTuple;
+    using InitializeSystems = typename Settings::InitializeSystems;
+    using UpdateSystems = typename Settings::UpdateSystems;
+    using RenderSystems = typename Settings::RenderSystems;
     
-    void AddSystem(GameSystem* system, int componentID);
+    using ComponentSystems = typename Settings::ComponentSystemsTuple;
     
-    void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
-    void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
-    GameObject* CreateGameObjectJson(minijson::istream_context& context, std::function<void(GameObject*)> iterator);
-    void CreateObjectID(GameObject* object, const std::string& id);
-    GameObject* FindObjectFromID(const std::string& id);
-    std::string* FindIDFromObject(GameObject* object);
-    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
-    GameObject* FindFirstObjectWithComponentID(int componentID);
-   
-    ComponentTypes componentTypes;
-    ComponentTypes changedComponentTypes;
-    ComponentTypes removedComponentTypes;
+    using SystemBitsets = typename Settings::SystemBitsets;
+    using Components = typename Settings::AllComponents;
+    using SerializableComponents = typename Settings::SerializableComponents;
+    using ComponentNames = typename Settings::ComponentNames;
     
-    ObjectCollection activeObjects;
-    ObjectCollection freeObjects;
-    typedef std::vector<GameObject*> RemovedObjects;
-    RemovedObjects removedObjects;
+    using Actions = std::vector<std::function<void()>>;
     
-    typedef std::vector<GameSystem*> Systems;
+    Objects objects;
+    
     Systems systems;
-    friend class GameSystem;
     
-    ScriptWorld* scriptWorld;
-    ObjectCollection children;
-    typedef std::map<void*, void*> PointerMap;
-    PointerMap pointerMap;
-    typedef std::map<void*, int> PointerCounter;
-    PointerCounter pointerCounter;
+    InitializeSystems initializeSystems;
+    UpdateSystems updateSystems;
+    RenderSystems renderSystems;
     
-    struct ObjectID {
-        GameObject* object;
-        std::string id;
+    ComponentSystems componentSystems;
+    
+    SystemBitsets systemBitsets;
+    Components components;
+    
+    SerializableComponents serializableComponents;
+    ComponentNames componentNames;
+    
+    Actions createActions;
+    Actions removeActions;
+    
+    void InitializeSystemBitsets() {
+        meta::for_each_in_tuple(systems, [&](auto& system) {
+            using SystemType = std::remove_const_t<std::remove_reference_t<decltype(system)>>;
+            meta::for_each_in_tuple(meta::IteratorPointer<typename SystemType::Components>{}.Iterate(), [&,this](auto component) {
+                systemBitsets[Settings::template GetSystemID<SystemType>()]
+                             [Settings::template GetComponentID<std::remove_pointer_t< decltype(component) >>()] = true;
+            });
+            std::get<SystemType>(systems).world = this;
+        });
+    }
+    
+    void InitializeComponentNames() {
+        componentNames = Settings::GetComponentNames();
+    }
+public:
+
+    template<typename System>
+    System& GetSystem() {
+        return std::get<Settings::template GetSystemID<System>()>(systems);
+    }
+
+    GameObject* CreateObject() {
+        auto object = objects.CreateObject();
+        object->object.instance = object;
+        object->object.SetWorld(this);
+        object->object.Reset();
+        return &object->object;
+    }
+    
+    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
+        minijson::istream_context context(jsonStream);
+        GameObject* object = 0;
+        try {
+             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string name = n;
+                if (name == "GameObject" && v.type() == minijson::Object) {
+                    object = CreateObject();
+                    minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                        std::string name = n;
+                        if (name == "Components" && v.type() == minijson::Array && object) {
+                            minijson::parse_array(context, [&] (minijson::value v) {
+                                if (v.type() == minijson::Object) {
+                                    minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                        object->AddComponent(context, n);
+                                    });
+                                }
+                            });
+                        } /*else if (name == "Children" && v.type() == minijson::Array && object) {
+                            minijson::parse_array(context, [&] (minijson::value v) {
+                                GameObject* child = CreateGameObjectJson(context, iterator);
+                                if (child) {
+                                    child->Parent = object;
+                                }
+                            });
+                        }
+                        */
+                        if (onCreated) {
+                            onCreated(object);
+                        }
+                    });
+                }
+             });
+        } catch (std::exception e) {
+            std::cout << e.what() << std::endl;
+        }
+        return object;
+    }
+    
+    GameWorld() {
+        InitializeSystemBitsets();
+        InitializeComponentNames();
+    }
+
+    void Initialize() {
+        meta::for_each_in_tuple(initializeSystems, [&](auto system) {
+            std::get<
+                Settings::template GetSystemID<
+                    std::remove_pointer_t<decltype(system)>
+                >()
+            >(systems).Initialize();//*this);
+        });
+    }
+
+    void Update(float dt) {
+        DoActions(createActions);
+        DoActions(removeActions);
+        meta::for_each_in_tuple(updateSystems, [this, dt] (auto system) {
+            std::get<
+                    Settings::template GetSystemID<
+                        std::remove_pointer_t< decltype(system)>
+                    >()
+                >(systems).Update(dt);
+        });
+        
+#ifdef SCRIPTING_ENABLED
+        for(auto scriptSystem : scriptSystems) {
+            scriptSystem->Update(dt);
+        }
+#endif
+    }
+    
+    void Render() {
+        meta::for_each_in_tuple(renderSystems, [this] (auto system) {
+            std::get<
+                    Settings::template GetSystemID<
+                        std::remove_pointer_t< decltype(system)>
+                    >()
+                >(systems).Render();
+        });
+    }
+
+    void DoActions(Actions& list) {
+       for(int i=0; i<list.size(); ++i) {
+            list[i]();
+       }
+       list.clear();
+    }
+
+    int ObjectCount() {
+        return objects.Size();
+    }
+    
+    GameObject* GetObject(int index) {
+        return objects.Get(index);
+    }
+
+    void Clear() {
+        for(int i=0; i<objects.Size(); ++i) {
+            objects.Get(i)->Remove();
+        }
+        DoActions(createActions);
+        DoActions(removeActions);
+    }
+    
+    ~GameWorld() {
+        Clear();
+    }
+    
+    void EnumerateComponentClasses(std::function<void(std::string, int)> callback) {
+        meta::for_each_in_tuple(serializableComponents, [this, callback] (auto componentPointer) {
+            using ComponentType = std::remove_const_t< std::remove_pointer_t<decltype(componentPointer)> >;
+            callback(componentNames[Settings::template GetComponentID<ComponentType>()], Settings::template GetComponentID<ComponentType>());
+        });
+    }
+    
+#ifdef SCRIPTING_ENABLED
+    //Scripting
+    using StaticScriptSystemComponents = std::array<std::vector<short>, typename Settings::UniqueComponents{}.size()>;
+    StaticScriptSystemComponents staticScriptSystemComponents;
+    using ScriptSystemComponents = std::vector<std::vector<short>>;
+    ScriptSystemComponents dynamicScriptSystemComponents;
+    
+    using ScriptComponents = std::vector<Container<void*>>;
+    ScriptComponents scriptComponents;
+    
+    using ScriptBitset = std::vector<bool>;
+    
+    struct ScriptSystemData {
+        typename Settings::Bitset staticComponents;
+        std::vector<short> scriptComponents;
     };
     
-    typedef std::vector<ObjectID> ObjectIDs;
-    ObjectIDs objectIDs;
+    using ScriptSystems = std::vector<IScriptSystem*>;
+    ScriptSystems scriptSystems;
     
+    using ScriptSystemsData = std::vector<ScriptSystemData>;
+    ScriptSystemsData scriptSystemsData;
+    
+    void ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted) {
+        for(int i=0; i<ObjectCount(); ++i) {
+            GetObject(i)->ClearScriptingData();
+        }
+
+        for(int i=0; i<typename Settings::UniqueComponents{}.size(); ++i) {
+            staticScriptSystemComponents[i].clear();
+        }
+        dynamicScriptSystemComponents.clear();
+        scriptComponents.clear();
+        for(auto scriptSystem : scriptSystems) {
+            onSystemDeleted(scriptSystem);
+        }
+        scriptSystems.clear();
+        scriptSystemsData.clear();
+    }
+
+    void InitializeScriptData(int numSystems, int numComponents,
+                std::function<IScriptSystem*(int)> onSystemCreate,
+                std::function<void(Container<void*>&, int)> onComponentCreate,
+                std::function<void(
+                            StaticScriptSystemComponents& staticScriptSystemComponents,
+                            ScriptSystemComponents& dynamicScriptSystemComponents,
+                            ScriptSystemsData& scriptSystemsData)> onSystemData
+                
+                ) {
+        
+        for(int i=0; i<numSystems; i++) {
+            scriptSystems.push_back(onSystemCreate(i));
+        }
+        
+        scriptComponents.resize(numComponents);
+        for(int i=0; i<numComponents; ++i) {
+            onComponentCreate(scriptComponents[i], i);
+        }
+        
+        dynamicScriptSystemComponents.resize(numComponents);
+        onSystemData(staticScriptSystemComponents, dynamicScriptSystemComponents, scriptSystemsData);
+        
+        for(int i=0; i<ObjectCount(); ++i) {
+            GetObject(i)->InitializeScriptingData();
+        }
+    }
+#endif
 };
-
-}
-
-//--------------------------- <GameWorld> -----------------------------
-
-template<class T>
-T* Pocket::GameWorld::CreateSystem() {
-    ASSERT(activeObjects.size()==0 && freeObjects.size()==0, "Systems cannot be created if Objects have been created.");
-    
-    T* system = new T();
-    system->indexInList = (unsigned)systems.size();
-    systems.push_back(system);
-    system->world = this;
-    system->aspect = 0;
-    system->Initialize();
-    system->AddedToWorld(*this);
-    return system;
-}
-
-template<class T>
-T* Pocket::GameWorld::CreateOrGetSystem() {
-    T* system = GetSystem<T>();
-    if (!system) {
-        system = CreateSystem<T>();
-    }
-    return system;
-}
-
-template<typename T>
-T* Pocket::GameWorld::GetSystem() {
-    for (size_t i = 0; i<systems.size(); i++) {
-        T* system = dynamic_cast<T*>(systems[i]);
-        if (system) return system;
-    }
-    return 0;
-}
-
-template<typename T>
-T* Pocket::GameWorld::CreateFactory() {
-    T* factory = new T();
-    factory->world = this;
-    factory->Initialize();
-    return factory;
-}
-
-//--------------------------- </GameWorld> -----------------------------
-
-
-//--------------------------- <GameObject> -----------------------------
-
-template<class T>
-T* Pocket::GameObject::AddComponent() {
-    return (T*)world->AddComponent(this, T::ID);
-}
-
-template<class T>
-T* Pocket::GameObject::AddComponent(GameObject* objectReference) {
-    return (T*)world->AddComponent(this, T::ID, objectReference);
-}
-
-template<class T>
-T* Pocket::GameObject::GetComponent() {
-    return (T*)components[T::ID];
-}
-
-template<class T>
-void Pocket::GameObject::RemoveComponent() {
-    world->RemoveComponent(this, T::ID);
-}
-
-template<class T>
-bool Pocket::GameObject::IsComponentEnabled() {
-    ComponentMask mask = world->componentTypes[T::ID]->mask;
-    return (enabledComponents & mask) == mask;
-}
-
-template<class T>
-void Pocket::GameObject::EnableComponent(bool enable) {
-    world->EnableComponent(this, T::ID, enable);
-}
-
-template<class T>
-T* Pocket::GameObject::CloneComponent(GameObject* source) {
-    return (T*)world->CloneComponent(this, T::ID, source);
-}
-
-template<class T>
-bool Pocket::GameObject::IsComponentReference() {
-    return IsComponentReference(T::ID);
-}
-
-//--------------------------- </GameObject> -----------------------------
-
-
-//--------------------------- <GameSystem> -----------------------------
-
-template<class T>
-void Pocket::GameSystem::AddComponent() {
-   world->AddSystem(this, T::ID);
-}
-
-//--------------------------- </GameSystem> -----------------------------
-
-//--------------------------- <GameFactory> -----------------------------
-
-template<typename T>
-T* Pocket::GameFactory::CreateSystem() {
-    T* system = World()->GetSystem<T>();
-    if (system) return system;
-    return World()->CreateSystem<T>();
-}
-
-//--------------------------- </GameFactory> -----------------------------
-
-

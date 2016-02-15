@@ -10,7 +10,7 @@
 
 namespace Pocket {
 template<>
-void Shader<Pocket::Vertex>::RenderObject(Pocket::VertexRenderer<Pocket::Vertex>& renderer, const typename Pocket::VertexMesh<Pocket::Vertex>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles, Pocket::GameObject* object, const Pocket::Matrix4x4& world) {
+void Shader<Pocket::Vertex>::RenderObject(Pocket::VertexRenderer<Pocket::Vertex>& renderer, const typename Pocket::VertexMesh<Pocket::Vertex>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles, const Pocket::Matrix4x4& world) {
     
     size_t verticesSize = vertices.size();
     size_t trianglesSize = triangles.size();
