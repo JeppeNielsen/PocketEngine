@@ -84,7 +84,7 @@ public:
     }
 
     GameObject* CreateObject() {
-        auto object = objects.CreateObject();
+        auto object = objects.CreateObjectNoReset();
         object->object.instance = object;
         object->object.SetWorld(this);
         object->object.Reset();
@@ -133,6 +133,9 @@ public:
     GameWorld() {
         InitializeSystemBitsets();
         InitializeComponentNames();
+        meta::for_each_in_tuple_non_const(components, [](auto& container) {
+            container.Initialize();
+        });
     }
 
     void Initialize() {

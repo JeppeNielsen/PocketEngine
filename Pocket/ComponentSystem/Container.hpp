@@ -16,10 +16,19 @@ public:
     struct ObjectInstance {
         Object object;
         int references;
+        int index;
         Container<Object>* owner;
     };
     
     ObjectInstance* CreateObject() {
+        TryGrow();
+        ObjectInstance* instance = objects[size++];
+        ++instance->references;
+        ResetInstance(instance);
+        return instance;
+    }
+    
+    ObjectInstance* CreateObjectNoReset() {
         TryGrow();
         ObjectInstance* instance = objects[size++];
         ++instance->references;
@@ -32,13 +41,18 @@ public:
         if ((--instance->references) == 0) {
             if (instance->owner == this) {
                 --size;
-                std::swap(instance, objects[size]);
+                objects[size]->index = instance->index;
+                std::swap(objects[instance->index], objects[size]);
+                instance->index = size;
             } else {
                 if (!instance->owner) {
                     delete instance;
                 } else {
-                    --instance->owner->size;
-                    std::swap(instance, instance->owner->objects[instance->owner->size]);
+                    auto* container = instance->owner;
+                    --container->size;
+                    container->objects[container->size]->index = instance->index;
+                    std::swap(container->objects[instance->index], container->objects[container->size]);
+                    instance->index = container->size;
                 }
             }
         }
@@ -74,6 +88,7 @@ private:
             objects[i] = CreateInstance();
             objects[i]->references = 0;
             objects[i]->owner = this;
+            objects[i]->index = i;
         }
         capacity = newCapacity;
     }
@@ -92,13 +107,25 @@ private:
         delete instance;
     }
     
+    void ResetInstance(ObjectInstance* instance) {
+        instance->object = defaultObject->object;
+    }
+    
 public:
-    Container() : size(0), capacity(0) {}
+    Container() : size(0), capacity(0), defaultObject(0) { }
     ~Container() {
         Clear();
+        DeleteInstance(defaultObject);
+    }
+    
+    void Initialize() {
+        defaultObject = CreateInstance();
     }
     
     void* createContext;
     void* deleteContext;
+    void* resetContext;
     int contextIndex;
+    
+    ObjectInstance* defaultObject;
 };
