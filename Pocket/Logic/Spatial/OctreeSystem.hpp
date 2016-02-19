@@ -75,16 +75,16 @@ namespace Pocket {
                 octreeNode.node = 0;
                 octreeNode.data = object;
                 
-                transform->World.HasBecomeDirty += event_handler(this, &Node::TransformChanged);
-                mesh->LocalBoundingBox.HasBecomeDirty += event_handler(this, &Node::MeshBoundingBoxChanged);
+                transform->World.HasBecomeDirty.Bind(this, &Node::TransformChanged);
+                mesh->LocalBoundingBox.HasBecomeDirty.Bind(this, &Node::MeshBoundingBoxChanged);
                 
                 SetOctreeNodeDirty();
             }
 
             ~Node() {
                 
-                transform->World.HasBecomeDirty -= event_handler(this, &Node::TransformChanged);
-                mesh->LocalBoundingBox.HasBecomeDirty -= event_handler(this, &Node::MeshBoundingBoxChanged);
+                transform->World.HasBecomeDirty.Unbind(this, &Node::TransformChanged);
+                mesh->LocalBoundingBox.HasBecomeDirty.Unbind(this, &Node::MeshBoundingBoxChanged);
                 
                 if (octreeNodeDirty) {
                     system->octreeObjectsUpdateList[indexInList] = 0;
@@ -95,12 +95,12 @@ namespace Pocket {
                 }
             }
 
-            void TransformChanged(DirtyProperty<Transform*, Matrix4x4>* transform) {
+            void TransformChanged() {
                 boundingBoxDirty = true;
                 SetOctreeNodeDirty();
             }
 
-            void MeshBoundingBoxChanged(DirtyProperty<Mesh*, BoundingBox>* mesh) {
+            void MeshBoundingBoxChanged() {
                 boundingBoxDirty = true;
                 SetOctreeNodeDirty();
             }
@@ -108,8 +108,8 @@ namespace Pocket {
             bool InView(const BoundingFrustum& frustum) {
                 if (boundingBoxDirty) {
                     boundingBoxDirty = false;
-                    BoundingBox* box = mesh->LocalBoundingBox.GetValue();
-                    box->CreateWorldAligned(*transform->World.GetValue(), boundingBox);
+                    const BoundingBox& box = mesh->LocalBoundingBox();
+                    box.CreateWorldAligned(transform->World, boundingBox);
                 }
                 return frustum.Intersect(boundingBox) != BoundingFrustum::OUTSIDE;
             }
@@ -127,8 +127,8 @@ namespace Pocket {
                 
                 if (boundingBoxDirty) {
                     boundingBoxDirty = false;
-                    BoundingBox* box = mesh->LocalBoundingBox.GetValue();
-                    box->CreateWorldAligned(*transform->World.GetValue(), octreeNode.box);
+                    const BoundingBox& box = mesh->LocalBoundingBox();
+                    box.CreateWorldAligned(transform->World, octreeNode.box);
                 }
                 
                 if (!octreeNode.node) {

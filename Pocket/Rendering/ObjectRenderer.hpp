@@ -103,7 +103,7 @@ public:
         currentShader->RenderObject(renderer,
             mesh.vertices,
             mesh.triangles,
-            *visibleObject.transform->World.GetValue()
+            visibleObject.transform->World
             );
         objectsRendered++;
         
@@ -118,8 +118,8 @@ public:
     }
     
     void RenderTransparentObject(const VisibleObject& visibleObject) override {
-        if (visibleObject.material->BlendMode.GetValue()!=currentBlendMode) {
-            currentBlendMode = visibleObject.material->BlendMode.GetValue();
+        if (visibleObject.material->BlendMode()!=currentBlendMode) {
+            currentBlendMode = visibleObject.material->BlendMode();
             renderer.Render();
              if (currentBlendMode == BlendModeType::Alpha ) {
                 glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

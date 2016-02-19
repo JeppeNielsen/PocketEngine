@@ -28,8 +28,8 @@ namespace Pocket {
 
 		const Vector2& GetTouchPosition(int index);
         
-        Property<InputManager*, bool> KeyboardActive;
-        Property<InputManager*, std::string> KeyboardText;
+        Property<bool> KeyboardActive;
+        Property<std::string> KeyboardText;
         
         GamePadManager GamePad;
         
@@ -38,8 +38,6 @@ namespace Pocket {
 	private:
 		InputDevice* device;
 		friend class InputDevice;
-        
-        void KeyboardChanged(InputManager* inputManager);
         
 	};
     

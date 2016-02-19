@@ -7,14 +7,12 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
 #include "Property.hpp"
 
 namespace Pocket {
     struct Orderable {
-    public:
-        Orderable();
-        Property<Orderable*, int> Order;
+        Orderable() { Order = 0; }
+        Property<int> Order;
     
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Order)

@@ -12,7 +12,7 @@
 namespace Pocket {
     struct Draggable {
         
-        Draggable() : Movement(MovementMode::Normal), IsDragging(this) { IsDragging = false; }
+        Draggable() : Movement(MovementMode::Normal) { IsDragging = false; }
         
         enum class MovementMode {
             Normal,
@@ -25,6 +25,6 @@ namespace Pocket {
         };
         
         MovementMode Movement;
-        Property<Draggable*, bool> IsDragging;
+        Property<bool> IsDragging;
     };
 }

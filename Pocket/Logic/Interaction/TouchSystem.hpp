@@ -43,9 +43,19 @@ namespace Pocket {
     
         using Systems = meta::list<OctreeSystem, CameraSystem, OrderableSystem>;
     
-        TouchSystem() : Input(this) {
+        TouchSystem() {
             Input = 0;
-            Input.ChangedWithOld += event_handler(this, &TouchSystem::InputManagerChanged);
+            Input.Changed.Bind([this](auto input) {
+                if (Input.PreviousValue()) {
+                    Input.PreviousValue()->TouchDown.Unbind(this, &TouchSystem::TouchDown);
+                    Input.PreviousValue()->TouchUp.Unbind(this, &TouchSystem::TouchUp);
+                }
+                
+                if (input) {
+                    input->TouchDown.Bind(this, &TouchSystem::TouchDown);
+                    input->TouchUp.Bind(this, &TouchSystem::TouchUp);
+                }
+            });
         }
         
         void Initialize() {
@@ -53,7 +63,7 @@ namespace Pocket {
             cameraSystem = &this->World().template GetSystem<TouchSystem::CameraSystem>();
         }
         
-        Property<TouchSystem*, InputManager*> Input;
+        Property<InputManager*> Input;
         OctreeSystem& Octree() { return *octree; }
 
         void ObjectAdded(GameObject* object) {
@@ -80,7 +90,7 @@ namespace Pocket {
                         Touched& list = touches[i];
                         for (size_t j=0; j<list.size(); j++) {
                             if (list[j].Touchable == cancelled) {
-                                cancelled->Cancelled -= event_handler(this, &TouchSystem::TouchableCancelled);
+                                cancelled->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
                                 ups.push_back(list[j]);
                                 list.erase(list.begin()+j);
                                 j--;
@@ -101,20 +111,7 @@ namespace Pocket {
         }
         
     private:
-        
-        void InputManagerChanged(typename Property<TouchSystem*, InputManager*>::EventData e) {
-            
-            if (e.Old) {
-                e.Old->TouchDown -= event_handler(this, &TouchSystem::TouchDown);
-                e.Old->TouchUp -= event_handler(this, &TouchSystem::TouchUp);
-            }
-            
-            if (e.Current) {
-                e.Current->TouchDown += event_handler(this, &TouchSystem::TouchDown);
-                e.Current->TouchUp += event_handler(this, &TouchSystem::TouchUp);
-            }
-        }
-        
+                
         void TouchDown(Pocket::TouchEvent e) {
             Touched& list = touches[e.Index];
             
@@ -122,7 +119,7 @@ namespace Pocket {
             AddToTouchList(list, downs);
             
             for (size_t i = 0; i<list.size(); i++) {
-                list[i].Touchable->Cancelled += event_handler(this, &TouchSystem::TouchableCancelled);
+                list[i].Touchable->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
             }
         }
 
@@ -152,7 +149,7 @@ namespace Pocket {
             AddToTouchList(touchList, ups);
             
             for (size_t i = 0; i<touchList.size(); i++) {
-                touchList[i].Touchable->Cancelled -= event_handler(this, &TouchSystem::TouchableCancelled);
+                touchList[i].Touchable->Cancelled.Unbind(this, &TouchSystem::TouchableCancelled);
             }
             
             touchList.clear();
@@ -194,11 +191,11 @@ namespace Pocket {
 
         TouchableObject* FindClipper(TouchableObject *fromThis) {
             if (!fromThis->orderable) return 0;
-            int order = fromThis->orderable->Order.Get();
+            int order = fromThis->orderable->Order();
             std::stack<TouchableObject*> stack;
             for (size_t i = 0; i<clippers.size(); ++i) {
                 TouchableObject* clipper = clippers[i];
-                int clipperOrder = clipper->orderable->Order.Get();
+                int clipperOrder = clipper->orderable->Order();
                 if (order<=clipperOrder) break;
                 if (clipper->clip == 1) {
                     stack.push(clipper);
@@ -270,11 +267,11 @@ namespace Pocket {
                 GameObject* object = touchableList[max - i];
                 TouchableObject* t = (TouchableObject*)this->GetMetaData(object);
                 Mesh* mesh = t->mesh;
-                const Matrix4x4* worldInverse = t->transform->WorldInverse.GetValue();
+                const Matrix4x4& worldInverse = t->transform->WorldInverse();
                 //int thisOrder = t->orderable ? t->orderable->Order.Get() : minOrder;
                 
                 Ray localRay = ray;
-                localRay.Transform(*worldInverse);
+                localRay.Transform(worldInverse);
                 
                 float distanceToPick;
                 float u;
@@ -381,10 +378,10 @@ namespace Pocket {
                 touch.Position = e.Position;
                 touch.Ray = ray;
                 
-                const Matrix4x4* world = touchableObject->transform->World.GetValue();
+                const Matrix4x4& world = touchableObject->transform->World();
                 
                 Vector3 localPosition = foundIntersection->localRay.GetPosition(foundIntersection->distanceToPick);
-                touch.WorldPosition = world->TransformPosition(localPosition);
+                touch.WorldPosition = world.TransformPosition(localPosition);
                 touch.TriangleIndex = foundIntersection->triIndex;
                 touch.WorldNormal = foundIntersection->normal;
                 
@@ -400,7 +397,7 @@ namespace Pocket {
                 
                     touch.WorldNormal = tan1.Cross(tan2);
                     
-                    touch.WorldNormal = touchableObject->transform->World.GetValue()->TransformVector(touch.WorldNormal);
+                    touch.WorldNormal = touchableObject->transform->World().TransformVector(touch.WorldNormal);
                     touch.WorldNormal.Normalize();
                 } 
             
@@ -416,7 +413,7 @@ namespace Pocket {
         
         static bool SortIntersections(const Intersection &a, const Intersection &b) {
             if (a.touchable->orderable && b.touchable->orderable) {
-                return a.touchable->orderable->Order.Get()>b.touchable->orderable->Order.Get();
+                return a.touchable->orderable->Order()>b.touchable->orderable->Order();
             } else {
                 return a.distanceToPick<b.distanceToPick;
             }

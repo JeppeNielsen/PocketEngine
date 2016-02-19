@@ -21,10 +21,10 @@ namespace Pocket {
 
     struct Material {
     public:
-        Material() : Shader(this), BlendMode(this), Mask(this), Clip(0) { }
-        Property<Material*, IShader*> Shader;
-        Property<Material*, BlendModeType> BlendMode;
-        Property<Material*, RenderMask> Mask;
+        Material() { Shader = 0; BlendMode = BlendModeType::Opaque; Mask = 0; Clip = 0; }
+        Property<IShader*> Shader;
+        Property<BlendModeType> BlendMode;
+        Property<RenderMask> Mask;
         int Clip;
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(BlendMode)

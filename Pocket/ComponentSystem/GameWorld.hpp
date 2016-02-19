@@ -76,6 +76,41 @@ private:
     void InitializeComponentNames() {
         componentNames = Settings::GetComponentNames();
     }
+    
+    GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+        GameObject* object = 0;
+         minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            std::string name = n;
+            if (name == "GameObject" && v.type() == minijson::Object) {
+                object = CreateObject();
+                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                    std::string name = n;
+                    if (name == "Components" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            if (v.type() == minijson::Object) {
+                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                    object->AddComponent(context, n);
+                                });
+                            }
+                        });
+                    } else if (name == "Children" && v.type() == minijson::Array && object) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            GameObject* child = LoadObject(context, onCreated);
+                            if (child) {
+                                child->Parent = object;
+                            }
+                        });
+                    }
+                    
+                    if (onCreated) {
+                        onCreated(object);
+                    }
+                });
+            }
+        });
+        return object;
+    }
+    
 public:
 
     template<typename System>
@@ -95,35 +130,7 @@ public:
         minijson::istream_context context(jsonStream);
         GameObject* object = 0;
         try {
-             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                std::string name = n;
-                if (name == "GameObject" && v.type() == minijson::Object) {
-                    object = CreateObject();
-                    minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                        std::string name = n;
-                        if (name == "Components" && v.type() == minijson::Array && object) {
-                            minijson::parse_array(context, [&] (minijson::value v) {
-                                if (v.type() == minijson::Object) {
-                                    minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                                        object->AddComponent(context, n);
-                                    });
-                                }
-                            });
-                        } /*else if (name == "Children" && v.type() == minijson::Array && object) {
-                            minijson::parse_array(context, [&] (minijson::value v) {
-                                GameObject* child = CreateGameObjectJson(context, iterator);
-                                if (child) {
-                                    child->Parent = object;
-                                }
-                            });
-                        }
-                        */
-                        if (onCreated) {
-                            onCreated(object);
-                        }
-                    });
-                }
-             });
+            object = LoadObject(context, onCreated);
         } catch (std::exception e) {
             std::cout << e.what() << std::endl;
         }

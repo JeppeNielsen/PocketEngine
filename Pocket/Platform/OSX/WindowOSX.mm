@@ -26,8 +26,8 @@ void WindowOSX::Create(int width, int height, bool fullScreen) {
 
 void WindowOSX::Begin() {
     
-    OSXWindowCreator::Instance()->OnInitialize += event_handler(this, &WindowOSX::osxWindowCreated);
-    OSXWindowCreator::Instance()->OnUpdate += event_handler(this, &WindowOSX::Loop);
+    OSXWindowCreator::Instance()->OnInitialize.Bind(this, &WindowOSX::osxWindowCreated);
+    OSXWindowCreator::Instance()->OnUpdate.Bind(this, &WindowOSX::Loop);
     OSXWindowCreator::Instance()->Create();
     
 }

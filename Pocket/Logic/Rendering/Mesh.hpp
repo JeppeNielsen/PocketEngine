@@ -27,14 +27,8 @@ struct MeshIntersector {
 struct Mesh {
 public:
     
-    Mesh() : vertexMesh(0), vertexType(0), LocalBoundingBox(this), customIntersector(0) {}
+    Mesh() : vertexMesh(0), vertexType(0), customIntersector(0) { }
     ~Mesh() { delete vertexMesh; }
-
-    void Reset() {
-        delete vertexMesh;
-        vertexMesh = 0;
-        customIntersector = 0;
-    }
     
     void operator=(const Mesh& other) {
         if (other.vertexMesh) {
@@ -42,6 +36,10 @@ public:
             vertexType = other.vertexType;
             RevertDefaultCalcBoundingBox();
             LocalBoundingBox.MakeDirty();
+        } else {
+             delete vertexMesh;
+            vertexMesh = 0;
+            customIntersector = 0;
         }
     }
     
@@ -75,7 +73,7 @@ public:
     int VertexType() { return vertexType; }
     
     IVertexMesh::Triangles& Triangles() { return vertexMesh->triangles; }
-    DirtyProperty<Mesh*, BoundingBox> LocalBoundingBox;
+    DirtyProperty<BoundingBox> LocalBoundingBox;
 
     bool IntersectsRay(const Ray& ray, float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) {
         if (customIntersector) {
@@ -87,9 +85,10 @@ public:
 
     MeshIntersector* customIntersector;
     
-     void RevertDefaultCalcBoundingBox() {
-        LocalBoundingBox.Method.Clear();
-        LocalBoundingBox.Method += event_handler(this, &Mesh::CalcBoundingBox);
+    void RevertDefaultCalcBoundingBox() {
+        LocalBoundingBox.Method = [this] (BoundingBox& box) {
+            vertexMesh->CalcBoundingBox(box);
+        };
     }
     
     void Clear() {
@@ -105,12 +104,6 @@ public:
 private:
     IVertexMesh* vertexMesh;
     int vertexType;
-
-    void CalcBoundingBox( DirtyProperty<Mesh*, BoundingBox>::EventData& eventData )
-    {
-        BoundingBox& box = *eventData.Value;
-        vertexMesh->CalcBoundingBox(box);
-    }
     
     template<typename T>
     friend class RenderSystem;

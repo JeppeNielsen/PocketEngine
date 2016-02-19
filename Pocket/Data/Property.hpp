@@ -1,156 +1,93 @@
+//
+//  Property.h
+//  EntitySystem
+//
+//  Created by Jeppe Nielsen on 08/12/15.
+//  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
+//
+
 #pragma once
 #include "Event.hpp"
 
-#ifdef ANDROID
-#include <ostream>
-#endif
-
 namespace Pocket {
-	template<class Owner, class T> class Property {
-	public:
-		Property(Owner owner);
-		~Property();
-        
-        Property(const Property<Owner, T> &other);
 
-		void operator = (Property<Owner, T> &other);
+template<class Value>
+class Property {
+private:
+    Value value;
+    
+    void Set(const Value& newValue) {
+        if (value==newValue) return;
+        previousValue = value;
+        value = newValue;
+        Changed(value);
+    }
+    static Value previousValue;
+public:
+    Property() = default;
 
-		T Get() const;
-		T operator () (void) const;
-		T operator = (const T& other);
+    Event<Value&> Changed;
+    
+    Value& PreviousValue() const;
+    
+    const Value& operator() () const { return value; }
+    operator const Value& () const { return value; }
+    
+    void operator = (const Value& v) { Set(v); }
+    void operator = (const Property<Value>& v) { Set(v.value); }
+    Value operator - () const { return -value; }
+    
+    Value operator + (const Value& v) const { return value + v; }
+    Value operator - (const Value& v) const { return value - v; }
+    Value operator * (const Value& v) const { return value * v; }
+    Value operator / (const Value& v) const { return value / v; }
+    Value operator ++ (int) { Value temp = value; Set(value+1); return temp; }
+    Value operator -- (int) { Value temp = value; Set(value-1); return temp; }
+    Value operator ++ () { Set(value+1); return value; }
+    Value operator -- () { Set(value-1); return value; }
+    
+    Value operator + (const Property<Value>& v) const { return value + v.value; }
+    Value operator - (const Property<Value>& v) const { return value - v.value; }
+    Value operator * (const Property<Value>& v) const { return value * v.value; }
+    Value operator / (const Property<Value>& v) const { return value / v.value; }
+    
+    const Value& operator += (const Value& v) { Set(value + v); return value; }
+    const Value& operator -= (const Value& v) { Set(value - v); return value; }
+    const Value& operator *= (const Value& v) { Set(value * v); return value; }
+    const Value& operator /= (const Value& v) { Set(value / v); return value; }
 
-		operator const T () const;
+    const Value& operator += (const Property<Value&> v) { Set(value + v.value); return value; }
+    const Value& operator -= (const Property<Value>& v) { Set(value - v.value); return value; }
+    const Value& operator *= (const Property<Value>& v) { Set(value * v.value); return value; }
+    const Value& operator /= (const Property<Value>& v) { Set(value / v.value); return value; }
 
-		const T& GetValue() const;
+    friend Value operator+(const Value& value, Property<Value>& property) {
+        return value + property.value;
+    }
+    
+    friend Value operator-(const Value& value, Property<Value>& property) {
+        return value - property.value;
+    }
+    
+    friend Value operator*(const Value& value, Property<Value>& property) {
+        return value * property.value;
+    }
+    
+    friend Value operator/(const Value& value, Property<Value>& property) {
+        return value / property.value;
+    }
+    
+    Property(const Property<Value>& other) {
+        value = other.value;
+    }
+};
 
-		void Set(T value);
-		Event<Owner> Changed;
+template<class Value>
+Value Property<Value>::previousValue;
 
-
-
-		struct EventData {
-			Owner owner;
-			T Current;
-			T Old;
-		};
-
-		Event<EventData> ChangedWithOld;
-
-		T operator + (T value) const;
-		T operator - (T value) const;
-		T operator * (T value) const;
-		T operator / (T value) const;
-		T operator += (T value);
-		T operator -= (T value);
-		T operator *= (T value);
-		T operator /= (T value);
-        T operator - ();
-
-	private:
-		T value;
-		Owner owner;
-
-	};
+template<class Value>
+Value& Property<Value>::PreviousValue() const {
+    return previousValue;
 }
 
-template<class Owner, class T> Pocket::Property<Owner, T>::Property(Owner owner) {
-	this->owner = owner;
-}
-
-template<class Owner, class T>
-Pocket::Property<Owner, T>::Property(const Property<Owner, T> &other) {
-	Set( other.Get() );
-    Changed = other.Changed;
-    ChangedWithOld = other.ChangedWithOld;
-}
-
-template<class Owner, class T> void Pocket::Property<Owner, T>::operator = (Property<Owner, T> &other) {
-	Set( other.Get() );
-}
-
-template<class Owner, class T> Pocket::Property<Owner, T>::~Property() {
-}
-
-template<class Owner, class T> void Pocket::Property<Owner, T>::Set(T value) {
-	if (this->value!=value) {
-		if (ChangedWithOld.Count()>0) {
-			EventData e;
-			e.owner = owner;
-			e.Current = value;
-			e.Old = this->value;
-			this->value = value;
-			Changed(owner);
-			ChangedWithOld(e);
-		} else {
-			this->value = value;
-			Changed(owner);
-		}
-	}
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::Get() const {
-	return value;
-}
-
-template<class Owner, class T> const T& Pocket::Property<Owner, T>::GetValue() const {
-	return value;
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator () () const {
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator = (const T& other) {
-	Set(other);
-	return Get();
-}
-
-template<class Owner, class T> Pocket::Property<Owner, T>::operator const T () const {
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator + (T value) const {
-	return this->value + value;
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator - (T value) const {
-	return this->value - value;
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator * (T value) const {
-	return this->value * value;
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator / (T value) const {
-	return this->value / value;
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator += (T value) {
-	Set(this->value + value);
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator -= (T value) {
-	Set(this->value - value);
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator *= (T value) {
-	Set(this->value * value);
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator /= (T value) {
-	Set(this->value / value);
-	return Get();
-}
-
-template<class Owner, class T> T Pocket::Property<Owner, T>::operator - () {
-	return -Get();
-}
-
-template<class Owner, class T>
-std::ostream& operator<<(std::ostream& stream, const Pocket::Property<Owner, T>& v) {
-    stream<<v();
-    return stream;
-}
+};

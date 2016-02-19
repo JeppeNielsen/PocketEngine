@@ -27,7 +27,7 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
     manager.screenSize = Vector2((float)width, (float)height);
 	//this->rootState->DoInitialize(&manager);
     firstFrame = true;
-    window->MainLoop += event_handler(this, &Engine::Loop);
+    window->MainLoop.Bind(this, &Engine::Loop);
 	window->Begin();
 }
 

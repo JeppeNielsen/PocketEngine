@@ -4,60 +4,59 @@
 
 namespace Pocket {
     template<typename T>
-	class TransformHierarchy : GameSystem<T, Transform> {
-    
+	class TransformHierarchy : public GameSystem<T, Transform> {
+    public:
         using GameObject = GameObject<T>;
         
-        void ObjectAdded(GameObject* gameObject) {
-            Transform* transform = gameObject->template GetComponent<Transform>();
-            //transform->World.HasBecomeDirty += event_handler(this, &WorldHasBecomeDirty);
-            transform->World.Method += event_handler(this, &CalcWorld, gameObject);
-            gameObject->Parent.ChangedWithOld += event_handler(this, &ParentChanged, gameObject);
-            typename Property<GameObject*, GameObject*>::EventData e;
-            e.owner = gameObject;
-            e.Old = 0;
-            e.Current = gameObject->Parent;
-            ParentChanged(e, gameObject);
-        }
-
-        void ObjectRemoved(GameObject* gameObject) {
-            Transform* transform = gameObject->template GetComponent<Transform>();
-            //transform->World.HasBecomeDirty -= event_handler(this, &WorldHasBecomeDirty);
-            transform->World.Method -= event_handler(this, &CalcWorld, gameObject);
-            gameObject->Parent.ChangedWithOld -= event_handler(this, &ParentChanged, gameObject);
-        }
-
-        void CalcWorld( DirtyProperty<Transform*, Matrix4x4>::EventData& event, GameObject* object )
-        {
-            Matrix4x4& world = *event.Value;
-            if (object->Parent) {
-                Transform* parentTransform = object->Parent()->template GetComponent<Transform>();
-                if (!parentTransform) {
-                    world = *event.owner->Local.GetValue();
+        void ObjectAdded(GameObject* object) {
+            Transform* transform = object->template GetComponent<Transform>();
+            
+            transform->World.Method = [object, transform] (Matrix4x4& world) {
+                if (object->Parent) {
+                    Transform* parentTransform = object->Parent()->template GetComponent<Transform>();
+                    if (!parentTransform) {
+                        world = transform->Local();
+                    } else {
+                        world = parentTransform->World().Multiply(transform->Local);
+                    }
                 } else {
-                    world = parentTransform->World.GetValue()->Multiply(*event.owner->Local.GetValue());
+                    world = transform->Local;
                 }
-            }
+            };
+        
+            object->Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
+            HookParent(transform, object->Parent);
         }
 
-        void ParentChanged( typename Property<GameObject*, GameObject*>::EventData event, GameObject* object ) {
+        void ObjectRemoved(GameObject* object) {
+            Transform* transform = object->template GetComponent<Transform>();
+            transform->ResetWorldCalculation();
+            object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
+        }
+
+        void ParentChanged(GameObject* &parent, GameObject* object ) {
             Transform* transform = object->template GetComponent<Transform>();
             transform->World.MakeDirty();
             transform->WorldInverse.MakeDirty();
 
-            if (event.Old) {
-                Transform* parentTransform = event.Old->template GetComponent<Transform>();
+            if (object->Parent.PreviousValue()) {
+                Transform* parentTransform = object->Parent.PreviousValue()->template GetComponent<Transform>();
                 if (parentTransform) {
                     transform->UnHookOther(parentTransform);
                 }
             }
             
-            if (event.Current) {
-                Transform* parentTransform = event.Current->template GetComponent<Transform>();
+            HookParent(transform, parent);
+        }
+        
+        void HookParent(Transform* transform, GameObject* parent) {
+            if (parent) {
+                Transform* parentTransform = parent->template GetComponent<Transform>();
                 if (parentTransform) {
                     transform->HookOther(parentTransform);
                 }
             }
         }
+        
     };
 }

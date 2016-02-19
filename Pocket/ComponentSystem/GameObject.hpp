@@ -51,9 +51,6 @@ private:
     GameWorld* world;
     ObjectCollection children;
     
-    
-    
-    
     friend class Container<GameObject>::ObjectInstance;
     
     void Reset() {
@@ -68,9 +65,8 @@ private:
 #endif
     }
     
-    GameObject() : Parent(this) {
+    GameObject() {
         Parent = 0;
-        /*
         Parent.Changed.Bind([this](GameObject* value) {
             assert(value!=this);
             GameObject* prevParent = Parent.PreviousValue();
@@ -83,21 +79,7 @@ private:
                 value->children.push_back(this);
             }
         });
-        */
         world = 0;
-    }
-    
-    void ParentChanged(typename Pocket::Property<GameObject*, GameObject*>::EventData event, GameObject* object) {
-        assert(event.Current !=this);
-        GameObject* prevParent = event.Old;
-        if (prevParent) {
-            auto& children = prevParent->children;
-            children.erase(std::find(children.begin(), children.end(), this));
-        }
-        
-        if (event.Current) {
-            event.Current->children.push_back(this);
-        }
     }
     
     void SetWorld(GameWorld* w) {
@@ -112,7 +94,7 @@ private:
     
 public:
 
-    Pocket::Property<GameObject*, GameObject*> Parent;
+    Property<GameObject*> Parent;
     const ObjectCollection& Children() { return children; }
     
     void Remove() {
@@ -272,7 +254,7 @@ private:
         });
 
         components.close();
-        /*
+        
         if (!children.empty()) {
             minijson::array_writer children_object = gameObject.nested_array("Children");
             for(auto child : children) {
@@ -285,7 +267,7 @@ private:
             }
             children_object.close();
         }
-        */
+        
         gameObject.close();
     }
     

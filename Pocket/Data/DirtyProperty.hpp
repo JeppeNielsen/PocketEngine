@@ -1,73 +1,75 @@
-#pragma once//;
+#pragma once
 #include "Event.hpp"
 
 namespace Pocket {
-	
-	template<class Owner, class T> class DirtyProperty {
-
-	public:
-		DirtyProperty(Owner owner);
-		~DirtyProperty();
-        
-        void operator = (DirtyProperty<Owner, T> &other);
-        
-		struct EventData {
-			Owner owner;
-			T* Value;
-		};
-
-		Event<EventData&> Method;
-
-		void MakeDirty();
-		Event<DirtyProperty<Owner, T>* > HasBecomeDirty; 
-
-		T* GetValue();
-
-		operator const T& ();
-
-		Owner GetOwner();
-		
+	template<typename Value>
+    class DirtyProperty {
 	private:
-		T value;
-		bool isDirty;
+        Value value;
+        bool isDirty;
+        
+        Value& getValue() {
+            if (isDirty) {
+                isDirty = false;
+                if (Method) {
+                    Method(value);
+                }
+            }
+            return value;
+        }
+    
+    public:
+        DirtyProperty() : isDirty(true) {}
+        DirtyProperty(const DirtyProperty<Value>& other) {
+            isDirty = true;
+            value = other.value;
+        }
+    
+	    void operator = (DirtyProperty<Value> &other) {
+            isDirty = other.isDirty;
+            value = other.value;
+        }
+        
+        std::function<void(Value&)> Method;
+    
+		void MakeDirty() {
+            if (isDirty) return;
+            isDirty = true;
+            HasBecomeDirty();
+        }
+        
+		Event<> HasBecomeDirty;
 
-		EventData eventData;
+        const Value& operator() () { return getValue(); }
+        operator const Value& () { return getValue(); }
+        
+        Value operator - () const { return -getValue(); }
+        
+        Value operator + (const Value& v) const { return getValue() + v; }
+        Value operator - (const Value& v) const { return getValue() - v; }
+        Value operator * (const Value& v) const { return getValue() * v; }
+        Value operator / (const Value& v) const { return getValue() / v; }
+        
+        Value operator + (const DirtyProperty<Value>& v) const { return getValue() + v.getValue(); }
+        Value operator - (const DirtyProperty<Value>& v) const { return getValue() - v.getValue(); }
+        Value operator * (const DirtyProperty<Value>& v) const { return getValue() * v.getValue(); }
+        Value operator / (const DirtyProperty<Value>& v) const { return getValue() / v.getValue(); }
+        
+        friend Value operator+(const Value& value, DirtyProperty<Value>& property) {
+            return value + property.getValue();
+        }
+        
+        friend Value operator-(const Value& value, DirtyProperty<Value>& property) {
+            return value - property.getValue();
+        }
+        
+        friend Value operator*(const Value& value, DirtyProperty<Value>& property) {
+            return value * property.getValue();
+        }
+        
+        friend Value operator/(const Value& value, DirtyProperty<Value>& property) {
+            return value / property.getValue();
+        }
 
 	};
-}
-
-template<class Owner, class T> Pocket::DirtyProperty<Owner, T>::DirtyProperty(Owner owner) { 
-	isDirty = true; 
-	eventData.owner = owner;
-	eventData.Value = &value;
-}
-
-template<class Owner, class T> Pocket::DirtyProperty<Owner, T>::~DirtyProperty() { }
-
-template<class Owner, class T>
-void Pocket::DirtyProperty<Owner, T>::operator = (DirtyProperty<Owner, T> &other) {
-	isDirty = other.isDirty;
-    value = other.value;
-}
-
-template<class Owner, class T> void Pocket::DirtyProperty<Owner, T>::MakeDirty() {
-	if (isDirty) return;
-	isDirty = true;
-	HasBecomeDirty(this);
-}
-
-template<class Owner, class T> T* Pocket::DirtyProperty<Owner, T>::GetValue() {
-	if (isDirty) {
-		isDirty = false;
-		Method(eventData);
-	}
-	return &value;
-}
-
-template<class Owner, class T> Pocket::DirtyProperty<Owner, T>::operator const T& () {
-	return *GetValue();
-}
-
-template<class Owner, class T> Owner Pocket::DirtyProperty<Owner, T>::GetOwner() {
-	return eventData.owner;
 }

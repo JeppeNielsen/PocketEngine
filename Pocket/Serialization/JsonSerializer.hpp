@@ -176,16 +176,16 @@ using namespace Pocket;
     };
     */
 
-    template<typename Owner, typename T>
-    struct JsonSerializer<Pocket::Property<Owner, T>> {
-        static void Serialize(std::string& key, const Pocket::Property<Owner, T>& value, minijson::object_writer& writer) {
-            JsonSerializer<T>::Serialize(key, value.GetValue(), writer);
+    template<typename T>
+    struct JsonSerializer<Pocket::Property<T>> {
+        static void Serialize(std::string& key, const Pocket::Property<T>& value, minijson::object_writer& writer) {
+            JsonSerializer<T>::Serialize(key, value(), writer);
         }
         
-        static void Deserialize(minijson::value& value, Pocket::Property<Owner, T>* field, minijson::istream_context& context) {
+        static void Deserialize(minijson::value& value, Pocket::Property<T>* field, minijson::istream_context& context) {
            T data;
            JsonSerializer<T>::Deserialize(value, &data, context);
-           field->Set(data);
+           field->operator=(data);
         }
     };
     

@@ -64,7 +64,7 @@ bool BoundingBox::Contains(const BoundingBox& other) const {
 	return true;
 };
 
-void BoundingBox::CreateWorldAligned(const Matrix4x4& matrix, BoundingBox& boundingBox) {
+void BoundingBox::CreateWorldAligned(const Matrix4x4& matrix, BoundingBox& boundingBox) const {
 	Vector3 halfExtends = extends * 0.5f;
 
 	boundingBox.center = matrix.TransformPosition(center);
