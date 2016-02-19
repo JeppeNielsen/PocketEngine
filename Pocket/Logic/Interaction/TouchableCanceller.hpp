@@ -7,13 +7,9 @@
 //
 
 #pragma once
-
-#include "GameComponent.hpp"
-
 namespace Pocket {
-    Component(TouchableCanceller)
-    public:
-        void Reset();
+    struct TouchableCanceller {
+        TouchableCanceller() : MovementToCancel(10.0f), trackTouchPosition(false)  {}
         float MovementToCancel;
         bool trackTouchPosition;
     };

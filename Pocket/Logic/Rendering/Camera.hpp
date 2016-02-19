@@ -41,7 +41,15 @@ namespace Pocket {
 	private:
 		void CalcProjectionMatrix(DirtyProperty<Camera*, Matrix4x4>::EventData& event);
 		void CalcProjectionInverseMatrix(DirtyProperty<Camera*, Matrix4x4>::EventData& event);
-		
 		void ProjectionPropertyChanged(Camera* camera);
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(FieldOfView)
+        TYPE_FIELD(Near)
+        TYPE_FIELD(Far)
+        TYPE_FIELD(Viewport)
+        TYPE_FIELD(Orthographic)
+        TYPE_FIELD(Mask)
+        TYPE_FIELDS_END
 	};
 }

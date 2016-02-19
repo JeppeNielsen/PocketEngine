@@ -15,7 +15,6 @@ namespace Pocket {
     public:
         Orderable();
         Property<Orderable*, int> Order;
-        void Reset();
     
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Order)

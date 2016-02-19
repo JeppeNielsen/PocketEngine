@@ -11,7 +11,7 @@
 		723588161B0932D2008D6568 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588151B0932D2008D6568 /* OpenGL.framework */; };
 		723588181B0932D2008D6568 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588171B0932D2008D6568 /* OpenAL.framework */; };
 		7235881A1B0932D2008D6568 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588191B0932D2008D6568 /* IOKit.framework */; };
-		7235881D1B0932D2008D6568 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235881C1B0932D2008D6568 /* main.cpp */; };
+		7235881D1B0932D2008D6568 /* testMeshReferences.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235881C1B0932D2008D6568 /* testMeshReferences.cpp */; };
 		72358C4E1B0932E1008D6568 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723588351B0932E0008D6568 /* Engine.cpp */; };
 		72358C4F1B0932E1008D6568 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723588371B0932E0008D6568 /* GameManager.cpp */; };
 		72358C501B0932E1008D6568 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235883A1B0932E0008D6568 /* GameState.cpp */; };
@@ -30,7 +30,6 @@
 		72358C5E1B0932E1008D6568 /* Triangulator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235885E1B0932E0008D6568 /* Triangulator.cpp */; };
 		72358C5F1B0932E1008D6568 /* UnitTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723588621B0932E0008D6568 /* UnitTest.cpp */; };
 		72358CB21B0932E1008D6568 /* Transform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235891B1B0932E0008D6568 /* Transform.cpp */; };
-		72358CB31B0932E1008D6568 /* TransformHierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235891D1B0932E0008D6568 /* TransformHierarchy.cpp */; };
 		72358CB41B0932E1008D6568 /* BoundingBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723589201B0932E0008D6568 /* BoundingBox.cpp */; };
 		72358CB51B0932E1008D6568 /* BoundingFrustum.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723589221B0932E0008D6568 /* BoundingFrustum.cpp */; };
 		72358CB61B0932E1008D6568 /* Box.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723589241B0932E0008D6568 /* Box.cpp */; };
@@ -259,6 +258,8 @@
 		729954221B87B9F30036A2DF /* ShaderCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299541E1B87B9F30036A2DF /* ShaderCollection.cpp */; };
 		72E3CF7F1C7290EA002DA95E /* TextureComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CF7D1C7290EA002DA95E /* TextureComponent.cpp */; };
 		72E3CF861C72914A002DA95E /* Orderable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CF831C72914A002DA95E /* Orderable.cpp */; };
+		72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CFA81C765836002DA95E /* Touchable.cpp */; };
+		72E3CFB81C766AE1002DA95E /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CFB71C766AE1002DA95E /* test.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -286,7 +287,7 @@
 		723588151B0932D2008D6568 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
 		723588171B0932D2008D6568 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = /System/Library/Frameworks/OpenAL.framework; sourceTree = "<absolute>"; };
 		723588191B0932D2008D6568 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
-		7235881C1B0932D2008D6568 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		7235881C1B0932D2008D6568 /* testMeshReferences.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testMeshReferences.cpp; sourceTree = "<group>"; };
 		723588351B0932E0008D6568 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 		723588361B0932E0008D6568 /* Engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Engine.hpp; sourceTree = "<group>"; };
 		723588371B0932E0008D6568 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
@@ -336,7 +337,6 @@
 		7235891A1B0932E0008D6568 /* OctreeSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OctreeSystem.hpp; sourceTree = "<group>"; };
 		7235891B1B0932E0008D6568 /* Transform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Transform.cpp; sourceTree = "<group>"; };
 		7235891C1B0932E0008D6568 /* Transform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Transform.hpp; sourceTree = "<group>"; };
-		7235891D1B0932E0008D6568 /* TransformHierarchy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformHierarchy.cpp; sourceTree = "<group>"; };
 		7235891E1B0932E0008D6568 /* TransformHierarchy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformHierarchy.hpp; sourceTree = "<group>"; };
 		723589201B0932E0008D6568 /* BoundingBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoundingBox.cpp; sourceTree = "<group>"; };
 		723589211B0932E0008D6568 /* BoundingBox.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BoundingBox.hpp; sourceTree = "<group>"; };
@@ -916,6 +916,14 @@
 		72E3CF7E1C7290EA002DA95E /* TextureComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextureComponent.hpp; sourceTree = "<group>"; };
 		72E3CF831C72914A002DA95E /* Orderable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Orderable.cpp; sourceTree = "<group>"; };
 		72E3CF841C72914A002DA95E /* Orderable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Orderable.hpp; sourceTree = "<group>"; };
+		72E3CFA81C765836002DA95E /* Touchable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Touchable.cpp; sourceTree = "<group>"; };
+		72E3CFA91C765836002DA95E /* Touchable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Touchable.hpp; sourceTree = "<group>"; };
+		72E3CFAB1C765836002DA95E /* TouchableCanceller.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchableCanceller.hpp; sourceTree = "<group>"; };
+		72E3CFAD1C765836002DA95E /* TouchCancelSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchCancelSystem.hpp; sourceTree = "<group>"; };
+		72E3CFB51C765FA4002DA95E /* TouchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchSystem.hpp; sourceTree = "<group>"; };
+		72E3CFB71C766AE1002DA95E /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test.cpp; sourceTree = "<group>"; };
+		72E3CFBB1C767253002DA95E /* Draggable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Draggable.hpp; sourceTree = "<group>"; };
+		72E3CFC11C767253002DA95E /* DraggableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DraggableSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -975,7 +983,8 @@
 		7235881B1B0932D2008D6568 /* PocketOSX */ = {
 			isa = PBXGroup;
 			children = (
-				7235881C1B0932D2008D6568 /* main.cpp */,
+				72E3CFB71C766AE1002DA95E /* test.cpp */,
+				7235881C1B0932D2008D6568 /* testMeshReferences.cpp */,
 			);
 			path = PocketOSX;
 			sourceTree = "<group>";
@@ -1098,6 +1107,8 @@
 		723588671B0932E0008D6568 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72E3CFB91C767253002DA95E /* Movement */,
+				72E3CFA71C765836002DA95E /* Interaction */,
 				72E3CF801C72914A002DA95E /* Common */,
 				723588EB1B0932E0008D6568 /* Rendering */,
 				723589181B0932E0008D6568 /* Spatial */,
@@ -1125,7 +1136,6 @@
 				7235891A1B0932E0008D6568 /* OctreeSystem.hpp */,
 				7235891B1B0932E0008D6568 /* Transform.cpp */,
 				7235891C1B0932E0008D6568 /* Transform.hpp */,
-				7235891D1B0932E0008D6568 /* TransformHierarchy.cpp */,
 				7235891E1B0932E0008D6568 /* TransformHierarchy.hpp */,
 			);
 			path = Spatial;
@@ -2046,6 +2056,27 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		72E3CFA71C765836002DA95E /* Interaction */ = {
+			isa = PBXGroup;
+			children = (
+				72E3CFB51C765FA4002DA95E /* TouchSystem.hpp */,
+				72E3CFA81C765836002DA95E /* Touchable.cpp */,
+				72E3CFA91C765836002DA95E /* Touchable.hpp */,
+				72E3CFAB1C765836002DA95E /* TouchableCanceller.hpp */,
+				72E3CFAD1C765836002DA95E /* TouchCancelSystem.hpp */,
+			);
+			path = Interaction;
+			sourceTree = "<group>";
+		};
+		72E3CFB91C767253002DA95E /* Movement */ = {
+			isa = PBXGroup;
+			children = (
+				72E3CFBB1C767253002DA95E /* Draggable.hpp */,
+				72E3CFC11C767253002DA95E /* DraggableSystem.hpp */,
+			);
+			path = Movement;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2107,7 +2138,6 @@
 				723590201B09338A008D6568 /* SpuCollisionShapes.cpp in Sources */,
 				7235902E1B09338A008D6568 /* btSoftSoftCollisionAlgorithm.cpp in Sources */,
 				72358CD61B0932E1008D6568 /* b2ContactManager.cpp in Sources */,
-				72358CB31B0932E1008D6568 /* TransformHierarchy.cpp in Sources */,
 				7235900E1B09338A008D6568 /* btDiscreteDynamicsWorld.cpp in Sources */,
 				72358C5E1B0932E1008D6568 /* Triangulator.cpp in Sources */,
 				72358FC91B09338A008D6568 /* btCollisionShape.cpp in Sources */,
@@ -2212,12 +2242,14 @@
 				72358FD61B09338A008D6568 /* btHeightfieldTerrainShape.cpp in Sources */,
 				7235902A1B09338A008D6568 /* btSoftBodyHelpers.cpp in Sources */,
 				72358FEB1B09338A008D6568 /* btGImpactBvh.cpp in Sources */,
+				72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */,
 				72358FF41B09338A008D6568 /* btContinuousConvexCollision.cpp in Sources */,
 				72358FBA1B09338A008D6568 /* btDefaultCollisionConfiguration.cpp in Sources */,
 				72358FA51B09338A008D6568 /* btBroadphaseProxy.cpp in Sources */,
 				72358CC21B0932E1008D6568 /* Vector3.cpp in Sources */,
 				72358D861B0932E1008D6568 /* GamePadManager.mm in Sources */,
 				72358DEE1B0932E1008D6568 /* miniz.c in Sources */,
+				72E3CFB81C766AE1002DA95E /* test.cpp in Sources */,
 				72358FAB1B09338A008D6568 /* btOverlappingPairCache.cpp in Sources */,
 				72358FE11B09338A008D6568 /* btTetrahedronShape.cpp in Sources */,
 				72358D891B0932E1008D6568 /* OSXWindowCreator.mm in Sources */,
@@ -2255,7 +2287,7 @@
 				723590381B09338A008D6568 /* MiniCLTask.cpp in Sources */,
 				7235900B1B09338A008D6568 /* btSolve2LinearConstraint.cpp in Sources */,
 				72358FC41B09338A008D6568 /* SphereTriangleDetector.cpp in Sources */,
-				7235881D1B0932D2008D6568 /* main.cpp in Sources */,
+				7235881D1B0932D2008D6568 /* testMeshReferences.cpp in Sources */,
 				72358FC11B09338A008D6568 /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				72358FDE1B09338A008D6568 /* btSphereShape.cpp in Sources */,
 				72358CC31B0932E1008D6568 /* ChromecastMessage.cpp in Sources */,

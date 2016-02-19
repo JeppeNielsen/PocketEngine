@@ -10,5 +10,4 @@
 
 using namespace Pocket;
 
-Orderable::Orderable() : Order(this) {}
-void Orderable::Reset() { Order = 0; }
+Orderable::Orderable() : Order(this) { Order = 0; }

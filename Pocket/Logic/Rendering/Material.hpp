@@ -25,15 +25,7 @@ namespace Pocket {
         Property<Material*, IShader*> Shader;
         Property<Material*, BlendModeType> BlendMode;
         Property<Material*, RenderMask> Mask;
-        int Clip; // 0 == no clipping, 1 == push clip, 2 == pop clip
-
-        void Reset() {
-            Shader = 0;
-            BlendMode = BlendModeType::Opaque;
-            Mask = 0;
-            Clip = 0;
-        }
-        
+        int Clip;
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(BlendMode)
         TYPE_FIELD(Mask)

@@ -10,24 +10,3 @@
 
 using namespace Pocket;
 
-Touchable::Touchable()
-{
-	
-}
-
-Touchable::~Touchable() { }
-
-void Touchable::Reset() {
-    ClickThrough = false;
-    Down.Clear();
-    Up.Clear();
-    Click.Clear();
-}
-
-void Touchable::Clone(const Touchable& source) {
-    ClickThrough = source.ClickThrough;
-}
-
-void Touchable::Cancel() {
-    Cancelled(this);
-}

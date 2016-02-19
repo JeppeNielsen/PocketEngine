@@ -10,14 +10,6 @@
 
 using namespace Pocket;
 
-void TextureComponent::Reset() {
-
-}
-
-void TextureComponent::Clone(const Pocket::TextureComponent &source) {
-    texture = source.texture;
-}
-
 Texture& TextureComponent::Texture() { return texture; }
 
 TextureComponent::TextureComponent() {}

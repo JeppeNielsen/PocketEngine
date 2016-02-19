@@ -181,7 +181,11 @@ namespace Pocket {
         inline Vector3 Max(const Vector3& other) {
             return Vector3(x>other.x ? x : other.x, y>other.y ? y : other.y, z>other.z ? z : other.z);
         }
+        
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Vector3& v) {
+            stream << v.x <<","<<v.y<<","<<v.z;
+            return stream;
+        }
     };
 }
 
-std::ostream& operator<<(std::ostream& stream, const Pocket::Vector3& v);
