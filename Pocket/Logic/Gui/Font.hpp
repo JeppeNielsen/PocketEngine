@@ -1,13 +1,11 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "GameComponent.hpp"
 #include "Vector2.hpp"
 
 
 namespace Pocket {
-	Component(Font)
-	public:
+	struct Font {
 		Font();
 		~Font();
         

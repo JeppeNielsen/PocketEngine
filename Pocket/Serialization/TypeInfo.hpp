@@ -240,7 +240,7 @@ struct JsonSerializer<T, typename std::enable_if_t< meta::HasGetTypeFunction::ap
     }
     
     static void Serialize(const T& value, minijson::array_writer& writer) {
-        auto type = value.GetType();
+        auto type = ((T&)value).GetType();
         minijson::object_writer object = writer.nested_object();
         type.Serialize(object);
         object.close();

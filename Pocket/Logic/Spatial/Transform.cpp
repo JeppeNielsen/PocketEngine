@@ -31,7 +31,6 @@ Transform::Transform() {
         Rotation = Quaternion(EulerRotation);
     });
 
-    
 	Local.Method = [this] (auto& local) {
         Matrix4x4 rotation;
         Rotation().ToRotationMatrix(rotation);

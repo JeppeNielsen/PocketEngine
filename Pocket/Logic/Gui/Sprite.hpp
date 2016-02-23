@@ -10,20 +10,20 @@
 #include "Property.hpp"
 #include <string>
 #include "Vector2.hpp"
-#include "GameComponent.hpp"
 
 namespace Pocket {
-    Component(Sprite)
+    struct Sprite {
     public:
-        Sprite();
-        Property<Sprite*, std::string> SpriteName;
-        Property<Sprite*, Vector2> CornerSize;
-        void Reset();
-    protected:
-        void Clone(const Sprite& source);
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(SpriteName);
-        SERIALIZE_FIELD(CornerSize);
-        SERIALIZE_FIELDS_END
+        Sprite() {
+             SpriteName = "";
+            CornerSize = 0;
+        }
+        Property<std::string> SpriteName;
+        Property<Vector2> CornerSize;
+    
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(SpriteName);
+        TYPE_FIELD(CornerSize);
+        TYPE_FIELDS_END
     };
 }

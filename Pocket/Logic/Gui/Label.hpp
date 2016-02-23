@@ -7,30 +7,33 @@
 //
 #pragma once
 #include <string>
+#include "TypeInfo.hpp"
 #include "Property.hpp"
 #include "Font.hpp"
-#include "GameComponent.hpp"
 
 namespace Pocket {
-    Component(Label)
+    struct Label {
     public:
+        Label() {
+            FontSize = 1;
+            Text = "";
+            HAlignment = Font::HAlignment::Left;
+            VAlignment = Font::VAlignment::Top;
+            WordWrap = false;
+        }
         
-        Label();
-		Property<Label*, float> FontSize;
-		Property<Label*, std::string> Text;
-		Property<Label*, Font::HAlignment> HAlignment;
-		Property<Label*, Font::VAlignment> VAlignment;
-		Property<Label*, bool> WordWrap;
+		Property<float> FontSize;
+		Property<std::string> Text;
+		Property<Font::HAlignment> HAlignment;
+		Property<Font::VAlignment> VAlignment;
+		Property<bool> WordWrap;
         
-        void Reset();
-        void Clone(const Label& source);
-    
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(FontSize);
-        SERIALIZE_FIELD(Text);
-        SERIALIZE_FIELD(HAlignment);
-        SERIALIZE_FIELD(VAlignment);
-        SERIALIZE_FIELD(WordWrap);
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(FontSize);
+        TYPE_FIELD(Text);
+        TYPE_FIELD(HAlignment);
+        TYPE_FIELD(VAlignment);
+        TYPE_FIELD(WordWrap);
+        TYPE_FIELDS_END
     };
 }

@@ -4,24 +4,9 @@
 #include "TouchSystem.hpp"
 #include "DraggableSystem.hpp"
 #include "TransformHierarchy.hpp"
-
-struct Rotator {
-    Vector3 angles;
-};
-
-template<typename T>
-struct RotatorSystem : GameSystem<T, Transform, Rotator> {
-    void ObjectAdded(GameObject<T>* o) {}
-    void ObjectRemoved(GameObject<T>* o) {}
-    void Update(float dt) {
-        for(auto o : this->Objects()) {
-            auto* t = o->template GetComponent<Transform>();
-            auto* r = o->template GetComponent<Rotator>();
-            t->Rotation *= Quaternion(r->angles * dt);
-        }
-    }
-};
-
+#include "SpriteMeshSystem.hpp"
+#include "SpriteTextureSystem.hpp"
+#include "LabelMeshSystem.hpp"
 
 struct GameWorldSettings :
     GameSettings<
@@ -29,14 +14,16 @@ struct GameWorldSettings :
         TouchSystem<GameWorldSettings>,
         DraggableSystem<GameWorldSettings>,
         TransformHierarchy<GameWorldSettings>,
-        RotatorSystem<GameWorldSettings>
+        SpriteMeshSystem<GameWorldSettings>,
+        SpriteTextureSystem<GameWorldSettings>,
+        LabelMeshSystem<GameWorldSettings>
     >
 {};
 
 
 using namespace Pocket;
 
-class Game : public GameState<Game> {
+class GuiExample : public GameState<GuiExample> {
 public:
     GameWorld<GameWorldSettings> world;
     
@@ -44,35 +31,50 @@ public:
     
     GameObject* camera;
     GameObject* cube;
+    GameObject* atlas;
     
     void Initialize() {
-     
-        std::cout<<" Vector3 size = "<< sizeof(Vector3)<<std::endl;
-        std::cout<<" Property<Vector3> size = "<< sizeof(Property<Vector3>)<<std::endl;
-        std::cout<<" Event<> size = "<< sizeof(std::function<void(int&)>)<<std::endl;
         
-    
         world.Initialize();
         
+        atlas = world.CreateObject();
+        atlas->AddComponent<Atlas>()->Load("images.xml", {1024, 512});
+        atlas->AddComponent<TextureComponent>()->Texture().LoadFromPng("images.png");
+        
+        
+        GameObject* quad = world.CreateObject();
+        quad->AddComponent<Transform>()->Position = {0,0,-10};
+        quad->AddComponent<Sprite>()->SpriteName = "Box";
+        quad->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        quad->AddComponent<Mesh>();
+        quad->AddComponent<Atlas>(atlas);
+        quad->AddComponent<TextureComponent>(atlas);
+        quad->AddComponent<Sizeable>()->Size = {100,100};
+        quad->AddComponent<Draggable>();
+        quad->AddComponent<Touchable>();
+        
+        GameObject* label = world.CreateObject();
+        label->Parent = quad;
+        label->AddComponent<Transform>();
+        label->AddComponent<Font>()->Load("Font.fnt", "Font");
+        label->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        label->AddComponent<Mesh>();
+        label->AddComponent<Atlas>(atlas);
+        label->AddComponent<TextureComponent>(atlas);
+        label->AddComponent<Sizeable>()->Size = {100,100};
+        label->AddComponent<Label>()->Text = "Jeppe er den bedste";
+        label->GetComponent<Label>()->FontSize = 10;
+        
         auto& renderSystem = world.GetSystem<RenderSystem<GameWorldSettings>>();
-        renderSystem.DefaultShader = &renderSystem.Shaders.LitColored;
         
         world.GetSystem<TouchSystem<GameWorldSettings>>().Input = &Input;
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
-        camera->AddComponent<Transform>()->Position = { 0, 0, 170 };
+        camera->AddComponent<Transform>()->Position = { 0, 0, 470 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         
-        GameObject* prev = 0;
-        
-        for(int i=0; i< 30; i++) {
-        
-            GameObject* cube = CreateObject({-4,0,0});
-            cube->Parent = prev;
-            prev = cube;
-        }
-        
+        CreateObject(0);
     }
     
     GameObject* CreateObject(Vector3 pos) {
@@ -87,8 +89,6 @@ public:
         cube->AddComponent<Touchable>()->Click.Bind([cube] (TouchData d) {
             cube->GetComponent<Transform>()->Rotation *= Quaternion(0.1f);
         });
-        cube->AddComponent<Rotator>()->angles = Vector3(1,1,2) * 0.1f;
-        cube->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XYPlane;
         return cube;
     }
     
@@ -101,8 +101,8 @@ public:
     }
 };
 
-int main_test() {
+int main() {
     Engine e;
-    e.Start<Game>();
+    e.Start<GuiExample>();
 	return 0;
 }

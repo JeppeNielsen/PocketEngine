@@ -8,37 +8,29 @@
 
 #pragma once
 
-#include "GameComponent.hpp"
 #include "Box.hpp"
+#include "TypeInfo.hpp"
 #include <map>
 
 namespace Pocket {
+    struct Atlas {
     
-    Component(Atlas)
+        Atlas();
     
-public:
-    
-    struct Node : public ISerializable {
+    struct Node {
         Box outer;
         Box inner;
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(outer)
-        SERIALIZE_FIELD(inner)
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(outer)
+        TYPE_FIELD(inner)
+        TYPE_FIELDS_END
     };
-    
-    Atlas();
     
     bool Load(std::string textureFile, const Vector2& textureSize);
     
     bool LoadSpineAtlas(std::string filename);
     
-    //void Set(std::string name, const Box& textureCoords, const Box& offset);
-    
     const Node& GetNode(std::string name);
-    
-    void Reset();
-    void Clone(const Atlas& other);
     
     const Vector2& TextureSize() const;
     
@@ -51,10 +43,10 @@ public:
         Node defaultNode;
         Vector2 textureSize;
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(nodes)
-        SERIALIZE_FIELD(defaultNode)
-        SERIALIZE_FIELD(textureSize)
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(nodes)
+        TYPE_FIELD(defaultNode)
+        TYPE_FIELD(textureSize)
+        TYPE_FIELDS_END
     };
 }
