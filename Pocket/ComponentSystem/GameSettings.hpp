@@ -20,8 +20,10 @@ struct GameSettings {
 
     using SystemsInList = meta::list<T...>;
     
-    using Systems = meta::concat<SystemsInList, meta::as_list<decltype(meta::FindSystems<SystemsInList>{}.Iterate())>>;
-    
+    using AllSystems = meta::concat<SystemsInList, meta::as_list<decltype(meta::FindSystems<SystemsInList>{}.Iterate())>>;
+
+    using Systems = meta::unique<AllSystems>;
+
     constexpr static size_t NumberOfSystems = Systems{}.size();
     
     using AllComponentsInSystems = meta::as_list<decltype(meta::FindComponents<Systems>{}.Iterate())>;

@@ -87,6 +87,26 @@ struct FindComponents<meta::list<TOther, Ts...>>
 
 //---------------------------------------------
 
+
+template <typename>
+struct IteratorSystems;
+
+template <typename... Ts>
+struct IteratorSystems<meta::list<Ts...>>
+{
+    constexpr auto Iterate() const {
+        return std::tuple<>{ };
+    }
+};
+
+template <typename TOther, typename... Ts>
+struct IteratorSystems<meta::list<TOther, Ts...>>
+{
+	constexpr auto Iterate() const {
+        return std::tuple_cat(std::tuple_cat(IteratorSystems<meta::list<Ts...>>{}.Iterate(),std::tuple<TOther>{}), IteratorSystems<typename TOther::Systems>{}.Iterate());
+    }
+};
+
 template <typename>
 struct FindSystems;
 
@@ -102,7 +122,7 @@ template <typename TOther, typename... Ts>
 struct FindSystems<meta::list<TOther, Ts...>>
 {
 	constexpr auto Iterate() const {
-	    return std::tuple_cat(FindSystems<meta::list<Ts...>>{}.Iterate(), Iterator<typename TOther::Systems>{}.Iterate());
+	    return std::tuple_cat(FindSystems<meta::list<Ts...>>{}.Iterate(), IteratorSystems<typename TOther::Systems>{}.Iterate());
 	}
 };
 

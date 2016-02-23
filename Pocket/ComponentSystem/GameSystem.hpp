@@ -58,3 +58,7 @@ public:
         return metaData[object];
     }
 };
+
+template<typename T>
+class GameConcept : public GameSystem<T> {
+};
