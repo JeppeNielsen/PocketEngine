@@ -21,25 +21,19 @@ namespace Pocket {
         
         void ObjectAdded(GameObject *object) {
             Sprite* sprite = object->template GetComponent<Sprite>();
-            sprite->SpriteName.Changed.Bind(this, &SpriteTextureSystem::SpriteTextureChanged, object);
-            sprite->CornerSize.Changed.Bind(this, &SpriteTextureSystem::CornerSizeChanged, object);
+            sprite->SpriteName.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
+            sprite->CornerSize.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
             
-            std::string temp;
-            SpriteTextureChanged(temp, object);
+            SpriteChanged(object);
         }
 
         void ObjectRemoved(GameObject *object) {
             Sprite* sprite = object->template GetComponent<Sprite>();
-            sprite->SpriteName.Changed.Unbind(this, &SpriteTextureSystem::SpriteTextureChanged,object);
-            sprite->CornerSize.Changed.Unbind(this, &SpriteTextureSystem::CornerSizeChanged,object);
+            sprite->SpriteName.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
+            sprite->CornerSize.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
         }
 
-        void CornerSizeChanged(Vector2& size, GameObject* object) {
-            std::string temp;
-            SpriteTextureChanged(temp, object);
-        }
-
-        void SpriteTextureChanged(std::string& spriteName, GameObject* object) {
+        void SpriteChanged(GameObject* object) {
             
             Sprite* sprite = object->template GetComponent<Sprite>();
             Atlas* atlas = object->template GetComponent<Atlas>();

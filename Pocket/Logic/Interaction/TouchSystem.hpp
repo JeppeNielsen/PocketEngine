@@ -45,15 +45,15 @@ namespace Pocket {
     
         TouchSystem() {
             Input = 0;
-            Input.Changed.Bind([this](auto input) {
+            Input.Changed.Bind([this]() {
                 if (Input.PreviousValue()) {
                     Input.PreviousValue()->TouchDown.Unbind(this, &TouchSystem::TouchDown);
                     Input.PreviousValue()->TouchUp.Unbind(this, &TouchSystem::TouchUp);
                 }
                 
-                if (input) {
-                    input->TouchDown.Bind(this, &TouchSystem::TouchDown);
-                    input->TouchUp.Bind(this, &TouchSystem::TouchUp);
+                if (Input) {
+                    Input()->TouchDown.Bind(this, &TouchSystem::TouchDown);
+                    Input()->TouchUp.Bind(this, &TouchSystem::TouchUp);
                 }
             });
         }

@@ -1,22 +1,9 @@
 #include "Engine.hpp"
-#include "GameWorld.hpp"
-#include "RenderSystem.hpp"
-#include "TouchSystem.hpp"
-#include "DraggableSystem.hpp"
-#include "TransformHierarchy.hpp"
-#include "SpriteMeshSystem.hpp"
-#include "SpriteTextureSystem.hpp"
-#include "LabelMeshSystem.hpp"
+#include "Gui.hpp"
 
 struct GameWorldSettings :
     GameSettings<
-        RenderSystem<GameWorldSettings>,
-        TouchSystem<GameWorldSettings>,
-        DraggableSystem<GameWorldSettings>,
-        TransformHierarchy<GameWorldSettings>,
-        SpriteMeshSystem<GameWorldSettings>,
-        SpriteTextureSystem<GameWorldSettings>,
-        LabelMeshSystem<GameWorldSettings>
+        Gui<GameWorldSettings>
     >
 {};
 
@@ -36,6 +23,15 @@ public:
     void Initialize() {
         
         world.Initialize();
+        
+        Gui<GameWorldSettings>& gui = world.GetSystem<Gui<GameWorldSettings>>();
+    
+        gui.Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        
+        gui.CreateControl(0, "Box", 100, 200);
+         
+        
+        /*
         
         atlas = world.CreateObject();
         atlas->AddComponent<Atlas>()->Load("images.xml", {1024, 512});
@@ -73,6 +69,8 @@ public:
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
         camera->AddComponent<Transform>()->Position = { 0, 0, 470 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
+        
+        */
         
         CreateObject(0);
     }

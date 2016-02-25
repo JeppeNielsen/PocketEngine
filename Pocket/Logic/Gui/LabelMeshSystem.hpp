@@ -11,44 +11,33 @@
 #include "Sizeable.hpp"
 #include "Label.hpp"
 #include "Font.hpp"
+#include "Atlas.hpp"
 
 namespace Pocket {
     template<typename T>
-    class LabelMeshSystem : public GameSystem<T, Label, Font, Mesh, Sizeable> {
+    class LabelMeshSystem : public GameSystem<T, Label, Font, Mesh, Sizeable, Atlas> {
     public:
         using GameObject = GameObject<T>;
     
         void ObjectAdded(GameObject *object) {
-            object->template GetComponent<Sizeable>()->Size.Changed.Bind(this, &LabelMeshSystem::SizeChanged, object);
+            object->template GetComponent<Sizeable>()->Size.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
             Label* label = object->template GetComponent<Label>();
-            /*label->FontSize.Changed.Bind(this, &LabelChanged, object);
-            label->Text.Changed.Bind(this, &LabelChanged, object);
-            label->HAlignment.Changed.Bind(this, &LabelChanged, object);
-            label->VAlignment.Changed.Bind(this, &LabelChanged, object);
-            label->WordWrap.Changed.Bind(this, &LabelChanged, object);
-            */
-            
+            label->FontSize.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->Text.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->HAlignment.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->VAlignment.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->WordWrap.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
             SomethingChanged(object);
         }
 
         void ObjectRemoved(GameObject *object) {
-            object->template GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LabelMeshSystem::SizeChanged, object);
-            /*
-            Label* label = object->GetComponent<Label>();
-            label->FontSize.Changed.Unbind(this, &LabelChanged, object);
-            label->Text.Changed.Unbind(this, &LabelChanged, object);
-            label->HAlignment.Changed.Unbind(this, &LabelChanged, object);
-            label->VAlignment.Changed.Unbind(this, &LabelChanged, object);
-            label->WordWrap.Changed.Unbind(this, &LabelChanged, object);
-            */
-        }
-
-        void SizeChanged(Vector2& size, GameObject* context) {
-            SomethingChanged(context);
-        }
-
-        void LabelChanged(Pocket::Label *label, GameObject* context) {
-            SomethingChanged(context);
+            object->template GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+            Label* label = object->template GetComponent<Label>();
+            label->FontSize.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->Text.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->HAlignment.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->VAlignment.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+            label->WordWrap.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
         }
 
         void SomethingChanged(GameObject* object) {

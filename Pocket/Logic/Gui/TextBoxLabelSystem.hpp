@@ -23,11 +23,9 @@ namespace Pocket {
     public:
         using GameObject = GameObject<T>;
         
-        static float cursorWidth;
+        const float cursorWidth = 1.05f;
     
         void Initialize() {
-        
-            cursorWidth = 1.05f;
             cursor = 0;
             activeTextbox = 0;
             timer = 0;
@@ -36,35 +34,39 @@ namespace Pocket {
         }
 
         void ObjectAdded(GameObject *object) {
-            TextBox* textbox = object->GetComponent<TextBox>();
-            textbox->Text.Changed += event_handler(this, &TextBoxTextChanged, object);
-            textbox->Active.Changed += event_handler(this, &TextBoxActiveChanged, object);
+            TextBox* textbox = object->template GetComponent<TextBox>();
+            textbox->Text.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+            textbox->Active.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
             if (textbox->Active) {
                 activeTextboxAdded = textbox;
                 activeTextboxAddedGO = object;
             }
-            TextBoxTextChanged(textbox, object);
+            TextBoxChanged(object);
         }
 
         void ObjectRemoved(GameObject *object) {
-            object->GetComponent<TextBox>()->Text.Changed -= event_handler(this, &TextBoxLabelSystem::TextBoxTextChanged, object);
-            object->GetComponent<TextBox>()->Active.Changed -= event_handler(this, &TextBoxLabelSystem::TextBoxActiveChanged, object);
-            if (cursor && activeTextbox == object->GetComponent<TextBox>()) {
+            TextBox* textBox = object->template GetComponent<TextBox>();
+            textBox->Text.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+            textBox->Active.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+            if (cursor && activeTextbox == textBox) {
                 cursor->Remove();
                 cursor = 0;
             }
         }
 
-        void TextBoxTextChanged(TextBox *textBox, GameObject* object) {
-            object->GetComponent<Label>()->Text = textBox->Text;
+        void TextBoxChanged(GameObject* object) {
+            TextBox* textBox = object->template GetComponent<TextBox>();
+            object->template GetComponent<Label>()->Text = textBox->Text;
             
             if (activeTextbox == textBox) {
                 MoveCursor(textBox, object);
             }
         }
 
-        void TextBoxActiveChanged(TextBox *textBox, Pocket::GameObject *object) {
-         
+        void TextBoxActiveChanged(bool& active, GameObject *object) {
+            
+            TextBox* textBox = object->template GetComponent<TextBox>();
+            
             activeTextbox = 0;
             if (cursor) {
                 cursor->Remove();
@@ -74,41 +76,41 @@ namespace Pocket {
             if (textBox->Active) {
                 activeTextbox = textBox;
                 
-                cursor = World()->CreateObject();
-                cursor->AddComponent<Transform>();
+                cursor = this->World().CreateObject();
+                cursor->template AddComponent<Transform>();
                 cursor->Parent = object;
-                cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
-                cursor->AddComponent<Material>();
+                cursor->template AddComponent<Mesh>()->template GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->template GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
+                cursor->template AddComponent<Material>();
                 MoveCursor(textBox, object);
                 
                 timer = 0;
             }
         }
 
-        void MoveCursor(Pocket::TextBox *textBox, Pocket::GameObject *object) {
+        void MoveCursor(Pocket::TextBox *textBox, GameObject *object) {
             if (!cursor) return;
-            Mesh* mesh = object->GetComponent<Mesh>();
+            Mesh* mesh = object->template GetComponent<Mesh>();
             if (mesh->Vertices().empty()) {
-                Sizeable* sizeable = object->GetComponent<Sizeable>();
-                cursor->GetComponent<Transform>()->Position = sizeable->Size * 0.5f;
+                Sizeable* sizeable = object->template GetComponent<Sizeable>();
+                cursor->template GetComponent<Transform>()->Position = sizeable->Size * 0.5f;
             } else {
                 const BoundingBox& bounds = mesh->LocalBoundingBox;
                 Vector3 local = Vector3(bounds.center.x + bounds.extends.x * 0.5f + cursorWidth, bounds.center.y,0);
-                cursor->GetComponent<Transform>()->Position = local;
+                cursor->template GetComponent<Transform>()->Position = local;
             }
         }
 
         void Update(float dt) {
             
             if (activeTextboxAdded && activeTextboxAdded->Active) {
-                TextBoxActiveChanged(activeTextboxAdded, activeTextboxAddedGO);
+                TextBoxChanged(activeTextboxAddedGO);
                 activeTextboxAdded = 0;
             }
             
             if (!cursor) return;
             timer += dt;
             
-            cursor->EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
+            //cursor->template EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
         }
 
 

@@ -891,6 +891,8 @@
 		72358FA11B09338A008D6568 /* vecidx_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vecidx_aos.h; sourceTree = "<group>"; };
 		72358FA21B09338A008D6568 /* vectormath_aos.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vectormath_aos.h; sourceTree = "<group>"; };
 		72358FA31B09338A008D6568 /* vmInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vmInclude.h; sourceTree = "<group>"; };
+		72481D0D1C7E21F200AD7AA8 /* Gui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Gui.hpp; sourceTree = "<group>"; };
+		72481D101C7E242F00AD7AA8 /* HierarchyOrder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyOrder.hpp; sourceTree = "<group>"; };
 		72735F2F1C7285A3009927EB /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		72735F301C7285A3009927EB /* GameObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
 		72735F311C7285A3009927EB /* GameSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameSettings.hpp; sourceTree = "<group>"; };
@@ -2057,6 +2059,7 @@
 		72E3CF801C72914A002DA95E /* Common */ = {
 			isa = PBXGroup;
 			children = (
+				72481D101C7E242F00AD7AA8 /* HierarchyOrder.hpp */,
 				72E3CF841C72914A002DA95E /* Orderable.hpp */,
 			);
 			path = Common;
@@ -2086,6 +2089,7 @@
 		72FB91961C7BA9BB0038AC85 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				72481D0D1C7E21F200AD7AA8 /* Gui.hpp */,
 				72FB91981C7BA9BB0038AC85 /* Droppable.hpp */,
 				72FB919A1C7BA9BB0038AC85 /* DroppableSystem.hpp */,
 				72FB919B1C7BA9BB0038AC85 /* Font.cpp */,

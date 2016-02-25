@@ -4,7 +4,7 @@
 using namespace Pocket;
 
 InputManager::InputManager() {
-    auto keyBoardChanged = [this](auto& v) {
+    auto keyBoardChanged = [this]() {
         device->SetKeyboard(KeyboardText, KeyboardActive);
     };
 

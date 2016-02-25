@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Property.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
     struct Orderable {

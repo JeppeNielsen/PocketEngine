@@ -17,35 +17,35 @@ namespace Pocket {
     struct DroppableSystem : public GameSystem<T, Droppable, Touchable> {
     
         using GameObject = GameObject<T>;
-        using Systems = meta::list<TouchSystem>;
+        using Systems = meta::list<TouchSystem<T>>;
     
         void Initialize() {
-            touchSystem = this->World().GetSystem<TouchSystem>();
+            touchSystem = &this->World().template GetSystem<TouchSystem<T>>();
         }
     
         void ObjectAdded(GameObject *object) {
-            object->GetComponent<Touchable>()->Up += event_handler(this, &DroppableSystem::TouchUp, object);
+            object->template GetComponent<Touchable>()->Up.Bind(this, &DroppableSystem::TouchUp, object);
         }
 
         void ObjectRemoved(GameObject *object) {
-            object->GetComponent<Touchable>()->Up -= event_handler(this, &DroppableSystem::TouchUp, object);
+            object->template GetComponent<Touchable>()->Up.Unbind(this, &DroppableSystem::TouchUp, object);
         }
 
         void TouchUp(Pocket::TouchData d, GameObject* object) {
             DroppedData droppedData;
-            droppedData.object = object;
+            //droppedData.object = object;
             droppedData.touchData = d;
             TouchEvent e(d.Index, d.Input->GetTouchPosition(d.Index));
             touchSystem->FindTouchedObjects(droppedData.droppedTouches, e, true);
             for (int i=0; i<droppedData.droppedTouches.size(); ++i) {
-                if (droppedData.droppedTouches[i].object == object) {
-                    droppedData.droppedTouches.erase(droppedData.droppedTouches.begin()+i);
-                    break;
-                }
+                //if (droppedData.droppedTouches[i].object == object) {
+                //    droppedData.droppedTouches.erase(droppedData.droppedTouches.begin()+i);
+                //    break;
+                //}
             }
-            object->GetComponent<Droppable>()->Dropped(droppedData);
+            object->template GetComponent<Droppable>()->Dropped(droppedData);
         }
 
-        TouchSystem* touchSystem;
+        TouchSystem<T>* touchSystem;
     };
 }

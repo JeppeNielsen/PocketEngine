@@ -33,7 +33,8 @@ namespace Pocket {
         void Relative(const Transform& a, const Transform& b);
     
 	private:
-		void OtherWorldChanged();
+		void PropertyChanged();
+        void OtherWorldChanged();
         
         bool useEulerRotation;
     

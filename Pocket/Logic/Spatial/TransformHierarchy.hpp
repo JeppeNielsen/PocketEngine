@@ -34,7 +34,7 @@ namespace Pocket {
             object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
         }
 
-        void ParentChanged(GameObject* &parent, GameObject* object ) {
+        void ParentChanged(GameObject* object) {
             Transform* transform = object->template GetComponent<Transform>();
             transform->World.MakeDirty();
             transform->WorldInverse.MakeDirty();
@@ -46,7 +46,7 @@ namespace Pocket {
                 }
             }
             
-            HookParent(transform, parent);
+            HookParent(transform, object->Parent);
         }
         
         void HookParent(Transform* transform, GameObject* parent) {

@@ -20,13 +20,13 @@ private:
         if (value==newValue) return;
         previousValue = value;
         value = newValue;
-        Changed(value);
+        Changed();
     }
     static Value previousValue;
 public:
     Property() = default;
 
-    Event<Value&> Changed;
+    Event<> Changed;
     
     Value& PreviousValue() const;
     

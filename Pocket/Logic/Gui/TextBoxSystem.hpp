@@ -14,7 +14,8 @@
 #include <map>
 
 namespace Pocket {
-    class TextBoxSystem : public GameSystem<TextBox, Touchable> {
+    template<typename T>
+    class TextBoxSystem : public GameSystem<T, TextBox, Touchable> {
     public:
         using GameObject = GameObject<T>;
  
@@ -23,32 +24,34 @@ namespace Pocket {
         }
 
         void ObjectAdded(GameObject *object) {
-            Touchable* touchable = object->GetComponent<Touchable>();
+            Touchable* touchable = object->template GetComponent<Touchable>();
             touchable->Down.Bind(this, &TextBoxSystem::TouchDown, object);
             touchable->Up.Bind(this, &TextBoxSystem::TouchUp, object);
             touchable->Click.Bind(this, &TextBoxSystem::TouchClick, object);
-            TextBox* textBox = object->GetComponent<TextBox>();
-            textBox->Active.Changed.Bind(this, &TextBoxSystem::ActiveTextBoxChanged);
+            TextBox* textBox = object->template GetComponent<TextBox>();
+            textBox->Active.Changed.Bind(this, &TextBoxSystem::ActiveTextBoxChanged, object);
             if (textBox->Active) {
-                ActiveTextBoxChanged(textBox);
+                ActiveTextBoxChanged(object);
             }
         }
 
         void ObjectRemoved(GameObject *object) {
-            Touchable* touchable = object->GetComponent<Touchable>();
+            Touchable* touchable = object->template GetComponent<Touchable>();
             touchable->Down.Unbind(this, &TextBoxSystem::TouchDown, object);
             touchable->Up.Unbind(this, &TextBoxSystem::TouchUp, object);
             touchable->Click.Unbind(this, &TextBoxSystem::TouchClick, object);
-            TextBox* textBox = object->GetComponent<TextBox>();
+            TextBox* textBox = object->template GetComponent<TextBox>();
             textBox->Active = false;
-            textBox->Active.Changed.Unbind(this, &TextBoxSystem::ActiveTextBoxChanged);
+            textBox->Active.Changed.Unbind(this, &TextBoxSystem::ActiveTextBoxChanged, object);
         }
 
-        void ActiveTextBoxChanged(TextBox* textBox) {
+        void ActiveTextBoxChanged(GameObject* object) {
+            TextBox* textBox = object->template GetComponent<TextBox>();
+            
             if (textBox->Active) {
                 ActiveTextBox = textBox;
-                for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
-                    TextBox* textBoxToDisable = (*it)->GetComponent<TextBox>();
+                for(auto o : this->Objects()) {
+                    TextBox* textBoxToDisable = o->template GetComponent<TextBox>();
                     if (textBox!=textBoxToDisable) {
                         textBoxToDisable->Active = false;
                     }
@@ -81,7 +84,7 @@ namespace Pocket {
         }
 
         void TouchUp(Pocket::TouchData d, GameObject *object) {
-            PushedTextBoxes::iterator it = pushedTextBoxes.find(object);
+            auto it = pushedTextBoxes.find(object);
             if (it!=pushedTextBoxes.end()) {
                 pushedTextBoxes.erase(it);
             }
@@ -89,10 +92,10 @@ namespace Pocket {
         }
 
         void TouchClick(Pocket::TouchData d, GameObject *object) {
-            PushedTextBoxes::iterator it = pushedTextBoxes.find(object);
+            auto it = pushedTextBoxes.find(object);
             if (it!=pushedTextBoxes.end()) {
                 if (it->second.distanceMoved<30) {
-                    object->GetComponent<TextBox>()->Active = true;
+                    object->template GetComponent<TextBox>()->Active = true;
                 }
             }
         }
@@ -109,7 +112,7 @@ namespace Pocket {
             
             if (pushedTextBoxes.empty()) return;
             
-            for (PushedTextBoxes::iterator it = pushedTextBoxes.begin(); it!=pushedTextBoxes.end(); ++it) {
+            for (auto it = pushedTextBoxes.begin(); it!=pushedTextBoxes.end(); ++it) {
                 Vector2 touchPosition = it->second.touch.Input->GetTouchPosition(it->second.touch.Index);
                 Vector2 delta = touchPosition-it->second.lastTouchPosition;
                 it->second.distanceMoved += delta.Length();
@@ -117,15 +120,15 @@ namespace Pocket {
             }
         }
 
-        void KeyboardActiveChanged(Pocket::InputManager *input) {
-            if (!input->KeyboardActive && ActiveTextBox()) {
+        void KeyboardActiveChanged() {
+            if (!Input->KeyboardActive && ActiveTextBox()) {
                 ActiveTextBox()->Active = false;
             }
         }
 
-        void KeyboardTextChanged(Pocket::InputManager *input) {
+        void KeyboardTextChanged() {
             if (ActiveTextBox()) {
-                ActiveTextBox()->Text = input->KeyboardText;
+                ActiveTextBox()->Text = Input->KeyboardText;
             }
         }
                 

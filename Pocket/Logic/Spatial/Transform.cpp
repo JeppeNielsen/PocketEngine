@@ -14,19 +14,13 @@ Transform::Transform() {
     useEulerRotation = false;
     World.HasBecomeDirty.Clear();
     
-    auto changed = [this] (auto& v) {
-        Local.MakeDirty();
-        World.MakeDirty();
-        WorldInverse.MakeDirty();
-    };
+    Position.Changed.Bind(this, &Transform::PropertyChanged);
+    Rotation.Changed.Bind(this, &Transform::PropertyChanged);
+    Scale.Changed.Bind(this, &Transform::PropertyChanged);
+    Anchor.Changed.Bind(this, &Transform::PropertyChanged);
+    Matrix.Changed.Bind(this, &Transform::PropertyChanged);
     
-    Position.Changed.Bind(changed);
-    Rotation.Changed.Bind(changed);
-    Scale.Changed.Bind(changed);
-    Anchor.Changed.Bind(changed);
-    Matrix.Changed.Bind(changed);
-    
-    EulerRotation.Changed.Bind([this] (auto& v) {
+    EulerRotation.Changed.Bind([this] () {
         useEulerRotation = true;
         Rotation = Quaternion(EulerRotation);
     });
@@ -63,6 +57,12 @@ void Transform::HookOther( Transform* other ) {
 
 void Transform::UnHookOther( Transform* other ) {
 	other->World.HasBecomeDirty.Unbind(this, &Transform::OtherWorldChanged);
+}
+
+void Transform::PropertyChanged() {
+    Local.MakeDirty();
+    World.MakeDirty();
+    WorldInverse.MakeDirty();
 }
 
 void Transform::OtherWorldChanged() {

@@ -23,7 +23,7 @@ Camera::Camera() {
         mat = Projection().Invert();
     };
     
-    auto changed = [this] (auto& v) {
+    auto changed = [this] () {
         Projection.MakeDirty();
         ProjectionInverse.MakeDirty();
     };

@@ -78,7 +78,7 @@ namespace Pocket {
 template<class T>
 Pocket::GameState<T>::GameState() : currentState(0), parent(0) {
     CurrentState = "";
-    CurrentState.Changed.Bind([this] (auto& state) {
+    CurrentState.Changed.Bind([this] () {
         typename States::iterator current = states.find(CurrentState);
         if (current!=states.end()) {
             wantedState = current->second;

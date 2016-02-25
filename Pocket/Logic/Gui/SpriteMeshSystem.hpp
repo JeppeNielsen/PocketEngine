@@ -18,18 +18,14 @@ namespace Pocket {
         using GameObject = GameObject<T>;
         
         void ObjectAdded(GameObject *object) {
-            object->template GetComponent<Sizeable>()->Size.Changed.Bind(this, &SpriteMeshSystem::SizeChanged, object);
-            object->template GetComponent<Sprite>()->CornerSize.Changed.Bind(this, &SpriteMeshSystem::SizeChanged, object);
+            object->template GetComponent<Sizeable>()->Size.Changed.Bind(this, &SpriteMeshSystem::UpdateMesh, object);
+            object->template GetComponent<Sprite>()->CornerSize.Changed.Bind(this, &SpriteMeshSystem::UpdateMesh, object);
             UpdateMesh(object);
         }
 
         void ObjectRemoved(GameObject *object) {
-            object->template GetComponent<Sizeable>()->Size.Changed.Unbind(this, &SpriteMeshSystem::SizeChanged, object);
-            object->template GetComponent<Sprite>()->CornerSize.Changed.Unbind(this, &SpriteMeshSystem::SizeChanged, object);
-        }
-
-        void SizeChanged(Vector2& size, GameObject* object) {
-            UpdateMesh(object);
+            object->template GetComponent<Sizeable>()->Size.Changed.Unbind(this, &SpriteMeshSystem::UpdateMesh, object);
+            object->template GetComponent<Sprite>()->CornerSize.Changed.Unbind(this, &SpriteMeshSystem::UpdateMesh, object);
         }
 
         void UpdateMesh(GameObject* object) {
