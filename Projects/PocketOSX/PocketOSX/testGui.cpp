@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
+#include "Event.hpp"
 
 struct GameWorldSettings :
     GameSettings<
@@ -20,16 +21,29 @@ public:
     GameObject* cube;
     GameObject* atlas;
     
+    
+    
     void Initialize() {
         
         world.Initialize();
         
+        
         Gui<GameWorldSettings>& gui = world.GetSystem<Gui<GameWorldSettings>>();
     
         gui.Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        gui.CreateFont("Font.fnt", "Font");
         
-        gui.CreateControl(0, "Box", 100, 200);
-         
+        auto window = gui.CreateControl(0, "Box", 100, 200);
+        window->AddComponent<Draggable>();
+        
+        gui.CreateControl(window, "TextBox", 50,100);
+        
+        //gui.CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text,
+        
+        gui.CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+        
+        
+        
         
         /*
         
@@ -78,7 +92,7 @@ public:
     GameObject* CreateObject(Vector3 pos) {
         GameObject* cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = pos;
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({-2,0,0}, {2,1,1});
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({-2,0,0}, {20,10,10});
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::Blue();// Colour::HslToRgb(i * 10, 1, 1, 1);

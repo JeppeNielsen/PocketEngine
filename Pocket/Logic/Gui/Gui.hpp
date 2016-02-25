@@ -160,8 +160,7 @@ namespace Pocket {
             if (!font && !fonts.empty()) {
                 font = fonts[0];
             }
-            GameObject* label = CreatePivot(parent);
-            label->template GetComponent<Transform>()->Position = position;
+            GameObject* label = CreatePivot(parent, position);
             label->template AddComponent<Font>(font);
             label->template AddComponent<Mesh>();
             label->template AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
