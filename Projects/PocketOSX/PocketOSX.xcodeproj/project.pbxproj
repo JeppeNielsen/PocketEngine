@@ -337,6 +337,10 @@
 		729954181B87B9940036A2DF /* TextureComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299540C1B87B9940036A2DF /* TextureComponent.cpp */; };
 		729954211B87B9F30036A2DF /* Shader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299541C1B87B9F30036A2DF /* Shader.cpp */; };
 		729954221B87B9F30036A2DF /* ShaderCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299541E1B87B9F30036A2DF /* ShaderCollection.cpp */; };
+		72F5CFB81C7FA92000C970EC /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFB41C7FA92000C970EC /* SelectedColorer.cpp */; };
+		72F5CFB91C7FA92000C970EC /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFB61C7FA92000C970EC /* SelectedColorerSystem.cpp */; };
+		72F5CFBE1C7FA95600C970EC /* Droppable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFBA1C7FA95600C970EC /* Droppable.cpp */; };
+		72F5CFBF1C7FA95600C970EC /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFBC1C7FA95600C970EC /* DroppableSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1142,6 +1146,14 @@
 		7299541E1B87B9F30036A2DF /* ShaderCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderCollection.cpp; sourceTree = "<group>"; };
 		7299541F1B87B9F30036A2DF /* ShaderCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderCollection.hpp; sourceTree = "<group>"; };
 		729954201B87B9F30036A2DF /* VertexMesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VertexMesh.hpp; sourceTree = "<group>"; };
+		72F5CFB41C7FA92000C970EC /* SelectedColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorer.cpp; sourceTree = "<group>"; };
+		72F5CFB51C7FA92000C970EC /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
+		72F5CFB61C7FA92000C970EC /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
+		72F5CFB71C7FA92000C970EC /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
+		72F5CFBA1C7FA95600C970EC /* Droppable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Droppable.cpp; sourceTree = "<group>"; };
+		72F5CFBB1C7FA95600C970EC /* Droppable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Droppable.hpp; sourceTree = "<group>"; };
+		72F5CFBC1C7FA95600C970EC /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
+		72F5CFBD1C7FA95600C970EC /* DroppableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DroppableSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1400,6 +1412,10 @@
 		723588991B0932E0008D6568 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				72F5CFBA1C7FA95600C970EC /* Droppable.cpp */,
+				72F5CFBB1C7FA95600C970EC /* Droppable.hpp */,
+				72F5CFBC1C7FA95600C970EC /* DroppableSystem.cpp */,
+				72F5CFBD1C7FA95600C970EC /* DroppableSystem.hpp */,
 				7235889A1B0932E0008D6568 /* Font.cpp */,
 				7235889B1B0932E0008D6568 /* Font.hpp */,
 				7235889C1B0932E0008D6568 /* Gui.cpp */,
@@ -1548,6 +1564,10 @@
 		7235890B1B0932E0008D6568 /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				72F5CFB41C7FA92000C970EC /* SelectedColorer.cpp */,
+				72F5CFB51C7FA92000C970EC /* SelectedColorer.hpp */,
+				72F5CFB61C7FA92000C970EC /* SelectedColorerSystem.cpp */,
+				72F5CFB71C7FA92000C970EC /* SelectedColorerSystem.hpp */,
 				7235890C1B0932E0008D6568 /* ClickSelectorSystem.cpp */,
 				7235890D1B0932E0008D6568 /* ClickSelectorSystem.hpp */,
 				7235890E1B0932E0008D6568 /* DragSelector.cpp */,
@@ -2803,6 +2823,7 @@
 				723590211B09338A008D6568 /* SpuContactResult.cpp in Sources */,
 				72358C971B0932E1008D6568 /* Joint2d.cpp in Sources */,
 				7235901A1B09338A008D6568 /* SpuCollisionTaskProcess.cpp in Sources */,
+				72F5CFBE1C7FA95600C970EC /* Droppable.cpp in Sources */,
 				72358CCB1B0932E1008D6568 /* b2Distance.cpp in Sources */,
 				72358FE41B09338A008D6568 /* btTriangleIndexVertexArray.cpp in Sources */,
 				72358FAF1B09338A008D6568 /* btBox2dBox2dCollisionAlgorithm.cpp in Sources */,
@@ -2822,6 +2843,7 @@
 				72358CD21B0932E1008D6568 /* b2Math.cpp in Sources */,
 				72358C801B0932E1008D6568 /* MenuSystem.cpp in Sources */,
 				723590091B09338A008D6568 /* btSequentialImpulseConstraintSolver.cpp in Sources */,
+				72F5CFB81C7FA92000C970EC /* SelectedColorer.cpp in Sources */,
 				72358FE81B09338A008D6568 /* btUniformScalingShape.cpp in Sources */,
 				72358CE41B0932E1008D6568 /* b2PulleyJoint.cpp in Sources */,
 				72358CDA1B0932E1008D6568 /* b2CircleContact.cpp in Sources */,
@@ -2857,6 +2879,7 @@
 				72358CD51B0932E1008D6568 /* b2Body.cpp in Sources */,
 				72358CBB1B0932E1008D6568 /* Plane.cpp in Sources */,
 				72358CC41B0932E1008D6568 /* ChromecastReceiver.cpp in Sources */,
+				72F5CFB91C7FA92000C970EC /* SelectedColorerSystem.cpp in Sources */,
 				72358CAF1B0932E1008D6568 /* SelectableDragSystem.cpp in Sources */,
 				72358DE61B0932E1008D6568 /* WorkScheduler.cpp in Sources */,
 				72358FA81B09338A008D6568 /* btDbvtBroadphase.cpp in Sources */,
@@ -2897,6 +2920,7 @@
 				72358FC81B09338A008D6568 /* btCapsuleShape.cpp in Sources */,
 				72358C6C1B0932E1008D6568 /* Sound.cpp in Sources */,
 				72358FA61B09338A008D6568 /* btCollisionAlgorithm.cpp in Sources */,
+				72F5CFBF1C7FA95600C970EC /* DroppableSystem.cpp in Sources */,
 				72358CC01B0932E1008D6568 /* TransitionHelper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3004,6 +3028,7 @@
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"",
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -3018,6 +3043,7 @@
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D\"",
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
