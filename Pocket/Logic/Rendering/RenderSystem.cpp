@@ -35,10 +35,6 @@ void RenderSystem::ObjectAdded(GameObject *object) {
     }
 }
 
-void RenderSystem::ObjectRemoved(GameObject *object) {
-
-}
-
 RenderSystem::OctreeSystem& RenderSystem::Octree() {
     return *meshOctreeSystem;
 }

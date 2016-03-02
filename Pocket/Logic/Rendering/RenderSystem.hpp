@@ -31,7 +31,6 @@ public:
     virtual ~RenderSystem();
     void Initialize(IGameWorld* world);
     void ObjectAdded(GameObject *object);
-    void ObjectRemoved(GameObject* object);
     OctreeSystem& Octree();
     void RenderCamera(GameObject* cameraObject);
     void RenderVisibleObjects(const VisibleObjects& visibleObjects);
