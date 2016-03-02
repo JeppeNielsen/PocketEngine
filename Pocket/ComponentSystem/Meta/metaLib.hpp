@@ -10,7 +10,8 @@
 #include "meta.hpp"
 #include <tuple>
 
-//struct GameWorld;
+struct IGameWorld;
+struct GameObject;
 struct TypeInfo;
 
 namespace meta {
@@ -242,10 +243,37 @@ struct Has ## methodName ## Function {\
     using apply = has_ ## methodName<Args..., signature>;\
 };
 
-HAS_OPTIONAL_METHOD(Initialize, void());
+HAS_OPTIONAL_METHOD(Initialize, void(IGameWorld*));
 HAS_OPTIONAL_METHOD(Update, void(float));
 HAS_OPTIONAL_METHOD(Render, void());
-
 HAS_OPTIONAL_METHOD(GetType, TypeInfo());
+HAS_OPTIONAL_METHOD(ObjectAdded, void(GameObject*));
+HAS_OPTIONAL_METHOD(ObjectRemoved, void(GameObject*));
+
+
+namespace static_if_detail {
+
+template<typename Param, bool Cond>
+struct statement {
+    template<typename F>
+    void then(Param param, const F& f){
+        f(param);
+    }
+};
+
+template<typename Param>
+struct statement<Param, false> {
+    template<typename F>
+    void then(Param param, const F&){}
+};
+
+} //end of namespace static_if_detail
+
+template<bool Cond, typename Param, typename F>
+static_if_detail::statement<Param, Cond> static_if(Param param, F const& f){
+    static_if_detail::statement<Param, Cond> if_;
+    if_.then(param, f);
+    return if_;
+}
 
 }

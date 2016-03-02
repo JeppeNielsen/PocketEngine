@@ -13,7 +13,6 @@
 
 namespace Pocket {
 
-template<typename T>
 class RenderSystem;
 
 struct Mesh;
@@ -105,7 +104,6 @@ private:
     IVertexMesh* vertexMesh;
     int vertexType;
     
-    template<typename T>
     friend class RenderSystem;
 };
 

@@ -1,34 +1,27 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
 #include "Event.hpp"
-
-struct GameWorldSettings :
-    GameSettings<
-        Gui<GameWorldSettings>
-    >
-{};
-
+#include "IDHelper.hpp"
 
 using namespace Pocket;
+
+using GameWorldSettings = GameSettings<Gui>;
 
 class GuiExample : public GameState<GuiExample> {
 public:
     GameWorld<GameWorldSettings> world;
     
-    using GameObject = GameObject<GameWorldSettings>;
-    
     GameObject* camera;
     GameObject* cube;
     GameObject* atlas;
-    
-    
     
     void Initialize() {
         
         world.Initialize();
         
         
-        Gui<GameWorldSettings>& gui = world.GetSystem<Gui<GameWorldSettings>>();
+        
+        Gui& gui = world.GetSystem<Gui>();
     
         gui.Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui.CreateFont("Font.fnt", "Font");
@@ -37,10 +30,9 @@ public:
         window->AddComponent<Draggable>();
         
         gui.CreateControl(window, "TextBox", 50,100);
-        
-        //gui.CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text,
-        
         gui.CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+        
+        std::cout<< IDHelper::NumberOfComponents() << std::endl;
         
         
         
@@ -86,9 +78,9 @@ public:
         
         */
         
-        CreateObject(0);
+        //CreateObject(0);
     }
-    
+    /*
     GameObject* CreateObject(Vector3 pos) {
         GameObject* cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = pos;
@@ -103,6 +95,7 @@ public:
         });
         return cube;
     }
+    */
     
     void Update(float dt) {
         world.Update(dt);

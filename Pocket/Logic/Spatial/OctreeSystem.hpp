@@ -14,10 +14,9 @@
 #include "Octree.hpp"
 
 namespace Pocket {
-    template<typename T, typename...ExtraComponents>
-    class OctreeSystem : public GameSystem<T, Transform, Mesh, ExtraComponents...> {
+    template<typename...ExtraComponents>
+    class OctreeSystem : public GameSystem<Transform, Mesh, ExtraComponents...> {
     public:
-        using GameObject = GameObject<T>;
         
         OctreeSystem() {
             SetWorldBounds(BoundingBox(0, 1000));
@@ -44,12 +43,12 @@ namespace Pocket {
             octreeObjectsUpdateList.clear();
         }
 
-        void GetObjectsInFrustum(const Pocket::BoundingFrustum &frustum, typename OctreeSystem<T, ExtraComponents...>::ObjectCollection& objectList) {
+        void GetObjectsInFrustum(const Pocket::BoundingFrustum &frustum, typename OctreeSystem<ExtraComponents...>::ObjectCollection& objectList) {
             UpdateAllNodes();
             octree.Get<GameObject*>(frustum, objectList);
         }
 
-        void GetObjectsAtRay(const Pocket::Ray &ray, typename OctreeSystem<T, ExtraComponents...>::ObjectCollection& objectList) {
+        void GetObjectsAtRay(const Pocket::Ray &ray, typename OctreeSystem<ExtraComponents...>::ObjectCollection& objectList) {
             UpdateAllNodes();
             octree.Get<GameObject*>(ray, objectList);
         }

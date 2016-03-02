@@ -278,5 +278,3 @@ fields.AddField(field, #field);
 return fields; \
 } \
 private:
-
-

@@ -8,57 +8,41 @@
 
 #pragma once
 #include "metaLib.hpp"
+#include "IGameWorld.hpp"
+#include "GameObject.hpp"
 #include <vector>
 #include <map>
 
-template<typename T>
-class GameObject;
-
-template<typename T>
-class GameWorld;
-
-template<typename T, typename... ComponentList>
+template<typename... ComponentList>
 class GameSystem {
 public:
-    friend class GameObject<T>;
-    friend class GameWorld<T>;
-
-    using GameObject = GameObject<T>;
     
     using Components = meta::list<ComponentList...>;
     virtual ~GameSystem() {};
     
     using Systems = meta::list<>;
-    
-    using ObjectCollection = std::vector<GameObject*>;
 
-private:
-    
+public:
+    using ObjectCollection = std::vector<GameObject*>;
     ObjectCollection objects;
-    GameWorld<T>* world;
-    
+
 public:
     const ObjectCollection& Objects() {
         return objects;
     }
-
-    GameWorld<T>& World() {
-        return *world;
-    }
     
     using MetaData = std::map<GameObject*, void*>;
-    
-    MetaData metaData;
+    MetaData metadata;
     
     void SetMetaData(GameObject* object, void* data) {
-        metaData[object] = data;
+        metadata[object] = data;
     }
     
     void* GetMetaData(GameObject* object) {
-        return metaData[object];
+        return metadata[object];
     }
 };
 
-template<typename T>
-class GameConcept : public GameSystem<T> {
+class GameConcept : public GameSystem<> {
+
 };

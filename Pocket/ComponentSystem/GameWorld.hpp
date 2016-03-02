@@ -7,32 +7,35 @@
 //
 
 #pragma once
+#include "IGameWorld.hpp"
 #include "GameSettings.hpp"
 #include "Container.hpp"
 #include "minijson_writer.hpp"
 #include "minijson_reader.hpp"
 #include <type_traits>
 #include <assert.h>
-#include "Property.hpp"
 #ifdef SCRIPTING_ENABLED
 #include "IScriptSystem.hpp"
 #endif
-#include "GameObject.hpp"
+#include "GameObjectSpecific.hpp"
+#include "IDHelper.hpp"
 
 template<typename Settings>
-class GameWorld {
+class GameWorld : public IGameWorld {
 private:
 
-    friend class GameObject<Settings>;
+    friend class GameObjectSpecific<Settings>;
     
-    using GameObject = GameObject<Settings>;
+    using GameObjectSpecific = GameObjectSpecific<Settings>;
     
-    using Objects = Container<GameObject>;
+    using Objects = Container<GameObjectSpecific>;
     
     using Systems = typename Settings::SystemsTuple;
     using InitializeSystems = typename Settings::InitializeSystems;
     using UpdateSystems = typename Settings::UpdateSystems;
     using RenderSystems = typename Settings::RenderSystems;
+    using ObjectAddedSystems = typename Settings::ObjectAddedSystems;
+    using ObjectRemovedSystems = typename Settings::ObjectRemovedSystems;
     
     using ComponentSystems = typename Settings::ComponentSystemsTuple;
     
@@ -50,6 +53,8 @@ private:
     InitializeSystems initializeSystems;
     UpdateSystems updateSystems;
     RenderSystems renderSystems;
+    ObjectAddedSystems objectAddedSystems;
+    ObjectRemovedSystems objectRemovedSystems;
     
     ComponentSystems componentSystems;
     
@@ -62,6 +67,7 @@ private:
     Actions createActions;
     Actions removeActions;
     
+    
     void InitializeSystemBitsets() {
         meta::for_each_in_tuple(systems, [&](auto& system) {
             using SystemType = std::remove_const_t<std::remove_reference_t<decltype(system)>>;
@@ -69,7 +75,6 @@ private:
                 systemBitsets[Settings::template GetSystemID<SystemType>()]
                              [Settings::template GetComponentID<std::remove_pointer_t< decltype(component) >>()] = true;
             });
-            std::get<SystemType>(systems).world = this;
         });
     }
     
@@ -77,12 +82,47 @@ private:
         componentNames = Settings::GetComponentNames();
     }
     
-    GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
-        GameObject* object = 0;
+    void InitializeCommands() {
+        meta::for_each_in_tuple(components, [this] (auto& component) {
+            using ComponentType = meta::mp_rename<std::remove_const_t<std::remove_reference_t<decltype(component)>>, meta::ReturnContainedType>;
+            int componentIndex = IDHelper::GetComponentID<ComponentType>();
+            if (componentIndex>=commands.size()) {
+                commands.resize(componentIndex+1);
+            }
+            commands[componentIndex].addComponent = [](GameObject* gameObjectPtr) {
+              GameObjectSpecific* go = (GameObjectSpecific*)gameObjectPtr;
+              return go->template AddComponent<ComponentType>();
+            };
+            commands[componentIndex].addComponentReference = [](GameObject* gameObjectPtr, GameObject* source) {
+              GameObjectSpecific* go = (GameObjectSpecific*)gameObjectPtr;
+              return go->template AddComponent<ComponentType>((GameObjectSpecific*) source);
+            };
+            commands[componentIndex].removeComponent = [](void* gameObjectPtr) -> void* {
+              GameObjectSpecific* go = (GameObjectSpecific*)gameObjectPtr;
+              go->template RemoveComponent<ComponentType>();
+              return 0;
+            };
+        });
+        
+        meta::for_each_in_tuple(systems, [&](auto& system) {
+            using SystemType = std::remove_const_t<std::remove_reference_t<decltype(system)>>;
+            
+            int systemIndex = IDHelper::GetSystemID<SystemType>();
+            if (systemIndex>=getSystemCommands.size()) {
+                getSystemCommands.resize(systemIndex+1);
+            }
+            getSystemCommands[systemIndex] = [this]() -> void* {
+                return &GetSystem<SystemType>();
+            };
+        });
+    }
+    
+    GameObjectSpecific* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+        GameObjectSpecific* object = 0;
          minijson::parse_object(context, [&] (const char* n, minijson::value v) {
             std::string name = n;
             if (name == "GameObject" && v.type() == minijson::Object) {
-                object = CreateObject();
+                object = (GameObjectSpecific*)CreateObject();
                 minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                     std::string name = n;
                     if (name == "Components" && v.type() == minijson::Array && object) {
@@ -95,7 +135,7 @@ private:
                         });
                     } else if (name == "Children" && v.type() == minijson::Array && object) {
                         minijson::parse_array(context, [&] (minijson::value v) {
-                            GameObject* child = LoadObject(context, onCreated);
+                            GameObjectSpecific* child = LoadObject(context, onCreated);
                             if (child) {
                                 child->Parent = object;
                             }
@@ -118,7 +158,7 @@ public:
         return std::get<Settings::template GetSystemID<System>()>(systems);
     }
 
-    GameObject* CreateObject() {
+    GameObject* CreateObject() override {
         auto object = objects.CreateObjectNoReset();
         object->object.instance = object;
         object->object.SetWorld(this);
@@ -126,9 +166,9 @@ public:
         return &object->object;
     }
     
-    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
+    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) override {
         minijson::istream_context context(jsonStream);
-        GameObject* object = 0;
+        GameObjectSpecific* object = 0;
         try {
             object = LoadObject(context, onCreated);
         } catch (std::exception e) {
@@ -140,6 +180,7 @@ public:
     GameWorld() {
         InitializeSystemBitsets();
         InitializeComponentNames();
+        InitializeCommands();
         meta::for_each_in_tuple_non_const(components, [](auto& container) {
             container.Initialize();
         });
@@ -151,7 +192,7 @@ public:
                 Settings::template GetSystemID<
                     std::remove_pointer_t<decltype(system)>
                 >()
-            >(systems).Initialize();//*this);
+            >(systems).Initialize(this);
         });
     }
 
@@ -190,11 +231,11 @@ public:
        list.clear();
     }
 
-    int ObjectCount() {
+    int ObjectCount() override {
         return objects.Size();
     }
     
-    GameObject* GetObject(int index) {
+    GameObject* GetObject(int index) override {
         return objects.Get(index);
     }
 

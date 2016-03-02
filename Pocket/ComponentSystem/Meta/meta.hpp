@@ -1927,6 +1927,97 @@ namespace meta
             using replace_if = defer<replace_if, C, U>;
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////
+        // count
+        namespace detail
+        {
+            template <typename State, typename Val, typename T>
+            using count_fn = if_<std::is_same<Val, T>, inc<State>, State>;
+        }
+
+        /// Count the number of times a type \p T appears in the list \p List.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        template <typename List, typename T>
+        using count = fold<List, meta::size_t<0>, bind_back<quote<detail::count_fn>, T>>;
+
+        namespace lazy
+        {
+            /// \sa `meta::count`
+            /// \ingroup lazy_query
+            template <typename List, typename T>
+            using count = defer<count, List, T>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+        // count_if
+        namespace detail
+        {
+            template <typename State, typename Val, typename Fn>
+            using count_if_fn = if_<apply<Fn, Val>, inc<State>, State>;
+        }
+
+        /// Count the number of times the predicate \p Fn evaluates to true for all the elements in
+        /// the list \p List.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup query
+        template <typename List, typename Fn>
+        using count_if = fold<List, meta::size_t<0>, bind_back<quote<detail::count_if_fn>, Fn>>;
+
+        namespace lazy
+        {
+            /// \sa `meta::count_if`
+            /// \ingroup lazy_query
+            template <typename List, typename Fn>
+            using count_if = defer<count_if, List, Fn>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // transform
+        /// \cond
+        namespace detail
+        {
+            template <typename, typename = void>
+            struct transform_
+            {
+            };
+
+            template <typename... Ts, typename Fun>
+            struct transform_<list<list<Ts...>, Fun>, void_<apply<Fun, Ts>...>>
+            {
+                using type = list<apply<Fun, Ts>...>;
+            };
+
+            template <typename... Ts0, typename... Ts1, typename Fun>
+            struct transform_<list<list<Ts0...>, list<Ts1...>, Fun>,
+                              void_<apply<Fun, Ts0, Ts1>...>>
+            {
+                using type = list<apply<Fun, Ts0, Ts1>...>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Return a new \c meta::list constructed by transforming all the elements in \p List with
+        /// the unary Alias Class \p Fun. \c transform can also be called with two lists of
+        /// the same length and a binary Alias Class, in which case it returns a new list
+        /// constructed with the results of calling \c Fun with each element in the lists,
+        /// pairwise.
+        /// \par Complexity
+        /// \f$ O(N) \f$.
+        /// \ingroup transformation
+        template <typename... Args>
+        using transform = _t<detail::transform_<list<Args...>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::transform'
+            /// \ingroup lazy_transformation
+            template <typename... Args>
+            using transform = defer<transform, Args...>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // filter
         /// \cond
@@ -2006,7 +2097,63 @@ namespace meta
         }
         /// \endcond
 
-        
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // transpose
+        /// Given a list of lists of types \p ListOfLists, transpose the elements from the lists.
+        /// \par Complexity
+        /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
+        /// \f$ M \f$ is the size of the inner lists.
+        /// \ingroup transformation
+        template <typename ListOfLists>
+        using transpose = fold<ListOfLists, repeat_n<size<front<ListOfLists>>, list<>>,
+                               bind_back<quote<transform>, quote<push_back>>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::transpose'
+            /// \ingroup lazy_transformation
+            template <typename ListOfLists>
+            using transpose = defer<transpose, ListOfLists>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // zip_with
+        /// Given a list of lists of types \p ListOfLists and a Alias Class \p Fun, construct
+        /// a new list by calling \p Fun with the elements from the lists pairwise.
+        /// \par Complexity
+        /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
+        /// \f$ M \f$ is the size of the inner lists.
+        /// \ingroup transformation
+        template <typename Fun, typename ListOfLists>
+        using zip_with = transform<transpose<ListOfLists>, uncurry<Fun>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::zip_with'
+            /// \ingroup lazy_transformation
+            template <typename Fun, typename ListOfLists>
+            using zip_with = defer<zip_with, Fun, ListOfLists>;
+        }
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // zip
+        /// Given a list of lists of types \p ListOfLists, construct a new list by grouping the
+        /// elements from the lists pairwise into `meta::list`s.
+        /// \par Complexity
+        /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and \f$ M \f$
+        /// is the size of the inner lists.
+        /// \ingroup transformation
+        template <typename ListOfLists>
+        using zip = transpose<ListOfLists>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::zip'
+            /// \ingroup lazy_transformation
+            template <typename ListOfLists>
+            using zip = defer<zip, ListOfLists>;
+        }
+
         ///////////////////////////////////////////////////////////////////////////////////////////
         // as_list
         /// \cond
@@ -2314,6 +2461,426 @@ namespace meta
             template <typename List, typename Pred>
             using sort = defer<sort, List, Pred>;
         }
+
+        ////////////////////////////////////////////////////////////////////////////
+        // lambda_
+        /// \cond
+        namespace detail
+        {
+            template <typename T, int = 0>
+            struct protect_;
+
+            template <typename, int = 0>
+            struct vararg_;
+
+            template <typename T, int = 0>
+            struct is_valid_;
+
+            // Returns which branch to evaluate
+            template <typename If, typename... Ts>
+            using lazy_if_ = lazy::_t<defer<_if_, If, protect_<Ts>...>>;
+
+            template <typename A, typename T, typename F, typename Ts>
+            struct subst1_
+            {
+                using type = list<list<T>>;
+            };
+            template <typename T, typename F, typename Ts>
+            struct subst1_<F, T, F, Ts>
+            {
+                using type = list<>;
+            };
+            template <typename A, typename T, typename F, typename Ts>
+            struct subst1_<vararg_<A>, T, F, Ts>
+            {
+                using type = list<Ts>;
+            };
+
+            template <typename As, typename Ts>
+            using substitutions_ = push_back<
+                join<transform<
+                    concat<As, repeat_n_c<size<Ts>{} + 2 - size<As>{}, back<As>>>,
+                    concat<Ts, repeat_n_c<2, back<As>>>,
+                    bind_back<quote_trait<subst1_>, back<As>, drop_c<Ts, size<As>{} - 2>>>>,
+                list<back<As>>>;
+
+            template <typename As, typename Ts>
+            using substitutions =
+                apply<if_c<(size<Ts>{} + 2 >= size<As>{}), quote<substitutions_>>, As, Ts>;
+
+            template <typename T>
+            struct is_vararg_ : std::false_type
+            {
+            };
+            template <typename T>
+            struct is_vararg_<vararg_<T>> : std::true_type
+            {
+            };
+
+            template <typename Tags>
+            using is_variadic_ = is_vararg_<at<push_front<Tags, void>, dec<size<Tags>>>>;
+
+            template <typename Tags, bool IsVariadic = is_variadic_<Tags>::value>
+            struct lambda_;
+
+            // Non-variadic lambda implementation
+            template <typename... As>
+            struct lambda_<list<As...>, false>
+            {
+            private:
+                static constexpr std::size_t arity = sizeof...(As)-1;
+                using Tags = list<As...>; // Includes the lambda body as the last arg!
+                using F = back<Tags>;
+                template <typename T, typename Args>
+                struct impl;
+                template <typename T, typename Args>
+                using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
+                template <typename, typename, typename = void>
+                struct subst_
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct subst_<defer<C, Ts...>, Args, void_<C<_t<impl<Ts, Args>>...>>>
+                {
+                    using type = C<_t<impl<Ts, Args>>...>;
+                };
+                template <typename T, template <T...> class C, T... Is, typename Args>
+                struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
+                {
+                    using type = C<Is...>;
+                };
+                template <typename T, typename Args>
+                struct impl : if_c<(reverse_find_index<Tags, T>() != npos()),
+                                   lazy::at<Args, reverse_find_index<Tags, T>>, id<T>>
+                {
+                };
+                template <typename T, typename Args>
+                struct impl<protect_<T>, Args>
+                {
+                    using type = T;
+                };
+                template <typename T, typename Args>
+                struct impl<is_valid_<T>, Args>
+                {
+                    using type = has_type<impl<T, Args>>;
+                };
+                template <typename If, typename... Ts, typename Args>
+                struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
+                    : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename T, template <T...> class C, T... Is, typename Args>
+                struct impl<defer_i<T, C, Is...>, Args> : subst_<defer_i<T, C, Is...>, Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename... Ts, typename Args>
+                struct impl<lambda_<list<Ts...>, false>, Args>
+                {
+                    using type = compose<uncurry<lambda_<list<As..., Ts...>, false>>,
+                                         curry<bind_front<quote<concat>, Args>>>;
+                };
+                template <typename... Bs, typename Args>
+                struct impl<lambda_<list<Bs...>, true>, Args>
+                {
+                    using type = compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                         bind_front<quote<concat>, transform<Args, quote<list>>>,
+                                         curry<bind_front<quote<substitutions>, list<Bs...>>>>;
+                };
+
+            public:
+                template <typename... Ts>
+                using apply = _t<if_c<sizeof...(Ts) == arity, impl<F, list<Ts..., F>>>>;
+            };
+
+            // Lambda with variadic placeholder (broken out due to less efficient compile-time
+            // resource usage)
+            template <typename... As>
+            struct lambda_<list<As...>, true>
+            {
+            private:
+                template <typename T, bool IsVar>
+                friend struct lambda_;
+                using Tags = list<As...>; // Includes the lambda body as the last arg!
+                template <typename T, typename Args>
+                struct impl;
+                template <typename Args>
+                using eval_impl_ = bind_back<quote_trait<impl>, Args>;
+                template <typename T, typename Args>
+                using lazy_impl_ = lazy::_t<defer<impl, T, protect_<Args>>>;
+                template <template <typename...> class C, typename Args, typename Ts>
+                using try_subst_ = apply_list<quote<C>, join<transform<Ts, eval_impl_<Args>>>>;
+                template <typename, typename, typename = void>
+                struct subst_
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct subst_<defer<C, Ts...>, Args, void_<try_subst_<C, Args, list<Ts...>>>>
+                {
+                    using type = list<try_subst_<C, Args, list<Ts...>>>;
+                };
+                template <typename T, template <T...> class C, T... Is, typename Args>
+                struct subst_<defer_i<T, C, Is...>, Args, void_<C<Is...>>>
+                {
+                    using type = list<C<Is...>>;
+                };
+                template <typename T, typename Args>
+                struct impl : if_c<(reverse_find_index<Tags, T>() != npos()),
+                                   lazy::at<Args, reverse_find_index<Tags, T>>, id<list<T>>>
+                {
+                };
+                template <typename T, typename Args>
+                struct impl<protect_<T>, Args>
+                {
+                    using type = list<T>;
+                };
+                template <typename T, typename Args>
+                struct impl<is_valid_<T>, Args>
+                {
+                    using type = list<has_type<impl<T, Args>>>;
+                };
+                template <typename If, typename... Ts, typename Args>
+                struct impl<defer<if_, If, Ts...>, Args> // Short-circuit if_
+                    : impl<lazy_impl_<lazy_if_<If, Ts...>, Args>, Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<and_, Bool, Ts...>, Args> // Short-circuit and_
+                    : impl<lazy_impl_<lazy_if_<Bool, lazy::and_<Ts...>, protect_<std::false_type>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <typename Bool, typename... Ts, typename Args>
+                struct impl<defer<or_, Bool, Ts...>, Args> // Short-circuit or_
+                    : impl<lazy_impl_<lazy_if_<Bool, protect_<std::true_type>, lazy::or_<Ts...>>,
+                                      Args>,
+                           Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<defer<C, Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename T, template <T...> class C, T... Is, typename Args>
+                struct impl<defer_i<T, C, Is...>, Args> : subst_<defer_i<T, C, Is...>, Args>
+                {
+                };
+                template <template <typename...> class C, typename... Ts, typename Args>
+                struct impl<C<Ts...>, Args> : subst_<defer<C, Ts...>, Args>
+                {
+                };
+                template <typename... Bs, bool IsVar, typename Args>
+                struct impl<lambda_<list<Bs...>, IsVar>, Args>
+                {
+                    using type =
+                        list<compose<typename lambda_<list<As..., Bs...>, true>::thunk,
+                                     bind_front<quote<concat>, Args>,
+                                     curry<bind_front<quote<substitutions>, list<Bs...>>>>>;
+                };
+                struct thunk
+                {
+                    template <typename S, typename R = _t<impl<back<Tags>, S>>>
+                    using apply = if_c<size<R>{} == 1, front<R>>;
+                };
+
+            public:
+                template <typename... Ts>
+                using apply = apply<thunk, substitutions<Tags, list<Ts...>>>;
+            };
+        }
+        /// \endcond
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // lambda
+        /// For creating anonymous Alias Classes.
+        /// \code
+        /// using L = lambda<_a, _b, std::pair<_b, std::pair<_a, _a>>>;
+        /// using P = apply<L, int, short>;
+        /// static_assert(std::is_same<P, std::pair<short, std::pair<int, int>>>::value, "");
+        /// \endcode
+        /// \ingroup trait
+        template <typename... Ts>
+        using lambda = if_c<(sizeof...(Ts) > 0), detail::lambda_<list<Ts...>>>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // is_valid
+        /// For testing whether a deferred computation will succeed in a \c let or a \c lambda.
+        /// \ingroup trait
+        template <typename T>
+        using is_valid = detail::is_valid_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // vararg
+        /// For defining variadic placeholders.
+        template <typename T>
+        using vararg = detail::vararg_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // protect
+        /// For preventing the evaluation of a nested `defer`ed computation in a \c let or
+        /// \c lambda expression.
+        template <typename T>
+        using protect = detail::protect_<T>;
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // var
+        /// For use when defining local variables in \c meta::let expressions
+        /// \sa `meta::let`
+        template <typename Tag, typename Value>
+        struct var;
+
+        /// \cond
+        namespace detail
+        {
+            template <typename... As>
+            struct let_
+            {
+            };
+            template <typename Fn>
+            struct let_<Fn>
+            {
+                using type = lazy::apply<lambda<Fn>>;
+            };
+            template <typename Tag, typename Value, typename... Rest>
+            struct let_<var<Tag, Value>, Rest...>
+            {
+                using type = lazy::apply<lambda<Tag, _t<let_<Rest...>>>, Value>;
+            };
+        }
+        /// \endcond
+
+        /// A lexically scoped expression with local variables.
+        ///
+        /// \code
+        /// template<typename T, typename List>
+        /// using find_index_ = let<
+        ///     var<_a, List>,
+        ///     var<_b, lazy::find<_a, T>>,
+        ///     lazy::if_<
+        ///         std::is_same<_b, list<>>,
+        ///         meta::npos,
+        ///         lazy::minus<lazy::size<_a>, lazy::size<_b>>>>;
+        /// static_assert(find_index_<int, list<short, int, float>>{} == 1, "");
+        /// static_assert(find_index_<double, list<short, int, float>>{} == meta::npos{}, "");
+        /// \endcode
+        /// \ingroup trait
+        template <typename... As>
+        using let = _t<_t<detail::let_<As...>>>;
+
+        namespace lazy
+        {
+            /// \sa `meta::let`
+            /// \ingroup lazy_trait
+            template <typename... As>
+            using let = defer<let, As...>;
+        }
+
+        // Some argument placeholders for use in \c lambda expressions.
+        /// \ingroup trait
+        inline namespace placeholders
+        {
+            // regular placeholders:
+            struct _a;
+            struct _b;
+            struct _c;
+            struct _d;
+            struct _e;
+            struct _f;
+            struct _g;
+            struct _h;
+            struct _i;
+
+            // variadic placeholders:
+            using _args = vararg<void>;
+            using _args_a = vararg<_a>;
+            using _args_b = vararg<_b>;
+            using _args_c = vararg<_c>;
+        } // namespace placeholders
+
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // cartesian_product
+        /// \cond
+        namespace detail
+        {
+            template <typename M2, typename M>
+            struct cartesian_product_fn
+            {
+                template <typename X>
+                struct lambda0
+                {
+                    template <typename Xs>
+                    using lambda1 = list<push_front<Xs, X>>;
+                    using type = join<transform<M2, quote<lambda1>>>;
+                };
+                using type = join<transform<M, quote_trait<lambda0>>>;
+            };
+        } // namespace detail
+        /// \endcond
+
+        /// Given a list of lists \p ListOfLists, return a new list of lists that is the Cartesian
+        /// Product. Like the `sequence` function from the Haskell Prelude.
+        /// \par Complexity
+        /// \f$ O(N \times M) \f$, where \f$ N \f$ is the size of the outer list, and
+        /// \f$ M \f$ is the size of the inner lists.
+        /// \ingroup transformation
+        template <typename ListOfLists>
+        using cartesian_product =
+            reverse_fold<ListOfLists, list<list<>>, quote_trait<detail::cartesian_product_fn>>;
+
+        namespace lazy
+        {
+            /// \sa 'meta::cartesian_product'
+            /// \ingroup lazy_transformation
+            template <typename ListOfLists>
+            using cartesian_product = defer<cartesian_product, ListOfLists>;
+        }
+
+        /// \cond
+        ///////////////////////////////////////////////////////////////////////////////////////////
+        // add_const_if
+        template <typename If>
+        using add_const_if = if_<If, quote_trait<std::add_const>, quote_trait<id>>;
+
+        template <bool If>
+        using add_const_if_c = if_c<If, quote_trait<std::add_const>, quote_trait<id>>;
+        /// \endcond
+
+        ///////////////////////////////////////////////////////////////////////////////////////////////
+        // integer_sequence
+
+#ifndef __cpp_lib_integer_sequence
+        /// A container for a sequence of compile-time integer constants.
+        /// \ingroup integral
+        template <typename T, T... Is>
+        struct integer_sequence
+        {
+            using value_type = T;
+            /// \return `sizeof...(Is)`
+            static constexpr std::size_t size() noexcept { return sizeof...(Is); }
+        };
+#endif
 
         /// \cond
         namespace detail

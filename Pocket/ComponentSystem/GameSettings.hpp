@@ -39,6 +39,8 @@ struct GameSettings {
     using InitializeSystems = meta::mp_rename<meta::filter<Systems, meta::HasInitializeFunction>, TupleOfPointers>;
     using UpdateSystems = meta::mp_rename<meta::filter<Systems, meta::HasUpdateFunction>, TupleOfPointers>;
     using RenderSystems = meta::mp_rename<meta::filter<Systems, meta::HasRenderFunction>, TupleOfPointers>;
+    using ObjectAddedSystems = meta::mp_rename<meta::filter<Systems, meta::HasObjectAddedFunction>, TupleOfPointers>;
+    using ObjectRemovedSystems = meta::mp_rename<meta::filter<Systems, meta::HasObjectAddedFunction>, TupleOfPointers>;
     
     using AllComponents = meta::mp_rename<UniqueComponents, TupleOfContainers>;
     

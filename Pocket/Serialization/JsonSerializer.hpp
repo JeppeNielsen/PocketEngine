@@ -14,8 +14,6 @@
 #include <sstream>
 #include <map>
 
-using namespace Pocket;
-
     template<class T, typename S = void>
     struct JsonSerializer {
         static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {

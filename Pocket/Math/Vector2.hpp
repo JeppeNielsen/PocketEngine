@@ -149,7 +149,12 @@ namespace Pocket {
             if (abs > epsilon) return false;
             return true;
         }
+        
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Vector2& v) {
+            stream << v.x <<","<<v.y;
+            return stream;
+        }
     };
 }
 
-std::ostream& operator<<(std::ostream& stream, const Pocket::Vector2& v);
+

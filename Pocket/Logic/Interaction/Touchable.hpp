@@ -19,16 +19,16 @@ namespace Pocket {
     class InputManager;
     struct TouchData {
         //Pocket::GameObject* object;
-        Pocket::Touchable* Touchable;
-        Pocket::InputManager* Input;
+        Touchable* Touchable;
+        InputManager* Input;
         int Index;
-        Pocket::Vector2 Position;
-        Pocket::Vector3 WorldPosition;
+        Vector2 Position;
+        Vector3 WorldPosition;
         size_t TriangleIndex;
-        Pocket::Transform* CameraTransform;
-        Pocket::Camera* Camera;
-        Pocket::Vector3 WorldNormal;
-        Pocket::Ray Ray;
+        Transform* CameraTransform;
+        Camera* Camera;
+        Vector3 WorldNormal;
+        Ray Ray;
     };
     
 	class Touchable {
