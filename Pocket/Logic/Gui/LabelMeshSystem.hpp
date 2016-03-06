@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Mesh.hpp"
 #include "Sizeable.hpp"
 #include "Label.hpp"

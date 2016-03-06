@@ -1,15 +1,11 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
-#include "Event.hpp"
-#include "IDHelper.hpp"
 
 using namespace Pocket;
 
-using GameWorldSettings = GameSettings<Gui>;
-
 class GuiExample : public GameState<GuiExample> {
 public:
-    GameWorld<GameWorldSettings> world;
+    GameWorld world;
     
     GameObject* camera;
     GameObject* cube;
@@ -17,20 +13,19 @@ public:
     
     void Initialize() {
         
-        world.Initialize();
         
+        world.Initialize<Gui>();
         
-        
-        Gui& gui = world.GetSystem<Gui>();
+        Gui* gui = world.GetSystem<Gui>();
     
-        gui.Setup("images.png", "images.xml", Manager().Viewport(), Input);
-        gui.CreateFont("Font.fnt", "Font");
+        gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        gui->CreateFont("Font.fnt", "Font");
         
-        auto window = gui.CreateControl(0, "Box", 100, 200);
+        auto window = gui->CreateControl(0, "Box", 100, 200);
         window->AddComponent<Draggable>();
         
-        gui.CreateControl(window, "TextBox", 50,100);
-        gui.CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+        gui->CreateControl(window, "TextBox", 50,100);
+        gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
         
         std::cout<< IDHelper::NumberOfComponents() << std::endl;
         

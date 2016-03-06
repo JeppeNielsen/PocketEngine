@@ -10,8 +10,8 @@
 
 using namespace Pocket;
 
-void DroppableSystem::Initialize(IGameWorld* world) {
-    touchSystem = &world->GetSystem<TouchSystem>();
+void DroppableSystem::Initialize(GameWorld* world) {
+    touchSystem = world->AddSystem<TouchSystem>();
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {

@@ -10,8 +10,8 @@
 #include <vector>
 #include <iostream>
 #include <type_traits>
+#include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
-#include "metaLib.hpp"
 
 template<class T>
 class FieldInfo;
@@ -43,7 +43,7 @@ struct FieldInfoEditorCreator {
 
 /*
 template<typename T>
-struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
+struct FieldEditorProperty : public FieldInfoEditor<Pocket::Property<T>, void, void> {
     IFieldInfoEditor* editor;
     
     FieldEditorProperty() : editor(0) {}
@@ -67,9 +67,9 @@ struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
         
         if (currentValue!=prevValue) {
             prevValue = currentValue;
-            this->field->Set(currentValue);
+            this->field->operator()(currentValue);
         } else {
-            currentValue = this->field->GetValue();
+            currentValue = this->field->operator();
             prevValue = currentValue;
         }
         editor->Update(dt);
@@ -81,7 +81,7 @@ struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
 
 
 template<typename T>
-struct FieldInfoEditorCreator<Property<T>> {
+struct FieldInfoEditorCreator<Pocket::Property<T>> {
     static IFieldInfoEditor* Create() {
         IFieldInfoEditor* editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
         if (!editor) {
@@ -231,7 +231,7 @@ public:
 };
 
 template<typename T>
-struct JsonSerializer<T, typename std::enable_if_t< meta::HasGetTypeFunction::apply<T>::value >> {
+struct JsonSerializer<T, typename std::enable_if_t< Meta::HasGetTypeFunction::apply<T>::value >> {
     static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
         auto type = ((T&)value).GetType();
         minijson::object_writer object = writer.nested_object(key.c_str());

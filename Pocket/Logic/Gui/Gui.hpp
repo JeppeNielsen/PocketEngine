@@ -29,29 +29,7 @@ namespace Pocket {
     class Gui : public GameConcept {
     public:
         
-        using Systems = meta::list<
-                RenderSystem,
-                TransformHierarchy,
-                TouchSystem,
-                LabelMeshSystem,
-                SpriteMeshSystem,
-                SpriteTextureSystem,
-                HierarchyOrder,
-                DraggableSystem,
-                //LayoutSystem,
-                TextBoxSystem,
-                TextBoxLabelSystem,
-                //MenuSystem,
-                //MenuButtonSystem,
-                //ColorSystem,
-                //DraggableMotionSystem,
-                //VelocitySystem,
-                //LimitableSystem,
-                //SelectedColorerSystem,
-                DroppableSystem
-                >;
-        
-        void Initialize(IGameWorld* world) ;
+        void Initialize(GameWorld* world) ;
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager);
         void Setup(GameObject *atlas, const Box &viewport, InputManager &inputManager);
         GameObject* GetCamera();
@@ -109,7 +87,7 @@ namespace Pocket {
 */
 
     private:
-        IGameWorld* world;
+        GameWorld* world;
         RenderSystem* renderer;
         GameObject* camera;
         GameObject* atlas;

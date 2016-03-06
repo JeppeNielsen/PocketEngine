@@ -7,10 +7,11 @@
 //
 
 #include "TextBoxLabelSystem.hpp"
+#include <cmath>
 
 using namespace Pocket;
 
-void TextBoxLabelSystem::Initialize(IGameWorld* world) {
+void TextBoxLabelSystem::Initialize(GameWorld* world) {
     this->world = world;
     cursor = 0;
     activeTextbox = 0;

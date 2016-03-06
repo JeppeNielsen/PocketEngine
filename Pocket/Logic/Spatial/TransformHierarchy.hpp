@@ -1,5 +1,5 @@
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Transform.hpp"
 
 namespace Pocket {

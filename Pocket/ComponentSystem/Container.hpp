@@ -10,8 +10,14 @@
 #include <vector>
 #include <assert.h>
 
+class IContainer {
+public:
+    virtual ~IContainer() {}
+    virtual void Initialize() = 0;
+};
+
 template<typename Object>
-class Container {
+class Container : public IContainer {
 public:
     struct ObjectInstance {
         Object object;
@@ -118,7 +124,7 @@ public:
         DeleteInstance(defaultObject);
     }
     
-    void Initialize() {
+    void Initialize() override {
         defaultObject = CreateInstance();
     }
     

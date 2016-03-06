@@ -8,6 +8,9 @@
 
 #pragma once
 
+#include <iostream>
+#include <typeinfo>
+
 class IDHelper {
 private:
     static int componentCounter;
@@ -15,6 +18,14 @@ private:
 public:
     const static int NumberOfComponents() {
         return componentCounter;
+    }
+    
+    template<typename Class>
+    static std::string GetClassName() {
+        std::string functionName = __PRETTY_FUNCTION__;
+        const std::string token = "Class = ";
+        size_t equal = functionName.find(token) + token.size();
+        return functionName.substr(equal, functionName.size() - equal - 1);
     }
 
     template<typename T>

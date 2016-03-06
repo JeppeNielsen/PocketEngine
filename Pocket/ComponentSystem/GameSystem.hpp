@@ -7,40 +7,50 @@
 //
 
 #pragma once
-#include "metaLib.hpp"
-#include "IGameWorld.hpp"
-#include "GameObject.hpp"
+#include <tuple>
 #include <vector>
 #include <map>
+#include "GameConstants.hpp"
 
-template<typename... ComponentList>
-class GameSystem {
-public:
-    
-    using Components = meta::list<ComponentList...>;
-    virtual ~GameSystem() {};
-    
-    using Systems = meta::list<>;
+class GameWorld;
+class GameObject;
 
-public:
+class IGameSystem {
+protected:
+    virtual ~IGameSystem();
+    
     using ObjectCollection = std::vector<GameObject*>;
     ObjectCollection objects;
 
 public:
-    const ObjectCollection& Objects() {
-        return objects;
-    }
-    
+    const ObjectCollection& Objects();
+protected:
     using MetaData = std::map<GameObject*, void*>;
     MetaData metadata;
     
-    void SetMetaData(GameObject* object, void* data) {
-        metadata[object] = data;
-    }
+    void SetMetaData(GameObject* object, void* data);
+    void* GetMetaData(GameObject* object);
     
-    void* GetMetaData(GameObject* object) {
-        return metadata[object];
-    }
+    virtual void Initialize(GameWorld* world);
+    virtual void Update(float dt);
+    virtual void Render();
+    virtual void ObjectAdded(GameObject* object);
+    virtual void ObjectRemoved(GameObject* object);
+    virtual void CreateComponents(GameWorld *world, int systemIndex) = 0;
+    
+    int index;
+    
+    friend class GameObject;
+    friend class GameWorld;
+};
+
+template<typename... ComponentList>
+class GameSystem : public IGameSystem {
+protected:
+    GameSystem() { }
+    virtual ~GameSystem() { }
+    
+    void CreateComponents(GameWorld *world, int systemIndex) override;
 };
 
 class GameConcept : public GameSystem<> {

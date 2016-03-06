@@ -13,11 +13,30 @@ using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::Initialize(IGameWorld* world) {
+void Gui::Initialize(GameWorld* world) {
+
     this->world = world;
-    renderer = &world->GetSystem<RenderSystem>();
-    textboxSystem = &world->GetSystem<TextBoxSystem>();
-    touchSystem = &world->GetSystem<TouchSystem>();
+    renderer = world->GetSystem<RenderSystem>();
+    textboxSystem = world->GetSystem<TextBoxSystem>();
+    touchSystem = world->GetSystem<TouchSystem>();
+    
+    world->GetSystem<TransformHierarchy>();
+    world->GetSystem<LabelMeshSystem>();
+    world->GetSystem<SpriteMeshSystem>();
+    world->GetSystem<SpriteTextureSystem>();
+    world->GetSystem<HierarchyOrder>();
+    world->GetSystem<DraggableSystem>();
+    //world->GetSystem<LayoutSystem>();
+    world->GetSystem<TextBoxLabelSystem>();
+    //world->GetSystem<MenuSystem>();
+    //world->GetSystem<MenuButtonSystem>();
+    //world->GetSystem<ColorSystem>();
+    //world->GetSystem<DraggableMotionSystem>();
+    //world->GetSystem<VelocitySystem>();
+    //world->GetSystem<LimitableSystem>();
+    //world->GetSystem<SelectedColorerSystem>();
+    world->GetSystem<DroppableSystem>();
+    
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {

@@ -23,13 +23,11 @@ public:
     
     struct TextureSystem : GameSystem<TextureComponent, Orderable> {};
     
-    using Systems = meta::list<CameraSystem, OctreeSystem, TextureSystem>;
-    
     using ObjectRenderers = std::vector<IObjectRenderer*>;
     using VisibleObjects = std::vector<VisibleObject>;
 
     virtual ~RenderSystem();
-    void Initialize(IGameWorld* world);
+    void Initialize(GameWorld* world);
     void ObjectAdded(GameObject *object);
     OctreeSystem& Octree();
     void RenderCamera(GameObject* cameraObject);

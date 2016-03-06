@@ -31,10 +31,10 @@ namespace Pocket {
         struct OrderableSystem : GameSystem<Orderable> {};
         
     public:
-        using Systems = meta::list<OctreeSystem, CameraSystem, OrderableSystem>;
+        
     
         TouchSystem();
-        void Initialize(IGameWorld* world);
+        void Initialize(GameWorld* world);
         OctreeSystem& Octree();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);

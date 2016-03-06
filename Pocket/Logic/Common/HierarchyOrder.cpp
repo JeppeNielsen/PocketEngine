@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-void HierarchyOrder::Initialize(IGameWorld *world) {
+void HierarchyOrder::Initialize(GameWorld *world) {
     this->world = world;
 }
 
