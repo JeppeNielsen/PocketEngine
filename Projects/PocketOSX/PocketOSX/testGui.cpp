@@ -1,5 +1,6 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
+#include <fstream>
 
 using namespace Pocket;
 
@@ -26,6 +27,23 @@ public:
         
         gui->CreateControl(window, "TextBox", 50,100);
         gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+        
+        {
+            std::ofstream file;
+            file.open("Window.json");
+            window->ToJson(file);
+            file.close();
+        }
+        
+        
+        /*
+        {
+            std::ifstream file;
+            file.open("Window.json");
+            window = world.CreateObject(file);
+            file.close();
+        }
+        */
         
         std::cout<< IDHelper::NumberOfComponents() << std::endl;
         
