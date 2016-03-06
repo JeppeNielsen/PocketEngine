@@ -119,7 +119,7 @@ public:
     }
 };
 
-int main() {
+int main_disabled() {
     Engine e;
     e.Start<GuiExample>();
 	return 0;

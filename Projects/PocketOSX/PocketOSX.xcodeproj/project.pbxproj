@@ -271,6 +271,7 @@
 		72D7C8151C8C609E00A9AF8F /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C80E1C8C609E00A9AF8F /* GameSystem.cpp */; };
 		72D7C8161C8C609E00A9AF8F /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8101C8C609E00A9AF8F /* GameWorld.cpp */; };
 		72D7C8171C8C609E00A9AF8F /* IDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8121C8C609E00A9AF8F /* IDHelper.cpp */; };
+		72D7C81B1C8CE15800A9AF8F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C81A1C8CE15800A9AF8F /* main.cpp */; };
 		72E3CF7F1C7290EA002DA95E /* TextureComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CF7D1C7290EA002DA95E /* TextureComponent.cpp */; };
 		72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CFA81C765836002DA95E /* Touchable.cpp */; };
 		72F5CFB31C7F8F5100C970EC /* testGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFB21C7F8F5100C970EC /* testGui.cpp */; };
@@ -945,6 +946,7 @@
 		72D7C8121C8C609E00A9AF8F /* IDHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IDHelper.cpp; sourceTree = "<group>"; };
 		72D7C8131C8C609E00A9AF8F /* IDHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IDHelper.hpp; sourceTree = "<group>"; };
 		72D7C8191C8C60A400A9AF8F /* MetaLibrary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
+		72D7C81A1C8CE15800A9AF8F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		72E3CF7D1C7290EA002DA95E /* TextureComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureComponent.cpp; sourceTree = "<group>"; };
 		72E3CF7E1C7290EA002DA95E /* TextureComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextureComponent.hpp; sourceTree = "<group>"; };
 		72E3CF841C72914A002DA95E /* Orderable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Orderable.hpp; sourceTree = "<group>"; };
@@ -1025,6 +1027,7 @@
 			children = (
 				72F5CFB21C7F8F5100C970EC /* testGui.cpp */,
 				72FB91DA1C7BC41F0038AC85 /* Assets */,
+				72D7C81A1C8CE15800A9AF8F /* main.cpp */,
 			);
 			path = PocketOSX;
 			sourceTree = "<group>";
@@ -2268,6 +2271,7 @@
 				72D7C8171C8C609E00A9AF8F /* IDHelper.cpp in Sources */,
 				723590241B09338A008D6568 /* SpuSampleTask.cpp in Sources */,
 				723590261B09338A008D6568 /* Win32ThreadSupport.cpp in Sources */,
+				72D7C81B1C8CE15800A9AF8F /* main.cpp in Sources */,
 				72358FCC1B09338A008D6568 /* btConeShape.cpp in Sources */,
 				72358FDA1B09338A008D6568 /* btOptimizedBvh.cpp in Sources */,
 				72D7C8151C8C609E00A9AF8F /* GameSystem.cpp in Sources */,
