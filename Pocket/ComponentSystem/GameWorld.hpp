@@ -92,7 +92,7 @@ public:
     }
     
     GameObject* CreateObject();
-    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated);
+    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated = 0);
     GameWorld();
     
     void Update(float dt);

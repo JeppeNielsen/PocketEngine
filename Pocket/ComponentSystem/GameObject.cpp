@@ -135,47 +135,19 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
 }
 
 void GameObject::AddComponent(minijson::istream_context& context, std::string componentName) {
-        
-        int componentID;
-        if (world->TryGetComponentIndex(componentName, componentID) && !activeComponents[componentID]) {
-            AddComponent(componentID);
-            if (world->getTypeComponent[componentID]) {
-                auto type = world->getTypeComponent[componentID](this);
-                type.Deserialize(context);
-            } else {
-                minijson::ignore(context);
-            }
+    int componentID;
+    if (world->TryGetComponentIndex(componentName, componentID) && !activeComponents[componentID]) {
+        AddComponent(componentID);
+        if (world->getTypeComponent[componentID]) {
+            auto type = world->getTypeComponent[componentID](this);
+            type.Deserialize(context);
         } else {
             minijson::ignore(context);
         }
-    
-    /*
-        bool addedAny = false;
-        meta::for_each_in_tuple(world->serializableComponents, [this, &context, &componentName, &addedAny] (auto componentPointer) {
-            if (addedAny) {
-                return;
-            }
-            using ComponentType = std::remove_const_t< std::remove_pointer_t<decltype(componentPointer)> >;
-            if (componentName == world->componentNames[Settings::template GetComponentID<ComponentType>()]) {
-                if (!HasComponent<ComponentType>()) {
-                    ComponentType* component = AddComponent<ComponentType>();
-                    auto type = component->GetType();
-                    type.Deserialize(context);
-                    addedAny = true;
-                } else {
-                    std::cout<<"Only one component per type allowed per object"<<std::endl;
-                    minijson::ignore(context);
-                }
-            }
-        });
-        if (!addedAny) {
-            
-        }
+    } else {
+        minijson::ignore(context);
     }
-*/
-
 }
-
 
 void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, std::string* referenceID ) {
     if (!activeComponents[componentID]) return;
