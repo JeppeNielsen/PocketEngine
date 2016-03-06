@@ -10,6 +10,8 @@
 #include <vector>
 #include <assert.h>
 
+namespace Pocket {
+  
 class IContainer {
 public:
     virtual ~IContainer() {}
@@ -135,3 +137,5 @@ public:
     
     ObjectInstance* defaultObject;
 };
+
+}

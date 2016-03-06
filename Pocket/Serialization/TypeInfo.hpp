@@ -13,6 +13,8 @@
 #include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
 
+namespace Pocket {
+
 template<class T>
 class FieldInfo;
 
@@ -41,9 +43,9 @@ struct FieldInfoEditorCreator {
     static IFieldInfoEditor* Create() { return 0; }
 };
 
-/*
+
 template<typename T>
-struct FieldEditorProperty : public FieldInfoEditor<Pocket::Property<T>, void, void> {
+struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
     IFieldInfoEditor* editor;
     
     FieldEditorProperty() : editor(0) {}
@@ -67,9 +69,9 @@ struct FieldEditorProperty : public FieldInfoEditor<Pocket::Property<T>, void, v
         
         if (currentValue!=prevValue) {
             prevValue = currentValue;
-            this->field->operator()(currentValue);
+            this->field->operator=(currentValue);
         } else {
-            currentValue = this->field->operator();
+            currentValue = this->field->operator()();
             prevValue = currentValue;
         }
         editor->Update(dt);
@@ -81,7 +83,7 @@ struct FieldEditorProperty : public FieldInfoEditor<Pocket::Property<T>, void, v
 
 
 template<typename T>
-struct FieldInfoEditorCreator<Pocket::Property<T>> {
+struct FieldInfoEditorCreator<Property<T>> {
     static IFieldInfoEditor* Create() {
         IFieldInfoEditor* editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
         if (!editor) {
@@ -92,7 +94,6 @@ struct FieldInfoEditorCreator<Pocket::Property<T>> {
         return new FieldEditorProperty<T>();
     }
 };
-*/
 
 class IFieldInfo {
 public:
@@ -231,7 +232,7 @@ public:
 };
 
 template<typename T>
-struct JsonSerializer<T, typename std::enable_if_t< Meta::HasGetTypeFunction::apply<T>::value >> {
+struct JsonSerializer<T, typename std::enable_if_t< Pocket::Meta::HasGetTypeFunction::apply<T>::value >> {
     static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
         auto type = ((T&)value).GetType();
         minijson::object_writer object = writer.nested_object(key.c_str());
@@ -278,3 +279,5 @@ fields.AddField(field, #field);
 return fields; \
 } \
 private:
+
+}

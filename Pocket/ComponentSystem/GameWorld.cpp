@@ -8,6 +8,7 @@
 
 #include "GameWorld.hpp"
 
+using namespace Pocket;
 
 bool GameWorld::TryGetComponentIndex(std::string componentName, int& index) {
     for(int i=0; i<componentNames.size(); ++i) {

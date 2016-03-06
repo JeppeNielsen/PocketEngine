@@ -9,6 +9,8 @@
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
 
+using namespace Pocket;
+
 GameObject::GameObject() : world(0)  {
     int numberOfComponents = IDHelper::NumberOfComponents();
     components = new ComponentPtr[numberOfComponents];

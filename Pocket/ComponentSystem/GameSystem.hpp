@@ -12,6 +12,8 @@
 #include <map>
 #include "GameConstants.hpp"
 
+namespace Pocket {
+
 class GameWorld;
 class GameObject;
 
@@ -53,6 +55,6 @@ protected:
     void CreateComponents(GameWorld *world, int systemIndex) override;
 };
 
-class GameConcept : public GameSystem<> {
+class GameConcept : public GameSystem<> { };
 
-};
+}

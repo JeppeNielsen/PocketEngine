@@ -12,6 +12,8 @@
 #include <functional>
 #include <string>
 
+namespace Pocket {
+
 class GameObject;
 class IGameSystem;
 class IContainer;
@@ -30,3 +32,5 @@ struct GameConstants {
     using ScriptBitset = std::vector<bool>;
 #endif
 };
+
+}

@@ -11,6 +11,8 @@
 #include <iostream>
 #include <typeinfo>
 
+namespace Pocket {
+
 class IDHelper {
 private:
     static int componentCounter;
@@ -44,3 +46,5 @@ public:
         return systemID;
     }
 };
+
+}

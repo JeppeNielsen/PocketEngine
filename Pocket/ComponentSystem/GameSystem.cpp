@@ -8,6 +8,8 @@
 
 #include "GameSystem.hpp"
 
+using namespace Pocket;
+
 IGameSystem::~IGameSystem() { }
 
 const IGameSystem::ObjectCollection& IGameSystem::Objects() {

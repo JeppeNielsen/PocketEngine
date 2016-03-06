@@ -8,6 +8,8 @@
 
 #include "IDHelper.hpp"
 
+using namespace Pocket;
+
 int IDHelper::componentCounter = 0;
 
 int IDHelper::systemCounter = 0;

@@ -8,6 +8,8 @@
 
 #pragma once
 
+namespace Pocket {
+  
 class TypeInfo;
 
 namespace Meta {
@@ -84,5 +86,6 @@ struct Has ## methodName ## Function {\
 
 HAS_OPTIONAL_METHOD(GetType, TypeInfo());
 
+}
 
 }

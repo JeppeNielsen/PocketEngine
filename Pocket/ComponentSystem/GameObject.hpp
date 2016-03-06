@@ -13,6 +13,8 @@
 #include "Container.hpp"
 #include "GameConstants.hpp"
 
+namespace Pocket {
+
 class GameWorld;
 
 #ifdef SCRIPTING_ENABLED
@@ -71,9 +73,9 @@ protected:
     ObjectCollection children;
 public:
 
-    Pocket::Property<GameObject*> Parent;
+    Property<GameObject*> Parent;
     const ObjectCollection& Children() { return children; }
-    Pocket::Property<int> Order;
+    Property<int> Order;
     
     template<typename T>
     T* GetComponent() {
@@ -149,3 +151,5 @@ private:
     void CheckForScriptSystemsRemoval(const std::vector<short>& systems, const GameConstants::Bitset& activeComponentsBefore, const typename GameConstants::ScriptBitset& activeScriptComponentsBefore);
 #endif
 };
+
+}

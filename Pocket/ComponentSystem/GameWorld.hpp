@@ -22,6 +22,8 @@
 #include "GameSystem.hpp"
 #include "Container.hpp"
 
+namespace Pocket {
+
 class GameWorld {
 private:
     friend class GameObject;
@@ -272,4 +274,6 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
         world->systemBitsets[systemIndex][componentID] = true;
         componentSystems[componentID].push_back(world->systems[systemIndex]);
     });
+}
+
 }
