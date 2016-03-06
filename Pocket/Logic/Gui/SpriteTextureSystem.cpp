@@ -11,7 +11,7 @@
 using namespace Pocket;
 
 void SpriteTextureSystem::ObjectAdded(GameObject *object) {
-    Sprite* sprite = object->template GetComponent<Sprite>();
+    Sprite* sprite = object->GetComponent<Sprite>();
     sprite->SpriteName.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
     sprite->CornerSize.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
     
@@ -19,16 +19,16 @@ void SpriteTextureSystem::ObjectAdded(GameObject *object) {
 }
 
 void SpriteTextureSystem::ObjectRemoved(GameObject *object) {
-    Sprite* sprite = object->template GetComponent<Sprite>();
+    Sprite* sprite = object->GetComponent<Sprite>();
     sprite->SpriteName.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
     sprite->CornerSize.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
 }
 
 void SpriteTextureSystem::SpriteChanged(GameObject* object) {
     
-    Sprite* sprite = object->template GetComponent<Sprite>();
-    Atlas* atlas = object->template GetComponent<Atlas>();
-    Mesh* mesh = object->template GetComponent<Mesh>();
+    Sprite* sprite = object->GetComponent<Sprite>();
+    Atlas* atlas = object->GetComponent<Atlas>();
+    Mesh* mesh = object->GetComponent<Mesh>();
     
     auto& vertices = mesh->GetMesh<Vertex>().vertices;
     Vector2 cornerSize = sprite->CornerSize;

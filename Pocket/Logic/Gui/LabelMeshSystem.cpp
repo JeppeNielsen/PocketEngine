@@ -10,8 +10,8 @@
 using namespace Pocket;
 
 void LabelMeshSystem::ObjectAdded(GameObject *object) {
-    object->template GetComponent<Sizeable>()->Size.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
-    Label* label = object->template GetComponent<Label>();
+    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+    Label* label = object->GetComponent<Label>();
     label->FontSize.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
     label->Text.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
     label->HAlignment.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
@@ -21,8 +21,8 @@ void LabelMeshSystem::ObjectAdded(GameObject *object) {
 }
 
 void LabelMeshSystem::ObjectRemoved(GameObject *object) {
-    object->template GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
-    Label* label = object->template GetComponent<Label>();
+    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+    Label* label = object->GetComponent<Label>();
     label->FontSize.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
     label->Text.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
     label->HAlignment.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
@@ -32,11 +32,11 @@ void LabelMeshSystem::ObjectRemoved(GameObject *object) {
 
 void LabelMeshSystem::SomethingChanged(GameObject* object) {
     
-    Sizeable* sizeable = object->template GetComponent<Sizeable>();
-    Mesh* mesh = object->template GetComponent<Mesh>();
-    Font* font = object->template GetComponent<Font>();
-    Label* label = object->template GetComponent<Label>();
-    Atlas* atlas = object->template GetComponent<Atlas>();
+    Sizeable* sizeable = object->GetComponent<Sizeable>();
+    Mesh* mesh = object->GetComponent<Mesh>();
+    Font* font = object->GetComponent<Font>();
+    Label* label = object->GetComponent<Label>();
+    Atlas* atlas = object->GetComponent<Atlas>();
     
     const Vector2& size = sizeable->Size;
     

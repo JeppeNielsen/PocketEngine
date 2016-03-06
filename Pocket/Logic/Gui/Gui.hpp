@@ -47,39 +47,39 @@ namespace Pocket {
 /*
         GameObject* CreateMenu(GameObject *parent, const Vector2 &position) {
             GameObject* pivot = CreatePivot(parent);
-            pivot->template GetComponent<Transform>()->Position = position;
-            pivot->template AddComponent<Menu>();
+            pivot->GetComponent<Transform>()->Position = position;
+            pivot->AddComponent<Menu>();
             return pivot;
         }
 
 
         void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
-            control->template AddComponent<Menu>(menu);
-            control->template AddComponent<TransformAnimator>();
-            MenuAnimator* menuAnimator = control->template AddComponent<MenuAnimator>();
+            control->AddComponent<Menu>(menu);
+            control->AddComponent<TransformAnimator>();
+            MenuAnimator* menuAnimator = control->AddComponent<MenuAnimator>();
             menuAnimator->Menu = activeMenu;
             menuAnimator->FadeInAnimation = fadeInAnimation;
             menuAnimator->FadeOutAnimation = fadeOutAnimation;
-            control->template AddComponent<TransformAnimationDatabase>(animations);
+            control->AddComponent<TransformAnimationDatabase>(animations);
         }
 
         GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
             GameObject* listbox = CreateControl(parent, spriteName, position, size);
-            listbox->template AddComponent<Layoutable>();
-            listbox->template GetComponent<Touchable>()->ClickThrough = false;
+            listbox->AddComponent<Layoutable>();
+            listbox->GetComponent<Touchable>()->ClickThrough = false;
             CreateClipper(listbox, true);
             GameObject* p = CreatePivot(listbox);
-            p->template AddComponent<Sizeable>();
-            p->template AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
-            p->template GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-            p->template AddComponent<Touchable>(listbox);
-            p->template AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
-            p->template AddComponent<DraggableMotion>();
-            p->template AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
-            p->template GetComponent<Velocity>()->Friction = 5;
-            Limitable* limitable = p->template AddComponent<Limitable>();
-            limitable->Size = p->template GetComponent<Sizeable>();
-            limitable->View = listbox->template GetComponent<Sizeable>();
+            p->AddComponent<Sizeable>();
+            p->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
+            p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+            p->AddComponent<Touchable>(listbox);
+            p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
+            p->AddComponent<DraggableMotion>();
+            p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
+            p->GetComponent<Velocity>()->Friction = 5;
+            Limitable* limitable = p->AddComponent<Limitable>();
+            limitable->Size = p->GetComponent<Sizeable>();
+            limitable->View = listbox->GetComponent<Sizeable>();
             CreateClipper(listbox, false);
             (*pivot)=p;
             return listbox;

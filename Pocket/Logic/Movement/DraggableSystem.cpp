@@ -12,13 +12,13 @@
 using namespace Pocket;
 
 void DraggableSystem::ObjectAdded(GameObject *object) {
-    Touchable* touchable = object->template GetComponent<Touchable>();
+    Touchable* touchable = object->GetComponent<Touchable>();
     touchable->Down.Bind(this, &DraggableSystem::Down, object);
     touchable->Up.Bind(this, &DraggableSystem::Up, object);
 }
 
 void DraggableSystem::ObjectRemoved(GameObject *object) {
-    Touchable* touchable = object->template GetComponent<Touchable>();
+    Touchable* touchable = object->GetComponent<Touchable>();
     touchable->Down.Unbind(this, &DraggableSystem::Down, object);
     touchable->Up.Unbind(this, &DraggableSystem::Up, object);
     TouchData d;
@@ -90,11 +90,11 @@ void DraggableSystem::Down(TouchData d, GameObject* object) {
     if (it!=draggingObjects.end()) return;
     DraggingObject& dragging = draggingObjects[d.Touchable];
     dragging.touchable = d.Touchable;
-    dragging.transform = object->template GetComponent<Transform>();
+    dragging.transform = object->GetComponent<Transform>();
     dragging.touch = d;
     
     dragging.offset = dragging.transform->WorldInverse().TransformPosition(d.WorldPosition);
-    dragging.draggable = object->template GetComponent<Draggable>();
+    dragging.draggable = object->GetComponent<Draggable>();
     
     Vector3 forward = d.CameraTransform->World().TransformVector(Vector3(0,0,-1));
     

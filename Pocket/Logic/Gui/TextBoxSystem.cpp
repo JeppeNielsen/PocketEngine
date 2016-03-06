@@ -16,11 +16,11 @@ void TextBoxSystem::Initialize() {
 }
 
 void TextBoxSystem::ObjectAdded(GameObject *object) {
-    Touchable* touchable = object->template GetComponent<Touchable>();
+    Touchable* touchable = object->GetComponent<Touchable>();
     touchable->Down.Bind(this, &TextBoxSystem::TouchDown, object);
     touchable->Up.Bind(this, &TextBoxSystem::TouchUp, object);
     touchable->Click.Bind(this, &TextBoxSystem::TouchClick, object);
-    TextBox* textBox = object->template GetComponent<TextBox>();
+    TextBox* textBox = object->GetComponent<TextBox>();
     textBox->Active.Changed.Bind(this, &TextBoxSystem::ActiveTextBoxChanged, object);
     if (textBox->Active) {
         ActiveTextBoxChanged(object);
@@ -28,22 +28,22 @@ void TextBoxSystem::ObjectAdded(GameObject *object) {
 }
 
 void TextBoxSystem::ObjectRemoved(GameObject *object) {
-    Touchable* touchable = object->template GetComponent<Touchable>();
+    Touchable* touchable = object->GetComponent<Touchable>();
     touchable->Down.Unbind(this, &TextBoxSystem::TouchDown, object);
     touchable->Up.Unbind(this, &TextBoxSystem::TouchUp, object);
     touchable->Click.Unbind(this, &TextBoxSystem::TouchClick, object);
-    TextBox* textBox = object->template GetComponent<TextBox>();
+    TextBox* textBox = object->GetComponent<TextBox>();
     textBox->Active = false;
     textBox->Active.Changed.Unbind(this, &TextBoxSystem::ActiveTextBoxChanged, object);
 }
 
 void TextBoxSystem::ActiveTextBoxChanged(GameObject* object) {
-    TextBox* textBox = object->template GetComponent<TextBox>();
+    TextBox* textBox = object->GetComponent<TextBox>();
     
     if (textBox->Active) {
         ActiveTextBox = textBox;
         for(auto o : this->Objects()) {
-            TextBox* textBoxToDisable = o->template GetComponent<TextBox>();
+            TextBox* textBoxToDisable = o->GetComponent<TextBox>();
             if (textBox!=textBoxToDisable) {
                 textBoxToDisable->Active = false;
             }
@@ -87,7 +87,7 @@ void TextBoxSystem::TouchClick(Pocket::TouchData d, GameObject *object) {
     auto it = pushedTextBoxes.find(object);
     if (it!=pushedTextBoxes.end()) {
         if (it->second.distanceMoved<30) {
-            object->template GetComponent<TextBox>()->Active = true;
+            object->GetComponent<TextBox>()->Active = true;
         }
     }
 }

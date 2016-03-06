@@ -15,11 +15,11 @@ void DroppableSystem::Initialize(GameWorld* world) {
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {
-    object->template GetComponent<Touchable>()->Up.Bind(this, &DroppableSystem::TouchUp, object);
+    object->GetComponent<Touchable>()->Up.Bind(this, &DroppableSystem::TouchUp, object);
 }
 
 void DroppableSystem::ObjectRemoved(GameObject *object) {
-    object->template GetComponent<Touchable>()->Up.Unbind(this, &DroppableSystem::TouchUp, object);
+    object->GetComponent<Touchable>()->Up.Unbind(this, &DroppableSystem::TouchUp, object);
 }
 
 void DroppableSystem::TouchUp(Pocket::TouchData d, GameObject* object) {
@@ -34,5 +34,5 @@ void DroppableSystem::TouchUp(Pocket::TouchData d, GameObject* object) {
         //    break;
         //}
     }
-    object->template GetComponent<Droppable>()->Dropped(droppedData);
+    object->GetComponent<Droppable>()->Dropped(droppedData);
 }

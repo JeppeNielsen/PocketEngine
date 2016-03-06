@@ -4,11 +4,11 @@
 using namespace Pocket;
 
 void TransformHierarchy::ObjectAdded(GameObject* object) {
-    Transform* transform = object->template GetComponent<Transform>();
+    Transform* transform = object->GetComponent<Transform>();
     
     transform->World.Method = [object, transform] (Matrix4x4& world) {
         if (object->Parent) {
-            Transform* parentTransform = object->Parent()->template GetComponent<Transform>();
+            Transform* parentTransform = object->Parent()->GetComponent<Transform>();
             if (!parentTransform) {
                 world = transform->Local();
             } else {
@@ -24,18 +24,18 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
 }
 
 void TransformHierarchy::ObjectRemoved(GameObject* object) {
-    Transform* transform = object->template GetComponent<Transform>();
+    Transform* transform = object->GetComponent<Transform>();
     transform->ResetWorldCalculation();
     object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
 }
 
 void TransformHierarchy::ParentChanged(GameObject* object) {
-    Transform* transform = object->template GetComponent<Transform>();
+    Transform* transform = object->GetComponent<Transform>();
     transform->World.MakeDirty();
     transform->WorldInverse.MakeDirty();
 
     if (object->Parent.PreviousValue()) {
-        Transform* parentTransform = object->Parent.PreviousValue()->template GetComponent<Transform>();
+        Transform* parentTransform = object->Parent.PreviousValue()->GetComponent<Transform>();
         if (parentTransform) {
             transform->UnHookOther(parentTransform);
         }
@@ -46,7 +46,7 @@ void TransformHierarchy::ParentChanged(GameObject* object) {
 
 void TransformHierarchy::HookParent(Transform* transform, GameObject* parent) {
     if (parent) {
-        Transform* parentTransform = parent->template GetComponent<Transform>();
+        Transform* parentTransform = parent->GetComponent<Transform>();
         if (parentTransform) {
             transform->HookOther(parentTransform);
         }

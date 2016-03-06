@@ -27,7 +27,7 @@ namespace Pocket {
         }
 
         void ObjectAdded(GameObject* object) {
-            this->SetMetaData(object, new Node(object, object->template GetComponent<Transform>(), object->template GetComponent<Mesh>(), this));
+            this->SetMetaData(object, new Node(object, object->GetComponent<Transform>(), object->GetComponent<Mesh>(), this));
         }
 
         void ObjectRemoved(GameObject* object) {

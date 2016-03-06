@@ -30,9 +30,9 @@ void RenderSystem::Initialize(GameWorld* world) {
 }
 
 void RenderSystem::ObjectAdded(GameObject *object) {
-    Material* material = object->template GetComponent<Material>();
+    Material* material = object->GetComponent<Material>();
     if (!material->Shader()) {
-        material->Shader = object->template GetComponent<TextureComponent>() ? DefaultTexturedShader : DefaultShader;
+        material->Shader = object->GetComponent<TextureComponent>() ? DefaultTexturedShader : DefaultShader;
     }
 }
 
@@ -41,8 +41,8 @@ RenderSystem::OctreeSystem& RenderSystem::Octree() {
 }
 
 void RenderSystem::RenderCamera(GameObject* cameraObject) {
-    Transform* cameraTransform = cameraObject->template GetComponent<Transform>();
-    Camera* camera = cameraObject->template GetComponent<Camera>();
+    Transform* cameraTransform = cameraObject->GetComponent<Transform>();
+    Camera* camera = cameraObject->GetComponent<Camera>();
     RenderMask cameraMask = camera->Mask;
     
     const Matrix4x4 viewProjection = camera->Projection().Multiply(cameraTransform->WorldInverse);
@@ -66,17 +66,17 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     Vector3 distanceToCameraPosition;
     for(auto object : objectsInFrustum) {
         
-        Material* material = object->template GetComponent<Material>();
+        Material* material = object->GetComponent<Material>();
         if (!material->Shader()) continue; // must have shader
         RenderMask mask = material->Mask;
         if (!((cameraMask & mask) == mask)) { // must be matching camera mask
             continue;
         }
         
-        Mesh* mesh = object->template GetComponent<Mesh>();
+        Mesh* mesh = object->GetComponent<Mesh>();
         if (!mesh->vertexMesh) continue; // must have mesh
         
-        Transform* transform = object->template GetComponent<Transform>();
+        Transform* transform = object->GetComponent<Transform>();
         
         const Matrix4x4& world = transform->World;
         distanceToCameraPosition.x = world[0][3];
@@ -93,8 +93,8 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
             material->Shader(),
             mesh,
             mesh->VertexType(),
-            object->template GetComponent<TextureComponent>(),
-            object->template GetComponent<Orderable>(),
+            object->GetComponent<TextureComponent>(),
+            object->GetComponent<Orderable>(),
             distanceToCamera
         });
     }

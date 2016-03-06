@@ -122,11 +122,11 @@ void TouchSystem::TouchUp(Pocket::TouchEvent e) {
 
 
 TouchSystem::TouchableObject::TouchableObject(GameObject* object) {
-    transform = object->template GetComponent<Transform>();
-    mesh = object->template GetComponent<Mesh>();
-    touchable = object->template GetComponent<Touchable>();
-    orderable = object->template GetComponent<Orderable>();
-    Material* material = object->template GetComponent<Material>();
+    transform = object->GetComponent<Transform>();
+    mesh = object->GetComponent<Mesh>();
+    touchable = object->GetComponent<Touchable>();
+    orderable = object->GetComponent<Orderable>();
+    Material* material = object->GetComponent<Material>();
     clip = material ? material->Clip : 0;
 }
 
@@ -164,9 +164,9 @@ void TouchSystem::FindTouchedObjects(Touched& list, const TouchEvent& e, bool fo
 }
 
 void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough) {
-    Camera* camera = cameraObject->template GetComponent<Camera>();
+    Camera* camera = cameraObject->GetComponent<Camera>();
     
-    Ray ray = camera->GetRay(cameraObject->template GetComponent<Transform>(), e.Position);
+    Ray ray = camera->GetRay(cameraObject->GetComponent<Transform>(), e.Position);
     
     BoundingFrustum::Count = 0;
     octree->GetObjectsAtRay(ray, touchableList);
@@ -296,7 +296,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         TouchData touch;
         //touch.object = foundIntersection->object;
         touch.Input = Input;
-        touch.CameraTransform = cameraObject->template GetComponent<Transform>();
+        touch.CameraTransform = cameraObject->GetComponent<Transform>();
         touch.Camera = camera;
         touch.Touchable = foundIntersection->touchable->touchable;
         touch.Index = e.Index;

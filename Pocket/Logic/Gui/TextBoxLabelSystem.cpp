@@ -21,7 +21,7 @@ void TextBoxLabelSystem::Initialize(GameWorld* world) {
 }
 
 void TextBoxLabelSystem::ObjectAdded(GameObject *object) {
-    TextBox* textbox = object->template GetComponent<TextBox>();
+    TextBox* textbox = object->GetComponent<TextBox>();
     textbox->Text.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
     textbox->Active.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
     if (textbox->Active) {
@@ -32,7 +32,7 @@ void TextBoxLabelSystem::ObjectAdded(GameObject *object) {
 }
 
 void TextBoxLabelSystem::ObjectRemoved(GameObject *object) {
-    TextBox* textBox = object->template GetComponent<TextBox>();
+    TextBox* textBox = object->GetComponent<TextBox>();
     textBox->Text.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
     textBox->Active.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
     if (cursor && activeTextbox == textBox) {
@@ -42,8 +42,8 @@ void TextBoxLabelSystem::ObjectRemoved(GameObject *object) {
 }
 
 void TextBoxLabelSystem::TextBoxChanged(GameObject* object) {
-    TextBox* textBox = object->template GetComponent<TextBox>();
-    object->template GetComponent<Label>()->Text = textBox->Text;
+    TextBox* textBox = object->GetComponent<TextBox>();
+    object->GetComponent<Label>()->Text = textBox->Text;
     
     if (activeTextbox == textBox) {
         MoveCursor(textBox, object);
@@ -52,7 +52,7 @@ void TextBoxLabelSystem::TextBoxChanged(GameObject* object) {
 
 void TextBoxLabelSystem::TextBoxActiveChanged(bool& active, GameObject *object) {
     
-    TextBox* textBox = object->template GetComponent<TextBox>();
+    TextBox* textBox = object->GetComponent<TextBox>();
     
     activeTextbox = 0;
     if (cursor) {
@@ -64,10 +64,10 @@ void TextBoxLabelSystem::TextBoxActiveChanged(bool& active, GameObject *object) 
         activeTextbox = textBox;
         
         cursor = world->CreateObject();
-        cursor->template AddComponent<Transform>();
+        cursor->AddComponent<Transform>();
         cursor->Parent = object;
-        cursor->template AddComponent<Mesh>()->template GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->template GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
-        cursor->template AddComponent<Material>();
+        cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
+        cursor->AddComponent<Material>();
         MoveCursor(textBox, object);
         
         timer = 0;
@@ -76,14 +76,14 @@ void TextBoxLabelSystem::TextBoxActiveChanged(bool& active, GameObject *object) 
 
 void TextBoxLabelSystem::MoveCursor(Pocket::TextBox *textBox, GameObject *object) {
     if (!cursor) return;
-    Mesh* mesh = object->template GetComponent<Mesh>();
+    Mesh* mesh = object->GetComponent<Mesh>();
     if (mesh->Vertices().empty()) {
-        Sizeable* sizeable = object->template GetComponent<Sizeable>();
-        cursor->template GetComponent<Transform>()->Position = sizeable->Size * 0.5f;
+        Sizeable* sizeable = object->GetComponent<Sizeable>();
+        cursor->GetComponent<Transform>()->Position = sizeable->Size * 0.5f;
     } else {
         const BoundingBox& bounds = mesh->LocalBoundingBox;
         Vector3 local = Vector3(bounds.center.x + bounds.extends.x * 0.5f + cursorWidth, bounds.center.y,0);
-        cursor->template GetComponent<Transform>()->Position = local;
+        cursor->GetComponent<Transform>()->Position = local;
     }
 }
 
@@ -97,6 +97,6 @@ void TextBoxLabelSystem::Update(float dt) {
     if (!cursor) return;
     timer += dt;
     
-    //cursor->template EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
+    //cursor->EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
 }
 

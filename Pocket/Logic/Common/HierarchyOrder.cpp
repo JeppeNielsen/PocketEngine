@@ -45,7 +45,7 @@ void HierarchyOrder::CalculateOrder(int& orderOffset, GameObject *object) {
     
     orderOffset++;
     
-    Orderable* orderable = object->template GetComponent<Orderable>();
+    Orderable* orderable = object->GetComponent<Orderable>();
     if (orderable) orderable->Order = orderOffset;
     
     const auto& children = object->Children();
