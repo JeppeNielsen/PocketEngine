@@ -22,7 +22,7 @@ class GameWorld;
 struct IGameObject {
     virtual void* GetComponent(int componentID) = 0;
     virtual void* AddComponent(int componentID) = 0;
-    virtual void* AddComponent(int componentID, GameObject* referenceObject);
+    virtual void* AddComponent(int componentID, GameObject* referenceObject) = 0;
     virtual void RemoveComponent(int componentID) = 0;
     virtual void* GetScriptComponent(int componentID) = 0;
     virtual void* AddScriptComponent(int componentID) = 0;
