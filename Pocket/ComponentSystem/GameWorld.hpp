@@ -46,16 +46,29 @@ private:
     GameConstants::Actions removeActions;
     
     std::vector<std::function<void*(GameObject*)>> addComponent;
+    std::vector<std::function<void*(GameObject*, GameObject*)>> addComponentReference;
     std::vector<std::function<void(GameObject*)>> removeComponent;
     std::vector<std::function<TypeInfo(GameObject*)>> getTypeComponent;
     
+    struct ObjectID {
+        GameObject* object;
+        std::string id;
+    };
+    
+    std::vector<ObjectID> objectIDs;
     bool isInitializing;
     
+    std::string* GetObjectID(GameObject* object);
+    void AddObjectID(GameObject* object, std::string id);
+    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
+    GameObject* FindObjectFromID(const std::string &id);
+    GameObject* FindFirstObjectWithComponentID(int componentID);
+    
     bool TryGetComponentIndex(std::string componentName, int& index);
+    bool TryGetComponentIndex(std::string componentName, int& index, bool& isReference);
+    
     GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
     void InitializeWorld();
-    
-    
     
 public:
 
@@ -148,7 +161,9 @@ void GameObject::RemoveComponent() {
     world->removeActions.emplace_back([this]() {
         auto activeComponentsBefore = activeComponents;
         
-        auto& systemsUsingComponent = world->componentSystems[IDHelper::GetComponentID<Component>()];
+        int componentID = IDHelper::GetComponentID<Component>();
+        
+        auto& systemsUsingComponent = world->componentSystems[componentID];
         for(auto system : systemsUsingComponent) {
             auto& bitSet = world->systemBitsets[system->index];
             bool wasInterest = (activeComponentsBefore & bitSet) == bitSet;
@@ -167,13 +182,12 @@ void GameObject::RemoveComponent() {
         
 #ifdef SCRIPTING_ENABLED
         auto activeScriptComponentsBefore = activeScriptComponents;
-        CheckForScriptSystemsRemoval(world->staticScriptSystemComponents[IDHelper::GetComponentID<Component>()], activeComponentsBefore, activeScriptComponentsBefore);
+        CheckForScriptSystemsRemoval(world->staticScriptSystemComponents[componentID], activeComponentsBefore, activeScriptComponentsBefore);
 #endif
-        
-        int componentID = IDHelper::GetComponentID<Component>();
         
         activeComponents[componentID] = false;
         removedComponents[componentID] = false;
+        ownedComponents[componentID] = false;
         typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[componentID];
         Container<Component>* container = (Container<Component>*)world->components[componentID];
         container->RemoveObject(instance);
@@ -186,6 +200,7 @@ Component* GameObject::AddComponent() {
     assert(!HasComponent<Component>());
     Container<Component>* container = (Container<Component>*)world->components[IDHelper::GetComponentID<Component>()];
     SetComponent<Component>(container->CreateObject());
+    ownedComponents[IDHelper::GetComponentID<Component>()] = true;
     return GetComponent<Component>();
 }
 
@@ -239,6 +254,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
         auto& componentNames = world->componentNames;
         auto& componentSystems = world->componentSystems;
         auto& addComponent = world->addComponent;
+        auto& addComponentReference = world->addComponentReference;
         auto& removeComponent = world->removeComponent;
         auto& getTypeComponent = world->getTypeComponent;
         
@@ -249,6 +265,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
             componentNames.resize(componentID + 1);
             componentSystems.resize(componentID + 1);
             addComponent.resize(componentID + 1);
+            addComponentReference.resize(componentID + 1);
             removeComponent.resize(componentID + 1);
             getTypeComponent.resize(componentID + 1);
         }
@@ -257,6 +274,9 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
             componentNames[componentID] = IDHelper::GetClassName<ComponentType>();
             addComponent[componentID] = [](GameObject* object) -> void* {
                 return object->AddComponent<ComponentType>();
+            };
+            addComponentReference[componentID] = [](GameObject* object, GameObject* ref) -> void* {
+                return object->AddComponent<ComponentType>(ref);
             };
             removeComponent[componentID] = [](GameObject* object) {
                 object->RemoveComponent<ComponentType>();

@@ -20,6 +20,25 @@ bool GameWorld::TryGetComponentIndex(std::string componentName, int& index) {
     return false;
 }
 
+bool GameWorld::TryGetComponentIndex(std::string componentName, int& index, bool& isReference) {
+    if (TryGetComponentIndex(componentName, index)) {
+        isReference = false;
+        return true;
+    }
+    if (componentName.size()>4) {
+        size_t refLocation = componentName.rfind(":ref");
+        if (refLocation!=-1) {
+            componentName = componentName.substr(0, refLocation);
+            if (TryGetComponentIndex(componentName, index)) {
+                isReference = true;
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
 GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
     GameObject* object = 0;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
@@ -159,6 +178,53 @@ GameWorld::~GameWorld() {
         delete s;
     }
 }
+
+void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            o.id = id;
+            return;
+        }
+    }
+    objectIDs.push_back({object, id});
+}
+
+std::string* GameWorld::GetObjectID(Pocket::GameObject *object) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            return &o.id;
+        }
+    }
+    return 0;
+}
+
+std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.object->components[componentID] &&
+            objectID.object->components[componentID] == referenceObject->components[componentID] &&
+            objectID.object->ownedComponents[componentID]) {
+            return &objectID.id;
+        }
+    }
+    return 0;
+}
+
+GameObject* GameWorld::FindObjectFromID(const std::string &id) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.id == id) return objectID.object;
+    }
+    return 0;
+}
+
+GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
+    for (int i=0; i<objects.Size(); ++i) {
+        GameObject* object = objects.Get(i);
+        if (object->components[componentID]) return object;
+    }
+    return 0;
+}
+
+
 
 
 #ifdef SCRIPTING_ENABLED

@@ -22,6 +22,7 @@ class GameWorld;
 struct IGameObject {
     virtual void* GetComponent(int componentID) = 0;
     virtual void* AddComponent(int componentID) = 0;
+    virtual void* AddComponent(int componentID, GameObject* referenceObject);
     virtual void RemoveComponent(int componentID) = 0;
     virtual void* GetScriptComponent(int componentID) = 0;
     virtual void* AddScriptComponent(int componentID) = 0;
@@ -45,6 +46,7 @@ private:
     
     Bitset activeComponents;
     Bitset removedComponents;
+    Bitset ownedComponents;
     
     using SystemIndices = int*;
     
@@ -101,16 +103,21 @@ public:
  #if SCRIPTING_ENABLED
     void* GetComponent(int componentID) override;
     void* AddComponent(int componentID) override;
+    void* AddComponent(int componentID, GameObject* referenceObject) override;
     void RemoveComponent(int componentID) override;
 #else
     void* GetComponent(int componentID);
     void* AddComponent(int componentID);
+    void* AddComponent(int componentID, GameObject* referenceObject);
     void RemoveComponent(int componentID);
 #endif
 
     using SerializePredicate = std::function<bool(GameObject*, int)>;
     
     void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
+    
+    void SetID(std::string id);
+    std::string GetID();
     
 private:
     template<typename Component>

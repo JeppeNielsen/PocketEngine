@@ -42,8 +42,6 @@ public:
         void ObjectRemoved(GameObject* go) {
             go->GetComponent<Touchable>()->Click.Unbind(this, &ClickColorSystem::Click, go);
         }
-        
-        
     };
     
     void Initialize() {
@@ -70,6 +68,8 @@ public:
         }
         
         rotation = 0;
+    
+    
     }
     
     void Update(float dt) {
@@ -83,7 +83,7 @@ public:
     }
 };
 
-int main() {
+int main_cube() {
     Engine e;
     e.Start<Game>();
 	return 0;

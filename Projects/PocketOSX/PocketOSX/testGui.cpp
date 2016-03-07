@@ -22,28 +22,32 @@ public:
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
+        /*
         auto window = gui->CreateControl(0, "Box", 100, 200);
         window->AddComponent<Draggable>();
         
         gui->CreateControl(window, "TextBox", 50,100);
         gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+        */
         
+        //window->ToJson(std::cout);
+        
+        /*
         {
             std::ofstream file;
             file.open("Window.json");
             window->ToJson(file);
             file.close();
         }
+        */
         
         
-        /*
         {
             std::ifstream file;
             file.open("Window.json");
-            window = world.CreateObject(file);
+            world.CreateObject(file);
             file.close();
         }
-        */
         
         std::cout<< IDHelper::NumberOfComponents() << std::endl;
         
@@ -119,7 +123,7 @@ public:
     }
 };
 
-int main_disabled() {
+int main() {
     Engine e;
     e.Start<GuiExample>();
 	return 0;
