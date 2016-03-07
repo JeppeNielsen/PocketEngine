@@ -122,7 +122,7 @@ public:
         JsonSerializer<T>::Deserialize(value, field, context);
     }
     
-    IFieldInfoEditor* CreateEditor(void* context, void* parent) {
+    IFieldInfoEditor* CreateEditor(void* context, void* parent) override {
         IFieldInfoEditor* editor = Editor ? Editor() : 0;
         if (!editor) {
             editor = FieldInfoEditorCreator<T>::Create();
@@ -132,7 +132,7 @@ public:
         return editor;
     }
     
-    bool HasEditor() {
+    bool HasEditor() override {
         if (Editor) return true;
         auto editor = FieldInfoEditorCreator<T>::Create();
         if (editor) {
