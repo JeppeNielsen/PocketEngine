@@ -8,8 +8,34 @@
 
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
+#include <map>
 
 using namespace Pocket;
+
+std::map<GameObject*, std::string> serializedObjects;
+
+struct AddReferenceComponent {
+    GameObject* object;
+    int componentID;
+    std::string referenceID;
+};
+
+std::vector<AddReferenceComponent> addReferenceComponents;
+
+void RecurseTree(GameObject* object, std::map<GameObject*, std::string>& objects) {
+    std::string id = object->GetID();
+    if (id == "") {
+        std::stringstream s;
+        s<<(objects.size() + 1);
+        id = s.str();
+    } else {
+        std::cout << id << std::endl;
+    }
+    objects[object] = id;
+    for(auto s : object->Children()) {
+        RecurseTree(s, objects);
+    }
+}
 
 GameObject::GameObject() : world(0)  {
     int numberOfComponents = IDHelper::NumberOfComponents();
@@ -102,6 +128,9 @@ void GameObject::RemoveComponent(int componentID) {
 }
 
 void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
+    serializedObjects.clear();
+    RecurseTree(this, serializedObjects);
+
     minijson::writer_configuration config;
     config = config.pretty_printing(true);
     minijson::object_writer writer(stream, config);
@@ -112,16 +141,14 @@ void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
 void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) {
 
     minijson::object_writer gameObject = writer.nested_object("GameObject");
+    gameObject.write("id", serializedObjects[this]);
     minijson::array_writer components = gameObject.nested_array("Components");
     
     for(int i=0; i<world->components.size(); ++i) {
-        if (!(predicate && !predicate(this, i))) {
-            std::string* referenceID = 0;
-            bool isReference = !ownedComponents[i];
-            if (isReference) {
-                referenceID = world->FindIDFromReferenceObject(this, i);
-            }
-            SerializeComponent(i, components, isReference, referenceID);
+        if (!(predicate && !predicate(this, i)) && activeComponents[i]) {
+            GameObject* componentOwner = world->getOwner[i](this);
+            bool isReference =  componentOwner != this;
+            SerializeComponent(i, components, isReference, componentOwner);
         }
     }
  
@@ -162,14 +189,7 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
                 std::string id = n;
                 if (id == "id" && v.type()==minijson::String) {
                     referenceID = v.as_string();
-                    GameObject* referenceObject = world->FindObjectFromID(referenceID);
-                    if (!referenceObject) {
-                        //object not found with id, try assign first object with this component
-                        referenceObject = world->FindFirstObjectWithComponentID(componentID);
-                    }
-                    if (referenceObject) {
-                        AddComponent(componentID, referenceObject);
-                    }
+                    addReferenceComponents.push_back({ this, componentID, referenceID });
                 } else {
                     minijson::ignore(context);
                 }
@@ -180,8 +200,7 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
     }
 }
 
-void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, std::string* referenceID ) {
-    if (!activeComponents[componentID]) return;
+void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject ) {
     minijson::object_writer componentWriter = writer.nested_object();
     std::string& name = world->componentNames[componentID];
     if (!isReference) {
@@ -194,10 +213,15 @@ void GameObject::SerializeComponent(int componentID, minijson::array_writer& wri
     } else {
         std::string referenceName = name + ":ref";
         minijson::object_writer jsonComponent = componentWriter.nested_object(referenceName.c_str());
-        if (!referenceID) {
+        if (!referenceObject) {
             jsonComponent.write("id", "");
         } else {
-            jsonComponent.write("id", *referenceID);
+            std::string id = serializedObjects[referenceObject];
+            if (id=="") {
+                std::string* idFromObject = world->FindIDFromReferenceObject(this, componentID);
+                id = idFromObject ? *idFromObject : "";
+            }
+            jsonComponent.write("id", id);
         }
         jsonComponent.close();
     }
@@ -211,6 +235,16 @@ void GameObject::SetID(std::string id) {
 std::string GameObject::GetID() {
     std::string* id = world->GetObjectID(this);
     return id ? *id : "";
+}
+
+bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, std::string &referenceID) {
+    if (addReferenceComponents.empty()) return false;
+    auto& refObj = addReferenceComponents.back();
+    addReferenceComponents.pop_back();
+    *object = refObj.object;
+    componentID = refObj.componentID;
+    referenceID = refObj.referenceID;
+    return true;
 }
 
 #ifdef SCRIPTING_ENABLED

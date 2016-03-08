@@ -25,7 +25,7 @@ public:
         Object object;
         int references;
         int index;
-        Container<Object>* owner;
+        void* owner;
     };
     
     ObjectInstance* CreateObject() {
@@ -46,24 +46,11 @@ public:
     int Size() const { return size; }
     
     void RemoveObject(ObjectInstance* instance) {
-        if ((--instance->references) == 0) {
-            if (instance->owner == this) {
-                --size;
-                objects[size]->index = instance->index;
-                std::swap(objects[instance->index], objects[size]);
-                instance->index = size;
-            } else {
-                if (!instance->owner) {
-                    delete instance;
-                } else {
-                    auto* container = instance->owner;
-                    --container->size;
-                    container->objects[container->size]->index = instance->index;
-                    std::swap(container->objects[instance->index], container->objects[container->size]);
-                    instance->index = container->size;
-                }
-            }
-        }
+        --size;
+        objects[size]->index = instance->index;
+        std::swap(objects[instance->index], objects[size]);
+        instance->index = size;
+        instance->owner = 0;
     }
     
     Object* Get(int index) {
@@ -73,7 +60,9 @@ public:
     void Clear() {
         for (int i=0; i<capacity; ++i) {
             if (objects[i]->references==0) {
-                DeleteInstance(objects[i]);
+                if (!objects[i]->owner) {
+                    DeleteInstance(objects[i]);
+                }
             } else {
                 objects[i]->owner = 0;
             }
@@ -95,7 +84,7 @@ private:
         for (int i=size; i<newCapacity; ++i) {
             objects[i] = CreateInstance();
             objects[i]->references = 0;
-            objects[i]->owner = this;
+            objects[i]->owner = 0;
             objects[i]->index = i;
         }
         capacity = newCapacity;

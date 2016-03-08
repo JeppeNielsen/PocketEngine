@@ -7,8 +7,11 @@
 //
 
 #include "GameWorld.hpp"
+#include <map>
 
 using namespace Pocket;
+
+std::map<std::string, GameObject*> loadedObjects;
 
 bool GameWorld::TryGetComponentIndex(std::string componentName, int& index) {
     for(int i=0; i<componentNames.size(); ++i) {
@@ -47,7 +50,9 @@ GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::funct
             object = (GameObject*)CreateObject();
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
-                if (name == "Components" && v.type() == minijson::Array && object) {
+                if (name == "id" && v.type() == minijson::String) {
+                    loadedObjects[std::string(v.as_string())] = object;
+                } else if (name == "Components" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {
                             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
@@ -115,6 +120,24 @@ GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void
     GameObject* object = 0;
     try {
         object = LoadObject(context, onCreated);
+        
+        GameObject* object;
+        int componentID;
+        std::string referenceID;
+        while (GameObject::GetAddReferenceComponent(&object, componentID, referenceID)) {
+            GameObject* referenceObject = 0;
+            auto foundObjectWithID = loadedObjects.find(referenceID);
+            if (foundObjectWithID!=loadedObjects.end()) {
+                referenceObject = foundObjectWithID->second;
+            } else {
+                referenceObject = FindObjectFromID(referenceID);
+                if (!referenceObject) {
+                    //object not found with id, try assign first object with this component
+                    referenceObject = FindFirstObjectWithComponentID(componentID);
+                }
+            }
+            addComponentReference[componentID](object, referenceObject);
+        }
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }

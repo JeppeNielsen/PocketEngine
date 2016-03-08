@@ -12,23 +12,46 @@ public:
     GameObject* cube;
     GameObject* atlas;
     
+    struct ClickColorSystem : GameSystem<Mesh, Touchable> {
+    
+        int number = 5;
+    
+        void Click(TouchData e, GameObject* go) {
+            auto& verts = go->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
+        
+            for (int i=0; i<verts.size(); i++) {
+                verts[i].Color = Colour::HslToRgb(i * 10 + number*10, 1, 1, 1);
+            }
+            
+            number++;
+        }
+    
+        void ObjectAdded(GameObject* go) {
+            go->GetComponent<Touchable>()->Click.Bind(this, &ClickColorSystem::Click, go);
+        }
+        
+        void ObjectRemoved(GameObject* go) {
+            go->GetComponent<Touchable>()->Click.Unbind(this, &ClickColorSystem::Click, go);
+        }
+    };
+
+    
     void Initialize() {
         
         
-        world.Initialize<Gui>();
+        world.Initialize<Gui, ClickColorSystem>();
         
         Gui* gui = world.GetSystem<Gui>();
     
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
-        /*
-        auto window = gui->CreateControl(0, "Box", 100, 200);
-        window->AddComponent<Draggable>();
         
-        gui->CreateControl(window, "TextBox", 50,100);
-        gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
-        */
+        //auto window = gui->CreateControl(0, "Box", 100, 200);
+        //window->AddComponent<Draggable>();
+        
+        //gui->CreateControl(window, "TextBox", 50,100);
+        //gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
         
         //window->ToJson(std::cout);
         
@@ -41,7 +64,7 @@ public:
         }
         */
         
-        
+        for(int i=0; i< 2; i++)
         {
             std::ifstream file;
             file.open("Window.json");

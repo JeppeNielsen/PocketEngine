@@ -49,6 +49,7 @@ private:
     std::vector<std::function<void*(GameObject*, GameObject*)>> addComponentReference;
     std::vector<std::function<void(GameObject*)>> removeComponent;
     std::vector<std::function<TypeInfo(GameObject*)>> getTypeComponent;
+    std::vector<std::function<GameObject*(GameObject*)>> getOwner;
     
     struct ObjectID {
         GameObject* object;
@@ -189,8 +190,18 @@ void GameObject::RemoveComponent() {
         removedComponents[componentID] = false;
         ownedComponents[componentID] = false;
         typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[componentID];
-        Container<Component>* container = (Container<Component>*)world->components[componentID];
-        container->RemoveObject(instance);
+        --instance->references;
+        if (instance->references == 0) {
+            if (instance->owner) {
+                GameObject* owner = (GameObject*)instance->owner;
+                Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
+                container->RemoveObject(instance);
+            } else {
+                delete instance;
+            }
+        } else if (instance->owner == this) {
+            instance->owner = 0;
+        }
         components[componentID] = 0;
     });
 }
@@ -199,7 +210,9 @@ template<typename Component>
 Component* GameObject::AddComponent() {
     assert(!HasComponent<Component>());
     Container<Component>* container = (Container<Component>*)world->components[IDHelper::GetComponentID<Component>()];
-    SetComponent<Component>(container->CreateObject());
+    typename Container<Component>::ObjectInstance* instance = container->CreateObject();
+    instance->owner = this;
+    SetComponent<Component>(instance);
     ownedComponents[IDHelper::GetComponentID<Component>()] = true;
     return GetComponent<Component>();
 }
@@ -246,6 +259,13 @@ void GameObject::SetComponent(typename Container<Component>::ObjectInstance *ins
     });
 }
 
+template<typename Component>
+GameObject* GameObject::GetOwner() {
+    typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[IDHelper::GetComponentID<Component>()];
+    if (!instance) return 0;
+    return (GameObject*)instance->owner;
+}
+
 template<typename... ComponentList>
 void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int systemIndex) {
     std::tuple<ComponentList*...> componentsTuple;
@@ -257,6 +277,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
         auto& addComponentReference = world->addComponentReference;
         auto& removeComponent = world->removeComponent;
         auto& getTypeComponent = world->getTypeComponent;
+        auto& getOwner = world->getOwner;
         
         using ComponentType = std::remove_pointer_t<decltype(c)>;
         int componentID = IDHelper::GetComponentID<ComponentType>();
@@ -268,6 +289,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
             addComponentReference.resize(componentID + 1);
             removeComponent.resize(componentID + 1);
             getTypeComponent.resize(componentID + 1);
+            getOwner.resize(componentID + 1);
         }
         if (!components[componentID]) {
             components[componentID] = new Container<ComponentType>;
@@ -290,6 +312,9 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
                     return component->GetType();
                 };
             });
+            getOwner[componentID] = [](GameObject* object) -> GameObject* {
+                return object->GetOwner<ComponentType>();
+            };
         }
         world->systemBitsets[systemIndex][componentID] = true;
         componentSystems[componentID].push_back(world->systems[systemIndex]);

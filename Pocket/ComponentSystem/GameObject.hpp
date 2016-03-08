@@ -100,6 +100,9 @@ public:
     template<typename Component>
     Component* AddComponent(GameObject* source);
     
+    template<typename Component>
+    GameObject* GetOwner();
+    
  #if SCRIPTING_ENABLED
     void* GetComponent(int componentID) override;
     void* AddComponent(int componentID) override;
@@ -123,15 +126,19 @@ private:
     template<typename Component>
     void SetComponent(typename Container<Component>::ObjectInstance* instance);
     
+    
     void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
-    void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, std::string* referenceID );
+    void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
     void AddComponent(minijson::istream_context& context, std::string componentName);
+    
     
     template<typename Component>
     TypeInfo GetComponentTypeInfo() {
         Component* component = GetComponent<Component>();
         return component->GetType();
     }
+    
+    static bool GetAddReferenceComponent(GameObject** object, int& componentID, std::string& referenceID);
     
 #ifdef SCRIPTING_ENABLED
     //Scripting *******************************
