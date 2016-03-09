@@ -8,17 +8,12 @@
 
 #include "MenuButtonSystem.hpp"
 
-void MenuButtonSystem::Initialize() {
-    AddComponent<MenuButton>();
-    AddComponent<Touchable>();
-}
-
 void MenuButtonSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click += event_handler(this, &MenuButtonSystem::ButtonClick, object);
+    object->GetComponent<Touchable>()->Click.Bind(this, &MenuButtonSystem::ButtonClick, object);
 }
 
 void MenuButtonSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &MenuButtonSystem::ButtonClick, object);
+    object->GetComponent<Touchable>()->Click.Unbind(this, &MenuButtonSystem::ButtonClick, object);
 }
 
 void MenuButtonSystem::ButtonClick(Pocket::TouchData d, Pocket::GameObject *object) {

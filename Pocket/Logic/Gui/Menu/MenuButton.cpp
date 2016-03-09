@@ -10,7 +10,4 @@
 
 using namespace Pocket;
 
-void MenuButton::Reset() {
-    menuToActivate = "";
-    menu = 0;
-}
+MenuButton::MenuButton() : menuToActivate(""), menu(0) { }

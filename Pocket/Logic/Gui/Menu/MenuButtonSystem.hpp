@@ -14,9 +14,8 @@
 
 using namespace Pocket;
 
-class MenuButtonSystem : public GameSystem {
+class MenuButtonSystem : public GameSystem<MenuButton, Touchable> {
 public:
-    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     

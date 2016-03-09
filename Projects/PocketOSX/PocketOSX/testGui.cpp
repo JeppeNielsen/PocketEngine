@@ -1,6 +1,7 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
 #include <fstream>
+#include "Timer.hpp"
 
 using namespace Pocket;
 
@@ -47,34 +48,60 @@ public:
         gui->CreateFont("Font.fnt", "Font");
         
         
-        //auto window = gui->CreateControl(0, "Box", 100, 200);
-        //window->AddComponent<Draggable>();
+        bool load = true;
         
-        //gui->CreateControl(window, "TextBox", 50,100);
-        //gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
         
-        //window->ToJson(std::cout);
+        if (!load) {
         
-        /*
-        {
-            std::ofstream file;
-            file.open("Window.json");
-            window->ToJson(file);
-            file.close();
+            Timer timer;
+            timer.Begin();
+            for(int i=0; i< 200; i++)
+            {
+                auto window = gui->CreateControl(0, "Box", 100, 200);
+                window->AddComponent<Draggable>();
+            
+                gui->CreateControl(window, "TextBox", 50,100);
+                gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+            
+            }
+            double time = timer.End();
+            std::cout << "Create windows : " << time << std::endl;
+        
+        } else {
+            
+            auto window = gui->CreateControl(0, "Box", 100, 200);
+            window->AddComponent<Draggable>();
+
+            gui->CreateControl(window, "TextBox", 50,100);
+            gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+
+            std::stringstream memory;
+            window->ToJson(memory);
+            
+            
+            /*
+            {
+                std::ofstream file;
+                file.open("Window.json");
+                window->ToJson(file);
+                file.close();
+            }
+            */
+            
+            
+            Timer timer;
+            timer.Begin();
+            for(int i=0; i< 200; i++)
+            {
+                memory.seekg(0, std::ios::beg);
+                //std::ifstream file;
+                //file.open("Window.json");
+                world.CreateObject(memory);
+                //file.close();
+            }
+            double time = timer.End();
+            std::cout << "Load windows : " << time << std::endl;
         }
-        */
-        
-        for(int i=0; i< 2; i++)
-        {
-            std::ifstream file;
-            file.open("Window.json");
-            world.CreateObject(file);
-            file.close();
-        }
-        
-        std::cout<< IDHelper::NumberOfComponents() << std::endl;
-        
-        
         
         
         /*

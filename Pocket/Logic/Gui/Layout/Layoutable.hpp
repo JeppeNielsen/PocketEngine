@@ -7,21 +7,19 @@
 //
 
 #pragma once
-
-#include "GameComponent.hpp"
+#include "TypeInfo.hpp"
 #include "Property.hpp"
 #include "Vector2.hpp"
 
 namespace Pocket {
-    Component(Layoutable)
-public:
+    class Layoutable {
+    public:
     Layoutable();
-    
     enum class HAlignment { None, Left, Center, Right, Relative };
     enum class VAlignment { None, Top, Center, Bottom, Relative };
     
-    Property<Layoutable*, HAlignment> HorizontalAlignment;
-    Property<Layoutable*, VAlignment> VerticalAlignment;
+    Property<HAlignment> HorizontalAlignment;
+    Property<VAlignment> VerticalAlignment;
     
     enum class ChildLayouting {
         None,
@@ -37,15 +35,12 @@ public:
         VerticalCentered, VerticalEvenlySized,
     };
     
-    Property<Layoutable*, ChildLayouting> ChildLayouting;
+    Property<ChildLayouting> ChildLayouting;
     
-    void Reset();
-    void Clone(const Layoutable& other);
-    
-    SERIALIZE_FIELDS_BEGIN
-    SERIALIZE_FIELD(HorizontalAlignment);
-    SERIALIZE_FIELD(VerticalAlignment);
-    SERIALIZE_FIELD(ChildLayouting);
-    SERIALIZE_FIELDS_END
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(HorizontalAlignment)
+    TYPE_FIELD(VerticalAlignment)
+    TYPE_FIELD(ChildLayouting)
+    TYPE_FIELDS_END
     };
 }

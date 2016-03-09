@@ -13,12 +13,9 @@
 #include "Property.hpp"
 
 namespace Pocket {
-    
-    Component(TransformAnimator)
+    struct TransformAnimator {
     public:
         TransformAnimator();
-    
-        void Reset();
     
         void Play(TransformAnimation* animation, float blendingDuration = 0);
     
@@ -26,7 +23,7 @@ namespace Pocket {
     
         void SetFromLastFrame(TransformAnimation* animation);
     
-        Property<TransformAnimator*, TransformAnimation*> CurrentAnimation;
+        Property<TransformAnimation*> CurrentAnimation;
         TransformAnimation* previousAnimation;
     
         float progress[3];

@@ -10,22 +10,14 @@
 
 using namespace Pocket;
 
-void TouchAnimatorSystem::Initialize() {
-    AddComponent<TouchAnimator>();
-    AddComponent<Touchable>();
-    AddComponent<TransformAnimator>();
-    AddComponent<TransformAnimationDatabase>();
-}
-
-
 void TouchAnimatorSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down += event_handler(this, &TouchAnimatorSystem::Down, object);
-    object->GetComponent<Touchable>()->Up += event_handler(this, &TouchAnimatorSystem::Up, object);
+    object->GetComponent<Touchable>()->Down.Bind(this, &TouchAnimatorSystem::Down, object);
+    object->GetComponent<Touchable>()->Up.Bind(this, &TouchAnimatorSystem::Up, object);
 }
 
 void TouchAnimatorSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down -= event_handler(this, &TouchAnimatorSystem::Down, object);
-    object->GetComponent<Touchable>()->Up -= event_handler(this, &TouchAnimatorSystem::Up, object);
+    object->GetComponent<Touchable>()->Down.Unbind(this, &TouchAnimatorSystem::Down, object);
+    object->GetComponent<Touchable>()->Up.Unbind(this, &TouchAnimatorSystem::Up, object);
 }
 
 void TouchAnimatorSystem::Down(Pocket::TouchData d, Pocket::GameObject *object) {

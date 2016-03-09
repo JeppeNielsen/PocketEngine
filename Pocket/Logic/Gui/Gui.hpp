@@ -18,11 +18,11 @@
 #include "DraggableSystem.hpp"
 #include "HierarchyOrder.hpp"
 #include "DroppableSystem.hpp"
-//#include "LayoutSystem.hpp"
+#include "LayoutSystem.hpp"
 #include "TextBoxSystem.hpp"
 #include "TextBoxLabelSystem.hpp"
-//#include "MenuButtonSystem.hpp"
-//#include "MenuSystem.hpp"
+#include "MenuButtonSystem.hpp"
+#include "MenuSystem.hpp"
 //#include "ColorSystem.hpp"
 
 namespace Pocket {

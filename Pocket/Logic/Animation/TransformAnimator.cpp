@@ -10,9 +10,7 @@
 
 using namespace Pocket;
 
-TransformAnimator::TransformAnimator() : CurrentAnimation(this) {}
-
-void TransformAnimator::Reset() {
+TransformAnimator::TransformAnimator() {
     for (int i=0; i<3; ++i) {
         progress[i]=previousProgress[i]=0;
     }

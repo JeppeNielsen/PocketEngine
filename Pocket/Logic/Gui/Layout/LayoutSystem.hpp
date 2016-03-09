@@ -14,16 +14,11 @@
 #include <set>
 
 namespace Pocket {
-    class LayoutSystem : public GameSystem {
-    
+    class LayoutSystem : public GameSystem<Transform, Sizeable, Layoutable> {
     public:
         void Update(float dt);
-        
-        void Initialize();
-    
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
-
     private:
         
         struct LayoutObject {
@@ -42,9 +37,9 @@ namespace Pocket {
             void Update();
             void UpdateChildren();
             
-            void ParentChanged(Property<GameObject*, GameObject*>::EventData d);
-            void ParentSizeChanged(Property<Sizeable*, Vector2>::EventData d);
-            void SizeChanged(Sizeable* sizeable);
+            void ParentChanged();
+            void ParentSizeChanged();
+            void SizeChanged();
             
             void IterateChildren(const ObjectCollection& children, std::function<void(Transform* transform, Sizeable* sizeable)> function);
         };

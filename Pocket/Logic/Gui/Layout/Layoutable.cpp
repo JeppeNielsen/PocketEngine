@@ -10,16 +10,8 @@
 
 using namespace Pocket;
 
-Layoutable::Layoutable() : HorizontalAlignment(this), VerticalAlignment(this), ChildLayouting(this) {}
-
-void Layoutable::Reset() {
+Layoutable::Layoutable() {
     HorizontalAlignment = HAlignment::None;
     VerticalAlignment = VAlignment::None;
     ChildLayouting = ChildLayouting::None;
 }
-
-void Layoutable::Clone(const Pocket::Layoutable &other) {
-    HorizontalAlignment = other.HorizontalAlignment;
-    VerticalAlignment = other.VerticalAlignment;
-}
-

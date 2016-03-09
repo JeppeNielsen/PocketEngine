@@ -272,6 +272,17 @@
 		72D7C8161C8C609E00A9AF8F /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8101C8C609E00A9AF8F /* GameWorld.cpp */; };
 		72D7C8171C8C609E00A9AF8F /* IDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8121C8C609E00A9AF8F /* IDHelper.cpp */; };
 		72D7C81B1C8CE15800A9AF8F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C81A1C8CE15800A9AF8F /* main.cpp */; };
+		72D7C8211C90AA6200A9AF8F /* Layoutable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C81D1C90AA6200A9AF8F /* Layoutable.cpp */; };
+		72D7C8221C90AA6200A9AF8F /* LayoutSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C81F1C90AA6200A9AF8F /* LayoutSystem.cpp */; };
+		72D7C82E1C90B2AF00A9AF8F /* Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8241C90B2AF00A9AF8F /* Menu.cpp */; };
+		72D7C8301C90B2AF00A9AF8F /* MenuButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8281C90B2AF00A9AF8F /* MenuButton.cpp */; };
+		72D7C8311C90B2AF00A9AF8F /* MenuButtonSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C82A1C90B2AF00A9AF8F /* MenuButtonSystem.cpp */; };
+		72D7C8321C90B2AF00A9AF8F /* MenuSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C82C1C90B2AF00A9AF8F /* MenuSystem.cpp */; };
+		72D7C8541C90B8F300A9AF8F /* TouchAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8431C90B8F300A9AF8F /* TouchAnimatorSystem.cpp */; };
+		72D7C8551C90B8F300A9AF8F /* TransformAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8451C90B8F300A9AF8F /* TransformAnimation.cpp */; };
+		72D7C8561C90B8F300A9AF8F /* TransformAnimationDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8471C90B8F300A9AF8F /* TransformAnimationDatabase.cpp */; };
+		72D7C8571C90B8F300A9AF8F /* TransformAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C8491C90B8F300A9AF8F /* TransformAnimator.cpp */; };
+		72D7C8581C90B8F300A9AF8F /* TransformAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D7C84B1C90B8F300A9AF8F /* TransformAnimatorSystem.cpp */; };
 		72E3CF7F1C7290EA002DA95E /* TextureComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CF7D1C7290EA002DA95E /* TextureComponent.cpp */; };
 		72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72E3CFA81C765836002DA95E /* Touchable.cpp */; };
 		72F5CFB31C7F8F5100C970EC /* testGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F5CFB21C7F8F5100C970EC /* testGui.cpp */; };
@@ -947,6 +958,30 @@
 		72D7C8131C8C609E00A9AF8F /* IDHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IDHelper.hpp; sourceTree = "<group>"; };
 		72D7C8191C8C60A400A9AF8F /* MetaLibrary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
 		72D7C81A1C8CE15800A9AF8F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		72D7C81D1C90AA6200A9AF8F /* Layoutable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Layoutable.cpp; sourceTree = "<group>"; };
+		72D7C81E1C90AA6200A9AF8F /* Layoutable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Layoutable.hpp; sourceTree = "<group>"; };
+		72D7C81F1C90AA6200A9AF8F /* LayoutSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LayoutSystem.cpp; sourceTree = "<group>"; };
+		72D7C8201C90AA6200A9AF8F /* LayoutSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LayoutSystem.hpp; sourceTree = "<group>"; };
+		72D7C8241C90B2AF00A9AF8F /* Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Menu.cpp; sourceTree = "<group>"; };
+		72D7C8251C90B2AF00A9AF8F /* Menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Menu.hpp; sourceTree = "<group>"; };
+		72D7C8271C90B2AF00A9AF8F /* MenuAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuAnimator.hpp; sourceTree = "<group>"; };
+		72D7C8281C90B2AF00A9AF8F /* MenuButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuButton.cpp; sourceTree = "<group>"; };
+		72D7C8291C90B2AF00A9AF8F /* MenuButton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuButton.hpp; sourceTree = "<group>"; };
+		72D7C82A1C90B2AF00A9AF8F /* MenuButtonSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuButtonSystem.cpp; sourceTree = "<group>"; };
+		72D7C82B1C90B2AF00A9AF8F /* MenuButtonSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuButtonSystem.hpp; sourceTree = "<group>"; };
+		72D7C82C1C90B2AF00A9AF8F /* MenuSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuSystem.cpp; sourceTree = "<group>"; };
+		72D7C82D1C90B2AF00A9AF8F /* MenuSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuSystem.hpp; sourceTree = "<group>"; };
+		72D7C8421C90B8F300A9AF8F /* TouchAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchAnimator.hpp; sourceTree = "<group>"; };
+		72D7C8431C90B8F300A9AF8F /* TouchAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchAnimatorSystem.cpp; sourceTree = "<group>"; };
+		72D7C8441C90B8F300A9AF8F /* TouchAnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchAnimatorSystem.hpp; sourceTree = "<group>"; };
+		72D7C8451C90B8F300A9AF8F /* TransformAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimation.cpp; sourceTree = "<group>"; };
+		72D7C8461C90B8F300A9AF8F /* TransformAnimation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimation.hpp; sourceTree = "<group>"; };
+		72D7C8471C90B8F300A9AF8F /* TransformAnimationDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimationDatabase.cpp; sourceTree = "<group>"; };
+		72D7C8481C90B8F300A9AF8F /* TransformAnimationDatabase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimationDatabase.hpp; sourceTree = "<group>"; };
+		72D7C8491C90B8F300A9AF8F /* TransformAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimator.cpp; sourceTree = "<group>"; };
+		72D7C84A1C90B8F300A9AF8F /* TransformAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimator.hpp; sourceTree = "<group>"; };
+		72D7C84B1C90B8F300A9AF8F /* TransformAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimatorSystem.cpp; sourceTree = "<group>"; };
+		72D7C84C1C90B8F300A9AF8F /* TransformAnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimatorSystem.hpp; sourceTree = "<group>"; };
 		72E3CF7D1C7290EA002DA95E /* TextureComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureComponent.cpp; sourceTree = "<group>"; };
 		72E3CF7E1C7290EA002DA95E /* TextureComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextureComponent.hpp; sourceTree = "<group>"; };
 		72E3CF841C72914A002DA95E /* Orderable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Orderable.hpp; sourceTree = "<group>"; };
@@ -1144,6 +1179,7 @@
 		723588671B0932E0008D6568 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72D7C8331C90B8F300A9AF8F /* Animation */,
 				72FB91961C7BA9BB0038AC85 /* Gui */,
 				72E3CFB91C767253002DA95E /* Movement */,
 				72E3CFA71C765836002DA95E /* Interaction */,
@@ -2097,6 +2133,51 @@
 			path = Meta;
 			sourceTree = "<group>";
 		};
+		72D7C81C1C90AA6200A9AF8F /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				72D7C81D1C90AA6200A9AF8F /* Layoutable.cpp */,
+				72D7C81E1C90AA6200A9AF8F /* Layoutable.hpp */,
+				72D7C81F1C90AA6200A9AF8F /* LayoutSystem.cpp */,
+				72D7C8201C90AA6200A9AF8F /* LayoutSystem.hpp */,
+			);
+			path = Layout;
+			sourceTree = "<group>";
+		};
+		72D7C8231C90B2AF00A9AF8F /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				72D7C8241C90B2AF00A9AF8F /* Menu.cpp */,
+				72D7C8251C90B2AF00A9AF8F /* Menu.hpp */,
+				72D7C8271C90B2AF00A9AF8F /* MenuAnimator.hpp */,
+				72D7C8281C90B2AF00A9AF8F /* MenuButton.cpp */,
+				72D7C8291C90B2AF00A9AF8F /* MenuButton.hpp */,
+				72D7C82A1C90B2AF00A9AF8F /* MenuButtonSystem.cpp */,
+				72D7C82B1C90B2AF00A9AF8F /* MenuButtonSystem.hpp */,
+				72D7C82C1C90B2AF00A9AF8F /* MenuSystem.cpp */,
+				72D7C82D1C90B2AF00A9AF8F /* MenuSystem.hpp */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		72D7C8331C90B8F300A9AF8F /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				72D7C8421C90B8F300A9AF8F /* TouchAnimator.hpp */,
+				72D7C8431C90B8F300A9AF8F /* TouchAnimatorSystem.cpp */,
+				72D7C8441C90B8F300A9AF8F /* TouchAnimatorSystem.hpp */,
+				72D7C8451C90B8F300A9AF8F /* TransformAnimation.cpp */,
+				72D7C8461C90B8F300A9AF8F /* TransformAnimation.hpp */,
+				72D7C8471C90B8F300A9AF8F /* TransformAnimationDatabase.cpp */,
+				72D7C8481C90B8F300A9AF8F /* TransformAnimationDatabase.hpp */,
+				72D7C8491C90B8F300A9AF8F /* TransformAnimator.cpp */,
+				72D7C84A1C90B8F300A9AF8F /* TransformAnimator.hpp */,
+				72D7C84B1C90B8F300A9AF8F /* TransformAnimatorSystem.cpp */,
+				72D7C84C1C90B8F300A9AF8F /* TransformAnimatorSystem.hpp */,
+			);
+			path = Animation;
+			sourceTree = "<group>";
+		};
 		72E3CF801C72914A002DA95E /* Common */ = {
 			isa = PBXGroup;
 			children = (
@@ -2134,6 +2215,8 @@
 		72FB91961C7BA9BB0038AC85 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				72D7C8231C90B2AF00A9AF8F /* Menu */,
+				72D7C81C1C90AA6200A9AF8F /* Layout */,
 				72FB91981C7BA9BB0038AC85 /* Droppable.hpp */,
 				7268376D1C864E5E00785193 /* DroppableSystem.cpp */,
 				72FB919A1C7BA9BB0038AC85 /* DroppableSystem.hpp */,
@@ -2275,6 +2358,7 @@
 				72358FCC1B09338A008D6568 /* btConeShape.cpp in Sources */,
 				72358FDA1B09338A008D6568 /* btOptimizedBvh.cpp in Sources */,
 				72D7C8151C8C609E00A9AF8F /* GameSystem.cpp in Sources */,
+				72D7C8321C90B2AF00A9AF8F /* MenuSystem.cpp in Sources */,
 				72358FF71B09338A008D6568 /* btGjkEpa2.cpp in Sources */,
 				72358C581B0932E1008D6568 /* ICellItem.cpp in Sources */,
 				72358CE21B0932E1008D6568 /* b2MouseJoint.cpp in Sources */,
@@ -2314,6 +2398,8 @@
 				72358FF31B09338A008D6568 /* gim_tri_collision.cpp in Sources */,
 				72358CD81B0932E1008D6568 /* b2World.cpp in Sources */,
 				72358FBD1B09338A008D6568 /* btInternalEdgeUtility.cpp in Sources */,
+				72D7C8311C90B2AF00A9AF8F /* MenuButtonSystem.cpp in Sources */,
+				72D7C8211C90AA6200A9AF8F /* Layoutable.cpp in Sources */,
 				726837781C864E5E00785193 /* TextBoxSystem.cpp in Sources */,
 				72358FD91B09338A008D6568 /* btMultiSphereShape.cpp in Sources */,
 				72358CBD1B0932E1008D6568 /* Point3.cpp in Sources */,
@@ -2321,6 +2407,7 @@
 				72358CC51B0932E1008D6568 /* ChromecastUser.cpp in Sources */,
 				72358FF61B09338A008D6568 /* btGjkConvexCast.cpp in Sources */,
 				72358CDD1B0932E1008D6568 /* b2PolyAndCircleContact.cpp in Sources */,
+				72D7C8581C90B8F300A9AF8F /* TransformAnimatorSystem.cpp in Sources */,
 				72358C541B0932E1008D6568 /* Window.cpp in Sources */,
 				72358FF81B09338A008D6568 /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
 				72358C5A1B0932E1008D6568 /* Octree.cpp in Sources */,
@@ -2355,12 +2442,14 @@
 				72358CC61B0932E1008D6568 /* RectPacker.cpp in Sources */,
 				72358FD61B09338A008D6568 /* btHeightfieldTerrainShape.cpp in Sources */,
 				7235902A1B09338A008D6568 /* btSoftBodyHelpers.cpp in Sources */,
+				72D7C8541C90B8F300A9AF8F /* TouchAnimatorSystem.cpp in Sources */,
 				72358FEB1B09338A008D6568 /* btGImpactBvh.cpp in Sources */,
 				72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */,
 				72358FF41B09338A008D6568 /* btContinuousConvexCollision.cpp in Sources */,
 				72358FBA1B09338A008D6568 /* btDefaultCollisionConfiguration.cpp in Sources */,
 				726837761C864E5E00785193 /* SpriteTextureSystem.cpp in Sources */,
 				72358FA51B09338A008D6568 /* btBroadphaseProxy.cpp in Sources */,
+				72D7C82E1C90B2AF00A9AF8F /* Menu.cpp in Sources */,
 				72358CC21B0932E1008D6568 /* Vector3.cpp in Sources */,
 				72358D861B0932E1008D6568 /* GamePadManager.mm in Sources */,
 				72358DEE1B0932E1008D6568 /* miniz.c in Sources */,
@@ -2380,6 +2469,7 @@
 				72358D881B0932E1008D6568 /* OSXWindow.mm in Sources */,
 				729953F31B87B8F80036A2DF /* File.mm in Sources */,
 				726837741C864E5E00785193 /* LabelMeshSystem.cpp in Sources */,
+				72D7C8571C90B8F300A9AF8F /* TransformAnimator.cpp in Sources */,
 				723590151B09338A008D6568 /* btParallelConstraintSolver.cpp in Sources */,
 				7235901B1B09338A008D6568 /* SpuContactManifoldCollisionAlgorithm.cpp in Sources */,
 				723590181B09338A008D6568 /* SequentialThreadSupport.cpp in Sources */,
@@ -2429,6 +2519,7 @@
 				7235901A1B09338A008D6568 /* SpuCollisionTaskProcess.cpp in Sources */,
 				72358CCB1B0932E1008D6568 /* b2Distance.cpp in Sources */,
 				72358FE41B09338A008D6568 /* btTriangleIndexVertexArray.cpp in Sources */,
+				72D7C8551C90B8F300A9AF8F /* TransformAnimation.cpp in Sources */,
 				72358FAF1B09338A008D6568 /* btBox2dBox2dCollisionAlgorithm.cpp in Sources */,
 				72358CB71B0932E1008D6568 /* Interpolator.cpp in Sources */,
 				72358FFB1B09338A008D6568 /* btPersistentManifold.cpp in Sources */,
@@ -2449,6 +2540,7 @@
 				72358CE41B0932E1008D6568 /* b2PulleyJoint.cpp in Sources */,
 				72358CDA1B0932E1008D6568 /* b2CircleContact.cpp in Sources */,
 				72358CE01B0932E1008D6568 /* b2GearJoint.cpp in Sources */,
+				72D7C8301C90B2AF00A9AF8F /* MenuButton.cpp in Sources */,
 				7235902F1B09338A008D6568 /* btAlignedAllocator.cpp in Sources */,
 				72358CE11B0932E1008D6568 /* b2Joint.cpp in Sources */,
 				72358DE81B0932E1008D6568 /* tinyxml.cpp in Sources */,
@@ -2490,6 +2582,7 @@
 				7235901F1B09338A008D6568 /* boxBoxDistance.cpp in Sources */,
 				72358FF11B09338A008D6568 /* gim_contact.cpp in Sources */,
 				72D7C8161C8C609E00A9AF8F /* GameWorld.cpp in Sources */,
+				72D7C8221C90AA6200A9AF8F /* LayoutSystem.cpp in Sources */,
 				72358FC31B09338A008D6568 /* btUnionFind.cpp in Sources */,
 				72358CBF1B0932E1008D6568 /* Ray.cpp in Sources */,
 				72358C521B0932E1008D6568 /* InputManager.cpp in Sources */,
@@ -2502,6 +2595,7 @@
 				72358FE01B09338A008D6568 /* btStridingMeshInterface.cpp in Sources */,
 				72358D8D1B0932E1008D6568 /* jpeg_decoder.cpp in Sources */,
 				72358FB31B09338A008D6568 /* btCollisionObject.cpp in Sources */,
+				72D7C8561C90B8F300A9AF8F /* TransformAnimationDatabase.cpp in Sources */,
 				72358FC81B09338A008D6568 /* btCapsuleShape.cpp in Sources */,
 				72358FA61B09338A008D6568 /* btCollisionAlgorithm.cpp in Sources */,
 				72358CC01B0932E1008D6568 /* TransitionHelper.cpp in Sources */,

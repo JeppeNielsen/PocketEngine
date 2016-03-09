@@ -26,10 +26,10 @@ void Gui::Initialize(GameWorld* world) {
     world->GetSystem<SpriteTextureSystem>();
     world->GetSystem<HierarchyOrder>();
     world->GetSystem<DraggableSystem>();
-    //world->GetSystem<LayoutSystem>();
+    world->GetSystem<LayoutSystem>();
     world->GetSystem<TextBoxLabelSystem>();
-    //world->GetSystem<MenuSystem>();
-    //world->GetSystem<MenuButtonSystem>();
+    world->GetSystem<MenuSystem>();
+    world->GetSystem<MenuButtonSystem>();
     //world->GetSystem<ColorSystem>();
     //world->GetSystem<DraggableMotionSystem>();
     //world->GetSystem<VelocitySystem>();
