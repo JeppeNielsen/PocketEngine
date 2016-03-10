@@ -78,35 +78,6 @@ GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::funct
     return object;
 }
 
-void GameWorld::InitializeWorld() {
-    std::vector<IGameSystem*> initializedSystems;
-    while (true) {
-        std::vector<IGameSystem*> systemsToInitialize;
-        for (auto s : systems) {
-            if (std::find(initializedSystems.begin(), initializedSystems.end(), s)==initializedSystems.end()) {
-                systemsToInitialize.push_back(s);
-            }
-        }
-        if (systemsToInitialize.empty()) break;
-        for(auto s : systemsToInitialize) {
-            initializedSystems.push_back(s);
-            s->Initialize(this);
-        }
-    }
-    
-    systemBitsets.resize(systems.size());
-    componentSystems.resize(systems.size());
-    for(int i=0; i<systems.size(); ++i) {
-        systems[i]->CreateComponents(this, i);
-    }
-    for(auto c : components) {
-        c->Initialize();
-    }
-#if SCRIPTING_ENABLED
-    staticScriptSystemComponents.resize(components.size());
-#endif
-}
-
 GameObject* GameWorld::CreateObject() {
     auto object = objects.CreateObjectNoReset();
     object->object.instance = object;
@@ -146,6 +117,25 @@ GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void
 
 GameWorld::GameWorld() {
     objects.Initialize();
+}
+
+void GameWorld::TryAddSystem(int systemID, std::function<IGameSystem*()> createSystem) {
+    if (systemID>=systemsIndexed.size()) {
+        systemsIndexed.resize(systemID + 1, 0);
+    }
+    if (!systemsIndexed[systemID]) {
+        systemsIndexed[systemID] = createSystem();
+        systems.push_back(systemsIndexed[systemID]);
+        systemsIndexed[systemID]->index = (int)(systems.size() - 1);
+        
+        systemBitsets.resize(systems.size());
+        
+        systemsIndexed[systemID]->CreateComponents(this, systemsIndexed[systemID]->index);
+        systemsIndexed[systemID]->Initialize(this);
+#if SCRIPTING_ENABLED
+        staticScriptSystemComponents.resize(components.size());
+#endif
+    }
 }
 
 void GameWorld::Update(float dt) {

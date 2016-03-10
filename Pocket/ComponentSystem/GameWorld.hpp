@@ -36,6 +36,7 @@ private:
     Objects objects;
     
     GameConstants::Systems systems;
+    GameConstants::Systems systemsIndexed;
     GameConstants::SystemBitsets systemBitsets;
     
     GameConstants::Components components;
@@ -57,8 +58,7 @@ private:
     };
     
     std::vector<ObjectID> objectIDs;
-    bool isInitializing;
-    
+
     std::string* GetObjectID(GameObject* object);
     void AddObjectID(GameObject* object, std::string id);
     std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
@@ -69,40 +69,17 @@ private:
     bool TryGetComponentIndex(std::string componentName, int& index, bool& isReference);
     
     GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
-    void InitializeWorld();
+    
+    void TryAddSystem(int systemID, std::function<IGameSystem*()> createSystem);
     
 public:
 
-    template<typename... Systems>
-    void Initialize() {
-        isInitializing = true;
-        std::tuple<Systems*...> systemsTuple;
-        Meta::for_each_in_tuple_non_const(systemsTuple, [this](auto t) {
-            using SystemType = std::remove_pointer_t<decltype(t)>;
-            AddSystem<SystemType>();
-        });
-        InitializeWorld();
-        isInitializing = false;
-    }
-
     template<typename System>
-    System* GetSystem() {
-        if (isInitializing) return AddSystem<System>();
-        return (System*)systems[IDHelper::GetSystemID<System>()];
-    }
-    
-    template<typename System>
-    System* AddSystem() {
-        if (!isInitializing) return GetSystem<System>();
+    System* CreateSystem() {
+        assert(ObjectCount() == 0);
         int systemID = IDHelper::GetSystemID<System>();
-        if (systemID>=systems.size()) {
-            systems.resize(systemID + 1, 0);
-        }
-        if (!systems[systemID]) {
-            systems[systemID] = new System();
-            systems[systemID]->index = (int)(systems.size() - 1);
-        }
-        return (System*)systems[systemID];
+        TryAddSystem(systemID, []() { return new System(); });
+        return (System*)systemsIndexed[systemID];
     }
     
     GameObject* CreateObject();
@@ -157,6 +134,7 @@ template<typename Component>
 void GameObject::RemoveComponent() {
     if (removedComponents[IDHelper::GetComponentID<Component>()]) return;
     assert(HasComponent<Component>());
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
     removedComponents[IDHelper::GetComponentID<Component>()] = true;
     
     world->removeActions.emplace_back([this]() {
@@ -196,8 +174,6 @@ void GameObject::RemoveComponent() {
                 GameObject* owner = (GameObject*)instance->owner;
                 Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
                 container->RemoveObject(instance);
-            } else {
-                delete instance;
             }
         } else if (instance->owner == this) {
             instance->owner = 0;
@@ -208,7 +184,10 @@ void GameObject::RemoveComponent() {
 
 template<typename Component>
 Component* GameObject::AddComponent() {
-    assert(!HasComponent<Component>());
+    if (HasComponent<Component>()) {
+        return GetComponent<Component>();
+    }
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
     Container<Component>* container = (Container<Component>*)world->components[IDHelper::GetComponentID<Component>()];
     typename Container<Component>::ObjectInstance* instance = container->CreateObject();
     instance->owner = this;
@@ -219,9 +198,13 @@ Component* GameObject::AddComponent() {
 
 template<typename Component>
 Component* GameObject::AddComponent(GameObject* source) {
+    if (HasComponent<Component>()) {
+        return GetComponent<Component>();
+    }
     assert(source);
     assert(!HasComponent<Component>());
     assert(source->HasComponent<Component>());
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
     typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)source->components[IDHelper::GetComponentID<Component>()];
     ++instance->references;
     SetComponent<Component>(instance);
@@ -293,6 +276,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
         }
         if (!components[componentID]) {
             components[componentID] = new Container<ComponentType>;
+            components[componentID]->Initialize();
             componentNames[componentID] = IDHelper::GetClassName<ComponentType>();
             addComponent[componentID] = [](GameObject* object) -> void* {
                 return object->AddComponent<ComponentType>();

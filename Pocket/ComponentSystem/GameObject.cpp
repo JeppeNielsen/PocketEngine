@@ -37,7 +37,7 @@ void RecurseTree(GameObject* object, std::map<GameObject*, std::string>& objects
     }
 }
 
-GameObject::GameObject() : world(0)  {
+GameObject::GameObject() : world(0), isRemoved(false)  {
     int numberOfComponents = IDHelper::NumberOfComponents();
     components = new ComponentPtr[numberOfComponents];
     for(int i=0; i<numberOfComponents; ++i) {
@@ -77,7 +77,6 @@ void GameObject::Remove() {
 
     world->removeActions.emplace_back([this]() {
         world->objects.RemoveObject(instance);
-        isRemoved = false;
     });
     
     for(auto child : children) {

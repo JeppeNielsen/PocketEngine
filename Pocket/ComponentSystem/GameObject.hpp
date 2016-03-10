@@ -79,9 +79,9 @@ public:
     const ObjectCollection& Children() { return children; }
     Property<int> Order;
     
-    template<typename T>
-    T* GetComponent() {
-        return (T*)components[IDHelper::GetComponentID<T>()];
+    template<typename Component>
+    Component* GetComponent() {
+        return (Component*)components[IDHelper::GetComponentID<Component>()];
     }
     
     void Remove();
