@@ -46,8 +46,10 @@ public:
     
     void Initialize() {
         
-        world.Initialize<RenderSystem, TouchSystem, DraggableSystem, ClickColorSystem>();
-        world.GetSystem<TouchSystem>()->Input = &Input;
+        world.CreateSystem<RenderSystem>();
+        world.CreateSystem<TouchSystem>()->Input = &Input;
+        world.CreateSystem<DraggableSystem>();
+        world.CreateSystem<ClickColorSystem>();
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();

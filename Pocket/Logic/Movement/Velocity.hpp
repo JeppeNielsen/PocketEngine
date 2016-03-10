@@ -7,14 +7,10 @@
 //
 
 #pragma once
-
-#include "GameWorld.hpp"
 #include "Vector3.hpp"
 
 namespace Pocket {
-    Component(Velocity)
-    public:
-        void Reset();
+    struct Velocity {
         Vector3 velocity;
         float Friction;
         float MinimumSpeedBeforeStop;

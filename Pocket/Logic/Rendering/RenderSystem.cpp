@@ -18,9 +18,9 @@ RenderSystem::~RenderSystem() {
 }
 
 void RenderSystem::Initialize(GameWorld* world) {
-    cameras = world->AddSystem<CameraSystem>();
-    meshOctreeSystem = world->AddSystem<OctreeSystem>();
-    world->AddSystem<TextureSystem>();
+    cameras = world->CreateSystem<CameraSystem>();
+    meshOctreeSystem = world->CreateSystem<OctreeSystem>();
+    world->CreateSystem<TextureSystem>();
     for (auto& vertexType : IVertexType::typelist) {
         objectRenderers.push_back(vertexType->CreateRenderer());
     }

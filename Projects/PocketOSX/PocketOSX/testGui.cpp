@@ -40,22 +40,22 @@ public:
     void Initialize() {
         
         
-        world.Initialize<Gui, ClickColorSystem>();
-        
-        Gui* gui = world.GetSystem<Gui>();
+        Gui* gui = world.CreateSystem<Gui>();
+        world.CreateSystem<ClickColorSystem>();
     
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
         
-        bool load = true;
         
+        
+        bool load = false;
         
         if (!load) {
         
             Timer timer;
             timer.Begin();
-            for(int i=0; i< 200; i++)
+            for(int i=0; i< 10; i++)
             {
                 auto window = gui->CreateControl(0, "Box", 100, 200);
                 window->AddComponent<Draggable>();

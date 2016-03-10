@@ -11,7 +11,7 @@
 using namespace Pocket;
 
 void DroppableSystem::Initialize(GameWorld* world) {
-    touchSystem = world->AddSystem<TouchSystem>();
+    touchSystem = world->CreateSystem<TouchSystem>();
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {

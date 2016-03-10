@@ -26,9 +26,9 @@ TouchSystem::TouchSystem() {
 }
 
 void TouchSystem::Initialize(GameWorld* world) {
-    octree = world->AddSystem<OctreeSystem>();
-    cameraSystem = world->AddSystem<TouchSystem::CameraSystem>();
-    world->AddSystem<OrderableSystem>();
+    octree = world->CreateSystem<OctreeSystem>();
+    cameraSystem = world->CreateSystem<TouchSystem::CameraSystem>();
+    world->CreateSystem<OrderableSystem>();
 }
 
 TouchSystem::OctreeSystem& TouchSystem::Octree() { return *octree; }

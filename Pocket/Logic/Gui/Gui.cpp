@@ -16,26 +16,26 @@ GameObject* Gui::GetAtlas() { return atlas; }
 void Gui::Initialize(GameWorld* world) {
 
     this->world = world;
-    renderer = world->GetSystem<RenderSystem>();
-    textboxSystem = world->GetSystem<TextBoxSystem>();
-    touchSystem = world->GetSystem<TouchSystem>();
+    renderer = world->CreateSystem<RenderSystem>();
+    textboxSystem = world->CreateSystem<TextBoxSystem>();
+    touchSystem = world->CreateSystem<TouchSystem>();
     
-    world->GetSystem<TransformHierarchy>();
-    world->GetSystem<LabelMeshSystem>();
-    world->GetSystem<SpriteMeshSystem>();
-    world->GetSystem<SpriteTextureSystem>();
-    world->GetSystem<HierarchyOrder>();
-    world->GetSystem<DraggableSystem>();
-    world->GetSystem<LayoutSystem>();
-    world->GetSystem<TextBoxLabelSystem>();
-    world->GetSystem<MenuSystem>();
-    world->GetSystem<MenuButtonSystem>();
-    //world->GetSystem<ColorSystem>();
-    //world->GetSystem<DraggableMotionSystem>();
-    //world->GetSystem<VelocitySystem>();
-    //world->GetSystem<LimitableSystem>();
-    //world->GetSystem<SelectedColorerSystem>();
-    world->GetSystem<DroppableSystem>();
+    world->CreateSystem<TransformHierarchy>();
+    world->CreateSystem<LabelMeshSystem>();
+    world->CreateSystem<SpriteMeshSystem>();
+    world->CreateSystem<SpriteTextureSystem>();
+    world->CreateSystem<HierarchyOrder>();
+    world->CreateSystem<DraggableSystem>();
+    world->CreateSystem<LayoutSystem>();
+    world->CreateSystem<TextBoxLabelSystem>();
+    world->CreateSystem<MenuSystem>();
+    world->CreateSystem<MenuButtonSystem>();
+    //world->CreateSystem<ColorSystem>();
+    //world->CreateSystem<DraggableMotionSystem>();
+    //world->CreateSystem<VelocitySystem>();
+    //world->CreateSystem<LimitableSystem>();
+    //world->CreateSystem<SelectedColorerSystem>();
+    world->CreateSystem<DroppableSystem>();
     
 }
 

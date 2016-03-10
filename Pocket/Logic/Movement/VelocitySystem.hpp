@@ -13,9 +13,8 @@
 #include "Velocity.hpp"
 
 namespace Pocket {
-    class VelocitySystem : public GameSystem {
+    class VelocitySystem : public GameSystem<Transform, Velocity> {
     public:
-        void Initialize();
         void Update(float dt);
     };
 }

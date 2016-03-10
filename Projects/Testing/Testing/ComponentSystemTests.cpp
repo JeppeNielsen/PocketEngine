@@ -25,7 +25,7 @@ void ComponentSystemTests::Run() {
         GameWorld world;
         auto obj1 = world.CreateObject();
         auto obj2 = world.CreateObject();
-        return obj1 && obj2 && obj1!=obj2 && world.Objects().size()==2;
+        return obj1 && obj2 && obj1!=obj2 && world.ObjectCount()==2;
     });
     
     UnitTest("Delete all objects", []()->bool {
@@ -33,41 +33,46 @@ void ComponentSystemTests::Run() {
         for (int i=0; i<100; i++) {
             world.CreateObject();
         }
-        bool wasHundred = world.Objects().size()==100;
-        world.DeleteAllObjects();
-        return world.Objects().empty() && wasHundred;
+        bool wasHundred = world.ObjectCount()==100;
+        world.Clear();
+        return world.ObjectCount() == 0 && wasHundred;
     });
     
     UnitTest("Create Component", []()->bool {
-        Component(Position)
-            int Position;
-            void Reset() { Position = 5; }
+        struct Position {
+            Position() { position = 5; }
+            int position;
         };
+        struct PositionSystem : public GameSystem<Position> {};
         
         GameWorld world;
+        world.CreateSystem<PositionSystem>();
         auto object = world.CreateObject();
         auto position = object->AddComponent<Position>();
         return position!=0;
     });
     
     UnitTest("Reset Component", []()->bool {
-        Component(Position)
-        public:
-            int Position;
-            void Reset() { Position = 5; }
+        struct Position {
+            Position() { position = 5; }
+            int position;
         };
+        struct PositionSystem : GameSystem<Position> {};
         GameWorld world;
+        world.CreateSystem<PositionSystem>();
         auto object = world.CreateObject();
         auto position = object->AddComponent<Position>();
-        return position->Position==5;
+        return position->position==5;
     });
     
     UnitTest("GetComponent", []()->bool {
-        Component(Position)
-        public:
-            int Position;
+        struct Position {
+            Position() { position = 5; }
+            int position;
         };
+        struct PositionSystem : GameSystem<Position> {};
         GameWorld world;
+        world.CreateSystem<PositionSystem>();
         auto object = world.CreateObject();
         object->AddComponent<Position>();
         return object->GetComponent<Position>()!=0;
@@ -75,12 +80,13 @@ void ComponentSystemTests::Run() {
 
     
     UnitTest("RemoveComponent", []()->bool {
-        Component(Position)
-        public:
-            int Position;
-            void Reset() { Position = 5; }
+        struct Position {
+            Position() { position = 5; }
+            int position;
         };
+        struct PositionSystem : GameSystem<Position> {};
         GameWorld world;
+        world.CreateSystem<PositionSystem>();
         auto object = world.CreateObject();
         bool componentDidExist = object->AddComponent<Position>()!=0;
         world.Update(0);
@@ -90,37 +96,38 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("EnableComponent", []()->bool {
-        Component(Position)
-        public:
-            int Position;
-            void Reset() { Position = 5; }
+        struct Position {
+            Position() { position = 5; }
+            int position;
         };
+        struct PositionSystem : GameSystem<Position> {};
         GameWorld world;
+        world.CreateSystem<PositionSystem>();
         auto object = world.CreateObject();
         object->AddComponent<Position>();
         world.Update(0);
-        bool wasEnabled = object->IsComponentEnabled<Position>();
-        object->EnableComponent<Position>(false);
+        bool wasEnabled = false;//object->IsComponentEnabled<Position>();
+        //object->EnableComponent<Position>(false);
         world.Update(0);
-        bool isEnabled = object->IsComponentEnabled<Position>();
+        bool isEnabled = false;//object->IsComponentEnabled<Position>();
         world.Update(0);
         return wasEnabled && !isEnabled;
     });
     
     UnitTest("Add System", []()->bool {
-        Component(Position)
-        public:
+        struct Position {
+            Position() { counter = 0; position = 5; }
             int counter;
-            int Position;
-            void Reset() { counter = 0; Position = 5; }
+            int position;
         };
         
-        Component(Velocity)
+        struct Velocity {
         public:
-            int Velocity;
-            void Reset() { Velocity = 5; }
+            int velocity;
+            Velocity() { velocity = 0; }
         };
-        SYSTEM(VelocitySystem, Position, Velocity)
+        
+        struct VelocitySystem : public GameSystem<Position, Velocity> {
             void ObjectAdded(GameObject* object) {
                 object->GetComponent<Position>()->counter++;
             }
@@ -135,19 +142,18 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("Object added to system", []()->bool {
-        Component(Position)
-        public:
+        struct Position {
+            Position() { counter = 0; position = 5; }
             int counter;
-            int Position;
-            void Reset() { counter = 0; Position = 5; }
+            int position;
         };
         
-        Component(Velocity)
+        struct Velocity {
         public:
-            int Velocity;
-            void Reset() { Velocity = 5; }
+            int velocity;
+            Velocity() { velocity = 0; }
         };
-        SYSTEM(VelocitySystem, Position, Velocity)
+        struct VelocitySystem : public GameSystem<Position, Velocity> {
             void ObjectAdded(GameObject* object) {
                 object->GetComponent<Position>()->counter++;
             }
@@ -171,20 +177,19 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("Object added and removed from system", []()->bool {
-        Component(Position)
-        public:
+        struct Position {
+            Position() { counter = 0; position = 5; }
             int counter;
-            int Position;
-            void Reset() { counter = 0; Position = 5; }
+            int position;
         };
         
-        Component(Velocity)
+        struct Velocity {
         public:
-            int Velocity;
-            void Reset() { Velocity = 5; }
+            int velocity;
+            Velocity() { velocity = 0; }
         };
         
-        SYSTEM(VelocitySystem, Position, Velocity)
+        struct VelocitySystem : public GameSystem<Position, Velocity> {
             void ObjectAdded(GameObject* object) {
                 object->GetComponent<Position>()->counter++;
                 objectCounter++;
@@ -196,83 +201,91 @@ void ComponentSystemTests::Run() {
         public:
             int objectCounter = 0;
         };
+        
              
-             GameWorld world;
-             auto velocitySystem = world.CreateSystem<VelocitySystem>();
-             
-             GameObject* objects[10];
-             for(int i=0; i<10; i++) {
-                 objects[i] = world.CreateObject();
-                 objects[i]->AddComponent<Position>();
-                 objects[i]->AddComponent<Velocity>();
-             }
-             world.Update(0);
-             bool wasTen = velocitySystem->objectCounter == 10;
-             bool allComponentCountersWhereOne = true;
-             for (int i=0;i<10;i++) {
-                 objects[i]->Remove();
-                 allComponentCountersWhereOne = allComponentCountersWhereOne && objects[i]->GetComponent<Position>()->counter == 1;
-             }
-             world.Update(0);
-             bool isZero = velocitySystem->objectCounter == 0;
-             
-             return
-             wasTen && isZero && allComponentCountersWhereOne;
+         GameWorld world;
+         auto velocitySystem = world.CreateSystem<VelocitySystem>();
+         
+         GameObject* objects[10];
+         for(int i=0; i<10; i++) {
+             objects[i] = world.CreateObject();
+             objects[i]->AddComponent<Position>();
+             objects[i]->AddComponent<Velocity>();
+         }
+         world.Update(0);
+         bool wasTen = velocitySystem->objectCounter == 10;
+         bool allComponentCountersWhereOne = true;
+         for (int i=0;i<10;i++) {
+             objects[i]->Remove();
+             allComponentCountersWhereOne = allComponentCountersWhereOne && objects[i]->GetComponent<Position>()->counter == 1;
+         }
+         world.Update(0);
+         bool isZero = velocitySystem->objectCounter == 0;
+         
+         return
+         wasTen && isZero && allComponentCountersWhereOne;
     });
     
     UnitTest("Add/Remove Object from GameSystem::ObjectAdded", []()->bool {
         
-        Component(Bomb)
-        public:
-            int damage;
-        };
+        struct Bomb { int damage; };
         
-        Component(BombThrower)
-        public:
+        struct BombThrower {
+            BombThrower() { numberOfBombsToCreate = 5; }
             int numberOfBombsToCreate;
-            void Reset() { numberOfBombsToCreate = 5; }
         };
         
-        SYSTEM(BombSystem, Bomb)
+        struct BombSystem : public GameSystem<Bomb> {
+            GameWorld* world;
+            void Initialize(GameWorld* world) {
+                this->world = world;
+            }
+        
             void ObjectAdded(GameObject* object) {bombs++;}
             void ObjectRemoved(GameObject* object) {bombs--;}
-            public:
             int bombs = 0;
         };
         
-        SYSTEM(BombThrowerSystem, BombThrower)
-        void ObjectAdded(GameObject* object) {
-            for (int i=0; i<object->GetComponent<BombThrower>()->numberOfBombsToCreate; i++) {
-                GameObject* bomb = World()->CreateObject();
-                bomb->AddComponent<Bomb>();
+        struct BombThrowerSystem : public GameSystem<BombThrower> {
+            GameWorld* world;
+            void Initialize(GameWorld* world) {
+                this->world = world;
             }
-            object->Remove();
-        }
-        
+            void ObjectAdded(GameObject* object) {
+                for (int i=0; i<object->GetComponent<BombThrower>()->numberOfBombsToCreate; i++) {
+                    GameObject* bomb = world->CreateObject();
+                    bomb->AddComponent<Bomb>();
+                }
+                object->Remove();
+            }
         };
         
-             GameWorld world;
-             world.CreateSystem<BombThrowerSystem>();
-             auto bombSystem = world.CreateSystem<BombSystem>();
-             GameObject* bombThrower = world.CreateObject();
-             bombThrower->AddComponent<BombThrower>();
-             
-             size_t objectsBefore = world.Objects().size();
-             int bombsBefore = bombSystem->bombs;
-             world.Update(0);
-             size_t objectsAfter = world.Objects().size();
-             int bombsAfter = bombSystem->bombs;
-             
+        GameWorld world;
+        world.CreateSystem<BombThrowerSystem>();
+        auto bombSystem = world.CreateSystem<BombSystem>();
+        GameObject* bombThrower = world.CreateObject();
+        bombThrower->AddComponent<BombThrower>();
+        
+        assert(bombThrower->GetComponent<BombThrower>());
+        
+
+        size_t objectsBefore = world.ObjectCount();
+        int bombsBefore = bombSystem->bombs;
+        world.Update(0);
+        size_t objectsAfter = world.ObjectCount();
+        int bombsAfter = bombSystem->bombs;
         
         return objectsBefore == 1 && bombsBefore == 0 && objectsAfter == 5 && bombsAfter == 5;
     });
     
+    
     UnitTest("Add same component multiple times same frame", []()->bool {
-        Component(Data)
-        public:
+        struct Data {
             int something;
         };
+        struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* object = world.CreateObject();
         auto c1 = object->AddComponent<Data>();
         auto c2 = object->AddComponent<Data>();
@@ -280,12 +293,13 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("AddComponent() and AddComponent(ref) multiple times same frame", []()->bool {
-        Component(Data)
-        public:
-            void Reset() { something = 1; }
+        struct Data {
+            Data() { something = 1; }
             int something;
         };
+        struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* ref = world.CreateObject();
         ref->AddComponent<Data>()->something = 128;
         GameObject* object = world.CreateObject();
@@ -295,11 +309,12 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("reference component", []()->bool {
-        Component(Data)
-        public:
+        struct Data {
             int something;
         };
+        struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* ref = world.CreateObject();
         ref->AddComponent<Data>()->something = 128;
         GameObject* o1 = world.CreateObject();
@@ -311,12 +326,13 @@ void ComponentSystemTests::Run() {
     });
     
     UnitTest("reference component vs non reference component", []()->bool {
-        Component(Data)
-        public:
+        struct Data {
+            Data() { something = 5; }
             int something;
-            void Reset() { something = 5; }
         };
+         struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* ref = world.CreateObject();
         ref->AddComponent<Data>()->something = 128;
         GameObject* o1 = world.CreateObject();
@@ -330,15 +346,13 @@ void ComponentSystemTests::Run() {
     
     UnitTest("Cleanup", []()->bool {
       
-        Component(Data)
-        public:
+        struct Data {
             int something;
         };
         
-        SYSTEM(DataSystem, Data)
+        struct DataSystem : public GameSystem<Data> {
             void ObjectAdded(GameObject* object) {(*objects)++;}
             void ObjectRemoved(GameObject* object) {(*objects)--;}
-            public:
             int* objects;
         };
         
@@ -361,16 +375,13 @@ void ComponentSystemTests::Run() {
     
     UnitTest("Add/Remove Component same frame", []()->bool {
         
-        Component(Component)
-            public:
-        };
+        struct Component { };
         
-        SYSTEM(ComponentSystem, Component)
+        struct ComponentSystem : public GameSystem<Component> {
             void ObjectAdded(GameObject* object) {added++;}
             void ObjectRemoved(GameObject* object) {removed++;}
-            public:
-                int added = 0;
-                int removed = 0;
+            int added = 0;
+            int removed = 0;
         };
         
          GameWorld world;
@@ -414,15 +425,13 @@ void ComponentSystemTests::Run() {
     
     
     UnitTest("Parent/Children hierarchal remove", []()->bool {
-        Component(Data)
-        public:
+        struct Data {
             int something;
         };
         
-        SYSTEM(DataSystem, Data)
+        struct DataSystem : public GameSystem<Data> {
             void ObjectAdded(GameObject* object) { added++; }
             void ObjectRemoved(GameObject* object) { removed++; }
-            public:
             int added;
             int removed;
         };
@@ -447,8 +456,8 @@ void ComponentSystemTests::Run() {
     UnitTest("Clone object", []()->bool {
         GameWorld world;
         GameObject* g1 = world.CreateObject();
-        GameObject* g2 = g1->Clone();
-        return g1!=g2 && world.Objects().size() == 2;
+        GameObject* g2 = g1;//g1->Clone();
+        return g1!=g2 && world.ObjectCount() == 2;
     });
     
     
@@ -457,25 +466,25 @@ void ComponentSystemTests::Run() {
         GameObject* g1 = world.CreateObject();
         GameObject* child = world.CreateObject();
         child->Parent = g1;
-        GameObject* g2 = g1->Clone();
-        return g1!=g2 && world.Objects().size() == 4 && g2->Children()[0] != 0;
+        GameObject* g2 = g1;//g1->Clone();
+        return g1!=g2 && world.ObjectCount() == 4 && g2->Children()[0] != 0;
     });
     
     
     UnitTest("Clone object with component", []()->bool {
     
-        Component(Data)
-            public:
-                std::string name;
-                int age;
+        struct Data {
+            std::string name;
+            int age;
         };
-    
+        struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* o1 = world.CreateObject();
         o1->AddComponent<Data>()->name = "Igor";
         o1->GetComponent<Data>()->age = 32;
         
-        GameObject* o2 = o1->Clone();
+        GameObject* o2 = o1;//o1->Clone();
         
         return
         o1!=o2 &&
@@ -486,43 +495,47 @@ void ComponentSystemTests::Run() {
     
      UnitTest("Clone component", []()->bool {
     
-        Component(Data)
-            public:
-                std::string name;
-                int age;
+        struct Data {
+            std::string name;
+            int age;
         };
     
+        struct DataSystem : GameSystem<Data> {};
         GameWorld world;
+        world.CreateSystem<DataSystem>();
         GameObject* o1 = world.CreateObject();
         o1->AddComponent<Data>()->name = "Igor";
         o1->GetComponent<Data>()->age = 32;
         
         GameObject* o2 = world.CreateObject();
-        o2->CloneComponent<Data>(o1);
-        
+        //o2->CloneComponent<Data>(o1);
+        /*
         return
         o1!=o2 &&
         o1->GetComponent<Data>()!=o2->GetComponent<Data>() &&
         o1->GetComponent<Data>()->name == o2->GetComponent<Data>()->name &&
         o1->GetComponent<Data>()->age == o2->GetComponent<Data>()->age;
+        */
+        return false;
     });
     
     UnitTest("Clone reference component", []()->bool {
     
-        Component(Texture)
-            public:
-                int Color;
+        struct Texture {
+            int Color;
         };
-    
+        
+        struct TextureSystem : GameSystem<Texture> {};
         GameWorld world;
+        world.CreateSystem<TextureSystem>();
         GameObject* texture = world.CreateObject();
         texture->AddComponent<Texture>()->Color = 456;
         
         GameObject* referenceTexture = world.CreateObject();
         referenceTexture->AddComponent<Texture>(texture);
         
-        GameObject* clone = referenceTexture->Clone();
-        
+        GameObject* clone = 0;//referenceTexture->Clone();
+        /*
         GameObject* textureCopy = world.CreateObject();
         textureCopy->CloneComponent<Texture>(texture);
         
@@ -537,36 +550,43 @@ void ComponentSystemTests::Run() {
                      copied->GetComponent<Texture>() != referenceTexture->GetComponent<Texture>();
         bool fourth = referenceTexture->GetComponent<Texture>() == textureComponentRef->GetComponent<Texture>();
         return first && second && third && fourth;
+        */
+        return false;
     });
     
     
     UnitTest("IsComponentReference<T>", []()->bool {
-        Component(ExpensiveStuff)
+        struct ExpensiveStuff {
             int HugeData;
         };
         
+        struct ExpensiveStuffSystem : GameSystem<ExpensiveStuff> {};
         GameWorld world;
+        world.CreateSystem<ExpensiveStuffSystem>();
         GameObject* database = world.CreateObject();
         database->AddComponent<ExpensiveStuff>()->HugeData = 100;
         
         GameObject* refObject = world.CreateObject();
         refObject->AddComponent<ExpensiveStuff>(database);
         
-        return !database->IsComponentReference<ExpensiveStuff>() && refObject->IsComponentReference<ExpensiveStuff>();
+        //return !database->IsComponentReference<ExpensiveStuff>() && refObject->IsComponentReference<ExpensiveStuff>();
+        return false;
     });
     
      UnitTest("cloned IsComponentReference<T>", []()->bool {
-        Component(ExpensiveStuff)
+        struct ExpensiveStuff {
             int HugeData;
         };
         
+        struct ExpensiveStuffSystem : GameSystem<ExpensiveStuff> {};
         GameWorld world;
+        world.CreateSystem<ExpensiveStuffSystem>();
         GameObject* database = world.CreateObject();
         database->AddComponent<ExpensiveStuff>()->HugeData = 100;
         
         GameObject* refObject = world.CreateObject();
         refObject->AddComponent<ExpensiveStuff>(database);
-        
+        /*
         GameObject* cloneRef = refObject->Clone();
         GameObject* cloneDatabase = database->Clone();
         
@@ -577,24 +597,27 @@ void ComponentSystemTests::Run() {
                 cloneRef->GetComponent<ExpensiveStuff>() == database->GetComponent<ExpensiveStuff>()
                 &&
                 cloneDatabase->GetComponent<ExpensiveStuff>()!=database->GetComponent<ExpensiveStuff>();
+                */
+                return false;
     });
     
-    UnitTest("cloned object System ObjectAdded/Removed", [] () {
-        Component(Nameable)
+    UnitTest("cloned object System ObjectAdded/Removed", [] () ->bool{
+        struct Nameable {
             std::string name;
         };
-        Component(Moveable)
+        struct Moveable {
             float speed;
         };
-        SYSTEM(Mover, Nameable, Moveable)
+        struct Mover : public GameSystem<Nameable, Moveable> {
             void ObjectAdded(GameObject* object) {count++;}
             void ObjectRemoved(GameObject* object) {count--;}
         public:
             int count = 0;
         };
-        
+        /*
         GameWorld world;
-        Mover* system = world.CreateSystem<Mover>();
+        world.Initialize<Mover>();
+        Mover* system = world.GetSystem<Mover>();
         
         GameObject* person = world.CreateObject();
         person->AddComponent<Nameable>()->name = "Albert";
@@ -617,32 +640,38 @@ void ComponentSystemTests::Run() {
         world.Update(0);
         bool isNoneLeft = world.Objects().size() == 0 && system->count == 0;
         return countWasOne && wasTwo && isOneLeft && isNoneLeft;
+        */
+        return false;
     });
 
 
     UnitTest("Clone component with Property", [] () {
     
-        Component(PropertyComponent)
+        struct PropertyComponent {
             public:
-                PropertyComponent() : Value(this) {}
-                Property<PropertyComponent*, int> Value;
+                PropertyComponent() { Value = 0;}
+                Property<int> Value;
         };
     
+        struct PropertyComponentSystem : GameSystem<PropertyComponent> {};
         GameWorld world;
+        world.CreateSystem<PropertyComponentSystem>();
         
         GameObject* source = world.CreateObject();
         PropertyComponent* property1 = source->AddComponent<PropertyComponent>();
         property1->Value = 123;
-        
+        /*
         GameObject* clone = source->Clone();
         PropertyComponent* property2 = clone->GetComponent<PropertyComponent>();
         
         return property1->Value == 123 && property2->Value == 123 && property1!=property2;
+        */
+        return false;
     });
 
 
     UnitTest("Test pointer to child, cloned", [] () {
-        Component(PointerToParent)
+        /*Component(PointerToParent)
             Pointer<GameObject> MyParent;
         };
         
@@ -665,9 +694,12 @@ void ComponentSystemTests::Run() {
         cloneChild->Parent == clone &&
         childParent == object &&
         cloneChildParent == clone;
+        */
+        return false;
     });
 
     UnitTest("Test pointer to removed object", [] () -> bool {
+        /*
         Component(PointerComponent)
             Pointer<GameObject> GameObject;
         };
@@ -685,9 +717,12 @@ void ComponentSystemTests::Run() {
         GameObject* newPointer = pointerObject->GetComponent<PointerComponent>()->GameObject;
         bool isPointingToNothing = newPointer == 0;
         return wasPointingToObject && isPointingToNothing;
+        */
+        return false;
     });
     
     UnitTest("Test pointer to removed object with cloned object", [] () -> bool {
+        /*
         Component(PointerComponent)
             Pointer<GameObject> GameObject;
         };
@@ -712,9 +747,12 @@ void ComponentSystemTests::Run() {
         GameObject* newPointerCloned = clonedObject->GetComponent<PointerComponent>()->GameObject;
         
         return wasPointingToObject && wasPointingToObjectCloned && !newPointer && !newPointerCloned;
+        */
+        return false;
     });
     
     UnitTest("Test pointer to object with removed cloned object", [] () -> bool {
+        /*
         Component(PointerComponent)
             Pointer<GameObject> GameObject;
         };
@@ -741,10 +779,13 @@ void ComponentSystemTests::Run() {
         GameObject* newPointerCloned = clonedObject->GetComponent<PointerComponent>()->GameObject;
         
         return wasPointingToObject && wasPointingToObjectCloned && newPointer==gameObject && newPointerCloned==gameObject;
+        */
+        return false;
     });
     
     
     UnitTest("Test pointer to component, cloned", [] () {
+        /*
         Component(Moveable)
             float speed;
         };
@@ -764,10 +805,13 @@ void ComponentSystemTests::Run() {
         object->GetComponent<Mover>()->Moveable == object->GetComponent<Moveable>() &&
         clone->GetComponent<Mover>()->Moveable == clone->GetComponent<Moveable>() &&
         clone->GetComponent<Mover>()->Moveable != object->GetComponent<Moveable>();
+        */
+        return false;
     });
 
 
     UnitTest("Test pointer to component, cloned, with reference component", [] () {
+        /*
         Component(Moveable)
             float speed;
         };
@@ -791,15 +835,21 @@ void ComponentSystemTests::Run() {
         clone->GetComponent<Mover>()->Moveable == object->GetComponent<Moveable>() &&
         object->GetComponent<Mover>() == moverObject->GetComponent<Mover>() &&
         clone->GetComponent<Mover>() == moverObject->GetComponent<Mover>();
+        */
+        return false;
     });
     
    UnitTest("Test creation and deletion in System::ObjectAdded/Removed", [] () {
-        Component(Parentable)
+        struct Parentable {
             GameObject* child;
         };
-        SYSTEM(ParentSystem, Parentable)
+        struct ParentSystem : public GameSystem<Parentable> {
+            GameWorld* world;
+            void Initialize(GameWorld* world) {
+                this->world = world;
+            }
             void ObjectAdded(GameObject* object) {
-                GameObject* child =World()->CreateObject();
+                GameObject* child = world->CreateObject();
                 child->Parent = object;
                 object->AddComponent<Parentable>()->child = child;
             }
@@ -813,11 +863,11 @@ void ComponentSystemTests::Run() {
         GameObject* object = world.CreateObject();
         object->AddComponent<Parentable>();
         world.Update(0);
-        bool wasTwoObjectsCreated = world.Objects().size() == 2;
-        bool childWasCreated = object->GetComponent<Parentable>()->child == world.Objects()[1];
+        bool wasTwoObjectsCreated = world.ObjectCount() == 2;
+        bool childWasCreated = object->GetComponent<Parentable>()->child == world.GetObject(1);
         object->Remove();
         world.Update(0);
-        bool noneLeft = world.Objects().empty();
+        bool noneLeft = world.ObjectCount() == 0;
         return
         wasTwoObjectsCreated && childWasCreated && noneLeft;
     });
@@ -826,14 +876,14 @@ void ComponentSystemTests::Run() {
         GameWorld world;
         GameObject* object = world.CreateObject();
         world.Update(0);
-        bool wasObjectCreated = world.Objects().size() == 1;
+        bool wasObjectCreated = world.ObjectCount() == 1;
         object->Remove();
         world.Update(0);
-        bool wasObjectRemoved = world.Objects().size() == 0;
+        bool wasObjectRemoved = world.ObjectCount() == 0;
         object->Remove();
         world.Update(0);
         object->Remove();
-        bool wasObjectRemoved2 = world.Objects().size() == 0;
+        bool wasObjectRemoved2 = world.ObjectCount() == 0;
         return
         wasObjectCreated && wasObjectRemoved && wasObjectRemoved2;
     });
@@ -844,20 +894,20 @@ void ComponentSystemTests::Run() {
         GameObject* child = world.CreateObject();
         child->Parent = object;
         world.Update(0);
-        bool wasObjectCreated = world.Objects().size() == 2;
-        bool childrenCountIsOne = world.Children().size() == 1;
+        bool wasObjectCreated = world.ObjectCount() == 2;
+        bool childrenCountIsOne = world.ObjectCount() == 1;
         object->Remove();
         world.Update(0);
         
-        bool wasObjectRemoved = world.Objects().size() == 0;
-        bool childrenCountWasZero = world.Children().size() == 0;
+        bool wasObjectRemoved = world.ObjectCount() == 0;
+        bool childrenCountWasZero = world.ObjectCount() == 0;
         object = world.CreateObject();
         child = world.CreateObject();
         child->Parent = object;
-        object->Clone();
+        //object->Clone();
         world.Update(0);
-        bool wasObjectCreated2 = world.Objects().size() == 4;
-        bool childrenCountIsOne2 = world.Children().size() == 2;
+        bool wasObjectCreated2 = world.ObjectCount() == 4;
+        bool childrenCountIsOne2 = world.ObjectCount() == 2;
         
         return wasObjectCreated && childrenCountIsOne && wasObjectRemoved && childrenCountWasZero && wasObjectCreated2 && childrenCountIsOne2;
     });
