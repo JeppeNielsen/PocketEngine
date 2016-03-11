@@ -52,17 +52,18 @@ public:
         bool load = false;
         
         if (!load) {
-        
+            
+            auto window = gui->CreateControl(0, "Box", 100, 200);
+            window->AddComponent<Draggable>();
+            
+            gui->CreateControl(window, "TextBox", 50,100);
+            gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
+            
             Timer timer;
             timer.Begin();
-            for(int i=0; i< 10; i++)
+            for(int i=0; i<2000; i++)
             {
-                auto window = gui->CreateControl(0, "Box", 100, 200);
-                window->AddComponent<Draggable>();
-            
-                gui->CreateControl(window, "TextBox", 50,100);
-                gui->CreateTextBox(window, "Box", 0, {200,30}, 0, "This is a textbox", 20);
-            
+                window->Clone();
             }
             double time = timer.End();
             std::cout << "Create windows : " << time << std::endl;
