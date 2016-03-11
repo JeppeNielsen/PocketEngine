@@ -27,6 +27,7 @@ struct IGameObject {
     virtual void* GetScriptComponent(int componentID) = 0;
     virtual void* AddScriptComponent(int componentID) = 0;
     virtual void RemoveScriptComponent(int componentID) = 0;
+    virtual void* CloneComponent(int componentID, GameObject* object) = 0;
 };
 
 #endif
@@ -85,6 +86,7 @@ public:
     }
     
     void Remove();
+    GameObject* Clone(GameObject* parent = 0);
     
     template<typename Component>
     bool HasComponent() const {
@@ -101,6 +103,9 @@ public:
     Component* AddComponent(GameObject* source);
     
     template<typename Component>
+    Component* CloneComponent(GameObject* source);
+    
+    template<typename Component>
     GameObject* GetOwner();
     
  #if SCRIPTING_ENABLED
@@ -108,11 +113,13 @@ public:
     void* AddComponent(int componentID) override;
     void* AddComponent(int componentID, GameObject* referenceObject) override;
     void RemoveComponent(int componentID) override;
+    void* CloneComponent(int componentID, GameObject* object) override;
 #else
     void* GetComponent(int componentID);
     void* AddComponent(int componentID);
     void* AddComponent(int componentID, GameObject* referenceObject);
     void RemoveComponent(int componentID);
+    void* CloneComponent(int componentID, GameObject* object);
 #endif
 
     using SerializePredicate = std::function<bool(GameObject*, int)>;
@@ -126,6 +133,7 @@ private:
     template<typename Component>
     void SetComponent(typename Container<Component>::ObjectInstance* instance);
     
+    GameObject* CloneInternal(GameObject* parent);
     
     void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
     void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);

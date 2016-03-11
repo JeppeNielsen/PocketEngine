@@ -9,6 +9,7 @@
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
 #include <map>
+#include <set>
 
 using namespace Pocket;
 
@@ -32,6 +33,23 @@ void RecurseTree(GameObject* object, std::map<GameObject*, std::string>& objects
         std::cout << id << std::endl;
     }
     objects[object] = id;
+    for(auto s : object->Children()) {
+        RecurseTree(s, objects);
+    }
+}
+
+struct CloneReferenceComponent {
+    GameObject* object;
+    int componentID;
+    GameObject* referencedObject;
+};
+
+std::set<GameObject*> clonedSourceObjects;
+std::vector<CloneReferenceComponent> clonedReferenceComponents;
+std::map<GameObject*, GameObject*> sourceToClonedObjects;
+
+void RecurseTree(GameObject* object, std::set<GameObject*>& objects) {
+    objects.insert(object);
     for(auto s : object->Children()) {
         RecurseTree(s, objects);
     }
@@ -84,6 +102,42 @@ void GameObject::Remove() {
     }
 }
 
+GameObject* GameObject::Clone(GameObject* parent) {
+    clonedSourceObjects.clear();
+    RecurseTree(this, clonedSourceObjects);
+    clonedReferenceComponents.clear();
+    sourceToClonedObjects.clear();
+    GameObject* clone = CloneInternal(parent);
+    for(auto& c : clonedReferenceComponents) {
+        c.object->AddComponent(c.componentID, sourceToClonedObjects[c.referencedObject]);
+    }
+    return clone;
+}
+
+GameObject* GameObject::CloneInternal(GameObject* parent) {
+    GameObject* clone = world->CreateObject();
+    clone->Parent = parent;
+    for(int i=0; i<world->components.size();++i) {
+        if (activeComponents[i]) {
+            GameObject* componentOwner = world->getOwner[i](this);
+            bool isReference =  componentOwner != this;
+            if (!isReference) {
+                clone->CloneComponent(i, this);
+            } else {
+                if (clonedSourceObjects.find(componentOwner)==clonedSourceObjects.end()) {
+                    clone->AddComponent(i, this);
+                } else {
+                    clonedReferenceComponents.push_back({ clone, i, componentOwner });
+                }
+            }
+        }
+    }
+    sourceToClonedObjects[this] = clone;
+    for(auto child : children) {
+        child->CloneInternal(clone);
+    }
+    return clone;
+}
 
 void GameObject::Reset() {
     isRemoved = false;
@@ -124,6 +178,11 @@ void* GameObject::AddComponent(int componentID, GameObject* referenceObject) {
 void GameObject::RemoveComponent(int componentID) {
     if (!activeComponents[componentID]) return;
     world->removeComponent[componentID](this);
+}
+
+void* GameObject::CloneComponent(int componentID, GameObject* referenceObject) {
+    if (activeComponents[componentID]) return components[componentID];
+    return world->cloneComponent[componentID](this, referenceObject);
 }
 
 void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {

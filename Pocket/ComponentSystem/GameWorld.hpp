@@ -51,6 +51,7 @@ private:
     std::vector<std::function<void(GameObject*)>> removeComponent;
     std::vector<std::function<TypeInfo(GameObject*)>> getTypeComponent;
     std::vector<std::function<GameObject*(GameObject*)>> getOwner;
+    std::vector<std::function<void*(GameObject*, GameObject*)>> cloneComponent;
     
     struct ObjectID {
         GameObject* object;
@@ -253,6 +254,26 @@ GameObject* GameObject::GetOwner() {
     return (GameObject*)instance->owner;
 }
 
+template<typename Component>
+Component* GameObject::CloneComponent(GameObject* source) {
+    assert(source);
+    assert(source->HasComponent<Component>());
+    typename Container<Component>::ObjectInstance* sourceInstance = (typename Container<Component>::ObjectInstance*)source->components[IDHelper::GetComponentID<Component>()];
+    bool isOwnedComponent = source->GetOwner<Component>() == source;
+    if (!HasComponent<Component>()) {
+        if (isOwnedComponent) {
+            AddComponent<Component>();
+        } else {
+            AddComponent<Component>(source);
+        }
+    }
+    typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[IDHelper::GetComponentID<Component>()];
+    if (isOwnedComponent) {
+        instance->object = sourceInstance->object;
+    }
+    return (Component*)instance;
+}
+
 template<typename... ComponentList>
 void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int systemIndex) {
     std::tuple<ComponentList*...> componentsTuple;
@@ -263,6 +284,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
         auto& addComponent = world->addComponent;
         auto& addComponentReference = world->addComponentReference;
         auto& removeComponent = world->removeComponent;
+        auto& cloneComponent = world->cloneComponent;
         auto& getTypeComponent = world->getTypeComponent;
         auto& getOwner = world->getOwner;
         
@@ -275,6 +297,7 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
             addComponent.resize(componentID + 1);
             addComponentReference.resize(componentID + 1);
             removeComponent.resize(componentID + 1);
+            cloneComponent.resize(componentID + 1);
             getTypeComponent.resize(componentID + 1);
             getOwner.resize(componentID + 1);
         }
@@ -290,6 +313,9 @@ void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int system
             };
             removeComponent[componentID] = [](GameObject* object) {
                 object->RemoveComponent<ComponentType>();
+            };
+            cloneComponent[componentID] = [](GameObject* object, GameObject* ref) -> void* {
+                return object->CloneComponent<ComponentType>(ref);
             };
             
             ComponentType* ptr = 0;
