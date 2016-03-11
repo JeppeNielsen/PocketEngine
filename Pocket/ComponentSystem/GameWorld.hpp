@@ -174,9 +174,13 @@ void GameObject::RemoveComponent() {
                 GameObject* owner = (GameObject*)instance->owner;
                 Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
                 container->RemoveObject(instance);
+            } else {
+                delete instance;
             }
         } else if (instance->owner == this) {
-            instance->owner = 0;
+            GameObject* owner = (GameObject*)instance->owner;
+            Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
+            container->DestroyObject(instance);
         }
         components[componentID] = 0;
     });

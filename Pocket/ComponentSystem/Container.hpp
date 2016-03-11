@@ -53,6 +53,14 @@ public:
         instance->owner = 0;
     }
     
+    void DestroyObject(ObjectInstance* instance) {
+        --capacity;
+        objects[capacity]->index = instance->index;
+        std::swap(objects[instance->index], objects[capacity]);
+        objects.pop_back();
+        instance->owner = 0;
+    }
+    
     Object* Get(int index) {
         return &objects[index]->object;
     }
