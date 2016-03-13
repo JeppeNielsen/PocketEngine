@@ -86,7 +86,7 @@ public:
     }
     
     void Remove();
-    GameObject* Clone(GameObject* parent = 0);
+    GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
     
     template<typename Component>
     bool HasComponent() const {
@@ -135,7 +135,7 @@ private:
     template<typename Component>
     void SetComponent(typename Container<Component>::ObjectInstance* instance);
     
-    GameObject* CloneInternal(GameObject* parent);
+    GameObject* CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate);
     
     void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
     void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);

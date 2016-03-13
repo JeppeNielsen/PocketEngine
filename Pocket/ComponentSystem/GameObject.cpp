@@ -102,19 +102,22 @@ void GameObject::Remove() {
     }
 }
 
-GameObject* GameObject::Clone(GameObject* parent) {
+GameObject* GameObject::Clone(GameObject* parent, std::function<bool(GameObject*)> predicate) {
     clonedSourceObjects.clear();
     RecurseTree(this, clonedSourceObjects);
     clonedReferenceComponents.clear();
     sourceToClonedObjects.clear();
-    GameObject* clone = CloneInternal(parent);
+    GameObject* clone = CloneInternal(parent, predicate);
     for(auto& c : clonedReferenceComponents) {
         c.object->AddComponent(c.componentID, sourceToClonedObjects[c.referencedObject]);
     }
     return clone;
 }
 
-GameObject* GameObject::CloneInternal(GameObject* parent) {
+GameObject* GameObject::CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate) {
+    if (predicate && !predicate(this)) {
+        return 0;
+    }
     GameObject* clone = world->CreateObject();
     clone->Parent = parent;
     for(int i=0; i<world->components.size();++i) {
@@ -134,7 +137,7 @@ GameObject* GameObject::CloneInternal(GameObject* parent) {
     }
     sourceToClonedObjects[this] = clone;
     for(auto child : children) {
-        child->CloneInternal(clone);
+        child->CloneInternal(clone, predicate);
     }
     return clone;
 }
