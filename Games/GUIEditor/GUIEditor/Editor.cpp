@@ -77,10 +77,10 @@ public:
         box->AddComponent<SizeModifier>();
         
         
-        //box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-        //box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+        box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+        box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
         
-        /*
+        
         for (int i=0; i<2; i++) {
     
             GameObject* child = gui->CreateControl(box, "TextBox", {i*20.0f,0}, 50);
@@ -105,7 +105,7 @@ public:
         label->AddComponent<Selectable>();
         label->AddComponent<SizeModifier>();
         label->AddComponent<Draggable>();
-        */
+        
         
         {
             GameObject* window = gui->CreatePivot();
@@ -187,7 +187,7 @@ public:
                     if (o->HasComponent<SizeModifierNode>()) return false;
                     if (o->HasComponent<SizeModifierLine>()) return false;
                     return true;
-                });
+                })->Parent = root;
             }
             
             std::cout <<"end"<<std::endl;
