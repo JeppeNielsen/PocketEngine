@@ -23,7 +23,12 @@
 #include "TextBoxLabelSystem.hpp"
 #include "MenuButtonSystem.hpp"
 #include "MenuSystem.hpp"
-//#include "ColorSystem.hpp"
+#include "ColorSystem.hpp"
+#include "DraggableMotionSystem.hpp"
+#include "VelocitySystem.hpp"
+#include "LimitableSystem.hpp"
+#include "DroppableSystem.hpp"
+#include "SelectedColorerSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameConcept {
@@ -35,6 +40,8 @@ namespace Pocket {
         GameObject* GetCamera();
         GameObject* GetAtlas();
         
+        GameObject* CreatePivot();
+        GameObject* CreatePivot(GameObject* parent);
         GameObject* CreatePivot(GameObject* parent, const Vector2& position);
         GameObject* CreateControl(GameObject* parent);
         GameObject* CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size);
@@ -44,48 +51,11 @@ namespace Pocket {
         GameObject* CreateLabel(GameObject *parent, const Vector2 &position, const Vector2 &size, GameObject *font, const std::string &text, float fontSize);
         GameObject* CreateLabelControl(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
         GameObject* CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
-/*
-        GameObject* CreateMenu(GameObject *parent, const Vector2 &position) {
-            GameObject* pivot = CreatePivot(parent);
-            pivot->GetComponent<Transform>()->Position = position;
-            pivot->AddComponent<Menu>();
-            return pivot;
-        }
+        
+        GameObject* CreateMenu(GameObject *parent, const Vector2 &position);
 
-
-        void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
-            control->AddComponent<Menu>(menu);
-            control->AddComponent<TransformAnimator>();
-            MenuAnimator* menuAnimator = control->AddComponent<MenuAnimator>();
-            menuAnimator->Menu = activeMenu;
-            menuAnimator->FadeInAnimation = fadeInAnimation;
-            menuAnimator->FadeOutAnimation = fadeOutAnimation;
-            control->AddComponent<TransformAnimationDatabase>(animations);
-        }
-
-        GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
-            GameObject* listbox = CreateControl(parent, spriteName, position, size);
-            listbox->AddComponent<Layoutable>();
-            listbox->GetComponent<Touchable>()->ClickThrough = false;
-            CreateClipper(listbox, true);
-            GameObject* p = CreatePivot(listbox);
-            p->AddComponent<Sizeable>();
-            p->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
-            p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-            p->AddComponent<Touchable>(listbox);
-            p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
-            p->AddComponent<DraggableMotion>();
-            p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
-            p->GetComponent<Velocity>()->Friction = 5;
-            Limitable* limitable = p->AddComponent<Limitable>();
-            limitable->Size = p->GetComponent<Sizeable>();
-            limitable->View = listbox->GetComponent<Sizeable>();
-            CreateClipper(listbox, false);
-            (*pivot)=p;
-            return listbox;
-        }
-*/
-
+        void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation);
+        GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot);
     private:
         GameWorld* world;
         RenderSystem* renderer;

@@ -14,7 +14,7 @@
 #include "Gui.hpp"
 
 namespace Pocket {
-    class GameObjectEditorSystem : GameSystem<GameObjectEditor, Transform, Sizeable> {
+    class GameObjectEditorSystem : public GameSystem<GameObjectEditor, Transform, Sizeable> {
         public:
             void Initialize(GameWorld* world);
         

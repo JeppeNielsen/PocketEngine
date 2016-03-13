@@ -30,13 +30,13 @@ void Gui::Initialize(GameWorld* world) {
     world->CreateSystem<TextBoxLabelSystem>();
     world->CreateSystem<MenuSystem>();
     world->CreateSystem<MenuButtonSystem>();
-    //world->CreateSystem<ColorSystem>();
-    //world->CreateSystem<DraggableMotionSystem>();
-    //world->CreateSystem<VelocitySystem>();
-    //world->CreateSystem<LimitableSystem>();
-    //world->CreateSystem<SelectedColorerSystem>();
+    world->CreateSystem<ColorSystem>();
+    world->CreateSystem<DraggableMotionSystem>();
+    world->CreateSystem<VelocitySystem>();
+    world->CreateSystem<LimitableSystem>();
+    world->CreateSystem<SelectedColorerSystem>();
     world->CreateSystem<DroppableSystem>();
-    
+    world->CreateSystem<DraggableMotionSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
@@ -73,6 +73,14 @@ void Gui::Setup(GameObject *atlas, const Box &viewport, InputManager &inputManag
 
 GameObject* Gui::GetCamera() {
     return camera;
+}
+
+GameObject* Gui::CreatePivot() {
+    return CreatePivot(0, {0,0});
+}
+
+GameObject* Gui::CreatePivot(GameObject *parent) {
+    return CreatePivot(parent,{0,0});
 }
 
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
@@ -143,7 +151,7 @@ GameObject* Gui::CreateLabel(GameObject *parent, const Vector2 &position, const 
     label->AddComponent<Font>(font);
     label->AddComponent<Mesh>();
     label->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
-    //label->AddComponent<Colorable>();
+    label->AddComponent<Colorable>();
     label->AddComponent<Sizeable>()->Size = size;
     label->AddComponent<class Atlas>(atlas);
     label->AddComponent<TextureComponent>(atlas);
@@ -174,8 +182,8 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     return control;
 }
 
-/*
-GameObject* CreateMenu(GameObject *parent, const Vector2 &position) {
+
+GameObject* Gui::CreateMenu(GameObject *parent, const Vector2 &position) {
     GameObject* pivot = CreatePivot(parent);
     pivot->GetComponent<Transform>()->Position = position;
     pivot->AddComponent<Menu>();
@@ -183,7 +191,7 @@ GameObject* CreateMenu(GameObject *parent, const Vector2 &position) {
 }
 
 
-void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
+void Gui::AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
     control->AddComponent<Menu>(menu);
     control->AddComponent<TransformAnimator>();
     MenuAnimator* menuAnimator = control->AddComponent<MenuAnimator>();
@@ -193,7 +201,7 @@ void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMe
     control->AddComponent<TransformAnimationDatabase>(animations);
 }
 
-GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
+GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
     listbox->AddComponent<Layoutable>();
     listbox->GetComponent<Touchable>()->ClickThrough = false;
@@ -204,7 +212,7 @@ GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, con
     p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
     p->AddComponent<Touchable>(listbox);
     p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
-    p->AddComponent<DraggableMotion>();
+    //p->AddComponent<DraggableMotion>();
     p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
     p->GetComponent<Velocity>()->Friction = 5;
     Limitable* limitable = p->AddComponent<Limitable>();
@@ -214,4 +222,3 @@ GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, con
     (*pivot)=p;
     return listbox;
 }
-*/

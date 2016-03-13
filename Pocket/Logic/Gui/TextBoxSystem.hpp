@@ -44,6 +44,7 @@ namespace Pocket {
         bool anyTextboxUp;
         
         InputManager* Input;
+    public:
         Property<TextBox*> ActiveTextBox;
         
         friend class Gui;

@@ -14,7 +14,7 @@
 #include "Gui.hpp"
 
 namespace Pocket {
-class FieldEditorSystem : GameSystem<FieldEditor, Sizeable, Transform> {
+class FieldEditorSystem : public GameSystem<FieldEditor, Sizeable, Transform> {
     public:
         Gui* gui;
     

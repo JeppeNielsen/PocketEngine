@@ -20,7 +20,7 @@ void HierarchyEditorSystem::Initialize(GameWorld *world) {
 
 void HierarchyEditorSystem::ObjectAdded(GameObject *object) {
     //object->GetComponent<HierarchyEditor>()->Object.Changed += event_handler(this, &HierarchyEditorSystem::ObjectChanged, object);
-    ObjectChanged(object);
+    //ObjectChanged(object);
 }
 
 void HierarchyEditorSystem::ObjectRemoved(GameObject *object) {
@@ -32,7 +32,7 @@ void HierarchyEditorSystem::Update(float dt) {
     for (auto o : Objects()) {
         HierarchyEditor* editor = o->GetComponent<HierarchyEditor>();
         if (editor->Object && editor->prevChildrenCount!=editor->Object->Children().size()) {
-            ObjectChanged(o);
+            //ObjectChanged(o);
         }
     }
 }
