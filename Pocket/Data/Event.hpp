@@ -44,6 +44,11 @@ private:
     };
     
 public:
+    Event() = default;
+    Event(const Event<T...>& other) { delegates.clear(); }
+    Event(Event<T...>& other) { delegates.clear(); }
+    void operator=(const Event<T...>& other) { delegates.clear(); }
+    void operator=(Event<T...>& other) { delegates.clear(); }
     
     void operator () (T... values) {
         for(auto& d : delegates) {
