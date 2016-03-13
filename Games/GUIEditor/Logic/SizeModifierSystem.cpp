@@ -33,8 +33,6 @@ void SizeModifierSystem::SelectionChanged(GameObject* object) {
     Selectable *selectable = object->GetComponent<Selectable>();
     SizeModifier* modifier = object->GetComponent<SizeModifier>();
     
-    std::cout << "SizeModifierSystem, " << object->ID << selectable->Selected  << std::endl;
-    
     if (selectable->Selected) {
         
         

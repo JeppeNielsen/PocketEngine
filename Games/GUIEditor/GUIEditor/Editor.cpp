@@ -75,18 +75,10 @@ public:
         box->AddComponent<Draggable>();
         box->AddComponent<Selectable>();
         box->AddComponent<SizeModifier>();
-        box->ID = "ORIGINAL";
-        
-        
-        world.Update(0.01f);
         
         
         //box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         //box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-        
-        
-        box->Clone()->ID = "Clone";
-        world.Update(0.01f);
         
         /*
         for (int i=0; i<2; i++) {
@@ -190,24 +182,12 @@ public:
         
             std::cout <<"end"<<std::endl;
             
-        
             for (auto o : selected->Selected()) {
-                auto clone = o->Clone(0, [](GameObject* o) {
+                o->Clone(0, [](GameObject* o) {
                     if (o->HasComponent<SizeModifierNode>()) return false;
                     if (o->HasComponent<SizeModifierLine>()) return false;
                     return true;
                 });
-                clone->ID = "CLONE";
-                
-                Touchable* t1 = o->GetComponent<Touchable>();
-                Touchable* t2 = clone->GetComponent<Touchable>();
-                
-                {
-                    std::cout << t1<< " : " << t2 << std::endl;
-                
-                }
-                
-                
             }
             
             std::cout <<"end"<<std::endl;
