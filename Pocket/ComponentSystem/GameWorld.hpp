@@ -78,7 +78,7 @@ public:
     System* CreateSystem() {
         //assert(ObjectCount() == 0);
         int systemID = IDHelper::GetSystemID<System>();
-        if (ObjectCount()>0) {
+        if (ObjectCount()==0) {
             TryAddSystem(systemID, []() { return new System(); });
         }
         return (System*)systemsIndexed[systemID];
