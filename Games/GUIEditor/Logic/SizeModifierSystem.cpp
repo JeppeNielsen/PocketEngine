@@ -14,17 +14,27 @@
 #include "SizeModifierLine.h"
 #include "Orderable.hpp"
 
+using namespace Pocket;
+
+void SizeModifierSystem::Initialize(GameWorld *world) {
+    this->world = world;
+}
+
 void SizeModifierSystem::ObjectAdded(GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed += event_handler(this, &SizeModifierSystem::SelectionChanged, object);
+    object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &SizeModifierSystem::SelectionChanged, object);
 }
 
 void SizeModifierSystem::ObjectRemoved(GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed -= event_handler(this, &SizeModifierSystem::SelectionChanged, object);
+    object->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SizeModifierSystem::SelectionChanged, object);
     object->GetComponent<SizeModifier>()->DeleteNodes();
 }
 
-void SizeModifierSystem::SelectionChanged(Selectable *selectable, GameObject* object) {
+void SizeModifierSystem::SelectionChanged(GameObject* object) {
+    Selectable *selectable = object->GetComponent<Selectable>();
     SizeModifier* modifier = object->GetComponent<SizeModifier>();
+    
+    std::cout << "SizeModifierSystem, " << object->ID << selectable->Selected  << std::endl;
+    
     if (selectable->Selected) {
         
         
@@ -47,7 +57,7 @@ void SizeModifierSystem::SelectionChanged(Selectable *selectable, GameObject* ob
 }
 
 GameObject* SizeModifierSystem::CreateNode(GameObject *object, int cornerIndex, Draggable::MovementMode movementMode) {
-    GameObject* go = World()->CreateObject();
+    GameObject* go = world->CreateObject();
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 10, Colour::White());
     go->AddComponent<Material>();
@@ -58,13 +68,13 @@ GameObject* SizeModifierSystem::CreateNode(GameObject *object, int cornerIndex, 
     node->sizableTarget = object->GetComponent<Sizeable>();
     node->transformTarget = object->GetComponent<Transform>();
     go->Parent = object;
-    go->AddComponent<Gridable>()->Size = 10;
+    //go->AddComponent<Gridable>()->Size = 10;
     go->AddComponent<Orderable>();
     return go;
 }
 
 GameObject* SizeModifierSystem::CreateLine(Pocket::GameObject *object, int index) {
-    GameObject* go = World()->CreateObject();
+    GameObject* go = world->CreateObject();
     go->Parent = object;
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(0.0f, 0.0f, 0.0f, 0.25f));

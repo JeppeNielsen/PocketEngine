@@ -15,12 +15,14 @@
 #include "Transform.hpp"
 #include "Draggable.hpp"
 
-SYSTEM(SizeModifierSystem, SizeModifier, Selectable, Sizeable, Transform)
+class SizeModifierSystem : public GameSystem<SizeModifier, Selectable, Sizeable, Transform> {
 public:
+    void Initialize(GameWorld* world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
 private:
-    void SelectionChanged(Selectable* selectable, GameObject* object);
+    void SelectionChanged(GameObject* object);
     GameObject* CreateNode(GameObject* object, int cornerIndex, Draggable::MovementMode movementMode);
     GameObject* CreateLine(GameObject* object, int index);
+    GameWorld* world;
 };

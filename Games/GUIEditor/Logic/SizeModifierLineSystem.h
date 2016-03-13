@@ -14,6 +14,6 @@
 
 using namespace Pocket;
 
-SYSTEM(SizeModifierLineSystem, Transform, SizeModifierLine)
+struct SizeModifierLineSystem : public GameSystem<Transform, SizeModifierLine> {
     void Update(float dt);
 };

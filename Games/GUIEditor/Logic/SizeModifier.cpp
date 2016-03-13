@@ -9,7 +9,7 @@
 #include "SizeModifier.hpp"
 #include "SizeModifierNode.hpp"
 
-void SizeModifier::Reset() {
+SizeModifier::SizeModifier() {
     for (int i=0; i<8; i++) {
         Nodes[i] = 0;
     }

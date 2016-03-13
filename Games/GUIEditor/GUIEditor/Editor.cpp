@@ -20,14 +20,13 @@
 
 using namespace Pocket;
 
-Component(Speed)
-    public:
-        Speed() : speed(this) { }
-        Property<Speed*, Vector2> speed;
+struct Speed {
+    Speed() { speed = Vector2(0,0); }
+    Property<Vector2> speed;
 
-    SERIALIZE_FIELDS_BEGIN
-    SERIALIZE_FIELD(speed)
-    SERIALIZE_FIELDS_END
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(speed)
+    TYPE_FIELDS_END
 };
 
 class Editor : public GameState<Editor> {
@@ -50,14 +49,14 @@ public:
         
         HierarchyEditorSystem* hierarchyEditorSystem = world.CreateSystem<HierarchyEditorSystem>();
         
-        gui = world.CreateFactory<Gui>();
-        textboxSystem = world.GetSystem<TextBoxSystem>();
+        gui = world.CreateSystem<Gui>();
+        textboxSystem = world.CreateSystem<TextBoxSystem>();
         world.CreateSystem<ClickSelectorSystem>();
         world.CreateSystem<SizeModifierSystem>();
         world.CreateSystem<SizeModifierNodeSystem>();
         world.CreateSystem<SizeModifierLineSystem>();
         selected = world.CreateSystem<SelectableCollection>();
-        selected->SelectionChanged += event_handler(this, &Editor::SelectionChanged);
+        selected->SelectionChanged.Bind(this, &Editor::SelectionChanged);
         //world.CreateSystem<GridSystem>();
         GameObjectEditorSystem* gameObjectEditorSystem = world.CreateSystem<GameObjectEditorSystem>();
         gameObjectEditorSystem->gui = gui;
@@ -70,17 +69,26 @@ public:
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
-        root = gui->CreatePivot();
+        root = gui->CreatePivot(0,0);
         
         box = gui->CreateControl(root, "Box", 200, 200);
         box->AddComponent<Draggable>();
         box->AddComponent<Selectable>();
         box->AddComponent<SizeModifier>();
-        box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-        box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-        box->AddComponent<Speed>()->speed = {10,23};
+        box->ID = "ORIGINAL";
         
         
+        world.Update(0.01f);
+        
+        
+        //box->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+        //box->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
+        
+        
+        box->Clone()->ID = "Clone";
+        world.Update(0.01f);
+        
+        /*
         for (int i=0; i<2; i++) {
     
             GameObject* child = gui->CreateControl(box, "TextBox", {i*20.0f,0}, 50);
@@ -105,7 +113,7 @@ public:
         label->AddComponent<Selectable>();
         label->AddComponent<SizeModifier>();
         label->AddComponent<Draggable>();
-        
+        */
         
         {
             GameObject* window = gui->CreatePivot();
@@ -127,7 +135,7 @@ public:
                 GameObject* close = gui->CreateControl(child, "Box", {300-30,0}, {30});
                 close->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Right;
                 close->AddComponent<Layoutable>()->VerticalAlignment = Layoutable::VAlignment::Relative;
-                close->GetComponent<Touchable>()->Click += event_handler(this, &Editor::CloseClicked, child);
+                close->GetComponent<Touchable>()->Click.Bind(this, &Editor::CloseClicked, child);
             }
         }
         
@@ -153,12 +161,11 @@ public:
         
         
         
-        Input.ButtonDown += event_handler(this, &Editor::ButtonDown);
+        Input.ButtonDown.Bind(this, &Editor::ButtonDown);
     }
     
     void CloseClicked(TouchData d, GameObject* object) {
         object->Parent = object->Parent() ? 0 : listBoxPivot;
-        
     }
     
     void SelectionChanged(SelectableCollection* selectables) {
@@ -180,18 +187,40 @@ public:
             label->Parent = box;
             label->GetComponent<Transform>()->Position = 0;
         } else if (button == "d") {
+        
+            std::cout <<"end"<<std::endl;
+            
+        
             for (auto o : selected->Selected()) {
-                o->Clone();
+                auto clone = o->Clone(0, [](GameObject* o) {
+                    if (o->HasComponent<SizeModifierNode>()) return false;
+                    if (o->HasComponent<SizeModifierLine>()) return false;
+                    return true;
+                });
+                clone->ID = "CLONE";
+                
+                Touchable* t1 = o->GetComponent<Touchable>();
+                Touchable* t2 = clone->GetComponent<Touchable>();
+                
+                {
+                    std::cout << t1<< " : " << t2 << std::endl;
+                
+                }
+                
+                
             }
+            
+            std::cout <<"end"<<std::endl;
+            
         } else if (button == "s") {
             std::ofstream file;
             file.open ("Gui.txt");
             root->ToJson(file, [] (GameObject* o, int componentType) {
                 if (o->GetComponent<SizeModifierNode>()) return false;
                 if (o->GetComponent<SizeModifierLine>()) return false;
-                if (componentType==Draggable::ID) return false;
-                if (componentType == SizeModifier::ID) return false;
-                if (componentType == Selectable::ID) return false;
+                if (componentType== IDHelper::GetComponentID<Draggable>()) return false;
+                if (componentType == IDHelper::GetComponentID<SizeModifier>()) return false;
+                if (componentType == IDHelper::GetComponentID<Selectable>()) return false;
                 return true;
             });
             file.close();
@@ -199,7 +228,7 @@ public:
             std::ifstream file;
             file.open("Gui.txt");
             root->Remove();
-            root = world.CreateObjectFromJson(file, [] (GameObject* o) {
+            root = world.CreateObject(file, [] (GameObject* o) {
                 o->AddComponent<Selectable>();
                 o->AddComponent<Draggable>();
                 o->AddComponent<SizeModifier>();
@@ -222,7 +251,7 @@ public:
     }
 };
 
-int main_nono() {
+int main() {
     Engine e;
     e.Start<Editor>();
 	return 0;

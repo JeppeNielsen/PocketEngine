@@ -8,6 +8,8 @@
 
 #include "SizeModifierNodeSystem.hpp"
 
+using namespace Pocket;
+
 void SizeModifierNodeSystem::ObjectAdded(GameObject *object) {
     draggingObjects.Add(object->GetComponent<Transform>()->Position, object);
 }
@@ -24,15 +26,15 @@ void SizeModifierNodeSystem::Update(float dt) {
         Draggable* draggable = go->GetComponent<Draggable>();
         if (draggable->IsDragging) {
             SizeModifierNode* node = go->GetComponent<SizeModifierNode>();
-            Vector3 position = go->GetComponent<Transform>()->World.GetValue()->TransformPosition(0);
+            Vector3 position = go->GetComponent<Transform>()->World().TransformPosition(0);
             position.x = roundf(position.x / gridSize.x) * gridSize.x;
             position.y = roundf(position.y / gridSize.y) * gridSize.y;
             
             
-            const Matrix4x4& worldInverse = *node->transformTarget->WorldInverse.GetValue();
+            const Matrix4x4& worldInverse = node->transformTarget->WorldInverse();
             Vector3 localPosition = worldInverse.TransformPosition(position);
             
-            Matrix4x4 localInverse = node->transformTarget->Local.GetValue()->Invert();
+            Matrix4x4 localInverse = node->transformTarget->Local().Invert();
             
             Vector2 size = node->sizableTarget->Size;
             Vector3 localPivotPosition = localInverse.TransformPosition(node->transformTarget->Position);
@@ -55,7 +57,7 @@ void SizeModifierNodeSystem::Update(float dt) {
             }
             
             
-            Vector3 targetPosition = node->transformTarget->Local.GetValue()->TransformPosition(localPivotPosition);
+            Vector3 targetPosition = node->transformTarget->Local().TransformPosition(localPivotPosition);
             
             size.x = roundf(size.x / gridSize.x) * gridSize.x;
             size.y = roundf(size.y / gridSize.y) * gridSize.y;
