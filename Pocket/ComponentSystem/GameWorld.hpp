@@ -9,8 +9,6 @@
 #pragma once
 #include <vector>
 #include "GameConstants.hpp"
-#include "minijson_writer.hpp"
-#include "minijson_reader.hpp"
 #include <type_traits>
 #include <assert.h>
 #include "GameObject.hpp"
@@ -27,6 +25,7 @@ namespace Pocket {
 class GameWorld {
 private:
     friend class GameObject;
+    friend class IGameSystem;
 #if SCRIPTING_ENABLED
     friend class ScriptWorld;
 #endif
@@ -77,9 +76,11 @@ public:
 
     template<typename System>
     System* CreateSystem() {
-        assert(ObjectCount() == 0);
+        //assert(ObjectCount() == 0);
         int systemID = IDHelper::GetSystemID<System>();
-        TryAddSystem(systemID, []() { return new System(); });
+        if (ObjectCount()>0) {
+            TryAddSystem(systemID, []() { return new System(); });
+        }
         return (System*)systemsIndexed[systemID];
     }
     

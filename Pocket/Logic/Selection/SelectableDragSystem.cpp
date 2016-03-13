@@ -10,35 +10,30 @@
 
 using namespace Pocket;
 
-void SelectableDragSystem::Initialize() {
-    AddComponent<Draggable>();
-    AddComponent<Selectable>();
-    AddComponent<Transform>();
-}
-
 void SelectableDragSystem::ObjectAdded(GameObject *object) {
-    object->GetComponent<Draggable>()->IsDragging.Changed += event_handler(this, &SelectableDragSystem::IsDraggingChanged, object);
+    object->GetComponent<Draggable>()->IsDragging.Changed.Bind(this, &SelectableDragSystem::IsDraggingChanged, object);
 }
 
 void SelectableDragSystem::ObjectRemoved(GameObject *object) {
-    object->GetComponent<Draggable>()->IsDragging.Changed -= event_handler(this, &SelectableDragSystem::IsDraggingChanged, object);
-    DraggingObjects::iterator it = draggingObjects.find(object);
+    object->GetComponent<Draggable>()->IsDragging.Changed.Unbind(this, &SelectableDragSystem::IsDraggingChanged, object);
+    auto it = draggingObjects.find(object);
     if (it!=draggingObjects.end()) draggingObjects.erase(it);
 }
 
-void SelectableDragSystem::IsDraggingChanged(Pocket::Draggable *draggable, GameObject* object) {
+void SelectableDragSystem::IsDraggingChanged(GameObject* object) {
+    Draggable* draggable = object->GetComponent<Draggable>();
     
     if (draggable->IsDragging) {
         if(!object->GetComponent<Selectable>()->Selected) return;
         DragData& data = draggingObjects[object];
-        Vector3 position = object->GetComponent<Transform>()->World.GetValue()->TransformPosition(0);
+        Vector3 position = object->GetComponent<Transform>()->World().TransformPosition(0);
         
         for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
             GameObject* go = *it;
             if (go == object) continue;
             if (!go->GetComponent<Selectable>()->Selected) continue;
             data.objects.push_back(go);
-            data.offsets.push_back(position - go->GetComponent<Transform>()->World.GetValue()->TransformPosition(0));
+            data.offsets.push_back(position - go->GetComponent<Transform>()->World().TransformPosition(0));
         }
     } else {
         DraggingObjects::iterator it = draggingObjects.find(object);
@@ -48,13 +43,13 @@ void SelectableDragSystem::IsDraggingChanged(Pocket::Draggable *draggable, GameO
 
 void SelectableDragSystem::Update(float dt) {
     for (DraggingObjects::iterator it = draggingObjects.begin(); it!=draggingObjects.end(); ++it) {
-        Vector3 position = it->first->GetComponent<Transform>()->World.GetValue()->TransformPosition(0);
+        Vector3 position = it->first->GetComponent<Transform>()->World().TransformPosition(0);
         DragData& data = it->second;
         for (int i=0; i<data.objects.size(); i++) {
             Transform* transform = data.objects[i]->GetComponent<Transform>();
-            Vector3 inversePosition = transform->WorldInverse.GetValue()->TransformPosition(position - data.offsets[i]);
+            Vector3 inversePosition = transform->WorldInverse().TransformPosition(position - data.offsets[i]);
 
-            Vector3 localPosition = transform->Local.GetValue()->TransformPosition(inversePosition+transform->Anchor());
+            Vector3 localPosition = transform->Local().TransformPosition(inversePosition+transform->Anchor());
             
             data.objects[i]->GetComponent<Transform>()->Position = localPosition;
         }

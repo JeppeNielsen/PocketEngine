@@ -7,27 +7,17 @@
 #include <btBulletDynamicsCommon.h>
 #include "GameWorld.hpp"
 
-
 namespace Pocket {
-	class PhysicsSystem : public GameSystem
-	{
+	class PhysicsSystem : public GameSystem<RigidBody, Transform> {
 	public:
-        
         PhysicsSystem();
         ~PhysicsSystem();
-		
         void Initialize();
-
 		void Update(float dt);
-
-		Property<PhysicsSystem*, Vector3> Gravity;
-		
+		Property<Vector3> Gravity;
 	protected:
-        
-        
-        
-		void ObjectAdded(GameObject* gameObject);
-		void ObjectRemoved(GameObject* gameObject);
+		void ObjectAdded(GameObject* gameObject) override;
+		void ObjectRemoved(GameObject* gameObject) override;
 
 	private:
 
@@ -54,7 +44,7 @@ namespace Pocket {
 
 		bool isSimulating;
 
-		void GravityChanged(PhysicsSystem* physicsSystem);
+		void GravityChanged();
 
 		void ImpulseReceived(RigidBody::ImpulseEvent& impulse, GameObject* object);
 

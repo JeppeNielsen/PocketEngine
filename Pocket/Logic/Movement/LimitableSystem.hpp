@@ -13,9 +13,8 @@
 #include "Limitable.hpp"
 
 namespace Pocket {
-    class LimitableSystem : public GameSystem {
+    class LimitableSystem : public GameSystem<Transform, Limitable> {
     public:
-        void Initialize();
         void Update(float dt);
     };
 }

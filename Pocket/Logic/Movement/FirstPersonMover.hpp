@@ -7,21 +7,15 @@
 //
 
 #pragma once
-
-#include "GameComponent.hpp"
 #include "Quaternion.hpp"
 
 namespace Pocket {
-    Component(FirstPersonMover)
-public:
-    float MovementSpeed;
-    float RotationSpeed;
-    float MaxPitch;
-    
-    Quaternion initialRotation;
-    
-    void Reset();
-    void Clone(const FirstPersonMover& other);
-    
+    class FirstPersonMover {
+    public:
+        FirstPersonMover();
+        float MovementSpeed;
+        float RotationSpeed;
+        float MaxPitch;
+        Quaternion initialRotation;
     };
 }

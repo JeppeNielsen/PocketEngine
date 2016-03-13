@@ -19,29 +19,26 @@
 class b2World;
 
 namespace Pocket {
-    class PhysicsSystem2d : public GameSystem {
+    class PhysicsSystem2d : public GameSystem<Transform, RigidBody2d> {
     public:
         PhysicsSystem2d();
         ~PhysicsSystem2d();
-        void Initialize();
-        void AddedToWorld(GameWorld& world);
+        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
     private:
         b2World* physicsWorld;
         
-        void TransformChanged(Transform* transform, GameObject* object);
+        void TransformChanged(GameObject* object);
         
         bool isSimulating;
         
-        class JointSystem : public GameSystem {
-        
+        class JointSystem : public GameSystem<Joint2d> {
         public:
             
             PhysicsSystem2d* physicsSystem;
             
-            void Initialize();
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
             
@@ -52,7 +49,6 @@ namespace Pocket {
         private:
             JointList jointsToCreate;
             JointList jointsToDelete;
-            
         };
         
         JointSystem* jointSystem;

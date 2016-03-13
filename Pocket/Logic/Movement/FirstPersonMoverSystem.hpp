@@ -16,18 +16,18 @@
 
 namespace Pocket {
     class DraggableSystem;
-    class FirstPersonMoverSystem : public GameSystem {
+    class FirstPersonMoverSystem : public GameSystem<Transform, FirstPersonMover>  {
     public:
         FirstPersonMoverSystem();
-        void Initialize();
-        Property<FirstPersonMoverSystem*, InputManager*> Input;
-
+        Property<InputManager*> Input;
+        
+        void Initialize(GameWorld* world);
         void Update(float dt);
         
         bool FlipControls;
         
 private:
-        void InputChanged(Property<FirstPersonMoverSystem*, InputManager*>::EventData e);
+        void InputChanged();
 
         void TouchDown(TouchEvent e);
         void TouchUp(TouchEvent e);
@@ -40,6 +40,6 @@ private:
 
         DraggableSystem* draggableSystem;
         bool isDraggableSystemChecked;
-        
+        GameWorld* world;
     };
 }

@@ -18,13 +18,15 @@ class GameWorld;
 class GameObject;
 
 class IGameSystem {
+public:
+    using ObjectCollection = std::vector<GameObject*>;
 protected:
     virtual ~IGameSystem();
     
-    using ObjectCollection = std::vector<GameObject*>;
     ObjectCollection objects;
 
 public:
+    friend class GameWorld;
     const ObjectCollection& Objects();
 protected:
     using MetaData = std::map<GameObject*, void*>;

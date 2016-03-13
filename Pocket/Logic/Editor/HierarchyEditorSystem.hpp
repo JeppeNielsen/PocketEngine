@@ -15,17 +15,18 @@
 #include "Droppable.hpp"
 
 namespace Pocket {
-    SYSTEM(HierarchyEditorSystem, HierarchyEditor, Transform, Sizeable)
+    class HierarchyEditorSystem : public GameSystem<HierarchyEditor, Transform, Sizeable> {
         public:
             Gui* gui;
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
             void Update(float dt);
+            void Initialize(GameWorld* world);
         private:
-            void ObjectChanged(HierarchyEditor* editor, GameObject* object);
+            void ObjectChanged(GameObject* object);
             int CountDepth(GameObject* object);
             void OnDropped(DroppedData d, GameObject* editorObject);
             bool IsParentLegal(GameObject* parent, GameObject* ancestor);
-    
+            GameWorld* world;
     };
 }

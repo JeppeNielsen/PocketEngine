@@ -18,7 +18,7 @@ namespace Pocket {
     class Touchable;
     class InputManager;
     struct TouchData {
-        //Pocket::GameObject* object;
+        Pocket::GameObject* object;
         Touchable* Touchable;
         InputManager* Input;
         int Index;

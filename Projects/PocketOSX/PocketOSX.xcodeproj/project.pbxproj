@@ -249,6 +249,44 @@
 		723590371B09338A008D6568 /* MiniCL.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72358F861B09338A008D6568 /* MiniCL.cpp */; };
 		723590381B09338A008D6568 /* MiniCLTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72358F881B09338A008D6568 /* MiniCLTask.cpp */; };
 		723590391B09338A008D6568 /* MiniCLTaskScheduler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72358F8A1B09338A008D6568 /* MiniCLTaskScheduler.cpp */; };
+		726461841C9566A600BAEB05 /* FieldEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461761C9566A600BAEB05 /* FieldEditor.cpp */; };
+		726461851C9566A600BAEB05 /* FieldEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461781C9566A600BAEB05 /* FieldEditorSystem.cpp */; };
+		726461861C9566A600BAEB05 /* GameObjectEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264617A1C9566A600BAEB05 /* GameObjectEditor.cpp */; };
+		726461871C9566A600BAEB05 /* GameObjectEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264617C1C9566A600BAEB05 /* GameObjectEditorSystem.cpp */; };
+		726461881C9566A600BAEB05 /* HierarchyEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264617E1C9566A600BAEB05 /* HierarchyEditor.cpp */; };
+		726461891C9566A600BAEB05 /* HierarchyEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461801C9566A600BAEB05 /* HierarchyEditorSystem.cpp */; };
+		7264618A1C9566A600BAEB05 /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461821C9566A600BAEB05 /* SerializedFieldEditors.cpp */; };
+		7264619C1C95A5BC00BAEB05 /* ClickSelectorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264618C1C95A5BC00BAEB05 /* ClickSelectorSystem.cpp */; };
+		7264619D1C95A5BC00BAEB05 /* DragSelector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264618E1C95A5BC00BAEB05 /* DragSelector.cpp */; };
+		7264619E1C95A5BC00BAEB05 /* Selectable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461901C95A5BC00BAEB05 /* Selectable.cpp */; };
+		7264619F1C95A5BC00BAEB05 /* SelectableCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461921C95A5BC00BAEB05 /* SelectableCollection.cpp */; };
+		726461A01C95A5BC00BAEB05 /* SelectableDragSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461941C95A5BC00BAEB05 /* SelectableDragSystem.cpp */; };
+		726461A11C95A5BC00BAEB05 /* SelectedColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461961C95A5BC00BAEB05 /* SelectedColorer.cpp */; };
+		726461A21C95A5BC00BAEB05 /* SelectedColorerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461981C95A5BC00BAEB05 /* SelectedColorerSystem.cpp */; };
+		726461A31C95A5BC00BAEB05 /* SelectionVisualizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7264619A1C95A5BC00BAEB05 /* SelectionVisualizer.cpp */; };
+		726461A81C95ADF800BAEB05 /* Colorable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461A41C95ADF800BAEB05 /* Colorable.cpp */; };
+		726461A91C95ADF800BAEB05 /* ColorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461A61C95ADF800BAEB05 /* ColorSystem.cpp */; };
+		726461B31C95C05700BAEB05 /* Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461AB1C95C05700BAEB05 /* Sound.cpp */; };
+		726461B41C95C05700BAEB05 /* SoundEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461AD1C95C05700BAEB05 /* SoundEmitter.cpp */; };
+		726461B51C95C05700BAEB05 /* SoundListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461AF1C95C05700BAEB05 /* SoundListener.cpp */; };
+		726461B61C95C05700BAEB05 /* SoundSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461B11C95C05700BAEB05 /* SoundSystem.cpp */; };
+		726461C01C95C28800BAEB05 /* ParticleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461B81C95C28800BAEB05 /* ParticleEffect.cpp */; };
+		726461C11C95C28800BAEB05 /* ParticleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461BA1C95C28800BAEB05 /* ParticleEmitter.cpp */; };
+		726461C21C95C28800BAEB05 /* ParticleMeshUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461BC1C95C28800BAEB05 /* ParticleMeshUpdater.cpp */; };
+		726461C31C95C28800BAEB05 /* ParticleUpdaterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461BE1C95C28800BAEB05 /* ParticleUpdaterSystem.cpp */; };
+		726461D31C95C45500BAEB05 /* DraggableMotion.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461C41C95C45500BAEB05 /* DraggableMotion.cpp */; };
+		726461D41C95C45500BAEB05 /* DraggableMotionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461C61C95C45500BAEB05 /* DraggableMotionSystem.cpp */; };
+		726461D51C95C45500BAEB05 /* FirstPersonMover.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461C81C95C45500BAEB05 /* FirstPersonMover.cpp */; };
+		726461D61C95C45500BAEB05 /* FirstPersonMoverSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461CA1C95C45500BAEB05 /* FirstPersonMoverSystem.cpp */; };
+		726461D71C95C45500BAEB05 /* Limitable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461CC1C95C45500BAEB05 /* Limitable.cpp */; };
+		726461D81C95C45500BAEB05 /* LimitableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461CE1C95C45500BAEB05 /* LimitableSystem.cpp */; };
+		726461D91C95C45500BAEB05 /* VelocitySystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461D11C95C45500BAEB05 /* VelocitySystem.cpp */; };
+		726461E71C95C7F900BAEB05 /* Collidable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461DB1C95C7F900BAEB05 /* Collidable.cpp */; };
+		726461E81C95C7F900BAEB05 /* Joint2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461DD1C95C7F900BAEB05 /* Joint2d.cpp */; };
+		726461E91C95C7F900BAEB05 /* PhysicsSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461DF1C95C7F900BAEB05 /* PhysicsSystem.cpp */; };
+		726461EA1C95C7F900BAEB05 /* PhysicsSystem2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461E11C95C7F900BAEB05 /* PhysicsSystem2d.cpp */; };
+		726461EB1C95C7F900BAEB05 /* RigidBody.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461E31C95C7F900BAEB05 /* RigidBody.cpp */; };
+		726461EC1C95C7F900BAEB05 /* RigidBody2d.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726461E51C95C7F900BAEB05 /* RigidBody2d.cpp */; };
 		7268376C1C864D1B00785193 /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268376B1C864D1B00785193 /* Gui.cpp */; };
 		726837731C864E5E00785193 /* DroppableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268376D1C864E5E00785193 /* DroppableSystem.cpp */; };
 		726837741C864E5E00785193 /* LabelMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7268376E1C864E5E00785193 /* LabelMeshSystem.cpp */; };
@@ -919,6 +957,83 @@
 		72358FA31B09338A008D6568 /* vmInclude.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vmInclude.h; sourceTree = "<group>"; };
 		72481D0D1C7E21F200AD7AA8 /* Gui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Gui.hpp; sourceTree = "<group>"; };
 		72481D101C7E242F00AD7AA8 /* HierarchyOrder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyOrder.hpp; sourceTree = "<group>"; };
+		726461761C9566A600BAEB05 /* FieldEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditor.cpp; sourceTree = "<group>"; };
+		726461771C9566A600BAEB05 /* FieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditor.hpp; sourceTree = "<group>"; };
+		726461781C9566A600BAEB05 /* FieldEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FieldEditorSystem.cpp; sourceTree = "<group>"; };
+		726461791C9566A600BAEB05 /* FieldEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FieldEditorSystem.hpp; sourceTree = "<group>"; };
+		7264617A1C9566A600BAEB05 /* GameObjectEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectEditor.cpp; sourceTree = "<group>"; };
+		7264617B1C9566A600BAEB05 /* GameObjectEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectEditor.hpp; sourceTree = "<group>"; };
+		7264617C1C9566A600BAEB05 /* GameObjectEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectEditorSystem.cpp; sourceTree = "<group>"; };
+		7264617D1C9566A600BAEB05 /* GameObjectEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectEditorSystem.hpp; sourceTree = "<group>"; };
+		7264617E1C9566A600BAEB05 /* HierarchyEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyEditor.cpp; sourceTree = "<group>"; };
+		7264617F1C9566A600BAEB05 /* HierarchyEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditor.hpp; sourceTree = "<group>"; };
+		726461801C9566A600BAEB05 /* HierarchyEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyEditorSystem.cpp; sourceTree = "<group>"; };
+		726461811C9566A600BAEB05 /* HierarchyEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditorSystem.hpp; sourceTree = "<group>"; };
+		726461821C9566A600BAEB05 /* SerializedFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializedFieldEditors.cpp; sourceTree = "<group>"; };
+		726461831C9566A600BAEB05 /* SerializedFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializedFieldEditors.hpp; sourceTree = "<group>"; };
+		7264618C1C95A5BC00BAEB05 /* ClickSelectorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClickSelectorSystem.cpp; sourceTree = "<group>"; };
+		7264618D1C95A5BC00BAEB05 /* ClickSelectorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClickSelectorSystem.hpp; sourceTree = "<group>"; };
+		7264618E1C95A5BC00BAEB05 /* DragSelector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DragSelector.cpp; sourceTree = "<group>"; };
+		7264618F1C95A5BC00BAEB05 /* DragSelector.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DragSelector.hpp; sourceTree = "<group>"; };
+		726461901C95A5BC00BAEB05 /* Selectable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Selectable.cpp; sourceTree = "<group>"; };
+		726461911C95A5BC00BAEB05 /* Selectable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Selectable.hpp; sourceTree = "<group>"; };
+		726461921C95A5BC00BAEB05 /* SelectableCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectableCollection.cpp; sourceTree = "<group>"; };
+		726461931C95A5BC00BAEB05 /* SelectableCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectableCollection.hpp; sourceTree = "<group>"; };
+		726461941C95A5BC00BAEB05 /* SelectableDragSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectableDragSystem.cpp; sourceTree = "<group>"; };
+		726461951C95A5BC00BAEB05 /* SelectableDragSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectableDragSystem.hpp; sourceTree = "<group>"; };
+		726461961C95A5BC00BAEB05 /* SelectedColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorer.cpp; sourceTree = "<group>"; };
+		726461971C95A5BC00BAEB05 /* SelectedColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorer.hpp; sourceTree = "<group>"; };
+		726461981C95A5BC00BAEB05 /* SelectedColorerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectedColorerSystem.cpp; sourceTree = "<group>"; };
+		726461991C95A5BC00BAEB05 /* SelectedColorerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectedColorerSystem.hpp; sourceTree = "<group>"; };
+		7264619A1C95A5BC00BAEB05 /* SelectionVisualizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectionVisualizer.cpp; sourceTree = "<group>"; };
+		7264619B1C95A5BC00BAEB05 /* SelectionVisualizer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectionVisualizer.hpp; sourceTree = "<group>"; };
+		726461A41C95ADF800BAEB05 /* Colorable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Colorable.cpp; sourceTree = "<group>"; };
+		726461A51C95ADF800BAEB05 /* Colorable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Colorable.hpp; sourceTree = "<group>"; };
+		726461A61C95ADF800BAEB05 /* ColorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorSystem.cpp; sourceTree = "<group>"; };
+		726461A71C95ADF800BAEB05 /* ColorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColorSystem.hpp; sourceTree = "<group>"; };
+		726461AB1C95C05700BAEB05 /* Sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sound.cpp; sourceTree = "<group>"; };
+		726461AC1C95C05700BAEB05 /* Sound.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Sound.hpp; sourceTree = "<group>"; };
+		726461AD1C95C05700BAEB05 /* SoundEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundEmitter.cpp; sourceTree = "<group>"; };
+		726461AE1C95C05700BAEB05 /* SoundEmitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SoundEmitter.hpp; sourceTree = "<group>"; };
+		726461AF1C95C05700BAEB05 /* SoundListener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundListener.cpp; sourceTree = "<group>"; };
+		726461B01C95C05700BAEB05 /* SoundListener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SoundListener.hpp; sourceTree = "<group>"; };
+		726461B11C95C05700BAEB05 /* SoundSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundSystem.cpp; sourceTree = "<group>"; };
+		726461B21C95C05700BAEB05 /* SoundSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SoundSystem.hpp; sourceTree = "<group>"; };
+		726461B81C95C28800BAEB05 /* ParticleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEffect.cpp; sourceTree = "<group>"; };
+		726461B91C95C28800BAEB05 /* ParticleEffect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleEffect.hpp; sourceTree = "<group>"; };
+		726461BA1C95C28800BAEB05 /* ParticleEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEmitter.cpp; sourceTree = "<group>"; };
+		726461BB1C95C28800BAEB05 /* ParticleEmitter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleEmitter.hpp; sourceTree = "<group>"; };
+		726461BC1C95C28800BAEB05 /* ParticleMeshUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleMeshUpdater.cpp; sourceTree = "<group>"; };
+		726461BD1C95C28800BAEB05 /* ParticleMeshUpdater.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleMeshUpdater.hpp; sourceTree = "<group>"; };
+		726461BE1C95C28800BAEB05 /* ParticleUpdaterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleUpdaterSystem.cpp; sourceTree = "<group>"; };
+		726461BF1C95C28800BAEB05 /* ParticleUpdaterSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleUpdaterSystem.hpp; sourceTree = "<group>"; };
+		726461C41C95C45500BAEB05 /* DraggableMotion.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DraggableMotion.cpp; sourceTree = "<group>"; };
+		726461C51C95C45500BAEB05 /* DraggableMotion.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DraggableMotion.hpp; sourceTree = "<group>"; };
+		726461C61C95C45500BAEB05 /* DraggableMotionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DraggableMotionSystem.cpp; sourceTree = "<group>"; };
+		726461C71C95C45500BAEB05 /* DraggableMotionSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DraggableMotionSystem.hpp; sourceTree = "<group>"; };
+		726461C81C95C45500BAEB05 /* FirstPersonMover.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirstPersonMover.cpp; sourceTree = "<group>"; };
+		726461C91C95C45500BAEB05 /* FirstPersonMover.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirstPersonMover.hpp; sourceTree = "<group>"; };
+		726461CA1C95C45500BAEB05 /* FirstPersonMoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FirstPersonMoverSystem.cpp; sourceTree = "<group>"; };
+		726461CB1C95C45500BAEB05 /* FirstPersonMoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FirstPersonMoverSystem.hpp; sourceTree = "<group>"; };
+		726461CC1C95C45500BAEB05 /* Limitable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Limitable.cpp; sourceTree = "<group>"; };
+		726461CD1C95C45500BAEB05 /* Limitable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Limitable.hpp; sourceTree = "<group>"; };
+		726461CE1C95C45500BAEB05 /* LimitableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LimitableSystem.cpp; sourceTree = "<group>"; };
+		726461CF1C95C45500BAEB05 /* LimitableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LimitableSystem.hpp; sourceTree = "<group>"; };
+		726461D01C95C45500BAEB05 /* Velocity.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Velocity.hpp; sourceTree = "<group>"; };
+		726461D11C95C45500BAEB05 /* VelocitySystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VelocitySystem.cpp; sourceTree = "<group>"; };
+		726461D21C95C45500BAEB05 /* VelocitySystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VelocitySystem.hpp; sourceTree = "<group>"; };
+		726461DB1C95C7F900BAEB05 /* Collidable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Collidable.cpp; sourceTree = "<group>"; };
+		726461DC1C95C7F900BAEB05 /* Collidable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Collidable.hpp; sourceTree = "<group>"; };
+		726461DD1C95C7F900BAEB05 /* Joint2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Joint2d.cpp; sourceTree = "<group>"; };
+		726461DE1C95C7F900BAEB05 /* Joint2d.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Joint2d.hpp; sourceTree = "<group>"; };
+		726461DF1C95C7F900BAEB05 /* PhysicsSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem.cpp; sourceTree = "<group>"; };
+		726461E01C95C7F900BAEB05 /* PhysicsSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsSystem.hpp; sourceTree = "<group>"; };
+		726461E11C95C7F900BAEB05 /* PhysicsSystem2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PhysicsSystem2d.cpp; sourceTree = "<group>"; };
+		726461E21C95C7F900BAEB05 /* PhysicsSystem2d.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PhysicsSystem2d.hpp; sourceTree = "<group>"; };
+		726461E31C95C7F900BAEB05 /* RigidBody.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RigidBody.cpp; sourceTree = "<group>"; };
+		726461E41C95C7F900BAEB05 /* RigidBody.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RigidBody.hpp; sourceTree = "<group>"; };
+		726461E51C95C7F900BAEB05 /* RigidBody2d.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RigidBody2d.cpp; sourceTree = "<group>"; };
+		726461E61C95C7F900BAEB05 /* RigidBody2d.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RigidBody2d.hpp; sourceTree = "<group>"; };
 		7268376B1C864D1B00785193 /* Gui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Gui.cpp; sourceTree = "<group>"; };
 		7268376D1C864E5E00785193 /* DroppableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DroppableSystem.cpp; sourceTree = "<group>"; };
 		7268376E1C864E5E00785193 /* LabelMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelMeshSystem.cpp; sourceTree = "<group>"; };
@@ -1180,11 +1295,16 @@
 			isa = PBXGroup;
 			children = (
 				72D7C8331C90B8F300A9AF8F /* Animation */,
-				72FB91961C7BA9BB0038AC85 /* Gui */,
-				72E3CFB91C767253002DA95E /* Movement */,
-				72E3CFA71C765836002DA95E /* Interaction */,
+				726461AA1C95C05700BAEB05 /* Audio */,
 				72E3CF801C72914A002DA95E /* Common */,
+				726461751C9566A600BAEB05 /* Editor */,
+				726461B71C95C28800BAEB05 /* Effects */,
+				72FB91961C7BA9BB0038AC85 /* Gui */,
+				72E3CFA71C765836002DA95E /* Interaction */,
+				72E3CFB91C767253002DA95E /* Movement */,
+				726461DA1C95C7F900BAEB05 /* Physics */,
 				723588EB1B0932E0008D6568 /* Rendering */,
+				7264618B1C95A5BC00BAEB05 /* Selection */,
 				723589181B0932E0008D6568 /* Spatial */,
 			);
 			path = Logic;
@@ -1197,6 +1317,10 @@
 				72FB91D61C7BBA420038AC85 /* Atlas.hpp */,
 				729953F71B87B9940036A2DF /* Camera.cpp */,
 				729953F81B87B9940036A2DF /* Camera.hpp */,
+				726461A41C95ADF800BAEB05 /* Colorable.cpp */,
+				726461A51C95ADF800BAEB05 /* Colorable.hpp */,
+				726461A61C95ADF800BAEB05 /* ColorSystem.cpp */,
+				726461A71C95ADF800BAEB05 /* ColorSystem.hpp */,
 				729954041B87B9940036A2DF /* Material.hpp */,
 				729954051B87B9940036A2DF /* Mesh.hpp */,
 				726837861C875A7100785193 /* RenderSystem.cpp */,
@@ -2125,6 +2249,99 @@
 			path = sse;
 			sourceTree = "<group>";
 		};
+		726461751C9566A600BAEB05 /* Editor */ = {
+			isa = PBXGroup;
+			children = (
+				726461761C9566A600BAEB05 /* FieldEditor.cpp */,
+				726461771C9566A600BAEB05 /* FieldEditor.hpp */,
+				726461781C9566A600BAEB05 /* FieldEditorSystem.cpp */,
+				726461791C9566A600BAEB05 /* FieldEditorSystem.hpp */,
+				7264617A1C9566A600BAEB05 /* GameObjectEditor.cpp */,
+				7264617B1C9566A600BAEB05 /* GameObjectEditor.hpp */,
+				7264617C1C9566A600BAEB05 /* GameObjectEditorSystem.cpp */,
+				7264617D1C9566A600BAEB05 /* GameObjectEditorSystem.hpp */,
+				7264617E1C9566A600BAEB05 /* HierarchyEditor.cpp */,
+				7264617F1C9566A600BAEB05 /* HierarchyEditor.hpp */,
+				726461801C9566A600BAEB05 /* HierarchyEditorSystem.cpp */,
+				726461811C9566A600BAEB05 /* HierarchyEditorSystem.hpp */,
+				726461821C9566A600BAEB05 /* SerializedFieldEditors.cpp */,
+				726461831C9566A600BAEB05 /* SerializedFieldEditors.hpp */,
+			);
+			path = Editor;
+			sourceTree = "<group>";
+		};
+		7264618B1C95A5BC00BAEB05 /* Selection */ = {
+			isa = PBXGroup;
+			children = (
+				7264618C1C95A5BC00BAEB05 /* ClickSelectorSystem.cpp */,
+				7264618D1C95A5BC00BAEB05 /* ClickSelectorSystem.hpp */,
+				7264618E1C95A5BC00BAEB05 /* DragSelector.cpp */,
+				7264618F1C95A5BC00BAEB05 /* DragSelector.hpp */,
+				726461901C95A5BC00BAEB05 /* Selectable.cpp */,
+				726461911C95A5BC00BAEB05 /* Selectable.hpp */,
+				726461921C95A5BC00BAEB05 /* SelectableCollection.cpp */,
+				726461931C95A5BC00BAEB05 /* SelectableCollection.hpp */,
+				726461941C95A5BC00BAEB05 /* SelectableDragSystem.cpp */,
+				726461951C95A5BC00BAEB05 /* SelectableDragSystem.hpp */,
+				726461961C95A5BC00BAEB05 /* SelectedColorer.cpp */,
+				726461971C95A5BC00BAEB05 /* SelectedColorer.hpp */,
+				726461981C95A5BC00BAEB05 /* SelectedColorerSystem.cpp */,
+				726461991C95A5BC00BAEB05 /* SelectedColorerSystem.hpp */,
+				7264619A1C95A5BC00BAEB05 /* SelectionVisualizer.cpp */,
+				7264619B1C95A5BC00BAEB05 /* SelectionVisualizer.hpp */,
+			);
+			path = Selection;
+			sourceTree = "<group>";
+		};
+		726461AA1C95C05700BAEB05 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				726461AB1C95C05700BAEB05 /* Sound.cpp */,
+				726461AC1C95C05700BAEB05 /* Sound.hpp */,
+				726461AD1C95C05700BAEB05 /* SoundEmitter.cpp */,
+				726461AE1C95C05700BAEB05 /* SoundEmitter.hpp */,
+				726461AF1C95C05700BAEB05 /* SoundListener.cpp */,
+				726461B01C95C05700BAEB05 /* SoundListener.hpp */,
+				726461B11C95C05700BAEB05 /* SoundSystem.cpp */,
+				726461B21C95C05700BAEB05 /* SoundSystem.hpp */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		726461B71C95C28800BAEB05 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				726461B81C95C28800BAEB05 /* ParticleEffect.cpp */,
+				726461B91C95C28800BAEB05 /* ParticleEffect.hpp */,
+				726461BA1C95C28800BAEB05 /* ParticleEmitter.cpp */,
+				726461BB1C95C28800BAEB05 /* ParticleEmitter.hpp */,
+				726461BC1C95C28800BAEB05 /* ParticleMeshUpdater.cpp */,
+				726461BD1C95C28800BAEB05 /* ParticleMeshUpdater.hpp */,
+				726461BE1C95C28800BAEB05 /* ParticleUpdaterSystem.cpp */,
+				726461BF1C95C28800BAEB05 /* ParticleUpdaterSystem.hpp */,
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
+		726461DA1C95C7F900BAEB05 /* Physics */ = {
+			isa = PBXGroup;
+			children = (
+				726461DB1C95C7F900BAEB05 /* Collidable.cpp */,
+				726461DC1C95C7F900BAEB05 /* Collidable.hpp */,
+				726461DD1C95C7F900BAEB05 /* Joint2d.cpp */,
+				726461DE1C95C7F900BAEB05 /* Joint2d.hpp */,
+				726461DF1C95C7F900BAEB05 /* PhysicsSystem.cpp */,
+				726461E01C95C7F900BAEB05 /* PhysicsSystem.hpp */,
+				726461E11C95C7F900BAEB05 /* PhysicsSystem2d.cpp */,
+				726461E21C95C7F900BAEB05 /* PhysicsSystem2d.hpp */,
+				726461E31C95C7F900BAEB05 /* RigidBody.cpp */,
+				726461E41C95C7F900BAEB05 /* RigidBody.hpp */,
+				726461E51C95C7F900BAEB05 /* RigidBody2d.cpp */,
+				726461E61C95C7F900BAEB05 /* RigidBody2d.hpp */,
+			);
+			path = Physics;
+			sourceTree = "<group>";
+		};
 		72D7C8181C8C60A400A9AF8F /* Meta */ = {
 			isa = PBXGroup;
 			children = (
@@ -2206,8 +2423,23 @@
 			isa = PBXGroup;
 			children = (
 				72E3CFBB1C767253002DA95E /* Draggable.hpp */,
+				726461C41C95C45500BAEB05 /* DraggableMotion.cpp */,
+				726461C51C95C45500BAEB05 /* DraggableMotion.hpp */,
+				726461C61C95C45500BAEB05 /* DraggableMotionSystem.cpp */,
+				726461C71C95C45500BAEB05 /* DraggableMotionSystem.hpp */,
 				726837791C86523B00785193 /* DraggableSystem.cpp */,
 				72E3CFC11C767253002DA95E /* DraggableSystem.hpp */,
+				726461C81C95C45500BAEB05 /* FirstPersonMover.cpp */,
+				726461C91C95C45500BAEB05 /* FirstPersonMover.hpp */,
+				726461CA1C95C45500BAEB05 /* FirstPersonMoverSystem.cpp */,
+				726461CB1C95C45500BAEB05 /* FirstPersonMoverSystem.hpp */,
+				726461CC1C95C45500BAEB05 /* Limitable.cpp */,
+				726461CD1C95C45500BAEB05 /* Limitable.hpp */,
+				726461CE1C95C45500BAEB05 /* LimitableSystem.cpp */,
+				726461CF1C95C45500BAEB05 /* LimitableSystem.hpp */,
+				726461D01C95C45500BAEB05 /* Velocity.hpp */,
+				726461D11C95C45500BAEB05 /* VelocitySystem.cpp */,
+				726461D21C95C45500BAEB05 /* VelocitySystem.hpp */,
 			);
 			path = Movement;
 			sourceTree = "<group>";
@@ -2331,6 +2563,7 @@
 				72358C5E1B0932E1008D6568 /* Triangulator.cpp in Sources */,
 				72358FC91B09338A008D6568 /* btCollisionShape.cpp in Sources */,
 				72358CBE1B0932E1008D6568 /* Quaternion.cpp in Sources */,
+				726461C21C95C28800BAEB05 /* ParticleMeshUpdater.cpp in Sources */,
 				72358FB41B09338A008D6568 /* btCollisionWorld.cpp in Sources */,
 				72358CD01B0932E1008D6568 /* b2Shape.cpp in Sources */,
 				72358FB81B09338A008D6568 /* btConvexConvexAlgorithm.cpp in Sources */,
@@ -2339,6 +2572,7 @@
 				723590111B09338A008D6568 /* Bullet-C-API.cpp in Sources */,
 				72358D9E1B0932E1008D6568 /* Texture.cpp in Sources */,
 				72358FB71B09338A008D6568 /* btConvexConcaveCollisionAlgorithm.cpp in Sources */,
+				726461D51C95C45500BAEB05 /* FirstPersonMover.cpp in Sources */,
 				72358CC81B0932E1008D6568 /* b2CollideCircle.cpp in Sources */,
 				72358D901B0932E1008D6568 /* Clipper.cpp in Sources */,
 				72358FA41B09338A008D6568 /* btAxisSweep3.cpp in Sources */,
@@ -2357,8 +2591,10 @@
 				72D7C81B1C8CE15800A9AF8F /* main.cpp in Sources */,
 				72358FCC1B09338A008D6568 /* btConeShape.cpp in Sources */,
 				72358FDA1B09338A008D6568 /* btOptimizedBvh.cpp in Sources */,
+				726461EA1C95C7F900BAEB05 /* PhysicsSystem2d.cpp in Sources */,
 				72D7C8151C8C609E00A9AF8F /* GameSystem.cpp in Sources */,
 				72D7C8321C90B2AF00A9AF8F /* MenuSystem.cpp in Sources */,
+				726461861C9566A600BAEB05 /* GameObjectEditor.cpp in Sources */,
 				72358FF71B09338A008D6568 /* btGjkEpa2.cpp in Sources */,
 				72358C581B0932E1008D6568 /* ICellItem.cpp in Sources */,
 				72358CE21B0932E1008D6568 /* b2MouseJoint.cpp in Sources */,
@@ -2371,10 +2607,12 @@
 				72358D8A1B0932E1008D6568 /* WindowOSX.mm in Sources */,
 				72358FFE1B09338A008D6568 /* btSubSimplexConvexCast.cpp in Sources */,
 				723590251B09338A008D6568 /* SpuSampleTaskProcess.cpp in Sources */,
+				726461EB1C95C7F900BAEB05 /* RigidBody.cpp in Sources */,
 				723590081B09338A008D6568 /* btPoint2PointConstraint.cpp in Sources */,
 				726837871C875A7100785193 /* RenderSystem.cpp in Sources */,
 				72358FA71B09338A008D6568 /* btDbvt.cpp in Sources */,
 				723590101B09338A008D6568 /* btSimpleDynamicsWorld.cpp in Sources */,
+				726461841C9566A600BAEB05 /* FieldEditor.cpp in Sources */,
 				72358CCA1B0932E1008D6568 /* b2Collision.cpp in Sources */,
 				72358DA11B0932E1008D6568 /* Vertex.cpp in Sources */,
 				72358FFA1B09338A008D6568 /* btMinkowskiPenetrationDepthSolver.cpp in Sources */,
@@ -2404,7 +2642,9 @@
 				72358FD91B09338A008D6568 /* btMultiSphereShape.cpp in Sources */,
 				72358CBD1B0932E1008D6568 /* Point3.cpp in Sources */,
 				72358CBC1B0932E1008D6568 /* Point.cpp in Sources */,
+				726461B31C95C05700BAEB05 /* Sound.cpp in Sources */,
 				72358CC51B0932E1008D6568 /* ChromecastUser.cpp in Sources */,
+				726461D31C95C45500BAEB05 /* DraggableMotion.cpp in Sources */,
 				72358FF61B09338A008D6568 /* btGjkConvexCast.cpp in Sources */,
 				72358CDD1B0932E1008D6568 /* b2PolyAndCircleContact.cpp in Sources */,
 				72D7C8581C90B8F300A9AF8F /* TransformAnimatorSystem.cpp in Sources */,
@@ -2414,6 +2654,7 @@
 				72358CCD1B0932E1008D6568 /* b2TimeOfImpact.cpp in Sources */,
 				72358FAD1B09338A008D6568 /* btSimpleBroadphase.cpp in Sources */,
 				72358FEC1B09338A008D6568 /* btGImpactCollisionAlgorithm.cpp in Sources */,
+				7264619D1C95A5BC00BAEB05 /* DragSelector.cpp in Sources */,
 				72358FF01B09338A008D6568 /* gim_box_set.cpp in Sources */,
 				72358FD21B09338A008D6568 /* btConvexShape.cpp in Sources */,
 				72358FB51B09338A008D6568 /* btCompoundCollisionAlgorithm.cpp in Sources */,
@@ -2424,6 +2665,7 @@
 				72358FDC1B09338A008D6568 /* btScaledBvhTriangleMeshShape.cpp in Sources */,
 				72358C5D1B0932E1008D6568 /* StringHelper.cpp in Sources */,
 				723590371B09338A008D6568 /* MiniCL.cpp in Sources */,
+				7264619F1C95A5BC00BAEB05 /* SelectableCollection.cpp in Sources */,
 				72358FD31B09338A008D6568 /* btConvexTriangleMeshShape.cpp in Sources */,
 				72358FAC1B09338A008D6568 /* btQuantizedBvh.cpp in Sources */,
 				723590141B09338A008D6568 /* btGpu3DGridBroadphase.cpp in Sources */,
@@ -2445,16 +2687,20 @@
 				72D7C8541C90B8F300A9AF8F /* TouchAnimatorSystem.cpp in Sources */,
 				72358FEB1B09338A008D6568 /* btGImpactBvh.cpp in Sources */,
 				72E3CFB01C765836002DA95E /* Touchable.cpp in Sources */,
+				726461B61C95C05700BAEB05 /* SoundSystem.cpp in Sources */,
 				72358FF41B09338A008D6568 /* btContinuousConvexCollision.cpp in Sources */,
 				72358FBA1B09338A008D6568 /* btDefaultCollisionConfiguration.cpp in Sources */,
 				726837761C864E5E00785193 /* SpriteTextureSystem.cpp in Sources */,
+				726461A81C95ADF800BAEB05 /* Colorable.cpp in Sources */,
 				72358FA51B09338A008D6568 /* btBroadphaseProxy.cpp in Sources */,
+				7264618A1C9566A600BAEB05 /* SerializedFieldEditors.cpp in Sources */,
 				72D7C82E1C90B2AF00A9AF8F /* Menu.cpp in Sources */,
 				72358CC21B0932E1008D6568 /* Vector3.cpp in Sources */,
 				72358D861B0932E1008D6568 /* GamePadManager.mm in Sources */,
 				72358DEE1B0932E1008D6568 /* miniz.c in Sources */,
 				72358FAB1B09338A008D6568 /* btOverlappingPairCache.cpp in Sources */,
 				72358FE11B09338A008D6568 /* btTetrahedronShape.cpp in Sources */,
+				726461871C9566A600BAEB05 /* GameObjectEditorSystem.cpp in Sources */,
 				72358D891B0932E1008D6568 /* OSXWindowCreator.mm in Sources */,
 				72358C511B0932E1008D6568 /* InputDevice.cpp in Sources */,
 				72358FA91B09338A008D6568 /* btDispatcher.cpp in Sources */,
@@ -2493,12 +2739,20 @@
 				72358C551B0932E1008D6568 /* BezierCurve1.cpp in Sources */,
 				723590381B09338A008D6568 /* MiniCLTask.cpp in Sources */,
 				7235900B1B09338A008D6568 /* btSolve2LinearConstraint.cpp in Sources */,
+				726461A91C95ADF800BAEB05 /* ColorSystem.cpp in Sources */,
 				72358FC41B09338A008D6568 /* SphereTriangleDetector.cpp in Sources */,
 				72358FC11B09338A008D6568 /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
+				726461E91C95C7F900BAEB05 /* PhysicsSystem.cpp in Sources */,
 				72358FDE1B09338A008D6568 /* btSphereShape.cpp in Sources */,
+				726461A01C95A5BC00BAEB05 /* SelectableDragSystem.cpp in Sources */,
 				72358CC31B0932E1008D6568 /* ChromecastMessage.cpp in Sources */,
 				723590331B09338A008D6568 /* btPolarDecomposition.cpp in Sources */,
+				726461A11C95A5BC00BAEB05 /* SelectedColorer.cpp in Sources */,
 				723590171B09338A008D6568 /* PosixThreadSupport.cpp in Sources */,
+				726461E71C95C7F900BAEB05 /* Collidable.cpp in Sources */,
+				726461D71C95C45500BAEB05 /* Limitable.cpp in Sources */,
+				726461EC1C95C7F900BAEB05 /* RigidBody2d.cpp in Sources */,
+				726461C01C95C28800BAEB05 /* ParticleEffect.cpp in Sources */,
 				72358D911B0932E1008D6568 /* Colour.cpp in Sources */,
 				72358CD11B0932E1008D6568 /* b2BlockAllocator.cpp in Sources */,
 				72358FB91B09338A008D6568 /* btConvexPlaneCollisionAlgorithm.cpp in Sources */,
@@ -2507,10 +2761,15 @@
 				7235900A1B09338A008D6568 /* btSliderConstraint.cpp in Sources */,
 				723590321B09338A008D6568 /* btGeometryUtil.cpp in Sources */,
 				723590271B09338A008D6568 /* btDefaultSoftBodySolver.cpp in Sources */,
+				726461D91C95C45500BAEB05 /* VelocitySystem.cpp in Sources */,
 				72358CB61B0932E1008D6568 /* Box.cpp in Sources */,
+				7264619E1C95A5BC00BAEB05 /* Selectable.cpp in Sources */,
+				726461A21C95A5BC00BAEB05 /* SelectedColorerSystem.cpp in Sources */,
 				72358CDE1B0932E1008D6568 /* b2PolyContact.cpp in Sources */,
+				726461891C9566A600BAEB05 /* HierarchyEditorSystem.cpp in Sources */,
 				72358CB51B0932E1008D6568 /* BoundingFrustum.cpp in Sources */,
 				723590061B09338A008D6568 /* btHinge2Constraint.cpp in Sources */,
+				726461D61C95C45500BAEB05 /* FirstPersonMoverSystem.cpp in Sources */,
 				72358CE31B0932E1008D6568 /* b2PrismaticJoint.cpp in Sources */,
 				72358FFD1B09338A008D6568 /* btRaycastCallback.cpp in Sources */,
 				72358FF91B09338A008D6568 /* btGjkPairDetector.cpp in Sources */,
@@ -2525,6 +2784,7 @@
 				72358FFB1B09338A008D6568 /* btPersistentManifold.cpp in Sources */,
 				72358C5F1B0932E1008D6568 /* UnitTest.cpp in Sources */,
 				72358FBF1B09338A008D6568 /* btSimulationIslandManager.cpp in Sources */,
+				726461C31C95C28800BAEB05 /* ParticleUpdaterSystem.cpp in Sources */,
 				72FB91C31C7BA9BB0038AC85 /* Font.cpp in Sources */,
 				723590361B09338A008D6568 /* btVector3.cpp in Sources */,
 				723590281B09338A008D6568 /* btSoftBody.cpp in Sources */,
@@ -2543,16 +2803,23 @@
 				72D7C8301C90B2AF00A9AF8F /* MenuButton.cpp in Sources */,
 				7235902F1B09338A008D6568 /* btAlignedAllocator.cpp in Sources */,
 				72358CE11B0932E1008D6568 /* b2Joint.cpp in Sources */,
+				726461B51C95C05700BAEB05 /* SoundListener.cpp in Sources */,
+				726461E81C95C7F900BAEB05 /* Joint2d.cpp in Sources */,
 				72358DE81B0932E1008D6568 /* tinyxml.cpp in Sources */,
 				72D7C8141C8C609E00A9AF8F /* GameObject.cpp in Sources */,
 				72358CD31B0932E1008D6568 /* b2Settings.cpp in Sources */,
 				72358CDF1B0932E1008D6568 /* b2DistanceJoint.cpp in Sources */,
+				726461D81C95C45500BAEB05 /* LimitableSystem.cpp in Sources */,
+				726461881C9566A600BAEB05 /* HierarchyEditor.cpp in Sources */,
 				7235902D1B09338A008D6568 /* btSoftRigidDynamicsWorld.cpp in Sources */,
+				7264619C1C95A5BC00BAEB05 /* ClickSelectorSystem.cpp in Sources */,
 				72358DE71B0932E1008D6568 /* tinystr.cpp in Sources */,
 				723590131B09338A008D6568 /* btWheelInfo.cpp in Sources */,
+				726461B41C95C05700BAEB05 /* SoundEmitter.cpp in Sources */,
 				72358DE91B0932E1008D6568 /* tinyxmlerror.cpp in Sources */,
 				72358FDD1B09338A008D6568 /* btShapeHull.cpp in Sources */,
 				72358DEA1B0932E1008D6568 /* tinyxmlparser.cpp in Sources */,
+				726461A31C95A5BC00BAEB05 /* SelectionVisualizer.cpp in Sources */,
 				72358FCB1B09338A008D6568 /* btConcaveShape.cpp in Sources */,
 				72358FD81B09338A008D6568 /* btMultimaterialTriangleMeshShape.cpp in Sources */,
 				72358FEF1B09338A008D6568 /* btTriangleShapeEx.cpp in Sources */,
@@ -2563,9 +2830,12 @@
 				72358CC41B0932E1008D6568 /* ChromecastReceiver.cpp in Sources */,
 				72358FA81B09338A008D6568 /* btDbvtBroadphase.cpp in Sources */,
 				72358CC11B0932E1008D6568 /* Vector2.cpp in Sources */,
+				726461C11C95C28800BAEB05 /* ParticleEmitter.cpp in Sources */,
 				72358FE61B09338A008D6568 /* btTriangleMesh.cpp in Sources */,
+				726461851C9566A600BAEB05 /* FieldEditorSystem.cpp in Sources */,
 				72358FD51B09338A008D6568 /* btEmptyShape.cpp in Sources */,
 				723590291B09338A008D6568 /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
+				726461D41C95C45500BAEB05 /* DraggableMotionSystem.cpp in Sources */,
 				723590341B09338A008D6568 /* btQuickprof.cpp in Sources */,
 				72358D8F1B0932E1008D6568 /* Profiler.cpp in Sources */,
 				72358FE51B09338A008D6568 /* btTriangleIndexVertexMaterialArray.cpp in Sources */,

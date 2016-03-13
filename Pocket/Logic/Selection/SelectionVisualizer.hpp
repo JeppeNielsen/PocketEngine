@@ -14,17 +14,19 @@
 #include <map>
 
 namespace Pocket {
-    class SelectionVisualizer : public GameSystem {
+    class SelectionVisualizer : public GameSystem<Transform, Mesh, Selectable>  {
     public:
-        void Initialize();
+        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         
     private:
-        void SelectionChanged(Selectable* selectable, GameObject* object);
+        void SelectionChanged(GameObject* object);
         GameObject* CreateSelection(GameObject* object);
         
         typedef std::map<GameObject*, GameObject*> Selections;
         Selections selections;
+        
+        GameWorld* world;
     };
 }

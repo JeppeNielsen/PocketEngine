@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-void SelectedColorer::Reset() {
+SelectedColorer::SelectedColorer() {
     Deselected = Colour::White();
     Selected = Colour::White();
 }

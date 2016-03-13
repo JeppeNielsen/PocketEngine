@@ -11,25 +11,17 @@
 
 using namespace Pocket;
 
-Joint2d::Joint2d() : BodyA(this), BodyB(this), joint(0), jointDef(0) {
-    
-}
-
 Joint2d::~Joint2d() {
     delete jointDef;
 }
 
-void Joint2d::Reset() {
+Joint2d::Joint2d() : joint(0), jointDef(0) {
+
     BodyA = 0;
     BodyB = 0;
     delete jointDef;
     jointDef = 0;
     joint = 0;
-}
-
-void Joint2d::Clone(const Joint2d &other) {
-    BodyA = other.BodyA;
-    BodyB = other.BodyB;
 }
 
 b2DistanceJointDef& Joint2d::CreateDistance(GameObject* a, GameObject* b, float length, const Vector2 &localAnchorA, const Vector2 &localAnchorB) {

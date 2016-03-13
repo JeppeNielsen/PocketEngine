@@ -11,15 +11,10 @@
 #include "Mesh.hpp"
 
 namespace Pocket {
-    class ParticleMeshUpdater : public GameSystem {
+    class ParticleMeshUpdater : public GameSystem<Mesh, ParticleEmitter> {
     public:
-        void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        
         void Update(float dt);
     private:
         void UpdateMesh(Mesh* mesh, ParticleEmitter* emitter);
-        
     };
 }

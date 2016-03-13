@@ -47,8 +47,6 @@ public:
         gui->CreateFont("Font.fnt", "Font");
         
         
-        
-        
         bool load = false;
         
         if (!load) {
@@ -61,9 +59,12 @@ public:
             
             Timer timer;
             timer.Begin();
-            for(int i=0; i<2000; i++)
+            for(int i=1; i<10; i++)
             {
-                window->Clone();
+                auto clone = window->Clone();
+                std::stringstream s;
+                s<<"Window #"<<i;
+                clone->Children()[1]->Children()[0]->GetComponent<TextBox>()->Text = s.str();
             }
             double time = timer.End();
             std::cout << "Create windows : " << time << std::endl;

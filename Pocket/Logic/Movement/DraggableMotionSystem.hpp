@@ -16,16 +16,15 @@
 #include <vector>
 
 namespace Pocket {
-    class DraggableMotionSystem : public GameSystem {
+    class DraggableMotionSystem : public GameSystem<Transform, Velocity, Draggable> {
     public:
-        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
         
     private:
         
-        void DraggingChanged(Draggable* draggable, GameObject* object);
+        void DraggingChanged(GameObject* object);
     
         struct DraggingData {
             GameObject* object;

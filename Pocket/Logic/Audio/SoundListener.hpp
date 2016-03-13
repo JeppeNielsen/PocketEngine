@@ -6,11 +6,7 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameComponent.hpp"
 
 namespace Pocket {
-    Component(SoundListener)
-public:
-        
-    };
+    class SoundListener { };
 }

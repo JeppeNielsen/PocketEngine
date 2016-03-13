@@ -10,7 +10,7 @@
 
 namespace Pocket {
     struct DroppedData {
-        //GameObject* object;
+        GameObject* object;
         TouchData touchData;
         std::vector<TouchData> droppedTouches;
     };

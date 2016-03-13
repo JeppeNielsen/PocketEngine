@@ -129,6 +129,8 @@ public:
     void SetID(std::string id);
     std::string GetID();
     
+    bool IsRemoved();
+    
 private:
     template<typename Component>
     void SetComponent(typename Container<Component>::ObjectInstance* instance);

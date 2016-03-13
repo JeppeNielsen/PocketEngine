@@ -13,12 +13,9 @@ using namespace Pocket;
 RigidBody2d::RigidBody2d() : body(0) {
     bodyDefinition.linearDamping = 1.6f;
     bodyDefinition.angularDamping = 0.1f;
-}
-
-void RigidBody2d::Reset() {
-    body = 0;
     polygons.clear();
     circles.clear();
+    body = 0;
 }
 
 b2PolygonDef& RigidBody2d::CreatePolygon(float density, float friction, float restitution) {

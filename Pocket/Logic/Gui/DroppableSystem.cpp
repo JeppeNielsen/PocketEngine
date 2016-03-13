@@ -24,15 +24,15 @@ void DroppableSystem::ObjectRemoved(GameObject *object) {
 
 void DroppableSystem::TouchUp(Pocket::TouchData d, GameObject* object) {
     DroppedData droppedData;
-    //droppedData.object = object;
+    droppedData.object = object;
     droppedData.touchData = d;
     TouchEvent e(d.Index, d.Input->GetTouchPosition(d.Index));
     touchSystem->FindTouchedObjects(droppedData.droppedTouches, e, true);
     for (int i=0; i<droppedData.droppedTouches.size(); ++i) {
-        //if (droppedData.droppedTouches[i].object == object) {
-        //    droppedData.droppedTouches.erase(droppedData.droppedTouches.begin()+i);
-        //    break;
-        //}
+        if (droppedData.droppedTouches[i].object == object) {
+            droppedData.droppedTouches.erase(droppedData.droppedTouches.begin()+i);
+            break;
+        }
     }
     object->GetComponent<Droppable>()->Dropped(droppedData);
 }

@@ -305,6 +305,8 @@ bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &comp
     return true;
 }
 
+bool GameObject::IsRemoved() { return isRemoved; }
+
 #ifdef SCRIPTING_ENABLED
 
 void GameObject::ClearScriptingData() {

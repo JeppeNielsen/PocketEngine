@@ -10,5 +10,5 @@
 
 using namespace Pocket;
 
-Collidable::Collidable() : IsColliding(this) { collisionCounts = 0; }
+Collidable::Collidable() { IsColliding = false; collisionCounts = 0; }
 

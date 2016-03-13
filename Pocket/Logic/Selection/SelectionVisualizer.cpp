@@ -12,18 +12,16 @@
 
 using namespace Pocket;
 
-void SelectionVisualizer::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Mesh>();
-    AddComponent<Selectable>();
+void SelectionVisualizer::Initialize(Pocket::GameWorld *world) {
+    this->world = world;
 }
 
 void SelectionVisualizer::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed += event_handler(this, &SelectionVisualizer::SelectionChanged, object);
+    object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectionVisualizer::SelectionChanged, object);
 }
 
 void SelectionVisualizer::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed -= event_handler(this, &SelectionVisualizer::SelectionChanged, object);
+    object->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectionVisualizer::SelectionChanged, object);
     Selections::iterator it = selections.find(object);
     
     //GameObject* test =0;
@@ -38,16 +36,17 @@ void SelectionVisualizer::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 GameObject* SelectionVisualizer::CreateSelection(GameObject* object) {
-    GameObject* go = World()->CreateObject();
+    GameObject* go = world->CreateObject();
     
     go->AddComponent<Transform>(object);
-    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->center, object->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));
+    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(object->GetComponent<Mesh>()->LocalBoundingBox().center, object->GetComponent<Mesh>()->LocalBoundingBox().extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));
     go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     
     return go;
 }
 
-void SelectionVisualizer::SelectionChanged(Pocket::Selectable *selectable, GameObject* object) {
+void SelectionVisualizer::SelectionChanged(GameObject* object) {
+    Selectable *selectable = object->GetComponent<Selectable>();
     if (selectable->Selected) {
         selections[object] = CreateSelection(object);
     } else {

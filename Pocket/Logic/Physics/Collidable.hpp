@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameObject.hpp"
 #include "Property.hpp"
 #include "Vector3.hpp"
 
@@ -26,10 +26,10 @@ namespace Pocket {
         Vector3 worldNormal;
     };
 
-    Component(Collidable)
+    class  Collidable {
     public:
         Collidable();
-        Property<Collidable*, bool> IsColliding;
+        Property<bool> IsColliding;
         Event<CollisionInfo> Enter;
         Event<CollisionInfo> Exit;
     

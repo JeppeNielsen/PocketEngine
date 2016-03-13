@@ -201,14 +201,3 @@ Colour Colour::Deserialize(const std::string &data) {
                   (Component)(v.size()>3 ? v[3] : 0)
                   );
 }
-
-std::ostream& operator<<(std::ostream& stream, const Pocket::Colour& c) {
-    int red = (int)c.r;
-    int green = (int)c.r;
-    int blue = (int)c.b;
-    int alpha = (int)c.a;
-    stream<<red<<','<<green<<","<<blue<<","<<alpha;
-    return stream;
-}
-
-

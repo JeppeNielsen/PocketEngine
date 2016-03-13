@@ -7,15 +7,12 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Property.hpp"
 
 namespace Pocket {
-    Component(Selectable)
-public:
+    class Selectable {
+    public:
         Selectable();
-        void Reset();
-        void Clone(const Selectable& other);
-        Property<Selectable*, bool> Selected;
+        Property<bool> Selected;
     };
 }

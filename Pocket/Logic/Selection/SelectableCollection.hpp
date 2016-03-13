@@ -12,9 +12,9 @@
 #include "Selectable.hpp"
 
 namespace Pocket {
-    class SelectableCollection : public GameSystem {
+    class SelectableCollection : public GameSystem<Selectable, Transform>  {
     public:
-        void Initialize();
+        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
@@ -22,7 +22,7 @@ namespace Pocket {
         const ObjectCollection& Selected();
         Event<SelectableCollection*> SelectionChanged;
     private:
-        void SelectedChanged(Selectable* selectable, GameObject* object);
+        void SelectedChanged(GameObject* object);
         ObjectCollection selectedObjects;
         void RemoveObject(GameObject* object);
         bool hasChanged;

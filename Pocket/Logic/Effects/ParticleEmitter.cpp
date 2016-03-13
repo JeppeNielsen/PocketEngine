@@ -10,21 +10,12 @@
 
 using namespace Pocket;
 
-void ParticleEmitter::Reset() {
+ParticleEmitter::ParticleEmitter() {
     UseWorldSpace = false;
     Playing = false;
     Age = 0;
     frequencyTime = 0;
 }
-
-void ParticleEmitter::Clone(const Pocket::ParticleEmitter &source) {
-    UseWorldSpace = source.UseWorldSpace;
-    Playing = source.Playing;
-    Age = source.Age;
-    frequencyTime = source.frequencyTime;
-}
-
-ParticleEmitter::ParticleEmitter() : UseWorldSpace(this), Playing(this), Age(this) {}
 
 void ParticleEmitter::CreateParticles(int amount) {
     particles.resize(amount);

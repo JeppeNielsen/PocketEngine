@@ -7,26 +7,19 @@
 //
 
 #pragma once
-
-#include "GameComponent.hpp"
 #include "Property.hpp"
 #include "Vector3.hpp"
 #include "Colour.hpp"
 #include <vector>
 
 namespace Pocket {
-    Component(ParticleEmitter)
-    protected:
-    
-    
-        void Clone(const ParticleEmitter& source);
+    class ParticleEmitter {
     public:
-        void Reset();
         ParticleEmitter();
     
-        Property<ParticleEmitter*, bool> UseWorldSpace;
-        Property<ParticleEmitter*, bool> Playing;
-        Property<ParticleEmitter*, float> Age;
+        Property<bool> UseWorldSpace;
+        Property<bool> Playing;
+        Property<float> Age;
     
     void CreateParticles(int amount);
     

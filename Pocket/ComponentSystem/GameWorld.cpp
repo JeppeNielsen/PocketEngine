@@ -7,6 +7,8 @@
 //
 
 #include "GameWorld.hpp"
+#include "minijson_writer.hpp"
+#include "minijson_reader.hpp"
 #include <map>
 
 using namespace Pocket;

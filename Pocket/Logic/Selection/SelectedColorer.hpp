@@ -7,13 +7,13 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "Colour.hpp"
 
 namespace Pocket {
-  Component(SelectedColorer)
+    class SelectedColorer {
     public:
+        SelectedColorer();
         Colour Deselected;
         Colour Selected;
-        void Reset();
     };
 }

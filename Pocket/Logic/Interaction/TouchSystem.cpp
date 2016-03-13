@@ -294,7 +294,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         TouchableObject* touchableObject = foundIntersection->touchable;
         
         TouchData touch;
-        //touch.object = foundIntersection->object;
+        touch.object = foundIntersection->object;
         touch.Input = Input;
         touch.CameraTransform = cameraObject->GetComponent<Transform>();
         touch.Camera = camera;

@@ -13,10 +13,10 @@
 #include "Selectable.hpp"
 
 namespace Pocket {
-    SYSTEM(SelectedColorerSystem, SelectedColorer, Colorable, Selectable)
+    class SelectedColorerSystem : public GameSystem<SelectedColorer, Colorable, Selectable> {
     public:
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
-        void SelectedChanged(Selectable* selectable, GameObject* object);
+        void SelectedChanged(GameObject* object);
     };
 }

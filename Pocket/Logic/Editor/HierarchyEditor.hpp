@@ -6,15 +6,13 @@
 //  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameWorld.hpp"
+#include "GameObject.hpp"
 
 namespace Pocket {
-  Component(HierarchyEditor)
+  class HierarchyEditor {
   public:
         HierarchyEditor();
-        void Reset();
         GameObject* Object;
-    
         size_t prevChildrenCount;
   };
 }

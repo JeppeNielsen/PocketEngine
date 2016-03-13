@@ -11,9 +11,8 @@
 #include "ParticleEmitter.hpp"
 
 namespace Pocket {
-    class ParticleUpdaterSystem : public GameSystem {
+    class ParticleUpdaterSystem : public GameSystem<ParticleEffect, ParticleEmitter> {
     public:
-        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);

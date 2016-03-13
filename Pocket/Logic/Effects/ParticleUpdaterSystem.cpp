@@ -16,11 +16,6 @@
 
 using namespace Pocket;
 
-void ParticleUpdaterSystem::Initialize() {
-    AddComponent<ParticleEffect>();
-    AddComponent<ParticleEmitter>();
-}
-
 void ParticleUpdaterSystem::ObjectAdded(Pocket::GameObject *object) {
     ParticleEffect* effect = object->GetComponent<ParticleEffect>();
     ParticleEmitter* emitter = object->GetComponent<ParticleEmitter>();
@@ -49,7 +44,7 @@ void ParticleUpdaterSystem::UpdateEmitter(float dt, ParticleEffect *effect, Part
         if (age>effect->Duration()) {
             emitter->Playing = false;
         } else {
-            if (emitter->frequencyTime>effect->EmissionFrequency.GetValue()) {
+            if (emitter->frequencyTime>effect->EmissionFrequency()) {
                 emitter->frequencyTime = 0;
                 int amount = effect->EmissionAmount();
                 
@@ -58,7 +53,7 @@ void ParticleUpdaterSystem::UpdateEmitter(float dt, ParticleEffect *effect, Part
                     ParticleEmitter::Particle* particle = emitter->inactiveParticles.back();
                     emitter->inactiveParticles.pop_back();
                     particle->id = (int)emitter->activeParticles.size();
-                    particle->position = useWorldSpace ? transform->World.GetValue()->TransformPosition(Vector3(0,0,0)) : Vector3(0,0,0);
+                    particle->position = useWorldSpace ? transform->World().TransformPosition(Vector3(0,0,0)) : Vector3(0,0,0);
                     particle->rotation = effect->Rotation.Get(MathHelper::Random());
                     particle->age = 0;
                     particle->lifetime = effect->Lifetime.Get(MathHelper::Random());
@@ -99,7 +94,7 @@ void ParticleUpdaterSystem::UpdateEmitter(float dt, ParticleEffect *effect, Part
                                                      velocity.Min.x + (velocity.Max.x - velocity.Min.x) * particle->velocityRnd[0],
                                                      velocity.Min.y + (velocity.Max.y - velocity.Min.y) * particle->velocityRnd[1],
                                                      velocity.Min.z + (velocity.Max.z - velocity.Min.z) * particle->velocityRnd[2]);
-                        if (useWorldSpace) transform->World.GetValue()->TransformVector(particle->velocity, particle->velocity);
+                        if (useWorldSpace) transform->World().TransformVector(particle->velocity, particle->velocity);
                     }
                     
                     if (effect->Acceleration.Count()==0) {

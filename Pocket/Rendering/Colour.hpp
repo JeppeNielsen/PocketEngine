@@ -55,8 +55,13 @@ namespace Pocket {
         
         Colour static Deserialize(const std::string& data);
         Colour operator *(const Colour &other) const;
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Colour& c) {
+            int red = (int)c.r;
+            int green = (int)c.r;
+            int blue = (int)c.b;
+            int alpha = (int)c.a;
+            stream<<red<<','<<green<<","<<blue<<","<<alpha;
+            return stream;
+        }
 	};
 }
-
-std::ostream& operator<<(std::ostream& stream, const Pocket::Colour& v);
-

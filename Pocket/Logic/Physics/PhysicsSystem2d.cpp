@@ -27,36 +27,31 @@ PhysicsSystem2d::~PhysicsSystem2d() {
     delete physicsWorld;
 }
 
-void PhysicsSystem2d::AddedToWorld(Pocket::GameWorld &world) {
-    jointSystem = world.CreateSystem<JointSystem>();
+void PhysicsSystem2d::Initialize(GameWorld* world) {
+    jointSystem = world->CreateSystem<JointSystem>();
     jointSystem->physicsSystem = this;
 }
 
-void PhysicsSystem2d::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<RigidBody2d>();
-}
-
 void PhysicsSystem2d::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Transform>()->Position.Changed += event_handler(this, &PhysicsSystem2d::TransformChanged, object);
+    object->GetComponent<Transform>()->Position.Changed.Bind(this, &PhysicsSystem2d::TransformChanged, object);
     RigidBody2d* rigidBody = object->GetComponent<RigidBody2d>();
-    rigidBody->HasBecomeDirty += event_handler(this, &PhysicsSystem2d::BodyWasDirty, object);
+    rigidBody->HasBecomeDirty.Bind(this, &PhysicsSystem2d::BodyWasDirty, object);
     BodyWasDirty(rigidBody, object);
 }
 
 void PhysicsSystem2d::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Transform>()->Position.Changed -= event_handler(this, &PhysicsSystem2d::TransformChanged, object);
+    object->GetComponent<Transform>()->Position.Changed.Unbind(this, &PhysicsSystem2d::TransformChanged, object);
     RigidBody2d* rigidBody = object->GetComponent<RigidBody2d>();
-    rigidBody->HasBecomeDirty -= event_handler(this, &PhysicsSystem2d::BodyWasDirty, object);
+    rigidBody->HasBecomeDirty.Unbind(this, &PhysicsSystem2d::BodyWasDirty, object);
     
     deletedBodies.insert(object);
     DirtyBodies::iterator it = dirtyBodies.find(object);
     if (it!=dirtyBodies.end()) dirtyBodies.erase(it);
 }
 
-void PhysicsSystem2d::TransformChanged(Pocket::Transform *transform, GameObject* object) {
+void PhysicsSystem2d::TransformChanged(GameObject* object) {
     if (isSimulating) return;
-    
+    Transform* transform = object->GetComponent<Transform>();
     Vector3 position = transform->Position;
     RigidBody2d* rigidBody = object->GetComponent<RigidBody2d>();
     rigidBody->body->SetXForm(b2Vec2(position.x, position.y), transform->Rotation().ToEuler().z);
@@ -135,10 +130,6 @@ void PhysicsSystem2d::Update(float dt) {
     //cout<<"Body count " << physicsWorld->GetBodyCount() << " Joint count " << physicsWorld->GetJointCount() << endl;
 }
 
-
-void PhysicsSystem2d::JointSystem::Initialize() {
-    AddComponent<Joint2d>();
-}
 
 void PhysicsSystem2d::JointSystem::ObjectAdded(Pocket::GameObject *object) {
     jointsToCreate.push_back(object->GetComponent<Joint2d>());

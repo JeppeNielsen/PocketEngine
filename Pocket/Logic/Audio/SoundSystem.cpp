@@ -42,17 +42,12 @@ SoundSystem::~SoundSystem() {
     }
 }
 
-void SoundSystem::Initialize() {
-    AddComponent<Sound>();
-    AddComponent<SoundEmitter>();
-    
+void SoundSystem::Initialize(GameWorld* world) {
     float f[]={0,0,-1,0,1,0};
     alListenerfv(AL_ORIENTATION, f);
-}
-
-void SoundSystem::AddedToWorld(Pocket::GameWorld &world) {
-    world.CreateSystem<ListenerSystem>();
-    SoundTransformSystem* transformSystem = world.CreateSystem<SoundTransformSystem>();
+    
+    world->CreateSystem<ListenerSystem>();
+    SoundTransformSystem* transformSystem = world->CreateSystem<SoundTransformSystem>();
     transformSystem->soundSystem = this;
 }
 
@@ -74,29 +69,27 @@ void SoundSystem::Update(float dt) {
     
 }
 
-void SoundSystem::ListenerSystem::Initialize() {
-    AddComponent<SoundListener>();
-    AddComponent<Transform>();
+void SoundSystem::ListenerSystem::Initialize(GameWorld* world) {
     needsUpdate = false;
 }
 
 void SoundSystem::ListenerSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Transform>()->World.HasBecomeDirty += event_handler(this, &SoundSystem::ListenerSystem::TransformChanged);
+    object->GetComponent<Transform>()->World.HasBecomeDirty.Bind(this, &SoundSystem::ListenerSystem::TransformChanged);
     needsUpdate = true;
-    lastPosition = object->GetComponent<Transform>()->World.GetValue()->Translation();
+    lastPosition = object->GetComponent<Transform>()->World().Translation();
    // AL_MAX_DISTANCE
     alListenerf(AL_MAX_DISTANCE, 5.0f);
 }
 
 void SoundSystem::ListenerSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Transform>()->World.HasBecomeDirty -= event_handler(this, &SoundSystem::ListenerSystem::TransformChanged);
+    object->GetComponent<Transform>()->World.HasBecomeDirty.Unbind(this, &SoundSystem::ListenerSystem::TransformChanged);
     if (Objects().size()==0) {
         float f[]={0,0,-1,0,1,0};
         alListenerfv(AL_ORIENTATION, f);
     }
 }
 
-void SoundSystem::ListenerSystem::TransformChanged(DirtyProperty<Pocket::Transform *, Pocket::Matrix4x4> *worldProperty) {
+void SoundSystem::ListenerSystem::TransformChanged() {
     needsUpdate = true;
 }
 
@@ -125,12 +118,6 @@ void SoundSystem::ListenerSystem::Update(float dt) {
     alListenerfv(AL_ORIENTATION, listenerOri);
 }
 
-void SoundSystem::SoundTransformSystem::Initialize() {
-    AddComponent<Sound>();
-    AddComponent<SoundEmitter>();
-    AddComponent<Transform>();
-}
-
 void SoundSystem::SoundTransformSystem::ObjectAdded(GameObject* object) {
     SoundableObject* soundableObject = (SoundableObject*)soundSystem->GetMetaData(object);
     soundableObject->TransformAdded(object->GetComponent<Transform>());
@@ -151,31 +138,30 @@ void SoundSystem::SoundableObject::Initialize(Pocket::GameObject* object) {
     alSource3f(alSource,AL_POSITION, 0, 0, 0);
     alSourcei(alSource, AL_SOURCE_RELATIVE, AL_TRUE);
     
-    emitter->Playing.Changed += event_handler(this, &SoundSystem::SoundableObject::PlayingChanged);
-    emitter->Pitch.Changed += event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->Volume.Changed += event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->Looping.Changed += event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->MinDistance.Changed += event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->MaxDistance.Changed += event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Playing.Changed.Bind(this, &SoundSystem::SoundableObject::PlayingChanged);
+    emitter->Pitch.Changed.Bind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Volume.Changed.Bind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Looping.Changed.Bind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->MinDistance.Changed.Bind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->MaxDistance.Changed.Bind(this, &SoundSystem::SoundableObject::EmitterChanged);
     
-    EmitterChanged(emitter);
-    PlayingChanged(emitter);
-    
+    EmitterChanged();
+    PlayingChanged();
 }
 
 void SoundSystem::SoundableObject::Destroy() {
     alDeleteSources(1, &alSource);
     alSource = 0;
     
-    emitter->Playing.Changed -= event_handler(this, &SoundSystem::SoundableObject::PlayingChanged);
-    emitter->Pitch.Changed -= event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->Volume.Changed -= event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->Looping.Changed -= event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->MinDistance.Changed -= event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
-    emitter->MaxDistance.Changed -= event_handler(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Playing.Changed.Unbind(this, &SoundSystem::SoundableObject::PlayingChanged);
+    emitter->Pitch.Changed.Unbind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Volume.Changed.Unbind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->Looping.Changed.Unbind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->MinDistance.Changed.Unbind(this, &SoundSystem::SoundableObject::EmitterChanged);
+    emitter->MaxDistance.Changed.Unbind(this, &SoundSystem::SoundableObject::EmitterChanged);
 }
 
-void SoundSystem::SoundableObject::EmitterChanged(Pocket::SoundEmitter *emitter) {
+void SoundSystem::SoundableObject::EmitterChanged() {
     alSourcei(alSource, AL_BUFFER, sound->GetOpenALBuffer());
     alSourcef(alSource, AL_PITCH, emitter->Pitch());
     alSourcef(alSource, AL_GAIN, emitter->Volume());
@@ -185,7 +171,7 @@ void SoundSystem::SoundableObject::EmitterChanged(Pocket::SoundEmitter *emitter)
     
 }
 
-void SoundSystem::SoundableObject::PlayingChanged(Pocket::SoundEmitter *emitter) {
+void SoundSystem::SoundableObject::PlayingChanged() {
     if (emitter->Playing()) {
         alSourcePlay(alSource);
     } else {
@@ -194,19 +180,19 @@ void SoundSystem::SoundableObject::PlayingChanged(Pocket::SoundEmitter *emitter)
 }
 
 void SoundSystem::SoundableObject::TransformAdded(Pocket::Transform *transform) {
-    transform->World.HasBecomeDirty += event_handler(this, &SoundSystem::SoundableObject::TransformChanged);
+    transform->World.HasBecomeDirty.Bind(this, &SoundSystem::SoundableObject::TransformChanged);
     alSourcei(alSource, AL_SOURCE_RELATIVE, AL_FALSE);
-    TransformChanged(&transform->World);
+    TransformChanged();
 }
 
 void SoundSystem::SoundableObject::TransformRemoved(Pocket::Transform *transform) {
-    transform->World.HasBecomeDirty -= event_handler(this, &SoundSystem::SoundableObject::TransformChanged);
+    transform->World.HasBecomeDirty.Unbind(this, &SoundSystem::SoundableObject::TransformChanged);
     alSource3f(alSource,AL_POSITION, 0, 0, 0);
     alSourcei(alSource, AL_SOURCE_RELATIVE, AL_TRUE);
 }
 
-void SoundSystem::SoundableObject::TransformChanged(DirtyProperty<Pocket::Transform *, Pocket::Matrix4x4> *worldProperty) {
-    Vector3 position = worldProperty->GetValue()->Translation();
+void SoundSystem::SoundableObject::TransformChanged() {
+    Vector3 position = transform->World().Translation();
     alSource3f(alSource,AL_POSITION,position.x,position.y,position.z);
 }
 
