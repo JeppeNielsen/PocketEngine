@@ -26,14 +26,14 @@ void FirstPersonMoverSystem::InputChanged() {
     InputManager* old = Input.PreviousValue();
     InputManager* current = Input;
     if (old) {
-        old->TouchDown.Bind(this, &FirstPersonMoverSystem::TouchDown);
-        old->TouchUp.Bind(this, &FirstPersonMoverSystem::TouchUp);
+        old->TouchDown.Unbind(this, &FirstPersonMoverSystem::TouchDown);
+        old->TouchUp.Unbind(this, &FirstPersonMoverSystem::TouchUp);
         touches.clear();
     }
     
     if (current) {
-        current->TouchDown.Unbind(this, &FirstPersonMoverSystem::TouchDown);
-        current->TouchUp.Unbind(this, &FirstPersonMoverSystem::TouchUp);
+        current->TouchDown.Bind(this, &FirstPersonMoverSystem::TouchDown);
+        current->TouchUp.Bind(this, &FirstPersonMoverSystem::TouchUp);
     }
 }
 
