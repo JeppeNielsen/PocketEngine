@@ -11,6 +11,7 @@
 #include "RenderSystem.hpp"
 #include "DraggableSystem.hpp"
 #include "TouchSystem.hpp"
+#include "FirstPersonMoverSystem.hpp"
 
 using namespace Pocket;
 
@@ -50,11 +51,13 @@ public:
         world.CreateSystem<TouchSystem>()->Input = &Input;
         world.CreateSystem<DraggableSystem>();
         world.CreateSystem<ClickColorSystem>();
+        world.CreateSystem<FirstPersonMoverSystem>()->Input = &Input;
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
+        camera->AddComponent<FirstPersonMover>();
         
         cube = world.CreateObject();
         cube->AddComponent<Transform>();
@@ -87,7 +90,7 @@ public:
     }
 };
 
-int main_cube() {
+int main() {
     Engine e;
     e.Start<Game>();
 	return 0;
