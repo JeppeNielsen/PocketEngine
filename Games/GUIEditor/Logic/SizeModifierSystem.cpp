@@ -34,21 +34,15 @@ void SizeModifierSystem::SelectionChanged(GameObject* object) {
     SizeModifier* modifier = object->GetComponent<SizeModifier>();
     
     if (selectable->Selected) {
-        
+        for (int i=0; i<4; ++i) {
+            modifier->Lines[i]=CreateLine(object,i);
+        }
         
         for (int i=0; i<8; ++i) {
                 Draggable::MovementMode mode = i==1 || i==5 ? Draggable::MovementMode::XAxis : (i==3 || i==7 ? Draggable::MovementMode::YAxis : Draggable::MovementMode::XYPlane);
             
             modifier->Nodes[i]=CreateNode(object, i, mode);
         }
-        
-        for (int i=0; i<4; ++i) {
-            modifier->Lines[i]=CreateLine(object,i);
-        }
-
-        
-        
-        
     } else {
         modifier->DeleteNodes();
     }
@@ -58,7 +52,7 @@ GameObject* SizeModifierSystem::CreateNode(GameObject *object, int cornerIndex, 
     GameObject* go = world->CreateObject();
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 10, Colour::White());
-    go->AddComponent<Material>();
+    go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     go->AddComponent<Touchable>();
     go->AddComponent<Draggable>()->Movement = movementMode;
     SizeModifierNode* node = go->AddComponent<SizeModifierNode>();
