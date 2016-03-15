@@ -44,7 +44,13 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
 
 LayoutSystem::LayoutObject::~LayoutObject() {
     object->Parent.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentChanged);
-    ParentChanged();
+    
+    if (parentSizeable) {
+        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable = 0;
+        parentLayoutObject = 0;
+    }
+    
     auto it = layoutSystem->dirtyObjects.find(this);
     if (it!=layoutSystem->dirtyObjects.end()) {
         layoutSystem->dirtyObjects.erase(it);
@@ -65,7 +71,7 @@ void LayoutSystem::LayoutObject::SizeChanged() {
 
 void LayoutSystem::LayoutObject::ParentChanged() {
     if (parentSizeable) {
-        parentSizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
         parentSizeable = 0;
         if (parentLayoutObject) {
             layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
