@@ -208,8 +208,9 @@ Component* GameObject::AddComponent(GameObject* source) {
         return GetComponent<Component>();
     }
     assert(source);
-    assert(!HasComponent<Component>());
-    assert(source->HasComponent<Component>());
+    if (!source->HasComponent<Component>()) {
+        return 0;
+    }
     assert(IDHelper::GetComponentID<Component>()<world->components.size());
     typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)source->components[IDHelper::GetComponentID<Component>()];
     ++instance->references;
