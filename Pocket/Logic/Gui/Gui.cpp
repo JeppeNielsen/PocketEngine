@@ -96,7 +96,7 @@ GameObject* Gui::CreateControl(GameObject* parent) {
     control->AddComponent<Mesh>();
     control->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     control->AddComponent<Touchable>();
-    //control->AddComponent<Colorable>();
+    control->AddComponent<Colorable>();
     control->AddComponent<Sizeable>();
     control->AddComponent<Sprite>();
     control->AddComponent<class Atlas>(atlas);
