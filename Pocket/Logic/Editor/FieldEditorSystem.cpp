@@ -15,15 +15,20 @@ void FieldEditorSystem::Initialize(Pocket::GameWorld* world) {
 
 void FieldEditorSystem::ObjectAdded(GameObject* object) {
     FieldEditor* editor = object->GetComponent<FieldEditor>();
-    editor->Object.Changed.Bind(this, &FieldEditorSystem::FieldChanged, object);
+    editor->TypeChanged.Bind(this, &FieldEditorSystem::FieldChanged, object);
     editor->Field.Changed.Bind(this, &FieldEditorSystem::FieldChanged,object);
     FieldChanged(object);
 }
 
 void FieldEditorSystem::ObjectRemoved(GameObject* object) {
     FieldEditor* editor = object->GetComponent<FieldEditor>();
-    editor->Object.Changed.Unbind(this, &FieldEditorSystem::FieldChanged, object);
+    editor->TypeChanged.Unbind(this, &FieldEditorSystem::FieldChanged, object);
     editor->Field.Changed.Unbind(this, &FieldEditorSystem::FieldChanged, object);
+    if (editor->editor) {
+        editor->editor->Destroy();
+        delete editor->editor;
+        editor->editor = 0;
+    }
 }
 
 void FieldEditorSystem::Update(float dt) {
@@ -41,11 +46,10 @@ void FieldEditorSystem::FieldChanged(GameObject* object) {
         delete editor->editor;
         editor->editor = 0;
     }
-    if (!editor->Object()) {
+    if (editor->Type.fields.size() == 0) {
         return;
     }
-    auto typeInfo = editor->Object();
-    IFieldInfo* field = typeInfo->GetField(editor->Field);
+    IFieldInfo* field = editor->Type.GetField(editor->Field);
     if (field) {
         editor->editor = field->CreateEditor(gui, object);
     }

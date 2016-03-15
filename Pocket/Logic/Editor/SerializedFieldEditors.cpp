@@ -25,7 +25,7 @@ void SerializedFieldEditorFloat::Destroy() {
 }
 
 void SerializedFieldEditorFloat::TextChanged(GameObject* object) {
-    TextBox* textBox = object->GetComponent<TextBox>();
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
     if (textBox->Active) return;
     float value = (float)atof(textBox->Text().c_str());
     (*field) = value;
@@ -63,7 +63,7 @@ void SerializedFieldEditorVector2::Destroy() {
 }
 
 void SerializedFieldEditorVector2::TextChanged(GameObject* object) {
-    TextBox* textBox = object->GetComponent<TextBox>();
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
     if (textBox->Active) return;
     float value = (float)atof(textBox->Text().c_str());
     if (object == this->textBox[0]) {
@@ -108,7 +108,7 @@ void SerializedFieldEditorVector3::Destroy() {
 }
 
 void SerializedFieldEditorVector3::TextChanged(GameObject* object) {
-    TextBox* textBox = object->GetComponent<TextBox>();
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
     if (textBox->Active) return;
     float value = (float)atof(textBox->Text().c_str());
     if (object == this->textBox[0]) {
@@ -144,12 +144,12 @@ void SerializedFieldEditorString::Initialize(Gui* context, GameObject* parent) {
 }
 
 void SerializedFieldEditorString::Destroy() {
-    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed.Bind(this, &SerializedFieldEditorString::TextChanged, textBox);
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed.Unbind(this, &SerializedFieldEditorString::TextChanged, textBox);
     textBox->Remove();
 }
 
 void SerializedFieldEditorString::TextChanged(GameObject* object) {
-    TextBox* textBox = object->GetComponent<TextBox>();
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
     if (textBox->Active) return;
     (*field) = textBox->Text();
 }
@@ -188,6 +188,14 @@ void SerializedFieldEditorBool::Clicked(TouchData touch) {
 void SerializedFieldEditorBool::Update(float dt) {
     bool changed = prev!=(*field);
     if (changed) {
+        bool active = *field;
+        if (active) {
+            tick->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        } else {
+            if (tick->HasComponent<Material>()) {
+                tick->RemoveComponent<Material>();
+            }
+        }
        // tick->EnableComponent<Material>(*field);
     }
     prev = (*field);
@@ -215,7 +223,7 @@ void SerializedFieldEditorQuaternion::Destroy() {
 }
 
 void SerializedFieldEditorQuaternion::TextChanged(GameObject* object) {
-    TextBox* textBox = object->GetComponent<TextBox>();
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
     if (textBox->Active) return;
     float value = (float)atof(textBox->Text().c_str());
     Vector3 euler = (*field).ToEuler();

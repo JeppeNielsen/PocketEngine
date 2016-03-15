@@ -16,7 +16,9 @@ namespace Pocket {
             FieldEditor();
             void operator=(const FieldEditor& other);
             IFieldInfoEditor* editor;
-            Property<TypeInfo*> Object;
             Property<std::string> Field;
+            TypeInfo Type;
+            void SetType(const TypeInfo& type);
+            Event<> TypeChanged;
     };
 }
