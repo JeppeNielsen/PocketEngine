@@ -55,6 +55,7 @@ public:
     
     void DestroyObject(ObjectInstance* instance) {
         --capacity;
+        --size;
         objects[capacity]->index = instance->index;
         std::swap(objects[instance->index], objects[capacity]);
         objects.pop_back();
