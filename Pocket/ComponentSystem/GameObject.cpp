@@ -94,12 +94,17 @@ void GameObject::Remove() {
     }
 
     world->removeActions.emplace_back([this]() {
+        Parent = 0;
         world->objects.RemoveObject(instance);
     });
     
     for(auto child : children) {
         child->Remove();
     }
+}
+
+GameObject* GameObject::Clone(std::function<bool(GameObject*)> predicate) {
+    return Clone(Parent, predicate);
 }
 
 GameObject* GameObject::Clone(GameObject* parent, std::function<bool(GameObject*)> predicate) {
@@ -309,6 +314,18 @@ bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &comp
 }
 
 bool GameObject::IsRemoved() { return isRemoved; }
+
+std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int componentID)> predicate) {
+    std::vector<TypeInfo> infos;
+    for (int i=0; i<world->components.size(); ++i) {
+        if (!world->getTypeComponent[i]) continue; // component has no type
+        if (!activeComponents[i]) continue; // gameobject hasn't got component
+        if (predicate && !predicate(i)) continue; // component type not allowed
+        infos.emplace_back(world->getTypeComponent[i](this));
+        infos[infos.size()-1].name = world->componentNames[i];
+    }
+    return infos;
+}
 
 #ifdef SCRIPTING_ENABLED
 

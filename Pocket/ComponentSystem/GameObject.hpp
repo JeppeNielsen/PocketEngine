@@ -86,6 +86,7 @@ public:
     }
     
     void Remove();
+    GameObject* Clone(std::function<bool(GameObject*)> predicate = 0);
     GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
     
     template<typename Component>
@@ -107,6 +108,8 @@ public:
     
     template<typename Component>
     GameObject* GetOwner();
+    
+    std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate = 0);
     
  #if SCRIPTING_ENABLED
     void* GetComponent(int componentID) override;
