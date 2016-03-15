@@ -183,11 +183,11 @@ public:
             std::cout <<"end"<<std::endl;
             
             for (auto o : selected->Selected()) {
-                o->Clone(0, [](GameObject* o) {
+                o->Clone([](GameObject* o) {
                     if (o->HasComponent<SizeModifierNode>()) return false;
                     if (o->HasComponent<SizeModifierLine>()) return false;
                     return true;
-                })->Parent = root;
+                });
             }
             
             std::cout <<"end"<<std::endl;
