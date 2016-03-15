@@ -104,9 +104,7 @@ public:
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
     virtual IFieldInfoEditor* CreateEditor(void* context, void* parent) = 0;
     virtual bool HasEditor() = 0;
-    
-    
-    
+    virtual IFieldInfo* Clone() = 0;
 };
 
 template<class T>
@@ -143,6 +141,14 @@ public:
         }
     }
     
+    IFieldInfo* Clone() override {
+        FieldInfo<T>* clone = new FieldInfo<T>();
+        clone->name = this->name;
+        clone->type = this->type;
+        clone->field = this->field;
+        return clone;
+    }
+    
     static std::function<IFieldInfoEditor*()> Editor;
     
     friend class TypeInfo;
@@ -169,7 +175,25 @@ public:
     
     TypeInfo(TypeInfo&& other) {
         fields = other.fields;
+        name = other.name;
         other.fields.clear();
+        other.name.clear();
+    }
+    
+    TypeInfo(const TypeInfo& other) {
+        fields.clear();
+        for(auto f : other.fields) {
+            fields.push_back(f->Clone());
+        }
+        name = other.name;
+    }
+    
+    void operator = (const TypeInfo& other) {
+        fields.clear();
+        for(auto f : other.fields) {
+            fields.push_back(f->Clone());
+        }
+        name = other.name;
     }
     
     template<class T>
