@@ -12,7 +12,7 @@ namespace Pocket {
   class HierarchyEditor {
   public:
         HierarchyEditor();
-        GameObject* Object;
+        Property<GameObject*> Object;
         size_t prevChildrenCount;
   };
 }
