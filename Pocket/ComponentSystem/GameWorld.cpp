@@ -137,6 +137,9 @@ void GameWorld::TryAddSystem(int systemID, std::function<IGameSystem*()> createS
 #if SCRIPTING_ENABLED
         staticScriptSystemComponents.resize(components.size());
 #endif
+        std::sort(systems.begin(), systems.end(), [](auto a, auto b) {
+            return a->Order()<b->Order();
+        });
     }
 }
 
@@ -238,9 +241,6 @@ GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
     }
     return 0;
 }
-
-
-
 
 #ifdef SCRIPTING_ENABLED
 void GameWorld::ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted) {

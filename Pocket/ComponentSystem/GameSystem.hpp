@@ -41,6 +41,7 @@ protected:
     virtual void ObjectAdded(GameObject* object);
     virtual void ObjectRemoved(GameObject* object);
     virtual void CreateComponents(GameWorld *world, int systemIndex) = 0;
+    virtual int Order() { return 0; }
     
     int index;
     
