@@ -1,9 +1,9 @@
 //
 //  Event.hpp
-//  EntitySystem
+//  TestEvents
 //
-//  Created by Jeppe Nielsen on 07/12/15.
-//  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 15/03/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
@@ -11,52 +11,80 @@
 #include <functional>
 
 namespace Pocket {
-
-template<class... T>
+template<typename... T>
 class Event {
 private:
-    using Signature = void(T...);
-    using Delegate = std::function<Signature>;
-    using Delegates = std::vector<Delegate>;
+    
+    template<typename...Args>
+    struct IDelegate {
+        short type;
+        virtual ~IDelegate() {}
+        virtual void Invoke(Args... values) = 0;
+    };
+    using Delegate = IDelegate<T...>;
+    using Delegates = std::vector<Delegate*>;
     Delegates delegates;
     
-    template<typename Obj, typename ...Args>
-    struct MemberDelegate {
-        Obj* x;
-        void (Obj::*f)(Args...);
-
-        template<typename ...Ts>
-        void operator()(Ts&&... args) {
-            (x->*f)(std::forward<Ts>(args)...);
+    template<typename Obj>
+    struct IDelegateMember : public IDelegate<T...> {
+        Obj* object;
+        void (Obj::*method)(T...);
+        
+        void Invoke(T... values) override {
+            (object->*method)(std::forward<T>(values)...);
         }
     };
     
-    template<typename Obj, typename Context, typename ...Args>
-    struct MemberDelegateContext {
-        Obj* x;
+    template<typename Obj, typename Context>
+    struct IDelegateMemberContext : public IDelegate<T...> {
+        Obj* object;
         Context context;
-        void (Obj::*f)(Args..., Context);
-
-        template<typename ...Ts>
-        void operator()(Ts&&... args) {
-            (x->*f)(std::forward<Ts>(args)..., context);
+        void (Obj::*method)(T..., Context);
+        
+        void Invoke(T... values) override {
+            (object->*method)(std::forward<T>(values)..., context);
         }
     };
+    
+    struct IDelegateLambda : public IDelegate<T...> {
+        std::function<void(T...)> function;
+        void Invoke(T... values) override {
+            function(std::forward<T>(values)...);
+        }
+    };
+    
+    static int objectIDCounter;
+    static int contextIDCounter;
+    
+    template<typename O>
+    int GetObjectID() {
+        static int id = objectIDCounter++;
+        return id;
+    }
+    
+    template<typename O>
+    int GetContextID() {
+        static int id = contextIDCounter++;
+        return id;
+    }
     
 public:
+    
     Event() = default;
     Event(const Event<T...>& other) { delegates.clear(); }
     Event(Event<T...>& other) { delegates.clear(); }
     void operator=(const Event<T...>& other) { delegates.clear(); }
     void operator=(Event<T...>& other) { delegates.clear(); }
     
-    void operator () (T... values) {
-        for(auto& d : delegates) {
-            d(values...);
-        }
+    Event(Event&& other) {
+        delegates = other.delegates;
+        other.delegates.clear();
     }
     
+    ~Event() { Clear(); }
+    
     void Clear() noexcept {
+        for(auto d : delegates) delete d;
         delegates.clear();
     }
     
@@ -64,48 +92,72 @@ public:
         return delegates.empty();
     }
     
-    void Bind(Delegate&& delegate) {
-        delegates.push_back(delegate);
-    }
-    
-    void Unbind(Delegate&& delegate) {
-        auto& delegateType = delegate.target_type();
-        auto delegateTarget = delegate.template target<Signature>();
-        for (auto i = 0; i<delegates.size(); ++i) {
-            auto d = delegates[i];
-            auto& type = d.target_type();
-            if (type != delegateType) continue;
-            auto dTarget = d.template target<Signature>();
-            if ( delegateTarget == dTarget) {
-                delegates.erase(delegates.begin() + i);
-                break;
-            }
+    void operator () (T... values) {
+        for(auto d : delegates) {
+            d->Invoke(values...);
         }
     }
     
     template<typename Obj>
-    void Bind(Obj* x, void (Obj::*fun)(T...)) {
-        MemberDelegate<Obj, T...> delegate{x, fun};
-        Bind(delegate);
+    void Bind(Obj* object, void (Obj::*method)(T...)) {
+        IDelegateMember<Obj>* delegate = new IDelegateMember<Obj>();
+        delegate->type = GetObjectID<Obj>();
+        delegate->object = object;
+        delegate->method = method;
+        delegates.push_back(delegate);
     }
     
     template<typename Obj>
-    void Unbind(Obj* x, void (Obj::*fun)(T...)) {
-        MemberDelegate<Obj, T...> delegate{x, fun};
-        Unbind(delegate);
+    void Unbind(Obj* object, void (Obj::*method)(T...)) {
+        short typeID = GetObjectID<Obj>();
+        for(int i=0; i<delegates.size(); ++i) {
+            auto d = delegates[i];
+            if (d->type != typeID) continue;
+            IDelegateMember<Obj>* delegate = (IDelegateMember<Obj>*)(d);
+            if (delegate->object != object) continue;
+            if (delegate->method != method) continue;
+            delegates.erase(delegates.begin() + i);
+            return;
+        }
     }
     
     template<typename Obj, typename Context>
-    void Bind(Obj* x, void (Obj::*fun)(T..., Context), Context context) {
-        MemberDelegateContext<Obj, Context, T...> delegate{x, context, fun};
-        Bind(delegate);
+    void Bind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
+        IDelegateMemberContext<Obj, Context>* delegate = new IDelegateMemberContext<Obj, Context>();
+        delegate->type = GetObjectID<Obj>() + GetContextID<Context>();
+        delegate->object = object;
+        delegate->method = method;
+        delegate->context = context;
+        delegates.push_back(delegate);
     }
     
     template<typename Obj, typename Context>
-    void Unbind(Obj* x, void (Obj::*fun)(T..., Context), Context context) {
-        MemberDelegateContext<Obj, Context, T...> delegate{x, context, fun};
-        Unbind(delegate);
+    void Unbind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
+        short typeID = GetObjectID<Obj>() + GetContextID<Context>();
+        for(int i=0; i<delegates.size(); ++i) {
+            auto d = delegates[i];
+            if (d->type != typeID) continue;
+            IDelegateMemberContext<Obj, Context>* delegate = (IDelegateMemberContext<Obj, Context>*)(d);
+            if (delegate->object != object) continue;
+            if (delegate->method != method) continue;
+            if (delegate->context != context) continue;
+            delegates.erase(delegates.begin() + i);
+            return;
+        }
+    }
+    
+    template<typename Lambda>
+    void Bind(Lambda&& lambda) {
+        IDelegateLambda* delegate = new IDelegateLambda();
+        delegate->type = -1;
+        delegate->function = lambda;
+        delegates.push_back(delegate);
     }
 };
 
+template<typename...T>
+int Event<T...>::objectIDCounter = 0;
+
+template<typename...T>
+int Event<T...>::contextIDCounter = 10000;
 }
