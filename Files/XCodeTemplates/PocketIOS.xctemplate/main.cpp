@@ -7,14 +7,22 @@ using namespace Pocket;
 class Game : public GameState<Game> {
 public:
     GameWorld world;
-    RenderSystem* renderer;
     GameObject* camera;
     GameObject* cube;
-    float rotation;
+    
+    struct Rotator { Vector3 speed; };
+    struct RotatorSystem : public GameSystem<Transform, Rotator> {
+        void Update(float dt) {
+            for(auto o : Objects()) {
+                o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->speed * dt;
+            }
+        }
+    };
     
     void Initialize() {
         
-        renderer = world.CreateSystem<RenderSystem>();
+        world.CreateSystem<RenderSystem>();
+        world.CreateSystem<RotatorSystem>();
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
@@ -23,6 +31,7 @@ public:
         
         cube = world.CreateObject();
         cube->AddComponent<Transform>();
+        cube->AddComponent<Rotator>()->speed = { 2,1,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         cube->AddComponent<Material>();
         
@@ -31,18 +40,14 @@ public:
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
         }
-        
-        rotation = 0;
     }
     
     void Update(float dt) {
-        cube->GetComponent<Transform>()->Rotation = Quaternion(rotation, Vector3(1,0.2f,0.5f).Normalized());
-        rotation += dt;
         world.Update(dt);
     }
     
     void Render() {
-        renderer->Render();
+        world.Render();
     }
 };
 
