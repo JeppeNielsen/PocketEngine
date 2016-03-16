@@ -31,7 +31,7 @@ class Test : public GameState<Test> {
         cube->AddComponent<Material>();
         cube->AddComponent<TextureComponent>()->Texture().LoadFromPng("Bird.png");
         
-        Input.TouchDown += event_handler(this, &Test::TouchDown);
+        Input.TouchDown.Bind(this, &Test::TouchDown);
     }
     
     void TouchDown(TouchEvent e) {

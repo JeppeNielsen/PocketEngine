@@ -10,15 +10,15 @@
 
 using namespace Pocket;
 
-Component(Flappable)
+struct Flappable {
     float force;
 };
 
-Component(Gravity)
+struct Gravity {
     float gravity;
 };
 
-SYSTEM(GravitySystem, Velocity, Gravity)
+struct GravitySystem : public GameSystem<Velocity, Gravity> {
     void Update(float dt) {
         for (auto o : Objects()) {
             o->GetComponent<Velocity>()->velocity += Vector3(0,-o->GetComponent<Gravity>()->gravity,0) * dt;
@@ -26,10 +26,9 @@ SYSTEM(GravitySystem, Velocity, Gravity)
     }
 };
 
-SYSTEM(FlappySystem, Flappable, Velocity)
-public:
+struct FlappySystem : public GameSystem<Flappable, Velocity> {
     void SetInput(InputManager* input) {
-        input->ButtonDown += event_handler(this, &FlappySystem::ButtonDown);
+        input->ButtonDown.Bind(this, &FlappySystem::ButtonDown);
     }
 
     void ButtonDown(std::string button) {
@@ -51,12 +50,12 @@ public:
     bool buttonDown;
 };
 
-Component(Background)
+struct Background {
     float parallax;
     Vector2 size;
 };
 
-SYSTEM(BackgroundSystem, Background, Transform, Mesh)
+struct BackgroundSystem : public GameSystem<Background, Transform, Mesh> {
     void Update(float dt) {
         for(auto o : Objects()) {
             
@@ -74,7 +73,7 @@ SYSTEM(BackgroundSystem, Background, Transform, Mesh)
             
             auto& verts = vertexMesh.vertices;
             
-            Matrix4x4 world = *transform->World.GetValue();
+            Matrix4x4 world = transform->World;
             world *= Matrix4x4::CreateTransform({world.Translation().x*background->parallax,0,0}, 1, Quaternion::IDENTITY);
             Vector3 leftEdge = world.TransformPosition(-background->size);
             Vector3 rightEdge = world.TransformPosition(background->size);
@@ -99,11 +98,11 @@ SYSTEM(BackgroundSystem, Background, Transform, Mesh)
 
 };
 
-Component(VelocityRotator)
+struct VelocityRotator {
     float LerpSpeed;
 };
 
-SYSTEM(VelocityRotatorSystem, VelocityRotator, Velocity, Transform)
+struct VelocityRotatorSystem : public GameSystem<VelocityRotator, Velocity, Transform> {
     void Update(float dt) {
         for(auto o : Objects()) {
             Vector3 vel = o->GetComponent<Velocity>()->velocity;
@@ -118,8 +117,8 @@ SYSTEM(VelocityRotatorSystem, VelocityRotator, Velocity, Transform)
     }
 };
 
-Component(PipeSpawner)
-    void Reset() {
+struct PipeSpawner {
+    PipeSpawner() {
         offset = 1.0f;
         spawnDistance = 2.0f;
         lastSpawnX = 0;
@@ -132,14 +131,14 @@ Component(PipeSpawner)
     Span<float> yOffset;
 };
 
-SYSTEM(PipeSpawnerSystem, PipeSpawner, Transform, Sizeable)
+struct PipeSpawnerSystem : public GameSystem<PipeSpawner, Transform, Sizeable> {
 public:
-
     GameObject* texture;
-    void AddedToWorld(GameWorld& world) {
-        
+    GameWorld* world;
+    void Initialize(GameWorld* world) {
+        this->world = world;
     }
-
+    
     void Update(float dt) {
         for (auto o : Objects()) {
             PipeSpawner* pipeSpawner = o->GetComponent<PipeSpawner>();
@@ -150,8 +149,8 @@ public:
             
                 pipeSpawner->lastSpawnX = o->GetComponent<Transform>()->Position().x;
                 Transform* transform = o->GetComponent<Transform>();
-                Vector3 topPosition = transform->World.GetValue()->TransformPosition(Vector3(pipeSpawner->offset,size.y,0));
-                Vector3 bottomPosition = transform->World.GetValue()->TransformPosition(Vector3(pipeSpawner->offset,0,0));
+                Vector3 topPosition = transform->World().TransformPosition(Vector3(pipeSpawner->offset,size.y,0));
+                Vector3 bottomPosition = transform->World().TransformPosition(Vector3(pipeSpawner->offset,0,0));
                 topPosition.z = 0;
                 bottomPosition.z = 0;
                 
@@ -168,7 +167,7 @@ public:
                 float bottomHeight = bottomEdge.y - bottomPosition.y;
                 
                 {
-                GameObject* pipe = World()->CreateObject();
+                GameObject* pipe = world->CreateObject();
                 pipe->AddComponent<Transform>()->Position = topPosition;
                 pipe->GetComponent<Transform>()->Anchor = {0,topHeight*0.5f,0};
                 pipe->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {0.2f,topHeight}, Colour::White());
@@ -177,7 +176,7 @@ public:
                 }
                 
                 {
-                GameObject* pipe = World()->CreateObject();
+                GameObject* pipe = world->CreateObject();
                 pipe->AddComponent<Transform>()->Position = bottomPosition;
                 pipe->GetComponent<Transform>()->Anchor = {0,-bottomHeight*0.5f,0};
                 pipe->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {0.2f,bottomHeight}, Colour::White());
@@ -265,7 +264,7 @@ public:
         pipeSpawner->AddComponent<Transform>(camera);
         pipeSpawner->AddComponent<Sizeable>()->Size = screenSize;
         
-        Input.ButtonUp += event_handler(this, &Game::ButtonUp);
+        Input.ButtonUp.Bind(this, &Game::ButtonUp);
     }
     
     void ButtonUp(std::string button) {
@@ -276,6 +275,7 @@ public:
     
     void Update(float dt) {
         world.Update(dt);
+        
         Vector3 birdPosition = bird->GetComponent<Transform>()->Position;
         birdPosition.y = 0;
         camera->GetComponent<Transform>()->Position = birdPosition + Vector3(-screenSize.x*0.5f, -screenSize.y*0.5f,1);
