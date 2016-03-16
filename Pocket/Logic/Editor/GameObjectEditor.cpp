@@ -10,6 +10,4 @@
 
 using namespace Pocket;
 
-GameObjectEditor::GameObjectEditor() : Object(this) {}
-void GameObjectEditor::Reset() { Object = 0; }
-
+GameObjectEditor::GameObjectEditor() { Object = 0; }

@@ -39,8 +39,11 @@ namespace Pocket {
 
 	private:
 		static Vector2 corners[4];
-
+        
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Box& v) {
+            stream << v.left <<","<<v.top<<","<<v.right<<","<<v.bottom;
+            return stream;
+        }
 	};
 }
 
-std::ostream& operator<<(std::ostream& stream, const Pocket::Box& v);

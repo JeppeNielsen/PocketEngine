@@ -10,8 +10,4 @@
 
 using namespace Pocket;
 
-Colorable::Colorable() : Color(this) {}
-
-void Colorable::Reset() {
-    Color = Colour::White();
-}
+Colorable::Colorable() { Color = Colour::White(); }

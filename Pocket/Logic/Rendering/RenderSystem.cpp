@@ -1,8 +1,8 @@
 //
-//  RenderSystem.cpp
+//  RenderSystem.h
 //  Shaders
 //
-//  Created by Jeppe Nielsen on 03/07/15.
+//  Created by Jeppe Nielsen on 23/06/15.
 //  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
 //
 
@@ -17,22 +17,16 @@ RenderSystem::~RenderSystem() {
     objectRenderers.clear();
 }
 
-void RenderSystem::Initialize() {
+void RenderSystem::Initialize(GameWorld* world) {
+    cameras = world->CreateSystem<CameraSystem>();
+    meshOctreeSystem = world->CreateSystem<OctreeSystem>();
+    world->CreateSystem<TextureSystem>();
     for (auto& vertexType : IVertexType::typelist) {
         objectRenderers.push_back(vertexType->CreateRenderer());
     }
-    AddComponent<Transform>();
-    AddComponent<Mesh>();
-    AddComponent<Material>();
     Shaders.Initialize();
     DefaultShader = &Shaders.Colored;
     DefaultTexturedShader = &Shaders.Textured;
-}
-
-void RenderSystem::AddedToWorld(GameWorld& world) {
-    cameras = world.CreateSystem<CameraSystem>();
-    meshOctreeSystem = world.CreateSystem<OctreeSystem>();
-    meshOctreeSystem->AddComponent<Material>();
 }
 
 void RenderSystem::ObjectAdded(GameObject *object) {
@@ -42,7 +36,7 @@ void RenderSystem::ObjectAdded(GameObject *object) {
     }
 }
 
-OctreeSystem& RenderSystem::Octree() {
+RenderSystem::OctreeSystem& RenderSystem::Octree() {
     return *meshOctreeSystem;
 }
 
@@ -51,7 +45,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     Camera* camera = cameraObject->GetComponent<Camera>();
     RenderMask cameraMask = camera->Mask;
     
-    Matrix4x4 viewProjection = camera->Projection.GetValue()->Multiply(*cameraTransform->WorldInverse.GetValue());
+    const Matrix4x4 viewProjection = camera->Projection().Multiply(cameraTransform->WorldInverse);
     const float* viewProjectionGL = viewProjection.GetGlMatrix();
     
     BoundingFrustum frustum;
@@ -84,17 +78,16 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         
         Transform* transform = object->GetComponent<Transform>();
         
-        const Matrix4x4& world = *transform->World.GetValue();
+        const Matrix4x4& world = transform->World;
         distanceToCameraPosition.x = world[0][3];
         distanceToCameraPosition.y = world[1][3];
         distanceToCameraPosition.z = world[2][3];
         float fInvW = 1.0f / ( viewProjection[3][0] * distanceToCameraPosition.x + viewProjection[3][1] * distanceToCameraPosition.y + viewProjection[3][2] * distanceToCameraPosition.z + viewProjection[3][3] );
         float distanceToCamera = ( viewProjection[2][0] * distanceToCameraPosition.x + viewProjection[2][1] * distanceToCameraPosition.y + viewProjection[2][2] * distanceToCameraPosition.z + viewProjection[2][3] ) * fInvW;
         
-        VisibleObjects& visibleObjects = material->BlendMode.GetValue() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
+        VisibleObjects& visibleObjects = material->BlendMode() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
         
         visibleObjects.push_back({
-            object,
             transform,
             material,
             material->Shader(),
@@ -180,8 +173,8 @@ void RenderSystem::Render() {
 bool RenderSystem::SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b) {
 
     if (a.orderable && b.orderable) {
-        int orderA = a.orderable->Order.Get();
-        int orderB = b.orderable->Order.Get();
+        int orderA = a.orderable->Order();
+        int orderB = b.orderable->Order();
         if (orderA!=orderB) {
             return orderA<orderB;
         }
@@ -204,8 +197,8 @@ bool RenderSystem::SortOpaqueObjects(const VisibleObject& a, const VisibleObject
 
 bool RenderSystem::SortTransparentObjects(const VisibleObject& a, const VisibleObject& b) {
     if (a.orderable && b.orderable) {
-        int orderA = a.orderable->Order.Get();
-        int orderB = b.orderable->Order.Get();
+        int orderA = a.orderable->Order();
+        int orderB = b.orderable->Order();
         if (orderA!=orderB) {
             return orderA<orderB;
         }
@@ -213,4 +206,3 @@ bool RenderSystem::SortTransparentObjects(const VisibleObject& a, const VisibleO
 
     return a.distanceToCamera>b.distanceToCamera;
 }
-

@@ -7,7 +7,6 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Property.hpp"
 #include "BezierCurve1.hpp"
 #include "Span.hpp"
@@ -15,17 +14,14 @@
 #include "Vector3.hpp"
 
 namespace Pocket {
-    Component(ParticleEffect)
+    class ParticleEffect {
     public:
         ParticleEffect();
-    
-        void Reset();
-        void Clone(const ParticleEffect& source);
-    
-        Property<ParticleEffect*, float> MaxParticles;
-        Property<ParticleEffect*, float> Duration;
-        Property<ParticleEffect*, float> EmissionFrequency;
-        Property<ParticleEffect*, int> EmissionAmount;
+        
+        Property<float> MaxParticles;
+        Property<float> Duration;
+        Property<float> EmissionFrequency;
+        Property<int> EmissionAmount;
     
         Span<float> Lifetime;
     
@@ -38,8 +34,5 @@ namespace Pocket {
         NodeLine<Span<Vector3> > Acceleration;
     
         NodeLine<Span<Colour> > Color;
-       
-    
-    
     };
 }

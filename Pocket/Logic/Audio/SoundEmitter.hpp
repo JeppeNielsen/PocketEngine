@@ -7,25 +7,21 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Property.hpp"
 
 
 namespace Pocket {
-    Component(SoundEmitter)
+    class SoundEmitter {
 public:
         SoundEmitter();
     
-        Property<SoundEmitter*, float> Volume;
-        Property<SoundEmitter*, float> Pitch;
-        Property<SoundEmitter*, bool> Looping;
-        Property<SoundEmitter*, bool> Playing;
-        Property<SoundEmitter*, float> MinDistance;
-        Property<SoundEmitter*, float> MaxDistance;
+        Property<float> Volume;
+        Property<float> Pitch;
+        Property<bool> Looping;
+        Property<bool> Playing;
+        Property<float> MinDistance;
+        Property<float> MaxDistance;
     
         void Emit();
-    
-        void Reset();
-        void Clone(const SoundEmitter& other);
     };
 }

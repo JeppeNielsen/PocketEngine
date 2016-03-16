@@ -1,46 +1,30 @@
 //
-//  SpriteMeshSystem.cpp
+//  SpriteMeshSystem.h
 //  PocketEngine
 //
 //  Created by Jeppe Nielsen on 9/1/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
-
 #include "SpriteMeshSystem.hpp"
-#include "Vertex.hpp"
 
 using namespace Pocket;
 
-void SpriteMeshSystem::Initialize() {
-    AddComponent<Sprite>();
-    AddComponent<Sizeable>();
-    AddComponent<Mesh>();
-}
-
-void SpriteMeshSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Sizeable>()->Size.Changed += event_handler(this, &SpriteMeshSystem::SizeChanged, object);
-    object->GetComponent<Sprite>()->CornerSize.Changed += event_handler(this, &SpriteMeshSystem::CornerSizeChanged, object);
+void SpriteMeshSystem::ObjectAdded(GameObject *object) {
+    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &SpriteMeshSystem::UpdateMesh, object);
+    object->GetComponent<Sprite>()->CornerSize.Changed.Bind(this, &SpriteMeshSystem::UpdateMesh, object);
     UpdateMesh(object);
 }
 
-void SpriteMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Sizeable>()->Size.Changed -= event_handler(this, &SpriteMeshSystem::SizeChanged, object);
-    object->GetComponent<Sprite>()->CornerSize.Changed -= event_handler(this, &SpriteMeshSystem::CornerSizeChanged, object);
+void SpriteMeshSystem::ObjectRemoved(GameObject *object) {
+    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &SpriteMeshSystem::UpdateMesh, object);
+    object->GetComponent<Sprite>()->CornerSize.Changed.Unbind(this, &SpriteMeshSystem::UpdateMesh, object);
 }
 
-void SpriteMeshSystem::CornerSizeChanged(Pocket::Sprite *sprite, GameObject* object) {
-    UpdateMesh(object);
-}
-
-void SpriteMeshSystem::SizeChanged(Sizeable* sizeable, GameObject* object) {
-    UpdateMesh(object);
-}
-
-void SpriteMeshSystem::UpdateMesh(Pocket::GameObject *object) {
-    const Vector2& size = object->GetComponent<Sizeable>()->Size.GetValue();
+void SpriteMeshSystem::UpdateMesh(GameObject* object) {
+    const Vector2& size = object->GetComponent<Sizeable>()->Size;
     Mesh* mesh = object->GetComponent<Mesh>();
     Sprite* sprite = object->GetComponent<Sprite>();
-    const Vector2& wantedCornerSize = sprite->CornerSize.GetValue();
+    const Vector2& wantedCornerSize = sprite->CornerSize;
     
     auto& vertices = mesh->GetMesh<Vertex>().vertices;
     auto& triangles = mesh->GetMesh<Vertex>().triangles;
@@ -107,7 +91,6 @@ void SpriteMeshSystem::UpdateMesh(Pocket::GameObject *object) {
         }
 
         
-        
         vertices[0].Position = Vector3(0,0,0);
         vertices[1].Position = Vector3(cornerSize.x,0,0);
         vertices[2].Position = Vector3(size.x - cornerSize.x,0,0);
@@ -128,12 +111,4 @@ void SpriteMeshSystem::UpdateMesh(Pocket::GameObject *object) {
         vertices[14].Position = Vector3(size.x - cornerSize.x,size.y,0);
         vertices[15].Position = Vector3(size.x,size.y,0);
     }
-    
-    
-  
-    
 }
-
-
-
-

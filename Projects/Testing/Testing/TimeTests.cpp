@@ -11,7 +11,6 @@
 #include "TimeMeasurer.hpp"
 #include "Transform.hpp"
 #include "VelocitySystem.hpp"
-#include "TransformAnimatorSystem.hpp"
 
 using namespace Pocket;
 
@@ -22,7 +21,6 @@ void TimeTests::Run() {
     GameWorld world;
 
     world.CreateSystem<VelocitySystem>();
-    world.CreateSystem<TransformAnimatorSystem>();
     
     TimeMeasurer measurer;
     
@@ -34,8 +32,8 @@ void TimeTests::Run() {
     });
     
     measurer.AddTest("remove 1 million objects", [&]() {
-        for (int i=0; i<world.Objects().size(); ++i) {
-            world.Objects()[i]->Remove();
+        for (int i=0; i<world.ObjectCount(); ++i) {
+            world.GetObject(i)->Remove();
         }
         world.Update(0.01f);
     });

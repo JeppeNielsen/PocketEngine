@@ -10,8 +10,5 @@
 #include "GameWorld.hpp"
 
 namespace Pocket {
-    Component(DraggableMotion)
-    public:
-
-    };
+    struct DraggableMotion {};
 }

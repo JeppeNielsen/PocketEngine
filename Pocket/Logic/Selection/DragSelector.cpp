@@ -12,19 +12,19 @@
 
 using namespace Pocket;
 
-void DragSelector::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Mesh>();
-    AddComponent<Selectable>();
+void DragSelector::Initialize(GameWorld* world) {
     draggingIndex = -1;
-    isDraggableSystemChecked = false;
+    draggableSystem = world->CreateSystem<DraggableSystem>();
+    
+    cameraSystem = world->CreateSystem<CameraSystem>();
+    selectables = world->CreateSystem<SelectableCollection>();
 }
 
 void DragSelector::Setup(const Pocket::Box &viewport, InputManager& input) {
 
     BoundingBox bounds(0, Vector3(viewport.right * 2.0f, viewport.top * 2.0f, 3000.0f));
     
-    renderWorld.DeleteAllObjects();
+    renderWorld.Clear();
     renderer = renderWorld.CreateSystem<RenderSystem>();
     renderer->Octree().SetWorldBounds(bounds);
     
@@ -43,11 +43,10 @@ void DragSelector::Setup(const Pocket::Box &viewport, InputManager& input) {
     dragRectangle->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(1.0f, 1.0f, 1.0f, 0.15f));
     dragRectangle->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     
-    input.TouchDown += event_handler(this, &DragSelector::Down);
-    input.TouchUp += event_handler(this, &DragSelector::Up);
+    input.TouchDown.Bind(this, &DragSelector::Down);
+    input.TouchUp.Bind(this, &DragSelector::Up);
     
     this->input = &input;
-    
 }
 
 void DragSelector::Down(Pocket::TouchEvent e) {
@@ -64,26 +63,11 @@ void DragSelector::Up(Pocket::TouchEvent e) {
     SelectObjects(dragStart, e.Position);
 }
 
-void DragSelector::ObjectAdded(Pocket::GameObject *object) {
-    
-}
-
-void DragSelector::ObjectRemoved(Pocket::GameObject *object) {
-    
-}
-
 bool DragSelector::IsDragging() {
     return draggingIndex!=-1;
 }
 
 void DragSelector::Update(float dt) {
-    
-    if (!isDraggableSystemChecked) {
-        isDraggableSystemChecked = true;
-        draggableSystem = World()->GetSystem<DraggableSystem>();
-    }
-    
-    
     
     if (IsDragging()) {
         
@@ -109,23 +93,10 @@ void DragSelector::Render() {
     renderer->Render();
 }
 
-void DragSelector::AddedToWorld(Pocket::GameWorld &world) {
-    cameraSystem = world.CreateSystem<CameraSystem>();
-    selectables = world.GetSystem<SelectableCollection>();
-    if (!selectables) {
-        selectables = world.CreateSystem<SelectableCollection>();
-    }
-}
-
-void DragSelector::CameraSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Camera>();
-}
-
 void DragSelector::SelectObjects(Vector2 start, Vector2 end) {
-    const ObjectCollection& cameras = cameraSystem->Objects();
-    for (ObjectCollection::const_iterator it = cameras.begin(); it!=cameras.end(); ++it) {
-        SelectObjectsFromCamera(*it, start, end);
+    const auto& cameras = cameraSystem->Objects();
+    for (auto c : cameras) {
+        SelectObjectsFromCamera(c, start, end);
     }
 }
 
@@ -153,13 +124,11 @@ void DragSelector::SelectObjectsFromCamera(GameObject* cameraObject, Vector2 sta
     
     selectables->ClearSelection();
     
-    for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
-        GameObject* go = (*it);
-        Vector3 position = go->GetComponent<Transform>()->World.GetValue()->TransformPosition(go->GetComponent<Mesh>()->LocalBoundingBox.GetValue()->center);
+    for (GameObject* go : Objects()) {
+        Vector3 position = go->GetComponent<Transform>()->World().TransformPosition(go->GetComponent<Mesh>()->LocalBoundingBox().center);
         
         Vector3 screenPosition = camera->TransformPointToScreenSpace(cameraObject->GetComponent<Transform>(), position);
         go->GetComponent<Selectable>()->Selected = screenPosition.x>min.x && screenPosition.y>min.y && screenPosition.x<max.x && screenPosition.y<max.y;
     }
-    
 }
 

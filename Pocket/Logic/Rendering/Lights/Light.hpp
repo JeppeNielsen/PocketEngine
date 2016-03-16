@@ -6,12 +6,10 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameComponent.hpp"
 #include "Property.hpp"
-#include "Colour.hpp"
 
 namespace Pocket {
-    Component(Light)
+    struct Light {
     public:
         Light();
     
@@ -20,13 +18,8 @@ namespace Pocket {
             Point
         };
         
-        Property<Light*, LightType> Type;
-        Property<Light*, float> Brightness;
-        Property<Light*, float> Radius;
-    
-        void Reset();
-    protected:
-    
-        void Clone(const Light& source);
+        Property<LightType> Type;
+        Property<float> Brightness;
+        Property<float> Radius;
     };
 }

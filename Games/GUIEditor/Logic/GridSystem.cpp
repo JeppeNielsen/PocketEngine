@@ -11,6 +11,10 @@
 
 Vector2 GridSystem::Size;
 
+void GridSystem::Initialize(Pocket::GameWorld *world) {
+    Size = 10;
+}
+
 void GridSystem::ObjectAdded(Pocket::GameObject *object) {
     changedPositions.Add(object->GetComponent<Transform>()->Position, object);
 }
@@ -37,6 +41,3 @@ void GridSystem::Update(float dt) {
     changedPositions.Clear();
 }
 
-void GridSystem::AddedToWorld(Pocket::GameWorld &world) {
-    Size = 10;
-}

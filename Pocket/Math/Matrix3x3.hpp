@@ -1,6 +1,5 @@
 #pragma once
 #include "Vector2.hpp"
-using namespace Pocket;
 
 namespace Pocket {
 

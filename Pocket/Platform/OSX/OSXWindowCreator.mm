@@ -14,7 +14,7 @@ using namespace Pocket;
 OSXWindowCreator::OSXWindowCreator() {
     
     inputDevice.Initialize(12);
-    inputDevice.KeyboardChanged += event_handler(this, &OSXWindowCreator::KeyboardChanged);
+    inputDevice.KeyboardChanged.Bind(this, &OSXWindowCreator::KeyboardChanged);
     
     isKeyboardActive = false;
 }

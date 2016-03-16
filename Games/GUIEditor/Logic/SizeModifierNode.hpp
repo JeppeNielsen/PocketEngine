@@ -14,12 +14,10 @@
 
 using namespace Pocket;
 
-Component(SizeModifierNode)
-public:
+struct SizeModifierNode {
+    SizeModifierNode();
     int cornerIndex;
     Transform* transformTarget;
     Sizeable* sizableTarget;
     Vector2 GetCornerPosition();
-
-    void Reset();
 };

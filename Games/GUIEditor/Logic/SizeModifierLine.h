@@ -11,7 +11,6 @@
 
 using namespace Pocket;
 
-Component(SizeModifierLine)
-public:
+struct SizeModifierLine {
     int index;
 };

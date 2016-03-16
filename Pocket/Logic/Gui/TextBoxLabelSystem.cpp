@@ -1,5 +1,5 @@
 //
-//  TextBoxLabelSystem.cpp
+//  TextBoxLabelSystem.h
 //  GirlsNightOut
 //
 //  Created by Jeppe Nielsen on 8/31/14.
@@ -7,21 +7,12 @@
 //
 
 #include "TextBoxLabelSystem.hpp"
-#include "Transform.hpp"
-#include "Mesh.hpp"
-#include "Material.hpp"
-#include "Sizeable.hpp"
 #include <cmath>
 
 using namespace Pocket;
 
-static float cursorWidth = 1.05f;
-
-void TextBoxLabelSystem::Initialize() {
-    AddComponent<TextBox>();
-    AddComponent<Label>();
-    AddComponent<Mesh>();
-    AddComponent<Sizeable>();
+void TextBoxLabelSystem::Initialize(GameWorld* world) {
+    this->world = world;
     cursor = 0;
     activeTextbox = 0;
     timer = 0;
@@ -29,27 +20,29 @@ void TextBoxLabelSystem::Initialize() {
     activeTextboxAddedGO = 0;
 }
 
-void TextBoxLabelSystem::ObjectAdded(Pocket::GameObject *object) {
+void TextBoxLabelSystem::ObjectAdded(GameObject *object) {
     TextBox* textbox = object->GetComponent<TextBox>();
-    textbox->Text.Changed += event_handler(this, &TextBoxLabelSystem::TextBoxTextChanged, object);
-    textbox->Active.Changed += event_handler(this, &TextBoxLabelSystem::TextBoxActiveChanged, object);
+    textbox->Text.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+    textbox->Active.Changed.Bind(this, &TextBoxLabelSystem::TextBoxChanged, object);
     if (textbox->Active) {
         activeTextboxAdded = textbox;
         activeTextboxAddedGO = object;
     }
-    TextBoxTextChanged(textbox, object);
+    TextBoxChanged(object);
 }
 
-void TextBoxLabelSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<TextBox>()->Text.Changed -= event_handler(this, &TextBoxLabelSystem::TextBoxTextChanged, object);
-    object->GetComponent<TextBox>()->Active.Changed -= event_handler(this, &TextBoxLabelSystem::TextBoxActiveChanged, object);
-    if (cursor && activeTextbox == object->GetComponent<TextBox>()) {
+void TextBoxLabelSystem::ObjectRemoved(GameObject *object) {
+    TextBox* textBox = object->GetComponent<TextBox>();
+    textBox->Text.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+    textBox->Active.Changed.Unbind(this, &TextBoxLabelSystem::TextBoxChanged, object);
+    if (cursor && activeTextbox == textBox) {
         cursor->Remove();
         cursor = 0;
     }
 }
 
-void TextBoxLabelSystem::TextBoxTextChanged(TextBox *textBox, GameObject* object) {
+void TextBoxLabelSystem::TextBoxChanged(GameObject* object) {
+    TextBox* textBox = object->GetComponent<TextBox>();
     object->GetComponent<Label>()->Text = textBox->Text;
     
     if (activeTextbox == textBox) {
@@ -57,8 +50,10 @@ void TextBoxLabelSystem::TextBoxTextChanged(TextBox *textBox, GameObject* object
     }
 }
 
-void TextBoxLabelSystem::TextBoxActiveChanged(TextBox *textBox, Pocket::GameObject *object) {
- 
+void TextBoxLabelSystem::TextBoxActiveChanged(bool& active, GameObject *object) {
+    
+    TextBox* textBox = object->GetComponent<TextBox>();
+    
     activeTextbox = 0;
     if (cursor) {
         cursor->Remove();
@@ -68,7 +63,7 @@ void TextBoxLabelSystem::TextBoxActiveChanged(TextBox *textBox, Pocket::GameObje
     if (textBox->Active) {
         activeTextbox = textBox;
         
-        cursor = World()->CreateObject();
+        cursor = world->CreateObject();
         cursor->AddComponent<Transform>();
         cursor->Parent = object;
         cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
@@ -79,7 +74,7 @@ void TextBoxLabelSystem::TextBoxActiveChanged(TextBox *textBox, Pocket::GameObje
     }
 }
 
-void TextBoxLabelSystem::MoveCursor(Pocket::TextBox *textBox, Pocket::GameObject *object) {
+void TextBoxLabelSystem::MoveCursor(Pocket::TextBox *textBox, GameObject *object) {
     if (!cursor) return;
     Mesh* mesh = object->GetComponent<Mesh>();
     if (mesh->Vertices().empty()) {
@@ -95,12 +90,13 @@ void TextBoxLabelSystem::MoveCursor(Pocket::TextBox *textBox, Pocket::GameObject
 void TextBoxLabelSystem::Update(float dt) {
     
     if (activeTextboxAdded && activeTextboxAdded->Active) {
-        TextBoxActiveChanged(activeTextboxAdded, activeTextboxAddedGO);
+        TextBoxChanged(activeTextboxAddedGO);
         activeTextboxAdded = 0;
     }
     
     if (!cursor) return;
     timer += dt;
     
-    cursor->EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
+    //cursor->EnableComponent<Material>(fmodf(timer, 0.7f)<0.35f);
 }
+

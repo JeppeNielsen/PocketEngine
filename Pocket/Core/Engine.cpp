@@ -3,13 +3,6 @@
 #include <iostream>
 #include "Timer.hpp"
 #include "../Debugging/Assert.hpp"
-#ifndef WIN32
-#ifndef EMSCRIPTEN
-#ifndef ANDROID
-#include "Thread.hpp"
-#endif
-#endif
-#endif
 #include "OpenGL.hpp"
 using namespace Pocket;
 
@@ -34,7 +27,7 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
     manager.screenSize = Vector2((float)width, (float)height);
 	//this->rootState->DoInitialize(&manager);
     firstFrame = true;
-    window->MainLoop += event_handler(this, &Engine::Loop);
+    window->MainLoop.Bind(this, &Engine::Loop);
 	window->Begin();
 }
 
@@ -72,13 +65,6 @@ void Engine::Loop(bool* exit) {
 
 bool Engine::Update(float dt) {
 	bool running = window->Update(rootState);
-#ifndef WIN32
-#ifndef EMSCRIPTEN
-#ifndef ANDROID
-	Thread::Update();
-#endif
-#endif
-#endif
 	rootState->DoUpdate(dt);
 	return running;
 }

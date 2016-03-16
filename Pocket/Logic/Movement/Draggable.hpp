@@ -7,31 +7,24 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
 #include "Property.hpp"
 
 namespace Pocket {
-    Component(Draggable)
-public:
-    
-    Draggable();
-    
-    void Reset();
-    void Clone(const Draggable& other);
-
-    
-    enum class MovementMode {
-        Normal,
-        XAxis,
-        YAxis,
-        ZAxis,
-        XYPlane,
-        YZPlane,
-        XZPlane,
-    };
-    
-    MovementMode Movement;
-    Property<Draggable*, bool> IsDragging;
-    
+    struct Draggable {
+        
+        Draggable() : Movement(MovementMode::Normal) { IsDragging = false; }
+        
+        enum class MovementMode {
+            Normal,
+            XAxis,
+            YAxis,
+            ZAxis,
+            XYPlane,
+            YZPlane,
+            XZPlane,
+        };
+        
+        MovementMode Movement;
+        Property<bool> IsDragging;
     };
 }

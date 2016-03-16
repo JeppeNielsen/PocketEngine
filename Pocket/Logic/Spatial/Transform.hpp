@@ -4,28 +4,28 @@
 #include "Vector3.hpp"
 #include "Quaternion.hpp"
 #include "Matrix4x4.hpp"
-#include "GameWorld.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-	Component(Transform)
+	class Transform {
 	public:
 		Transform();
 
-		Property<Transform*, Vector3> Position;  
-		Property<Transform*, Quaternion> Rotation;
-        Property<Transform*, Vector3> EulerRotation;
-        Property<Transform*, Vector3> Scale;
-		Property<Transform*, Vector3> Anchor; 
-		Property<Transform*, Matrix4x4> Matrix;
+		Property<Vector3> Position;  
+		Property<Quaternion> Rotation;
+        Property<Vector3> EulerRotation;
+        Property<Vector3> Scale;
+		Property<Vector3> Anchor; 
+		Property<Matrix4x4> Matrix;
 
-		DirtyProperty<Transform*, Matrix4x4> Local;
-		DirtyProperty<Transform*, Matrix4x4> World;
-		DirtyProperty<Transform*, Matrix4x4> WorldInverse;
+		DirtyProperty<Matrix4x4> Local;
+		DirtyProperty<Matrix4x4> World;
+		DirtyProperty<Matrix4x4> WorldInverse;
 
 		void HookOther(Transform* other);
 		void UnHookOther(Transform* other);
-
-		void Reset();
+        
+        void ResetWorldCalculation();
     
     protected:
         
@@ -33,22 +33,17 @@ namespace Pocket {
         void Relative(const Transform& a, const Transform& b);
     
 	private:
-		void PropertyChanged(Transform* transform);
-        void EulerRotationChanged(Transform* transform);
-		void CalcLocal(DirtyProperty<Transform*, Matrix4x4>::EventData& event);
-		void CalcWorld(DirtyProperty<Transform*, Matrix4x4>::EventData& event);
-		void CalcWorldInverse(DirtyProperty<Transform*, Matrix4x4>::EventData& event);
-
-		void OtherWorldChanged(DirtyProperty<Transform*, Matrix4x4>* event);
+		void PropertyChanged();
+        void OtherWorldChanged();
         
         bool useEulerRotation;
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(Position);
-        SERIALIZE_FIELD(Rotation);
-        SERIALIZE_FIELD(Scale);
-        SERIALIZE_FIELD(Anchor);
-        SERIALIZE_FIELD(Matrix);
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Position);
+        TYPE_FIELD(Rotation);
+        TYPE_FIELD(Scale);
+        TYPE_FIELD(Anchor);
+        TYPE_FIELD(Matrix);
+        TYPE_FIELDS_END
 	};
 }

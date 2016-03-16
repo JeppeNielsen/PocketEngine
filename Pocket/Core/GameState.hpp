@@ -54,7 +54,7 @@ namespace Pocket {
         void AddState(std::string name);
         
     public:
-        Property<GameState*, std::string> CurrentState;
+        Property<std::string> CurrentState;
     protected:
         T& Parent();
         
@@ -66,8 +66,6 @@ namespace Pocket {
         typedef std::map<std::string, GameState*> States;
         States states;
         
-        void StateChanged(typename Property<GameState*, std::string>::EventData d);
-        
         void CheckState();
         
         GameState* currentState;
@@ -78,9 +76,16 @@ namespace Pocket {
 }
 
 template<class T>
-Pocket::GameState<T>::GameState() : CurrentState(this), currentState(0), parent(0) {
+Pocket::GameState<T>::GameState() : currentState(0), parent(0) {
     CurrentState = "";
-    CurrentState.ChangedWithOld += event_handler(this, &Pocket::GameState<T>::StateChanged);
+    CurrentState.Changed.Bind([this] () {
+        typename States::iterator current = states.find(CurrentState);
+        if (current!=states.end()) {
+            wantedState = current->second;
+        } else {
+            wantedState = 0;
+        }
+    });
 }
 
 template<class T>
@@ -136,16 +141,6 @@ void Pocket::GameState<T>::AddState(std::string name) {
     S* state = new S();
     state->parent = (T*)this;
     states[name] = state;
-}
-
-template<class T>
-void Pocket::GameState<T>::StateChanged(typename Property<GameState*, std::string>::EventData d) {
-    typename States::iterator current = states.find(d.Current);
-    if (current!=states.end()) {
-        wantedState = current->second;
-    } else {
-        wantedState = 0;
-    }
 }
 
 template<class T>

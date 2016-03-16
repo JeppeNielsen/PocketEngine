@@ -14,11 +14,10 @@
 
 using namespace Pocket;
 
-SYSTEM(SizeModifierNodeSystem, SizeModifierNode, Draggable, Transform)
+class SizeModifierNodeSystem : public GameSystem<SizeModifierNode, Draggable, Transform> {
 public:
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
-    
     void Update(float dt);
     
 private:

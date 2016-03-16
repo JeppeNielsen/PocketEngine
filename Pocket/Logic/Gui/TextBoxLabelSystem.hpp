@@ -7,36 +7,34 @@
 //
 
 #pragma once
-
 #include "GameWorld.hpp"
+#include "Sizeable.hpp"
 #include "TextBox.hpp"
 #include "Label.hpp"
+#include "Mesh.hpp"
+#include "Material.hpp"
+#include "Sizeable.hpp"
 
 namespace Pocket {
-    class TextBoxLabelSystem : public GameSystem {
+    class TextBoxLabelSystem : public GameSystem<TextBox, Label, Mesh, Sizeable> {
     public:
-        void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
+        
+        const float cursorWidth = 1.05f;
+    
+        void Initialize(GameWorld* world);
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
+        void TextBoxChanged(GameObject* object);
+        void TextBoxActiveChanged(bool& active, GameObject *object);
+        void MoveCursor(Pocket::TextBox *textBox, GameObject *object);
         void Update(float dt);
-        
+
     private:
-        
-        
-        
-        void TextBoxTextChanged(TextBox* textBox, GameObject* object);
-        void TextBoxActiveChanged(TextBox* textBox, GameObject* object);
-        
         GameObject* cursor;
-        
         TextBox* activeTextbox;
-        
         TextBox* activeTextboxAdded;
         GameObject* activeTextboxAddedGO;
-        
-        void MoveCursor(TextBox* textBox, GameObject* object);
-        
         float timer;
-        
+        GameWorld* world;
     };
 }

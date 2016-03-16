@@ -14,13 +14,9 @@
 #include "Atlas.hpp"
 
 namespace Pocket {
-    class SpriteTextureSystem : public GameSystem {
-    public:
-        void Initialize();
-    protected:
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        
-        void SpriteTextureChanged(Sprite* sprite, GameObject* object);
+    struct SpriteTextureSystem : public GameSystem<Sprite, Atlas, Mesh> {
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
+        void SpriteChanged(GameObject* object);
     };
 }

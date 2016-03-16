@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-void Limitable::Reset() {
+Limitable::Limitable() {
     min = Vector3(0,0,0);
     max = Vector3(0,0,0);
     Size = 0;

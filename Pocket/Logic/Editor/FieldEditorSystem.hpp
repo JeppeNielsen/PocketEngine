@@ -14,14 +14,14 @@
 #include "Gui.hpp"
 
 namespace Pocket {
-SYSTEM(FieldEditorSystem, FieldEditor, Sizeable, Transform)
+class FieldEditorSystem : public GameSystem<FieldEditor, Sizeable, Transform> {
     public:
         Gui* gui;
     
-        void AddedToWorld(GameWorld& world);
+        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
-        void FieldChanged(FieldEditor* editor, GameObject* object);
+        void FieldChanged(GameObject* object);
     };
 }

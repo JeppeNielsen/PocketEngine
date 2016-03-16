@@ -18,15 +18,7 @@ using namespace std;
 
 Atlas::Atlas()  {
     defaultNode.inner = defaultNode.outer = Box(0,0,1,1);
-}
-
-void Atlas::Reset(){
-	nodes.clear();
-}
-
-void Atlas::Clone(const Pocket::Atlas &other) {
     nodes.clear();
-    nodes = other.nodes;
 }
 
 bool Atlas::Load(std::string textureFile, const Vector2& textureSize) {

@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-void TransformAnimationDatabase::Reset() {
+TransformAnimationDatabase::TransformAnimationDatabase() {
     animations.clear();
 }
 

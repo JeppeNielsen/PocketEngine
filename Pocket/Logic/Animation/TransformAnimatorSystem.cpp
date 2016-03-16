@@ -11,22 +11,8 @@
 
 using namespace Pocket;
 
-void TransformAnimatorSystem::Initialize() {
-    AddComponent<TransformAnimator>();
-    AddComponent<Transform>();
-}
-
-void TransformAnimatorSystem::ObjectAdded(Pocket::GameObject *object) {
-    
-}
-
-void TransformAnimatorSystem::ObjectRemoved(Pocket::GameObject *object) {
-    
-}
-
 void TransformAnimatorSystem::Update(float dt) {
-    for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
-        GameObject* object = *it;
+    for (auto object : Objects()) {
         TransformAnimator* animator = object->GetComponent<TransformAnimator>();
         TransformAnimation* animation = animator->CurrentAnimation;
                 

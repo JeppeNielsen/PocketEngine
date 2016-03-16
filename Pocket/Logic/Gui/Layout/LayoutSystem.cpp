@@ -11,12 +11,6 @@
 
 using namespace Pocket;
 
-void LayoutSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Sizeable>();
-    AddComponent<Layoutable>();
-}
-
 void LayoutSystem::ObjectAdded(Pocket::GameObject *object) {
     SetMetaData(object, new LayoutObject(object, this));
 }
@@ -36,31 +30,27 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     this->layoutSystem = layoutSystem;
     this->object = object;
     sizeable = object->GetComponent<Sizeable>();
-    sizeable->Size.Changed += event_handler(this, &LayoutSystem::LayoutObject::SizeChanged);
+    sizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::SizeChanged);
     layoutable = object->GetComponent<Layoutable>();
     transform = object->GetComponent<Transform>();
-    if (!layoutable) {
-        int hej = 6;
-        hej++;
-    }
     parentSizeable = 0;
     parentLayoutObject = 0;
-    object->Parent.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentChanged);
-    Property<GameObject*, GameObject*>::EventData d;
-    d.Old = 0;
-    d.Current = object->Parent;
-    ParentChanged(d);
+    object->Parent.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentChanged);
+    ParentChanged();
     if (layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
         layoutSystem->dirtyChildLayoutables.insert(this);
     }
 }
 
 LayoutSystem::LayoutObject::~LayoutObject() {
-    object->Parent.ChangedWithOld -= event_handler(this, &LayoutSystem::LayoutObject::ParentChanged);
-    Property<GameObject*, GameObject*>::EventData d;
-    d.Old = object->Parent;
-    d.Current = 0;
-    ParentChanged(d);
+    object->Parent.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentChanged);
+    
+    if (parentSizeable) {
+        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable = 0;
+        parentLayoutObject = 0;
+    }
+    
     auto it = layoutSystem->dirtyObjects.find(this);
     if (it!=layoutSystem->dirtyObjects.end()) {
         layoutSystem->dirtyObjects.erase(it);
@@ -69,20 +59,19 @@ LayoutSystem::LayoutObject::~LayoutObject() {
     if (it2!=layoutSystem->dirtyChildLayoutables.end()) {
         layoutSystem->dirtyChildLayoutables.erase(it2);
     }
-    sizeable->Size.Changed -= event_handler(this, &LayoutSystem::LayoutObject::SizeChanged);
+    sizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::SizeChanged);
 }
 
-void LayoutSystem::LayoutObject::SizeChanged(Pocket::Sizeable *sizeable) {
+void LayoutSystem::LayoutObject::SizeChanged() {
     if (!parentLayoutObject) return;
     if (parentLayoutObject->layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
         layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
     }
 }
 
-void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*>::EventData d) {
-    
+void LayoutSystem::LayoutObject::ParentChanged() {
     if (parentSizeable) {
-        parentSizeable->Size.ChangedWithOld -= event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
         parentSizeable = 0;
         if (parentLayoutObject) {
             layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
@@ -90,13 +79,13 @@ void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*
         parentLayoutObject = 0;
     }
     
-    if (d.Current) {
-        parentSizeable = d.Current->GetComponent<Sizeable>();
+    if (object->Parent) {
+        parentSizeable = object->Parent()->GetComponent<Sizeable>();
         if (parentSizeable) {
-            parentSizeable->Size.ChangedWithOld += event_handler(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
+            parentSizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
             
-            if (d.Current->GetComponent<Layoutable>()) {
-                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(d.Current);
+            if (object->Parent()->GetComponent<Layoutable>()) {
+                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(object->Parent);
                 if (parentLayoutObject) {
                     if (parentLayoutObject->layoutable->ChildLayouting==Layoutable::ChildLayouting::None) {
                         parentLayoutObject = 0;
@@ -111,9 +100,9 @@ void LayoutSystem::LayoutObject::ParentChanged(Property<GameObject*, GameObject*
     }
 }
 
-void LayoutSystem::LayoutObject::ParentSizeChanged(Property<Sizeable*, Vector2>::EventData d){
-    oldSize = d.Old;
-    deltaSize = d.Current - d.Old;
+void LayoutSystem::LayoutObject::ParentSizeChanged(){
+    oldSize = parentSizeable->Size.PreviousValue();
+    deltaSize = parentSizeable->Size - oldSize;
     layoutSystem->dirtyObjects.insert(this);
     if (parentLayoutObject) {
         layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);

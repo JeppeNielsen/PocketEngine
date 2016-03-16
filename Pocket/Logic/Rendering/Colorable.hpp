@@ -9,17 +9,16 @@
 
 #include "Property.hpp"
 #include "Colour.hpp"
-#include "GameComponent.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-    Component(Colorable)
+    class Colorable {
     public:
         Colorable();
-        Property<Colorable*, Colour> Color;
-        void Reset();
-    
-        SERIALIZE_FIELDS_BEGIN;
-        SERIALIZE_FIELD(Color);
-        SERIALIZE_FIELDS_END;
+        Property<Colour> Color;
+        
+        TYPE_FIELDS_BEGIN;
+        TYPE_FIELD(Color);
+        TYPE_FIELDS_END;
     };
 }

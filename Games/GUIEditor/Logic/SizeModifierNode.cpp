@@ -8,7 +8,7 @@
 
 #include "SizeModifierNode.hpp"
 
-void SizeModifierNode::Reset() {
+SizeModifierNode::SizeModifierNode() {
     cornerIndex = 0;
     transformTarget = 0;
     sizableTarget = 0;

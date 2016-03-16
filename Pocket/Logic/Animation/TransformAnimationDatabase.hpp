@@ -14,10 +14,9 @@
 #include <map>
 
 namespace Pocket {
-    Component(TransformAnimationDatabase)
+    class TransformAnimationDatabase {
     public:
-    
-        void Reset();
+        TransformAnimationDatabase();
     
         typedef std::map<std::string, TransformAnimation> Animations;
     
@@ -28,10 +27,7 @@ namespace Pocket {
     
         TransformAnimation* GetAnimation(std::string name);
     
-private:
+    private:
         Animations animations;
-    
-    
-    
     };
 }

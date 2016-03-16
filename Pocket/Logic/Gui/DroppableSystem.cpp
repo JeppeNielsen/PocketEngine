@@ -1,5 +1,5 @@
 //
-//  DroppableSystem.cpp
+//  DroppableSystem.h
 //  GUIEditor
 //
 //  Created by Jeppe Nielsen on 03/10/15.
@@ -7,18 +7,19 @@
 //
 
 #include "DroppableSystem.hpp"
-#include "OctreeSystem.hpp"
 
-void DroppableSystem::AddedToWorld(Pocket::GameWorld &world) {
-    touchSystem = world.CreateOrGetSystem<TouchSystem>();
+using namespace Pocket;
+
+void DroppableSystem::Initialize(GameWorld* world) {
+    touchSystem = world->CreateSystem<TouchSystem>();
 }
 
-void DroppableSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Up += event_handler(this, &DroppableSystem::TouchUp, object);
+void DroppableSystem::ObjectAdded(GameObject *object) {
+    object->GetComponent<Touchable>()->Up.Bind(this, &DroppableSystem::TouchUp, object);
 }
 
-void DroppableSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Up -= event_handler(this, &DroppableSystem::TouchUp, object);
+void DroppableSystem::ObjectRemoved(GameObject *object) {
+    object->GetComponent<Touchable>()->Up.Unbind(this, &DroppableSystem::TouchUp, object);
 }
 
 void DroppableSystem::TouchUp(Pocket::TouchData d, GameObject* object) {

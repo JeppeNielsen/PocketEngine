@@ -10,11 +10,6 @@
 
 using namespace Pocket;
 
-void VelocitySystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Velocity>();
-}
-
 void VelocitySystem::Update(float dt) {
     for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
         GameObject* object = *it;

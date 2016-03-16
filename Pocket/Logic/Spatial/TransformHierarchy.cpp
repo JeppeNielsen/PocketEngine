@@ -1,59 +1,55 @@
+
 #include "TransformHierarchy.hpp"
 
 using namespace Pocket;
 
-void TransformHierarchy::Initialize() {
-	AddComponent<Transform>();
-}
-
-void TransformHierarchy::ObjectAdded(GameObject* gameObject) {
-	Transform* transform = gameObject->GetComponent<Transform>();
-	//transform->World.HasBecomeDirty += event_handler(this, &TransformHierarchy::WorldHasBecomeDirty);
-	transform->World.Method += event_handler(this, &TransformHierarchy::CalcWorld, gameObject);
-	gameObject->Parent.ChangedWithOld += event_handler(this, &TransformHierarchy::ParentChanged, gameObject);
-	Property<GameObject*, GameObject*>::EventData e;
-	e.owner = gameObject;
-	e.Old = 0;
-	e.Current = gameObject->Parent;
-	ParentChanged(e, gameObject);
-}
-
-void TransformHierarchy::ObjectRemoved(GameObject* gameObject) {
-	Transform* transform = gameObject->GetComponent<Transform>();
-	//transform->World.HasBecomeDirty -= event_handler(this, &TransformHierarchy::WorldHasBecomeDirty);
-	transform->World.Method -= event_handler(this, &TransformHierarchy::CalcWorld, gameObject);
-	gameObject->Parent.ChangedWithOld -= event_handler(this, &TransformHierarchy::ParentChanged, gameObject);
-}
-
-void TransformHierarchy::CalcWorld( DirtyProperty<Transform*, Matrix4x4>::EventData& event, GameObject* object )
-{
-	Matrix4x4& world = *event.Value;
-	if (object->Parent) {
-        Transform* parentTransform = object->Parent()->GetComponent<Transform>();
-        if (!parentTransform) {
-            world = *event.owner->Local.GetValue();
+void TransformHierarchy::ObjectAdded(GameObject* object) {
+    Transform* transform = object->GetComponent<Transform>();
+    
+    transform->World.Method = [object, transform] (Matrix4x4& world) {
+        if (object->Parent) {
+            Transform* parentTransform = object->Parent()->GetComponent<Transform>();
+            if (!parentTransform) {
+                world = transform->Local();
+            } else {
+                world = parentTransform->World().Multiply(transform->Local);
+            }
         } else {
-            world = parentTransform->World.GetValue()->Multiply(*event.owner->Local.GetValue());
+            world = transform->Local;
         }
-    }
+    };
+
+    object->Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
+    HookParent(transform, object->Parent);
 }
 
-void TransformHierarchy::ParentChanged( Property<GameObject*, GameObject*>::EventData event, GameObject* object ) {
-	Transform* transform = object->GetComponent<Transform>();
-	transform->World.MakeDirty();
-	transform->WorldInverse.MakeDirty();
+void TransformHierarchy::ObjectRemoved(GameObject* object) {
+    Transform* transform = object->GetComponent<Transform>();
+    transform->ResetWorldCalculation();
+    object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
+}
 
-	if (event.Old) {
-        Transform* parentTransform = event.Old->GetComponent<Transform>();
+void TransformHierarchy::ParentChanged(GameObject* object) {
+    Transform* transform = object->GetComponent<Transform>();
+    transform->World.MakeDirty();
+    transform->WorldInverse.MakeDirty();
+
+    if (object->Parent.PreviousValue()) {
+        Transform* parentTransform = object->Parent.PreviousValue()->GetComponent<Transform>();
         if (parentTransform) {
             transform->UnHookOther(parentTransform);
         }
     }
     
-	if (event.Current) {
-        Transform* parentTransform = event.Current->GetComponent<Transform>();
+    HookParent(transform, object->Parent);
+}
+
+void TransformHierarchy::HookParent(Transform* transform, GameObject* parent) {
+    if (parent) {
+        Transform* parentTransform = parent->GetComponent<Transform>();
         if (parentTransform) {
             transform->HookOther(parentTransform);
         }
-	}
+    }
 }
+

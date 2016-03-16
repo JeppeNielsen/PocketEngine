@@ -8,14 +8,17 @@
 
 #pragma once
 #include "GameWorld.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-    Component(FieldEditor)
+    struct FieldEditor {
         public:
             FieldEditor();
-            void Reset();
-            ISerializedFieldEditor* editor;
-            Property<FieldEditor*, ISerializable*> Object;
-            Property<FieldEditor*, std::string> Field;
+            void operator=(const FieldEditor& other);
+            IFieldInfoEditor* editor;
+            Property<std::string> Field;
+            TypeInfo Type;
+            void SetType(const TypeInfo& type);
+            Event<> TypeChanged;
     };
 }

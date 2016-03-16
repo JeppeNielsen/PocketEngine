@@ -21,7 +21,7 @@ namespace Pocket {
 		bool operator==(const BoundingBox &other);
 		bool operator!=(const BoundingBox &other);
 
-		void CreateWorldAligned(const Matrix4x4& matrix, BoundingBox& boundingBox);
+		void CreateWorldAligned(const Matrix4x4& matrix, BoundingBox& boundingBox) const;
 
 	};
 }

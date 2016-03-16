@@ -11,11 +11,8 @@
 #include <string>
 
 namespace Pocket {
-    Component(TouchAnimator)
-public:
-        void Reset();
+    struct TouchAnimator {
         std::string DownAnimation;
         std::string UpAnimation;
-    
     };
 }

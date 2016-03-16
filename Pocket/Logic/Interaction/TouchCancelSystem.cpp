@@ -1,5 +1,5 @@
 //
-//  TouchCancelSystem.cpp
+//  TouchCancelSystem.h
 //  PocketEngine
 //
 //  Created by Jeppe Nielsen on 9/11/14.
@@ -10,46 +10,23 @@
 #include "InputManager.hpp"
 
 using namespace Pocket;
-#include <iostream>
 
-void TouchCancelSystem::Initialize() {
-    AddComponent<Touchable>();
-    AddComponent<TouchableCanceller>();
-    AddComponent<Transform>();
+void TouchCancelSystem::ObjectAdded(GameObject *object) {
+    object->GetComponent<Touchable>()->Down.Bind(this, &TouchCancelSystem::TouchableDown, object);
+    object->GetComponent<Touchable>()->Up.Bind(this, &TouchCancelSystem::TouchableUp, object);
 }
 
-void TouchCancelSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down += event_handler(this, &TouchCancelSystem::TouchableDown, object);
-    object->GetComponent<Touchable>()->Up += event_handler(this, &TouchCancelSystem::TouchableUp, object);
-}
-
-void TouchCancelSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Down -= event_handler(this, &TouchCancelSystem::TouchableDown, object);
-    object->GetComponent<Touchable>()->Up -= event_handler(this, &TouchCancelSystem::TouchableUp, object);
-}
-
-void TouchCancelSystem::TouchableDown(TouchData touch, Pocket::GameObject *object) {
-    Transform* transform = object->GetComponent<Transform>();
-    Vector3 startPosition = !object->GetComponent<TouchableCanceller>()->trackTouchPosition ?
-     transform->World.GetValue()->TransformPosition(transform->Anchor)
-     :
-     Vector3(touch.Position,0);
-    activeTouchables[touch.Touchable] = { object->GetComponent<Touchable>(), transform, object->GetComponent<TouchableCanceller>(), 0, startPosition, touch };
-}
-
-void TouchCancelSystem::TouchableUp(TouchData touch, Pocket::GameObject *object) {
-    ActiveTouchables::iterator it = activeTouchables.find(touch.Touchable);
-    if (it!=activeTouchables.end()) {
-        activeTouchables.erase(it);
-    }
+void TouchCancelSystem::ObjectRemoved(GameObject *object) {
+    object->GetComponent<Touchable>()->Down.Unbind(this, &TouchCancelSystem::TouchableDown, object);
+    object->GetComponent<Touchable>()->Up.Unbind(this, &TouchCancelSystem::TouchableUp, object);
 }
 
 void TouchCancelSystem::Update(float dt) {
-    for (ActiveTouchables::iterator it = activeTouchables.begin(); it!=activeTouchables.end(); ++it) {
+    for (typename ActiveTouchables::iterator it = activeTouchables.begin(); it!=activeTouchables.end(); ++it) {
         
         Vector3 worldPosition =
             !it->second.canceller->trackTouchPosition ?
-            it->second.transform->World.GetValue()->TransformPosition(it->second.transform->Anchor) :
+            it->second.transform->World().TransformPosition(it->second.transform->Anchor) :
             Vector3(it->second.touch.Input->GetTouchPosition(it->second.touch.Index),0);
         
         Vector3 delta = worldPosition - it->second.prevPosition;
@@ -61,5 +38,25 @@ void TouchCancelSystem::Update(float dt) {
         if (it->second.distanceTravelled>it->second.canceller->MovementToCancel) {
             it->second.touchable->Cancel();
         }
+    }
+}
+
+void TouchCancelSystem::TouchableDown(TouchData touch, GameObject *object) {
+    Transform* transform = object->GetComponent<Transform>();
+    Vector3 startPosition = !object->GetComponent<TouchableCanceller>()->trackTouchPosition ?
+    transform->World().TransformPosition(transform->Anchor)
+    :
+    Vector3(touch.Position,0);
+    activeTouchables[touch.Touchable] = {
+        object->GetComponent<Touchable>(),
+        transform,
+        object->GetComponent<TouchableCanceller>(), 0, startPosition, touch
+    };
+}
+
+void TouchCancelSystem::TouchableUp(TouchData touch, GameObject *object) {
+    typename ActiveTouchables::iterator it = activeTouchables.find(touch.Touchable);
+    if (it!=activeTouchables.end()) {
+        activeTouchables.erase(it);
     }
 }

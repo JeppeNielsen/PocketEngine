@@ -10,13 +10,7 @@
 
 using namespace Pocket;
 
-void FirstPersonMover::Clone(const Pocket::FirstPersonMover &other) {
-    MovementSpeed = other.MovementSpeed;
-    RotationSpeed = other.RotationSpeed;
-    MaxPitch = other.MaxPitch;
-}
-
-void FirstPersonMover::Reset() {
+FirstPersonMover::FirstPersonMover() {
     MovementSpeed = 0.2f;
     RotationSpeed = 0.15f;
     MaxPitch = 89.0f;

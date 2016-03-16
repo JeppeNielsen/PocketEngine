@@ -8,17 +8,13 @@
 
 #pragma once
 
-#include "GameComponent.hpp"
 #include "Menu.hpp"
 #include <string>
 
 namespace Pocket {
-    
-    Component(MenuButton)
-    public:
-        void Reset();
+    struct MenuButton {
+        MenuButton();
         Menu* menu;
         std::string menuToActivate;
-
     };
 }

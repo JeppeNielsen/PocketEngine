@@ -1,5 +1,5 @@
 //
-//  SpriteTextureSystem.cpp
+//  SpriteTextureSystem.h
 //  PocketEngine
 //
 //  Created by Jeppe Nielsen on 9/8/13.
@@ -7,37 +7,31 @@
 //
 
 #include "SpriteTextureSystem.hpp"
-#include "Atlas.hpp"
-#include "Vertex.hpp"
 
 using namespace Pocket;
 
-void SpriteTextureSystem::Initialize() {
-    AddComponent<Sprite>();
-    AddComponent<Atlas>();
-    AddComponent<Mesh>();
-}
-
-void SpriteTextureSystem::ObjectAdded(Pocket::GameObject *object) {
+void SpriteTextureSystem::ObjectAdded(GameObject *object) {
     Sprite* sprite = object->GetComponent<Sprite>();
-    sprite->SpriteName.Changed += event_handler(this, &SpriteTextureSystem::SpriteTextureChanged, object);
-    sprite->CornerSize.Changed += event_handler(this, &SpriteTextureSystem::SpriteTextureChanged, object);
+    sprite->SpriteName.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
+    sprite->CornerSize.Changed.Bind(this, &SpriteTextureSystem::SpriteChanged, object);
     
-    SpriteTextureChanged(sprite, object);
+    SpriteChanged(object);
 }
 
-void SpriteTextureSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Sprite>()->SpriteName.Changed -= event_handler(this, &SpriteTextureSystem::SpriteTextureChanged,object);
-    object->GetComponent<Sprite>()->CornerSize.Changed -= event_handler(this, &SpriteTextureSystem::SpriteTextureChanged,object);
+void SpriteTextureSystem::ObjectRemoved(GameObject *object) {
+    Sprite* sprite = object->GetComponent<Sprite>();
+    sprite->SpriteName.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
+    sprite->CornerSize.Changed.Unbind(this, &SpriteTextureSystem::SpriteChanged,object);
 }
 
-void SpriteTextureSystem::SpriteTextureChanged(Sprite* sprite, GameObject* object) {
+void SpriteTextureSystem::SpriteChanged(GameObject* object) {
     
+    Sprite* sprite = object->GetComponent<Sprite>();
     Atlas* atlas = object->GetComponent<Atlas>();
     Mesh* mesh = object->GetComponent<Mesh>();
     
     auto& vertices = mesh->GetMesh<Vertex>().vertices;
-    Vector2 cornerSize = sprite->CornerSize.GetValue();
+    Vector2 cornerSize = sprite->CornerSize;
     
     const Atlas::Node& atlasNode = atlas->GetNode(sprite->SpriteName);
     
@@ -89,5 +83,3 @@ void SpriteTextureSystem::SpriteTextureChanged(Sprite* sprite, GameObject* objec
     }
     
 }
-
-

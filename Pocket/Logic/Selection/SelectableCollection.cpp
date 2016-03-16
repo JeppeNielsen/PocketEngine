@@ -10,30 +10,29 @@
 
 using namespace Pocket;
 
-void SelectableCollection::Initialize() {
-    AddComponent<Selectable>();
-    AddComponent<Transform>();
+void SelectableCollection::Initialize(GameWorld* world) {
     hasChanged = false;
 }
 
 void SelectableCollection::ClearSelection() {
-    for (ObjectCollection::const_iterator it=Objects().begin(); it!=Objects().end(); ++it) {
-        (*it)->GetComponent<Selectable>()->Selected = false;
+    for (auto o : Objects()) {
+        o->GetComponent<Selectable>()->Selected = false;
     }
     hasChanged = true;
 }
 
 void SelectableCollection::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed += event_handler(this, &SelectableCollection::SelectedChanged, object);
-    SelectedChanged(object->GetComponent<Selectable>(), object);
+    object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectableCollection::SelectedChanged, object);
+    SelectedChanged(object);
 }
 
 void SelectableCollection::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Selectable>()->Selected.Changed -= event_handler(this, &SelectableCollection::SelectedChanged, object);
+    object->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectableCollection::SelectedChanged, object);
     RemoveObject(object);
 }
 
-void SelectableCollection::SelectedChanged(Pocket::Selectable *selectable, GameObject* object) {
+void SelectableCollection::SelectedChanged(GameObject* object) {
+    Selectable* selectable = object->GetComponent<Selectable>();
     if (selectable->Selected) {
         selectedObjects.push_back(object);
         hasChanged = true;
@@ -50,7 +49,7 @@ void SelectableCollection::RemoveObject(Pocket::GameObject *object) {
     }
 }
 
-const ObjectCollection& SelectableCollection::Selected() { return selectedObjects; }
+const IGameSystem::ObjectCollection& SelectableCollection::Selected() { return selectedObjects; }
 
 void SelectableCollection::Update(float dt) {
     if (hasChanged) {

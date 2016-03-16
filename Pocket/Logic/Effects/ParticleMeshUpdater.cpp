@@ -11,31 +11,14 @@
 
 using namespace Pocket;
 
-void ParticleMeshUpdater::Initialize() {
-    AddComponent<Mesh>();
-    AddComponent<ParticleEmitter>();
-}
-
-void ParticleMeshUpdater::ObjectAdded(Pocket::GameObject *object) {
-    
-}
-
-void ParticleMeshUpdater::ObjectRemoved(Pocket::GameObject *object) {
-    
-}
-
 void ParticleMeshUpdater::Update(float dt) {
-    
-    for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
-        GameObject* object = *it;
-        UpdateMesh(object->GetComponent<Mesh>(), object->GetComponent<ParticleEmitter>());
+    for (auto go : Objects()) {
+        UpdateMesh(go->GetComponent<Mesh>(), go->GetComponent<ParticleEmitter>());
     }
 }
 
 void ParticleMeshUpdater::UpdateMesh(Mesh *mesh, ParticleEmitter *emitter) {
     if (!emitter->Playing()) return;
-    
-    size_t particlesCount = emitter->activeParticles.size();
     
     int vertCount = (int)emitter->particles.size() * 4;
     int triCount = (int)emitter->particles.size() * 6;

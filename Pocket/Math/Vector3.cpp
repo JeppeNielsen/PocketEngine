@@ -28,9 +28,4 @@ Vector3 Vector3::Deserialize(const std::string &data, const char delim) {
     return Vector3(v.size()>0 ? v[0] : 0, v.size()>1 ? v[1] : 0, v.size()>2 ? v[2] : 0);
 }
 
-std::ostream& operator<<(std::ostream& stream, const Vector3& v) {
-    stream << v.x <<","<<v.y<<","<<v.z;
-    return stream;
-}
-
 Vector3 Vector3::zero(0,0,0);

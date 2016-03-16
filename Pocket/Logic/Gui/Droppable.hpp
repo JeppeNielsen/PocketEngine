@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameWorld.hpp"
 #include "Touchable.hpp"
 
 namespace Pocket {
@@ -16,8 +15,7 @@ namespace Pocket {
         std::vector<TouchData> droppedTouches;
     };
 
-    Component(Droppable)
-        void Reset();
+    struct Droppable {
         Event<DroppedData> Dropped;
     };
 }

@@ -11,7 +11,7 @@
 
 using namespace Pocket;
 
-Component(Gridable)
+struct Gridable {
     Vector2 Size;
 };
 

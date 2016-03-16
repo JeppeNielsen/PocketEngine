@@ -9,45 +9,46 @@
 #pragma once
 #include "Gui.hpp"
 #include "TextBox.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-    struct SerializedFieldEditorFloat : public SerializedFieldEditor<float, Gui, GameObject> {
+    struct SerializedFieldEditorFloat : public FieldInfoEditor<float, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
-        void TextChanged(TextBox* textBox);
+        void TextChanged(GameObject* object);
         void Update(float dt);
         GameObject* textBox;
         float prev;
     };
     
-    struct SerializedFieldEditorVector2 : public SerializedFieldEditor<Vector2, Gui, GameObject> {
+    struct SerializedFieldEditorVector2 : public FieldInfoEditor<Vector2, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
-        void TextChanged(TextBox* textBox, GameObject* object);
+        void TextChanged(GameObject* object);
         void Update(float dt);
         GameObject* textBox[2];
         Vector2 prev;
     };
 
-    struct SerializedFieldEditorVector3 : public SerializedFieldEditor<Vector3, Gui, GameObject> {
+    struct SerializedFieldEditorVector3 : public FieldInfoEditor<Vector3, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
-        void TextChanged(TextBox* textBox, GameObject* object);
+        void TextChanged(GameObject* object);
         void Update(float dt);
         GameObject* textBox[3];
         Vector3 prev;
     };
     
-    struct SerializedFieldEditorString : public SerializedFieldEditor<std::string, Gui, GameObject> {
+    struct SerializedFieldEditorString : public FieldInfoEditor<std::string, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
-        void TextChanged(TextBox* textBox);
+        void TextChanged(GameObject* object);
         void Update(float dt);
         GameObject* textBox;
         std::string prev;
     };
     
-    struct SerializedFieldEditorBool : public SerializedFieldEditor<bool, Gui, GameObject> {
+    struct SerializedFieldEditorBool : public FieldInfoEditor<bool, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
         void Clicked(TouchData touch);
@@ -57,10 +58,10 @@ namespace Pocket {
         bool prev;
     };
     
-    struct SerializedFieldEditorQuaternion : public SerializedFieldEditor<Quaternion, Gui, GameObject> {
+    struct SerializedFieldEditorQuaternion : public FieldInfoEditor<Quaternion, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();
-        void TextChanged(TextBox* textBox, GameObject* object);
+        void TextChanged(GameObject* object);
         void Update(float dt);
         GameObject* textBox[3];
         Vector3 prev;

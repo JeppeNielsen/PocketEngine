@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Draggable.hpp"
 #include "Touchable.hpp"
 #include "Transform.hpp"
@@ -15,17 +15,13 @@
 #include <map>
 
 namespace Pocket {
-    class DraggableSystem : public GameSystem {
+    class DraggableSystem : public GameSystem<Transform, Touchable, Draggable> {
     public:
-        void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
         void Update(float dt);
-        
         bool IsTouchIndexUsed(int touchIndex);
-        
     private:
-        
         struct DraggingObject {
             TouchData touch;
             Vector3 offset;
@@ -42,6 +38,5 @@ namespace Pocket {
         
         void Down(TouchData d, GameObject* object);
         void Up(TouchData d, GameObject* object);
-        
     };
 }

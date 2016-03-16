@@ -1,9 +1,9 @@
 //
-//  PropertyListener.h
-//  Homeland
+//  PropertyListener.hpp
+//  GUIEditor
 //
-//  Created by Jeppe Nielsen on 15/06/15.
-//  Copyright (c) 2015 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 13/03/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
@@ -14,27 +14,27 @@ namespace Pocket {
     template<class Context>
     class PropertyListener {
 		public:
-            template<class Owner, class Value>
-            void Add(Property<Owner, Value>& property, Context context, bool insert = true) {
-            	property.Changed += event_handler(this, &PropertyListener::PropertyChanged<Owner>, context);
+            template<class Value>
+            void Add(Property<Value>& property, Context context, bool insert = true) {
+            	property.Changed.Bind(this, &PropertyListener::PropertyChanged<Context>, context);
                 if (insert) {
                     changedObjects.insert(context);
                 }
             }
-            template<class Owner, class T>
-        	void Remove(Property<Owner, T>& property, Context object) {
-            	property.Changed -= event_handler(this, &PropertyListener::PropertyChanged<Owner>, object);
+            template<class Value>
+        	void Remove(Property<Value>& property, Context object) {
+            	property.Changed.Unbind(this, &PropertyListener::PropertyChanged<Context>, object);
                 auto it = changedObjects.find(object);
                 if (it!=changedObjects.end()) {
                     changedObjects.erase(it);
                 }
             }
-        	typedef std::set<Context> ChangedObjects;
+        	using ChangedObjects = std::set<Context>;
             const ChangedObjects& Objects() { return changedObjects; }
         	void Clear() { changedObjects.clear(); }
         private:
         	template<class Owner>
-        	void PropertyChanged(Owner owner, Context context) {
+        	void PropertyChanged(Context context) {
             	changedObjects.insert(context);
             }
 			ChangedObjects changedObjects;

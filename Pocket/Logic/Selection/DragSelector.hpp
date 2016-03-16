@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Selectable.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
@@ -17,16 +17,14 @@
 #include "SelectableCollection.hpp"
 
 namespace Pocket {
-    class DragSelector : public GameSystem {
+    class DragSelector : public GameSystem<Transform, Mesh, Selectable> {
     public:
-        void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
+        void Initialize(GameWorld* world) override;
         
         void Setup(const Box& viewport, InputManager& input);
     
-        void Update(float dt);
-        void Render();
+        void Update(float dt) override;
+        void Render() override;
         
         bool IsDragging();
         
@@ -46,10 +44,7 @@ namespace Pocket {
         
         InputManager* input;
         
-        class CameraSystem : public GameSystem {
-        public:
-            void Initialize();
-        };
+        class CameraSystem : public GameSystem<Transform, Camera> { };
         
         CameraSystem* cameraSystem;
         
@@ -59,6 +54,5 @@ namespace Pocket {
         SelectableCollection* selectables;
         
         DraggableSystem* draggableSystem;
-        bool isDraggableSystemChecked;
     };
 }

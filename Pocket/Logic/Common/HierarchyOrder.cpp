@@ -1,5 +1,5 @@
 //
-//  HierarchyOrder.cpp
+//  HierarchyOrder.h
 //  PocketEngine
 //
 //  Created by Jeppe Nielsen on 10/12/13.
@@ -7,30 +7,25 @@
 //
 
 #include "HierarchyOrder.hpp"
-#include <algorithm>
 
 using namespace Pocket;
 
-void HierarchyOrder::Initialize() {
-    AddComponent<Orderable>();
-    orderIsDirty = false;
+void HierarchyOrder::Initialize(GameWorld *world) {
+    this->world = world;
 }
 
-void HierarchyOrder::ObjectAdded(Pocket::GameObject *object) {
-    object->Parent.ChangedWithOld += event_handler(this, &HierarchyOrder::ParentChanged);
-    object->Order.Changed += event_handler(this, &HierarchyOrder::OrderChanged);
+void HierarchyOrder::ObjectAdded(GameObject *object) {
+    object->Parent.Changed.Bind(this, &HierarchyOrder::SetDirty);
+    object->Order.Changed.Bind(this, &HierarchyOrder::SetDirty);
     orderIsDirty = true;
 }
 
-void HierarchyOrder::ObjectRemoved(Pocket::GameObject *object) {
-   object->Order.Changed -= event_handler(this, &HierarchyOrder::OrderChanged);
+void HierarchyOrder::ObjectRemoved(GameObject *object) {
+   object->Parent.Changed.Unbind(this, &HierarchyOrder::SetDirty);
+   object->Order.Changed.Unbind(this, &HierarchyOrder::SetDirty);
 }
 
-void HierarchyOrder::ParentChanged(Property<GameObject*, GameObject*>::EventData d) {
-    orderIsDirty = true;
-}
-
-void HierarchyOrder::OrderChanged(Pocket::GameObject *object) {
+void HierarchyOrder::SetDirty() {
     orderIsDirty = true;
 }
 
@@ -39,22 +34,24 @@ void HierarchyOrder::Update(float dt) {
     orderIsDirty = false;
 
     int order = 0;
-    for (ObjectCollection::const_iterator it = World()->Children().begin(); it!= World()->Children().end(); ++it) {
-        CalculateOrder(order, *it);
+    for (int i=0; i<world->ObjectCount(); ++i) {
+        GameObject* object = world->GetObject(i);
+        if (object->Parent) continue;
+        CalculateOrder(order, object);
     }
 }
 
-void HierarchyOrder::CalculateOrder(int& orderOffset, Pocket::GameObject *object) {
+void HierarchyOrder::CalculateOrder(int& orderOffset, GameObject *object) {
     
     orderOffset++;
     
     Orderable* orderable = object->GetComponent<Orderable>();
     if (orderable) orderable->Order = orderOffset;
     
-    const ObjectCollection& children = object->Children();
+    const auto& children = object->Children();
     if (children.empty()) return;
     
-    ObjectCollection sortedChildren = children;
+    auto sortedChildren = children;
     std::sort(sortedChildren.begin(), sortedChildren.end(), [] (GameObject* a, GameObject* b) {
         return a->Order()<b->Order();
     });

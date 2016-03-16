@@ -10,22 +10,9 @@
 
 using namespace Pocket;
 
-
-
-void ParticleEffect::Reset() {
+ParticleEffect::ParticleEffect() {
     MaxParticles = 100;
     Duration = 1.0f;
     EmissionFrequency = 1.0f;
     EmissionAmount = 1;
 }
-
-void ParticleEffect::Clone(const ParticleEffect& source) {
-    Duration = source.Duration;
-    EmissionFrequency = source.EmissionFrequency;
-    EmissionAmount = source.EmissionAmount;
-}
-
-ParticleEffect::ParticleEffect()
-:
-MaxParticles(this), Duration(this), EmissionFrequency(this), EmissionAmount(this) { }
-

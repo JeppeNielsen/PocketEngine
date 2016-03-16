@@ -12,17 +12,10 @@
 #include "Sprite.hpp"
 
 namespace Pocket {
-    class Sizeable;
-    class SpriteMeshSystem : public GameSystem {
+    class SpriteMeshSystem : public GameSystem<Sprite, Sizeable, Mesh> {
     public:
-        void Initialize();
-    protected:    
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        
-        void SizeChanged(Sizeable* sizeable, GameObject* object);
-        void CornerSizeChanged(Sprite* sprite, GameObject* object);
-        
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
         void UpdateMesh(GameObject* object);
     };
 }

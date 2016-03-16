@@ -14,31 +14,23 @@
 #include <map>
 
 namespace Pocket {
-    class TextBoxSystem : public GameSystem {
+    class Gui;
+    class TextBoxSystem : public GameSystem<TextBox, Touchable> {
     public:
-        TextBoxSystem();
+        
         void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
+        void ActiveTextBoxChanged(GameObject* object);
+        void TouchInputUp(Pocket::TouchEvent e);
+        void TouchDown(Pocket::TouchData d, GameObject *object);
+        void TouchUp(Pocket::TouchData d, GameObject *object);
+        void TouchClick(Pocket::TouchData d, GameObject *object);
         void Update(float dt);
+        void KeyboardActiveChanged();
+        void KeyboardTextChanged();
         
-        InputManager* Input;
-        
-        Property<TextBoxSystem*, TextBox*> ActiveTextBox;
     private:
-        
-        
-        void ActiveTextBoxChanged(TextBox* textBox);
-        
-        void KeyboardActiveChanged(InputManager* input);
-        void KeyboardTextChanged(InputManager* input);
-        
-        void TouchInputUp(TouchEvent e);
-        
-        void TouchDown(TouchData d, GameObject* object);
-        void TouchUp(TouchData d, GameObject* object);
-        void TouchClick(TouchData d, GameObject* object);
-        
         struct pushedTextBox {
             TouchData touch;
             Vector2 lastTouchPosition;
@@ -51,5 +43,10 @@ namespace Pocket {
         bool touchWasUp;
         bool anyTextboxUp;
         
+        InputManager* Input;
+    public:
+        Property<TextBox*> ActiveTextBox;
+        
+        friend class Gui;
     };
 }

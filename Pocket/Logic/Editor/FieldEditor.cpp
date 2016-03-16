@@ -10,13 +10,20 @@
 
 using namespace Pocket;
 
-FieldEditor::FieldEditor() : Object(this), Field(this), editor(0) {}
+FieldEditor::FieldEditor() :editor(0) {
+    editor = 0;
+    Field = "";
+}
 
- void FieldEditor::Reset() {
+void FieldEditor::operator=(const FieldEditor& other) {
     if (editor) {
         editor->Destroy();
     }
     editor = 0;
-    Object = 0;
     Field = "";
+}
+
+void FieldEditor::SetType(const Pocket::TypeInfo& type) {
+    Type = type;
+    TypeChanged();
 }

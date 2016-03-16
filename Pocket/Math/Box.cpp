@@ -183,9 +183,6 @@ Box Pocket::Box::Deserialize(const std::string &data) {
                v.size()>3 ? v[3] : 0);
 }
 
-std::ostream& operator<<(std::ostream& stream, const Pocket::Box& v) {
-    stream << v.left <<","<<v.top<<","<<v.right<<","<<v.bottom;
-    return stream;
-}
+
 
 

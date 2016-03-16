@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Transform.hpp"
 #include "Gridable.h"
 #include "PropertyListener.hpp"
@@ -16,11 +16,12 @@
 
 using namespace Pocket;
 
-SYSTEM(GridSystem, Transform, Draggable)
+class GridSystem : public GameSystem<Transform, Draggable> {
+public:
+    void Initialize(GameWorld* world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);
-    void AddedToWorld(GameWorld& world);
     static Vector2 Size;
 private:
     PropertyListener<GameObject*> changedPositions;

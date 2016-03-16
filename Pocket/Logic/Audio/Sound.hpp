@@ -10,8 +10,7 @@
 
 #include <OpenAL/al.h>
 #include <OpenAL/alc.h>
-
-#include "GameComponent.hpp"
+#include <string>
 
 namespace Pocket {
     
@@ -24,7 +23,7 @@ namespace Pocket {
         };
     };
     
-    Component(Sound)
+    class Sound {
     public:
     
         Sound();

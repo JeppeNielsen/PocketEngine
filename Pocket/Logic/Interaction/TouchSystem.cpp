@@ -1,108 +1,80 @@
 //
-//  TouchSystem.cpp
+//  TouchSystem.hpp
 //  PocketEngine
 //
-//  Created by Jeppe Nielsen on 8/24/13.
+//  Created by Jeppe Nielsen on 8/21/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 
 #include "TouchSystem.hpp"
-#include "GameWorld.hpp"
-#include "OctreeSystem.hpp"
-#include <stack>
 
 using namespace Pocket;
 
-TouchSystem::TouchSystem() : Input(this) {
+TouchSystem::TouchSystem() {
     Input = 0;
-    Input.ChangedWithOld += event_handler(this, &TouchSystem::InputManagerChanged);
-}
-TouchSystem::~TouchSystem() { }
-
-void TouchSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Mesh>();
-    AddComponent<Touchable>();
-}
-
-void TouchSystem::AddedToWorld(Pocket::GameWorld &world) {
-    octree = world.CreateSystem<OctreeSystem>();
-    octree->AddComponent<Touchable>();
-    
-    cameraSystem = world.CreateSystem<TouchSystem::CameraSystem>();
+    Input.Changed.Bind([this]() {
+        if (Input.PreviousValue()) {
+            Input.PreviousValue()->TouchDown.Unbind(this, &TouchSystem::TouchDown);
+            Input.PreviousValue()->TouchUp.Unbind(this, &TouchSystem::TouchUp);
+        }
+        
+        if (Input) {
+            Input()->TouchDown.Bind(this, &TouchSystem::TouchDown);
+            Input()->TouchUp.Bind(this, &TouchSystem::TouchUp);
+        }
+    });
 }
 
-OctreeSystem& TouchSystem::Octree() { return *octree; }
+void TouchSystem::Initialize(GameWorld* world) {
+    octree = world->CreateSystem<OctreeSystem>();
+    cameraSystem = world->CreateSystem<TouchSystem::CameraSystem>();
+    world->CreateSystem<OrderableSystem>();
+}
+
+TouchSystem::OctreeSystem& TouchSystem::Octree() { return *octree; }
 
 void TouchSystem::ObjectAdded(GameObject* object) {
     TouchableObject* touchableObject = new TouchableObject(object);
     if (touchableObject->clip>0 && touchableObject->orderable) {
         clippers.push_back(touchableObject);
     }
-    SetMetaData(object, touchableObject);
+    this->SetMetaData(object, touchableObject);
 }
 
 void TouchSystem::ObjectRemoved(GameObject* object) {
-    TouchableObject* touchableObject = (TouchableObject*)GetMetaData(object);
+    TouchableObject* touchableObject = (TouchableObject*)this->GetMetaData(object);
     if (touchableObject->clip>0 && touchableObject->orderable) {
         clippers.erase(std::find(clippers.begin(), clippers.end(), touchableObject));
     }
     delete touchableObject;
 }
 
-bool TouchSystem::SortClippers(const Pocket::TouchSystem::TouchableObject *a, const Pocket::TouchSystem::TouchableObject *b) {
-    if (a->orderable && b->orderable) {
-        return a->orderable->Order.Get()<b->orderable->Order.Get();
-    } else {
-        return false;
-    }
-}
-
-TouchSystem::TouchableObject* TouchSystem::FindClipper(Pocket::TouchSystem::TouchableObject *fromThis) {
-    if (!fromThis->orderable) return 0;
-    int order = fromThis->orderable->Order.Get();
-    std::stack<TouchableObject*> stack;
-    for (size_t i = 0; i<clippers.size(); ++i) {
-        TouchableObject* clipper = clippers[i];
-        int clipperOrder = clipper->orderable->Order.Get();
-        if (order<=clipperOrder) break;
-        if (clipper->clip == 1) {
-            stack.push(clipper);
-        } else {
-            stack.pop();
+void TouchSystem::Update(float dt) {
+    if (!cancelledTouchables.empty()) {
+        for (CancelledTouchables::iterator it = cancelledTouchables.begin(); it!=cancelledTouchables.end(); ++it) {
+            Touchable* cancelled = *it;
+            for (int i=0; i<12; i++) {
+                Touched& list = touches[i];
+                for (size_t j=0; j<list.size(); j++) {
+                    if (list[j].Touchable == cancelled) {
+                        cancelled->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
+                        ups.push_back(list[j]);
+                        list.erase(list.begin()+j);
+                        j--;
+                    }
+                }
+            }
         }
+        cancelledTouchables.clear();
     }
     
-    return stack.empty() ? 0 : stack.top();
-}
-
-void TouchSystem::CameraSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Camera>();
-}
-
-TouchSystem::TouchableObject::TouchableObject(GameObject* object) {
-    transform = object->GetComponent<Transform>();
-    mesh = object->GetComponent<Mesh>();
-    touchable = object->GetComponent<Touchable>();
-    orderable = object->GetComponent<Orderable>();
-    Material* material = object->GetComponent<Material>();
-    clip = material ? material->Clip : 0;
-}
-
-TouchSystem::TouchableObject::~TouchableObject() {}
-
-void TouchSystem::InputManagerChanged(Property<TouchSystem*, InputManager*>::EventData e) {
     
-    if (e.Old) {
-        e.Old->TouchDown -= event_handler(this, &TouchSystem::TouchDown);
-        e.Old->TouchUp -= event_handler(this, &TouchSystem::TouchUp);
-    }
-    
-    if (e.Current) {
-        e.Current->TouchDown += event_handler(this, &TouchSystem::TouchDown);
-        e.Current->TouchUp += event_handler(this, &TouchSystem::TouchUp);
-    }
+    for (unsigned i=0; i<downs.size(); i++) downs[i].Touchable->Down(downs[i]);
+    downs.clear();
+    for (unsigned i=0; i<clicks.size(); i++) clicks[i].Touchable->Click(clicks[i]);
+    clicks.clear();
+    for (unsigned i=0; i<ups.size(); i++) ups[i].Touchable->Up(ups[i]);
+    ups.clear();
 }
 
 void TouchSystem::TouchDown(Pocket::TouchEvent e) {
@@ -112,7 +84,7 @@ void TouchSystem::TouchDown(Pocket::TouchEvent e) {
     AddToTouchList(list, downs);
     
     for (size_t i = 0; i<list.size(); i++) {
-        list[i].Touchable->Cancelled += event_handler(this, &TouchSystem::TouchableCancelled);
+        list[i].Touchable->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
     }
 }
 
@@ -142,15 +114,51 @@ void TouchSystem::TouchUp(Pocket::TouchEvent e) {
     AddToTouchList(touchList, ups);
     
     for (size_t i = 0; i<touchList.size(); i++) {
-        touchList[i].Touchable->Cancelled -= event_handler(this, &TouchSystem::TouchableCancelled);
+        touchList[i].Touchable->Cancelled.Unbind(this, &TouchSystem::TouchableCancelled);
     }
     
     touchList.clear();
 }
 
+
+TouchSystem::TouchableObject::TouchableObject(GameObject* object) {
+    transform = object->GetComponent<Transform>();
+    mesh = object->GetComponent<Mesh>();
+    touchable = object->GetComponent<Touchable>();
+    orderable = object->GetComponent<Orderable>();
+    Material* material = object->GetComponent<Material>();
+    clip = material ? material->Clip : 0;
+}
+
+bool TouchSystem::SortClippers(const TouchableObject *a, const TouchableObject *b) {
+    if (a->orderable && b->orderable) {
+        return a->orderable->Order<b->orderable->Order;
+    } else {
+        return false;
+    }
+}
+
+TouchSystem::TouchableObject* TouchSystem::FindClipper(TouchableObject *fromThis) {
+    if (!fromThis->orderable) return 0;
+    int order = fromThis->orderable->Order();
+    std::stack<TouchableObject*> stack;
+    for (size_t i = 0; i<clippers.size(); ++i) {
+        TouchableObject* clipper = clippers[i];
+        int clipperOrder = clipper->orderable->Order();
+        if (order<=clipperOrder) break;
+        if (clipper->clip == 1) {
+            stack.push(clipper);
+        } else {
+            stack.pop();
+        }
+    }
+    
+    return stack.empty() ? 0 : stack.top();
+}
+
 void TouchSystem::FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough) {
-    const ObjectCollection& cameras = cameraSystem->Objects();
-    for (ObjectCollection::const_iterator it = cameras.begin(); it!=cameras.end(); ++it) {
+    const auto& cameras = cameraSystem->Objects();
+    for (auto it = cameras.begin(); it!=cameras.end(); ++it) {
         FindTouchedObjectsFromCamera(*it, list, e, forceClickThrough);
     }
 }
@@ -162,7 +170,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
     
     BoundingFrustum::Count = 0;
     octree->GetObjectsAtRay(ray, touchableList);
-	
+    
     if (touchableList.empty()) {
         return;
     }
@@ -180,15 +188,15 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
     */
 
     size_t max = touchableList.size() - 1;
-	for(unsigned i=0; i<touchableList.size(); i++) {
+    for(unsigned i=0; i<touchableList.size(); i++) {
         GameObject* object = touchableList[max - i];
-        TouchableObject* t = (TouchableObject*)GetMetaData(object);
-		Mesh* mesh = t->mesh;
-        const Matrix4x4* worldInverse = t->transform->WorldInverse.GetValue();
+        TouchableObject* t = (TouchableObject*)this->GetMetaData(object);
+        Mesh* mesh = t->mesh;
+        const Matrix4x4& worldInverse = t->transform->WorldInverse();
         //int thisOrder = t->orderable ? t->orderable->Order.Get() : minOrder;
         
         Ray localRay = ray;
-        localRay.Transform(*worldInverse);
+        localRay.Transform(worldInverse);
         
         float distanceToPick;
         float u;
@@ -229,7 +237,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
             */
         }
     }
-	touchableList.clear();
+    touchableList.clear();
     
     if (intersections.empty()) return;
     
@@ -288,17 +296,17 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         TouchData touch;
         touch.object = foundIntersection->object;
         touch.Input = Input;
-        touch.CameraObject = cameraObject;
+        touch.CameraTransform = cameraObject->GetComponent<Transform>();
         touch.Camera = camera;
         touch.Touchable = foundIntersection->touchable->touchable;
         touch.Index = e.Index;
         touch.Position = e.Position;
         touch.Ray = ray;
         
-        const Matrix4x4* world = touchableObject->transform->World.GetValue();
+        const Matrix4x4& world = touchableObject->transform->World();
         
         Vector3 localPosition = foundIntersection->localRay.GetPosition(foundIntersection->distanceToPick);
-        touch.WorldPosition = world->TransformPosition(localPosition);
+        touch.WorldPosition = world.TransformPosition(localPosition);
         touch.TriangleIndex = foundIntersection->triIndex;
         touch.WorldNormal = foundIntersection->normal;
         
@@ -314,7 +322,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         
             touch.WorldNormal = tan1.Cross(tan2);
             
-            touch.WorldNormal = touchableObject->transform->World.GetValue()->TransformVector(touch.WorldNormal);
+            touch.WorldNormal = touchableObject->transform->World().TransformVector(touch.WorldNormal);
             touch.WorldNormal.Normalize();
         } 
     
@@ -322,45 +330,14 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
     }
     
     intersections.clear();
-    
-    
 }
 
-bool TouchSystem::SortIntersections(const Pocket::TouchSystem::Intersection &a, const Pocket::TouchSystem::Intersection &b) {
+bool TouchSystem::SortIntersections(const Intersection &a, const Intersection &b) {
     if (a.touchable->orderable && b.touchable->orderable) {
-        return a.touchable->orderable->Order.Get()>b.touchable->orderable->Order.Get();
+        return a.touchable->orderable->Order()>b.touchable->orderable->Order();
     } else {
         return a.distanceToPick<b.distanceToPick;
     }
-}
-
-void TouchSystem::Update(float dt) {
-    
-    if (!cancelledTouchables.empty()) {
-        for (CancelledTouchables::iterator it = cancelledTouchables.begin(); it!=cancelledTouchables.end(); ++it) {
-            Touchable* cancelled = *it;
-            for (int i=0; i<12; i++) {
-                Touched& list = touches[i];
-                for (size_t j=0; j<list.size(); j++) {
-                    if (list[j].Touchable == cancelled) {
-                        cancelled->Cancelled -= event_handler(this, &TouchSystem::TouchableCancelled);
-                        ups.push_back(list[j]);
-                        list.erase(list.begin()+j);
-                        j--;
-                    }
-                }
-            }
-        }
-        cancelledTouchables.clear();
-    }
-    
-    
-    for (unsigned i=0; i<downs.size(); i++) downs[i].Touchable->Down(downs[i]);
-    downs.clear();
-    for (unsigned i=0; i<clicks.size(); i++) clicks[i].Touchable->Click(clicks[i]);
-    clicks.clear();
-    for (unsigned i=0; i<ups.size(); i++) ups[i].Touchable->Up(ups[i]);
-    ups.clear();
 }
 
 void TouchSystem::AddToTouchList(Touched &from, Touched &to) {
@@ -379,4 +356,3 @@ bool TouchSystem::IsTouchInList(const Pocket::TouchData &touchData, const Touche
 void TouchSystem::TouchableCancelled(Pocket::Touchable *touchable) {
     cancelledTouchables.insert(touchable);
 }
-

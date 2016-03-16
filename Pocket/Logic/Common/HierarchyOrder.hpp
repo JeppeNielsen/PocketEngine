@@ -7,23 +7,21 @@
 //
 
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Orderable.hpp"
 #include <set>
 
 namespace Pocket {
-    class HierarchyOrder : public GameSystem {
+    class HierarchyOrder : public GameSystem<Orderable> {
     public:
-        void Initialize();
+        void Initialize(GameWorld* world);
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
+        void SetDirty();
         void Update(float dt);
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        
-        void ParentChanged(Property<GameObject*, GameObject*>::EventData d);
-        void OrderChanged(GameObject* object);
-        
+        void CalculateOrder(int& orderOffset, GameObject *object);
     private:
         bool orderIsDirty;
-        void CalculateOrder(int& orderOffset, GameObject* hierarchy);
+        GameWorld* world;
     };
 }

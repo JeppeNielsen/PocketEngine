@@ -1,243 +1,340 @@
 //
-//  World.h
+//  GameWorld.hpp
 //  ComponentSystem
 //
-//  Created by Jeppe Nielsen on 9/24/14.
-//  Copyright (c) 2014 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 27/12/15.
+//  Copyright © 2015 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-#include "GameComponent.hpp"
-#include "GameObject.hpp"
-#include "GameSystem.hpp"
-#include "GameFactory.hpp"
 #include <vector>
-#include <memory>
-#include <string>
-#include <istream>
-#include "Assert.hpp"
-#if EMSCRIPTEN
-#if ENABLE_SCRIPTING
-    #undef ENABLE_SCRIPTING
+#include "GameConstants.hpp"
+#include <type_traits>
+#include <assert.h>
+#include "GameObject.hpp"
+#include "IDHelper.hpp"
+#include "MetaLibrary.hpp"
+#ifdef SCRIPTING_ENABLED
+#include "IScriptSystem.hpp"
 #endif
-#endif
-
-namespace minijson {
-    class object_writer;
-};
+#include "GameSystem.hpp"
+#include "Container.hpp"
 
 namespace Pocket {
 
 class GameWorld {
-public:
-    
-    friend class GameObject;
-    friend class ScriptWorld;
-    
-    GameWorld();
-    ~GameWorld();
-    
-    GameObject* CreateObject();
-    GameObject* CreateObjectFromJson(std::istream& jsonStream, std::function<void(GameObject*)> iterator = 0);
-    
-    void Update(float dt);
-    void Render();
-    
-    void DeleteAllObjects();
-    
-    const ObjectCollection& Objects();
-    const ObjectCollection& Children();
-    
-    template<class T>
-    T* CreateSystem();
-    
-    template<class T>
-    T* CreateOrGetSystem();
-    
-    template<typename T>
-    T* GetSystem();
-    
-    template<typename T>
-    T* CreateFactory();
-    
-    typedef std::vector<IGameComponentType*> ComponentTypes;
-    const ComponentTypes& ComponentTypesList();
-    
-#ifdef ENABLE_SCRIPTING
-    void InitializeScripts();
-    bool Build(std::vector<std::string> scriptFilenames);
-    bool CallMain();
-    
-    ScriptWorld* GetScriptWorld();
-#endif
-    
 private:
+    friend class GameObject;
+    friend class IGameSystem;
+#if SCRIPTING_ENABLED
+    friend class ScriptWorld;
+#endif
+
+    using Objects = Container<GameObject>;
+
+    Objects objects;
     
+    GameConstants::Systems systems;
+    GameConstants::Systems systemsIndexed;
+    GameConstants::SystemBitsets systemBitsets;
     
-    void UpdateRemovedObjects();
-    void UpdateRemovedObject(GameObject* object);
-    void UpdateChangedComponents();
-    void UpdateRemovedComponents();
+    GameConstants::Components components;
+    GameConstants::ComponentNames componentNames;
+    GameConstants::ComponentSystems componentSystems;
     
-    void* AddComponent(GameObject* object, int componentID);
-    void* AddComponent(GameObject* object, int componentID, GameObject* referenceObject);
-    void RemoveComponent(GameObject* object, int componentID);
-    void EnableComponent(GameObject* object, int componentID, bool enable);
-    void* CloneComponent(GameObject* object, int componentID, GameObject* source);
-    void UpdatePointers(GameObject* object, int componentID);
+    GameConstants::Actions createActions;
+    GameConstants::Actions removeActions;
     
-    void AddSystem(GameSystem* system, int componentID);
-    
-    void WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID);
-    void ReadJsonComponent(minijson::istream_context& context, GameObject* object, int componentID);
-    GameObject* CreateGameObjectJson(minijson::istream_context& context, std::function<void(GameObject*)> iterator);
-    void CreateObjectID(GameObject* object, const std::string& id);
-    GameObject* FindObjectFromID(const std::string& id);
-    std::string* FindIDFromObject(GameObject* object);
-    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
-    GameObject* FindFirstObjectWithComponentID(int componentID);
-   
-    ComponentTypes componentTypes;
-    ComponentTypes changedComponentTypes;
-    ComponentTypes removedComponentTypes;
-    
-    ObjectCollection activeObjects;
-    ObjectCollection freeObjects;
-    typedef std::vector<GameObject*> RemovedObjects;
-    RemovedObjects removedObjects;
-    
-    typedef std::vector<GameSystem*> Systems;
-    Systems systems;
-    friend class GameSystem;
-    
-    ScriptWorld* scriptWorld;
-    ObjectCollection children;
-    typedef std::map<void*, void*> PointerMap;
-    PointerMap pointerMap;
-    typedef std::map<void*, int> PointerCounter;
-    PointerCounter pointerCounter;
+    std::vector<std::function<void*(GameObject*)>> addComponent;
+    std::vector<std::function<void*(GameObject*, GameObject*)>> addComponentReference;
+    std::vector<std::function<void(GameObject*)>> removeComponent;
+    std::vector<std::function<TypeInfo(GameObject*)>> getTypeComponent;
+    std::vector<std::function<GameObject*(GameObject*)>> getOwner;
+    std::vector<std::function<void*(GameObject*, GameObject*)>> cloneComponent;
     
     struct ObjectID {
         GameObject* object;
         std::string id;
     };
     
-    typedef std::vector<ObjectID> ObjectIDs;
-    ObjectIDs objectIDs;
+    std::vector<ObjectID> objectIDs;
+
+    std::string* GetObjectID(GameObject* object);
+    void AddObjectID(GameObject* object, std::string id);
+    std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
+    GameObject* FindObjectFromID(const std::string &id);
+    GameObject* FindFirstObjectWithComponentID(int componentID);
     
+    bool TryGetComponentIndex(std::string componentName, int& index);
+    bool TryGetComponentIndex(std::string componentName, int& index, bool& isReference);
+    
+    GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+    
+    void TryAddSystem(int systemID, std::function<IGameSystem*()> createSystem);
+    
+public:
+
+    template<typename System>
+    System* CreateSystem() {
+        //assert(ObjectCount() == 0);
+        int systemID = IDHelper::GetSystemID<System>();
+        if (ObjectCount()==0) {
+            TryAddSystem(systemID, []() { return new System(); });
+        }
+        return (System*)systemsIndexed[systemID];
+    }
+    
+    GameObject* CreateObject();
+    GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated = 0);
+    GameWorld();
+    
+    void Update(float dt);
+    void Render();
+    void DoActions(GameConstants::Actions& list);
+    int ObjectCount();
+    GameObject* GetObject(int index);
+    void Clear();
+    ~GameWorld();
+    
+#ifdef SCRIPTING_ENABLED
+    //Scripting
+    using StaticScriptSystemComponents = std::vector<std::vector<short>>;
+    StaticScriptSystemComponents staticScriptSystemComponents;
+    using ScriptSystemComponents = std::vector<std::vector<short>>;
+    ScriptSystemComponents dynamicScriptSystemComponents;
+    
+    using ScriptComponents = std::vector<Container<void*>>;
+    ScriptComponents scriptComponents;
+    
+    struct ScriptSystemData {
+        GameConstants::Bitset staticComponents;
+        std::vector<short> scriptComponents;
+    };
+    
+    using ScriptSystems = std::vector<IScriptSystem*>;
+    ScriptSystems scriptSystems;
+    
+    using ScriptSystemsData = std::vector<ScriptSystemData>;
+    ScriptSystemsData scriptSystemsData;
+    
+    void ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted);
+    void InitializeScriptData(int numSystems, int numComponents,
+                std::function<IScriptSystem*(int)> onSystemCreate,
+                std::function<void(Container<void*>&, int)> onComponentCreate,
+                std::function<void(
+                            StaticScriptSystemComponents& staticScriptSystemComponents,
+                            ScriptSystemComponents& dynamicScriptSystemComponents,
+                            ScriptSystemsData& scriptSystemsData)> onSystemData
+                
+                );
+#endif
 };
 
-}
 
-//--------------------------- <GameWorld> -----------------------------
 
-template<class T>
-T* Pocket::GameWorld::CreateSystem() {
-    ASSERT(activeObjects.size()==0 && freeObjects.size()==0, "Systems cannot be created if Objects have been created.");
+template<typename Component>
+void GameObject::RemoveComponent() {
+    if (removedComponents[IDHelper::GetComponentID<Component>()]) return;
+    assert(HasComponent<Component>());
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
+    removedComponents[IDHelper::GetComponentID<Component>()] = true;
     
-    T* system = new T();
-    system->indexInList = (unsigned)systems.size();
-    systems.push_back(system);
-    system->world = this;
-    system->aspect = 0;
-    system->Initialize();
-    system->AddedToWorld(*this);
-    return system;
+    world->removeActions.emplace_back([this]() {
+        auto activeComponentsBefore = activeComponents;
+        
+        int componentID = IDHelper::GetComponentID<Component>();
+        
+        auto& systemsUsingComponent = world->componentSystems[componentID];
+        for(auto system : systemsUsingComponent) {
+            auto& bitSet = world->systemBitsets[system->index];
+            bool wasInterest = (activeComponentsBefore & bitSet) == bitSet;
+            if (wasInterest) {
+            
+                system->ObjectRemoved(this);
+                
+                int objectIndexInSystem = systemIndices[system->index];
+                int lastIndex = (int)system->objects.size() - 1;
+                GameObject* lastObject = (GameObject*)system->objects[lastIndex];
+                lastObject->systemIndices[system->index]=objectIndexInSystem;
+                system->objects[objectIndexInSystem]=lastObject;
+                system->objects.pop_back();
+            }
+        }
+        
+#ifdef SCRIPTING_ENABLED
+        auto activeScriptComponentsBefore = activeScriptComponents;
+        CheckForScriptSystemsRemoval(world->staticScriptSystemComponents[componentID], activeComponentsBefore, activeScriptComponentsBefore);
+#endif
+        
+        activeComponents[componentID] = false;
+        removedComponents[componentID] = false;
+        ownedComponents[componentID] = false;
+        typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[componentID];
+        --instance->references;
+        if (instance->references == 0) {
+            if (instance->owner) {
+                GameObject* owner = (GameObject*)instance->owner;
+                Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
+                container->RemoveObject(instance);
+            } else {
+                delete instance;
+            }
+        } else if (instance->owner == this) {
+            GameObject* owner = (GameObject*)instance->owner;
+            Container<Component>* container = (Container<Component>*)owner->world->components[componentID];
+            container->DestroyObject(instance);
+        }
+        components[componentID] = 0;
+    });
 }
 
-template<class T>
-T* Pocket::GameWorld::CreateOrGetSystem() {
-    T* system = GetSystem<T>();
-    if (!system) {
-        system = CreateSystem<T>();
+template<typename Component>
+Component* GameObject::AddComponent() {
+    if (HasComponent<Component>()) {
+        return GetComponent<Component>();
     }
-    return system;
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
+    Container<Component>* container = (Container<Component>*)world->components[IDHelper::GetComponentID<Component>()];
+    typename Container<Component>::ObjectInstance* instance = container->CreateObject();
+    instance->owner = this;
+    SetComponent<Component>(instance);
+    ownedComponents[IDHelper::GetComponentID<Component>()] = true;
+    return GetComponent<Component>();
 }
 
-template<typename T>
-T* Pocket::GameWorld::GetSystem() {
-    for (size_t i = 0; i<systems.size(); i++) {
-        T* system = dynamic_cast<T*>(systems[i]);
-        if (system) return system;
+template<typename Component>
+Component* GameObject::AddComponent(GameObject* source) {
+    if (HasComponent<Component>()) {
+        return GetComponent<Component>();
     }
-    return 0;
+    assert(source);
+    if (!source->HasComponent<Component>()) {
+        return 0;
+    }
+    assert(IDHelper::GetComponentID<Component>()<world->components.size());
+    typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)source->components[IDHelper::GetComponentID<Component>()];
+    ++instance->references;
+    SetComponent<Component>(instance);
+    return GetComponent<Component>();
 }
 
-template<typename T>
-T* Pocket::GameWorld::CreateFactory() {
-    T* factory = new T();
-    factory->world = this;
-    factory->Initialize();
-    return factory;
+template<typename Component>
+void GameObject::SetComponent(typename Container<Component>::ObjectInstance *instance) {
+    activeComponents[IDHelper::GetComponentID<Component>()] = true;
+    components[IDHelper::GetComponentID<Component>()] = instance;
+    auto activeComponentsBefore = activeComponents;
+#ifdef SCRIPTING_ENABLED
+    auto activeScriptComponentsBefore = activeScriptComponents;
+#endif
+    world->createActions.emplace_back([this, activeComponentsBefore
+#ifdef SCRIPTING_ENABLED
+    , activeScriptComponentsBefore
+#endif
+    ]() {
+    
+        auto& systemsUsingComponent = world->componentSystems[IDHelper::GetComponentID<Component>()];
+        for(auto system : systemsUsingComponent) {
+            auto& bitSet = world->systemBitsets[system->index];
+            bool isInterest = (activeComponentsBefore & bitSet) == bitSet;
+            if (isInterest) {
+                systemIndices[system->index]=(int)system->objects.size();
+                system->objects.push_back(this);
+                system->ObjectAdded(this);
+            }
+        }
+
+#ifdef SCRIPTING_ENABLED
+        CheckForScriptSystemsAddition(world->staticScriptSystemComponents[IDHelper::GetComponentID<Component>()], activeComponentsBefore, activeScriptComponentsBefore);
+#endif
+    });
 }
 
-//--------------------------- </GameWorld> -----------------------------
-
-
-//--------------------------- <GameObject> -----------------------------
-
-template<class T>
-T* Pocket::GameObject::AddComponent() {
-    return (T*)world->AddComponent(this, T::ID);
+template<typename Component>
+GameObject* GameObject::GetOwner() {
+    typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[IDHelper::GetComponentID<Component>()];
+    if (!instance) return 0;
+    return (GameObject*)instance->owner;
 }
 
-template<class T>
-T* Pocket::GameObject::AddComponent(GameObject* objectReference) {
-    return (T*)world->AddComponent(this, T::ID, objectReference);
+template<typename Component>
+Component* GameObject::CloneComponent(GameObject* source) {
+    assert(source);
+    assert(source->HasComponent<Component>());
+    typename Container<Component>::ObjectInstance* sourceInstance = (typename Container<Component>::ObjectInstance*)source->components[IDHelper::GetComponentID<Component>()];
+    bool isOwnedComponent = source->GetOwner<Component>() == source;
+    if (!HasComponent<Component>()) {
+        if (isOwnedComponent) {
+            AddComponent<Component>();
+        } else {
+            AddComponent<Component>(source);
+        }
+    }
+    typename Container<Component>::ObjectInstance* instance = (typename Container<Component>::ObjectInstance*)components[IDHelper::GetComponentID<Component>()];
+    if (isOwnedComponent) {
+        instance->object = sourceInstance->object;
+    }
+    return (Component*)instance;
 }
 
-template<class T>
-T* Pocket::GameObject::GetComponent() {
-    return (T*)components[T::ID];
+template<typename... ComponentList>
+void GameSystem<ComponentList...>::CreateComponents(GameWorld *world, int systemIndex) {
+    std::tuple<ComponentList*...> componentsTuple;
+    Meta::for_each_in_tuple_non_const(componentsTuple, [world, systemIndex](auto c) {
+        auto& components = world->components;
+        auto& componentNames = world->componentNames;
+        auto& componentSystems = world->componentSystems;
+        auto& addComponent = world->addComponent;
+        auto& addComponentReference = world->addComponentReference;
+        auto& removeComponent = world->removeComponent;
+        auto& cloneComponent = world->cloneComponent;
+        auto& getTypeComponent = world->getTypeComponent;
+        auto& getOwner = world->getOwner;
+        
+        using ComponentType = std::remove_pointer_t<decltype(c)>;
+        int componentID = IDHelper::GetComponentID<ComponentType>();
+        if (componentID>=components.size()) {
+            components.resize(componentID + 1, 0);
+            componentNames.resize(componentID + 1);
+            componentSystems.resize(componentID + 1);
+            addComponent.resize(componentID + 1);
+            addComponentReference.resize(componentID + 1);
+            removeComponent.resize(componentID + 1);
+            cloneComponent.resize(componentID + 1);
+            getTypeComponent.resize(componentID + 1);
+            getOwner.resize(componentID + 1);
+        }
+        if (!components[componentID]) {
+            components[componentID] = new Container<ComponentType>;
+            components[componentID]->Initialize();
+            componentNames[componentID] = IDHelper::GetClassName<ComponentType>();
+            addComponent[componentID] = [](GameObject* object) -> void* {
+                return object->AddComponent<ComponentType>();
+            };
+            addComponentReference[componentID] = [](GameObject* object, GameObject* ref) -> void* {
+                return object->AddComponent<ComponentType>(ref);
+            };
+            removeComponent[componentID] = [](GameObject* object) {
+                object->RemoveComponent<ComponentType>();
+            };
+            cloneComponent[componentID] = [](GameObject* object, GameObject* ref) -> void* {
+                return object->CloneComponent<ComponentType>(ref);
+            };
+            
+            ComponentType* ptr = 0;
+            Meta::static_if<Meta::HasGetTypeFunction::apply<ComponentType>::value, ComponentType*>(ptr, [&getTypeComponent, componentID](auto p) {
+                using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                getTypeComponent[componentID] = [](GameObject* object) -> TypeInfo {
+                    auto component = object->GetComponent<SerializedComponentType>();
+                    return component->GetType();
+                };
+            });
+            getOwner[componentID] = [](GameObject* object) -> GameObject* {
+                return object->GetOwner<ComponentType>();
+            };
+        }
+        world->systemBitsets[systemIndex][componentID] = true;
+        componentSystems[componentID].push_back(world->systems[systemIndex]);
+    });
 }
 
-template<class T>
-void Pocket::GameObject::RemoveComponent() {
-    world->RemoveComponent(this, T::ID);
 }
-
-template<class T>
-bool Pocket::GameObject::IsComponentEnabled() {
-    ComponentMask mask = world->componentTypes[T::ID]->mask;
-    return (enabledComponents & mask) == mask;
-}
-
-template<class T>
-void Pocket::GameObject::EnableComponent(bool enable) {
-    world->EnableComponent(this, T::ID, enable);
-}
-
-template<class T>
-T* Pocket::GameObject::CloneComponent(GameObject* source) {
-    return (T*)world->CloneComponent(this, T::ID, source);
-}
-
-template<class T>
-bool Pocket::GameObject::IsComponentReference() {
-    return IsComponentReference(T::ID);
-}
-
-//--------------------------- </GameObject> -----------------------------
-
-
-//--------------------------- <GameSystem> -----------------------------
-
-template<class T>
-void Pocket::GameSystem::AddComponent() {
-   world->AddSystem(this, T::ID);
-}
-
-//--------------------------- </GameSystem> -----------------------------
-
-//--------------------------- <GameFactory> -----------------------------
-
-template<typename T>
-T* Pocket::GameFactory::CreateSystem() {
-    T* system = World()->GetSystem<T>();
-    if (system) return system;
-    return World()->CreateSystem<T>();
-}
-
-//--------------------------- </GameFactory> -----------------------------
-
-

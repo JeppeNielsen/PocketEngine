@@ -11,11 +11,9 @@
 
 using namespace Pocket;
 
-Component(SizeModifier)
-public:
-    Pointer<GameObject> Nodes[8];
-    Pointer<GameObject> Lines[4];
-    
-    void Reset();
+struct SizeModifier {
+    SizeModifier();
+    GameObject* Nodes[8];
+    GameObject* Lines[4];
     void DeleteNodes();
 };

@@ -7,19 +7,16 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
 #include "Property.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-    Component(Orderable)
-    public:
-        Orderable();
-        Property<Orderable*, int> Order;
-        void Reset();
-        void Clone(const Orderable& source);
+    struct Orderable {
+        Orderable() { Order = 0; }
+        Property<int> Order;
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(Order)
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Order)
+        TYPE_FIELDS_END
     };
 }

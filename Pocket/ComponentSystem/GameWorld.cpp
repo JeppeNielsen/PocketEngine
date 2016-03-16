@@ -1,346 +1,230 @@
 //
-//  World.cpp
+//  GameWorld.cpp
 //  ComponentSystem
 //
-//  Created by Jeppe Nielsen on 9/24/14.
-//  Copyright (c) 2014 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 03/03/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameWorld.hpp"
-#ifdef ENABLE_SCRIPTING
-#include "ScriptWorld.hpp"
-#include "ScriptSystem.hpp"
-#endif
-
 #include "minijson_writer.hpp"
-#include <iostream>
+#include "minijson_reader.hpp"
+#include <map>
 
 using namespace Pocket;
 
-GameWorld::GameWorld() {
-    for (int i=0; i<GameComponentTypeFactory::componentIdCounter; i++) {
-        componentTypes.push_back(GameComponentTypeFactory::createdComponentTypes->at(i)->Clone());
+std::map<std::string, GameObject*> loadedObjects;
+
+bool GameWorld::TryGetComponentIndex(std::string componentName, int& index) {
+    for(int i=0; i<componentNames.size(); ++i) {
+        if (componentNames[i]==componentName) {
+            index = i;
+            return true;
+        }
     }
-    scriptWorld = 0;
+    return false;
 }
 
-GameWorld::~GameWorld() {
+bool GameWorld::TryGetComponentIndex(std::string componentName, int& index, bool& isReference) {
+    if (TryGetComponentIndex(componentName, index)) {
+        isReference = false;
+        return true;
+    }
+    if (componentName.size()>4) {
+        size_t refLocation = componentName.rfind(":ref");
+        if (refLocation!=-1) {
+            componentName = componentName.substr(0, refLocation);
+            if (TryGetComponentIndex(componentName, index)) {
+                isReference = true;
+                return true;
+            }
+        }
+    }
     
-    DeleteAllObjects();
-    for (size_t i=0; i<componentTypes.size(); i++) {
-        delete componentTypes[i];
-    }
-    for (size_t i = 0; i<activeObjects.size(); i++) {
-        delete activeObjects[i];
-    }
-    for (size_t i=0; i<freeObjects.size(); i++) {
-        delete freeObjects[i];
-    }
-    
-#ifdef ENABLE_SCRIPTING
-    if (scriptWorld) {
-        scriptWorld->Destroy();
-        delete scriptWorld;
-        scriptWorld = 0;
-    }
-#endif
-
-    for (int i=0; i<systems.size(); i++) {
-        delete systems[i];
-    }
+    return false;
 }
 
-const ObjectCollection& GameWorld::Objects() { return activeObjects; }
-const ObjectCollection& GameWorld::Children() { return children; }
-
-void GameWorld::DeleteAllObjects() {
-    children.clear();
-    while (!activeObjects.empty()) {
-        UpdateRemovedObject(activeObjects.back());
-    }
+GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+    GameObject* object = 0;
+     minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+        std::string name = n;
+        if (name == "GameObject" && v.type() == minijson::Object) {
+            object = (GameObject*)CreateObject();
+            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string name = n;
+                if (name == "id" && v.type() == minijson::String) {
+                    loadedObjects[std::string(v.as_string())] = object;
+                } else if (name == "Components" && v.type() == minijson::Array && object) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        if (v.type() == minijson::Object) {
+                            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                object->AddComponent(context, n);
+                            });
+                        }
+                    });
+                } else if (name == "Children" && v.type() == minijson::Array && object) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        GameObject* child = LoadObject(context, onCreated);
+                        if (child) {
+                            child->Parent = object;
+                        }
+                    });
+                }
+                
+                if (onCreated) {
+                    onCreated(object);
+                }
+            });
+        }
+    });
+    return object;
 }
 
 GameObject* GameWorld::CreateObject() {
-    if (freeObjects.empty()) {
-        for (size_t i=0; i<16; i++) {
-            GameObject* object = new GameObject();
-            object->Initialize(componentTypes.size());
-            object->world = this;
-            object->systemIndicies = new GameObject::SystemIndicies[systems.size()];
-            freeObjects.push_back(object);
-        }
-    }
-    GameObject* object = freeObjects.back();
-    object->indexInList = (unsigned)activeObjects.size();
-    object->isRemoved = false;
-    freeObjects.pop_back();
-    activeObjects.push_back(object);
-    object->childIndex = (unsigned)children.size();
-    children.push_back(object);
-    return object;
+    auto object = objects.CreateObjectNoReset();
+    object->object.instance = object;
+    object->object.SetWorld(this);
+    object->object.Reset();
+    return &object->object;
 }
 
-void GameWorld::UpdateRemovedObjects() {
-    for (int i=0; i<removedObjects.size(); ++i) {
-        UpdateRemovedObject(removedObjects[i]);
-    }
-    removedObjects.clear();
-}
-
-void GameWorld::UpdateRemovedObject(GameObject *object) {
-
-    for (size_t i=0; i<componentTypes.size(); i++) {
-        if (object->components[i]) {
-            componentTypes[i]->UpdateRemovedObject(object);
-        }
-    }
-    
-    object->Parent = 0;
-    if (!object->Parent() && !children.empty()) {
-        GameObject* lastChild = children.back();
-        children[object->childIndex] = lastChild;
-        lastChild->childIndex = object->childIndex;
-        children.pop_back();
-    }
-    
-    freeObjects.push_back(object);
-    GameObject* lastObject = activeObjects.back();
-    lastObject->indexInList = object->indexInList;
-    activeObjects[object->indexInList] = lastObject;
-    activeObjects.pop_back();
-    for (int i=0; i<objectIDs.size(); ++i) {
-        if (objectIDs[i].object == object) {
-            objectIDs.erase(objectIDs.begin() + i);
-            break;
-        }
-    }
-    object->ClearPointers();
-}
-
-void GameWorld::UpdateChangedComponents() {
-    while (!changedComponentTypes.empty()) {
-        ComponentTypes temp = changedComponentTypes;
-        changedComponentTypes.clear();
-        for (size_t i = 0; i<temp.size(); i++) {
-            temp[i]->UpdateChangedObjects();
-        }
-    }
-}
-
-void GameWorld::UpdateRemovedComponents() {
-    while (!removedComponentTypes.empty()) {
-        ComponentTypes temp = removedComponentTypes;
-        removedComponentTypes.clear();
-        for (size_t i=0; i<temp.size(); i++) {
-            temp[i]->UpdateRemovedObjects();
-        }
-    }
-}
-
-void GameWorld::Update(float dt) {
-    UpdateChangedComponents();
-    UpdateRemovedComponents();
-    UpdateRemovedObjects();
-    for (size_t i = 0; i<systems.size(); i++) {
-        systems[i]->Update(dt);
-    }
-    //UpdateRemovedComponents();
-    //UpdateRemovedObjects();
-}
-
-void GameWorld::Render() {
-    for (size_t i = 0; i<systems.size(); i++) {
-        systems[i]->Render();
-    }
-}
-
-void* GameWorld::AddComponent(GameObject* object, int componentID) {
-    if (object->components[componentID]) return object->components[componentID];
-    IGameComponentType* type = componentTypes[componentID];
-    void* component = type->AddComponent();
-    object->components[componentID] = component;
-    object->ownedComponents |= type->mask;
-    EnableComponent(object, componentID, true);
-    return component;
-}
-
-void* GameWorld::AddComponent(GameObject *object, int componentID, GameObject *referenceObject) {
-    if (object->components[componentID]) return object->components[componentID];
-    void* referenceComponent = referenceObject->components[componentID];
-    if (!referenceComponent) return 0; // no such component on referenced gameobject
-    IGameComponentType* type = referenceObject->world->componentTypes[componentID];
-    type->AddReference(referenceComponent);
-    object->components[componentID] = referenceComponent;
-    EnableComponent(object, componentID, true);
-    return referenceComponent;
-}
-
-void GameWorld::RemoveComponent(GameObject *object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    if (!type->isInRemovedList) {
-        type->isInRemovedList = true;
-        removedComponentTypes.push_back(type);
-    }
-    type->removedObjects.insert(object);
-}
-
-void GameWorld::EnableComponent(GameObject *object, int componentID, bool enable) {
-    if (!object->components[componentID]) return; // object does not have component, ignore
-    IGameComponentType* type = componentTypes[componentID];
-    bool isEnabled = (object->enabledComponents & type->mask) == type->mask;
-    if (isEnabled == enable) return;
-    if (enable) {
-        object->enabledComponents |= type->mask;
-    } else {
-        object->enabledComponents &= type->maskInverse;
-    }
-    if (!type->isInEnabledChangedList) {
-        type->isInEnabledChangedList = true;
-        changedComponentTypes.push_back(type);
-    }
-    type->changedObjects.push_back(object);
-}
-
-void* GameWorld::CloneComponent(GameObject *object, int componentID, GameObject* source) {
-    if (object->components[componentID]) return object->components[componentID];
-    void* sourceComponent = source->components[componentID];
-    if (!sourceComponent) return 0; // source object does not have this component type
-    IGameComponentType* type = componentTypes[componentID];
-    void* component;
-    if ((source->ownedComponents & type->mask) == type->mask) {
-        component = type->CloneComponent(sourceComponent);
-        object->ownedComponents |= type->mask;
-    } else {
-        type->AddReference(sourceComponent);
-        component = sourceComponent;
-    }
-    object->components[componentID] = component;
-    EnableComponent(object, componentID, (source->enabledComponents & type->mask) == type->mask);
-    return component;
-}
-
-void GameWorld::UpdatePointers(Pocket::GameObject *object, int componentID) {
-    void* component = object->components[componentID];
-    IGameComponentType* type = componentTypes[componentID];
-    if ((object->ownedComponents & type->mask) == type->mask) {
-        type->UpdatePointers(component, pointerMap, pointerCounter);
-    }
-}
-
-void GameWorld::AddSystem(GameSystem* system, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    system->aspect |= type->mask;
-    type->systems.push_back(system);
-}
-
-const GameWorld::ComponentTypes& GameWorld::ComponentTypesList() { return componentTypes; }
-
-void GameWorld::WriteJsonComponent(minijson::array_writer& writer, GameObject* object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    std::string* referenceID;
-    bool isReference = object->IsComponentReference(componentID);
-    if (isReference) {
-        referenceID = FindIDFromReferenceObject(object, componentID);
-    } else {
-        referenceID = 0;
-    }
-    type->WriteJson(writer, object->components[componentID], isReference, referenceID);
-}
-
-void GameWorld::ReadJsonComponent(minijson::istream_context &context, GameObject *object, int componentID) {
-    IGameComponentType* type = componentTypes[componentID];
-    type->ReadJson(context, object->components[componentID]);
-}
-
-GameObject* GameWorld::CreateObjectFromJson(std::istream &jsonStream, std::function<void(GameObject*)> iterator) {
+GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
     minijson::istream_context context(jsonStream);
-    GameObject* object = CreateGameObjectJson(context, iterator);
-    return object;
-}
-
-GameObject* GameWorld::CreateGameObjectJson(minijson::istream_context &context, std::function<void(GameObject*)> iterator) {
     GameObject* object = 0;
-    
     try {
-         minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-            std::string name = n;
-            if (name == "GameObject" && v.type() == minijson::Object) {
-                object = CreateObject();
-                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                    std::string name = n;
-                    if (name == "Components" && v.type() == minijson::Array && object) {
-                        minijson::parse_array(context, [&] (minijson::value v) {
-                            if (v.type() == minijson::Object) {
-                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                                    std::string componentName = n;
-                                    int componentID = GameComponentTypeFactory::ComponentIDFromName(componentName);
-                                    if (componentID!=-1) {
-                                        if (!object->components[componentID]) { // only allow one type of component for each object
-                                            AddComponent(object, componentID);
-                                            ReadJsonComponent(context, object, componentID);
-                                        } else {
-                                            std::cout<<"Only one component per type allowed per object"<<std::endl;
-                                            minijson::ignore(context);
-                                        }
-                                    } else if(componentName.size()>4) {
-                                        size_t refLocation = componentName.rfind(":ref");
-                                        if (refLocation!=-1) {
-                                            componentName = componentName.substr(0, refLocation);
-                                            componentID = GameComponentTypeFactory::ComponentIDFromName(componentName);
-                                            if (componentID!=-1) {
-                                                std::string referenceID = "";
-                                                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                                                    std::string id = n;
-                                                    if (id == "id" && v.type()==minijson::String) {
-                                                        referenceID = v.as_string();
-                                                        GameObject* referenceObject = FindObjectFromID(referenceID);
-                                                        if (!referenceObject) {
-                                                            //object not found with id, try assign first object with this component
-                                                            referenceObject = FindFirstObjectWithComponentID(componentID);
-                                                        }
-                                                        if (referenceObject) {
-                                                            AddComponent(object, componentID, referenceObject);
-                                                        }
-                                                    } else {
-                                                        minijson::ignore(context);
-                                                    }
-                                                });
-                                                //std::cout << "component reference found for component : " <<componentName<<std::endl;
-                                            }
-                                            minijson::ignore(context);
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    } else if (name == "Children" && v.type() == minijson::Array && object) {
-                        minijson::parse_array(context, [&] (minijson::value v) {
-                            GameObject* child = CreateGameObjectJson(context, iterator);
-                            if (child) {
-                                child->Parent = object;
-                            }
-                        });
-                    }
-                    if (iterator) {
-                        iterator(object);
-                    }
-                });
+        object = LoadObject(context, onCreated);
+        
+        GameObject* object;
+        int componentID;
+        std::string referenceID;
+        while (GameObject::GetAddReferenceComponent(&object, componentID, referenceID)) {
+            GameObject* referenceObject = 0;
+            auto foundObjectWithID = loadedObjects.find(referenceID);
+            if (foundObjectWithID!=loadedObjects.end()) {
+                referenceObject = foundObjectWithID->second;
+            } else {
+                referenceObject = FindObjectFromID(referenceID);
+                if (!referenceObject) {
+                    //object not found with id, try assign first object with this component
+                    referenceObject = FindFirstObjectWithComponentID(componentID);
+                }
             }
-         });
+            addComponentReference[componentID](object, referenceObject);
+        }
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }
     return object;
 }
 
-void GameWorld::CreateObjectID(GameObject *object, const std::string &id) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.object == object)  {
-            objectID.id = id;
+GameWorld::GameWorld() {
+    objects.Initialize();
+}
+
+void GameWorld::TryAddSystem(int systemID, std::function<IGameSystem*()> createSystem) {
+    if (systemID>=systemsIndexed.size()) {
+        systemsIndexed.resize(systemID + 1, 0);
+    }
+    if (!systemsIndexed[systemID]) {
+        systemsIndexed[systemID] = createSystem();
+        systems.push_back(systemsIndexed[systemID]);
+        systemsIndexed[systemID]->index = (int)(systems.size() - 1);
+        
+        systemBitsets.resize(systems.size());
+        
+        systemsIndexed[systemID]->CreateComponents(this, systemsIndexed[systemID]->index);
+        systemsIndexed[systemID]->Initialize(this);
+#if SCRIPTING_ENABLED
+        staticScriptSystemComponents.resize(components.size());
+#endif
+        std::sort(systems.begin(), systems.end(), [](auto a, auto b) {
+            return a->Order()<b->Order();
+        });
+    }
+}
+
+void GameWorld::Update(float dt) {
+    DoActions(createActions);
+    DoActions(removeActions);
+    
+    for(auto system : systems) {
+        system->Update(dt);
+    }
+    
+#ifdef SCRIPTING_ENABLED
+    for(auto scriptSystem : scriptSystems) {
+        scriptSystem->Update(dt);
+    }
+#endif
+}
+
+void GameWorld::Render() {
+    for(auto system : systems) {
+        system->Render();
+    }
+}
+
+void GameWorld::DoActions(GameConstants::Actions& list) {
+   for(int i=0; i<list.size(); ++i) {
+        list[i]();
+   }
+   list.clear();
+}
+
+int GameWorld::ObjectCount() {
+    return objects.Size();
+}
+
+GameObject* GameWorld::GetObject(int index) {
+    return objects.Get(index);
+}
+
+void GameWorld::Clear() {
+    for(int i=0; i<objects.Size(); ++i) {
+        objects.Get(i)->Remove();
+    }
+    DoActions(createActions);
+    DoActions(removeActions);
+}
+
+GameWorld::~GameWorld() {
+    Clear();
+    for(auto c : components) {
+        delete c;
+    }
+    for(auto s : systems) {
+        delete s;
+    }
+}
+
+void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            o.id = id;
             return;
         }
     }
     objectIDs.push_back({object, id});
+}
+
+std::string* GameWorld::GetObjectID(Pocket::GameObject *object) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            return &o.id;
+        }
+    }
+    return 0;
+}
+
+std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.object->components[componentID] &&
+            objectID.object->components[componentID] == referenceObject->components[componentID] &&
+            objectID.object->ownedComponents[componentID]) {
+            return &objectID.id;
+        }
+    }
+    return 0;
 }
 
 GameObject* GameWorld::FindObjectFromID(const std::string &id) {
@@ -350,46 +234,66 @@ GameObject* GameWorld::FindObjectFromID(const std::string &id) {
     return 0;
 }
 
-std::string* GameWorld::FindIDFromObject(GameObject *object) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.object == object) return &objectID.id;
-    }
-    return 0;
-}
-
-std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.object->components[componentID] &&
-            objectID.object->components[componentID] == referenceObject->components[componentID] &&
-            !objectID.object->IsComponentReference(componentID)) {
-            return &objectID.id;
-        }
-    }
-    return 0;
-}
-
 GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
-    for(GameObject* object : activeObjects) {
+    for (int i=0; i<objects.Size(); ++i) {
+        GameObject* object = objects.Get(i);
         if (object->components[componentID]) return object;
     }
     return 0;
 }
 
-#ifdef ENABLE_SCRIPTING
+#ifdef SCRIPTING_ENABLED
+void GameWorld::ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted) {
+    for(int i=0; i<ObjectCount(); ++i) {
+        GetObject(i)->ClearScriptingData();
+    }
 
-void GameWorld::InitializeScripts() {
-    scriptWorld = new ScriptWorld();
-    scriptWorld->Initialize(this);
+    for(int i=0; i<components.size(); ++i) {
+        staticScriptSystemComponents[i].clear();
+    }
+    dynamicScriptSystemComponents.clear();
+    scriptComponents.clear();
+    for(auto scriptSystem : scriptSystems) {
+        onSystemDeleted(scriptSystem);
+    }
+    scriptSystems.clear();
+    scriptSystemsData.clear();
 }
 
-bool GameWorld::Build(std::vector<std::string> scriptFilenames) {
-    return scriptWorld->Build(scriptFilenames);
+void GameWorld::InitializeScriptData(int numSystems, int numComponents,
+            std::function<IScriptSystem*(int)> onSystemCreate,
+            std::function<void(Container<void*>&, int)> onComponentCreate,
+            std::function<void(
+                        StaticScriptSystemComponents& staticScriptSystemComponents,
+                        ScriptSystemComponents& dynamicScriptSystemComponents,
+                        ScriptSystemsData& scriptSystemsData)> onSystemData
+            
+            ) {
+    
+    for(int i=0; i<numSystems; i++) {
+        scriptSystems.push_back(onSystemCreate(i));
+    }
+    
+    scriptComponents.resize(numComponents);
+    for(int i=0; i<numComponents; ++i) {
+        onComponentCreate(scriptComponents[i], i);
+    }
+    
+    dynamicScriptSystemComponents.resize(numComponents);
+    onSystemData(staticScriptSystemComponents, dynamicScriptSystemComponents, scriptSystemsData);
+    
+    for(int i=0; i<ObjectCount(); ++i) {
+        GetObject(i)->InitializeScriptingData();
+    }
 }
-
-bool GameWorld::CallMain() {
-    return scriptWorld->CallMain();
-}
-
-ScriptWorld* GameWorld::GetScriptWorld() { return scriptWorld; }
-
 #endif
+
+
+
+
+
+
+
+
+
+

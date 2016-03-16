@@ -7,20 +7,15 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Texture.hpp"
 
 namespace Pocket {
-    Component(TextureComponent)
+    struct TextureComponent {
     public:
         TextureComponent();
         ~TextureComponent();
         
         Pocket::Texture& Texture();
-        void Reset();
-    protected:
-        void Clone(const TextureComponent& source);
-        
     private:
         class Pocket::Texture texture;
     };

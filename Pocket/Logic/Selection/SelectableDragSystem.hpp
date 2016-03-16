@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 #pragma once
-#include "GameSystem.hpp"
+#include "GameWorld.hpp"
 #include "Draggable.hpp"
 #include "Selectable.hpp"
 #include "Transform.hpp"
@@ -14,14 +14,14 @@
 #include <vector>
 
 namespace Pocket {
-    class SelectableDragSystem : public GameSystem {
+    class SelectableDragSystem : public GameSystem<Draggable, Selectable, Transform>  {
     public:
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
     private:
-        void IsDraggingChanged(Draggable* draggable, GameObject* object);
+        void IsDraggingChanged(GameObject* object);
         
         struct DragData {
             std::vector<GameObject*> objects;

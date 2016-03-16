@@ -14,17 +14,21 @@
 #include "Gui.hpp"
 
 namespace Pocket {
-    SYSTEM(GameObjectEditorSystem, GameObjectEditor, Transform, Sizeable)
+    class GameObjectEditorSystem : public GameSystem<GameObjectEditor, Transform, Sizeable> {
         public:
+            void Initialize(GameWorld* world);
+        
             Gui* gui;
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
+        
             template<class T>
             void IgnoreComponent() {
-                ignoredComponents.push_back(T::ID);
+                ignoredComponents.push_back(IDHelper::GetComponentID<T>());
             }
         private:
-            void ObjectChanged(GameObjectEditor* editor, GameObject* object);
+            GameWorld* world;
+            void ObjectChanged(GameObject* object);
             typedef std::vector<int> IgnoredComponents;
             IgnoredComponents ignoredComponents;
     };

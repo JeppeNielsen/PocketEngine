@@ -7,22 +7,23 @@
 //
 
 #pragma once
-#include "GameComponent.hpp"
 #include "Property.hpp"
 #include <string>
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-    Component(TextBox)
-public:
-    TextBox();
-    void Reset();
-    
-    Property<TextBox*, std::string> Text;
-    Property<TextBox*, bool> Active;
-    
-    SERIALIZE_FIELDS_BEGIN
-    SERIALIZE_FIELD(Text);
-    SERIALIZE_FIELD(Active);
-    SERIALIZE_FIELDS_END
+    struct TextBox {
+        TextBox() {
+             Text = "";
+            Active = false;
+        }
+        
+        Property<std::string> Text;
+        Property<bool> Active;
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Text);
+        TYPE_FIELD(Active);
+        TYPE_FIELDS_END
     };
 }

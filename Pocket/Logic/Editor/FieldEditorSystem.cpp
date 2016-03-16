@@ -9,19 +9,26 @@
 #include "FieldEditorSystem.hpp"
 #include "SerializedFieldEditors.hpp"
 
-void FieldEditorSystem::AddedToWorld(Pocket::GameWorld &world) {
+void FieldEditorSystem::Initialize(Pocket::GameWorld* world) {
     CreateDefaultSerializedEditors();
 }
 
 void FieldEditorSystem::ObjectAdded(GameObject* object) {
-    object->GetComponent<FieldEditor>()->Object.Changed += event_handler(this, &FieldEditorSystem::FieldChanged, object);
-    object->GetComponent<FieldEditor>()->Field.Changed += event_handler(this, &FieldEditorSystem::FieldChanged, object);
-    FieldChanged(object->GetComponent<FieldEditor>(), object);
+    FieldEditor* editor = object->GetComponent<FieldEditor>();
+    editor->TypeChanged.Bind(this, &FieldEditorSystem::FieldChanged, object);
+    editor->Field.Changed.Bind(this, &FieldEditorSystem::FieldChanged,object);
+    FieldChanged(object);
 }
 
 void FieldEditorSystem::ObjectRemoved(GameObject* object) {
-    object->GetComponent<FieldEditor>()->Object.Changed -= event_handler(this, &FieldEditorSystem::FieldChanged, object);
-    object->GetComponent<FieldEditor>()->Field.Changed -= event_handler(this, &FieldEditorSystem::FieldChanged, object);
+    FieldEditor* editor = object->GetComponent<FieldEditor>();
+    editor->TypeChanged.Unbind(this, &FieldEditorSystem::FieldChanged, object);
+    editor->Field.Changed.Unbind(this, &FieldEditorSystem::FieldChanged, object);
+    if (editor->editor) {
+        editor->editor->Destroy();
+        delete editor->editor;
+        editor->editor = 0;
+    }
 }
 
 void FieldEditorSystem::Update(float dt) {
@@ -32,17 +39,17 @@ void FieldEditorSystem::Update(float dt) {
     }
 }
 
-void FieldEditorSystem::FieldChanged(FieldEditor* editor, GameObject* object) {
+void FieldEditorSystem::FieldChanged(GameObject* object) {
+    FieldEditor* editor = object->GetComponent<FieldEditor>();
     if (editor->editor) {
         editor->editor->Destroy();
         delete editor->editor;
         editor->editor = 0;
     }
-    if (!editor->Object()) {
+    if (editor->Type.fields.size() == 0) {
         return;
     }
-    auto fields = editor->Object()->GetFields();
-    ISerializedField* field = fields.GetField(editor->Field);
+    IFieldInfo* field = editor->Type.GetField(editor->Field);
     if (field) {
         editor->editor = field->CreateEditor(gui, object);
     }

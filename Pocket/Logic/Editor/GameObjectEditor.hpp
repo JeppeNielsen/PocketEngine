@@ -7,13 +7,13 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "Property.hpp"
+#include "GameObject.hpp"
 
 namespace Pocket {
-  Component(GameObjectEditor)
+  class GameObjectEditor {
     public:
         GameObjectEditor();
-        void Reset();
-        Property<GameObjectEditor*, GameObject*> Object;
+        Property<GameObject*> Object;
   };
 }

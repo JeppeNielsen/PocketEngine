@@ -15,9 +15,10 @@
 #include "Transform.hpp"
 
 namespace Pocket {
-    class TouchCancelSystem : public GameSystem {
+
+    class TouchCancelSystem : public GameSystem<Touchable, TouchableCanceller, Transform> {
     public:
-        void Initialize();
+    
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
@@ -37,6 +38,5 @@ namespace Pocket {
         
         void TouchableDown(TouchData touch, GameObject* object);
         void TouchableUp(TouchData touch, GameObject* object);
-        
     };
 }

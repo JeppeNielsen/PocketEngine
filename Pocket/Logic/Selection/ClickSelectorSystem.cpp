@@ -10,25 +10,16 @@
 
 using namespace Pocket;
 
-void ClickSelectorSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Selectable>();
-    AddComponent<Touchable>();
-}
-
-void ClickSelectorSystem::AddedToWorld(Pocket::GameWorld &world) {
-    selectables = world.GetSystem<SelectableCollection>();
-    if (!selectables) {
-        selectables = world.CreateSystem<SelectableCollection>();
-    }
+void ClickSelectorSystem::Initialize(GameWorld* world) {
+    selectables = world->CreateSystem<SelectableCollection>();
 }
 
 void ClickSelectorSystem::ObjectAdded(GameObject *object) {
-    object->GetComponent<Touchable>()->Click += event_handler(this, &ClickSelectorSystem::TouchableClick, object);
+    object->GetComponent<Touchable>()->Click.Bind(this, &ClickSelectorSystem::TouchableClick, object);
 }
 
 void ClickSelectorSystem::ObjectRemoved(GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &ClickSelectorSystem::TouchableClick, object);
+    object->GetComponent<Touchable>()->Click.Unbind(this, &ClickSelectorSystem::TouchableClick, object);
 }
 
 void ClickSelectorSystem::TouchableClick(Pocket::TouchData d, GameObject* object) {

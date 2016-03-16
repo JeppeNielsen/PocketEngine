@@ -7,9 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
-#include <iostream>
-#include "CameraSystem.hpp"
+#include "GameSystem.hpp"
 #include "Camera.hpp"
 #include "OctreeSystem.hpp"
 #include "ObjectRenderer.hpp"
@@ -17,28 +15,33 @@
 
 namespace Pocket {
 
-class RenderSystem : public GameSystem {
+class RenderSystem : public GameSystem<Transform, Mesh, Material> {
 public:
-    typedef std::vector<IObjectRenderer*> ObjectRenderers;
-    typedef std::vector<VisibleObject> VisibleObjects;
+    using OctreeSystem = OctreeSystem<Material>;
+    
+    struct CameraSystem : GameSystem<Transform, Camera> { };
+    
+    struct TextureSystem : GameSystem<TextureComponent, Orderable> {};
+    
+    using ObjectRenderers = std::vector<IObjectRenderer*>;
+    using VisibleObjects = std::vector<VisibleObject>;
 
-    ~RenderSystem();
-    void Initialize();
-    void AddedToWorld(GameWorld& world);
+    virtual ~RenderSystem();
+    void Initialize(GameWorld* world);
+    void ObjectAdded(GameObject *object);
     OctreeSystem& Octree();
     void RenderCamera(GameObject* cameraObject);
     void RenderVisibleObjects(const VisibleObjects& visibleObjects);
     void RenderTransparentVisibleObjects(const VisibleObjects& visibleObjects);
     void Render();
-    
-    void ObjectAdded(GameObject* object);
+    static bool SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b);
+    static bool SortTransparentObjects(const VisibleObject& a, const VisibleObject& b);
     
     ShaderCollection Shaders;
     IShader* DefaultShader;
     IShader* DefaultTexturedShader;
+    
 private:
-    static bool SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b);
-    static bool SortTransparentObjects(const VisibleObject& a, const VisibleObject& b);
     
     ObjectRenderers objectRenderers;
     
@@ -46,11 +49,10 @@ private:
     VisibleObjects transparentObjects;
 
     RenderInfo renderInfo;
-    
+    typename RenderSystem::ObjectCollection objectsInFrustum;
+
     CameraSystem* cameras;
     OctreeSystem* meshOctreeSystem;
-    
-    ObjectCollection objectsInFrustum;
 };
 
 }

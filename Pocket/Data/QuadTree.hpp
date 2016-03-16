@@ -5,12 +5,8 @@
 #include <vector>
 
 namespace Pocket {
-	class Quadtree
-	{
+	class Quadtree {
 	public:
-
-		
-
 		struct Node {
 			Vector2 min;
             Vector2 max;

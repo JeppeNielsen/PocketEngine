@@ -1,63 +1,45 @@
 
 #include "Camera.hpp"
-#include "OpenGL.hpp"
 #include "Transform.hpp"
-#include "GameObject.hpp"
 
 using namespace Pocket;
 
-Camera::Camera():
-	FieldOfView(this),
-	Near(this),
-	Far(this),
-    Viewport(this),
-	Projection(this),
-	ProjectionInverse(this),
-    Orthographic(this),
-    Mask(this)
-{
+Camera::Camera() {
 	FieldOfView = 70;
 	Near = 0.1f;
 	Far = 512.0f;
     Orthographic = false;
     Mask = 0;
 	
-	Projection.Method += event_handler(this, &Camera::CalcProjectionMatrix);
-	ProjectionInverse.Method += event_handler(this, &Camera::CalcProjectionInverseMatrix);
+	Projection.Method = [this] (Matrix4x4& mat) {
+        if (!Orthographic) {
+            mat.InitPerspective(FieldOfView, Viewport().Aspect(), Near, Far);
+        } else {
+            mat.InitOrthographic(Viewport().left, Viewport().top, Viewport().right, Viewport().bottom, Near, Far);
+        }
+    };
+    
+	ProjectionInverse.Method = [this] (Matrix4x4& mat) {
+        mat = Projection().Invert();
+    };
+    
+    auto changed = [this] () {
+        Projection.MakeDirty();
+        ProjectionInverse.MakeDirty();
+    };
 
-	FieldOfView.Changed += event_handler(this, &Camera::ProjectionPropertyChanged);
-	Near.Changed += event_handler(this, &Camera::ProjectionPropertyChanged);
-	Far.Changed += event_handler(this, &Camera::ProjectionPropertyChanged);
-    Viewport.Changed += event_handler(this, &Camera::ProjectionPropertyChanged);
-}
-
-void Camera::ProjectionPropertyChanged(Camera* camera) {
-	Projection.MakeDirty();
-	ProjectionInverse.MakeDirty();
-}
-
-void Camera::CalcProjectionMatrix(DirtyProperty<Camera*, Matrix4x4>::EventData& event) {
-	Matrix4x4& mat = *event.Value;
-    if (!Orthographic) {
-        mat.InitPerspective(FieldOfView, Viewport().Aspect(), Near, Far);
-    } else {
-        mat.InitOrthographic(Viewport().left, Viewport().top, Viewport().right, Viewport().bottom, Near, Far);
-        
-        //mat.InitOrthographic(-1, 1, 1, -1, 1, FAR);
-    }
-}
-
-void Camera::CalcProjectionInverseMatrix(DirtyProperty<Camera*, Matrix4x4>::EventData& event) {
-	Matrix4x4& mat = *event.Value;
-	mat = Projection.GetValue()->Invert();
+	FieldOfView.Changed.Bind(changed);
+    Near.Changed.Bind(changed);
+    Far.Changed.Bind(changed);
+    Viewport.Changed.Bind(changed);
 }
 
 Matrix4x4 Camera::GetViewProjection(Transform* viewTransform) {
-	return Projection.GetValue()->Multiply(*viewTransform->WorldInverse.GetValue());
+	return Projection().Multiply(viewTransform->WorldInverse);
 }
 
 Ray Camera::GetRay(Transform* viewTransform, Pocket::Vector2 screenPosition) {
-    const Box& viewPort = Viewport.GetValue();
+    const Box& viewPort = Viewport;
     
     Vector2 fromCenter = screenPosition - viewPort.Center();
     fromCenter /= (viewPort.Size() * 0.5f);
@@ -77,7 +59,7 @@ Vector3 Camera::TransformPointToViewSpace(Transform* viewTransform, Vector3 worl
 Vector3 Camera::TransformPointToScreenSpace(Transform* viewTransform, Vector3 worldPoint) {
     worldPoint = TransformPointToViewSpace(viewTransform, worldPoint);
     Vector2 screenPoint = Vector2(worldPoint.x, worldPoint.y );
-    const Box& viewPort = Viewport.GetValue();
+    const Box& viewPort = Viewport;
     screenPoint *= (viewPort.Size() * 0.5f);
     screenPoint += viewPort.Center();
     return Vector3(screenPoint.x, screenPoint.y, worldPoint.z);
@@ -91,21 +73,4 @@ Vector3 Camera::TransformViewportToWorld(Transform* viewTransform, Vector3 viewp
 Vector3 Camera::TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint) {
     Matrix4x4 viewProjection = GetViewProjection(viewTransform);
     return viewProjection.TransformPosition(worldPoint);
-}
-
-void Camera::Reset() {
-    FieldOfView = 70;
-	Near = 0.1f;
-	Far = 512.0f;
-    Orthographic = false;
-    Mask = 0;
-}
-
-void Camera::Clone(const Camera& source) {
-    FieldOfView = source.FieldOfView;
-    Near = source.Near;
-    Far = source.Far;
-    Viewport = source.Viewport;
-    Orthographic = source.Orthographic;
-    Mask = source.Mask;
 }

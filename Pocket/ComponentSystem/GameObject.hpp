@@ -1,117 +1,182 @@
 //
-//  GameObject.h
+//  GameObject.hpp
 //  ComponentSystem
 //
-//  Created by Jeppe Nielsen on 9/25/14.
-//  Copyright (c) 2014 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 12/02/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-
 #include "Property.hpp"
-#include "TypeDefs.hpp"
-#include "IPointable.hpp"
-#include <ostream>
-
-namespace minijson {
-  class object_writer;
-}
+#include "IDHelper.hpp"
+#include "TypeInfo.hpp"
+#include "Container.hpp"
+#include "GameConstants.hpp"
 
 namespace Pocket {
 
 class GameWorld;
-class GameObject;
-class IGameComponentType;
-template<class T>
-class GameComponentType;
-class ScriptWorld;
-class ISerializable;
 
-class GameObject : public IPointable<GameObject> {
+#ifdef SCRIPTING_ENABLED
+
+struct IGameObject {
+    virtual void* GetComponent(int componentID) = 0;
+    virtual void* AddComponent(int componentID) = 0;
+    virtual void* AddComponent(int componentID, GameObject* referenceObject) = 0;
+    virtual void RemoveComponent(int componentID) = 0;
+    virtual void* GetScriptComponent(int componentID) = 0;
+    virtual void* AddScriptComponent(int componentID) = 0;
+    virtual void RemoveScriptComponent(int componentID) = 0;
+    virtual void* CloneComponent(int componentID, GameObject* object) = 0;
+};
+
+#endif
+
+class GameObject
+#ifdef SCRIPTING_ENABLED
+: public IGameObject
+#endif
+{
 public:
-    Pocket::Property<GameObject*, GameObject*> Parent;
-    const ObjectCollection& Children();
-    void ToFront();
-    void ToBack();
-    Pocket::Property<GameObject*, int> Order;
+    using ObjectCollection = std::vector<GameObject*>;
+
+private:
+    friend class GameWorld;
     
-    template<class T>
-    T* AddComponent();
+    using Bitset = GameConstants::Bitset;
     
-    template<class T>
-    T* AddComponent(GameObject* objectReference);
+    Bitset activeComponents;
+    Bitset removedComponents;
+    Bitset ownedComponents;
     
-    template<class T>
-    T* CloneComponent(GameObject* object);
+    using SystemIndices = int*;
     
-    template<class T>
-    T* GetComponent();
+    SystemIndices systemIndices;
     
-    template<class T>
-    void EnableComponent(bool enable);
+    bool isRemoved;
+    Container<GameObject>::ObjectInstance* instance;
+    GameWorld* world;
     
-    template<class T>
-    bool IsComponentEnabled();
+    friend class Container<GameObject>::ObjectInstance;
     
-    template<class T>
-    void RemoveComponent();
+    void Reset();
+    void SetWorld(GameWorld* w);
+    GameObject(const GameObject& other) = default;
+
+protected:
     
-    template<class T>
-    bool IsComponentReference();
+    friend class IGameWorld;
+
+    using ComponentPtr = void*;
+    ComponentPtr* components;
+
+    GameObject();
+    virtual ~GameObject();
+    
+    ObjectCollection children;
+public:
+
+    Property<GameObject*> Parent;
+    const ObjectCollection& Children() { return children; }
+    Property<int> Order;
+    
+    template<typename Component>
+    Component* GetComponent() {
+        return (Component*)components[IDHelper::GetComponentID<Component>()];
+    }
     
     void Remove();
+    GameObject* Clone(std::function<bool(GameObject*)> predicate = 0);
+    GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
     
-    void AddComponent(int componentType);
-    void EnableComponent(int componentType, bool enable);
+    template<typename Component>
+    bool HasComponent() const {
+        return activeComponents[IDHelper::GetComponentID<Component>()];
+    }
     
-    GameObject* Clone();
-    GameObject* Clone(GameObject* parent);
+    template<typename Component>
+    void RemoveComponent();
     
-    GameWorld* World();
+    template<typename Component>
+    Component* AddComponent();
     
-    typedef std::function<bool(GameObject*, int)> SerializePredicate;
+    template<typename Component>
+    Component* AddComponent(GameObject* source);
+    
+    template<typename Component>
+    Component* CloneComponent(GameObject* source);
+    
+    template<typename Component>
+    GameObject* GetOwner();
+    
+    std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate = 0);
+    
+ #if SCRIPTING_ENABLED
+    void* GetComponent(int componentID) override;
+    void* AddComponent(int componentID) override;
+    void* AddComponent(int componentID, GameObject* referenceObject) override;
+    void RemoveComponent(int componentID) override;
+    void* CloneComponent(int componentID, GameObject* object) override;
+#else
+    void* GetComponent(int componentID);
+    void* AddComponent(int componentID);
+    void* AddComponent(int componentID, GameObject* referenceObject);
+    void RemoveComponent(int componentID);
+    void* CloneComponent(int componentID, GameObject* object);
+#endif
+
+    using SerializePredicate = std::function<bool(GameObject*, int)>;
     
     void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
     
+    void SetID(std::string id);
     std::string GetID();
-    void SetID(const std::string& id);
     
-    SerializableCollection SerializableComponents();
-    std::vector<std::string> ComponentNames();
-    std::vector<int> ComponentTypes();
-    bool IsRemoved() const;
+    bool IsRemoved();
     
 private:
-    GameObject();
-    ~GameObject();
-    void ParentChanged(Pocket::Property<GameObject*, GameObject*>::EventData d);
-    void Initialize(size_t numberOfComponents);
-    void CountPointers();
-    GameObject* CloneInternal(GameObject* parent);
-    void UpdatePointers();
-    bool IsComponentReference(int componentID);
+    template<typename Component>
+    void SetComponent(typename Container<Component>::ObjectInstance* instance);
+    
+    GameObject* CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate);
+    
     void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
-   
-    ObjectCollection children;
-    GameWorld* world;
-    typedef void* Components;
-    Components* components;
-    typedef unsigned short SystemIndicies;
-    SystemIndicies* systemIndicies;
+    void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
+    void AddComponent(minijson::istream_context& context, std::string componentName);
     
-    unsigned indexInList;
     
-    ComponentMask activeComponents;
-    ComponentMask enabledComponents;
-    ComponentMask ownedComponents;
-    int childIndex;
-    bool isRemoved;
+    template<typename Component>
+    TypeInfo GetComponentTypeInfo() {
+        Component* component = GetComponent<Component>();
+        return component->GetType();
+    }
     
-    friend class GameWorld;
-    friend class IGameComponentType;
-    template<class T>
-    friend class GameComponentType;
-    friend class ScriptWorld;
+    static bool GetAddReferenceComponent(GameObject** object, int& componentID, std::string& referenceID);
+    
+#ifdef SCRIPTING_ENABLED
+    //Scripting *******************************
+    
+    // Scripting Data
+    using ScriptComponent = Container<void*>::ObjectInstance*;
+    ScriptComponent* scriptComponents;
+    
+    int* scriptSystemIndices;
+    
+    GameConstants::ScriptBitset activeScriptComponents;
+    GameConstants::ScriptBitset removedScriptComponents;
+
+private:
+    void ClearScriptingData();
+    void InitializeScriptingData();
+public:
+    
+    void* GetScriptComponent(int componentID) override;
+    void* AddScriptComponent(int componentID) override;
+    void RemoveScriptComponent(int componentID) override;
+private:
+    void CheckForScriptSystemsAddition(const std::vector<short>& systems, const GameConstants::Bitset& activeComponentsBefore, const typename GameConstants::ScriptBitset& activeScriptComponentsBefore);
+    void CheckForScriptSystemsRemoval(const std::vector<short>& systems, const GameConstants::Bitset& activeComponentsBefore, const typename GameConstants::ScriptBitset& activeScriptComponentsBefore);
+#endif
 };
 
 }

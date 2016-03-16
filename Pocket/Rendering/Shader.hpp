@@ -313,6 +313,6 @@ public:
         glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection);
     }   
 
-    virtual void RenderObject(Pocket::VertexRenderer<V>& renderer, const typename Pocket::VertexMesh<V>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles,Pocket::GameObject* object, const Pocket::Matrix4x4& world);
+    virtual void RenderObject(Pocket::VertexRenderer<V>& renderer, const typename Pocket::VertexMesh<V>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles, const Pocket::Matrix4x4& world);
 };
 }

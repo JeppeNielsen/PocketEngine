@@ -1,40 +1,31 @@
 //
-//  GameSystem.cpp
+//  IGameSystem.cpp
 //  ComponentSystem
 //
-//  Created by Jeppe Nielsen on 9/29/14.
-//  Copyright (c) 2014 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 05/03/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameSystem.hpp"
-#include "GameObject.hpp"
 
 using namespace Pocket;
 
-GameSystem::~GameSystem() { }
+IGameSystem::~IGameSystem() { }
 
-GameWorld* GameSystem::World() { return world; }
-
-void GameSystem::Initialize() {}
-
-const ObjectCollection& GameSystem::Objects() { return objects; }
-
-void GameSystem::ObjectAdded(GameObject *object) {}
-void GameSystem::ObjectRemoved(GameObject *object) {}
-
-void GameSystem::Update(float dt) {}
-void GameSystem::Render() {}
-void GameSystem::AddedToWorld(Pocket::GameWorld &world) {}
-
-void GameSystem::SetMetaData(Pocket::GameObject *object, void *data) {
-    metaData[object] = data;
-    //if (!object->metaData) {
-    //    object->metaData = new GameObject::MetaData[world->systems.size()];
-    //}
-    //object->metaData[id] = data;
+const IGameSystem::ObjectCollection& IGameSystem::Objects() {
+    return objects;
 }
 
-void* GameSystem::GetMetaData(Pocket::GameObject *object) {
-    //return object->metaData[id];
-    return metaData[object];
+void IGameSystem::SetMetaData(GameObject* object, void* data) {
+    metadata[object] = data;
 }
+
+void* IGameSystem::GetMetaData(GameObject* object) {
+    return metadata[object];
+}
+
+void IGameSystem::Initialize(GameWorld* world) { }
+void IGameSystem::Update(float dt) { }
+void IGameSystem::Render() { }
+void IGameSystem::ObjectAdded(GameObject* object) {}
+void IGameSystem::ObjectRemoved(GameObject* object) {}

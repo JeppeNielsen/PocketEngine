@@ -14,15 +14,16 @@
 #include "TransformAnimator.hpp"
 #include "TransformAnimationDatabase.hpp"
 
-using namespace Pocket;
-
-class MenuSystem : public GameSystem {
+namespace Pocket {
+class MenuSystem : public GameSystem<Menu, MenuAnimator, TransformAnimator, TransformAnimationDatabase> {
 public:
     void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     
 private:
-    void ActiveMenuChanged(Property<Menu*, std::string>::EventData d, GameObject* object);
+    void ActiveMenuChanged(GameObject* object);
     
 };
+
+}

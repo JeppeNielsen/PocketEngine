@@ -1,63 +1,56 @@
 //
 //  Gui.cpp
-//  PocketEngine
+//  PocketOSX
 //
-//  Created by Jeppe Nielsen on 10/12/13.
-//  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 01/03/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "Gui.hpp"
-#include "FirstPersonMoverSystem.hpp"
-#include "OctreeSystem.hpp"
-#include "HierarchyOrder.hpp"
-#include "TextBoxLabelSystem.hpp"
-#include "DraggableMotionSystem.hpp"
-#include "VelocitySystem.hpp"
-#include "LimitableSystem.hpp"
-#include "SelectedColorerSystem.hpp"
-#include "DroppableSystem.hpp"
 
 using namespace Pocket;
 
-Gui::Gui() { atlas = 0; }
-Gui::~Gui() {}
 
-GameObject* Gui::Atlas() { return atlas; }
+GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::Initialize() {
-    renderer = CreateSystem<RenderSystem>();
-    CreateSystem<TransformHierarchy>();
-    touchSystem = CreateSystem<TouchSystem>();
-    CreateSystem<LabelMeshSystem>();
-    CreateSystem<SpriteMeshSystem>();
-    CreateSystem<SpriteTextureSystem>();
-    CreateSystem<HierarchyOrder>();
-    CreateSystem<DraggableSystem>();
-    CreateSystem<LayoutSystem>();
-    textboxSystem = CreateSystem<TextBoxSystem>();
-    CreateSystem<TextBoxLabelSystem>();
-    CreateSystem<MenuSystem>();
-    CreateSystem<MenuButtonSystem>();
-    CreateSystem<ColorSystem>();
-    CreateSystem<DraggableMotionSystem>();
-    CreateSystem<VelocitySystem>();
-    CreateSystem<LimitableSystem>();
-    CreateSystem<SelectedColorerSystem>();
-    CreateSystem<DroppableSystem>();
+void Gui::Initialize(GameWorld* world) {
+
+    this->world = world;
+    renderer = world->CreateSystem<RenderSystem>();
+    textboxSystem = world->CreateSystem<TextBoxSystem>();
+    touchSystem = world->CreateSystem<TouchSystem>();
+    
+    world->CreateSystem<TransformHierarchy>();
+    world->CreateSystem<LabelMeshSystem>();
+    world->CreateSystem<SpriteMeshSystem>();
+    world->CreateSystem<SpriteTextureSystem>();
+    world->CreateSystem<HierarchyOrder>();
+    world->CreateSystem<DraggableSystem>();
+    world->CreateSystem<LayoutSystem>();
+    world->CreateSystem<TextBoxLabelSystem>();
+    world->CreateSystem<MenuSystem>();
+    world->CreateSystem<MenuButtonSystem>();
+    world->CreateSystem<ColorSystem>();
+    world->CreateSystem<DraggableMotionSystem>();
+    world->CreateSystem<VelocitySystem>();
+    world->CreateSystem<LimitableSystem>();
+    world->CreateSystem<SelectedColorerSystem>();
+    world->CreateSystem<DroppableSystem>();
+    world->CreateSystem<DraggableMotionSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
 
-    atlas = World()->CreateObject();
+    atlas = world->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng(atlasTexture);
-    atlas->AddComponent<class Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
+    atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
     atlas->SetID("Gui.Atlas");
     
     Setup(atlas, viewport, inputManager);
 }
 
-void Gui::Setup(Pocket::GameObject *atlas, const Pocket::Box &viewport, Pocket::InputManager &inputManager) {
+void Gui::Setup(GameObject *atlas, const Box &viewport, InputManager &inputManager) {
     
     this->atlas = atlas;
     
@@ -66,7 +59,7 @@ void Gui::Setup(Pocket::GameObject *atlas, const Pocket::Box &viewport, Pocket::
     touchSystem->Octree().SetWorldBounds(bounds);
     touchSystem->Input = &inputManager;
     
-    camera = World()->CreateObject();
+    camera = world->CreateObject();
     camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = camera->AddComponent<Camera>();
     
@@ -82,8 +75,16 @@ GameObject* Gui::GetCamera() {
     return camera;
 }
 
+GameObject* Gui::CreatePivot() {
+    return CreatePivot(0, {0,0});
+}
+
+GameObject* Gui::CreatePivot(GameObject *parent) {
+    return CreatePivot(parent,{0,0});
+}
+
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
-    GameObject* pivot = World()->CreateObject();
+    GameObject* pivot = world->CreateObject();
     pivot->Parent = parent;
     pivot->AddComponent<Transform>()->Position = position;
     pivot->AddComponent<Orderable>();
@@ -91,7 +92,7 @@ GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
 }
 
 GameObject* Gui::CreateControl(GameObject* parent) {
-    GameObject* control = CreatePivot(parent);
+    GameObject* control = CreatePivot(parent, 0);
     control->AddComponent<Mesh>();
     control->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     control->AddComponent<Touchable>();
@@ -103,7 +104,7 @@ GameObject* Gui::CreateControl(GameObject* parent) {
     return control;
 }
 
-GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string& spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size) {
+GameObject* Gui::CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size) {
     
     GameObject* control = CreateControl(parent);
     
@@ -114,16 +115,16 @@ GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string& sp
     return control;
 }
 
-GameObject* Gui::CreateControl(Pocket::GameObject *parent, const std::string &spriteName, const Vector2& size) {
+GameObject* Gui::CreateControl(GameObject *parent, const std::string &spriteName, const Vector2& size) {
     GameObject* control = CreateControl(parent);
     control->GetComponent<Sprite>()->SpriteName = spriteName;
     control->GetComponent<Sizeable>()->Size = size;
-    control->AddComponent<Layoutable>();
+    //control->AddComponent<Layoutable>();
     return control;
 }
 
-GameObject* Gui::CreateClipper(Pocket::GameObject *parent, bool push) {
-    GameObject* clipper = CreatePivot(parent);
+GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
+    GameObject* clipper = CreatePivot(parent, 0);
     clipper->AddComponent<Mesh>(parent);
     clipper->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
     clipper->GetComponent<Material>()->Clip = push ? 1 : 2;
@@ -134,19 +135,19 @@ GameObject* Gui::CreateClipper(Pocket::GameObject *parent, bool push) {
 }
 
 GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& fontAtlasName) {
-    GameObject* font = World()->CreateObject();
+    GameObject* font = world->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
+    font->SetID(fontFile);
     fonts.push_back(font);
     return font;
 }
 
-GameObject* Gui::CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize) {
+GameObject* Gui::CreateLabel(GameObject *parent, const Vector2 &position, const Vector2 &size, GameObject *font, const std::string &text, float fontSize) {
     if (!font && !fonts.empty()) {
         font = fonts[0];
     }
-    GameObject* label = CreatePivot(parent);
-    label->GetComponent<Transform>()->Position = position;
+    GameObject* label = CreatePivot(parent, position);
     label->AddComponent<Font>(font);
     label->AddComponent<Mesh>();
     label->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
@@ -159,7 +160,7 @@ GameObject* Gui::CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &
     return label;
 }
 
-GameObject* Gui::CreateLabelControl(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, std::string text, float fontSize) {
+GameObject* Gui::CreateLabelControl(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize) {
     GameObject* control = CreateControl(parent, spriteName, position, size);
     control->GetComponent<Transform>()->Anchor = size * 0.5f;
     GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
@@ -170,7 +171,7 @@ GameObject* Gui::CreateLabelControl(Pocket::GameObject *parent, const std::strin
     return control;
 }
 
-GameObject* Gui::CreateTextBox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, std::string text, float fontSize) {
+GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize) {
     GameObject* control = CreateControl(parent, spriteName, position, size);
     GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
     Label* label = labelGO->GetComponent<Label>();
@@ -181,7 +182,8 @@ GameObject* Gui::CreateTextBox(Pocket::GameObject *parent, const std::string &sp
     return control;
 }
 
-GameObject* Gui::CreateMenu(Pocket::GameObject *parent, const Pocket::Vector2 &position) {
+
+GameObject* Gui::CreateMenu(GameObject *parent, const Vector2 &position) {
     GameObject* pivot = CreatePivot(parent);
     pivot->GetComponent<Transform>()->Position = position;
     pivot->AddComponent<Menu>();
@@ -189,7 +191,7 @@ GameObject* Gui::CreateMenu(Pocket::GameObject *parent, const Pocket::Vector2 &p
 }
 
 
-void Gui::AddMenuAnimator(Pocket::GameObject *control, Pocket::GameObject *menu, std::string activeMenu, Pocket::GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
+void Gui::AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
     control->AddComponent<Menu>(menu);
     control->AddComponent<TransformAnimator>();
     MenuAnimator* menuAnimator = control->AddComponent<MenuAnimator>();
@@ -199,7 +201,7 @@ void Gui::AddMenuAnimator(Pocket::GameObject *control, Pocket::GameObject *menu,
     control->AddComponent<TransformAnimationDatabase>(animations);
 }
 
-GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &spriteName, const Pocket::Vector2 &position, const Pocket::Vector2 &size, GameObject** pivot) {
+GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
     listbox->AddComponent<Layoutable>();
     listbox->GetComponent<Touchable>()->ClickThrough = false;
@@ -210,7 +212,7 @@ GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &sp
     p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
     p->AddComponent<Touchable>(listbox);
     p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
-    p->AddComponent<DraggableMotion>();
+    //p->AddComponent<DraggableMotion>();
     p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
     p->GetComponent<Velocity>()->Friction = 5;
     Limitable* limitable = p->AddComponent<Limitable>();
@@ -220,21 +222,3 @@ GameObject* Gui::CreateListbox(Pocket::GameObject *parent, const std::string &sp
     (*pivot)=p;
     return listbox;
 }
-
-/*
-
-GameObject* Gui::CreateSubMenu(GameObject* parent, Pocket::Menu* parentMenu, const Pocket::Vector2 &position, const std::string &name, GameObject* animations, const std::string& fadeInAnimation, const std::string& fadeOutAnimation) {
-    GameObject* pivot = CreatePivot(parent);
-    pivot->GetComponent<Transform>()->Position = position;
-    Menu* menu = pivot->AddComponent<Menu>();
-    menu->MenuName = name;
-    menu->ParentMenu = parentMenu;
-    menu->FadeInAnimation = fadeInAnimation;
-    menu->FadeOutAnimation = fadeOutAnimation;
-    pivot->AddComponent<TransformAnimationDatabase>(animations);
-    pivot->AddComponent<TransformAnimator>();
-    return pivot;
-}
-
-*/
-

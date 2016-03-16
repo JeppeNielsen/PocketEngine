@@ -8,6 +8,7 @@
 
 #pragma once
 #include "Property.hpp"
+#include "OctreeSystem.hpp"
 #include "GameSystem.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
@@ -16,48 +17,43 @@
 #include "InputManager.hpp"
 #include "Orderable.hpp"
 #include <set>
+#include <stack>
 
 namespace Pocket {
-    class OctreeSystem;
+
+    class TouchSystem : public GameSystem<Transform, Mesh, Touchable> {
+    private:
     
-    class TouchSystem : public GameSystem {
+        using OctreeSystem = OctreeSystem<Touchable>;
+        using ObjectCollection = typename GameSystem<Transform, Mesh, Touchable>::ObjectCollection;
+        
+        struct CameraSystem : GameSystem<Transform, Camera> {};
+        struct OrderableSystem : GameSystem<Orderable> {};
+        
     public:
+        
+    
         TouchSystem();
-        ~TouchSystem();
-        
-        Property<TouchSystem*, InputManager*> Input;
-        
-        void Initialize();
-        void AddedToWorld(GameWorld& world);
-        
+        void Initialize(GameWorld* world);
         OctreeSystem& Octree();
-        
-    protected:
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
         
+        Property<InputManager*> Input;
+        
     private:
-        
-        void InputManagerChanged(Property<TouchSystem*, InputManager*>::EventData e);
-        
-        void TouchDown(TouchEvent e);
-        void TouchUp(TouchEvent e);
-        
-        class CameraSystem : public GameSystem {
-        public:
-            void Initialize();
-        };
+                
+        void TouchDown(Pocket::TouchEvent e);
+        void TouchUp(Pocket::TouchEvent e);
         
         CameraSystem* cameraSystem;
         OctreeSystem* octree;
         
         ObjectCollection touchableList;
         
-        class TouchableObject {
-        public:
+        struct TouchableObject {
             TouchableObject(GameObject* object);
-            ~TouchableObject();
             
             Transform* transform;
             Mesh* mesh;
@@ -66,14 +62,13 @@ namespace Pocket {
             int clip;
         };
         
-        typedef std::vector<TouchableObject*> Clippers;
+        using Clippers = std::vector<TouchableObject*>;
         
         Clippers clippers;
         
-        static bool SortClippers(const TouchableObject* a, const TouchableObject* b);
+        static bool SortClippers(const TouchableObject *a, const TouchableObject *b);
         
-        TouchableObject* FindClipper(TouchableObject* fromThis);
-        
+        TouchableObject* FindClipper(TouchableObject *fromThis);
         
         struct Intersection {
             GameObject* object;
@@ -85,10 +80,8 @@ namespace Pocket {
             Ray localRay;
         };
         
-        typedef std::vector<Intersection> Intersections;
+        using Intersections = std::vector<Intersection>;
         Intersections intersections;
-        
-        static bool SortIntersections(const Intersection& a, const Intersection& b);
         
         typedef std::vector<TouchData> Touched;
         
@@ -101,13 +94,14 @@ namespace Pocket {
     public:
         void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
     private:
-        void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);
-        void AddToTouchList(Touched& from, Touched& to);
-        bool IsTouchInList(const TouchData& touchData, const Touched& list);
         
-        typedef std::set<Touchable*> CancelledTouchables;
+        void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);
+        using CancelledTouchables = std::set<Touchable*>;
         CancelledTouchables cancelledTouchables;
         
-        void TouchableCancelled(Touchable* touchable);
+        static bool SortIntersections(const Intersection &a, const Intersection &b);
+        void AddToTouchList(Touched &from, Touched &to);
+        bool IsTouchInList(const Pocket::TouchData &touchData, const Touched &list);
+        void TouchableCancelled(Pocket::Touchable *touchable);
     };
 }

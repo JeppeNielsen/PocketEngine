@@ -10,14 +10,4 @@
 
 using namespace Pocket;
 
-Selectable::Selectable() : Selected(this) {
-    
-}
-
-void Selectable::Reset() {
-    Selected = false;
-}
-
-void Selectable::Clone(const Pocket::Selectable &other) {
-    Selected = other.Selected;
-}
+Selectable::Selectable() { Selected = false; }

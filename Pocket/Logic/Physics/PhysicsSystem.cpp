@@ -3,20 +3,16 @@
 
 using namespace Pocket;
 
-PhysicsSystem::PhysicsSystem() 
-	: Gravity(this)
-{
+PhysicsSystem::PhysicsSystem() {
 	collisionConfiguration = new btDefaultCollisionConfiguration();
     dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	broadphase = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
 	physicsWorld = new btDiscreteDynamicsWorld(dispatcher,broadphase,solver,collisionConfiguration);
 		
-	
 	isSimulating = false;
 
-	Gravity.Changed += event_handler(this, &PhysicsSystem::GravityChanged);
-
+	Gravity.Changed.Bind(this, &PhysicsSystem::GravityChanged);
 	Gravity = Vector3(0,-10,0);
 }
 
@@ -26,11 +22,6 @@ PhysicsSystem::~PhysicsSystem() {
 	delete broadphase;
 	delete dispatcher;
 	delete collisionConfiguration;
-}
-
-void PhysicsSystem::Initialize() {
-    AddComponent<RigidBody>();
-	AddComponent<Transform>();
 }
 
 void PhysicsSystem::Update(float dt) {
@@ -67,11 +58,9 @@ void PhysicsSystem::Update(float dt) {
 void PhysicsSystem::ObjectAdded(GameObject* gameObject) {
 	RigidBody* rigidBody = gameObject->GetComponent<RigidBody>();
 	if (!rigidBody->Body) return;
-
 	Transform* transform = gameObject->GetComponent<Transform>();
-
 	
-	const Matrix4x4& world = *transform->World.GetValue();
+	const Matrix4x4& world = transform->World;
 	Vector3 position = world.Translation();
 	Quaternion rotation;
 	rotation.FromRotationMatrix(world);
@@ -115,7 +104,7 @@ void PhysicsSystem::ImpulseReceived(RigidBody::ImpulseEvent& impulse, GameObject
 		btVector3(impulse.localPosition.x, impulse.localPosition.y, impulse.localPosition.z));
 }
 
-void PhysicsSystem::GravityChanged(PhysicsSystem* physicsSystem) {
-	const Vector3& gravity = Gravity.GetValue();
+void PhysicsSystem::GravityChanged() {
+	const Vector3& gravity = Gravity;
 	physicsWorld->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
 }

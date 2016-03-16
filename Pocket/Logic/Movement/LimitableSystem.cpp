@@ -10,19 +10,13 @@
 
 using namespace Pocket;
 
-void LimitableSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Limitable>();
-}
-
 void LimitableSystem::Update(float dt) {
-    for (ObjectCollection::const_iterator it = Objects().begin(); it!=Objects().end(); ++it) {
-        GameObject* object = *it;
+    for (GameObject* object : Objects()) {
         Transform* transform = object->GetComponent<Transform>();
         Limitable* limitable = object->GetComponent<Limitable>();
         Vector3 position = transform->Position;
         if (limitable->Size && limitable->View) {
-            limitable->min = -limitable->Size()->Size + limitable->View->Size;
+            limitable->min = -limitable->Size->Size + limitable->View->Size;
             limitable->min = limitable->min.Min(limitable->max);
         }
         

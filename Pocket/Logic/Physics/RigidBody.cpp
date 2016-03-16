@@ -13,11 +13,3 @@ void RigidBody::ApplyImpulse(const Vector3& impulse, const Vector3& localPositio
 	impulseEvent.localPosition = localPosition;
 	ImpulseEvents.push_back(impulseEvent);
 }
-
-void RigidBody::Clone(const RigidBody &source) {
-    Body = source.Body;
-}
-
-void RigidBody::Reset() {
-    Body = 0;
-}

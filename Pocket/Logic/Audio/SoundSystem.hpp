@@ -15,13 +15,12 @@
 #include "Transform.hpp"
 
 namespace Pocket {
-    class SoundSystem : public GameSystem {
+    class SoundSystem : public GameSystem<Sound, SoundEmitter> {
     public:
         SoundSystem();
         ~SoundSystem();
         
-        void Initialize();
-        void AddedToWorld(GameWorld& world);
+        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
@@ -32,22 +31,21 @@ namespace Pocket {
         static ALCdevice* device;
         static ALCcontext* context;
         
-        class ListenerSystem : public GameSystem {
+        class ListenerSystem : public GameSystem<SoundListener, Transform> {
         public:
-            void Initialize();
+            void Initialize(GameWorld* world);
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
             void Update(float dt);
         private:
             Vector3 lastPosition;
             bool needsUpdate;
-            void TransformChanged(DirtyProperty<Transform*, Matrix4x4>* worldProperty);
+            void TransformChanged();
         };
         
-        class SoundTransformSystem : public GameSystem {
+        class SoundTransformSystem : public GameSystem<Sound, SoundEmitter, Transform> {
         public:
             SoundSystem* soundSystem;
-            void Initialize();
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
         };
@@ -64,18 +62,14 @@ namespace Pocket {
             Transform* transform;
             ALuint alSource;
             
-            void EmitterChanged(SoundEmitter* emitter);
-            void PlayingChanged(SoundEmitter* emitter);
+            void EmitterChanged();
+            void PlayingChanged();
         public:
             void TransformAdded(Transform* transform);
             void TransformRemoved(Transform* transform);
         private:
-            void TransformChanged(DirtyProperty<Transform*, Matrix4x4>* worldProperty);
+            void TransformChanged();
             
         };
-        
-        
-        
-    
     };
 }

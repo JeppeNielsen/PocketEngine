@@ -8,16 +8,11 @@
 
 #pragma once
 #include "Property.hpp"
-#include "GameComponent.hpp"
 #include <string>
 
 namespace Pocket {
-    Component(Menu)
-    public:
-
+    struct Menu {
         Menu();
-        Property<Menu*, std::string> ActiveMenu;
-        void Reset();
+        Property<std::string> ActiveMenu;
     };
-
 }

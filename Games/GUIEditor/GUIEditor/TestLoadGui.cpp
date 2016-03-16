@@ -18,11 +18,11 @@ class TestLoadGui : public GameState<TestLoadGui> {
     GameObject* root;
     
     void Initialize() {
-        Gui* gui = world.CreateFactory<Gui>();
+        Gui* gui = world.CreateSystem<Gui>();
         gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         std::ifstream file("Gui.txt");
-        root = world.CreateObjectFromJson(file);
+        root = world.CreateObject(file);
         file.close();
         root->GetID();
     }
@@ -39,7 +39,7 @@ class TestLoadGui : public GameState<TestLoadGui> {
     }
 };
 
-int main() {
+int main_load() {
     Engine e;
     e.Start<TestLoadGui>();
     return 0;

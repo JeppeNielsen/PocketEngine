@@ -7,19 +7,14 @@
 //
 
 #pragma once
-
 #include "GameWorld.hpp"
+#include "Transform.hpp"
 #include "TransformAnimator.hpp"
 
 namespace Pocket {
-    class TransformAnimatorSystem : public GameSystem {
+    class TransformAnimatorSystem : public GameSystem<TransformAnimator, Transform> {
     public:
         void Initialize();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        
         void Update(float dt);
-    private:
-        
     };
 }

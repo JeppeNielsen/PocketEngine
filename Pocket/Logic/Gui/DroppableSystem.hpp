@@ -7,18 +7,18 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Droppable.hpp"
+#include "DroppableSystem.hpp"
 #include "TouchSystem.hpp"
 
 namespace Pocket {
-  SYSTEM(DroppableSystem, Droppable, Touchable)
-    public:
-        void AddedToWorld(GameWorld& world);
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-    private:
-        void TouchUp(TouchData d, GameObject* object);
+    struct DroppableSystem : GameSystem<Droppable, Touchable> {
+        
+        void Initialize(GameWorld* world);
+        void ObjectAdded(GameObject *object);
+        void ObjectRemoved(GameObject *object);
+        void TouchUp(Pocket::TouchData d, GameObject* object);
         TouchSystem* touchSystem;
-  };
+    };
 }

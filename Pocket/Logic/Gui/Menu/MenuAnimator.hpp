@@ -8,15 +8,11 @@
 
 #pragma once
 #include <string>
-#include "GameComponent.hpp"
 
 namespace Pocket {
-    Component(MenuAnimator)
-    public:
-        void Reset();
+    struct MenuAnimator {
         std::string Menu;
         std::string FadeInAnimation;
         std::string FadeOutAnimation;
-    
     };
 }

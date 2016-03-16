@@ -11,28 +11,29 @@
 
 using namespace Pocket;
 
-FirstPersonMoverSystem::FirstPersonMoverSystem() : Input(this), draggableSystem(0) {
+FirstPersonMoverSystem::FirstPersonMoverSystem() : draggableSystem(0) {
     Input = 0;
-    Input.ChangedWithOld += event_handler(this, &FirstPersonMoverSystem::InputChanged);
+    Input.Changed.Bind(this, &FirstPersonMoverSystem::InputChanged);
     isDraggableSystemChecked = false;
     FlipControls = false;
 }
 
-void FirstPersonMoverSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<FirstPersonMover>();
+void FirstPersonMoverSystem::Initialize(GameWorld *world) {
+    this->world = world;
 }
 
-void FirstPersonMoverSystem::InputChanged(Property<FirstPersonMoverSystem *, InputManager *>::EventData e) {
-    if (e.Old) {
-        e.Old->TouchDown -= event_handler(this, &FirstPersonMoverSystem::TouchDown);
-        e.Old->TouchUp -= event_handler(this, &FirstPersonMoverSystem::TouchUp);
+void FirstPersonMoverSystem::InputChanged() {
+    InputManager* old = Input.PreviousValue();
+    InputManager* current = Input;
+    if (old) {
+        old->TouchDown.Unbind(this, &FirstPersonMoverSystem::TouchDown);
+        old->TouchUp.Unbind(this, &FirstPersonMoverSystem::TouchUp);
         touches.clear();
     }
     
-    if (e.Current) {
-        e.Current->TouchDown += event_handler(this, &FirstPersonMoverSystem::TouchDown);
-        e.Current->TouchUp += event_handler(this, &FirstPersonMoverSystem::TouchUp);
+    if (current) {
+        current->TouchDown.Bind(this, &FirstPersonMoverSystem::TouchDown);
+        current->TouchUp.Bind(this, &FirstPersonMoverSystem::TouchUp);
     }
 }
 
@@ -58,7 +59,7 @@ void FirstPersonMoverSystem::TouchUp(Pocket::TouchEvent e) {
 void FirstPersonMoverSystem::Update(float dt) {
     if (!isDraggableSystemChecked) {
         isDraggableSystemChecked = true;
-        draggableSystem = World()->GetSystem<DraggableSystem>();
+        draggableSystem = world->CreateSystem<DraggableSystem>();
     }
     
     if (!UpdateRotation(dt, FlipControls ? 0 : 1)) {
@@ -79,7 +80,7 @@ void FirstPersonMoverSystem::UpdateMovement(float dt, int touchIndex) {
 	for (ObjectCollection::const_iterator it = list.begin(); it!=list.end(); ++it) {
 		Transform* transform = (*it)->GetComponent<Transform>();
         FirstPersonMover* mover = (*it)->GetComponent<FirstPersonMover>();
-		Vector3 vector = transform->World.GetValue()->TransformVector(Vector3(delta.x * dt * mover->MovementSpeed,0,-delta.y * dt * mover->MovementSpeed));
+		Vector3 vector = transform->World().TransformVector(Vector3(delta.x * dt * mover->MovementSpeed,0,-delta.y * dt * mover->MovementSpeed));
 		transform->Position += vector;
 	}
 }

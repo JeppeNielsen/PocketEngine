@@ -593,7 +593,15 @@ namespace Pocket {
         };
         
         Matrix4x4 static Deserialize(const std::string& data);
+        
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Matrix4x4& m) {
+            for (int i=0; i<16; ++i) {
+                stream<<m._m[i];
+                if (i<15) stream<<",";
+            }
+            return stream;
+        }
+        
     };
 }
 
-std::ostream& operator<<(std::ostream& stream, const Pocket::Matrix4x4& m);

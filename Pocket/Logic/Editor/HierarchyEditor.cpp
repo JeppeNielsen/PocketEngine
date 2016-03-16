@@ -10,6 +10,5 @@
 
 using namespace Pocket;
 
-HierarchyEditor::HierarchyEditor() {}
-void HierarchyEditor::Reset() { Object = 0; }
+HierarchyEditor::HierarchyEditor() { Object = 0; }
 

@@ -10,22 +10,16 @@
 
 using namespace Pocket;
 
-
-void DraggableMotionSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Velocity>();
-    AddComponent<Draggable>();
-}
-
 void DraggableMotionSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Draggable>()->IsDragging.Changed += event_handler(this, &DraggableMotionSystem::DraggingChanged, object);
+    object->GetComponent<Draggable>()->IsDragging.Changed.Bind(this, &DraggableMotionSystem::DraggingChanged, object);
 }
 
 void DraggableMotionSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Draggable>()->IsDragging.Changed -= event_handler(this, &DraggableMotionSystem::DraggingChanged, object);
+    object->GetComponent<Draggable>()->IsDragging.Changed.Unbind(this, &DraggableMotionSystem::DraggingChanged, object);
 }
 
-void DraggableMotionSystem::DraggingChanged(Pocket::Draggable *draggable, Pocket::GameObject *object) {
+void DraggableMotionSystem::DraggingChanged(Pocket::GameObject *object) {
+    Draggable *draggable = object->GetComponent<Draggable>();
     if (draggable->IsDragging) {
         draggingObjects[draggable] = { object, object->GetComponent<Transform>()->Position };
     } else {
@@ -47,16 +41,16 @@ void DraggableMotionSystem::DraggingChanged(Pocket::Draggable *draggable, Pocket
 
 void DraggableMotionSystem::Update(float dt) {
     
-    for (DraggingObjects::iterator it = draggingObjects.begin(); it!=draggingObjects.end(); ++it) {
-        Transform* transform = it->second.object->GetComponent<Transform>();
+    for (auto& it : draggingObjects) {
+        Transform* transform = it.second.object->GetComponent<Transform>();
         Vector3 position = transform->Position;
         
-        Vector3 velocity = (position-it->second.lastPosition) / dt;
-        it->second.velocities.push_back(velocity);
-        while (it->second.velocities.size()>6) {
-            it->second.velocities.erase(it->second.velocities.begin());
+        Vector3 velocity = (position-it.second.lastPosition) / dt;
+        it.second.velocities.push_back(velocity);
+        while (it.second.velocities.size()>6) {
+            it.second.velocities.erase(it.second.velocities.begin());
         }
-        it->second.lastPosition = position;
+        it.second.lastPosition = position;
     }
     
     

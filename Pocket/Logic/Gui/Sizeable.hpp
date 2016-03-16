@@ -8,21 +8,20 @@
 
 #pragma once
 #include "Vector2.hpp"
+#include "TypeInfo.hpp"
 #include "Property.hpp"
-#include "GameComponent.hpp"
 
 namespace Pocket {
-    Component(Sizeable) 
+    struct Sizeable {
     public:
-        Sizeable();
-        Property<Sizeable*, Vector2> Size;
-        void Reset();
-    protected:
-        void Clone(const Sizeable& source);
-        void DebugLog(std::ostringstream& s);
+        Sizeable() {
+            Size = 1.0f;
+        }
+        
+        Property<Vector2> Size;
     
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(Size)
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(Size)
+        TYPE_FIELDS_END
     };
 }

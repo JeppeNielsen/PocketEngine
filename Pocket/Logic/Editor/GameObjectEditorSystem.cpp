@@ -11,37 +11,37 @@
 #include "Layoutable.hpp"
 using namespace Pocket;
 
+void GameObjectEditorSystem::Initialize(GameWorld *world) {
+    this->world = world;
+}
+
 void GameObjectEditorSystem::ObjectAdded(GameObject *object) {
-    object->GetComponent<GameObjectEditor>()->Object.Changed += event_handler(this, &GameObjectEditorSystem::ObjectChanged, object);
-    ObjectChanged(object->GetComponent<GameObjectEditor>(), object);
+    object->GetComponent<GameObjectEditor>()->Object.Changed.Bind(this, &GameObjectEditorSystem::ObjectChanged, object);
+    ObjectChanged(object);
 }
 
 void GameObjectEditorSystem::ObjectRemoved(GameObject *object) {
-    object->GetComponent<GameObjectEditor>()->Object.Changed -= event_handler(this, &GameObjectEditorSystem::ObjectChanged, object);
+    object->GetComponent<GameObjectEditor>()->Object.Changed.Unbind(this, &GameObjectEditorSystem::ObjectChanged, object);
 }
 
-void GameObjectEditorSystem::ObjectChanged(GameObjectEditor *editor, GameObject* object) {
+void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
+    GameObjectEditor *editor = object->GetComponent<GameObjectEditor>();
     for (auto child : object->Children()) {
         child->Remove();
     }
     if (!editor->Object()) return;
     
-    SerializableCollection components = editor->Object()->SerializableComponents();
-    std::vector<std::string> componentNames = editor->Object()->ComponentNames();
-    std::vector<int> componentTypes = editor->Object()->ComponentTypes();
-    Vector2 size = {200,50};
-    for (int i=0; i<components.size(); ++i) {
-        
-        auto isIgnoredComponent = std::find(ignoredComponents.begin(), ignoredComponents.end(), componentTypes[i]);
-        if (isIgnoredComponent!=ignoredComponents.end()) {
-            continue;
-        }
-        
-        ISerializable* component = components[i];
+    Vector2 size = { 200, 50 };
+    
+    auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
+        return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
+    });
+    
+    for (auto info : infos) {
+        std::cout << "Field : " << info.name << std::endl;
     
         bool hasNoEditors = true;
-        auto fields = component->GetFields();
-        for (auto field : fields.fields) {
+        for (auto field : info.fields) {
             if (field->HasEditor()) {
                 hasNoEditors = false;
                 break;
@@ -50,37 +50,38 @@ void GameObjectEditorSystem::ObjectChanged(GameObjectEditor *editor, GameObject*
         if (hasNoEditors) {
             continue;
         }
-    
-        GameObject* componentChild = World()->CreateObject();
+        
+        
+        GameObject* componentChild = world->CreateObject();
         componentChild->Parent = object;
         componentChild->AddComponent<Transform>();
         componentChild->AddComponent<Sizeable>()->Size = size;
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         
-        GameObject* space = World()->CreateObject();
+        GameObject* space = world->CreateObject();
         space->Parent = componentChild;
         space->AddComponent<Transform>();
         space->AddComponent<Sizeable>()->Size = {size.x, 10};
         space->AddComponent<Layoutable>();
-        
-        for (auto field : fields.fields) {
+        for (auto field : info.fields) {
             if (!field->HasEditor()) continue;
             
-            GameObject* editor = World()->CreateObject();
+            GameObject* editor = world->CreateObject();
             editor->Parent = componentChild;
             editor->AddComponent<Transform>();
             editor->AddComponent<Sizeable>()->Size = {size.x, size.y*0.5f};
             editor->AddComponent<Layoutable>();
             FieldEditor* fieldEditor = editor->AddComponent<FieldEditor>();
-            fieldEditor->Object = component;
+            fieldEditor->SetType(info);
             fieldEditor->Field = field->name;
         }
         
-        GameObject* componentName = gui->CreateLabel(componentChild, 0, {size.x, size.y*0.5f}, 0, componentNames[i], 14);
+        GameObject* componentName = gui->CreateLabel(componentChild, 0, {size.x, size.y*0.5f}, 0, info.name, 14);
         componentName->GetComponent<Label>()->HAlignment = Font::Center;
         componentName->GetComponent<Label>()->VAlignment = Font::Middle;
         componentName->GetComponent<Colorable>()->Color = Colour::Black();
         componentName->AddComponent<Layoutable>();
+    
     }
 }
