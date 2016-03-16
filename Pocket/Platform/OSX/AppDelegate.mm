@@ -38,7 +38,7 @@
     }
     
     NSRect frame = NSMakeRect(xPos, yPos, windowWidth, windowHeight);
-    NSUInteger styleMask = NSTitledWindowMask | NSClosableWindowMask;
+    NSUInteger styleMask = NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask | NSMiniaturizableWindowMask;
     if (isFullScreen) {
         styleMask |=NSFullScreenWindowMask;
     }
@@ -97,6 +97,10 @@
 - (void)windowWillClose:(NSNotification *)notification
 {
     exit(0);
+}
+
+- (void)windowDidResize:(NSNotification *)notification {
+    Pocket::OSXWindowCreator::Instance()->ScreenSizeChanged(view.bounds.size.width, view.bounds.size.height);
 }
 
 @end

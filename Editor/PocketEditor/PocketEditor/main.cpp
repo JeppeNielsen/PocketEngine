@@ -25,12 +25,20 @@ public:
         world.CreateSystem<RotatorSystem>();
         
         camera = world.CreateObject();
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->AddComponent<Camera>()->Viewport = Context().Viewport();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         
+        for (int x=0; x<20; x++) {
+            for(int y=0; y<20; y++) {
+                CreateCube({(float)x,(float)y,0});
+            }
+        }
+    }
+    
+    void CreateCube(Vector3 pos) {
         cube = world.CreateObject();
-        cube->AddComponent<Transform>();
+        cube->AddComponent<Transform>()->Position = pos;
         cube->AddComponent<Rotator>()->speed = { 2,1,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         cube->AddComponent<Material>();
@@ -43,10 +51,13 @@ public:
     }
     
     void Update(float dt) {
+        camera->GetComponent<Camera>()->Viewport = Context().Viewport();
         world.Update(dt);
     }
     
     void Render() {
+        glClearColor(1, 1, 0, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
         world.Render();
     }
 };

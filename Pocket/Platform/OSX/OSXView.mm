@@ -36,12 +36,11 @@
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
     
     Pocket::Window::Framebuffer = (uint)defaultFBO;
-   
+    
 }
 
 - (void) updateGLView:(NSTimer *)timer
 {
-    
     [self drawRect: [self frame]];
 }
 
@@ -108,5 +107,8 @@
     Pocket::OSXWindowCreator::Instance()->ButtonUp([str UTF8String]);
 }
 
+- (void)windowDidResize:(NSNotification *)notification {
+    NSLog(@"test");
+}
 
 @end

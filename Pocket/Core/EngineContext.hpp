@@ -7,21 +7,14 @@
 //
 
 #pragma once
-
+#include "Property.hpp"
 #include "Vector2.hpp"
 #include "Box.hpp"
 
 namespace Pocket {
-    class Engine;
-    class GameManager {
+    class EngineContext {
     public:
-        
+        Property<Vector2> ScreenSize;
         Box Viewport() const;
-        Vector2 ScreenSize() const;
-        
-    private:
-        Vector2 screenSize;
-        
-        friend class Engine;
     };
 }

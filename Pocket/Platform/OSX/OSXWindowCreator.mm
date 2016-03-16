@@ -98,4 +98,3 @@ void OSXWindowCreator::KeyboardChanged(InputDevice::KeyboardEventData keyboardDa
     isKeyboardActive = keyboardData.active;
     inputDevice.KeyboardText = keyboardData.text;
 }
-

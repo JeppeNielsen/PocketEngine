@@ -23,22 +23,22 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
     this->rootState = rootState;
     this->fullScreen = fullScreen;
 	this->window = Window::CreatePlatformWindow();
+	this->window->context = &context;
 	this->window->Create(width, height, fullScreen);
-    manager.screenSize = Vector2((float)width, (float)height);
-	//this->rootState->DoInitialize(&manager);
+    //this->rootState->DoInitialize(&manager);
     firstFrame = true;
     window->MainLoop.Bind(this, &Engine::Loop);
 	window->Begin();
 }
 
 void Engine::Loop(bool* exit) {
-        
+    
+    
     static float targetDelta = 1.0f / 60.0f;
     
     float delta = (float)timer->End();
     if (firstFrame) {
-        manager.screenSize = window->screenSize;
-        this->rootState->DoInitialize(&manager);
+        this->rootState->DoInitialize(&context);
         delta = targetDelta;
         firstFrame = false;
     } else {

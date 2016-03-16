@@ -1,7 +1,9 @@
 #pragma once
 #include "InputManager.hpp"
 #include "Event.hpp"
+#include "Property.hpp"
 #include "Vector2.hpp"
+#include "EngineContext.hpp"
 
 namespace Pocket {
 	class Window
@@ -21,7 +23,7 @@ namespace Pocket {
         
         Event<bool*> MainLoop;
         
-        Vector2 screenSize;
+        EngineContext* context;
         
         static unsigned int Framebuffer;
         

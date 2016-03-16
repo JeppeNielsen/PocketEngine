@@ -43,7 +43,7 @@ namespace Pocket {
         GLuint viewRenderbuffer;
         GLuint viewFramebuffer;
         
-        void* context;
+        void* openGLContext;
         
 	};
 }

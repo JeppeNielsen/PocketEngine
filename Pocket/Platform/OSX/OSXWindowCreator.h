@@ -25,6 +25,7 @@ namespace Pocket {
         
         Event<void*> OnInitialize;
         Event<bool> OnUpdate;
+        Event<int, int> ScreenSizeChanged;
         
         InputDevice inputDevice;
         
@@ -36,7 +37,7 @@ namespace Pocket {
         void ButtonDown(const std::string& button);
         void ButtonUp(const std::string& button);
         void SetScroll(float delta);
-                
+        
     private:
         static OSXWindowCreator* instance;
         

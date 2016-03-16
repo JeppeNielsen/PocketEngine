@@ -10,4 +10,8 @@
 
 @implementation OSXWindow
 
+- (void)windowDidResize:(NSNotification *)notification {
+    NSLog(@"test");
+}
+
 @end

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7287F1061C9A11F1005D05FA /* EngineContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7287F1051C9A11F1005D05FA /* EngineContext.cpp */; };
 		72994F901C99F74F00DAAE5D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72994F8F1C99F74F00DAAE5D /* Cocoa.framework */; };
 		72994F921C99F74F00DAAE5D /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72994F911C99F74F00DAAE5D /* OpenGL.framework */; };
 		72994F941C99F74F00DAAE5D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72994F931C99F74F00DAAE5D /* OpenAL.framework */; };
@@ -17,7 +18,6 @@
 		729953C01C99F76100DAAE5D /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FA71C99F76000DAAE5D /* GameWorld.cpp */; };
 		729953C11C99F76100DAAE5D /* IDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FA91C99F76000DAAE5D /* IDHelper.cpp */; };
 		729953C21C99F76100DAAE5D /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FAE1C99F76000DAAE5D /* Engine.cpp */; };
-		729953C31C99F76100DAAE5D /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FB01C99F76000DAAE5D /* GameManager.cpp */; };
 		729953C41C99F76100DAAE5D /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FB31C99F76000DAAE5D /* GameState.cpp */; };
 		729953C51C99F76100DAAE5D /* InputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FB51C99F76000DAAE5D /* InputDevice.cpp */; };
 		729953C61C99F76100DAAE5D /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72994FB71C99F76000DAAE5D /* InputManager.cpp */; };
@@ -343,6 +343,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7287F1051C9A11F1005D05FA /* EngineContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EngineContext.cpp; sourceTree = "<group>"; };
 		72994F8C1C99F74F00DAAE5D /* PocketEditor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketEditor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72994F8F1C99F74F00DAAE5D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		72994F911C99F74F00DAAE5D /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = /System/Library/Frameworks/OpenGL.framework; sourceTree = "<absolute>"; };
@@ -362,8 +363,7 @@
 		72994FAC1C99F76000DAAE5D /* MetaLibrary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
 		72994FAE1C99F76000DAAE5D /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 		72994FAF1C99F76000DAAE5D /* Engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Engine.hpp; sourceTree = "<group>"; };
-		72994FB01C99F76000DAAE5D /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
-		72994FB11C99F76000DAAE5D /* GameManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameManager.hpp; sourceTree = "<group>"; };
+		72994FB11C99F76000DAAE5D /* EngineContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EngineContext.hpp; sourceTree = "<group>"; };
 		72994FB21C99F76000DAAE5D /* GamePadManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamePadManager.hpp; sourceTree = "<group>"; };
 		72994FB31C99F76000DAAE5D /* GameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameState.cpp; sourceTree = "<group>"; };
 		72994FB41C99F76000DAAE5D /* GameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameState.hpp; sourceTree = "<group>"; };
@@ -1237,8 +1237,8 @@
 			children = (
 				72994FAE1C99F76000DAAE5D /* Engine.cpp */,
 				72994FAF1C99F76000DAAE5D /* Engine.hpp */,
-				72994FB01C99F76000DAAE5D /* GameManager.cpp */,
-				72994FB11C99F76000DAAE5D /* GameManager.hpp */,
+				7287F1051C9A11F1005D05FA /* EngineContext.cpp */,
+				72994FB11C99F76000DAAE5D /* EngineContext.hpp */,
 				72994FB21C99F76000DAAE5D /* GamePadManager.hpp */,
 				72994FB31C99F76000DAAE5D /* GameState.cpp */,
 				72994FB41C99F76000DAAE5D /* GameState.hpp */,
@@ -2553,6 +2553,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7287F1061C9A11F1005D05FA /* EngineContext.cpp in Sources */,
 				729954A81C99F76100DAAE5D /* btGjkEpa2.cpp in Sources */,
 				729953D11C99F76100DAAE5D /* TimeMeasurer.cpp in Sources */,
 				729954B61C99F76100DAAE5D /* btGeneric6DofSpringConstraint.cpp in Sources */,
@@ -2596,7 +2597,6 @@
 				729954C31C99F76100DAAE5D /* btRaycastVehicle.cpp in Sources */,
 				729954A91C99F76100DAAE5D /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
 				7299548D1C99F76100DAAE5D /* btScaledBvhTriangleMeshShape.cpp in Sources */,
-				729953C31C99F76100DAAE5D /* GameManager.cpp in Sources */,
 				7299549C1C99F76100DAAE5D /* btGImpactBvh.cpp in Sources */,
 				729954E21C99F76100DAAE5D /* btConvexHullComputer.cpp in Sources */,
 				729954641C99F76100DAAE5D /* btCollisionObject.cpp in Sources */,
@@ -3001,6 +3001,7 @@
 				72994F9E1C99F74F00DAAE5D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

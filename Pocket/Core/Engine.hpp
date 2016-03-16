@@ -1,5 +1,5 @@
 #pragma once
-#include "GameManager.hpp"
+#include "EngineContext.hpp"
 #include "GameState.hpp"
 
 namespace Pocket {
@@ -35,7 +35,7 @@ namespace Pocket {
         bool firstFrame;
         Timer* timer;
         
-        GameManager manager;
+        EngineContext context;
         IGameState* rootState;
         
         friend class Thread;

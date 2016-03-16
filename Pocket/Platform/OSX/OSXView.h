@@ -15,4 +15,6 @@
 
 - (void) drawRect: (NSRect) bounds;
 - (void) prepareOpenGL;
+- (void)windowDidResize:(NSNotification *)n;
+
 @end

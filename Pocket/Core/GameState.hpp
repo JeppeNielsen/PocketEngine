@@ -11,7 +11,7 @@
 #include <string>
 #include "Property.hpp"
 #include "InputManager.hpp"
-#include "GameManager.hpp"
+#include "EngineContext.hpp"
 
 namespace Pocket {
 
@@ -20,7 +20,7 @@ namespace Pocket {
         IGameState();
         virtual ~IGameState();
     
-        virtual void DoInitialize(GameManager* manager) = 0;
+        virtual void DoInitialize(EngineContext* context) = 0;
         virtual void DoUpdate(float dt) = 0;
         virtual void DoRender() = 0;
         virtual void UpdateInput(IInputManagerUpdater* inputManagerUpdater) = 0;
@@ -35,7 +35,7 @@ namespace Pocket {
         GameState();
         virtual ~GameState();
         
-        void DoInitialize(GameManager* manager);
+        void DoInitialize(EngineContext* context);
         void DoUpdate(float dt);
         void DoRender();
         void UpdateInput(IInputManagerUpdater* inputManagerUpdater);
@@ -58,7 +58,7 @@ namespace Pocket {
     protected:
         T& Parent();
         
-        GameManager& Manager();
+        EngineContext& Context();
         
     private:
         T* parent;
@@ -71,7 +71,7 @@ namespace Pocket {
         GameState* currentState;
         GameState* wantedState;
         
-        GameManager* manager;
+        EngineContext* context;
     };
 }
 
@@ -98,11 +98,11 @@ Pocket::GameState<T>::~GameState() {
 
 
 template<class T>
-void Pocket::GameState<T>::DoInitialize(GameManager* manager) {
-    this->manager = manager;
+void Pocket::GameState<T>::DoInitialize(EngineContext* context) {
+    this->context = context;
     Initialize();
     for (typename States::iterator it = states.begin(); it!=states.end(); ++it) {
-        it->second->DoInitialize(manager);
+        it->second->DoInitialize(context);
     }
 }
 
@@ -159,7 +159,7 @@ template<class T>
 T& Pocket::GameState<T>::Parent() { return *parent; }
 
 template<class T>
-Pocket::GameManager& Pocket::GameState<T>::Manager() { return *manager; }
+Pocket::EngineContext& Pocket::GameState<T>::Context() { return *context; }
 
 template<class T>
 void Pocket::GameState<T>::UpdateInput(IInputManagerUpdater* inputManagerUpdater) {
