@@ -11,13 +11,18 @@ public:
     GameObject* cube;
     
     struct Rotator { Vector3 speed; };
-    struct RotatorSystem : public GameSystem<Transform, Rotator>() {
+    struct RotatorSystem : public GameSystem<Transform, Rotator> {
         void Update(float dt) {
-            for(auto o : Objects) { o->GetComponent<Transform>()->Rotation += o->GetComponent<Rotator>()->speed * dt; }
+            for(auto o : Objects()) {
+                o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->speed * dt;
+            }
         }
     };
     
     void Initialize() {
+        
+        world.CreateSystem<RenderSystem>();
+        world.CreateSystem<RotatorSystem>();
         
         camera = world.CreateObject();
         camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
