@@ -19,7 +19,7 @@ class TestLoadGui : public GameState<TestLoadGui> {
     
     void Initialize() {
         Gui* gui = world.CreateSystem<Gui>();
-        gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         std::ifstream file("Gui.txt");
         root = world.CreateObject(file);

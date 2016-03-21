@@ -66,7 +66,7 @@ public:
         world.CreateSystem<FieldEditorSystem>()->gui = gui;
         hierarchyEditorSystem->gui = gui;
         
-        gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
         root = gui->CreatePivot(0,0);
