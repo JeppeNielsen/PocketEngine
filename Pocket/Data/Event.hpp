@@ -17,7 +17,7 @@ private:
     
     template<typename...Args>
     struct IDelegate {
-        short type;
+        int type;
         virtual ~IDelegate() {}
         virtual void Invoke(Args... values) = 0;
     };
@@ -54,17 +54,10 @@ private:
     };
     
     static int objectIDCounter;
-    static int contextIDCounter;
     
     template<typename O>
     int GetObjectID() {
         static int id = objectIDCounter++;
-        return id;
-    }
-    
-    template<typename O>
-    int GetContextID() {
-        static int id = contextIDCounter++;
         return id;
     }
     
@@ -124,7 +117,7 @@ public:
     template<typename Obj, typename Context>
     void Bind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
         IDelegateMemberContext<Obj, Context>* delegate = new IDelegateMemberContext<Obj, Context>();
-        delegate->type = GetObjectID<Obj>() + GetContextID<Context>();
+        delegate->type = 10000 + GetObjectID<Obj>() + GetObjectID<Context>() * 10000;
         delegate->object = object;
         delegate->method = method;
         delegate->context = context;
@@ -133,7 +126,7 @@ public:
     
     template<typename Obj, typename Context>
     void Unbind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
-        short typeID = GetObjectID<Obj>() + GetContextID<Context>();
+        int typeID = 10000 + GetObjectID<Obj>() + GetObjectID<Context>() * 10000;
         for(int i=0; i<delegates.size(); ++i) {
             auto d = delegates[i];
             if (d->type != typeID) continue;
@@ -157,7 +150,4 @@ public:
 
 template<typename...T>
 int Event<T...>::objectIDCounter = 0;
-
-template<typename...T>
-int Event<T...>::contextIDCounter = 10000;
 }
