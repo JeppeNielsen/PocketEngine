@@ -21,7 +21,7 @@ namespace Pocket {
     public:
         void Initialize(GameWorld* world) override;
         
-        void Setup(const Box& viewport, InputManager& input);
+        void Setup(const Rect& viewport, InputManager& input);
     
         void Update(float dt) override;
         void Render() override;

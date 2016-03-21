@@ -9,12 +9,12 @@
 #pragma once
 #include "Property.hpp"
 #include "Vector2.hpp"
-#include "Box.hpp"
+#include "Rect.hpp"
 
 namespace Pocket {
     class EngineContext {
     public:
         Property<Vector2> ScreenSize;
-        Box Viewport() const;
+        Rect Viewport() const;
     };
 }

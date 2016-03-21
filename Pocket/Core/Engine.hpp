@@ -19,6 +19,8 @@ namespace Pocket {
                 int width = 1280, int height=720, bool fullScreen=false
 #endif
         );
+        
+        static EngineContext& Context();
 
 	private:
 		bool fullScreen;
@@ -37,6 +39,8 @@ namespace Pocket {
         
         EngineContext context;
         IGameState* rootState;
+        
+        static EngineContext* staticContext;
         
         friend class Thread;
 	};

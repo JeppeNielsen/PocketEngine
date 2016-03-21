@@ -10,6 +10,6 @@
 
 using namespace Pocket;
 
-Box EngineContext::Viewport() const {
-    return Box(0, ScreenSize().y, ScreenSize().x, 0);
+Rect EngineContext::Viewport() const {
+    return Rect(0, ScreenSize());
 }

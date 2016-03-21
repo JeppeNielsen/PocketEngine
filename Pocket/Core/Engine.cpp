@@ -9,6 +9,7 @@ using namespace Pocket;
 Engine::Engine() {
 	window = 0;
     timer = new Timer();
+    staticContext = &context;
 }
 
 Engine::~Engine() {
@@ -69,7 +70,6 @@ bool Engine::Update(float dt) {
 	return running;
 }
 
-
 void Engine::Render() {
     ASSERT_GL(glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     ASSERT_GL(glEnable(GL_CULL_FACE));
@@ -78,7 +78,6 @@ void Engine::Render() {
 	window->PostRender();
 }
 
+EngineContext& Engine::Context() { return *staticContext; }
 
-
-
-
+EngineContext* Engine::staticContext = 0;

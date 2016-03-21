@@ -3,7 +3,7 @@
 #include "Property.hpp"
 #include "DirtyProperty.hpp"
 #include "Matrix4x4.hpp"
-#include "Box.hpp"
+#include "Rect.hpp"
 #include "Ray.hpp"
 #include "Transform.hpp"
 
@@ -18,8 +18,11 @@ namespace Pocket {
 		Property<float> FieldOfView;
 		Property<float> Near;
 		Property<float> Far;
-		Property<Box> Viewport;
+		Property<Rect> Viewport;
+        Property<float> Aspect;
         Property<bool> Orthographic;
+        Property<Rect> OrthographicRectangle;
+        
         Property<RenderMask> Mask;
     
 		DirtyProperty<Matrix4x4> Projection;
@@ -32,12 +35,17 @@ namespace Pocket {
         Vector3 TransformPointToScreenSpace(Transform* viewTransform, Vector3 worldPoint);
         Vector3 TransformViewportToWorld(Transform* viewTransform, Vector3 viewportPoint);
         Vector3 TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint);
+        
+    private:
+        void ScreenSizeChanged();
+    public:
     	
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(FieldOfView)
         TYPE_FIELD(Near)
         TYPE_FIELD(Far)
         TYPE_FIELD(Viewport)
+        TYPE_FIELD(Aspect)
         TYPE_FIELD(Orthographic)
         TYPE_FIELD(Mask)
         TYPE_FIELDS_END

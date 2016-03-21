@@ -39,7 +39,7 @@ void Gui::Initialize(GameWorld* world) {
     world->CreateSystem<DraggableMotionSystem>();
 }
 
-void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager) {
+void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport, InputManager& inputManager) {
 
     atlas = world->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
@@ -50,11 +50,11 @@ void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, co
     Setup(atlas, viewport, inputManager);
 }
 
-void Gui::Setup(GameObject *atlas, const Box &viewport, InputManager &inputManager) {
+void Gui::Setup(GameObject *atlas, const Rect &viewport, InputManager &inputManager) {
     
     this->atlas = atlas;
     
-    BoundingBox bounds(0, Vector3(viewport.right * 2.0f, viewport.top * 2.0f, 3000.0f));
+    BoundingBox bounds(0, Vector3(viewport.width * 2.0f, viewport.height * 2.0f, 3000.0f));
     renderer->Octree().SetWorldBounds(bounds);
     touchSystem->Octree().SetWorldBounds(bounds);
     touchSystem->Input = &inputManager;
@@ -63,7 +63,6 @@ void Gui::Setup(GameObject *atlas, const Box &viewport, InputManager &inputManag
     camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = camera->AddComponent<Camera>();
     
-    cam->Viewport = viewport;
     cam->Orthographic = true;
     cam->Near = 1.0f;
     cam->Far = 2.0f;

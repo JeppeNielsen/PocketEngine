@@ -35,8 +35,8 @@ namespace Pocket {
     public:
         
         void Initialize(GameWorld* world) ;
-        void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Box& viewport, InputManager& inputManager);
-        void Setup(GameObject *atlas, const Box &viewport, InputManager &inputManager);
+        void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport, InputManager& inputManager);
+        void Setup(GameObject *atlas, const Rect &viewport, InputManager &inputManager);
         GameObject* GetCamera();
         GameObject* GetAtlas();
         

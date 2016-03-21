@@ -7,6 +7,7 @@
 //
 
 #include "RenderSystem.hpp"
+#include "Engine.hpp"
 
 using namespace Pocket;
 
@@ -44,9 +45,13 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     Transform* cameraTransform = cameraObject->GetComponent<Transform>();
     Camera* camera = cameraObject->GetComponent<Camera>();
     RenderMask cameraMask = camera->Mask;
-    
+    if (!camera->Orthographic()) {
+        const Rect& viewport = camera->Viewport;
+        const Vector2& screenSize = Engine::Context().ScreenSize;
+        Rect screenRect = viewport * screenSize;
+        glViewport(screenRect.x, screenRect.y, screenRect.width, screenRect.height);
+    }
     const Matrix4x4 viewProjection = camera->Projection().Multiply(cameraTransform->WorldInverse);
-    const float* viewProjectionGL = viewProjection.GetGlMatrix();
     
     BoundingFrustum frustum;
     frustum.SetFromViewProjection(viewProjection);
@@ -54,10 +59,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
 
     if (objectsInFrustum.empty()) return;
     
-    if (!camera->Orthographic()) {
-        Box viewport = camera->Viewport;
-        glViewport(viewport.left, viewport.bottom, viewport.Size().x, viewport.Size().y);
-    }
+    const float* viewProjectionGL = viewProjection.GetGlMatrix();
     
     for (auto renderer : objectRenderers) {
         renderer->viewProjection = viewProjectionGL;
