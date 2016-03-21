@@ -25,7 +25,7 @@ public:
         world.CreateSystem<RotatorSystem>();
         
         camera = world.CreateObject();
-        camera->AddComponent<Camera>()->Viewport = Context().Viewport();
+        camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         
@@ -51,7 +51,6 @@ public:
     }
     
     void Update(float dt) {
-        camera->GetComponent<Camera>()->Viewport = Context().Viewport();
         world.Update(dt);
     }
     
@@ -62,7 +61,7 @@ public:
     }
 };
 
-int main() {
+int main_cube() {
     Engine e;
     e.Start<Game>();
 	return 0;
