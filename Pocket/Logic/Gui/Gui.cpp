@@ -178,6 +178,7 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     label->VAlignment = Font::Middle;
     labelGO->AddComponent<TextBox>()->Text = text;
     labelGO->AddComponent<Touchable>(control);
+    labelGO->GetComponent<Colorable>()->Color = Colour::Black();
     return control;
 }
 
@@ -214,9 +215,9 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     //p->AddComponent<DraggableMotion>();
     p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
     p->GetComponent<Velocity>()->Friction = 5;
-    Limitable* limitable = p->AddComponent<Limitable>();
-    limitable->Size = p->GetComponent<Sizeable>();
-    limitable->View = listbox->GetComponent<Sizeable>();
+    //Limitable* limitable = p->AddComponent<Limitable>();
+    //limitable->Size = p->GetComponent<Sizeable>();
+    //limitable->View = listbox->GetComponent<Sizeable>();
     CreateClipper(listbox, false);
     (*pivot)=p;
     return listbox;

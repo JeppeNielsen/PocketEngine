@@ -26,7 +26,7 @@ namespace Pocket {
         }
     
 	    void operator = (DirtyProperty<Value> &other) {
-            isDirty = other.isDirty;
+            isDirty = true;
             value = other.value;
         }
         

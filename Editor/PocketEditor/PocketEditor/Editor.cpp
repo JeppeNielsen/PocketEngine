@@ -8,6 +8,8 @@
 #include "Engine.hpp"
 #include "Gui.hpp"
 #include "ScriptWorld.hpp"
+#include "VirtualTreeListSystem.hpp"
+#include "VirtualTreeListSpawnerSystem.hpp"
 
 using namespace Pocket;
 
@@ -27,7 +29,8 @@ public:
     };
     
     void Initialize() {
-    
+        
+        /*
         scriptWorld.SetFiles(
         "ScriptExample.so",
         "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
@@ -41,19 +44,85 @@ public:
             "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
         }
         );
+        */
         
         
         
         gui = world.CreateSystem<Gui>();
         world.CreateSystem<RotatorSystem>();
+        
+        world.CreateSystem<VirtualTreeListSystem>();
+        world.CreateSystem<VirtualTreeListSpawnerSystem>();
+        
+        
+        /*
+        
         scriptWorld.SetWorldType(world);
         
         scriptWorld.Build();
         
         scriptWorld.AddGameWorld(world);
         
+        */
+        
         gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
+        
+        
+        GameObject* pivot;
+        GameObject* listBox = gui->CreateListbox(0, "Box", {0,0}, {200,800}, &pivot);
+        
+        
+        GameObject* root = world.CreateObject();
+        //root->ID = "Root";
+        
+            for(int i=0; i<20; i++) {
+            GameObject* child1 = world.CreateObject();
+            child1->Parent = root;
+            //child1->ID = "Child1";
+        
+            for(int j=0; j<100; j++) {
+            GameObject* child2 = world.CreateObject();
+            child2->Parent = child1;
+            //child2->ID = "Child2";
+        
+            GameObject* child3 = world.CreateObject();
+            child3->Parent = child2;
+            //child3->ID = "Child3";
+        
+                GameObject* sub1 = world.CreateObject();
+                sub1->Parent = child3;
+                //sub1->ID = "Sub1";
+                GameObject* sub2 = world.CreateObject();
+                sub2->Parent = child3;
+                //sub2->ID = "Sub2";
+            GameObject* child4 = world.CreateObject();
+            child4->Parent = child1;
+            //child4->ID = "Child4";
+            
+            }
+        }
+        
+        auto treeView = pivot->AddComponent<VirtualTreeList>();
+        treeView->Root = root;
+        treeView->SetNodeExpanded(root, true);
+        //treeView->SetNodeExpanded(child3, true);
+        treeView->Pivot = listBox;
+        auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
+        
+        GameObject* clone = gui->CreateControl(0, "Box", {-1000,0}, {200,25});
+        clone->RemoveComponent<Touchable>();
+        gui->CreateControl(clone, "TextBox", 0, {25,25});
+        gui->CreateTextBox(clone, "TextBox", {25,0}, {200-25,25}, 0, "Object", 20);
+        
+        spawner->prefab = clone;
+        
+        
+        for(int i=0; i<0; i++) {
+            GameObject* box = gui->CreateControl(pivot, "Box", {0,i*52.0f}, {200,50});
+            box->GetComponent<Colorable>()->Color = Colour::HslToRgb(i*20, 1, 1, 1);
+            box->RemoveComponent<Touchable>();
+        }
         
         for (int x=0; x<30; x++) {
             for(int y=0; y<15; y++) {
@@ -65,14 +134,16 @@ public:
         window->AddComponent<Draggable>();
         window->GetComponent<Colorable>()->Color = Colour(0.0f,0.0f,1.0f,0.5f);
         window->GetComponent<Transform>()->Position = {300,300};
-        window->AddScriptComponent(1);
+       // window->AddScriptComponent(1);
         
+        /*
         GameObject* compileButton = gui->CreateControl(0, "Box", {100,50});
         gui->CreateLabel(compileButton, 0, {100,50}, 0, "Compile", 20);
         
         compileButton->GetComponent<Touchable>()->Click.Bind([this](auto t) {
             Compile();
         });
+        */
     }
     
     void CreateCube(Vector3 pos) {

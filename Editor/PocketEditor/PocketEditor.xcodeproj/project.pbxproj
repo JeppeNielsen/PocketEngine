@@ -338,6 +338,10 @@
 		729955551C99F76100DAAE5D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B11C99F76100DAAE5D /* tinyxml.cpp */; };
 		729955561C99F76100DAAE5D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */; };
 		729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */; };
+		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
+		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
+		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
+		72D719F71CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1160,6 +1164,14 @@
 		729953B21C99F76100DAAE5D /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
 		729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
+		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
+		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
+		72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeListSystem.hpp; sourceTree = "<group>"; };
+		72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSpawner.cpp; sourceTree = "<group>"; };
+		72D719F31CAB20BF00868DDB /* VirtualTreeListSpawner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeListSpawner.hpp; sourceTree = "<group>"; };
+		72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSpawnerSystem.cpp; sourceTree = "<group>"; };
+		72D719F61CAB211300868DDB /* VirtualTreeListSpawnerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeListSpawnerSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1466,6 +1478,14 @@
 				729950131C99F76000DAAE5D /* HierarchyEditorSystem.hpp */,
 				729950141C99F76000DAAE5D /* SerializedFieldEditors.cpp */,
 				729950151C99F76000DAAE5D /* SerializedFieldEditors.hpp */,
+				72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */,
+				72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */,
+				72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */,
+				72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */,
+				72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */,
+				72D719F31CAB20BF00868DDB /* VirtualTreeListSpawner.hpp */,
+				72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */,
+				72D719F61CAB211300868DDB /* VirtualTreeListSpawnerSystem.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -2743,6 +2763,7 @@
 				729954961C99F76100DAAE5D /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
 				729953E91C99F76100DAAE5D /* SerializedFieldEditors.cpp in Sources */,
 				729953E21C99F76100DAAE5D /* HierarchyOrder.cpp in Sources */,
+				72D719F71CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp in Sources */,
 				7299548F1C99F76100DAAE5D /* btSphereShape.cpp in Sources */,
 				7299543D1C99F76100DAAE5D /* b2CircleShape.cpp in Sources */,
 				729954191C99F76100DAAE5D /* Selectable.cpp in Sources */,
@@ -2788,6 +2809,7 @@
 				7299540F1C99F76100DAAE5D /* Colorable.cpp in Sources */,
 				729954921C99F76100DAAE5D /* btTetrahedronShape.cpp in Sources */,
 				729954A41C99F76100DAAE5D /* gim_tri_collision.cpp in Sources */,
+				72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */,
 				729953CB1C99F76100DAAE5D /* ICellItem.cpp in Sources */,
 				729954671C99F76100DAAE5D /* btConvex2dConvex2dAlgorithm.cpp in Sources */,
 				729954AE1C99F76100DAAE5D /* btRaycastCallback.cpp in Sources */,
@@ -2798,6 +2820,7 @@
 				729954981C99F76100DAAE5D /* btTriangleMeshShape.cpp in Sources */,
 				7299547A1C99F76100DAAE5D /* btCollisionShape.cpp in Sources */,
 				729953CD1C99F76100DAAE5D /* Pointer.cpp in Sources */,
+				72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */,
 				729954791C99F76100DAAE5D /* btCapsuleShape.cpp in Sources */,
 				729954FC1C99F76100DAAE5D /* File.mm in Sources */,
 				729955061C99F76100DAAE5D /* lodepng.cpp in Sources */,
@@ -2915,6 +2938,7 @@
 				7299548B1C99F76100DAAE5D /* btOptimizedBvh.cpp in Sources */,
 				729954B41C99F76100DAAE5D /* btGearConstraint.cpp in Sources */,
 				729953CC1C99F76100DAAE5D /* Octree.cpp in Sources */,
+				72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */,
 				729954851C99F76100DAAE5D /* btCylinderShape.cpp in Sources */,
 				7299549A1C99F76100DAAE5D /* btContactProcessing.cpp in Sources */,
 				7299544C1C99F76100DAAE5D /* b2PolyAndCircleContact.cpp in Sources */,
