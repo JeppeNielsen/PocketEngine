@@ -8,13 +8,14 @@
 
 #pragma once
 #include <map>
+#include <functional>
 #include "GameObject.hpp"
 #include "VirtualTreeList.hpp"
 
 namespace Pocket {
   class VirtualTreeListSpawner {
     public:
-        GameObject* prefab;
+        std::function<GameObject*(GameObject*, GameObject*)> OnCreate;
         std::vector<VirtualTreeList::Node> objects;
   };
 }

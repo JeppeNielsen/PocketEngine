@@ -28,6 +28,17 @@ public:
         }
     };
     
+    struct TouchInvalidSystem : public GameSystem<Colorable, Touchable> {
+    
+        void Update(float dt) {
+            for(auto o : Objects()) {
+                o->GetComponent<Colorable>()->Color = o->GetComponent<Touchable>()->Click.Empty() ? Colour::Red() : Colour::Green();
+            }
+        
+        }
+    
+    };
+    
     void Initialize() {
         
         /*
@@ -53,7 +64,7 @@ public:
         
         world.CreateSystem<VirtualTreeListSystem>();
         world.CreateSystem<VirtualTreeListSpawnerSystem>();
-        
+        //world.CreateSystem<TouchInvalidSystem>();
         
         /*
         
@@ -76,12 +87,44 @@ public:
         GameObject* root = world.CreateObject();
         //root->ID = "Root";
         
-            for(int i=0; i<20; i++) {
+        /*
+        GameObject* child1 = world.CreateObject();
+        child1->ID = "Child0";
+        
+        GameObject* child2 = world.CreateObject();
+        child2->ID = "Child1";
+        
+        child1->Parent = root;
+        child2->Parent = root;
+        */
+        
+        
+        /*
+        for (int i=0; i<5; i++) {
+            GameObject* child = world.CreateObject();
+            std::stringstream s;
+            s<<"Root/Child"<<i;
+            std::string str =s.str();
+            child->ID = str;
+            child->Parent = root;
+            
+            GameObject* sub = world.CreateObject();
+            std::stringstream ss;
+            ss<<"Root/Child"<<i<<"/Sub";
+            sub->ID = ss.str();
+            sub->Parent = child;
+            
+        }
+        
+        */
+        
+        
+        for(int i=0; i<100; i++) {
             GameObject* child1 = world.CreateObject();
             child1->Parent = root;
             //child1->ID = "Child1";
         
-            for(int j=0; j<100; j++) {
+            for(int j=0; j<50; j++) {
             GameObject* child2 = world.CreateObject();
             child2->Parent = child1;
             //child2->ID = "Child2";
@@ -110,12 +153,15 @@ public:
         treeView->Pivot = listBox;
         auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
         
-        GameObject* clone = gui->CreateControl(0, "Box", {-1000,0}, {200,25});
-        clone->RemoveComponent<Touchable>();
-        gui->CreateControl(clone, "TextBox", 0, {25,25});
-        gui->CreateTextBox(clone, "TextBox", {25,0}, {200-25,25}, 0, "Object", 20);
+
         
-        spawner->prefab = clone;
+        spawner->OnCreate = [&](GameObject* node, GameObject* parent) -> GameObject* {
+            GameObject* clone = gui->CreateControl(parent, "Box", {-1000,0}, {200,25});
+            clone->RemoveComponent<Touchable>();
+            gui->CreateControl(clone, "TextBox", 0, {25,25});
+            gui->CreateTextBox(clone, "TextBox", {25,0}, {200-25,25}, 0, "Object", 14);
+            return clone;
+        };
         
         
         for(int i=0; i<0; i++) {

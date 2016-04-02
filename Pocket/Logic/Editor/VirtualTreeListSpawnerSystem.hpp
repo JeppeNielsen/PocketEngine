@@ -31,7 +31,7 @@ namespace Pocket {
                 return !(node!=other.node || treelist!=other.treelist);
             }
 
-            inline  bool operator !=(const FoldoutData &other) const{
+            inline bool operator !=(const FoldoutData &other) const{
                 return (node!=other.node || treelist!=other.treelist);
             }
         };

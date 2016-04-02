@@ -48,11 +48,23 @@ void VirtualTreeListSystem::UpdateVirtualList(Pocket::GameObject *object) {
     
     float itemHeight = 25;
 
-    int startIndex = (int)floorf(startPosition.y / itemHeight);
-    int endIndex = (int)floorf(endPosition.y / itemHeight);
+    //int startIndex = (int)floorf(startPosition.y / itemHeight);
+    //int endIndex = (int)floorf(endPosition.y / itemHeight);
+
+    int startIndex = (int)-floorf(endPosition.y / itemHeight);
+    int endIndex = (int)-floorf(startPosition.y / itemHeight);
+
 
     VirtualTreeList::Nodes nodes;
     treeList->GetNodes(startIndex, endIndex, nodes);
+
+    for(auto& node : treeList->visibleNodes) {
+        auto current = std::find(nodes.begin(), nodes.end(), node);
+        bool isRemoved = current == nodes.end();
+        if (isRemoved) {
+            treeList->NodeRemoved({ node.node, node.position, node.depth });
+        }
+    }
 
     for(auto& node : nodes) {
         auto prev = std::find(treeList->visibleNodes.begin(), treeList->visibleNodes.end(), node);
@@ -62,13 +74,7 @@ void VirtualTreeListSystem::UpdateVirtualList(Pocket::GameObject *object) {
         }
     }
 
-    for(auto& node : treeList->visibleNodes) {
-        auto current = std::find(nodes.begin(), nodes.end(), node);
-        bool isRemoved = current == nodes.end();
-        if (isRemoved) {
-            treeList->NodeRemoved({ node.node, node.position, node.depth });
-        }
-    }
+    
 
     //std::cout << "startIndex : " << startIndex << "   endIndex : " << endIndex<< std::endl;
 

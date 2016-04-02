@@ -59,8 +59,6 @@ namespace Pocket {
         
         Event<Node> NodeCreated;
         Event<Node> NodeRemoved;
-      
-        void GetNodes_old(int lower, int upper, Nodes& nodesFound);
         
         void GetNodes(int lower, int upper, Nodes& nodesFound);
         
