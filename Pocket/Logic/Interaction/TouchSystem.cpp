@@ -46,6 +46,17 @@ void TouchSystem::ObjectRemoved(GameObject* object) {
     if (touchableObject->clip>0 && touchableObject->orderable) {
         clippers.erase(std::find(clippers.begin(), clippers.end(), touchableObject));
     }
+    
+    for(int i=0; i<12; ++i) {
+        Touched& list = touches[i];
+        for(int j=0; j<list.size(); ++j) {
+            if (list[j].Touchable == touchableObject->touchable) {
+                list.erase(list.begin() + j);
+                --j;
+                break;
+            }
+        }
+    }
     delete touchableObject;
 }
 
@@ -60,7 +71,7 @@ void TouchSystem::Update(float dt) {
                         cancelled->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
                         ups.push_back(list[j]);
                         list.erase(list.begin()+j);
-                        j--;
+                        --j;
                     }
                 }
             }
