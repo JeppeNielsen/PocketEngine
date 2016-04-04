@@ -21,6 +21,7 @@
 
 - (void)prepareOpenGL {
     [super prepareOpenGL];
+    [self setWantsBestResolutionOpenGLSurface:NO];
     
     NSTimeInterval timeInterval = 0.005;
     
@@ -36,7 +37,6 @@
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
     
     Pocket::Window::Framebuffer = (uint)defaultFBO;
-    
 }
 
 - (void) updateGLView:(NSTimer *)timer
@@ -74,7 +74,7 @@
     NSPoint p;
     p.x = point.x;
     p.y = point.y;//_bounds.size.height - point.y;
-    return p;
+    return [self convertPointToBacking:p];;
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {

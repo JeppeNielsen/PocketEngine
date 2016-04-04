@@ -84,14 +84,8 @@
                                                     options:options
                                                       owner:window
                                                    userInfo:nil];
-
-    
     [view addTrackingArea:area];
-
-    
     Pocket::OSXWindowCreator::Instance()->OnInitialize(view);
-    
-    //[view enterFullScreenMode:[NSScreen mainScreen] withOptions:nil];
 }
 
 - (void)windowWillClose:(NSNotification *)notification
@@ -100,7 +94,13 @@
 }
 
 - (void)windowDidResize:(NSNotification *)notification {
-    Pocket::OSXWindowCreator::Instance()->ScreenSizeChanged(view.bounds.size.width, view.bounds.size.height);
+
+    NSRect backingBounds = [view convertRectToBacking:view.bounds];
+ 
+    GLsizei backingPixelWidth  = (GLsizei)(backingBounds.size.width),
+            backingPixelHeight = (GLsizei)(backingBounds.size.height);
+
+    Pocket::OSXWindowCreator::Instance()->ScreenSizeChanged(backingPixelWidth, backingPixelHeight);
 }
 
 @end
