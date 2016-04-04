@@ -67,13 +67,11 @@ public:
         //world.CreateSystem<TouchInvalidSystem>();
         
         /*
-        
         scriptWorld.SetWorldType(world);
         
         scriptWorld.Build();
         
         scriptWorld.AddGameWorld(world);
-        
         */
         
         gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
@@ -159,7 +157,7 @@ public:
             GameObject* clone = gui->CreateControl(parent, "Box", {-1000,0}, {200,25});
             clone->RemoveComponent<Touchable>();
             gui->CreateControl(clone, "TextBox", 0, {25,25});
-            gui->CreateTextBox(clone, "TextBox", {25,0}, {200-25,25}, 0, "Object", 14);
+            gui->CreateTextBox(clone, "TextBox", {25,0}, {200-25,25}, 0, "Object", 10);
             return clone;
         };
         

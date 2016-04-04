@@ -338,6 +338,7 @@
 		729955551C99F76100DAAE5D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B11C99F76100DAAE5D /* tinyxml.cpp */; };
 		729955561C99F76100DAAE5D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */; };
 		729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */; };
+		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
 		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
 		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
@@ -1164,6 +1165,7 @@
 		729953B21C99F76100DAAE5D /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
 		729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
 		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
 		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
@@ -1268,6 +1270,8 @@
 		72994F971C99F74F00DAAE5D /* PocketEditor */ = {
 			isa = PBXGroup;
 			children = (
+				72CE8EDE1CB2E494001F08E4 /* Logic */,
+				72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */,
 				721EA9A91C9DFEB60027D223 /* ScriptCode */,
 				721EA9A11C9DFC8C0027D223 /* ScriptInclude */,
 				7287F21F1C9DB496005D05FA /* libclang.dylib */,
@@ -2605,6 +2609,21 @@
 			path = TinyXml;
 			sourceTree = "<group>";
 		};
+		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EDF1CB2E580001F08E4 /* Windows */,
+			);
+			path = Logic;
+			sourceTree = "<group>";
+		};
+		72CE8EDF1CB2E580001F08E4 /* Windows */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Windows;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2665,6 +2684,7 @@
 				7287F1161C9B4216005D05FA /* Font.fnt in Resources */,
 				7287F1171C9B4216005D05FA /* images.png in Resources */,
 				7287F1181C9B4216005D05FA /* images.xml in Resources */,
+				72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3113,11 +3133,12 @@
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"",
 					"\"$(SRCROOT)/PocketEditor/clang/include\"",
 				);
+				INFOPLIST_FILE = "$(SRCROOT)/NSOpenGLView-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PocketEditor/clang/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -3134,11 +3155,12 @@
 					"\"$(SRCROOT)/../../Pocket/Physics/Box2D/Collision\"",
 					"\"$(SRCROOT)/PocketEditor/clang/include\"",
 				);
+				INFOPLIST_FILE = "$(SRCROOT)/NSOpenGLView-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/PocketEditor/clang/lib",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
