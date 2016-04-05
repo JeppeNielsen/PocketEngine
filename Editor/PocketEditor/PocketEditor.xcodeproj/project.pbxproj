@@ -339,6 +339,10 @@
 		729955561C99F76100DAAE5D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */; };
 		729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
+		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
+		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
+		72CE8EEA1CB435DD001F08E4 /* HierarchyWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE81CB435DD001F08E4 /* HierarchyWindow.cpp */; };
+		72CE8EEE1CB437F5001F08E4 /* Project.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EEC1CB437F5001F08E4 /* Project.cpp */; };
 		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
 		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
 		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
@@ -1166,6 +1170,14 @@
 		729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
+		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
+		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
+		72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseWindow.cpp; sourceTree = "<group>"; };
+		72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BaseWindow.hpp; sourceTree = "<group>"; };
+		72CE8EE81CB435DD001F08E4 /* HierarchyWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyWindow.cpp; sourceTree = "<group>"; };
+		72CE8EE91CB435DD001F08E4 /* HierarchyWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyWindow.hpp; sourceTree = "<group>"; };
+		72CE8EEC1CB437F5001F08E4 /* Project.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Project.cpp; sourceTree = "<group>"; };
+		72CE8EED1CB437F5001F08E4 /* Project.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Project.hpp; sourceTree = "<group>"; };
 		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
 		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
 		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
@@ -2612,6 +2624,8 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72CE8EEB1CB437DF001F08E4 /* Project */,
+				72CE8EE01CB2FD92001F08E4 /* Context */,
 				72CE8EDF1CB2E580001F08E4 /* Windows */,
 			);
 			path = Logic;
@@ -2620,8 +2634,38 @@
 		72CE8EDF1CB2E580001F08E4 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				72CE8EE71CB43569001F08E4 /* Hierarchy */,
+				72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */,
+				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
 			);
 			path = Windows;
+			sourceTree = "<group>";
+		};
+		72CE8EE01CB2FD92001F08E4 /* Context */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */,
+				72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */,
+			);
+			path = Context;
+			sourceTree = "<group>";
+		};
+		72CE8EE71CB43569001F08E4 /* Hierarchy */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EE81CB435DD001F08E4 /* HierarchyWindow.cpp */,
+				72CE8EE91CB435DD001F08E4 /* HierarchyWindow.hpp */,
+			);
+			path = Hierarchy;
+			sourceTree = "<group>";
+		};
+		72CE8EEB1CB437DF001F08E4 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EEC1CB437F5001F08E4 /* Project.cpp */,
+				72CE8EED1CB437F5001F08E4 /* Project.hpp */,
+			);
+			path = Project;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2796,6 +2840,8 @@
 				729954B01C99F76100DAAE5D /* btVoronoiSimplexSolver.cpp in Sources */,
 				729954471C99F76100DAAE5D /* b2World.cpp in Sources */,
 				7299540A1C99F76100DAAE5D /* PhysicsSystem2d.cpp in Sources */,
+				72CE8EEA1CB435DD001F08E4 /* HierarchyWindow.cpp in Sources */,
+				72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */,
 				729954FA1C99F76100DAAE5D /* AppDelegate.mm in Sources */,
 				729953C91C99F76100DAAE5D /* BezierCurve1.cpp in Sources */,
 				7299549B1C99F76100DAAE5D /* btGenericPoolAllocator.cpp in Sources */,
@@ -2856,6 +2902,7 @@
 				729953E51C99F76100DAAE5D /* GameObjectEditor.cpp in Sources */,
 				729954561C99F76100DAAE5D /* btBroadphaseProxy.cpp in Sources */,
 				729955051C99F76100DAAE5D /* jpeg_decoder.cpp in Sources */,
+				72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */,
 				7299550A1C99F76100DAAE5D /* DeferredBuffers.cpp in Sources */,
 				729954811C99F76100DAAE5D /* btConvexPointCloudShape.cpp in Sources */,
 				729953FB1C99F76100DAAE5D /* TextBoxSystem.cpp in Sources */,
@@ -2910,6 +2957,7 @@
 				729954E01C99F76100DAAE5D /* btAlignedAllocator.cpp in Sources */,
 				729954941C99F76100DAAE5D /* btTriangleCallback.cpp in Sources */,
 				729954691C99F76100DAAE5D /* btConvexConvexAlgorithm.cpp in Sources */,
+				72CE8EEE1CB437F5001F08E4 /* Project.cpp in Sources */,
 				729954061C99F76100DAAE5D /* VelocitySystem.cpp in Sources */,
 				729953C51C99F76100DAAE5D /* InputDevice.cpp in Sources */,
 				729954DB1C99F76100DAAE5D /* btSoftBodyHelpers.cpp in Sources */,
