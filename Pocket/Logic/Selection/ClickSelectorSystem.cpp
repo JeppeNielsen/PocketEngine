@@ -24,6 +24,6 @@ void ClickSelectorSystem::ObjectRemoved(GameObject *object) {
 
 void ClickSelectorSystem::TouchableClick(Pocket::TouchData d, GameObject* object) {
     selectables->ClearSelection();
-    object->GetComponent<Selectable>()->Selected = true;
+    object->GetComponent<Selectable>()->Selected = true;//!object->GetComponent<Selectable>()->Selected;
 }
 

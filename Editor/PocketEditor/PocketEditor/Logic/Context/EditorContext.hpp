@@ -18,10 +18,12 @@ class EditorContext {
 private:
     Project project;
     GameWorld world;
+    GameWorld guiWorld;
     Gui* gui;
     InputManager* input;
 public:
     GameWorld& World();
+    GameWorld& GuiWorld();
     Gui& Gui();
     InputManager& Input();
     Project& Project();

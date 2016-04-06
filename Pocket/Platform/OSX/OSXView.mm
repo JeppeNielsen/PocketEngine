@@ -21,7 +21,7 @@
 
 - (void)prepareOpenGL {
     [super prepareOpenGL];
-    [self setWantsBestResolutionOpenGLSurface:NO];
+    
     
     NSTimeInterval timeInterval = 0.005;
     

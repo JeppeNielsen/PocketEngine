@@ -23,7 +23,7 @@ void HierarchyWindow::OnInitialize() {
 }
 
 void HierarchyWindow::OnCreate() {
-    GameWorld& world = context->World();
+    GameWorld& world = context->GuiWorld();
     Gui& gui = context->Gui();
 
     GameObject* pivot;

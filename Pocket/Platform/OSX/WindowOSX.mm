@@ -41,10 +41,12 @@ void WindowOSX::osxWindowCreated(void* win) {
     
     OSXView* window = (OSXView*)win;
     
-    NSRect backingBounds = [window convertRectToBacking:window.bounds];
+    
+    NSRect backingBounds = [window bounds];//;[window convertRectToBacking:window.bounds];
  
     GLsizei backingPixelWidth  = (GLsizei)(backingBounds.size.width),
             backingPixelHeight = (GLsizei)(backingBounds.size.height);
+    
     
     context->ScreenSize = Vector2(backingPixelWidth, backingPixelHeight);
 }

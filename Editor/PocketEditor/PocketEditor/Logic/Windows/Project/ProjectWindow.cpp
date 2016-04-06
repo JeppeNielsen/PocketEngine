@@ -13,13 +13,9 @@
 std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
-
-    GameWorld& world = context->World();
-
+    GameWorld& world = context->GuiWorld();
     world.CreateSystem<VirtualTreeListSystem>();
     world.CreateSystem<VirtualTreeListSpawnerSystem>();
-
-
 }
 
 void ProjectWindow::OnCreate() {

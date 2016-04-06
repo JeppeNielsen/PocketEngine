@@ -10,6 +10,8 @@
 
 GameWorld& EditorContext::World() { return world; }
 
+GameWorld& EditorContext::GuiWorld() { return guiWorld; }
+
 InputManager& EditorContext::Input() { return *input; }
 
 Gui& EditorContext::Gui() { return *gui; }
@@ -18,13 +20,13 @@ Project& EditorContext::Project() { return project; }
 
 void EditorContext::NewProject() {
     project = { };
-    project.CreateDefaultScene();
+    project.CreateDefaultScene(world);
 }
 
 void EditorContext::Initialize(InputManager& input) {
     this->input = &input;
     
-    gui = world.CreateSystem<class Gui>();
+    gui = guiWorld.CreateSystem<class Gui>();
     
     gui->Setup("images.png", "images.xml", {0,0, 1280,1024}, input);
     gui->CreateFont("Font.fnt", "Font");

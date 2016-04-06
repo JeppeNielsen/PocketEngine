@@ -70,6 +70,7 @@
     
 
     view = [[OSXView alloc]init];
+    [view setWantsBestResolutionOpenGLSurface:NO];
     
     [window setContentView:view ];  
     

@@ -8,6 +8,7 @@
 
 #include "Project.hpp"
 #include "RenderSystem.hpp"
+#include "SelectionSystem.hpp"
 
 GameWorld& Project::World() { return world; }
 
@@ -20,25 +21,34 @@ struct RotatorSystem : public GameSystem<Transform, Rotator> {
     }
 };
 
-void Project::CreateDefaultScene() {
+void Project::CreateDefaultScene(GameWorld& editorWorld) {
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<RotatorSystem>();
+    world.CreateSystem<SelectionSystem>()->editorWorld = &editorWorld;
     
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Camera>();
     camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-    camera->GetComponent<Camera>()->FieldOfView = 40;
+    camera->GetComponent<Camera>()->FieldOfView = 70;
 
-    GameObject* cube = world.CreateObject();
-    cube->AddComponent<Transform>()->Position = {0,0,0};
-    cube->AddComponent<Rotator>()->speed = { 2,1,0 };
-    cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-    cube->AddComponent<Material>();
+
+    for (int x=-4; x<=4; ++x) {
+    for (int y=-4; y<=4; ++y) {
     
-    auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
-    
-    for (int i=0; i<verts.size(); i++) {
-        verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
+        GameObject* cube = world.CreateObject();
+        cube->AddComponent<Transform>()->Position = {x*2.3f,y*2.3f,0};
+        cube->AddComponent<Rotator>()->speed = { 0.02f+x*0.03f,0.6f,0 };
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+        cube->AddComponent<Material>();
+        
+        auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
+        
+        for (int i=0; i<verts.size(); i++) {
+            verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
+        }
+        }
     }
+    
+    
 }

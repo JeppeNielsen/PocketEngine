@@ -10,6 +10,9 @@
 #include "EditorContext.hpp"
 #include "HierarchyWindow.hpp"
 #include "ProjectWindow.hpp"
+#include "EditorSelectionSystem.hpp"
+#include "ClickSelectorSystem.hpp"
+#include "RenderSystem.hpp"
 
 #include <vector>
 
@@ -39,6 +42,18 @@ public:
         }
         );
         */
+        
+        GameWorld& world = context.World();
+        
+        context.World().CreateSystem<RenderSystem>();
+        context.World().CreateSystem<EditorSelectionSystem>();
+        context.World().CreateSystem<TouchSystem>()->Input = &Input;
+        context.World().CreateSystem<ClickSelectorSystem>();
+        
+        GameObject* camera = world.CreateObject();
+        camera->AddComponent<Camera>();
+        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
+        camera->GetComponent<Camera>()->FieldOfView = 70;
         
         context.NewProject();
         
@@ -83,8 +98,9 @@ public:
     
     void Update(float dt) {
         
-        context.World().Update(dt);
+        context.GuiWorld().Update(dt);
         context.Project().World().Update(dt);
+        context.World().Update(dt);
     }
     
     void Render() {
@@ -92,6 +108,7 @@ public:
         //glClear(GL_COLOR_BUFFER_BIT);
         context.Project().World().Render();
         context.World().Render();
+        context.GuiWorld().Render();
     }
 };
 
