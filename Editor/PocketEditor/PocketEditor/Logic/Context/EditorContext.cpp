@@ -18,6 +18,7 @@ Project& EditorContext::Project() { return project; }
 
 void EditorContext::NewProject() {
     project = { };
+    project.CreateDefaultScene();
 }
 
 void EditorContext::Initialize(InputManager& input) {
@@ -25,9 +26,6 @@ void EditorContext::Initialize(InputManager& input) {
     
     gui = world.CreateSystem<class Gui>();
     
-    
     gui->Setup("images.png", "images.xml", {0,0, 1280,1024}, input);
     gui->CreateFont("Font.fnt", "Font");
-    
-    
 }

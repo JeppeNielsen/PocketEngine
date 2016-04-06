@@ -6,9 +6,10 @@
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 #include "Engine.hpp"
+#include "ScriptWorld.hpp"
 #include "EditorContext.hpp"
 #include "HierarchyWindow.hpp"
-#include "ScriptWorld.hpp"
+#include "ProjectWindow.hpp"
 
 #include <vector>
 
@@ -39,9 +40,11 @@ public:
         );
         */
         
+        context.NewProject();
         
         
         windows.push_back(new HierarchyWindow());
+        windows.push_back(new ProjectWindow());
         
         for(auto window : windows) {
             window->Initialize(&context);
@@ -53,6 +56,12 @@ public:
             window->Create();
         }
         
+        
+        Input.ButtonDown.Bind([this] (auto key) {
+            if (key == "n") {
+                context.NewProject();
+            }
+        });
     }
     
 //    void Compile() {
@@ -73,12 +82,15 @@ public:
 //    }
     
     void Update(float dt) {
+        
         context.World().Update(dt);
+        context.Project().World().Update(dt);
     }
     
     void Render() {
         //glClearColor(1, 1, 0, 1);
         //glClear(GL_COLOR_BUFFER_BIT);
+        context.Project().World().Render();
         context.World().Render();
     }
 };

@@ -343,6 +343,7 @@
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
 		72CE8EEA1CB435DD001F08E4 /* HierarchyWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE81CB435DD001F08E4 /* HierarchyWindow.cpp */; };
 		72CE8EEE1CB437F5001F08E4 /* Project.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EEC1CB437F5001F08E4 /* Project.cpp */; };
+		72CE8EF21CB461F6001F08E4 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EF01CB461F6001F08E4 /* ProjectWindow.cpp */; };
 		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
 		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
 		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
@@ -1178,6 +1179,8 @@
 		72CE8EE91CB435DD001F08E4 /* HierarchyWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyWindow.hpp; sourceTree = "<group>"; };
 		72CE8EEC1CB437F5001F08E4 /* Project.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Project.cpp; sourceTree = "<group>"; };
 		72CE8EED1CB437F5001F08E4 /* Project.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Project.hpp; sourceTree = "<group>"; };
+		72CE8EF01CB461F6001F08E4 /* ProjectWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectWindow.cpp; sourceTree = "<group>"; };
+		72CE8EF11CB461F6001F08E4 /* ProjectWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectWindow.hpp; sourceTree = "<group>"; };
 		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
 		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
 		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
@@ -2634,6 +2637,7 @@
 		72CE8EDF1CB2E580001F08E4 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				72CE8EEF1CB461F6001F08E4 /* Project */,
 				72CE8EE71CB43569001F08E4 /* Hierarchy */,
 				72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */,
 				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
@@ -2664,6 +2668,15 @@
 			children = (
 				72CE8EEC1CB437F5001F08E4 /* Project.cpp */,
 				72CE8EED1CB437F5001F08E4 /* Project.hpp */,
+			);
+			path = Project;
+			sourceTree = "<group>";
+		};
+		72CE8EEF1CB461F6001F08E4 /* Project */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EF01CB461F6001F08E4 /* ProjectWindow.cpp */,
+				72CE8EF11CB461F6001F08E4 /* ProjectWindow.hpp */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -2964,6 +2977,7 @@
 				7299543E1C99F76100DAAE5D /* b2PolygonShape.cpp in Sources */,
 				729954661C99F76100DAAE5D /* btCompoundCollisionAlgorithm.cpp in Sources */,
 				729954DC1C99F76100DAAE5D /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
+				72CE8EF21CB461F6001F08E4 /* ProjectWindow.cpp in Sources */,
 				729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */,
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,

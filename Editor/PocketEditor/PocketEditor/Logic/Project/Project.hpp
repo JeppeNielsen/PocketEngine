@@ -16,4 +16,6 @@ private:
     GameWorld world;
 public:
     GameWorld& World();
+    
+    void CreateDefaultScene();
 };
