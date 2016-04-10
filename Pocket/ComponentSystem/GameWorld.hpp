@@ -58,6 +58,7 @@ private:
     };
     
     std::vector<ObjectID> objectIDs;
+    GameObject root;
 
     std::string* GetObjectID(GameObject* object);
     void AddObjectID(GameObject* object, std::string id);
@@ -95,6 +96,7 @@ public:
     GameObject* GetObject(int index);
     void Clear();
     ~GameWorld();
+    const GameObject* Root();
     
 #ifdef SCRIPTING_ENABLED
     //Scripting

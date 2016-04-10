@@ -56,6 +56,7 @@ private:
     bool isRemoved;
     Container<GameObject>::ObjectInstance* instance;
     GameWorld* world;
+    int childIndex;
     
     friend class Container<GameObject>::ObjectInstance;
     
@@ -77,7 +78,7 @@ protected:
 public:
 
     Property<GameObject*> Parent;
-    const ObjectCollection& Children() { return children; }
+    const ObjectCollection& Children() const { return children; }
     Property<int> Order;
     
     template<typename Component>

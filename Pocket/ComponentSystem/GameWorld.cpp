@@ -197,6 +197,10 @@ GameWorld::~GameWorld() {
     }
 }
 
+const GameObject* GameWorld::Root() {
+    return &root;
+}
+
 void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
     for(auto& o : objectIDs) {
         if (o.object == object) {

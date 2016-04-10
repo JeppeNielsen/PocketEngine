@@ -31,6 +31,7 @@ public:
     ObjectInstance* CreateObject() {
         TryGrow();
         ObjectInstance* instance = objects[size++];
+        assert(instance->references == 0);
         ++instance->references;
         ResetInstance(instance);
         return instance;

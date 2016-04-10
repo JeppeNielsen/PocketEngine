@@ -65,15 +65,23 @@ GameObject::GameObject() : world(0), isRemoved(false)  {
     Parent = 0;
     Parent.Changed.Bind([this]() {
         assert(Parent!=this);
-        auto prevParent = Parent.PreviousValue();
-        if (prevParent) {
-            auto& children = prevParent->children;
-            children.erase(std::find(children.begin(), children.end(), this));
+        GameObject* prevParent = Parent.PreviousValue();
+        GameObject* currentParent = Parent;
+        if (!currentParent) {
+            currentParent = &world->root;
+        }
+        if (!prevParent) {
+            prevParent = &world->root;
         }
         
-        if (Parent) {
-            Parent()->children.push_back(this);
-        }
+        auto& children = prevParent->children;
+        GameObject* lastChild = children.back();
+        lastChild->childIndex = childIndex;
+        children[childIndex] = lastChild;
+        children.pop_back();
+        
+        childIndex = (int)currentParent->children.size();
+        currentParent->children.push_back(this);
     });
 }
 
@@ -95,6 +103,13 @@ void GameObject::Remove() {
 
     world->removeActions.emplace_back([this]() {
         Parent = 0;
+        
+        auto& children = world->root.children;
+        GameObject* lastChild = children.back();
+        lastChild->childIndex = childIndex;
+        children[childIndex] = lastChild;
+        children.pop_back();
+        
         world->objects.RemoveObject(instance);
     });
     
@@ -157,6 +172,8 @@ void GameObject::Reset() {
         removedScriptComponents[i]=false;
     }
 #endif
+    childIndex = (int)world->root.children.size();
+    world->root.children.push_back(this);
 }
 
 void GameObject::SetWorld(GameWorld* w) {
