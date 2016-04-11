@@ -112,8 +112,11 @@ void DraggableSystem::Down(TouchData d, GameObject* object) {
         }
         break;
         case  Draggable::MovementMode::ZAxis: {
+            bool leftSide = d.CameraTransform->WorldInverse().TransformPosition(d.WorldPosition).x<0;
+            
             Vector3 axis = dragging.transform->World().TransformVector(Vector3(0,0,1));
-            Vector3 up = axis.Cross(forward);
+            Vector3 sideways = d.CameraTransform->World().TransformVector(Vector3(leftSide ? -1 : 1,0,0));
+            Vector3 up = axis.Cross(sideways);
             dragging.dragPlane = Plane(axis.Cross(up).Normalized(), d.WorldPosition);
         }
         break;
