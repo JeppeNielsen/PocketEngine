@@ -12,7 +12,9 @@
 #include "ProjectWindow.hpp"
 #include "EditorSelectionSystem.hpp"
 #include "ClickSelectorSystem.hpp"
+#include "EditorTransformSystem.hpp"
 #include "RenderSystem.hpp"
+#include "SelectableFactory.hpp"
 
 #include <vector>
 
@@ -48,7 +50,10 @@ public:
         context.World().CreateSystem<RenderSystem>();
         context.World().CreateSystem<EditorSelectionSystem>();
         context.World().CreateSystem<TouchSystem>()->Input = &Input;
+        context.World().CreateSystem<DraggableSystem>();
         context.World().CreateSystem<ClickSelectorSystem>();
+        context.World().CreateSystem<EditorTransformSystem>();
+        context.World().CreateSystem<SelectableFactory>();
         
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Camera>();

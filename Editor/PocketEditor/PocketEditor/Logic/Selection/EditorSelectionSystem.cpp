@@ -36,7 +36,9 @@ void EditorSelectionSystem::SelectionChanged(Pocket::GameObject *object) {
         selectionObject->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
         editorSelection->selectionObject = selectionObject;
     } else {
-        object->GetComponent<EditorSelection>()->selectionObject->Remove();
-        object->GetComponent<EditorSelection>()->selectionObject = 0;
+        if (object->GetComponent<EditorSelection>()->selectionObject) {
+            object->GetComponent<EditorSelection>()->selectionObject->Remove();
+            object->GetComponent<EditorSelection>()->selectionObject = 0;
+        }
     }
 }

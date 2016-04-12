@@ -16,6 +16,7 @@ namespace Pocket {
   class VirtualTreeListSpawner {
     public:
         std::function<GameObject*(GameObject*, GameObject*)> OnCreate;
+        std::function<void(GameObject*, GameObject*)> OnRemove;
         std::vector<VirtualTreeList::Node> objects;
   };
 }

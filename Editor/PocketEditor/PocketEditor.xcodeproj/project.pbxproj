@@ -347,6 +347,10 @@
 		72CE8EF61CB59B10001F08E4 /* SelectionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EF41CB59B10001F08E4 /* SelectionSystem.cpp */; };
 		72CE8EF91CB59B3F001F08E4 /* EditorSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EF71CB59B3F001F08E4 /* EditorSelection.cpp */; };
 		72CE8EFC1CB5A18E001F08E4 /* EditorSelectionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EFA1CB5A18E001F08E4 /* EditorSelectionSystem.cpp */; };
+		72CE8F001CBA4932001F08E4 /* EditorTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EFE1CBA4932001F08E4 /* EditorTransform.cpp */; };
+		72CE8F031CBA4BCD001F08E4 /* EditorTransformCreationSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F011CBA4BCD001F08E4 /* EditorTransformCreationSystem.cpp */; };
+		72CE8F061CBA4FC3001F08E4 /* EditorTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F041CBA4FC3001F08E4 /* EditorTransformSystem.cpp */; };
+		72CE8F0D1CBC4023001F08E4 /* SelectableFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F0B1CBC4023001F08E4 /* SelectableFactory.cpp */; };
 		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
 		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
 		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
@@ -1190,6 +1194,14 @@
 		72CE8EF81CB59B3F001F08E4 /* EditorSelection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSelection.hpp; sourceTree = "<group>"; };
 		72CE8EFA1CB5A18E001F08E4 /* EditorSelectionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSelectionSystem.cpp; sourceTree = "<group>"; };
 		72CE8EFB1CB5A18E001F08E4 /* EditorSelectionSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSelectionSystem.hpp; sourceTree = "<group>"; };
+		72CE8EFE1CBA4932001F08E4 /* EditorTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorTransform.cpp; sourceTree = "<group>"; };
+		72CE8EFF1CBA4932001F08E4 /* EditorTransform.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorTransform.hpp; sourceTree = "<group>"; };
+		72CE8F011CBA4BCD001F08E4 /* EditorTransformCreationSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorTransformCreationSystem.cpp; sourceTree = "<group>"; };
+		72CE8F021CBA4BCD001F08E4 /* EditorTransformCreationSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorTransformCreationSystem.hpp; sourceTree = "<group>"; };
+		72CE8F041CBA4FC3001F08E4 /* EditorTransformSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorTransformSystem.cpp; sourceTree = "<group>"; };
+		72CE8F051CBA4FC3001F08E4 /* EditorTransformSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorTransformSystem.hpp; sourceTree = "<group>"; };
+		72CE8F0B1CBC4023001F08E4 /* SelectableFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SelectableFactory.cpp; sourceTree = "<group>"; };
+		72CE8F0C1CBC4023001F08E4 /* SelectableFactory.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SelectableFactory.hpp; sourceTree = "<group>"; };
 		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
 		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
 		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
@@ -2636,6 +2648,8 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72CE8F071CBAF34E001F08E4 /* Objects */,
+				72CE8EFD1CBA468D001F08E4 /* Transforming */,
 				72CE8EF31CB59AB4001F08E4 /* Selection */,
 				72CE8EEB1CB437DF001F08E4 /* Project */,
 				72CE8EE01CB2FD92001F08E4 /* Context */,
@@ -2702,6 +2716,28 @@
 				72CE8EFB1CB5A18E001F08E4 /* EditorSelectionSystem.hpp */,
 			);
 			path = Selection;
+			sourceTree = "<group>";
+		};
+		72CE8EFD1CBA468D001F08E4 /* Transforming */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8EFE1CBA4932001F08E4 /* EditorTransform.cpp */,
+				72CE8EFF1CBA4932001F08E4 /* EditorTransform.hpp */,
+				72CE8F011CBA4BCD001F08E4 /* EditorTransformCreationSystem.cpp */,
+				72CE8F021CBA4BCD001F08E4 /* EditorTransformCreationSystem.hpp */,
+				72CE8F041CBA4FC3001F08E4 /* EditorTransformSystem.cpp */,
+				72CE8F051CBA4FC3001F08E4 /* EditorTransformSystem.hpp */,
+			);
+			path = Transforming;
+			sourceTree = "<group>";
+		};
+		72CE8F071CBAF34E001F08E4 /* Objects */ = {
+			isa = PBXGroup;
+			children = (
+				72CE8F0B1CBC4023001F08E4 /* SelectableFactory.cpp */,
+				72CE8F0C1CBC4023001F08E4 /* SelectableFactory.hpp */,
+			);
+			path = Objects;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2819,6 +2855,7 @@
 				729954C91C99F76100DAAE5D /* SequentialThreadSupport.cpp in Sources */,
 				729954381C99F76100DAAE5D /* b2CollidePoly.cpp in Sources */,
 				729954C31C99F76100DAAE5D /* btRaycastVehicle.cpp in Sources */,
+				72CE8F031CBA4BCD001F08E4 /* EditorTransformCreationSystem.cpp in Sources */,
 				729954A91C99F76100DAAE5D /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
 				7299548D1C99F76100DAAE5D /* btScaledBvhTriangleMeshShape.cpp in Sources */,
 				7299549C1C99F76100DAAE5D /* btGImpactBvh.cpp in Sources */,
@@ -2926,6 +2963,7 @@
 				72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */,
 				729954791C99F76100DAAE5D /* btCapsuleShape.cpp in Sources */,
 				729954FC1C99F76100DAAE5D /* File.mm in Sources */,
+				72CE8F001CBA4932001F08E4 /* EditorTransform.cpp in Sources */,
 				729955061C99F76100DAAE5D /* lodepng.cpp in Sources */,
 				729954D11C99F76100DAAE5D /* SpuCollisionShapes.cpp in Sources */,
 				7299542F1C99F76100DAAE5D /* Vector3.cpp in Sources */,
@@ -3013,6 +3051,7 @@
 				729954931C99F76100DAAE5D /* btTriangleBuffer.cpp in Sources */,
 				729954261C99F76100DAAE5D /* Matrix3x3.cpp in Sources */,
 				729953C81C99F76100DAAE5D /* Window.cpp in Sources */,
+				72CE8F061CBA4FC3001F08E4 /* EditorTransformSystem.cpp in Sources */,
 				729954301C99F76100DAAE5D /* ChromecastMessage.cpp in Sources */,
 				7299549D1C99F76100DAAE5D /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				729955001C99F76100DAAE5D /* OSXWindow.mm in Sources */,
@@ -3092,6 +3131,7 @@
 				7299546E1C99F76100DAAE5D /* btInternalEdgeUtility.cpp in Sources */,
 				729953EF1C99F76100DAAE5D /* Font.cpp in Sources */,
 				7299546C1C99F76100DAAE5D /* btEmptyCollisionAlgorithm.cpp in Sources */,
+				72CE8F0D1CBC4023001F08E4 /* SelectableFactory.cpp in Sources */,
 				729953F61C99F76100DAAE5D /* MenuButtonSystem.cpp in Sources */,
 				729954E81C99F76100DAAE5D /* MiniCL.cpp in Sources */,
 				729953EC1C99F76100DAAE5D /* ParticleMeshUpdater.cpp in Sources */,

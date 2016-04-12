@@ -9,6 +9,8 @@
 #include "Project.hpp"
 #include "RenderSystem.hpp"
 #include "SelectionSystem.hpp"
+#include "EditorTransformCreationSystem.hpp"
+#include "SelectableCollection.hpp"
 
 GameWorld& Project::World() { return world; }
 
@@ -25,7 +27,9 @@ void Project::CreateDefaultScene(GameWorld& editorWorld) {
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<RotatorSystem>();
-    world.CreateSystem<SelectionSystem>()->editorWorld = &editorWorld;
+    world.CreateSystem<SelectionSystem>()->SetEditorWorld(&editorWorld);
+    world.CreateSystem<EditorTransformCreationSystem>()->SetEditorWorld(&editorWorld);
+    world.CreateSystem<SelectableCollection>();
     
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Camera>();
@@ -33,14 +37,15 @@ void Project::CreateDefaultScene(GameWorld& editorWorld) {
     camera->GetComponent<Camera>()->FieldOfView = 70;
 
 
-    for (int x=-4; x<=4; ++x) {
-    for (int y=-4; y<=4; ++y) {
+    for (int x=-1; x<=1; ++x) {
+    for (int y=-1; y<=1; ++y) {
     
         GameObject* cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = {x*2.3f,y*2.3f,0};
-        cube->AddComponent<Rotator>()->speed = { 0.02f+x*0.03f,0.6f,0 };
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+        //cube->AddComponent<Rotator>()->speed = { 0.02f+x*0.03f,0.6f,0 };
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.2f);
         cube->AddComponent<Material>();
+        //cube->AddComponent<Selectable>();
         
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         

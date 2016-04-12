@@ -40,3 +40,15 @@ void BaseWindow::OnInitialize() {
 void BaseWindow::OnCreate() {
 
 }
+
+GameObject* BaseWindow::CreateButton(GameObject* parent, const Vector2& position, const Vector2& size, const std::string& text) {
+    Gui& gui = context->Gui();
+    
+    GameObject* button = gui.CreateControl(parent, "Box", position, size);
+    GameObject* label = gui.CreateLabel(button, 0, size, 0, text, 20);
+    label->GetComponent<Label>()->HAlignment = Font::Center;
+    label->GetComponent<Label>()->VAlignment = Font::Middle;
+    label->GetComponent<Colorable>()->Color = Colour::Black();
+
+    return button;
+}

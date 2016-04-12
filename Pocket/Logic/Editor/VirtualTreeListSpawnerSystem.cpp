@@ -51,6 +51,7 @@ void VirtualTreeListSpawnerSystem::NodeRemoved(VirtualTreeList::Node e, Pocket::
     auto& objects = spawner->objects;
     auto it = std::find(objects.begin(), objects.end(), e);
     GameObject* clone = it->data;
+    spawner->OnRemove(e.node, clone);
     clone->Remove();
     objects.erase(it);
     clone->Children()[0]->GetComponent<Touchable>()->Click.Unbind(this, &VirtualTreeListSpawnerSystem::FoldOutClicked, {e.node, object->GetComponent<VirtualTreeList>()});

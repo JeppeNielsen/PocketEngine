@@ -8,6 +8,7 @@
 
 #pragma once
 #include "EditorContext.hpp"
+#include <string>
 
 class BaseWindow {
 public:
@@ -22,4 +23,6 @@ protected:
     virtual std::string Name() = 0;
     virtual void OnInitialize();
     virtual void OnCreate();
+    
+    GameObject* CreateButton(GameObject* parent, const Vector2& position, const Vector2& size, const std::string& text);
 };

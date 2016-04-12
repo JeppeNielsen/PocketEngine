@@ -12,10 +12,6 @@
 using namespace Pocket;
 
 struct EditorSelection {
-
     EditorSelection();
-
     GameObject* selectionObject;
-    
-
 };
