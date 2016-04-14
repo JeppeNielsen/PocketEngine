@@ -12,19 +12,61 @@
 #include "Selectable.hpp"
 
 namespace Pocket {
-    class SelectableCollection : public GameSystem<Selectable, Transform>  {
+    template<typename T>
+    class SelectableCollection : public GameSystem<Selectable, T>  {
     public:
-        void Initialize(GameWorld* world);
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        void Update(float dt);
-        void ClearSelection();
-        const ObjectCollection& Selected();
-        Event<SelectableCollection*> SelectionChanged;
+    void Initialize(GameWorld* world) {
+        hasChanged = false;
+    }
+
+    void ClearSelection() {
+        for (auto o : this->Objects()) {
+            o->template GetComponent<Selectable>()->Selected = false;
+        }
+        hasChanged = true;
+    }
+    
+    void SelectedChanged(GameObject* object) {
+        Selectable* selectable = object->GetComponent<Selectable>();
+        if (selectable->Selected) {
+            selectedObjects.push_back(object);
+            hasChanged = true;
+        } else {
+           RemoveObject(object);
+        }
+    }
+
+    void ObjectAdded(Pocket::GameObject *object) {
+        object->template GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectableCollection<T>::SelectedChanged, object);
+        SelectedChanged(object);
+    }
+
+    void ObjectRemoved(Pocket::GameObject *object) {
+        object->template GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectableCollection<T>::SelectedChanged, object);
+        RemoveObject(object);
+    }
+
+    void RemoveObject(Pocket::GameObject *object) {
+        auto i = std::find(selectedObjects.begin(), selectedObjects.end(), object);
+        if (i!=selectedObjects.end()) {
+            selectedObjects.erase(i);
+            hasChanged = true;
+        }
+    }
+
+    const IGameSystem::ObjectCollection& Selected() { return selectedObjects; }
+
+    void Update(float dt) {
+        if (hasChanged) {
+            hasChanged = false;
+            SelectionChanged(this);
+        }
+    }
+    
+    Event<SelectableCollection*> SelectionChanged;
+    
     private:
-        void SelectedChanged(GameObject* object);
-        ObjectCollection selectedObjects;
-        void RemoveObject(GameObject* object);
+        GameConcept::ObjectCollection selectedObjects;
         bool hasChanged;
     };
 }

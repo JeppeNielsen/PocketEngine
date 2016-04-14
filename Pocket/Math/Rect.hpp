@@ -19,6 +19,8 @@ namespace Pocket {
         Rect() : x(0), y(0), width(0), height(0) {}
         Rect(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
         Rect(const Vector2& position, const Vector2& size) : x(position.x), y(position.y), width(size.x), height(size.y) { }
+        Rect(const Vector2& size) : x(0), y(0), width(size.x), height(size.y) { }
+        
         
         inline Rect operator *(const Vector2 &vector) const {
             return Rect(x * vector.x, y * vector.y, width * vector.x, height * vector.y);

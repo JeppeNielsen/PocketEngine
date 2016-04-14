@@ -51,7 +51,7 @@ namespace Pocket {
         void SelectObjects(Vector2 start, Vector2 end);
         void SelectObjectsFromCamera(GameObject* cameraObject, Vector2 start, Vector2 end);
         
-        SelectableCollection* selectables;
+        SelectableCollection<Transform>* selectables;
         
         DraggableSystem* draggableSystem;
     };

@@ -17,7 +17,7 @@ void DragSelector::Initialize(GameWorld* world) {
     draggableSystem = world->CreateSystem<DraggableSystem>();
     
     cameraSystem = world->CreateSystem<CameraSystem>();
-    selectables = world->CreateSystem<SelectableCollection>();
+    selectables = world->CreateSystem<SelectableCollection<Transform>>();
 }
 
 void DragSelector::Setup(const Pocket::Rect &viewport, InputManager& input) {
@@ -33,7 +33,6 @@ void DragSelector::Setup(const Pocket::Rect &viewport, InputManager& input) {
     cameraObject->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = cameraObject->AddComponent<Camera>();
     
-    cam->OrthographicRectangle = viewport;
     cam->Orthographic = true;
     cam->Near = 1.0f;
     cam->Far = 2.0f;
@@ -94,6 +93,11 @@ void DragSelector::Render() {
 }
 
 void DragSelector::SelectObjects(Vector2 start, Vector2 end) {
+
+    if ((start-end).Length()<5.0f) {
+        return;
+    }
+
     const auto& cameras = cameraSystem->Objects();
     for (auto c : cameras) {
         SelectObjectsFromCamera(c, start, end);

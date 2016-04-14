@@ -18,7 +18,7 @@ namespace Pocket {
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:
-        SelectableCollection* selectables;
+        SelectableCollection<Transform>* selectables;
         void TouchableClick(TouchData d, GameObject* object);
     };
 }
