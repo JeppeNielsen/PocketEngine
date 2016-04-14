@@ -19,6 +19,7 @@
 #include "Touchable.hpp"
 #include "Draggable.hpp"
 
+
 void EditorTransformSystem::Initialize(Pocket::GameWorld *world) {
     this->world = world;
 }
@@ -29,16 +30,11 @@ void EditorTransformSystem::ObjectAdded(Pocket::GameObject *object) {
 
 void EditorTransformSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &EditorTransformSystem::SelectionChanged, object);
-    
-    if (object->GetComponent<EditorTransform>()->transformerObject) {
-        object->GetComponent<EditorTransform>()->transformerObject->Remove();
-        object->GetComponent<EditorTransform>()->transformerObject = 0;
-    }
+    TryRemoveTransformObject(object);
 }
 
 void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
     if (object->GetComponent<Selectable>()->Selected) {
-        auto editorSelection = object->GetComponent<EditorTransform>();
         GameObject* transformerObject = world->CreateObject();
         transformerObject->AddComponent<Transform>(object);
         
@@ -51,6 +47,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             xaxis->AddComponent<Material>();
             xaxis->AddComponent<Touchable>();
             xaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XAxis;
+            xaxis->AddComponent<Selectable>(object);
         }
         
         {
@@ -62,6 +59,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             yaxis->AddComponent<Material>();
             yaxis->AddComponent<Touchable>();
             yaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
+            yaxis->AddComponent<Selectable>(object);
         }
         
         {
@@ -73,14 +71,18 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             zaxis->AddComponent<Material>();
             zaxis->AddComponent<Touchable>();
             zaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::ZAxis;
+            zaxis->AddComponent<Selectable>(object);
         }
-        
-        
-        editorSelection->transformerObject = transformerObject;
+        transformObjects[object] = transformerObject;
     } else {
-        if (object->GetComponent<EditorTransform>()->transformerObject) {
-            object->GetComponent<EditorTransform>()->transformerObject->Remove();
-            object->GetComponent<EditorTransform>()->transformerObject = 0;
-        }
+        TryRemoveTransformObject(object);
+    }
+}
+    
+void EditorTransformSystem::TryRemoveTransformObject(Pocket::GameObject *object) {
+    auto it = transformObjects.find(object);
+    if (it!=transformObjects.end()) {
+        it->second->Remove();
+        transformObjects.erase(it);
     }
 }

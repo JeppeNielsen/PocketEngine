@@ -10,11 +10,13 @@
 #include "EditorContext.hpp"
 #include "HierarchyWindow.hpp"
 #include "ProjectWindow.hpp"
-#include "EditorSelectionSystem.hpp"
 #include "ClickSelectorSystem.hpp"
 #include "EditorTransformSystem.hpp"
 #include "RenderSystem.hpp"
-#include "SelectableFactory.hpp"
+#include "EditorMeshSystem.hpp"
+#include "ClickSelectorSystem.hpp"
+#include "DragSelector.hpp"
+#include "SelectableDragSystem.hpp"
 
 #include <vector>
 
@@ -47,21 +49,15 @@ public:
         
         GameWorld& world = context.World();
         
+        
         context.World().CreateSystem<RenderSystem>();
-        context.World().CreateSystem<EditorSelectionSystem>();
         context.World().CreateSystem<TouchSystem>()->Input = &Input;
         context.World().CreateSystem<DraggableSystem>();
-        context.World().CreateSystem<ClickSelectorSystem>();
         context.World().CreateSystem<EditorTransformSystem>();
-        context.World().CreateSystem<SelectableFactory>();
-        
-        GameObject* camera = world.CreateObject();
-        camera->AddComponent<Camera>();
-        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-        camera->GetComponent<Camera>()->FieldOfView = 70;
-        
-        context.NewProject();
-        
+        context.World().CreateSystem<EditorMeshSystem>();
+        context.World().CreateSystem<ClickSelectorSystem>();
+        context.World().CreateSystem<DragSelector>()->Setup(Context().ScreenSize(), Input);
+        context.World().CreateSystem<SelectableDragSystem>();
         
         windows.push_back(new HierarchyWindow());
         windows.push_back(new ProjectWindow());
@@ -72,9 +68,19 @@ public:
         context.Initialize(Input);
         
         
+        
+        
+        GameObject* camera = world.CreateObject();
+        camera->AddComponent<Camera>();
+        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
+        camera->GetComponent<Camera>()->FieldOfView = 70;
+        
+        context.NewProject();
+        
         for(auto window : windows) {
             window->Create();
         }
+        
         
         
         Input.ButtonDown.Bind([this] (auto key) {

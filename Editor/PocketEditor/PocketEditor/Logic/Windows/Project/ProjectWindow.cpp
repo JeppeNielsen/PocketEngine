@@ -9,13 +9,13 @@
 #include "ProjectWindow.hpp"
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
+#include "EditorObject.hpp"
 
 std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
     GameWorld& world = context->World();
-    factory = world.CreateSystem<SelectableFactory>();
-    selectables = world.CreateSystem<SelectableCollection>();
+    selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
 
     GameWorld& guiWorld = context->GuiWorld();
     guiWorld.CreateSystem<VirtualTreeListSystem>();
@@ -33,6 +33,7 @@ void ProjectWindow::OnCreate() {
            object->AddComponent<Transform>()->Position = {0,0,0};
            object->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
            object->AddComponent<Material>();
+           object->AddComponent<EditorObject>();
         });
     }
     
@@ -40,10 +41,7 @@ void ProjectWindow::OnCreate() {
         GameObject* button = CreateButton(window, {120,10}, {100,50}, "Delete");
         button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
            for(auto o : selectables->Selected()) {
-                GameObject* object = factory->GetGameObject(o);
-                if (object) {
-                    object->Remove();
-                }
+                o->GetComponent<EditorObject>()->object->Remove();
            }
         });
     }

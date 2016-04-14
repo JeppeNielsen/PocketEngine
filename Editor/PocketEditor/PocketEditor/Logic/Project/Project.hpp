@@ -16,5 +16,5 @@ private:
     GameWorld world;
 public:
     GameWorld& World();
-    void CreateDefaultScene(GameWorld& editorWorld);
+    void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot);
 };

@@ -1,5 +1,5 @@
 //
-//  SelectionSystem.hpp
+//  EditorSelectionSystem.hpp
 //  PocketEditor
 //
 //  Created by Jeppe Nielsen on 06/04/16.
@@ -11,22 +11,20 @@
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "Material.hpp"
-#include "EditorSelection.hpp"
-#include "Touchable.hpp"
-#include "EditorSelection.hpp"
 #include "Selectable.hpp"
-#include "SelectableFactory.hpp"
+#include <map>
 
 using namespace Pocket;
 
-class SelectionSystem : public GameSystem<Transform, Mesh, Material> {
+class EditorMeshSystem : public GameSystem<Transform, Mesh, Selectable> {
 public:
+    void Initialize(GameWorld* world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
-    
-    void SetEditorWorld(GameWorld* editorWorld);
-    
 private:
-    GameWorld* editorWorld;
-    SelectableFactory* factory;
+    void SelectionChanged(GameObject* object);
+    void TryRemoveTransformObject(GameObject* object);
+    using TransformObjects = std::map<GameObject*, GameObject*>;
+    TransformObjects transformObjects;
+    GameWorld* world;
 };

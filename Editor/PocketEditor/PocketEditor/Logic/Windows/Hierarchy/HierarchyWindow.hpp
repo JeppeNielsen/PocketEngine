@@ -8,8 +8,8 @@
 
 #pragma once
 #include "BaseWindow.hpp"
-#include "SelectableFactory.hpp"
 #include "SelectableCollection.hpp"
+#include "EditorObject.hpp"
 
 class HierarchyWindow : public BaseWindow {
 protected:
@@ -18,6 +18,5 @@ protected:
     std::string Name() override;
 private:
     void Clicked(TouchData d, GameObject* object);
-    SelectableFactory* factory;
-    SelectableCollection* selectables;
+    SelectableCollection<EditorObject>* selectables;
 };

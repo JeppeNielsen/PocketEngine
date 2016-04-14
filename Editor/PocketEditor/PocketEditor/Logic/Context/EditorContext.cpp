@@ -18,13 +18,17 @@ Gui& EditorContext::Gui() { return *gui; }
 
 Project& EditorContext::Project() { return project; }
 
+GameObject* EditorContext::GameRoot() { return gameRoot; }
+
 void EditorContext::NewProject() {
     project = { };
-    project.CreateDefaultScene(world);
+    project.CreateDefaultScene(world, gameRoot);
 }
 
 void EditorContext::Initialize(InputManager& input) {
     this->input = &input;
+    
+    gameRoot = world.CreateObject();
     
     gui = guiWorld.CreateSystem<class Gui>();
     

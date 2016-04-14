@@ -1,8 +1,8 @@
 //
-//  EditorTransform.hpp
+//  EditorObject.hpp
 //  PocketEditor
 //
-//  Created by Jeppe Nielsen on 10/04/16.
+//  Created by Jeppe Nielsen on 14/04/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
@@ -11,6 +11,6 @@
 
 using namespace Pocket;
 
-struct EditorTransform {
-    GameObject* transformerObject;
+struct EditorObject {
+    GameObject* object;
 };

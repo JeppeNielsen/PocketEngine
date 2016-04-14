@@ -8,9 +8,7 @@
 
 #include "Project.hpp"
 #include "RenderSystem.hpp"
-#include "SelectionSystem.hpp"
-#include "EditorTransformCreationSystem.hpp"
-#include "SelectableCollection.hpp"
+#include "EditorObjectCreatorSystem.hpp"
 
 GameWorld& Project::World() { return world; }
 
@@ -23,13 +21,13 @@ struct RotatorSystem : public GameSystem<Transform, Rotator> {
     }
 };
 
-void Project::CreateDefaultScene(GameWorld& editorWorld) {
+void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<RotatorSystem>();
-    world.CreateSystem<SelectionSystem>()->SetEditorWorld(&editorWorld);
-    world.CreateSystem<EditorTransformCreationSystem>()->SetEditorWorld(&editorWorld);
-    world.CreateSystem<SelectableCollection>();
+    auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
+    creatorSystem->editorWorld = &editorWorld;
+    creatorSystem->gameRoot = gameRoot;
     
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Camera>();
@@ -45,7 +43,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld) {
         //cube->AddComponent<Rotator>()->speed = { 0.02f+x*0.03f,0.6f,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.2f);
         cube->AddComponent<Material>();
-        //cube->AddComponent<Selectable>();
+        cube->AddComponent<EditorObject>();
         
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         

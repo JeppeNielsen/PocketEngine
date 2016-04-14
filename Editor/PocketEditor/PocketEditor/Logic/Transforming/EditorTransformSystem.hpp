@@ -8,21 +8,23 @@
 
 #pragma once
 #include "GameWorld.hpp"
-#include "EditorTransform.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "Material.hpp"
 #include "Selectable.hpp"
+#include <map>
 
 using namespace Pocket;
 
-class EditorTransformSystem : public GameSystem<Transform, Selectable, EditorTransform> {
+class EditorTransformSystem : public GameSystem<Transform, Selectable> {
 public:
     void Initialize(GameWorld* world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
 private:
     void SelectionChanged(GameObject* object);
-
+    void TryRemoveTransformObject(GameObject* object);
+    using TransformObjects = std::map<GameObject*, GameObject*>;
+    TransformObjects transformObjects;
     GameWorld* world;
 };

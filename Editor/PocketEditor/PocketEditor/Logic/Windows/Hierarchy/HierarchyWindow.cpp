@@ -10,6 +10,7 @@
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "SelectedColorer.hpp"
+#include "Selectable.hpp"
 
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
@@ -21,8 +22,7 @@ void HierarchyWindow::OnInitialize() {
     world.CreateSystem<VirtualTreeListSpawnerSystem>();
     world.CreateSystem<SelectedColorerSystem>();
 
-    factory = world.CreateSystem<SelectableFactory>();
-    selectables = world.CreateSystem<SelectableCollection>();
+    selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
 }
 
 void HierarchyWindow::OnCreate() {
@@ -94,7 +94,7 @@ void HierarchyWindow::OnCreate() {
 //    }
 //
     
-    GameObject* root = (GameObject*)context->Project().World().Root();
+    GameObject* root = (GameObject*)context->GameRoot();
 
     auto treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->Root = root;
@@ -116,7 +116,7 @@ void HierarchyWindow::OnCreate() {
         
         GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
         selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, node);
-        selectButton->AddComponent<Selectable>(this->factory->AddSelectable(node));
+        selectButton->AddComponent<Selectable>(node);
         selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
         return clone;
     };
@@ -128,7 +128,8 @@ void HierarchyWindow::OnCreate() {
 
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {
     selectables->ClearSelection();
-    factory->GetSelectable(object)->Selected = true;
+    object->GetComponent<Selectable>()->Selected = true;
+    //factory->GetSelectable(object)->Selected = true;
     //object->GetComponent<Selectable>()->Selected = true;
 }
 

@@ -9,7 +9,7 @@
 #pragma once
 #include "BaseWindow.hpp"
 #include "SelectableCollection.hpp"
-#include "SelectableFactory.hpp"
+#include "EditorObject.hpp"
 
 class ProjectWindow : public BaseWindow {
 protected:
@@ -17,6 +17,5 @@ protected:
     void OnCreate() override;
     std::string Name() override;
 private:
-    SelectableCollection* selectables;
-    SelectableFactory* factory;
+    SelectableCollection<EditorObject>* selectables;
 };
