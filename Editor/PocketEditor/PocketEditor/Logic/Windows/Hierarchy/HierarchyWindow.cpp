@@ -94,7 +94,7 @@ void HierarchyWindow::OnCreate() {
 //    }
 //
     
-    GameObject* root = (GameObject*)context->GameRoot();
+    GameObject* root = (GameObject*)context->Project().World().Root();
 
     auto treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->Root = root;
@@ -107,17 +107,19 @@ void HierarchyWindow::OnCreate() {
         GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
         clone->RemoveComponent<Touchable>();
         GameObject* button = gui.CreateControl(clone, "TextBox", 0, {25,25});
-        
         if (node!=root) {
-            button->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, node);
+            EditorObject* editorObject = node->GetComponent<EditorObject>();
+            if (editorObject && editorObject->editorObject) {
+                GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
+                selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
+                selectButton->AddComponent<Selectable>(editorObject->editorObject);
+                selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
+            }
+            
         } else {
             std::cout << "yes"<<std::endl;
         }
         
-        GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-        selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, node);
-        selectButton->AddComponent<Selectable>(node);
-        selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
         return clone;
     };
     

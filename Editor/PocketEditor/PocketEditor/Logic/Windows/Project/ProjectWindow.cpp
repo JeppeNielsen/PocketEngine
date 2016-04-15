@@ -41,10 +41,18 @@ void ProjectWindow::OnCreate() {
         GameObject* button = CreateButton(window, {120,10}, {100,50}, "Delete");
         button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
            for(auto o : selectables->Selected()) {
-                o->GetComponent<EditorObject>()->object->Remove();
+                o->GetComponent<EditorObject>()->gameObject->Remove();
            }
         });
     }
 
+     {
+        GameObject* button = CreateButton(window, {120,70}, {100,50}, "Clone");
+        button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
+           for(auto o : selectables->Selected()) {
+                o->GetComponent<EditorObject>()->gameObject->Clone();
+           }
+        });
+    }
     
 }

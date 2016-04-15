@@ -15,11 +15,17 @@ void EditorObjectCreatorSystem::Initialize(Pocket::GameWorld *world) {
 }
 
 void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
+    
     GameObject* editorObject = editorWorld->CreateObject();
     editorObject->Parent = gameRoot;
-    editorObject->AddComponent<EditorObject>()->object = object;
     editorObject->AddComponent<Selectable>();
     editorObject->AddComponent<Touchable>();
+    
+    object->GetComponent<EditorObject>()->gameObject = object;
+    object->GetComponent<EditorObject>()->editorObject = editorObject;
+    
+    editorObject->AddComponent<EditorObject>(object);
+    
     SetMetaData(object, editorObject);
 }
 

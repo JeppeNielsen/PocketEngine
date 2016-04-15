@@ -9,6 +9,7 @@
 #include "Project.hpp"
 #include "RenderSystem.hpp"
 #include "EditorObjectCreatorSystem.hpp"
+#include "TransformHierarchy.hpp"
 
 GameWorld& Project::World() { return world; }
 
@@ -25,6 +26,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<RotatorSystem>();
+    world.CreateSystem<TransformHierarchy>();
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
@@ -40,7 +42,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
     
         GameObject* cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = {x*2.3f,y*2.3f,0};
-        //cube->AddComponent<Rotator>()->speed = { 0.02f+x*0.03f,0.6f,0 };
+        cube->AddComponent<Rotator>()->speed = { 0,0.3f,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.2f);
         cube->AddComponent<Material>();
         cube->AddComponent<EditorObject>();
@@ -50,6 +52,13 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
         }
+        
+        GameObject* child = world.CreateObject();
+        child->Parent = cube;
+        child->AddComponent<Transform>()->Position = {0,0,-2};
+        child->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f);
+        child->AddComponent<Material>();
+        child->AddComponent<EditorObject>();
         }
     }
     
