@@ -88,7 +88,7 @@ public:
     
     void Remove();
     GameObject* Clone(std::function<bool(GameObject*)> predicate = 0);
-    GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
+    GameObject* Clone(GameObject* parent, std::function<bool(GameObject*)> predicate = 0);
     
     template<typename Component>
     bool HasComponent() const {
