@@ -27,6 +27,12 @@ void TransformHierarchy::ObjectRemoved(GameObject* object) {
     Transform* transform = object->GetComponent<Transform>();
     transform->ResetWorldCalculation();
     object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
+    if (object->Parent) {
+        Transform* parentTransform = object->Parent()->GetComponent<Transform>();
+        if (parentTransform) {
+            transform->UnHookOther(parentTransform);
+        }
+    }
 }
 
 void TransformHierarchy::ParentChanged(GameObject* object) {
