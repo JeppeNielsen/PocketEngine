@@ -35,6 +35,9 @@ namespace Pocket {
         
         Event<float> ScrollChanged;
        
+        void SwallowTouch(int index, int depth);
+        bool IsTouchSwallowed(int index, int depth);
+        
 	private:
 		InputDevice* device;
 		friend class InputDevice;

@@ -29,6 +29,8 @@ namespace Pocket {
         bool IsDragging();
         
         void AddedToWorld(GameWorld& world);
+        
+        int TouchDepth;
             
     private:
         GameWorld renderWorld;
@@ -52,7 +54,5 @@ namespace Pocket {
         void SelectObjectsFromCamera(GameObject* cameraObject, Vector2 start, Vector2 end);
         
         SelectableCollection<Transform>* selectables;
-        
-        DraggableSystem* draggableSystem;
     };
 }

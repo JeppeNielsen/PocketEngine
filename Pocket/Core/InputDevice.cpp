@@ -35,7 +35,17 @@ void InputDevice::SetTouch(int index, bool isDown, const Vector2& position) {
 	touch.Position = position;
 }
 
+void InputDevice::SwallowTouch(int index, int depth) {
+    if (index<0 || index>=maxTouches) return;
+    if (depth>currentTouches[index].swallowedDepth) {
+        currentTouches[index].swallowedDepth = depth;
+    }
+}
 
+bool InputDevice::IsTouchSwallowed(int index, int depth) {
+    if (index<0 || index>=maxTouches) return false;
+    return depth<currentTouches[index].swallowedDepth;
+}
 
 void InputDevice::SetButton(const std::string& button, bool isDown) {
 	if (isDown) {
@@ -51,6 +61,16 @@ void InputDevice::ReleaseAllButtons() {
 }
 
 void InputDevice::Update(IInputManagerIterator* inputManagers) {
+
+    for (unsigned i=0; i<currentTouches.size(); i++) {
+        Touch& current = currentTouches[i];
+        Touch& prev = previousTouches[i];
+        if (current.IsDown!=prev.IsDown) {
+            if (current.IsDown) {
+                current.swallowedDepth = -1;
+            }
+        }
+    }
 
     updating = true;
     inputManagers->UpdateInput(this);

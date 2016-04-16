@@ -14,10 +14,11 @@ using namespace Pocket;
 
 void DragSelector::Initialize(GameWorld* world) {
     draggingIndex = -1;
-    draggableSystem = world->CreateSystem<DraggableSystem>();
     
     cameraSystem = world->CreateSystem<CameraSystem>();
     selectables = world->CreateSystem<SelectableCollection<Transform>>();
+    
+    TouchDepth = 0;
 }
 
 void DragSelector::Setup(const Pocket::Rect &viewport, InputManager& input) {
@@ -53,24 +54,24 @@ void DragSelector::Down(Pocket::TouchEvent e) {
     if (e.Index != 0) return;
     draggingIndex = e.Index;
     dragStart = e.Position;
+    input->SwallowTouch(e.Index, TouchDepth);
 }
 
 void DragSelector::Up(Pocket::TouchEvent e) {
     if (draggingIndex==-1) return;
+    bool wasSwallowed = input->IsTouchSwallowed(draggingIndex, TouchDepth);
     draggingIndex = -1;
-    if (draggableSystem && draggableSystem->IsTouchIndexUsed(e.Index)) return;
+    if (wasSwallowed) return;
     SelectObjects(dragStart, e.Position);
 }
 
 bool DragSelector::IsDragging() {
-    return draggingIndex!=-1;
+    return draggingIndex!=-1 && !input->IsTouchSwallowed(draggingIndex, TouchDepth);
 }
 
 void DragSelector::Update(float dt) {
     
     if (IsDragging()) {
-        
-        if (draggableSystem && draggableSystem->IsTouchIndexUsed(draggingIndex)) return;
         
         Vector2 dragNow = input->GetTouchPosition(draggingIndex);
         
@@ -88,16 +89,10 @@ void DragSelector::Update(float dt) {
 
 void DragSelector::Render() {
     if (!IsDragging()) return;
-    if (draggableSystem && draggableSystem->IsTouchIndexUsed(draggingIndex)) return;
     renderer->Render();
 }
 
 void DragSelector::SelectObjects(Vector2 start, Vector2 end) {
-
-    if ((start-end).Length()<5.0f) {
-        return;
-    }
-
     const auto& cameras = cameraSystem->Objects();
     for (auto c : cameras) {
         SelectObjectsFromCamera(c, start, end);

@@ -17,7 +17,6 @@
 #include "InputManager.hpp"
 #include "Orderable.hpp"
 #include <set>
-#include <stack>
 
 namespace Pocket {
 
@@ -34,6 +33,7 @@ namespace Pocket {
         
     
         TouchSystem();
+        ~TouchSystem();
         void Initialize(GameWorld* world);
         OctreeSystem& Octree();
         void ObjectAdded(GameObject* object);
@@ -41,6 +41,8 @@ namespace Pocket {
         void Update(float dt);
         
         Property<InputManager*> Input;
+        
+        int TouchDepth;
         
     private:
                 
@@ -103,5 +105,6 @@ namespace Pocket {
         void AddToTouchList(Touched &from, Touched &to);
         bool IsTouchInList(const Pocket::TouchData &touchData, const Touched &list);
         void TouchableCancelled(Pocket::Touchable *touchable);
+        bool IsTouchValid(const TouchData& touchData);
     };
 }

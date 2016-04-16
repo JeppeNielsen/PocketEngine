@@ -7,10 +7,11 @@
 //
 
 #include "TouchSystem.hpp"
+#include <stack>
 
 using namespace Pocket;
 
-TouchSystem::TouchSystem() {
+TouchSystem::TouchSystem() : TouchDepth(0) {
     Input = 0;
     Input.Changed.Bind([this]() {
         if (Input.PreviousValue()) {
@@ -23,6 +24,10 @@ TouchSystem::TouchSystem() {
             Input()->TouchUp.Bind(this, &TouchSystem::TouchUp);
         }
     });
+}
+
+TouchSystem::~TouchSystem() {
+    Input = 0;
 }
 
 void TouchSystem::Initialize(GameWorld* world) {
@@ -80,12 +85,29 @@ void TouchSystem::Update(float dt) {
     }
     
     
-    for (unsigned i=0; i<downs.size(); i++) downs[i].Touchable->Down(downs[i]);
+    
+    for (unsigned i=0; i<downs.size(); i++) {
+        if (IsTouchValid(downs[i])) {
+            downs[i].Touchable->Down(downs[i]);
+        }
+    }
     downs.clear();
-    for (unsigned i=0; i<clicks.size(); i++) clicks[i].Touchable->Click(clicks[i]);
+    for (unsigned i=0; i<clicks.size(); i++) {
+        if (IsTouchValid(clicks[i])) {
+            clicks[i].Touchable->Click(clicks[i]);
+        }
+    }
     clicks.clear();
-    for (unsigned i=0; i<ups.size(); i++) ups[i].Touchable->Up(ups[i]);
+    for (unsigned i=0; i<ups.size(); i++) {
+        if (IsTouchValid(ups[i])) {
+            ups[i].Touchable->Up(ups[i]);
+        }
+    }
     ups.clear();
+}
+
+bool TouchSystem::IsTouchValid(const Pocket::TouchData &touchData) {
+    return !Input()->IsTouchSwallowed(touchData.Index, TouchDepth);
 }
 
 void TouchSystem::TouchDown(Pocket::TouchEvent e) {
@@ -96,6 +118,10 @@ void TouchSystem::TouchDown(Pocket::TouchEvent e) {
     
     for (size_t i = 0; i<list.size(); i++) {
         list[i].Touchable->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
+    }
+    
+    if (!list.empty()) {
+        Input()->SwallowTouch(e.Index, TouchDepth);
     }
 }
 

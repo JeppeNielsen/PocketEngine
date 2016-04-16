@@ -19,10 +19,11 @@ namespace Pocket {
 		void Initialize(int maxTouches);
 
 		struct Touch {
-			Touch() : IsDown(false), Position(0) {}
+			Touch() : IsDown(false), Position(0), swallowedDepth(-1) {}
 			bool IsDown;
 			Vector2 Position;
-		};
+            int swallowedDepth;
+        };
 
 		void SetTouchPosition(int index, const Vector2& position);
 		void SetTouch(int index, bool isDown, const Vector2& position);
@@ -48,7 +49,10 @@ namespace Pocket {
         void UpdateInputManager(InputManager* inputManager);
         
         void SetScroll(float delta);
-
+        
+        void SwallowTouch(int index, int depth);
+        bool IsTouchSwallowed(int index, int depth);
+        
 	private:
 
 		typedef std::vector<Touch> Touches;
