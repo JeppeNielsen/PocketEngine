@@ -58,6 +58,7 @@ public:
         context.World().CreateSystem<ClickSelectorSystem>();
         context.World().CreateSystem<DragSelector>()->Setup(Context().ScreenSize(), Input);
         context.World().CreateSystem<SelectableDragSystem>();
+        context.World().CreateSystem<TouchSystem>()->TouchDepth = 5;
         
         windows.push_back(new HierarchyWindow());
         windows.push_back(new ProjectWindow());

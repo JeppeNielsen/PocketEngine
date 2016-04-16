@@ -31,6 +31,7 @@ void EditorContext::Initialize(InputManager& input) {
     gameRoot = world.CreateObject();
     
     gui = guiWorld.CreateSystem<class Gui>();
+    guiWorld.CreateSystem<TouchSystem>()->TouchDepth = 10;
     
     gui->Setup("images.png", "images.xml", {0,0, 1280,1024}, input);
     gui->CreateFont("Font.fnt", "Font");
