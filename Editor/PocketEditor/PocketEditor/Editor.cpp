@@ -17,6 +17,8 @@
 #include "ClickSelectorSystem.hpp"
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
+#include "CompilationWindow.hpp"
+#include "InspectorWindow.hpp"
 
 #include <vector>
 
@@ -62,14 +64,13 @@ public:
         
         windows.push_back(new HierarchyWindow());
         windows.push_back(new ProjectWindow());
+        windows.push_back(new CompilationWindow());
+        windows.push_back(new InspectorWindow());
         
         for(auto window : windows) {
             window->Initialize(&context);
         }
         context.Initialize(Input);
-        
-        
-        
         
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Camera>();

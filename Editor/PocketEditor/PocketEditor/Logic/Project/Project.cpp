@@ -13,14 +13,7 @@
 
 GameWorld& Project::World() { return world; }
 
-struct Rotator { Vector3 speed; };
-struct RotatorSystem : public GameSystem<Transform, Rotator> {
-    void Update(float dt) {
-        for(auto o : Objects()) {
-            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->speed * dt;
-        }
-    }
-};
+
 
 void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
 

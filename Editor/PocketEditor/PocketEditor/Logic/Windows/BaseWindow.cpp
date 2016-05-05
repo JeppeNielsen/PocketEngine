@@ -19,9 +19,9 @@ void BaseWindow::Create() {
 
     Gui& gui = context->Gui();
     
-    window = gui.CreateControl(0, "Box", {200,800});
+    window = gui.CreateControl(0, "Box", {200,400});
     GameObject* bar = gui.CreateControl(window, "TextBox", {200,50});
-    bar->GetComponent<Transform>()->Position = {0,800-50};
+    bar->GetComponent<Transform>()->Position = {0,400-50};
     bar->RemoveComponent<Touchable>();
     bar->AddComponent<Touchable>(window);
     window->AddComponent<Draggable>();

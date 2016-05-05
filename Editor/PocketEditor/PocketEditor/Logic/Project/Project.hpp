@@ -8,8 +8,23 @@
 
 #pragma once
 #include "GameWorld.hpp"
+#include "Transform.hpp"
 
 using namespace Pocket;
+
+struct Rotator {
+    Vector3 speed;
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(speed)
+    TYPE_FIELDS_END
+};
+struct RotatorSystem : public GameSystem<Transform, Rotator> {
+    void Update(float dt) {
+        for(auto o : Objects()) {
+            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->speed * dt;
+        }
+    }
+};
 
 class Project {
 private:

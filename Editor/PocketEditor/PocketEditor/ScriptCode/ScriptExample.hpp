@@ -26,6 +26,18 @@ struct Jumpable {
     
 };
 
+struct RotatorComponent {
+    RotatorComponent() { speed = {0,10,0}; }
+    Pocket::Vector3 speed;
+};
+struct RotatorScriptSystem : public GameSystem<Pocket::Transform, RotatorComponent> {
+    void Update(float dt) {
+        for(auto o : Objects()) {
+            o->GetComponent<Pocket::Transform>()->EulerRotation += o->GetComponent<RotatorComponent>()->speed * dt;
+        }
+    }
+};
+
 struct SpriteSystem : GameSystem<Pocket::Transform, Sprite> {
     void ObjectAdded(GameObject* object) {
         std::cout << "SpriteSystem::ObjectAdded"<<std::endl;
@@ -38,7 +50,7 @@ struct SpriteSystem : GameSystem<Pocket::Transform, Sprite> {
     void Update(float dt) {
         for(auto o : Objects()) {
             auto var = o->GetComponent<Pocket::Transform>();
-            var->Position += {dt*50,dt,0};
+            var->Position += {dt*-0.2f,0,0};
         }
     }
 };
@@ -55,9 +67,9 @@ struct ScriptTransformSystem : GameSystem<Pocket::Transform, Pocket::Sizeable> {
 
     void Update(float dt) {
        for(auto o : Objects()) {
-          auto s = o->GetComponent<Pocket::Sizeable>()->Size();
-          s.x = o->GetComponent<Pocket::Transform>()->Position().x;
-          o->GetComponent<Pocket::Sizeable>()->Size = s;
+          //auto s = o->GetComponent<Pocket::Sizeable>()->Size();
+          //s.x = o->GetComponent<Pocket::Transform>()->Position().x;
+          //o->GetComponent<Pocket::Sizeable>()->Size = s;
        }
        //std::cout << Objects()[0]->GetComponent<Sprite>()->width<<std::endl;
     }

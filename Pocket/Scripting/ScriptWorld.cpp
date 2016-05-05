@@ -494,18 +494,33 @@ void Container<void*>::ResetInstance(Container<void *>::ObjectInstance *instance
 void ScriptWorld::SetWorldType(GameWorld& world) {
     worldComponentNames.clear();
     for(int i=0; i<world.componentNames.size(); ++i) {
-        std::string nameWithoutNamespace = world.componentNames[i].substr(8, world.componentNames[i].size() - 8);
-        worldComponentNames.push_back({ nameWithoutNamespace, i });
+        size_t namespaceColons = world.componentNames[i].find("::");
+        std::string nameWithoutNamespace;
+        if (namespaceColons!=std::string::npos) {
+            nameWithoutNamespace = world.componentNames[i].substr(namespaceColons+2, world.componentNames[i].size() - namespaceColons-2);
+        } else {
+            nameWithoutNamespace = world.componentNames[i];
+        }
+        if (nameWithoutNamespace!="") {
+            worldComponentNames.push_back({ nameWithoutNamespace, i });
+        }
     }
 }
 
 void ScriptWorld::AddGameWorld(GameWorld& world) {
-
+    /*
     worldComponentNames.clear();
     for(int i=0; i<world.componentNames.size(); ++i) {
-        std::string nameWithoutNamespace = world.componentNames[i].substr(8, world.componentNames[i].size() - 8);
-        worldComponentNames.push_back({ nameWithoutNamespace, i });
+        size_t namespaceColons = world.componentNames[i].find("::");
+        std::string nameWithoutNamespace;
+        if (namespaceColons!=std::string::npos) {
+            nameWithoutNamespace = world.componentNames[i].substr(namespaceColons+2, world.componentNames[i].size() - namespaceColons-2);
+        } else {
+            nameWithoutNamespace = world.componentNames[i];
+        }
+        worldComponentNames.push_back({ world.componentNames[i], i });
     }
+    */
 
     int numberOfSystems = countSystems();
     int numberOfComponents = countComponents();

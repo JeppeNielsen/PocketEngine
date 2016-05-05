@@ -31,12 +31,13 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     }
     if (!editor->Object()) return;
     
-    Vector2 size = { 200, 50 };
+    Vector2 size = { 200, 100 };
     
     auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
         return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
     });
     
+    int counter = 0;
     for (auto info : infos) {
         std::cout << "Field : " << info.name << std::endl;
     
@@ -54,7 +55,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         
         GameObject* componentChild = world->CreateObject();
         componentChild->Parent = object;
-        componentChild->AddComponent<Transform>();
+        componentChild->AddComponent<Transform>()->Position = {0, counter*size.y,0};
         componentChild->AddComponent<Sizeable>()->Size = size;
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
@@ -70,18 +71,19 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
             GameObject* editor = world->CreateObject();
             editor->Parent = componentChild;
             editor->AddComponent<Transform>();
-            editor->AddComponent<Sizeable>()->Size = {size.x, size.y*0.5f};
+            editor->AddComponent<Sizeable>()->Size = {size.x, size.y/info.fields.size()};
             editor->AddComponent<Layoutable>();
             FieldEditor* fieldEditor = editor->AddComponent<FieldEditor>();
             fieldEditor->SetType(info);
             fieldEditor->Field = field->name;
         }
         
-        GameObject* componentName = gui->CreateLabel(componentChild, 0, {size.x, size.y*0.5f}, 0, info.name, 14);
+        GameObject* componentName = gui->CreateLabel(componentChild, 0, {size.x, 20}, 0, info.name, 14);
         componentName->GetComponent<Label>()->HAlignment = Font::Center;
         componentName->GetComponent<Label>()->VAlignment = Font::Middle;
         componentName->GetComponent<Colorable>()->Color = Colour::Black();
         componentName->AddComponent<Layoutable>();
     
+        counter++;
     }
 }
