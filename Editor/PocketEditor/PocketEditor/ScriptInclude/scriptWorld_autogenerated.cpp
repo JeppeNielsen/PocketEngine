@@ -33,7 +33,7 @@ template<> Pocket::Camera* GameObject::GetComponent<Pocket::Camera>() { return (
 template<> Pocket::TextureComponent* GameObject::GetComponent<Pocket::TextureComponent>() { return (Pocket::TextureComponent*) GetComponent(4); }
 template<> Pocket::Orderable* GameObject::GetComponent<Pocket::Orderable>() { return (Pocket::Orderable*) GetComponent(5); }
 template<> Pocket::EditorObject* GameObject::GetComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) GetComponent(14); }
-template<> Pocket::Rotator* GameObject::GetComponent<Pocket::Rotator>() { return (Pocket::Rotator*) GetComponent(29); }
+template<> Pocket::Rotator* GameObject::GetComponent<Pocket::Rotator>() { return (Pocket::Rotator*) GetComponent(31); }
 template<> Pocket::Transform* GameObject::AddComponent<Pocket::Transform>() { return (Pocket::Transform*) AddComponent(0); }
 template<> Pocket::Mesh* GameObject::AddComponent<Pocket::Mesh>() { return (Pocket::Mesh*) AddComponent(1); }
 template<> Pocket::Material* GameObject::AddComponent<Pocket::Material>() { return (Pocket::Material*) AddComponent(2); }
@@ -41,7 +41,7 @@ template<> Pocket::Camera* GameObject::AddComponent<Pocket::Camera>() { return (
 template<> Pocket::TextureComponent* GameObject::AddComponent<Pocket::TextureComponent>() { return (Pocket::TextureComponent*) AddComponent(4); }
 template<> Pocket::Orderable* GameObject::AddComponent<Pocket::Orderable>() { return (Pocket::Orderable*) AddComponent(5); }
 template<> Pocket::EditorObject* GameObject::AddComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) AddComponent(14); }
-template<> Pocket::Rotator* GameObject::AddComponent<Pocket::Rotator>() { return (Pocket::Rotator*) AddComponent(29); }
+template<> Pocket::Rotator* GameObject::AddComponent<Pocket::Rotator>() { return (Pocket::Rotator*) AddComponent(31); }
 template<> void GameObject::RemoveComponent<Pocket::Transform>() { RemoveComponent(0); }
 template<> void GameObject::RemoveComponent<Pocket::Mesh>() { RemoveComponent(1); }
 template<> void GameObject::RemoveComponent<Pocket::Material>() { RemoveComponent(2); }
@@ -49,7 +49,7 @@ template<> void GameObject::RemoveComponent<Pocket::Camera>() { RemoveComponent(
 template<> void GameObject::RemoveComponent<Pocket::TextureComponent>() { RemoveComponent(4); }
 template<> void GameObject::RemoveComponent<Pocket::Orderable>() { RemoveComponent(5); }
 template<> void GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(14); }
-template<> void GameObject::RemoveComponent<Pocket::Rotator>() { RemoveComponent(29); }
+template<> void GameObject::RemoveComponent<Pocket::Rotator>() { RemoveComponent(31); }
 template<> Jumpable* GameObject::GetComponent<Jumpable>() { return (Jumpable*) GetScriptComponent(0); }
 template<> Jumpable* GameObject::AddComponent<Jumpable>() { return (Jumpable*) AddScriptComponent(0); }
 template<> void GameObject::RemoveComponent<Jumpable>() { RemoveScriptComponent(0); }

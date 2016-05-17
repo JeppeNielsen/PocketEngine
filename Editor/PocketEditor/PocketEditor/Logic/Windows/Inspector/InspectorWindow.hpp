@@ -19,4 +19,6 @@ protected:
     std::string Name() override;
 private:
     SelectableCollection<EditorObject>* selectables;
+    GameObject* inspectorEditor;
+    void SelectionChanged(SelectableCollection<EditorObject>* selectables);
 };

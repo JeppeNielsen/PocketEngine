@@ -20,6 +20,7 @@ std::string InspectorWindow::Name() { return "Inspector"; }
 void InspectorWindow::OnInitialize() {
     GameWorld& world = context->World();
     selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
+    selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     
     GameWorld& guiWorld = context->GuiWorld();
     
@@ -33,15 +34,18 @@ void InspectorWindow::OnInitialize() {
 
 void InspectorWindow::OnCreate() {
 
+/*
+
     GameWorld& world = context->Project().World();
     GameObject* go = world.CreateObject();
-
+ 
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {2,1,1});
     go->AddComponent<Material>();
     go->AddComponent<EditorObject>();
     go->AddComponent<Rotator>();
 
+*/
 
     GameWorld& guiWorld = context->GuiWorld();
     Gui& gui = context->Gui();
@@ -62,8 +66,11 @@ void InspectorWindow::OnCreate() {
     
     
     
-    GameObject* inspectorObject = gui.CreatePivot(pivot);
-    inspectorObject->AddComponent<Sizeable>()->Size = {200,400};
-    inspectorObject->AddComponent<GameObjectEditor>()->Object = go;
-   
+    inspectorEditor = gui.CreatePivot(pivot);
+    inspectorEditor->AddComponent<Sizeable>()->Size = {200,400};
+    inspectorEditor->AddComponent<GameObjectEditor>()->Object = 0;
+}
+
+void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
+    inspectorEditor->AddComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0];
 }
