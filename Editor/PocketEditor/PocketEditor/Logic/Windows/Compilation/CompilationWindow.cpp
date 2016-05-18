@@ -15,6 +15,7 @@ std::string CompilationWindow::Name() { return "Compiler"; }
 
 void CompilationWindow::OnInitialize() {
     GameWorld& world = context->World();
+    ScriptWorld& scriptWorld = context->ScriptWorld();
     selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
 
     
@@ -45,6 +46,7 @@ void CompilationWindow::OnCreate() {
 void CompilationWindow::Compile() {
 
     GameWorld& world = context->Project().World();
+    ScriptWorld& scriptWorld = context->ScriptWorld();
 
     std::cout<<"Compilation Started..."<<std::endl;
 
@@ -64,6 +66,14 @@ void CompilationWindow::Compile() {
     go->AddComponent<EditorObject>();
     
     go->AddScriptComponent(1);
+    
+    
+    TypeInfo info = scriptWorld.GetTypeInfo(*go, 1);
+    
+    {
+        
+    
+    }
 
     /*
     GameObject* window = gui->CreateControl(0, "Box", {200,200});

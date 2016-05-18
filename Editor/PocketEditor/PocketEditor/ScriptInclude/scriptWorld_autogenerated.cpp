@@ -117,20 +117,27 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
       case 0: {
       Jumpable* component = (Jumpable*)componentPtr;
-      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-      info->AddField(component->JumpHeight, "JumpHeight");
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "Jumpable";
+	      info->AddField(component->JumpHeight, "JumpHeight");
       return info;
       break; }
       case 1: {
       RotatorComponent* component = (RotatorComponent*)componentPtr;
-      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "RotatorComponent";
+	      info->AddField(component->max, "max");
+	      info->AddField(component->min, "min");
+	      info->AddField(component->speed, "speed");
+	      info->AddField(component->time, "time");
       return info;
       break; }
       case 2: {
       Sprite* component = (Sprite*)componentPtr;
-      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-      info->AddField(component->width, "width");
-      info->AddField(component->height, "height");
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "Sprite";
+	      info->AddField(component->height, "height");
+	      info->AddField(component->width, "width");
       return info;
       break; }
       default: return 0;

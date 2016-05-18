@@ -411,14 +411,21 @@ void ScriptWorld::WriteMainSerializedComponents(std::ofstream &file) {
                 auto& component = componentIt.second;
                 file<<"      case "<<index <<": {"<<std::endl;
                 file<<"      "<<component.name<<"* component = ("<<component.name<<"*)componentPtr;"<<std::endl;
-                file<<"      Pocket::TypeInfo* info = new Pocket::TypeInfo();"<<std::endl;
+                file<<"	      Pocket::TypeInfo* info = new Pocket::TypeInfo();"<<std::endl;
+                file<<"	      info->name = \""<<component.name<<"\";"<<std::endl;
+                std::set<std::string> uniqueFields;
+                for(auto& f : component.fields) {
+                    uniqueFields.insert(f.name);
+                }
                 
-                for(auto& field : component.fields) {
-                    if (field.type == "int" ||
-                        field.type == "string" ||
-                        field.type == "float") {
-                file<<"      info->AddField(component->"<< field.name <<", \""<<field.name<<"\");"<<std::endl;
-                    }
+                for(auto& field : uniqueFields) {
+                    //if (field.type == "int" ||
+                      //  field.type == "string" ||
+                        //field.type == "float" ||
+                       // field.type == "Vector3") {
+                file<<"	      info->AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
+                //file<< "// field.type == " << field.type << std::endl;
+                    //}
                 }
                 file<<"      return info;"<<std::endl;
                 
@@ -524,6 +531,8 @@ void ScriptWorld::AddGameWorld(GameWorld& world) {
 
     int numberOfSystems = countSystems();
     int numberOfComponents = countComponents();
+    
+    componentCount = numberOfComponents;
 
     world.InitializeScriptData(
         numberOfSystems, numberOfComponents,
@@ -582,9 +591,4 @@ TypeInfo ScriptWorld::GetTypeInfo(GameObject& object, int index) {
     return t;
 }
 
-
-
-
-
-
-
+int ScriptWorld::ComponentCount() { return componentCount; }

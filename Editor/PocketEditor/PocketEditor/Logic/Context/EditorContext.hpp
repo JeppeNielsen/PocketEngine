@@ -11,6 +11,7 @@
 #include "GameWorld.hpp"
 #include "InputManager.hpp"
 #include "Gui.hpp"
+#include "ScriptWorld.hpp"
 
 using namespace Pocket;
 
@@ -22,6 +23,7 @@ private:
     Gui* gui;
     InputManager* input;
     GameObject* gameRoot;
+    ScriptWorld scriptWorld;
 public:
     GameWorld& World();
     GameWorld& GuiWorld();
@@ -29,6 +31,7 @@ public:
     InputManager& Input();
     Project& Project();
     GameObject* GameRoot();
+    ScriptWorld& ScriptWorld();
     
     void Initialize(InputManager& input);
     void NewProject();

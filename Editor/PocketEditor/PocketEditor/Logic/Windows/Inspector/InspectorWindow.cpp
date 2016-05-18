@@ -51,12 +51,10 @@ void InspectorWindow::OnCreate() {
     Gui& gui = context->Gui();
     
     guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
-    guiWorld.CreateSystem<GameObjectEditorSystem>()->gui = &gui;
-
-
+    GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.CreateSystem<GameObjectEditorSystem>();
+    gameObjectEditorSystem->gui = &gui;
+    gameObjectEditorSystem->scriptWorld = &context->ScriptWorld();
     
-    
-   
     
     GameObject* pivot;
     GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-50}, &pivot);

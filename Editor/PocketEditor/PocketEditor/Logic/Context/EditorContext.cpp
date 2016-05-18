@@ -20,6 +20,8 @@ Project& EditorContext::Project() { return project; }
 
 GameObject* EditorContext::GameRoot() { return gameRoot; }
 
+ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
+
 void EditorContext::NewProject() {
     project = { };
     project.CreateDefaultScene(world, gameRoot);

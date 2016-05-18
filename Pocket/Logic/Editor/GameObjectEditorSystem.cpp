@@ -11,6 +11,8 @@
 #include "Layoutable.hpp"
 using namespace Pocket;
 
+GameObjectEditorSystem::GameObjectEditorSystem() : scriptWorld(0) {}
+
 void GameObjectEditorSystem::Initialize(GameWorld *world) {
     this->world = world;
 }
@@ -36,6 +38,17 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
         return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
     });
+    
+    if (scriptWorld) {
+        int numberOfScriptComponents = scriptWorld->ComponentCount();
+        
+        for(int i=0; i<numberOfScriptComponents; ++i) {
+            TypeInfo info = scriptWorld->GetTypeInfo(*editor->Object(), i);
+            if (!info.fields.empty()) {
+                infos.push_back(info);
+            }
+        }
+    }
     
     int counter = 0;
     for (auto info : infos) {

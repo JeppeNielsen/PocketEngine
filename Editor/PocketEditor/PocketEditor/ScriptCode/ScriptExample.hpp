@@ -27,13 +27,20 @@ struct Jumpable {
 };
 
 struct RotatorComponent {
-    RotatorComponent() { speed = {0,10,0}; }
+    RotatorComponent() { speed = {2.5f,1.5f,0}; min = 1.0f; max=1.2f; }
     Pocket::Vector3 speed;
+    float min;
+    float max;
+    float time;
 };
 struct RotatorScriptSystem : public GameSystem<Pocket::Transform, RotatorComponent> {
     void Update(float dt) {
         for(auto o : Objects()) {
-            o->GetComponent<Pocket::Transform>()->EulerRotation += o->GetComponent<RotatorComponent>()->speed * dt;
+            auto t = o->GetComponent<Pocket::Transform>();
+            auto r = o->GetComponent<RotatorComponent>();
+            t->EulerRotation += r->speed * dt;
+            t->Scale = r->min + (r->max - r->min) * sinf(r->time);
+            r->time += dt;
         }
     }
 };

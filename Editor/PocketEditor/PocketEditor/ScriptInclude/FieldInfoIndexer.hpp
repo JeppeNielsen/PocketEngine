@@ -8,6 +8,7 @@
 
 #pragma once
 #include <string>
+#include "Vector3.hpp"
 
 template<typename T> struct FieldInfoIndexer { static int Index() { return 0; } };
 
@@ -15,3 +16,4 @@ template<> struct FieldInfoIndexer<int> { static int Index() { return 0; } };
 template<> struct FieldInfoIndexer<float> { static int Index() { return 1; } };
 template<> struct FieldInfoIndexer<double> { static int Index() { return 2; } };
 template<> struct FieldInfoIndexer<std::string> { static int Index() { return 3; } };
+template<> struct FieldInfoIndexer<Pocket::Vector3> { static int Index() { return 4; } };

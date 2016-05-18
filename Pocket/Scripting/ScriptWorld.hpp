@@ -37,6 +37,9 @@ public:
     void AddGameWorld(GameWorld& world);
     void RemoveGameWorld(GameWorld& world);
     TypeInfo GetTypeInfo(GameObject& object, int index);
+    
+    int ComponentCount();
+    
 private:
     void ExtractScriptClasses();
     void WriteMainIncludes(std::ofstream &file);
@@ -64,6 +67,7 @@ private:
     
     std::vector<ComponentName> worldComponentNames;
     ScriptClass scriptClasses;
+    int componentCount;
     
     using LibHandle = void*;
     

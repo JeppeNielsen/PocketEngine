@@ -19,6 +19,5 @@ protected:
     std::string Name() override;
 private:
     SelectableCollection<EditorObject>* selectables;
-    ScriptWorld scriptWorld;
     void Compile();
 };

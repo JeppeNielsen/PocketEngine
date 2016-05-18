@@ -12,13 +12,16 @@
 #include "Transform.hpp"
 #include "Sizeable.hpp"
 #include "Gui.hpp"
+#include "ScriptWorld.hpp"
 
 namespace Pocket {
     class GameObjectEditorSystem : public GameSystem<GameObjectEditor, Transform, Sizeable> {
         public:
+            GameObjectEditorSystem();
             void Initialize(GameWorld* world);
         
             Gui* gui;
+            ScriptWorld* scriptWorld;
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
         

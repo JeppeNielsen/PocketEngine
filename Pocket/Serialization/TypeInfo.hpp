@@ -12,6 +12,7 @@
 #include <type_traits>
 #include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
+#include "Vector3.hpp"
 
 namespace Pocket {
 
@@ -240,6 +241,7 @@ public:
     
     
     void UpdateFromPointer(TypeInfo* info) {
+        name = info->name;
         for(auto field : info->fields) {
             AddField(field);
         }
@@ -251,6 +253,7 @@ public:
             case 1: AddField(*static_cast<FieldInfo<float>*>(fieldInfo)->field, fieldInfo->name); break;
             case 2: AddField(*static_cast<FieldInfo<double>*>(fieldInfo)->field, fieldInfo->name); break;
             case 3: AddField(*static_cast<FieldInfo<std::string>*>(fieldInfo)->field, fieldInfo->name); break;
+            case 4: AddField(*static_cast<FieldInfo<Pocket::Vector3>*>(fieldInfo)->field, fieldInfo->name); break;
         }
     }
 };
