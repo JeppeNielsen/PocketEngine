@@ -72,5 +72,5 @@ void InspectorWindow::OnCreate() {
 }
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
-    inspectorEditor->AddComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0];
+    inspectorEditor->AddComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
 }
