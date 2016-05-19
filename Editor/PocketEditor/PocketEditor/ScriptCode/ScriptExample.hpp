@@ -86,7 +86,7 @@ struct JumpSystem : GameSystem<Pocket::Transform, Jumpable> {
     
     void ObjectAdded(GameObject* object) {
         std::cout << "JumpSystem::ObjectAdded : JumpHeight "<< object->GetComponent<Jumpable>()->JumpHeight <<std::endl;
-        object->GetComponent<Jumpable>()->JumpHeight = 233;
+        object->GetComponent<Jumpable>()->JumpHeight = 10;
         std::cout << "JumpSystem::ObjectAdded : JumpHeight "<< object->GetComponent<Jumpable>()->JumpHeight <<std::endl;
     }
         
@@ -95,6 +95,18 @@ struct JumpSystem : GameSystem<Pocket::Transform, Jumpable> {
     }
 
     void Update(float dt) {
+        
+        static float timer = 0;
+        timer += dt;
+        
+        for(auto o : Objects()) {
+            auto j = o->GetComponent<Jumpable>();
+            auto t = o->GetComponent<Pocket::Transform>();
+            
+            Pocket::Vector3 p = t->Position;
+            p.y = sinf(timer) * j->JumpHeight * 0.1f;
+            t->Position = p;
+        }
        //std::cout << Objects()[0]->GetComponent<Sprite>()->width<<std::endl;
     }
     

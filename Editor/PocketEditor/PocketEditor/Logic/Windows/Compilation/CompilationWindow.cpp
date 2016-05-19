@@ -66,9 +66,9 @@ void CompilationWindow::Compile() {
     go->AddComponent<EditorObject>();
     
     go->AddScriptComponent(1);
+    go->AddScriptComponent(0);
     
-    
-    TypeInfo info = scriptWorld.GetTypeInfo(*go, 1);
+    TypeInfo info = scriptWorld.GetTypeInfo(*go, 0);
     
     {
         

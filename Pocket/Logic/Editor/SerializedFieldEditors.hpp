@@ -21,6 +21,15 @@ namespace Pocket {
         float prev;
     };
     
+    struct SerializedFieldEditorInt : public FieldInfoEditor<int, Gui, GameObject> {
+        void Initialize(Gui* context, GameObject* parent);
+        void Destroy();
+        void TextChanged(GameObject* object);
+        void Update(float dt);
+        GameObject* textBox;
+        int prev;
+    };
+    
     struct SerializedFieldEditorVector2 : public FieldInfoEditor<Vector2, Gui, GameObject> {
         void Initialize(Gui* context, GameObject* parent);
         void Destroy();

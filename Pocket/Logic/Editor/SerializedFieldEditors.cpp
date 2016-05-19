@@ -42,6 +42,40 @@ void SerializedFieldEditorFloat::Update(float dt) {
     prev = (*field);
 }
 
+
+//-------- int ---------
+void SerializedFieldEditorInt::Initialize(Gui* context, GameObject* parent) {
+    Vector2 size = parent->GetComponent<Sizeable>()->Size;
+    textBox = context->CreateTextBox(parent, "TextBox", 0, size, 0, "", 15.0f);
+    textBox->GetComponent<Touchable>()->ClickThrough = true;
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed.Bind(this, &SerializedFieldEditorInt::TextChanged, textBox);
+    textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+    prev = (*field) - 1;
+}
+
+void SerializedFieldEditorInt::Destroy() {
+    textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed.Unbind(this, &SerializedFieldEditorInt::TextChanged, textBox);
+    textBox->Remove();
+}
+
+void SerializedFieldEditorInt::TextChanged(GameObject* object) {
+    TextBox* textBox = object->Children()[0]->GetComponent<TextBox>();
+    if (textBox->Active) return;
+    int value = (int)atof(textBox->Text().c_str());
+    (*field) = value;
+    //prev = (*field);
+}
+
+void SerializedFieldEditorInt::Update(float dt) {
+    bool changed = prev!=(*field);
+    if (changed && !textBox->Children()[0]->GetComponent<TextBox>()->Active()) {
+        std::stringstream s;
+        s<<(*field);
+        textBox->Children()[0]->GetComponent<TextBox>()->Text = s.str();
+    }
+    prev = (*field);
+}
+
 //-------- Vector2 ---------
 void SerializedFieldEditorVector2::Initialize(Gui* context, GameObject* parent) {
     Vector2 size = parent->GetComponent<Sizeable>()->Size;
@@ -254,9 +288,9 @@ void SerializedFieldEditorQuaternion::Update(float dt) {
     prev = euler;
 }
 
-
 void Pocket::CreateDefaultSerializedEditors() {
     FieldInfo<float>::Editor = [] () { return new SerializedFieldEditorFloat(); };
+    FieldInfo<int>::Editor = [] () { return new SerializedFieldEditorInt(); };
     FieldInfo<Vector2>::Editor = [] () { return new SerializedFieldEditorVector2(); };
     FieldInfo<Vector3>::Editor = [] () { return new SerializedFieldEditorVector3(); };
     FieldInfo<std::string>::Editor = [] () { return new SerializedFieldEditorString(); };

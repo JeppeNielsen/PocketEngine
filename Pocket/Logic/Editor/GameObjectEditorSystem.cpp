@@ -84,7 +84,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
             GameObject* editor = world->CreateObject();
             editor->Parent = componentChild;
             editor->AddComponent<Transform>();
-            editor->AddComponent<Sizeable>()->Size = {size.x, size.y/info.fields.size()};
+            editor->AddComponent<Sizeable>()->Size = {size.x, size.y/(info.fields.size()+1)};
             editor->AddComponent<Layoutable>();
             FieldEditor* fieldEditor = editor->AddComponent<FieldEditor>();
             fieldEditor->SetType(info);
