@@ -39,7 +39,7 @@ struct RotatorScriptSystem : public GameSystem<Pocket::Transform, RotatorCompone
             auto t = o->GetComponent<Pocket::Transform>();
             auto r = o->GetComponent<RotatorComponent>();
             t->EulerRotation += r->speed * dt;
-            t->Scale = r->min + (r->max - r->min) * sinf(r->time);
+            t->Scale = r->min + (r->max - r->min) * (0.5f + sinf(r->time) * 0.5f);
             r->time += dt;
         }
     }
@@ -57,7 +57,8 @@ struct SpriteSystem : GameSystem<Pocket::Transform, Sprite> {
     void Update(float dt) {
         for(auto o : Objects()) {
             auto var = o->GetComponent<Pocket::Transform>();
-            var->Position += {dt*-0.2f,0,0};
+            auto sprite = o->GetComponent<Sprite>();
+            //var->Position += {dt*-0.2f,0,0};
         }
     }
 };
@@ -111,4 +112,26 @@ struct JumpSystem : GameSystem<Pocket::Transform, Jumpable> {
     }
     
 
+};
+
+struct ColorCycler {
+    float speed;
+    float phase;
+    float vertexOffset;
+};
+
+struct ColorCyclerSystem : public GameSystem<Pocket::Mesh, ColorCycler> {
+    void Update(float dt) {
+       for(auto o : Objects()) {
+            auto c = o->GetComponent<ColorCycler>();           
+            auto m = o->GetComponent<Pocket::Mesh>();
+            auto& vertices = m->GetMesh<Pocket::Vertex>().vertices;
+            
+            for(int i = 0; i<vertices.size(); ++i) {
+                vertices[i].Color = Pocket::Colour::HslToRgb(i * c->vertexOffset + c->phase,1.0, 1.0, 1.0);
+            }
+            c->phase += c->speed * dt;
+            
+       } 
+    }  
 };

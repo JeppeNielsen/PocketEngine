@@ -21,7 +21,9 @@ namespace Pocket {
             void Initialize(GameWorld* world);
         
             Gui* gui;
+#ifdef SCRIPTING_ENABLED
             ScriptWorld* scriptWorld;
+#endif
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
         

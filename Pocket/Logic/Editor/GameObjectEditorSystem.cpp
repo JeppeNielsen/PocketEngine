@@ -39,6 +39,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
     });
     
+#ifdef SCRIPTING_ENABLED
     if (scriptWorld) {
         int numberOfScriptComponents = scriptWorld->ComponentCount();
         
@@ -49,6 +50,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
             }
         }
     }
+#endif
     
     int counter = 0;
     for (auto info : infos) {

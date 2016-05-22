@@ -8,6 +8,7 @@ struct Orderable;
 struct EditorObject;
 struct Rotator;
 }
+struct ColorCycler;
 struct Jumpable;
 struct RotatorComponent;
 struct Sprite;
@@ -50,31 +51,39 @@ template<> void GameObject::RemoveComponent<Pocket::TextureComponent>() { Remove
 template<> void GameObject::RemoveComponent<Pocket::Orderable>() { RemoveComponent(5); }
 template<> void GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(14); }
 template<> void GameObject::RemoveComponent<Pocket::Rotator>() { RemoveComponent(31); }
-template<> Jumpable* GameObject::GetComponent<Jumpable>() { return (Jumpable*) GetScriptComponent(0); }
-template<> Jumpable* GameObject::AddComponent<Jumpable>() { return (Jumpable*) AddScriptComponent(0); }
-template<> void GameObject::RemoveComponent<Jumpable>() { RemoveScriptComponent(0); }
-template<> RotatorComponent* GameObject::GetComponent<RotatorComponent>() { return (RotatorComponent*) GetScriptComponent(1); }
-template<> RotatorComponent* GameObject::AddComponent<RotatorComponent>() { return (RotatorComponent*) AddScriptComponent(1); }
-template<> void GameObject::RemoveComponent<RotatorComponent>() { RemoveScriptComponent(1); }
-template<> Sprite* GameObject::GetComponent<Sprite>() { return (Sprite*) GetScriptComponent(2); }
-template<> Sprite* GameObject::AddComponent<Sprite>() { return (Sprite*) AddScriptComponent(2); }
-template<> void GameObject::RemoveComponent<Sprite>() { RemoveScriptComponent(2); }
+template<> ColorCycler* GameObject::GetComponent<ColorCycler>() { return (ColorCycler*) GetScriptComponent(0); }
+template<> ColorCycler* GameObject::AddComponent<ColorCycler>() { return (ColorCycler*) AddScriptComponent(0); }
+template<> void GameObject::RemoveComponent<ColorCycler>() { RemoveScriptComponent(0); }
+template<> Jumpable* GameObject::GetComponent<Jumpable>() { return (Jumpable*) GetScriptComponent(1); }
+template<> Jumpable* GameObject::AddComponent<Jumpable>() { return (Jumpable*) AddScriptComponent(1); }
+template<> void GameObject::RemoveComponent<Jumpable>() { RemoveScriptComponent(1); }
+template<> RotatorComponent* GameObject::GetComponent<RotatorComponent>() { return (RotatorComponent*) GetScriptComponent(2); }
+template<> RotatorComponent* GameObject::AddComponent<RotatorComponent>() { return (RotatorComponent*) AddScriptComponent(2); }
+template<> void GameObject::RemoveComponent<RotatorComponent>() { RemoveScriptComponent(2); }
+template<> Sprite* GameObject::GetComponent<Sprite>() { return (Sprite*) GetScriptComponent(3); }
+template<> Sprite* GameObject::AddComponent<Sprite>() { return (Sprite*) AddScriptComponent(3); }
+template<> void GameObject::RemoveComponent<Sprite>() { RemoveScriptComponent(3); }
 #include "TypeInfo.hpp"
 #include "Transform.hpp"
+#include "Mesh.hpp"
 #include "Property.hpp"
 #include "Vector3.hpp"
 #include "Sizeable.hpp"
+#include "VertexMesh.hpp"
+#include "TextureAtlas.hpp"
+#include "Colour.hpp"
 #include "ScriptExample.hpp"
 
 extern "C" int CountSystems() {
-   return 4;
+   return 5;
 }
 extern "C" IScriptSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 0: return new JumpSystem();
-      case 1: return new RotatorScriptSystem();
-      case 2: return new ScriptTransformSystem();
-      case 3: return new SpriteSystem();
+      case 0: return new ColorCyclerSystem();
+      case 1: return new JumpSystem();
+      case 2: return new RotatorScriptSystem();
+      case 3: return new ScriptTransformSystem();
+      case 4: return new SpriteSystem();
       default: return 0;
    }
 }
@@ -82,32 +91,37 @@ extern "C" void DeleteSystem(IScriptSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 3;
+   return 4;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 0: return new Jumpable();
-      case 1: return new RotatorComponent();
-      case 2: return new Sprite();
+      case 0: return new ColorCycler();
+      case 1: return new Jumpable();
+      case 2: return new RotatorComponent();
+      case 3: return new Sprite();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 0: { delete ((Jumpable*)component); break; }
-      case 1: { delete ((RotatorComponent*)component); break; }
-      case 2: { delete ((Sprite*)component); break; }
+      case 0: { delete ((ColorCycler*)component); break; }
+      case 1: { delete ((Jumpable*)component); break; }
+      case 2: { delete ((RotatorComponent*)component); break; }
+      case 3: { delete ((Sprite*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 0: { Jumpable* co = (Jumpable*)c; 
+      case 0: { ColorCycler* co = (ColorCycler*)c; 
+      ColorCycler* so = ((ColorCycler*)s);
+        co->operator=(*so);             break; }
+      case 1: { Jumpable* co = (Jumpable*)c; 
       Jumpable* so = ((Jumpable*)s);
         co->operator=(*so);             break; }
-      case 1: { RotatorComponent* co = (RotatorComponent*)c; 
+      case 2: { RotatorComponent* co = (RotatorComponent*)c; 
       RotatorComponent* so = ((RotatorComponent*)s);
         co->operator=(*so);             break; }
-      case 2: { Sprite* co = (Sprite*)c; 
+      case 3: { Sprite* co = (Sprite*)c; 
       Sprite* so = ((Sprite*)s);
         co->operator=(*so);             break; }
    }
@@ -116,13 +130,22 @@ extern "C" void ResetComponent(int componentID, void* c, void* s) {
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
       case 0: {
+      ColorCycler* component = (ColorCycler*)componentPtr;
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "ColorCycler";
+	      info->AddField(component->phase, "phase");
+	      info->AddField(component->speed, "speed");
+	      info->AddField(component->vertexOffset, "vertexOffset");
+      return info;
+      break; }
+      case 1: {
       Jumpable* component = (Jumpable*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Jumpable";
 	      info->AddField(component->JumpHeight, "JumpHeight");
       return info;
       break; }
-      case 1: {
+      case 2: {
       RotatorComponent* component = (RotatorComponent*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "RotatorComponent";
@@ -132,7 +155,7 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      info->AddField(component->time, "time");
       return info;
       break; }
-      case 2: {
+      case 3: {
       Sprite* component = (Sprite*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Sprite";

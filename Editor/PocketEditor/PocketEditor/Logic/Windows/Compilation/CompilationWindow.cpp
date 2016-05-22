@@ -23,13 +23,18 @@ void CompilationWindow::OnInitialize() {
         "ScriptExample.so",
         "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
         {
-            "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp"
+            "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/Colour.cpp"
         },
         {
             "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
             "/Projects/PocketEngine/Pocket/Data/Property.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
         }
         );
     
@@ -65,8 +70,9 @@ void CompilationWindow::Compile() {
     go->AddComponent<Material>();
     go->AddComponent<EditorObject>();
     
-    go->AddScriptComponent(1);
-    go->AddScriptComponent(0);
+    for(int i=0; i<scriptWorld.ComponentCount(); ++i) {
+        go->AddScriptComponent(i);
+    }
     
     TypeInfo info = scriptWorld.GetTypeInfo(*go, 0);
     

@@ -46,9 +46,9 @@ public:
     class VertexMesh<Vertex>& GetMesh() {
         if (!vertexMesh) {
             vertexMesh = new VertexMesh<Vertex>();
-            vertexType = Vertex::ID;
+            vertexType = 0;//Vertex::ID;
             RevertDefaultCalcBoundingBox();
-        } else if (vertexType != Vertex::ID) {
+        } else if (vertexType != 0) {//Vertex::ID) {
             return VertexMesh<Vertex>::empty;
         }
         VertexMesh<Vertex>& mesh = *((VertexMesh<Vertex>*)vertexMesh);

@@ -45,6 +45,7 @@ public:
     }
     
     int Size() const { return size; }
+    int Capacity() const { return capacity; }
     
     void RemoveObject(ObjectInstance* instance) {
         --size;

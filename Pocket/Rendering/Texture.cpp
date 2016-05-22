@@ -4,6 +4,7 @@
 #include "jpeg_decoder.h"
 #include <iostream>
 #include "File.hpp"
+#include "OpenGL.hpp"
 
 using namespace Pocket;
 

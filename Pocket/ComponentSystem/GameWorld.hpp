@@ -92,7 +92,7 @@ public:
     void Update(float dt);
     void Render();
     void DoActions(GameConstants::Actions& list);
-    int ObjectCount();
+    int ObjectCount() const;
     GameObject* GetObject(int index);
     void Clear();
     ~GameWorld();

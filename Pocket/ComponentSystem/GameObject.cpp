@@ -347,6 +347,7 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int compo
 #ifdef SCRIPTING_ENABLED
 
 void GameObject::ClearScriptingData() {
+    if (!world) return;
     delete[] scriptComponents;
     delete[] scriptSystemIndices;
     activeScriptComponents.clear();
@@ -354,6 +355,7 @@ void GameObject::ClearScriptingData() {
 }
 
 void GameObject::InitializeScriptingData() {
+    if (!world) return;
     std::size_t numScriptComponents = world->scriptComponents.size();
     scriptComponents = new ScriptComponent[numScriptComponents];
     for (int i=0; i<numScriptComponents; i++) {

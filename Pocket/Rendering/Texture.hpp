@@ -1,11 +1,12 @@
 #pragma once
-#include "OpenGL.hpp"
 #include <string>
 
 namespace Pocket {
-	class Texture
-	{
+	class Texture {
 	public:
+        using GLuint = uint32_t;
+        using GLenum = uint32_t;
+    
 		Texture();
 		~Texture();
 

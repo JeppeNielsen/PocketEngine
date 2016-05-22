@@ -171,7 +171,7 @@ void GameWorld::DoActions(GameConstants::Actions& list) {
    list.clear();
 }
 
-int GameWorld::ObjectCount() {
+int GameWorld::ObjectCount() const {
     return objects.Size();
 }
 
@@ -248,8 +248,19 @@ GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
 
 #ifdef SCRIPTING_ENABLED
 void GameWorld::ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted) {
-    for(int i=0; i<ObjectCount(); ++i) {
-        GetObject(i)->ClearScriptingData();
+
+    std::vector<short> systems;
+    for (short i=0; i<scriptSystems.size(); ++i) {
+        systems.push_back(i);
+    }
+
+    for(int i=0; i<objects.Size(); ++i) {
+        GameObject* object = objects.Get(i);
+        object->CheckForScriptSystemsRemoval(systems, object->activeComponents, object->activeScriptComponents);
+    }
+
+    for(int i=0; i<objects.Capacity(); ++i) {
+        objects.Get(i)->ClearScriptingData();
     }
 
     for(int i=0; i<components.size(); ++i) {
@@ -286,8 +297,18 @@ void GameWorld::InitializeScriptData(int numSystems, int numComponents,
     dynamicScriptSystemComponents.resize(numComponents);
     onSystemData(staticScriptSystemComponents, dynamicScriptSystemComponents, scriptSystemsData);
     
-    for(int i=0; i<ObjectCount(); ++i) {
-        GetObject(i)->InitializeScriptingData();
+    for(int i=0; i<objects.Capacity(); ++i) {
+        objects.Get(i)->InitializeScriptingData();
+    }
+    
+    std::vector<short> systems;
+    for (short i=0; i<scriptSystems.size(); ++i) {
+        systems.push_back(i);
+    }
+    
+    for(int i=0; i<objects.Size(); ++i) {
+        GameObject* object = objects.Get(i);
+        object->CheckForScriptSystemsAddition(systems, object->activeComponents, object->activeScriptComponents);
     }
 }
 #endif
