@@ -113,8 +113,10 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
                     templateArgumentsStarted = true;
                 }
                 
-                if (cursorKind == "FieldDecl" && cursorSpelling!=tokenSpelling) {
-                    currentClass->fields.push_back({cursorSpelling, tokenSpelling });
+                if (cursorKind == "FieldDecl") {
+                    if (!currentClass->HasFieldName(cursorSpelling)) {
+                        currentClass->fields.push_back({cursorSpelling, tokenSpelling });
+                    }
                 }
                 
                 if (!fileSet) {

@@ -35,3 +35,10 @@ void ScriptClass::Print() {
     }
 }
 
+bool ScriptClass::HasFieldName(const std::string &name) {
+    for(auto& f: fields) {
+        if (f.name == name) return true;
+    }
+    return false;
+}
+

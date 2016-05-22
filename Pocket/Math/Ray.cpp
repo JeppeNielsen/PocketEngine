@@ -13,26 +13,11 @@
 
 using namespace Pocket;
 
-Ray::Ray() { }
-Ray::~Ray() { }
 
-Ray::Ray(const Ray& ray) {
-    position = ray.position;
-    direction = ray.direction;
-}
-
-Ray::Ray(const Vector3& position, const Vector3& direction) {
-    this->position = position;
-    this->direction = direction;
-}
 
 void Ray::Transform(const Pocket::Matrix4x4 &matrix) {
     position = matrix.TransformPosition(position);
     direction = matrix.TransformVector(direction);
-}
-
-Vector3 Ray::GetPosition(float distance) const {
-    return position + direction * distance;
 }
 
 bool Ray::Intersect(const BoundingBox& box) const {

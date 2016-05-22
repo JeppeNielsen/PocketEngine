@@ -30,11 +30,13 @@ void CompilationWindow::OnInitialize() {
             "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
             "/Projects/PocketEngine/Pocket/Data/Property.hpp",
+            "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
         }
         );
     
@@ -68,6 +70,7 @@ void CompilationWindow::Compile() {
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
     go->AddComponent<Material>();
+    go->AddComponent<Touchable>();
     go->AddComponent<EditorObject>();
     
     for(int i=0; i<scriptWorld.ComponentCount(); ++i) {

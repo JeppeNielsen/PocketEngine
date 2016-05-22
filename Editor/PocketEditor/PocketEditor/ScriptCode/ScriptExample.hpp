@@ -8,15 +8,8 @@
 
 #pragma once
 #include "GameSystem.hpp"
+#include "Property.hpp"
 #include <iostream>
-
-struct Sprite {
-    
-    Sprite() : width(100), height(200) {}
-    
-    float width;
-    float height;
-};
 
 struct Jumpable {
     
@@ -45,22 +38,41 @@ struct RotatorScriptSystem : public GameSystem<Pocket::Transform, RotatorCompone
     }
 };
 
-struct SpriteSystem : GameSystem<Pocket::Transform, Sprite> {
+struct Sprite {
+    Sprite() { Size = {2,1}; }
+    Pocket::Property<Pocket::Vector2> Size;
+};
+
+struct SpriteSystem : GameSystem<Pocket::Mesh, Sprite> {
     void ObjectAdded(GameObject* object) {
         std::cout << "SpriteSystem::ObjectAdded"<<std::endl;
+        object->GetComponent<Sprite>()->Size.Changed.Bind(this, &SpriteSystem::SizeChanged, object);
     }
 
     void ObjectRemoved(GameObject* object) {
-        std::cout << "SpriteSystem::ObjectRemoved"<<std::endl;
+        object->GetComponent<Sprite>()->Size.Changed.Unbind(this, &SpriteSystem::SizeChanged, object);
     }
     
-    void Update(float dt) {
-        for(auto o : Objects()) {
-            auto var = o->GetComponent<Pocket::Transform>();
-            auto sprite = o->GetComponent<Sprite>();
-            //var->Position += {dt*-0.2f,0,0};
-        }
+    void SizeChanged(GameObject* object) {
+        auto mesh = object->GetComponent<Pocket::Mesh>();
+        auto sprite = object->GetComponent<Sprite>();
+        
+        auto& vertices = mesh->GetMesh<Pocket::Vertex>().vertices;
+        auto& triangles = mesh->GetMesh<Pocket::Vertex>().triangles;
+        
+        
+        vertices.clear();
+        vertices.resize(4);
+        vertices[0].Position = {0,0,0};
+        vertices[1].Position = {sprite->Size().x,0,0};
+        vertices[2].Position = {sprite->Size().x,sprite->Size().y,0};
+        vertices[3].Position = {0,sprite->Size().y,0};
+        
+        triangles.clear();
+        triangles = {0,1,2,0,2,3};
+        
     }
+    
 };
 
 struct ScriptTransformSystem : GameSystem<Pocket::Transform, Pocket::Sizeable> {
@@ -128,10 +140,43 @@ struct ColorCyclerSystem : public GameSystem<Pocket::Mesh, ColorCycler> {
             auto& vertices = m->GetMesh<Pocket::Vertex>().vertices;
             
             for(int i = 0; i<vertices.size(); ++i) {
-                vertices[i].Color = Pocket::Colour::HslToRgb(i * c->vertexOffset + c->phase,1.0, 1.0, 1.0);
+            //    vertices[i].Color = Pocket::Colour::HslToRgb(i * c->vertexOffset + c->phase,1.0, 1.0, 1.0);
             }
             c->phase += c->speed * dt;
             
        } 
     }  
+};
+
+struct ClickColorer {
+       ClickColorer() {
+           downColor = Pocket::Colour::Yellow();
+           upColor = Pocket::Colour::Blue();
+       }
+  Pocket::Colour downColor;
+  Pocket::Colour upColor;  
+};
+
+struct ClickColorerSystem : public GameSystem<Pocket::Touchable, Pocket::Mesh, ClickColorer> {
+  
+    void ObjectAdded(GameObject* object) {
+        object->GetComponent<Pocket::Touchable>()->Down.Bind(this, &ClickColorerSystem::Down, object);
+        object->GetComponent<Pocket::Touchable>()->Up.Bind(this, &ClickColorerSystem::Up, object);
+    }  
+    
+    void ObjectRemoved(GameObject* object) {
+        object->GetComponent<Pocket::Touchable>()->Down.Unbind(this, &ClickColorerSystem::Down, object);
+        object->GetComponent<Pocket::Touchable>()->Up.Unbind(this, &ClickColorerSystem::Up, object);
+    }
+    
+    void Down(Pocket::TouchData d, GameObject* object) {
+        auto mesh = object->GetComponent<Pocket::Mesh>();
+        mesh->GetMesh<Pocket::Vertex>().SetColor(object->GetComponent<ClickColorer>()->downColor);
+    }
+    
+     void Up(Pocket::TouchData d, GameObject* object) {
+        auto mesh = object->GetComponent<Pocket::Mesh>();
+        mesh->GetMesh<Pocket::Vertex>().SetColor(object->GetComponent<ClickColorer>()->upColor);
+    }
+    
 };

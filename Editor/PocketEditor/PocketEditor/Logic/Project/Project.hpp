@@ -9,6 +9,7 @@
 #pragma once
 #include "GameWorld.hpp"
 #include "Transform.hpp"
+#include "InputManager.hpp"
 
 using namespace Pocket;
 
@@ -31,5 +32,5 @@ private:
     GameWorld world;
 public:
     GameWorld& World();
-    void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot);
+    void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
 };

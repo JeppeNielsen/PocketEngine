@@ -24,7 +24,7 @@ ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
 
 void EditorContext::NewProject() {
     project = { };
-    project.CreateDefaultScene(world, gameRoot);
+    project.CreateDefaultScene(world, gameRoot, *input);
 }
 
 void EditorContext::Initialize(InputManager& input) {

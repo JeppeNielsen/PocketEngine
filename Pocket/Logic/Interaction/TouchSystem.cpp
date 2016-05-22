@@ -8,6 +8,7 @@
 
 #include "TouchSystem.hpp"
 #include <stack>
+#include "Material.hpp"
 
 using namespace Pocket;
 

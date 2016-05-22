@@ -8,7 +8,7 @@
 
 #pragma once
 #include "Property.hpp"
-#include "Material.hpp"
+#include "Transform.hpp"
 #include "Vector3.hpp"
 #include "Mesh.hpp"
 
@@ -17,6 +17,7 @@ namespace Pocket {
     class Camera;
     class Touchable;
     class InputManager;
+    class GameObject;
     struct TouchData {
         Pocket::GameObject* object;
         Touchable* Touchable;

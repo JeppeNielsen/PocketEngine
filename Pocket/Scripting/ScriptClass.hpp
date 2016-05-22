@@ -35,6 +35,8 @@ public:
     using Fields = std::vector<Field>;
     Fields fields;
     
+    bool HasFieldName(const std::string& name);
+    
     void Print();
 };
 

@@ -8,6 +8,7 @@
 
 #include "Project.hpp"
 #include "RenderSystem.hpp"
+#include "TouchSystem.hpp"
 #include "EditorObjectCreatorSystem.hpp"
 #include "TransformHierarchy.hpp"
 
@@ -15,11 +16,13 @@ GameWorld& Project::World() { return world; }
 
 
 
-void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot) {
+void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input) {
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<RotatorSystem>();
     world.CreateSystem<TransformHierarchy>();
+    world.CreateSystem<TouchSystem>()->Input = &input;
+    //world.CreateSystem<TouchSystem>()->TouchDepth = 1000;
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;

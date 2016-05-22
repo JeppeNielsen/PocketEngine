@@ -8,6 +8,7 @@
 
 #include "DraggableSystem.hpp"
 #include "InputManager.hpp"
+#include "Camera.hpp"
 
 using namespace Pocket;
 
