@@ -12,7 +12,9 @@
 #include "Transform.hpp"
 #include "Sizeable.hpp"
 #include "Gui.hpp"
+#ifdef SCRIPTING_ENABLED
 #include "ScriptWorld.hpp"
+#endif
 
 namespace Pocket {
     class GameObjectEditorSystem : public GameSystem<GameObjectEditor, Transform, Sizeable> {

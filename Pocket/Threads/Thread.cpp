@@ -104,10 +104,10 @@ void Thread::Sleep(unsigned int microseconds) {
     usleep(microseconds);
 }
 
-void Thread::AddTask(void* data, Pocket::IDelegate<void*>* method) {
+void Thread::AddTask(void* data, std::function<void(void*)>& method) {
     Task* task = new Task();
     task->data = data;
-    task->event += method;
+    task->event.Bind(method);
     pthread_mutex_lock(&task_mutex);
     tasks.push_back(task);
     pthread_mutex_unlock(&task_mutex);

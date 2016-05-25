@@ -11,7 +11,11 @@
 #include "Layoutable.hpp"
 using namespace Pocket;
 
-GameObjectEditorSystem::GameObjectEditorSystem() : scriptWorld(0) {}
+GameObjectEditorSystem::GameObjectEditorSystem()
+#ifdef SCRIPTING_ENABLED
+: scriptWorld(0)
+#endif
+{}
 
 void GameObjectEditorSystem::Initialize(GameWorld *world) {
     this->world = world;

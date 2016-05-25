@@ -17,7 +17,7 @@
 using namespace Pocket;
 
 BigButtonManager::BigButtonManager() : device(0), interface(0) {
-    thread.Code += event_handler(this, &BigButtonManager::PollLoop);
+    thread.Code.Bind(this, &BigButtonManager::PollLoop);
     
     for (int i=0; i<4; i++) {
         controller[i].timeSinceButtonClick = 0;

@@ -35,7 +35,7 @@ namespace Pocket {
             Event<void*> event;
         };
         
-        static void AddTask(void* data, Pocket::IDelegate<void*>* method);
+        static void AddTask(void* data, std::function<void(void*)>& method);
         
         struct ThreadContext {
             Thread* Thread;
