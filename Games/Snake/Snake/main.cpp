@@ -2,15 +2,16 @@
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
 #include "BigButtonManager.hpp"
+#include "Mesh.hpp"
+#include "VertexMesh.hpp"
 
 using namespace Pocket;
 
-
-Component(TimedLife)
+struct TimedLife {
     float time;
 };
 
-SYSTEM(TimedLifeSystem, TimedLife)
+struct TimedLifeSystem : public GameSystem<TimedLife> {
     void Update(float dt) {
         for (auto o : Objects()) {
             auto timedLife = o->GetComponent<TimedLife>();
@@ -23,8 +24,8 @@ SYSTEM(TimedLifeSystem, TimedLife)
     }
 };
 
-Component(PointTransform)
-    void Reset() { x=0; y=0; rotation=0; }
+struct PointTransform {
+    PointTransform() { x=0; y=0; rotation=0; }
     int x;
     int y;
     int rotation;
@@ -50,14 +51,14 @@ Component(PointTransform)
     }
 };
 
-Component(Moveable)
-    void Reset() { timer = 0; timeBetweenMoves = 0.4f; }
+struct Moveable {
+    Moveable() { timer = 0; timeBetweenMoves = 0.4f; }
     float timeBetweenMoves;
     float timer;
     Event<Moveable*> Moved;
 };
 
-SYSTEM(MoveSystem, PointTransform, Moveable)
+struct MoveSystem : public GameSystem<PointTransform, Moveable> {
     struct dir {
         int dx; int dy;
     };
@@ -80,7 +81,7 @@ SYSTEM(MoveSystem, PointTransform, Moveable)
     }
 };
 
-SYSTEM(PointTransformSystem, PointTransform, Transform)
+struct PointTransformSystem : public GameSystem<PointTransform, Transform> {
     void Update(float dt) {
         for (auto o : Objects()) {
             auto p = o->GetComponent<PointTransform>();
@@ -89,27 +90,33 @@ SYSTEM(PointTransformSystem, PointTransform, Transform)
     }
 };
 
-Component(Snake)
+struct Snake {
     int index;
     float tailLife;
 };
 
-Component(SnakeBody)
-    Pointer<Snake> snake;
+struct SnakeBody {
+    Snake* snake;
 };
 
-SYSTEM(SnakeSystem, Snake, Moveable, PointTransform)
+struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
+
+    GameWorld* world;
+    void Initialize(GameWorld* world) {
+        this->world = world;
+    }
+
     void ObjectAdded(GameObject* object) {
-        object->GetComponent<Moveable>()->Moved += event_handler(this, &SnakeSystem::Moved, object);
+        object->GetComponent<Moveable>()->Moved.Bind(this, &SnakeSystem::Moved, object);
     }
     
     void ObjectRemoved(GameObject* object) {
-        object->GetComponent<Moveable>()->Moved -= event_handler(this, &SnakeSystem::Moved, object);
+        object->GetComponent<Moveable>()->Moved.Unbind(this, &SnakeSystem::Moved, object);
     }
 
     void Moved(Moveable* movable, GameObject* snakeObject) {
         Snake* snake = snakeObject->GetComponent<Snake>();
-        GameObject* object = World()->CreateObject();
+        GameObject* object = world->CreateObject();
         object->AddComponent<Transform>();
         object->CloneComponent<PointTransform>(snakeObject);
         object->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1.0f, snakeObject->GetComponent<Mesh>()->GetMesh<Vertex>().vertices[0].Color);
@@ -119,16 +126,14 @@ SYSTEM(SnakeSystem, Snake, Moveable, PointTransform)
     }
 };
 
-SYSTEM(SnakeControlSystem, Snake, PointTransform)
-
-
+struct SnakeControlSystem : public GameSystem<Snake, PointTransform> {
 
     void SetInput(InputManager& input) {
-        input.ButtonDown += event_handler(this, &SnakeControlSystem::ButtonDown);
+        input.ButtonDown.Bind(this, &SnakeControlSystem::ButtonDown);
     }
 
     void SetBigButtons(BigButtonManager& bigButtons) {
-        bigButtons.ButtonDown += event_handler(this, &SnakeControlSystem::BigButtonDown);
+        bigButtons.ButtonDown.Unbind(this, &SnakeControlSystem::BigButtonDown);
     }
 
     void BigButtonDown(BigButtonEvent e) {
@@ -170,7 +175,7 @@ SYSTEM(SnakeControlSystem, Snake, PointTransform)
     }
 };
 
-Component(Collidable)
+struct Collidable {
     struct CollisionEvent {
         Collidable* collidable;
         Collidable* other;
@@ -181,24 +186,23 @@ Component(Collidable)
     Event<CollisionEvent> OnCollision;
 };
 
-SYSTEM(CollidableSystem, Collidable)
-
+template<typename ...T>
+struct CollidableSystem : public GameSystem<Collidable, T...> {
 };
 
-SYSTEM(CollisionSystem, Moveable, Collidable, PointTransform)
-    CollidableSystem* collidables;
+struct CollisionSystem : public GameSystem<Moveable, Collidable, PointTransform> {
+    CollidableSystem<PointTransform>* collidables;
 
-    void AddedToWorld(GameWorld& world) {
-        collidables = world.CreateSystem<CollidableSystem>();
-        collidables->AddComponent<PointTransform>();
+    void Initialize(GameWorld* world) {
+        collidables = world->CreateSystem<CollidableSystem<PointTransform>>();
     }
 
     void ObjectAdded(GameObject* object) {
-        object->GetComponent<Moveable>()->Moved += event_handler(this, &CollisionSystem::Moved, object);
+        object->GetComponent<Moveable>()->Moved.Bind(this, &CollisionSystem::Moved, object);
     }
     
     void ObjectRemoved(GameObject* object) {
-        object->GetComponent<Moveable>()->Moved -= event_handler(this, &CollisionSystem::Moved, object);
+        object->GetComponent<Moveable>()->Moved.Unbind(this, &CollisionSystem::Moved, object);
     }
 
     void Moved(Moveable* movable, GameObject* object) {
@@ -214,32 +218,31 @@ SYSTEM(CollisionSystem, Moveable, Collidable, PointTransform)
     }
 };
 
-Component(Powerup)
+struct Powerup {
     enum class PowerupType {
         Grow,
     };
-
     PowerupType type;
 };
 
-SYSTEM(BodySystem, SnakeBody)
+template<typename ...T>
+struct BodySystem : public GameSystem<SnakeBody, T...> {
 };
 
-SYSTEM(PowerupSystem, Powerup, Collidable)
+struct PowerupSystem : public GameSystem<Powerup, Collidable> {
 
-    BodySystem* bodies;
+    BodySystem<TimedLife>* bodies;
 
-    void AddedToWorld(GameWorld& world) {
-        bodies = world.CreateSystem<BodySystem>();
-        bodies->AddComponent<TimedLife>();
+    void Initialize(GameWorld* world) override {
+        bodies = world->CreateSystem<BodySystem<TimedLife>>();
     }
 
     void ObjectAdded(GameObject* object) {
-        object->GetComponent<Collidable>()->OnCollision += event_handler(this, &PowerupSystem::Collision);
+        object->GetComponent<Collidable>()->OnCollision.Bind(this, &PowerupSystem::Collision);
     }
     
     void ObjectRemoved(GameObject* object) {
-        object->GetComponent<Collidable>()->OnCollision -= event_handler(this, &PowerupSystem::Collision);
+        object->GetComponent<Collidable>()->OnCollision.Bind(this, &PowerupSystem::Collision);
     }
 
     void Collision(Collidable::CollisionEvent e) {
@@ -261,7 +264,7 @@ SYSTEM(PowerupSystem, Powerup, Collidable)
     }
 };
 
-SYSTEM(SnakeCreatorSystem, Snake)
+struct SnakeCreatorSystem : public GameSystem<Snake> {
 
     std::vector<Colour> snakeColors {
         Colour::Green(),
@@ -271,24 +274,29 @@ SYSTEM(SnakeCreatorSystem, Snake)
     };
 
     void SetBigButtons(BigButtonManager& bigButtons) {
-        bigButtons.ButtonDown += event_handler(this, &SnakeCreatorSystem::BigButtonDown);
+        bigButtons.ButtonDown.Bind(this, &SnakeCreatorSystem::BigButtonDown);
     }
 
     void BigButtonDown(BigButtonEvent e) {
         if (DoesPlayerIndexExist(e.PlayerIndex)) return;
         CreateSnake(e.PlayerIndex, 0, 0);
     }
+    
+    void Initialize(GameWorld* world) {
+        this->world = world;
+    }
 
 private:
+    GameWorld* world;
     bool DoesPlayerIndexExist(int playerIndex) {
         for(auto o : Objects()) {
             if (o->GetComponent<Snake>()->index == playerIndex) return true;
         }
         return false;
     }
-
+public:
     void CreateSnake(int index, int x, int y) {
-        GameObject* snake = World()->CreateObject();
+        GameObject* snake = world->CreateObject();
         snake->AddComponent<Transform>();
         snake->AddComponent<PointTransform>()->SetPosition(x, y);
         snake->AddComponent<Snake>()->tailLife = 0.6f;
@@ -331,11 +339,12 @@ public:
         world.CreateSystem<PointTransformSystem>();
         world.CreateSystem<CollisionSystem>();
         
+        world.CreateSystem<SnakeCreatorSystem>()->CreateSnake(0, 0, 0);
+        
         
         camera = world.CreateObject();
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
         camera->AddComponent<Transform>()->Position = { 0, 0, 100 };
-        camera->GetComponent<Camera>()->FieldOfView = 40;
+        camera->AddComponent<Camera>()->FieldOfView = 40;
         
         for (int i=0; i<20; i++) {
             CreatePowerup(-20 + MathHelper::Random(40), -10 + MathHelper::Random(20));
