@@ -149,6 +149,9 @@
 		72772F071CF62F14005AC1D8 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772D991CF62F13005AC1D8 /* tinyxmlparser.cpp */; };
 		72772F0B1CF62F14005AC1D8 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 72772DA11CF62F13005AC1D8 /* miniz.c */; };
 		72772F131CF63460005AC1D8 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F0D1CF63460005AC1D8 /* Thread.cpp */; };
+		72772F221CFCCFF8005AC1D8 /* font.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 72772F1B1CFCCF3A005AC1D8 /* font.fnt */; };
+		72772F231CFCCFF8005AC1D8 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 72772F1F1CFCCF3A005AC1D8 /* images.png */; };
+		72772F241CFCCFF8005AC1D8 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 72772F201CFCCF3A005AC1D8 /* images.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -478,6 +481,9 @@
 		72772DA21CF62F13005AC1D8 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		72772F0D1CF63460005AC1D8 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
 		72772F0E1CF63460005AC1D8 /* Thread.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Thread.hpp; sourceTree = "<group>"; };
+		72772F1B1CFCCF3A005AC1D8 /* font.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = font.fnt; sourceTree = "<group>"; };
+		72772F1F1CFCCF3A005AC1D8 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
+		72772F201CFCCF3A005AC1D8 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -527,6 +533,7 @@
 		723E783D1B5C07E700007AEA /* Snake */ = {
 			isa = PBXGroup;
 			children = (
+				72772F191CFCCF3A005AC1D8 /* Assets */,
 				723E783E1B5C07E700007AEA /* main.cpp */,
 			);
 			path = Snake;
@@ -1136,6 +1143,16 @@
 			path = Threads;
 			sourceTree = "<group>";
 		};
+		72772F191CFCCF3A005AC1D8 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				72772F1B1CFCCF3A005AC1D8 /* font.fnt */,
+				72772F1F1CFCCF3A005AC1D8 /* images.png */,
+				72772F201CFCCF3A005AC1D8 /* images.xml */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1146,6 +1163,7 @@
 				723E78301B5C07E700007AEA /* Sources */,
 				723E78311B5C07E700007AEA /* Frameworks */,
 				723E78321B5C07E700007AEA /* CopyFiles */,
+				72772F211CFCCFEE005AC1D8 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -1186,6 +1204,19 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		72772F211CFCCFEE005AC1D8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				72772F221CFCCFF8005AC1D8 /* font.fnt in Resources */,
+				72772F231CFCCFF8005AC1D8 /* images.png in Resources */,
+				72772F241CFCCFF8005AC1D8 /* images.xml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		723E78301B5C07E700007AEA /* Sources */ = {
