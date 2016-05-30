@@ -77,7 +77,7 @@ void Thread::Start() {
     if (running) return;
     threadContext = new ThreadContext();
     threadContext->Thread = this;
-    threadContext->Code = new Event<Pocket::Thread*>(Code);
+    threadContext->Code = &Code;
     pthread_t* t = new pthread_t();
     pthread_create(t, NULL, Method, threadContext);
     running = true;
