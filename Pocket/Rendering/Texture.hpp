@@ -28,6 +28,8 @@ namespace Pocket {
 		GLuint GetHandle();
 
 		virtual void Free();
+        
+        void DisableMipmapping();
 
 	protected:
 		GLuint texture;

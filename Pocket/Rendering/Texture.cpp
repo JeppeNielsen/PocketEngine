@@ -103,6 +103,11 @@ void Texture::CreateFromBuffer(unsigned char *buffer, int width, int height, GLe
     GenerateMipmaps();
 }
 
+void Texture::DisableMipmapping() {
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+}
 
 void Texture::GenerateMipmaps() {
     glGenerateMipmap(GL_TEXTURE_2D);
