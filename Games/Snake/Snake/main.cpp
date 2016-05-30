@@ -667,7 +667,7 @@ public:
         
         factory->AddBlockRectangle(-20, -20, 40, 40);
         for (int i=0; i<40; ++i) {
-            factory->CreatePowerup(i*5, i*5);
+            factory->CreatePowerup(-19 + MathHelper::Random(40), -19 + MathHelper::Random(40));
         }
     }
     
