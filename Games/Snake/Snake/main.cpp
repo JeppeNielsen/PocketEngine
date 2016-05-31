@@ -44,9 +44,6 @@ struct PointTransform {
     int y;
     int rotation;
     void SetRotation(int targetRotation) {
-        if (IsRotationOpposite(rotation, targetRotation)) {
-            return;
-        }
         rotation = targetRotation;
     }
     void SetPosition(int x, int y) {
@@ -163,7 +160,7 @@ struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
 struct SnakeBodyRemovalSystem : public GameSystem<SnakeBody> {
     void ObjectRemoved(GameObject* object) {
         auto& list = object->GetComponent<SnakeBody>()->snake->bodies;
-        list.erase(std::remove(list.begin(), list.end(), object));
+        list.erase(std::find(list.begin(), list.end(), object));
     }
 };
 
@@ -172,9 +169,17 @@ struct SnakeControlSystem : public GameSystem<Player, Snake, PointTransform> {
     void SetInput(InputManager& input) {
         input.ButtonDown.Bind(this, &SnakeControlSystem::ButtonDown);
     }
+    
+    void RemoveInput(InputManager& input) {
+        input.ButtonDown.Unbind(this, &SnakeControlSystem::ButtonDown);
+    }
 
     void SetBigButtons(BigButtonManager& bigButtons) {
         bigButtons.ButtonDown.Bind(this, &SnakeControlSystem::BigButtonDown);
+    }
+    
+    void RemoveBigButtons(BigButtonManager& bigButtons) {
+        bigButtons.ButtonDown.Unbind(this, &SnakeControlSystem::BigButtonDown);
     }
 
     void BigButtonDown(BigButtonEvent e) {
@@ -190,28 +195,31 @@ struct SnakeControlSystem : public GameSystem<Player, Snake, PointTransform> {
     void SetRotation(int index, int rotation) {
         for(auto o : Objects()) {
             if (o->GetComponent<Player>()->index == index) {
-                o->GetComponent<PointTransform>()->SetRotation(rotation);
+            
+                Snake* snake = o->GetComponent<Snake>();
+                if (snake->bodies.empty()) {
+                    o->GetComponent<PointTransform>()->SetRotation(rotation);
+                } else {
+                    PointTransform* bodyTransform = snake->bodies[snake->bodies.size()-1]->GetComponent<PointTransform>();
+                    if (!bodyTransform->IsRotationOpposite(rotation, bodyTransform->rotation)) {
+                        o->GetComponent<PointTransform>()->SetRotation(rotation);
+                    } else {
+                        std::cout<< "Rotation blocked"<<std::endl;
+                    }
+                }
             }
         }
     }
 
     void ButtonDown(std::string button) {
         if (button == "a") {
-            for(auto o : Objects()) {
-                o->GetComponent<PointTransform>()->SetRotation(2);
-            }
+            SetRotation(0, 2);
         } else if (button == "d") {
-            for(auto o : Objects()) {
-                o->GetComponent<PointTransform>()->SetRotation(0);
-            }
+            SetRotation(0, 0);
         } else if (button == "w") {
-            for(auto o : Objects()) {
-                o->GetComponent<PointTransform>()->SetRotation(3);
-            }
+            SetRotation(0, 3);
         } else if (button == "s") {
-            for(auto o : Objects()) {
-                o->GetComponent<PointTransform>()->SetRotation(1);
-            }
+            SetRotation(0, 1);
         }
     }
 };
@@ -594,26 +602,7 @@ public:
         bigButtons.Initialize();
     
         //world.CreateSystem<SnakeCreatorSystem>()->SetBigButtons(bigButtons);
-        factory = world.CreateSystem<SnakeFactory>();
-        renderer = world.CreateSystem<RenderSystem>();
-        SnakeControlSystem* snakeControlSystem = world.CreateSystem<SnakeControlSystem>();
-        snakeControlSystem->SetInput(Input);
-        snakeControlSystem->SetBigButtons(bigButtons);
-        world.CreateSystem<PowerupSystem>();
-        world.CreateSystem<MoveSystem>();
-        world.CreateSystem<BlockableCollisionSystem>();
-        world.CreateSystem<SnakeCollisionSystem>();
-        world.CreateSystem<CollisionSystem>();
-        world.CreateSystem<SnakeSystem>();
         
-        world.CreateSystem<TimedLifeSystem>();
-        world.CreateSystem<SnakeBodyRemovalSystem>();
-        world.CreateSystem<PointTransformSystem>();
-        world.CreateSystem<BlockableSystem>();
-        world.CreateSystem<BlinkSystem>();
-        world.CreateSystem<SnakeBlinkCollisionSystem>();
-        world.CreateSystem<ColorSystem>();
-        world.CreateSystem<SnakeCollectPowerupScoreSystem>();
         
         
         guiWorld.CreateSystem<PlayerScoreLabelSystem>();
@@ -640,7 +629,12 @@ public:
     }
     
     void ClearGame() {
-        world.Clear();
+    
+        SnakeControlSystem* snakeControlSystem = world.CreateSystem<SnakeControlSystem>();
+        snakeControlSystem->RemoveInput(Input);
+        snakeControlSystem->RemoveBigButtons(bigButtons);
+    
+        world = {};
         for (int i=0; i<4; ++i) {
             scoreLabels[i]->RemoveComponent<Player>();
             scoreLabels[i]->GetComponent<Label>()->Text = "0";
@@ -648,6 +642,27 @@ public:
     }
     
     void CreateNewGame() {
+    
+        factory = world.CreateSystem<SnakeFactory>();
+        renderer = world.CreateSystem<RenderSystem>();
+        SnakeControlSystem* snakeControlSystem = world.CreateSystem<SnakeControlSystem>();
+        snakeControlSystem->SetInput(Input);
+        snakeControlSystem->SetBigButtons(bigButtons);
+        world.CreateSystem<PowerupSystem>();
+        world.CreateSystem<MoveSystem>();
+        world.CreateSystem<BlockableCollisionSystem>();
+        world.CreateSystem<SnakeCollisionSystem>();
+        world.CreateSystem<CollisionSystem>();
+        world.CreateSystem<SnakeSystem>();
+        
+        world.CreateSystem<TimedLifeSystem>();
+        world.CreateSystem<SnakeBodyRemovalSystem>();
+        world.CreateSystem<PointTransformSystem>();
+        world.CreateSystem<BlockableSystem>();
+        world.CreateSystem<BlinkSystem>();
+        world.CreateSystem<SnakeBlinkCollisionSystem>();
+        world.CreateSystem<ColorSystem>();
+        world.CreateSystem<SnakeCollectPowerupScoreSystem>();
     
         camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = { 0, 0, 100 };
