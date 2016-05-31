@@ -55,7 +55,7 @@ void RecurseTree(GameObject* object, std::set<GameObject*>& objects) {
     }
 }
 
-GameObject::GameObject() : world(0), isRemoved(false)  {
+GameObject::GameObject() : world(0), isRemoved(false), systemIndices(0)  {
     int numberOfComponents = IDHelper::NumberOfComponents();
     components = new ComponentPtr[numberOfComponents];
     for(int i=0; i<numberOfComponents; ++i) {
