@@ -6,6 +6,8 @@
 #include "VertexMesh.hpp"
 #include "Gui.hpp"
 #include "ColorSystem.hpp"
+#include "SoundSystem.hpp"
+#include "TransformAnimatorSystem.hpp"
 
 using namespace Pocket;
 
@@ -13,6 +15,7 @@ struct Player {
     Player() { Score = 0; }
     int index;
     Property<int> Score;
+    std::string name;
 };
 
 struct TimedLife {
@@ -117,7 +120,7 @@ struct Snake {
 };
 
 struct SnakeBody {
-    Snake* snake;
+    GameObject* snake;
 };
 
 struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
@@ -126,10 +129,16 @@ struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
     void Initialize(GameWorld* world) {
         this->world = world;
     }
+    
+    std::function<void()> OneSnakeLeft;
 
     void Update(float dt) {
         for(auto o : Objects()) {
             UpdateSnake(o);
+        }
+        if (Objects().size()<=1 && OneSnakeLeft) {
+            OneSnakeLeft();
+            OneSnakeLeft = 0;
         }
     }
     
@@ -150,7 +159,7 @@ struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
         object->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1.0f, snakeObject->GetComponent<Mesh>()->GetMesh<Vertex>().vertices[0].Color);
         object->AddComponent<Material>();
         object->AddComponent<TimedLife>()->time = snakeObject->GetComponent<Snake>()->tailLife;
-        object->AddComponent<SnakeBody>()->snake = snake;
+        object->AddComponent<SnakeBody>()->snake = snakeObject;
         object->AddComponent<Blockable>();
         object->AddComponent<Collidable>();
         snake->bodies.push_back(object);
@@ -159,7 +168,9 @@ struct SnakeSystem : public GameSystem<Snake, Moveable, PointTransform> {
 
 struct SnakeBodyRemovalSystem : public GameSystem<SnakeBody> {
     void ObjectRemoved(GameObject* object) {
-        auto& list = object->GetComponent<SnakeBody>()->snake->bodies;
+        Snake* snakeObject = object->GetComponent<SnakeBody>()->snake->GetComponent<Snake>();
+        if (!snakeObject) return;
+        auto& list = snakeObject->bodies;
         list.erase(std::find(list.begin(), list.end(), object));
     }
 };
@@ -220,6 +231,17 @@ struct SnakeControlSystem : public GameSystem<Player, Snake, PointTransform> {
             SetRotation(0, 3);
         } else if (button == "s") {
             SetRotation(0, 1);
+        }
+        
+        
+        if (button == "j") {
+            SetRotation(1, 2);
+        } else if (button == "l") {
+            SetRotation(1, 0);
+        } else if (button == "i") {
+            SetRotation(1, 3);
+        } else if (button == "k") {
+            SetRotation(1, 1);
         }
     }
 };
@@ -465,20 +487,7 @@ struct SnakeFactory : GameConcept {
         this->world = world;
     }
     
-    GameObject* CreatePlayer(int index) {
-        GameObject* player = world->CreateObject();
-        player->AddComponent<Player>()->index = index;
-        
-        static std::vector<Colour> snakeColors {
-            Colour::Green(),
-            Colour::Red(),
-            Colour::Blue(),
-            Colour::Yellow()
-        };
-        player->AddComponent<Colorable>()->Color = snakeColors[index];
-        return player;
-    }
-
+    
     GameObject* CreateSnake(int x, int y, GameObject* player = 0) {
         GameObject* snake = world->CreateObject();
         snake->AddComponent<Transform>();
@@ -538,28 +547,7 @@ struct SnakeFactory : GameConcept {
             CreateBlock(x+width, y+i);
         }
     }
-
-
 };
-
-struct SnakeCollectPowerupScoreSystem : public GameSystem<Snake, Player, Collidable> {
-
-    void ObjectAdded(GameObject* object) override {
-        object->GetComponent<Collidable>()->OnCollision.Bind(this, &SnakeCollectPowerupScoreSystem::Collision);
-    }
-    
-    void ObjectRemoved(GameObject* object) override {
-        object->GetComponent<Collidable>()->OnCollision.Unbind(this, &SnakeCollectPowerupScoreSystem::Collision);
-    }
-
-    void Collision(Collidable::CollisionEvent e) {
-        auto powerup = (e.otherObject->GetComponent<Powerup>());
-        if (!powerup) return;
-        if (powerup->type!=Powerup::PowerupType::Grow) return;
-        e.object->GetComponent<Player>()->Score++;
-    }
-};
-
 
 
 
@@ -583,6 +571,149 @@ struct PlayerScoreLabelSystem : public GameSystem<Label, Player> {
 };
 
 
+//-------- SCORE SYSTEMS --------
+struct SnakeCollectPowerupScoreSystem : public GameSystem<Snake, Player, Collidable> {
+
+    void ObjectAdded(GameObject* object) override {
+        object->GetComponent<Collidable>()->OnCollision.Bind(this, &SnakeCollectPowerupScoreSystem::Collision);
+    }
+    
+    void ObjectRemoved(GameObject* object) override {
+        object->GetComponent<Collidable>()->OnCollision.Unbind(this, &SnakeCollectPowerupScoreSystem::Collision);
+    }
+
+    void Collision(Collidable::CollisionEvent e) {
+        auto powerup = (e.otherObject->GetComponent<Powerup>());
+        if (!powerup) return;
+        if (powerup->type!=Powerup::PowerupType::Grow) return;
+        e.object->GetComponent<Player>()->Score++;
+    }
+};
+
+struct SnakeInstantDeathSystem : public GameSystem<Snake> {
+     void ObjectAdded(GameObject* object) override {
+        object->GetComponent<Snake>()->OnCollision.Bind(this, &SnakeInstantDeathSystem::Collision, object);
+    }
+    
+    void ObjectRemoved(GameObject* object) override {
+        object->GetComponent<Snake>()->OnCollision.Unbind(this, &SnakeInstantDeathSystem::Collision, object);
+    }
+
+    void Collision(GameObject* object) {
+        auto& list = object->GetComponent<Snake>()->bodies;
+        for (auto b : list) {
+            b->Remove();
+        }
+        object->Remove();
+    }
+};
+
+
+struct SnakeDeathPointSystem : public GameSystem<Snake, Collidable> {
+
+    void ObjectAdded(GameObject* object) {
+        object->GetComponent<Collidable>()->OnCollision.Bind(this, &SnakeDeathPointSystem::Collision, object);
+    }
+
+    void ObjectRemoved(GameObject* object) {
+        object->GetComponent<Collidable>()->OnCollision.Unbind(this, &SnakeDeathPointSystem::Collision, object);
+    }
+    
+    void Collision(Collidable::CollisionEvent e, GameObject* object) {
+        if (!e.otherObject->GetComponent<Blockable>()) return;//was not a snake colllision
+        Snake* otherSnake = e.otherObject->GetComponent<Snake>();
+        SnakeBody* otherSnakeBody = e.otherObject->GetComponent<SnakeBody>();
+        Player* player = 0;
+        Player* snakePlayer = object->GetComponent<Player>();
+        
+        if (otherSnake) {
+            player = e.otherObject->GetComponent<Player>();
+        } else if (otherSnakeBody) {
+            player = otherSnakeBody->snake->GetComponent<Player>();
+        }
+        if (player && player!=snakePlayer) {
+            player->Score++;
+        } else if (snakePlayer) { // suicide
+            if (snakePlayer->Score>0) {
+                snakePlayer->Score--;
+            }
+        }
+    }
+};
+
+struct TextEffect {
+    float delay;
+    std::string text;
+};
+
+
+struct TextEffectFactory : public GameConcept {
+
+    GameWorld* world;
+    
+    Gui* gui;
+
+    TransformAnimation scaleUp;
+    
+    struct TimedLifeLabels : public GameSystem<TimedLife, Label> {
+    
+    };
+    
+    TimedLifeLabels* timedLifeLabels;
+    
+    void Initialize(GameWorld* world) {
+        this->world = world;
+        world->CreateSystem<TransformAnimatorSystem>();
+        timedLifeLabels = world->CreateSystem<TimedLifeLabels>();
+        
+        gui = world->CreateSystem<Gui>();
+        
+        scaleUp.scale.Add(0, 0);
+        scaleUp.scale.Add(0.5f, 1.0f);
+        //scaleUp.rotation.Add(0, {0,0,2.0f});
+        //scaleUp.rotation.Add(0.5f, {0,0,0});
+        
+    }
+    
+    GameObject* CreateTextEffect(Vector2 center, std::string text, float fontSize, float time = 0.5f) {
+        GameObject* effect = gui->CreateLabel(0, center, 300, 0, text, fontSize);
+        effect->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        effect->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+        effect->GetComponent<Transform>()->Anchor = {150,150,0};
+        effect->AddComponent<TimedLife>()->time = time;
+        effect->AddComponent<TransformAnimator>()->Play(&scaleUp);
+        return effect;
+    }
+    
+    void ClearAll() {
+        for(auto o : timedLifeLabels->Objects()) {
+            o->Remove();
+        }
+    }
+    
+    
+};
+
+struct TimedEvent {
+    float time;
+    std::function<void()> event;
+};
+
+struct TimedEventSystem : public GameSystem<TimedEvent> {
+    void Update(float dt) {
+        for (auto o : Objects()) {
+            auto timedLife = o->GetComponent<TimedEvent>();
+            if (timedLife->time>0) {
+                timedLife->time -= dt;
+            } else {
+                timedLife->event();
+                o->Remove();
+            }
+        }
+    }
+};
+
+
 class Game : public GameState<Game> {
 public:
     GameWorld world;
@@ -593,11 +724,59 @@ public:
     GameWorld guiWorld;
     Gui* gui;
     
+    TextEffectFactory* textEffect;
+    
     GameObject* scoreLabels[4];
-    bool playing;
+    GameObject* title;
+    
+    struct GameSettings {
+        GameSettings() { maxRounds = 1; }
+        int maxRounds;
+    };
+    
+    struct GameData {
+        GameData() : currentRound(0) { }
+        GameObject* players[4];
+        int currentRound;
+        GameObject* currentRoundWinner;
+    };
+    
+    GameSettings settings;
+    GameData gameData;
+    
+    enum class State {
+        MainMenu,
+        StartNewGame,
+        StartRound,
+        PlayingRound,
+        RoundEnded,
+        GameEnded
+    };
+    
+    State currentState;
+    
+    SnakeSystem* snakeSystem;
+    
+    GameWorld musicWorld;
     
     void Initialize() {
-        playing = false;
+    
+        musicWorld.CreateSystem<SoundSystem>();
+        
+        /*GameObject* music = musicWorld.CreateObject();
+        music->AddComponent<Transform>();
+        music->AddComponent<SoundEmitter>();
+        music->AddComponent<Sound>()->LoadFromWav("Music.wav");
+        music->GetComponent<SoundEmitter>()->Looping = true;
+        
+        GameObject* soundListener = musicWorld.CreateObject();
+        soundListener->AddComponent<Transform>();
+        soundListener->AddComponent<SoundListener>();
+        
+        music->GetComponent<SoundEmitter>()->Emit();
+        */
+    
+        currentState = State::MainMenu;
     
         bigButtons.Initialize();
     
@@ -606,16 +785,16 @@ public:
         
         
         guiWorld.CreateSystem<PlayerScoreLabelSystem>();
+        guiWorld.CreateSystem<TimedLifeSystem>();
+        guiWorld.CreateSystem<TimedEventSystem>();
         gui = guiWorld.CreateSystem<Gui>();
+        textEffect = guiWorld.CreateSystem<TextEffectFactory>();
         gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
         gui->GetAtlas()->GetComponent<TextureComponent>()->Texture().DisableMipmapping();
         gui->CreateFont("font.fnt", "font");
-        gui->CreateLabel(0, {0, Context().ScreenSize().y-100}, {Context().ScreenSize().x,100}, 0, "SNAKE", 32)->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
         
-        scoreLabels[0]=CreateLabel(0, 200);
-        scoreLabels[1]=CreateLabel({Context().ScreenSize().x-200,0}, 200);
-        scoreLabels[2]=CreateLabel({Context().ScreenSize().x-200,Context().ScreenSize().y-200}, 200);
-        scoreLabels[3]=CreateLabel({0,Context().ScreenSize().y-200}, 200);
+        
+        CreateMainMenu();
         
         Input.ButtonDown.Bind(this, &Game::ButtonDown);
     }
@@ -628,21 +807,77 @@ public:
         return l;
     }
     
+    GameObject* CreatePlayer(int index) {
+        GameObject* player = guiWorld.CreateObject();
+        player->AddComponent<Player>()->index = index;
+        
+        static std::vector<Colour> snakeColors {
+            Colour::Green(),
+            Colour::Red(),
+            Colour::Blue(),
+            Colour::Yellow()
+        };
+        
+        static std::vector<std::string> snakeNames = {
+            "Green",
+            "Red",
+            "Blue",
+            "Yellow"
+        };
+        
+        player->AddComponent<Colorable>()->Color = snakeColors[index];
+        player->GetComponent<Player>()->name = snakeNames[index];
+        return player;
+    }
+
+    
+    void CreateMainMenu() {
+        title = gui->CreateLabel(0, {0, Context().ScreenSize().y-300}, {Context().ScreenSize().x,100}, 0, "SNAKE", 180);
+        title->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+    }
+    
+    void RemoveMainMenu() {
+        title->Remove();
+    }
+    
+    void CreateNewGame() {
+        
+        gameData = {};
+        
+        scoreLabels[0]=CreateLabel(0, 200);
+        scoreLabels[1]=CreateLabel({Context().ScreenSize().x-200,0}, 200);
+        scoreLabels[2]=CreateLabel({Context().ScreenSize().x-200,Context().ScreenSize().y-200}, 200);
+        scoreLabels[3]=CreateLabel({0,Context().ScreenSize().y-200}, 200);
+    
+        for(int i=0; i<4; i++) {
+            gameData.players[i] = CreatePlayer(i);
+            scoreLabels[i]->AddComponent<Player>(gameData.players[i]);
+            scoreLabels[i]->GetComponent<Colorable>()->Color = gameData.players[i]->GetComponent<Colorable>()->Color;
+        }
+    }
+    
     void ClearGame() {
+    
+         for(int i=0; i<4; i++) {
+            scoreLabels[i]->Remove();
+            gameData.players[i]->Remove();
+        }
+        
+        ClearBoard();
+    }
+    
+    void ClearBoard() {
     
         SnakeControlSystem* snakeControlSystem = world.CreateSystem<SnakeControlSystem>();
         snakeControlSystem->RemoveInput(Input);
         snakeControlSystem->RemoveBigButtons(bigButtons);
-    
+        
         world = {};
-        for (int i=0; i<4; ++i) {
-            scoreLabels[i]->RemoveComponent<Player>();
-            scoreLabels[i]->GetComponent<Label>()->Text = "0";
-        }
     }
     
-    void CreateNewGame() {
-    
+    void CreateNewBoard() {
+        
+        
         factory = world.CreateSystem<SnakeFactory>();
         renderer = world.CreateSystem<RenderSystem>();
         SnakeControlSystem* snakeControlSystem = world.CreateSystem<SnakeControlSystem>();
@@ -653,7 +888,7 @@ public:
         world.CreateSystem<BlockableCollisionSystem>();
         world.CreateSystem<SnakeCollisionSystem>();
         world.CreateSystem<CollisionSystem>();
-        world.CreateSystem<SnakeSystem>();
+        snakeSystem = world.CreateSystem<SnakeSystem>();
         
         world.CreateSystem<TimedLifeSystem>();
         world.CreateSystem<SnakeBodyRemovalSystem>();
@@ -662,39 +897,186 @@ public:
         world.CreateSystem<BlinkSystem>();
         world.CreateSystem<SnakeBlinkCollisionSystem>();
         world.CreateSystem<ColorSystem>();
-        world.CreateSystem<SnakeCollectPowerupScoreSystem>();
-    
+        
+        bool collectPowerups = false;
+        
+        if (collectPowerups) {
+            world.CreateSystem<SnakeCollectPowerupScoreSystem>();
+        } else {
+            world.CreateSystem<SnakeInstantDeathSystem>();
+            world.CreateSystem<SnakeDeathPointSystem>();
+        }
+        
         camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = { 0, 0, 100 };
         camera->AddComponent<Camera>()->FieldOfView = 25;
         
-        GameObject* players[4];
         
-        for(int i=0; i<4; i++) {
-            players[i] = factory->CreatePlayer(i);
-            scoreLabels[i]->AddComponent<Player>(players[i]);
-            scoreLabels[i]->GetComponent<Colorable>()->Color = players[i]->GetComponent<Colorable>()->Color;
-        }
         
-        factory->CreateSnake(0,0, players[0]);
-        factory->CreateSnake(0,10, players[1]);
         
         
         factory->AddBlockRectangle(-20, -20, 40, 40);
         for (int i=0; i<40; ++i) {
             factory->CreatePowerup(-19 + MathHelper::Random(40), -19 + MathHelper::Random(40));
         }
+        
+        
     }
+    
+    void CreateSnakes() {
+        
+        factory->CreateSnake(0,0, gameData.players[0]);
+        factory->CreateSnake(0,10, gameData.players[1]);
+    }
+    
     
     void ButtonDown(std::string button) {
         if (button == "q") exit(0);
         if (button == " ") {
-            playing = !playing;
-            if (playing) {
-                CreateNewGame();
-            } else {
-                ClearGame();
+            if (currentState == State::MainMenu) {
+                SetState(State::StartNewGame);
+            } else {// if (currentState == State::PlayingRound){
+                SetState(State::MainMenu);
             }
+        }
+    }
+    
+    void CreateTimedEvent(float time, std::function<void()> event) {
+        GameObject* o = guiWorld.CreateObject();
+        o->AddComponent<TimedEvent>()->time = time;
+        o->GetComponent<TimedEvent>()->event = event;
+    }
+    
+    void SetState(State state) {
+        currentState = state;
+    
+        switch (state) {
+            case State::MainMenu:
+            {
+                ClearGame();
+                CreateMainMenu();
+                textEffect->ClearAll();
+                break;
+            }
+            case State::StartNewGame:
+            {
+                RemoveMainMenu();
+                CreateNewGame();
+                CreateTimedEvent(0, [this] {
+                    SetState(State::StartRound);
+                });
+             
+                break;
+            }
+            case State::StartRound:
+            {
+                ClearBoard();
+                CreateNewBoard();
+                gameData.currentRoundWinner = 0;
+                std::stringstream s;
+                s<<"Round ";
+                s<<(gameData.currentRound + 1);
+                s<<"/";
+                s<<settings.maxRounds;
+                textEffect->CreateTextEffect(Context().ScreenSize * 0.5f, s.str(), 130, 1.0f);
+                
+                for (int i=0; i<5; i++) {
+                CreateTimedEvent(1.0f + i*0.5f, [this, i]{
+                    int counter = 5 - i;
+                    std::stringstream s;
+                    s<<counter;
+                    textEffect->CreateTextEffect(Context().ScreenSize * 0.5f, s.str(), 200);
+                });
+                }
+                CreateTimedEvent(1.0f + 5 * 0.5f, [this] {
+                    textEffect->CreateTextEffect(Context().ScreenSize * 0.5f, "Go!", 200);
+                });
+                
+                CreateTimedEvent(1.0f + 5 * 0.5f + 0.5f, [this] {
+                    SetState(State::PlayingRound);
+                });
+                break;
+            }
+            case State::PlayingRound:
+            {
+                CreateSnakes();
+                
+                snakeSystem->OneSnakeLeft = [this]{
+                    for(auto o : snakeSystem->Objects()) {
+                        o->RemoveComponent<Moveable>();
+                    }
+                    if (!snakeSystem->Objects().empty()) {
+                        gameData.currentRoundWinner = snakeSystem->Objects()[0];
+                    }
+                    
+                    SetState(State::RoundEnded);
+                };
+                
+                break;
+            }
+            case State::RoundEnded:
+            {
+                
+                if (gameData.currentRoundWinner) {
+                    textEffect->CreateTextEffect(Context().ScreenSize * 0.5f+Vector2(0,250), "Round Winner:", 70, 5.0f);
+                    GameObject* winnerText = textEffect->CreateTextEffect(Context().ScreenSize * 0.5f + Vector2(0,-50), gameData.currentRoundWinner->GetComponent<Player>()->name, 150, 5.0f);
+                    winnerText->GetComponent<Colorable>()->Color = gameData.currentRoundWinner->GetComponent<Colorable>()->Color;
+                    
+                    CreateTimedEvent(2.0f, [this]{
+                        GameObject* points = textEffect->CreateTextEffect(Context().ScreenSize * 0.5f + Vector2(0,-250), "+2", 150, 0.75f);
+                        points->GetComponent<Colorable>()->Color = gameData.currentRoundWinner->GetComponent<Colorable>()->Color;
+                        CreateTimedEvent(0.60f, [this] {
+                            gameData.currentRoundWinner->GetComponent<Player>()->Score+=2;
+                        });
+                    });
+                } else {
+                    textEffect->CreateTextEffect(Context().ScreenSize * 0.5f+Vector2(0,250), "Round Draw", 70, 5.0f);
+                }
+                
+                gameData.currentRound++;
+                CreateTimedEvent(5.0f, [this] {
+                    SetState(gameData.currentRound>=settings.maxRounds ? State::GameEnded : State::StartRound);
+                });
+                
+                
+                //CreateTimedEvent(1.0f + 5 * 0.5f, [this] {
+                //    SetState(State::PlayingRound);
+                //});
+                break;
+            }
+            case State::GameEnded:
+            {
+                ClearBoard();
+                std::vector<GameObject*> sortedPlayers;
+                for(int i=0;i<4;i++) {
+                    sortedPlayers.push_back(gameData.players[i]);
+                }
+                std::sort(sortedPlayers.begin(), sortedPlayers.end(), [](auto a, auto b){
+                    return a->template GetComponent<Player>()->Score()>b->template GetComponent<Player>()->Score();
+                });
+                GameObject* best = sortedPlayers[0];
+                std::vector<GameObject*> winners;
+                winners.push_back(best);
+                for(int i=1; i<4; i++) {
+                    if (sortedPlayers[i]->GetComponent<Player>()->Score()==best->GetComponent<Player>()->Score()) {
+                        winners.push_back(sortedPlayers[i]);
+                    }
+                }
+                
+                textEffect->CreateTextEffect(Context().ScreenSize * 0.5f+Vector2(0,350), "Final result:", 50, 50.0f);
+                textEffect->CreateTextEffect(Context().ScreenSize * 0.5f+Vector2(0,250), winners.size() == 1 ? "Winner:" : "Draw between:", 70, 50.0f);
+                
+                int c = 0;
+                for(auto winner : winners) {
+                    auto e = textEffect->CreateTextEffect(Context().ScreenSize * 0.5f+Vector2(0,0 - c * 100), winner->GetComponent<Player>()->name, 70, 50.0f);
+                    e->GetComponent<Colorable>()->Color = winner->GetComponent<Colorable>()->Color;
+                    c++;
+                }
+                
+                break;
+            }
+        default:
+        break;
         }
     }
     
@@ -702,6 +1084,7 @@ public:
         bigButtons.Update(dt);
         world.Update(dt);
         guiWorld.Update(dt);
+        musicWorld.Update(dt);
     }
     
     void Render() {
@@ -712,7 +1095,7 @@ public:
 
 int main() {
     Engine e;
-    //e.Start<Game>(1920,1080, true);
-	e.Start<Game>();
+    e.Start<Game>(1920,1080, true);
+	//e.Start<Game>();
     return 0;
 }

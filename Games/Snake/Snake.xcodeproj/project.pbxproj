@@ -152,6 +152,7 @@
 		72772F221CFCCFF8005AC1D8 /* font.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 72772F1B1CFCCF3A005AC1D8 /* font.fnt */; };
 		72772F231CFCCFF8005AC1D8 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 72772F1F1CFCCF3A005AC1D8 /* images.png */; };
 		72772F241CFCCFF8005AC1D8 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 72772F201CFCCF3A005AC1D8 /* images.xml */; };
+		72772F2C1D00DB19005AC1D8 /* Music.wav in Resources */ = {isa = PBXBuildFile; fileRef = 72772F2B1D00DB18005AC1D8 /* Music.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -484,6 +485,7 @@
 		72772F1B1CFCCF3A005AC1D8 /* font.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = font.fnt; sourceTree = "<group>"; };
 		72772F1F1CFCCF3A005AC1D8 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		72772F201CFCCF3A005AC1D8 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
+		72772F2B1D00DB18005AC1D8 /* Music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Music.wav; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1146,6 +1148,7 @@
 		72772F191CFCCF3A005AC1D8 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				72772F2B1D00DB18005AC1D8 /* Music.wav */,
 				72772F1B1CFCCF3A005AC1D8 /* font.fnt */,
 				72772F1F1CFCCF3A005AC1D8 /* images.png */,
 				72772F201CFCCF3A005AC1D8 /* images.xml */,
@@ -1212,6 +1215,7 @@
 			files = (
 				72772F221CFCCFF8005AC1D8 /* font.fnt in Resources */,
 				72772F231CFCCFF8005AC1D8 /* images.png in Resources */,
+				72772F2C1D00DB19005AC1D8 /* Music.wav in Resources */,
 				72772F241CFCCFF8005AC1D8 /* images.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
