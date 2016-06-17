@@ -78,8 +78,11 @@ char* Sound::LoadWAV(std::string filename, int& chan, int& samplerate, int& bps,
 
     char buffer[4];
 
-    std::istringstream in;
-    in.rdbuf()->pubsetbuf((char*)file.Data(),file.Size());
+    //std::istringstream in;
+    
+    std::istringstream in(std::string((char*)file.Data(), file.Size()));
+    
+    //in.rdbuf()->pubsetbuf((char*)file.Data(),file.Size());
 
     //std::ifstream in(filename,std::ios::binary);
     in.read(buffer,4);

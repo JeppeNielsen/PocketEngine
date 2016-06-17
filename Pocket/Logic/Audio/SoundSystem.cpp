@@ -131,7 +131,7 @@ void SoundSystem::SoundTransformSystem::ObjectRemoved(GameObject* object) {
 void SoundSystem::SoundableObject::Initialize(Pocket::GameObject* object) {
     sound = object->GetComponent<Sound>();
     emitter = object->GetComponent<SoundEmitter>();
-    transform = 0;
+    transform = object->GetComponent<Transform>();
 
     alGenSources(1, &alSource);
     
