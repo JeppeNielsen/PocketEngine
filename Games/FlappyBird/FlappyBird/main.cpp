@@ -223,13 +223,12 @@ public:
         pipeSpawnerSystem->texture = world.CreateObject();
         pipeSpawnerSystem->texture->AddComponent<TextureComponent>()->Texture().LoadFromPng("pipe.png");
         
-        screenSize = {1.0f * Manager().ScreenSize().Aspect(),1.0f};
+        screenSize = {1.0f * Context().ScreenSize().Aspect(),1.0f};
         
         camera = world.CreateObject();
         
-        camera->AddComponent<Camera>()->Viewport = Box(0,screenSize.y, screenSize.x, 0);
         camera->AddComponent<Transform>()->Position = { 0, 0, 1 };
-        camera->GetComponent<Camera>()->Orthographic = true;
+        camera->AddComponent<Camera>()->Orthographic = true;
         camera->GetComponent<Camera>()->Near = 0.5f;
         camera->GetComponent<Camera>()->Far = 10.0f;
         

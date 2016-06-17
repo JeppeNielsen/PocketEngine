@@ -20,10 +20,9 @@ class Test : public GameState<Test> {
 
         GameObject* cameraObject = world.CreateObject();
         cameraObject->AddComponent<Transform>()->Position = {0,0,5};
-        cameraObject->AddComponent<Camera>()->Viewport = Manager().Viewport();
         cameraObject->AddComponent<FirstPersonMover>();
 
-        Box viewPort = Manager().Viewport();
+        auto viewPort = Context().Viewport();
 
         cube = world.CreateObject();
         cube->AddComponent<Transform>();
