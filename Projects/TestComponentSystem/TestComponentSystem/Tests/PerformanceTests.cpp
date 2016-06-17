@@ -8,6 +8,7 @@
 
 #include "PerformanceTests.hpp"
 #include "GameWorld.hpp"
+#include <iostream>
 using namespace Pocket;
 
 void PerformanceTests::RunTests() {

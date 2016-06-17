@@ -1,31 +1,28 @@
 //
-//  IGameSystem.cpp
-//  ComponentSystem
+//  GameSystem.cpp
+//  EntitySystem
 //
-//  Created by Jeppe Nielsen on 05/03/16.
+//  Created by Jeppe Nielsen on 08/06/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameSystem.hpp"
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 
-IGameSystem::~IGameSystem() { }
+IGameSystem::IGameSystem() : world(0) {}
+IGameSystem::~IGameSystem() {}
 
-const IGameSystem::ObjectCollection& IGameSystem::Objects() {
-    return objects;
+void IGameSystem::TryAddComponentContainer(ComponentID id, std::function<IContainer *()> constructor) {
+    if (!world->components[id]) {
+        world->components[id] = constructor();
+    }
 }
 
-void IGameSystem::SetMetaData(GameObject* object, void* data) {
-    metadata[object] = data;
-}
-
-void* IGameSystem::GetMetaData(GameObject* object) {
-    return metadata[object];
-}
-
-void IGameSystem::Initialize(GameWorld* world) { }
-void IGameSystem::Update(float dt) { }
-void IGameSystem::Render() { }
-void IGameSystem::ObjectAdded(GameObject* object) {}
-void IGameSystem::ObjectRemoved(GameObject* object) {}
+void IGameSystem::Initialize() {}
+void IGameSystem::ObjectAdded(Pocket::GameObject *object) {}
+void IGameSystem::ObjectRemoved(Pocket::GameObject *object) {}
+void IGameSystem::Update(float dt) {}
+void IGameSystem::Render() {}
+const ObjectCollection& IGameSystem::Objects() const { return objects; }

@@ -1,161 +1,68 @@
 //
 //  GameWorld.cpp
-//  ComponentSystem
+//  EntitySystem
 //
-//  Created by Jeppe Nielsen on 03/03/16.
+//  Created by Jeppe Nielsen on 06/06/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameWorld.hpp"
-#include "minijson_writer.hpp"
-#include "minijson_reader.hpp"
-#include <map>
+#include <iostream>
 
 using namespace Pocket;
 
-std::map<std::string, GameObject*> loadedObjects;
-
-bool GameWorld::TryGetComponentIndex(std::string componentName, int& index) {
-    for(int i=0; i<componentNames.size(); ++i) {
-        if (componentNames[i]==componentName) {
-            index = i;
-            return true;
-        }
+GameWorld::GameWorld() {
+    for(int i=0; i<MaxComponents; ++i) {
+        components[i] = 0;
     }
-    return false;
+    root.world = this;
+    objectCount = 0;
 }
 
-bool GameWorld::TryGetComponentIndex(std::string componentName, int& index, bool& isReference) {
-    if (TryGetComponentIndex(componentName, index)) {
-        isReference = false;
-        return true;
+GameWorld::~GameWorld() {
+    Clear();
+    for(auto s : systems) {
+        delete s;
     }
-    if (componentName.size()>4) {
-        size_t refLocation = componentName.rfind(":ref");
-        if (refLocation!=-1) {
-            componentName = componentName.substr(0, refLocation);
-            if (TryGetComponentIndex(componentName, index)) {
-                isReference = true;
-                return true;
-            }
-        }
+    for(int i=0; i<MaxComponents; ++i) {
+        delete components[i];
     }
-    
-    return false;
 }
 
-GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
-    GameObject* object = 0;
-     minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-        std::string name = n;
-        if (name == "GameObject" && v.type() == minijson::Object) {
-            object = (GameObject*)CreateObject();
-            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                std::string name = n;
-                if (name == "id" && v.type() == minijson::String) {
-                    loadedObjects[std::string(v.as_string())] = object;
-                } else if (name == "Components" && v.type() == minijson::Array && object) {
-                    minijson::parse_array(context, [&] (minijson::value v) {
-                        if (v.type() == minijson::Object) {
-                            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                                object->AddComponent(context, n);
-                            });
-                        }
-                    });
-                } else if (name == "Children" && v.type() == minijson::Array && object) {
-                    minijson::parse_array(context, [&] (minijson::value v) {
-                        GameObject* child = LoadObject(context, onCreated);
-                        if (child) {
-                            child->Parent = object;
-                        }
-                    });
-                }
-                
-                if (onCreated) {
-                    onCreated(object);
-                }
-            });
-        }
-    });
-    return object;
-}
+const GameObject* GameWorld::Root() { return &root; }
 
 GameObject* GameWorld::CreateObject() {
-    auto object = objects.CreateObjectNoReset();
-    object->object.instance = object;
-    object->object.SetWorld(this);
-    object->object.Reset();
-    return &object->object;
-}
-
-GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
-    minijson::istream_context context(jsonStream);
-    GameObject* object = 0;
-    try {
-        object = LoadObject(context, onCreated);
-        
-        GameObject* object;
-        int componentID;
-        std::string referenceID;
-        while (GameObject::GetAddReferenceComponent(&object, componentID, referenceID)) {
-            GameObject* referenceObject = 0;
-            auto foundObjectWithID = loadedObjects.find(referenceID);
-            if (foundObjectWithID!=loadedObjects.end()) {
-                referenceObject = foundObjectWithID->second;
-            } else {
-                referenceObject = FindObjectFromID(referenceID);
-                if (!referenceObject) {
-                    //object not found with id, try assign first object with this component
-                    referenceObject = FindFirstObjectWithComponentID(componentID);
-                }
+    int index;
+    if (objectsFreeIndicies.empty()) {
+        index = (int)objects.size();
+        objects.resize(index + 1);
+        if (index>=objectComponents[0].size()) {
+            for(int i=0; i<MaxComponents; i++) {
+                objectComponents[i].resize(index + 32);
             }
-            addComponentReference[componentID](object, referenceObject);
         }
-    } catch (std::exception e) {
-        std::cout << e.what() << std::endl;
+    } else {
+        index = objectsFreeIndicies.back();
+        objectsFreeIndicies.pop_back();
     }
-    return object;
-}
-
-GameWorld::GameWorld() {
-    objects.Initialize();
-}
-
-void GameWorld::TryAddSystem(int systemID, std::function<IGameSystem*()> createSystem) {
-    if (systemID>=systemsIndexed.size()) {
-        systemsIndexed.resize(systemID + 1, 0);
+    
+    for(int i=0; i<MaxComponents; i++) {
+        objectComponents[i][index] = -1;
     }
-    if (!systemsIndexed[systemID]) {
-        systemsIndexed[systemID] = createSystem();
-        systems.push_back(systemsIndexed[systemID]);
-        systemsIndexed[systemID]->index = (int)(systems.size() - 1);
-        
-        systemBitsets.resize(systems.size());
-        
-        systemsIndexed[systemID]->CreateComponents(this, systemsIndexed[systemID]->index);
-        systemsIndexed[systemID]->Initialize(this);
-#if SCRIPTING_ENABLED
-        staticScriptSystemComponents.resize(components.size());
-#endif
-        std::sort(systems.begin(), systems.end(), [](auto a, auto b) {
-            return a->Order()<b->Order();
-        });
-    }
+    ++objectCount;
+    GameObject& object = objects[index];
+    object.Parent() = &root;
+    object.index = index;
+    object.world = this;
+    return &object;
 }
 
 void GameWorld::Update(float dt) {
-    DoActions(createActions);
-    DoActions(removeActions);
-    
     for(auto system : systems) {
         system->Update(dt);
     }
-    
-#ifdef SCRIPTING_ENABLED
-    for(auto scriptSystem : scriptSystems) {
-        scriptSystem->Update(dt);
-    }
-#endif
+    DoActions(createActions);
+    DoActions(removeActions);
 }
 
 void GameWorld::Render() {
@@ -164,161 +71,124 @@ void GameWorld::Render() {
     }
 }
 
-void GameWorld::DoActions(GameConstants::Actions& list) {
-   for(int i=0; i<list.size(); ++i) {
-        list[i]();
-   }
-   list.clear();
-}
-
 int GameWorld::ObjectCount() const {
-    return objects.Size();
+    return objectCount;
 }
 
-GameObject* GameWorld::GetObject(int index) {
-    return objects.Get(index);
+int GameWorld::CapacityCount() const {
+    return (int)objects.size();
 }
 
 void GameWorld::Clear() {
-    for(int i=0; i<objects.Size(); ++i) {
-        objects.Get(i)->Remove();
-    }
-    DoActions(createActions);
-    DoActions(removeActions);
-}
+    IterateObjects([](GameObject* o) {
+        o->SetEnabled(false);
+    });
 
-GameWorld::~GameWorld() {
-    Clear();
-    for(auto c : components) {
-        delete c;
-    }
-    for(auto s : systems) {
-        delete s;
+    objects.clear();
+    objectsFreeIndicies.clear();
+    objectCount = 0;
+    for(int i=0; i<MaxComponents; ++i) {
+        if (components[i]) {
+            components[i]->Clear();
+        }
+        objectComponents[i].clear();
     }
 }
 
-const GameObject* GameWorld::Root() {
-    return &root;
-}
-
-void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
-    for(auto& o : objectIDs) {
-        if (o.object == object) {
-            o.id = id;
-            return;
+void GameWorld::Trim() {
+    for(int i=0; i<MaxComponents; ++i) {
+        if (components[i]) {
+            components[i]->Trim();
         }
     }
-    objectIDs.push_back({object, id});
-}
-
-std::string* GameWorld::GetObjectID(Pocket::GameObject *object) {
-    for(auto& o : objectIDs) {
-        if (o.object == object) {
-            return &o.id;
+    
+    int smallestSize = 0;
+    for(int i = (int)objects.size() - 1; i>=0; --i) {
+        if (objects[i].index>=-1) {
+            smallestSize = i + 1;
+            break;
         }
     }
-    return 0;
-}
-
-std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.object->components[componentID] &&
-            objectID.object->components[componentID] == referenceObject->components[componentID] &&
-            objectID.object->ownedComponents[componentID]) {
-            return &objectID.id;
+    if (smallestSize<objects.size()) {
+        for(int i=0; i<MaxComponents; ++i) {
+            objectComponents[i].resize(smallestSize);
+        }
+        objects.resize(smallestSize);
+        for(int i=0; i<objectsFreeIndicies.size(); ++i) {
+            if (objectsFreeIndicies[i]>=smallestSize) {
+                objectsFreeIndicies.erase(objectsFreeIndicies.begin() + i);
+                --i;
+            }
         }
     }
-    return 0;
 }
 
-GameObject* GameWorld::FindObjectFromID(const std::string &id) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.id == id) return objectID.object;
+IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(std::vector<int>& components)> constructor) {
+    if (id>=systemsIndexed.size()) {
+        systemsIndexed.resize(id + 1, 0);
     }
-    return 0;
+    IGameSystem* system = systemsIndexed[id];
+    if (!system) {
+        std::vector<int> componentIndices;
+        system = constructor(componentIndices);
+        for(auto c : componentIndices) {
+            system->componentMask[c] = true;
+            if (c>=systemsPerComponent.size()) {
+                systemsPerComponent.resize(c + 1);
+            }
+            systemsPerComponent[c].push_back(system);
+        }
+        systemsIndexed[id] = system;
+        systems.push_back(system);
+        system->Initialize();
+        
+        IterateObjects([system](GameObject* o) {
+            if ((o->data->enabledComponents & system->componentMask) == system->componentMask) {
+                system->objects.push_back(o);
+                system->ObjectAdded(o);
+            }
+        });
+    }
+    return system;
 }
 
-GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
-    for (int i=0; i<objects.Size(); ++i) {
-        GameObject* object = objects.Get(i);
-        if (object->components[componentID]) return object;
+void GameWorld::TryRemoveSystem(SystemID id) {
+    if (id>=systemsIndexed.size()) return;
+    IGameSystem* system = systemsIndexed[id];
+    if (!system) return;
+    
+    IterateObjects([system](GameObject* o) {
+        if ((o->data->enabledComponents & system->componentMask) == system->componentMask) {
+            system->ObjectRemoved(o);
+            auto& objects = system->objects;
+            objects.erase(std::find(objects.begin(), objects.end(), o));
+        }
+    });
+
+    
+    for(int i=0; i<MaxComponents; ++i) {
+        if (system->componentMask[i]) {
+            auto& list = systemsPerComponent[i];
+            list.erase(std::find(list.begin(), list.end(), system));
+        }
     }
-    return 0;
+    
+    systems.erase(std::find(systems.begin(), systems.end(), system));
+    systemsIndexed[id] = 0;
+    delete system;
 }
 
-#ifdef SCRIPTING_ENABLED
-void GameWorld::ClearScripingData(std::function<void(IScriptSystem*)> onSystemDeleted) {
-
-    std::vector<short> systems;
-    for (short i=0; i<scriptSystems.size(); ++i) {
-        systems.push_back(i);
+void GameWorld::DoActions(Actions &actions) {
+    for(auto action : actions) {
+        action();
     }
-
-    for(int i=0; i<objects.Size(); ++i) {
-        GameObject* object = objects.Get(i);
-        object->CheckForScriptSystemsRemoval(systems, object->activeComponents, object->activeScriptComponents);
-    }
-
-    for(int i=0; i<objects.Capacity(); ++i) {
-        objects.Get(i)->ClearScriptingData();
-    }
-
-    for(int i=0; i<components.size(); ++i) {
-        staticScriptSystemComponents[i].clear();
-    }
-    dynamicScriptSystemComponents.clear();
-    scriptComponents.clear();
-    for(auto scriptSystem : scriptSystems) {
-        onSystemDeleted(scriptSystem);
-    }
-    scriptSystems.clear();
-    scriptSystemsData.clear();
+    actions.clear();
 }
 
-void GameWorld::InitializeScriptData(int numSystems, int numComponents,
-            std::function<IScriptSystem*(int)> onSystemCreate,
-            std::function<void(Container<void*>&, int)> onComponentCreate,
-            std::function<void(
-                        StaticScriptSystemComponents& staticScriptSystemComponents,
-                        ScriptSystemComponents& dynamicScriptSystemComponents,
-                        ScriptSystemsData& scriptSystemsData)> onSystemData
-            
-            ) {
-    
-    for(int i=0; i<numSystems; i++) {
-        scriptSystems.push_back(onSystemCreate(i));
-    }
-    
-    scriptComponents.resize(numComponents);
-    for(int i=0; i<numComponents; ++i) {
-        onComponentCreate(scriptComponents[i], i);
-    }
-    
-    dynamicScriptSystemComponents.resize(numComponents);
-    onSystemData(staticScriptSystemComponents, dynamicScriptSystemComponents, scriptSystemsData);
-    
-    for(int i=0; i<objects.Capacity(); ++i) {
-        objects.Get(i)->InitializeScriptingData();
-    }
-    
-    std::vector<short> systems;
-    for (short i=0; i<scriptSystems.size(); ++i) {
-        systems.push_back(i);
-    }
-    
-    for(int i=0; i<objects.Size(); ++i) {
-        GameObject* object = objects.Get(i);
-        object->CheckForScriptSystemsAddition(systems, object->activeComponents, object->activeScriptComponents);
+void GameWorld::IterateObjects(std::function<void (GameObject *)> callback) {
+    for(auto& o : objects) {
+        if (o.index >= 0) {
+            callback(&o);
+        }
     }
 }
-#endif
-
-
-
-
-
-
-
-
-
-

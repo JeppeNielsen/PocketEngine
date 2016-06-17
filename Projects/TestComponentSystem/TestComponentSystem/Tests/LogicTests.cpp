@@ -42,18 +42,18 @@ void LogicTests::RunTests() {
     AddTest("Default parent should be Root", []() {
         GameWorld world;
         GameObject* object = world.CreateObject();
-        return object->Parent == world.Root() && world.Root()->Children().size() == 1;
+        return object->Parent() == world.Root() && world.Root()->Children().size() == 1;
     });
     
     AddTest("Parent set to 0 should be child of root", []() {
         GameWorld world;
         GameObject* object = world.CreateObject();
-        bool parentWasRoot = object->Parent == world.Root();
+        bool parentWasRoot = object->Parent() == world.Root();
         GameObject* parent = world.CreateObject();
-        object->Parent = parent;
+        object->Parent() = parent;
         bool objectNotRootChild = std::find(world.Root()->Children().begin(), world.Root()->Children().end(), object)==world.Root()->Children().end();
-        bool parentWasParent = object->Parent == parent;
-        object->Parent = 0;
+        bool parentWasParent = object->Parent() == parent;
+        object->Parent() = 0;
         bool objectIsRootChild = std::find(world.Root()->Children().begin(), world.Root()->Children().end(), object)!=world.Root()->Children().end();
         return parentWasRoot && parentWasParent && objectIsRootChild && objectNotRootChild;
     });
@@ -244,7 +244,7 @@ void LogicTests::RunTests() {
         object->AddComponent<Renderable>();
         world.Update(0);
         bool wasOne = system->Objects().size() == 1;
-        //object->Enabled = false;
+        object->Enabled() = false;
         world.Update(0);
         bool isNone = system->Objects().size() == 0;
         return wasNone && wasOne && isNone;
@@ -274,7 +274,7 @@ void LogicTests::RunTests() {
         auto object1 = world.CreateObject();
         object1->AddComponent<Transform>();
         object1->AddComponent<Renderable>();
-        //object1->Enabled = false;
+        object1->Enabled() = false;
         auto object2 = world.CreateObject();
         object2->AddComponent<Transform>();
         object2->AddComponent<Renderable>();
@@ -302,7 +302,7 @@ void LogicTests::RunTests() {
         world.Update(0);
         world.CreateSystem<RenderSystem>();
         bool wasOneObject = ObjectCount == 1;
-        //world.RemoveSystem<RenderSystem>();
+        world.RemoveSystem<RenderSystem>();
         bool hasNoObjects = ObjectCount == 0;
         return wasOneObject && hasNoObjects;
     });

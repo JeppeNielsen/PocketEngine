@@ -7,17 +7,18 @@
 //
 
 #include <iostream>
-//#include "LogicTests.hpp"
+#include "LogicTests.hpp"
 #include "PerformanceTests.hpp"
 #include "GameWorld.hpp"
+#include "Property.hpp"
 
 int main(int argc, const char * argv[]) {
     
-    std::cout << sizeof(Pocket::GameObject)<<std::endl;
+    std::cout << sizeof(Pocket::Property<int>)<<std::endl;
     std::cout << sizeof(Pocket::GameWorld)<<std::endl;
     
-    //LogicTests tests;
-    //tests.Run();
+    LogicTests logic;
+    logic.Run();
     PerformanceTests tests;
     tests.Run();
     

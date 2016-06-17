@@ -1,63 +1,59 @@
 //
 //  GameSystem.hpp
-//  ComponentSystem
+//  EntitySystem
 //
-//  Created by Jeppe Nielsen on 27/12/15.
-//  Copyright © 2015 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 08/06/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-#include <tuple>
 #include <vector>
-#include <map>
-#include "GameConstants.hpp"
+#include "GameIDHelper.hpp"
+#include "GameObject.hpp"
 
 namespace Pocket {
-
-class GameWorld;
-class GameObject;
-
-class IGameSystem {
-public:
-    using ObjectCollection = std::vector<GameObject*>;
-protected:
-    virtual ~IGameSystem();
     
-    ObjectCollection objects;
-
-public:
-    friend class GameWorld;
-    const ObjectCollection& Objects();
-protected:
-    using MetaData = std::map<GameObject*, void*>;
-    MetaData metadata;
+    class GameWorld;
+    class IGameSystem {
+    protected:
+        GameWorld* const world;
+        IGameSystem();
+        virtual ~IGameSystem();
+        void TryAddComponentContainer(ComponentID id, std::function<IContainer*()> constructor);
+        friend class GameWorld;
+        virtual void Initialize();
+        virtual void ObjectAdded(GameObject* object);
+        virtual void ObjectRemoved(GameObject* object);
+        virtual void Update(float dt);
+        virtual void Render();
+    private:
+        ObjectCollection objects;
+        ComponentMask componentMask;
+        friend class GameObject;
+    public:
+        const ObjectCollection& Objects() const;
+    };
     
-    void SetMetaData(GameObject* object, void* data);
-    void* GetMetaData(GameObject* object);
+    template<typename ...T>
+    class GameSystem : public IGameSystem {
+    private:
+        template<typename Last>
+        void ExtractComponents(std::vector<int>& components) {
+            ComponentID id = GameIDHelper::GetComponentID<Last>();
+            TryAddComponentContainer(id, [](){ return new Container<Last>(); });
+            components.push_back(id);
+        }
+        
+        template<typename First, typename Second, typename ...Rest>
+        void ExtractComponents(std::vector<int>& components) {
+            ExtractComponents<First>(components);
+            ExtractComponents<Second, Rest...>(components);
+        }
     
-    virtual void Initialize(GameWorld* world);
-    virtual void Update(float dt);
-    virtual void Render();
-    virtual void ObjectAdded(GameObject* object);
-    virtual void ObjectRemoved(GameObject* object);
-    virtual void CreateComponents(GameWorld *world, int systemIndex) = 0;
-    virtual int Order() { return 0; }
-    
-    int index;
-    
-    friend class GameObject;
-    friend class GameWorld;
-};
-
-template<typename... ComponentList>
-class GameSystem : public IGameSystem {
-protected:
-    GameSystem() { }
-    virtual ~GameSystem() { }
-    
-    void CreateComponents(GameWorld *world, int systemIndex) override;
-};
-
-class GameConcept : public GameSystem<> { };
-
+        void ExtractAllComponents(std::vector<int>& components) {
+            ExtractComponents<T...>(components);
+        }
+        
+        friend class GameWorld;
+    };
 }
