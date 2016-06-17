@@ -22,7 +22,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
     world.CreateSystem<RotatorSystem>();
     world.CreateSystem<TransformHierarchy>();
     world.CreateSystem<TouchSystem>()->Input = &input;
-    //world.CreateSystem<TouchSystem>()->TouchDepth = 1000;
+    world.CreateSystem<TouchSystem>()->TouchDepth = 1000;
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
@@ -32,7 +32,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
     camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
     camera->GetComponent<Camera>()->FieldOfView = 70;
 
-
+    
     for (int x=-1; x<=1; ++x) {
     for (int y=-1; y<=1; ++y) {
     
