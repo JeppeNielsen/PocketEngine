@@ -80,6 +80,10 @@ namespace Pocket {
         inline int operator[](int index) const{
             return (index == 0) ? x : y;
         }
+        
+        inline bool operator<(const Point& other) const {
+            return !(other.x==this->x && other.y==this->y);
+        }
 
 	};
 }
