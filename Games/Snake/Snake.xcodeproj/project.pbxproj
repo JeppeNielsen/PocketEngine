@@ -153,6 +153,10 @@
 		72772F231CFCCFF8005AC1D8 /* images.png in Resources */ = {isa = PBXBuildFile; fileRef = 72772F1F1CFCCF3A005AC1D8 /* images.png */; };
 		72772F241CFCCFF8005AC1D8 /* images.xml in Resources */ = {isa = PBXBuildFile; fileRef = 72772F201CFCCF3A005AC1D8 /* images.xml */; };
 		72772F2C1D00DB19005AC1D8 /* Music.wav in Resources */ = {isa = PBXBuildFile; fileRef = 72772F2B1D00DB18005AC1D8 /* Music.wav */; };
+		72772F2F1D02291A005AC1D8 /* LevelCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F2D1D02291A005AC1D8 /* LevelCreator.cpp */; };
+		72772F321D0235ED005AC1D8 /* testLevels.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F301D0235ED005AC1D8 /* testLevels.cpp */; };
+		72772F351D02F001005AC1D8 /* Level.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F331D02F001005AC1D8 /* Level.cpp */; };
+		72772F381D02F413005AC1D8 /* Level1.png in Resources */ = {isa = PBXBuildFile; fileRef = 72772F371D02F413005AC1D8 /* Level1.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -486,6 +490,12 @@
 		72772F1F1CFCCF3A005AC1D8 /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		72772F201CFCCF3A005AC1D8 /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
 		72772F2B1D00DB18005AC1D8 /* Music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Music.wav; sourceTree = "<group>"; };
+		72772F2D1D02291A005AC1D8 /* LevelCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LevelCreator.cpp; sourceTree = "<group>"; };
+		72772F2E1D02291A005AC1D8 /* LevelCreator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LevelCreator.hpp; sourceTree = "<group>"; };
+		72772F301D0235ED005AC1D8 /* testLevels.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testLevels.cpp; sourceTree = "<group>"; };
+		72772F331D02F001005AC1D8 /* Level.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level.cpp; sourceTree = "<group>"; };
+		72772F341D02F001005AC1D8 /* Level.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Level.hpp; sourceTree = "<group>"; };
+		72772F371D02F413005AC1D8 /* Level1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Level1.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -537,6 +547,11 @@
 			children = (
 				72772F191CFCCF3A005AC1D8 /* Assets */,
 				723E783E1B5C07E700007AEA /* main.cpp */,
+				72772F2D1D02291A005AC1D8 /* LevelCreator.cpp */,
+				72772F2E1D02291A005AC1D8 /* LevelCreator.hpp */,
+				72772F301D0235ED005AC1D8 /* testLevels.cpp */,
+				72772F331D02F001005AC1D8 /* Level.cpp */,
+				72772F341D02F001005AC1D8 /* Level.hpp */,
 			);
 			path = Snake;
 			sourceTree = "<group>";
@@ -1148,12 +1163,21 @@
 		72772F191CFCCF3A005AC1D8 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				72772F361D02F413005AC1D8 /* Levels */,
 				72772F2B1D00DB18005AC1D8 /* Music.wav */,
 				72772F1B1CFCCF3A005AC1D8 /* font.fnt */,
 				72772F1F1CFCCF3A005AC1D8 /* images.png */,
 				72772F201CFCCF3A005AC1D8 /* images.xml */,
 			);
 			path = Assets;
+			sourceTree = "<group>";
+		};
+		72772F361D02F413005AC1D8 /* Levels */ = {
+			isa = PBXGroup;
+			children = (
+				72772F371D02F413005AC1D8 /* Level1.png */,
+			);
+			path = Levels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1217,6 +1241,7 @@
 				72772F231CFCCFF8005AC1D8 /* images.png in Resources */,
 				72772F2C1D00DB19005AC1D8 /* Music.wav in Resources */,
 				72772F241CFCCFF8005AC1D8 /* images.xml in Resources */,
+				72772F381D02F413005AC1D8 /* Level1.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1232,9 +1257,11 @@
 				72772DC81CF62F13005AC1D8 /* FieldEditor.cpp in Sources */,
 				72772E051CF62F13005AC1D8 /* SelectedColorer.cpp in Sources */,
 				72772F051CF62F14005AC1D8 /* tinyxml.cpp in Sources */,
+				72772F2F1D02291A005AC1D8 /* LevelCreator.cpp in Sources */,
 				72772DC51CF62F13005AC1D8 /* SoundListener.cpp in Sources */,
 				72772E081CF62F13005AC1D8 /* Transform.cpp in Sources */,
 				72772DDA1CF62F13005AC1D8 /* LabelMeshSystem.cpp in Sources */,
+				72772F351D02F001005AC1D8 /* Level.cpp in Sources */,
 				72772E071CF62F13005AC1D8 /* SelectionVisualizer.cpp in Sources */,
 				72772EE91CF62F14005AC1D8 /* OSXView.mm in Sources */,
 				72772DAF1CF62F13005AC1D8 /* BezierCurve3.cpp in Sources */,
@@ -1264,6 +1291,7 @@
 				72772F041CF62F14005AC1D8 /* tinystr.cpp in Sources */,
 				72772DE71CF62F13005AC1D8 /* TouchSystem.cpp in Sources */,
 				72772E111CF62F13005AC1D8 /* Plane.cpp in Sources */,
+				72772F321D0235ED005AC1D8 /* testLevels.cpp in Sources */,
 				72772DF61CF62F13005AC1D8 /* Atlas.cpp in Sources */,
 				72772DE31CF62F13005AC1D8 /* TextBoxLabelSystem.cpp in Sources */,
 				72772DE61CF62F13005AC1D8 /* TouchCancelSystem.cpp in Sources */,

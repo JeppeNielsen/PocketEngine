@@ -8,6 +8,8 @@
 #include "ColorSystem.hpp"
 #include "SoundSystem.hpp"
 #include "TransformAnimatorSystem.hpp"
+#include "Point.hpp"
+#include "Timer.hpp"
 
 using namespace Pocket;
 
@@ -488,10 +490,11 @@ struct SnakeFactory : GameConcept {
     }
     
     
-    GameObject* CreateSnake(int x, int y, GameObject* player = 0) {
+    GameObject* CreateSnake(int x, int y, int direction, GameObject* player = 0) {
         GameObject* snake = world->CreateObject();
         snake->AddComponent<Transform>();
         snake->AddComponent<PointTransform>()->SetPosition(x, y);
+        snake->GetComponent<PointTransform>()->rotation = direction;
         snake->AddComponent<Snake>()->tailLife = 0.6f;
         snake->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour::White());
         snake->AddComponent<Material>();
@@ -728,10 +731,27 @@ public:
     
     GameObject* scoreLabels[4];
     GameObject* title;
+    GameObject* activePlayerLabels[4];
+    GameObject* numberOfRounds;
     
     struct GameSettings {
-        GameSettings() { maxRounds = 1; }
+        GameSettings() { maxRounds = 1;
+            for (int i=0; i<4; i++) {
+                activePlayers[i]=false;
+            }
+        }
         int maxRounds;
+        
+        bool activePlayers[4];
+        
+        int ActivePlayers() {
+            int count =0;
+            for(int i=0; i<4; i++) {
+                if (activePlayers[i]) count++;
+            }
+            return count;
+        }
+        
     };
     
     struct GameData {
@@ -759,8 +779,32 @@ public:
     
     GameWorld musicWorld;
     
+    Colour GetPlayerColor(int index) {
+    static std::vector<Colour> snakeColors {
+            Colour::Green(),
+            Colour::Red(),
+            Colour::Blue(),
+            Colour::Yellow()
+        };
+        return snakeColors[index];
+    }
+    
+    std::string GetPlayerName(int index) {
+        static std::vector<std::string> snakeNames = {
+            "Green",
+            "Red",
+            "Blue",
+            "Yellow"
+        };
+        return snakeNames[index];
+    }
+
+    bool isGameStarting;
+    
     void Initialize() {
     
+        isGameStarting = false;
+        
         musicWorld.CreateSystem<SoundSystem>();
         
         /*GameObject* music = musicWorld.CreateObject();
@@ -811,22 +855,8 @@ public:
         GameObject* player = guiWorld.CreateObject();
         player->AddComponent<Player>()->index = index;
         
-        static std::vector<Colour> snakeColors {
-            Colour::Green(),
-            Colour::Red(),
-            Colour::Blue(),
-            Colour::Yellow()
-        };
-        
-        static std::vector<std::string> snakeNames = {
-            "Green",
-            "Red",
-            "Blue",
-            "Yellow"
-        };
-        
-        player->AddComponent<Colorable>()->Color = snakeColors[index];
-        player->GetComponent<Player>()->name = snakeNames[index];
+        player->AddComponent<Colorable>()->Color = GetPlayerColor(index);
+        player->GetComponent<Player>()->name = GetPlayerName(index);
         return player;
     }
 
@@ -834,33 +864,98 @@ public:
     void CreateMainMenu() {
         title = gui->CreateLabel(0, {0, Context().ScreenSize().y-300}, {Context().ScreenSize().x,100}, 0, "SNAKE", 180);
         title->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        
+        GameObject* activePlayers = gui->CreateLabel(title, {0, -200}, {Context().ScreenSize().x,100}, 0, "Active players:", 30);
+        activePlayers->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        
+        GameObject* maxRounds = gui->CreateLabel(title, {0, -320}, {Context().ScreenSize().x,100}, 0, "Rounds:", 30);
+        maxRounds->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        
+        
+        Vector2 size = {Context().ScreenSize().x / 4,100};
+        
+        Vector2 pos = {0,Context().ScreenSize().y/2-200};
+        for(int i=0; i<4; i++) {
+            activePlayerLabels[i]=gui->CreateLabel(0, pos, size, 0, GetPlayerName(i), 40);
+            activePlayerLabels[i]->GetComponent<Colorable>()->Color = Colour::White(0.3f);// GetPlayerColor(i);
+            activePlayerLabels[i]->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+            pos.x+=size.x;
+        }
+        
+        std::stringstream s;
+        s<<settings.maxRounds;
+        numberOfRounds = gui->CreateLabel(0, {0, Context().ScreenSize().y/2-300}, {Context().ScreenSize().x,100}, 0, s.str(), 40);
+        numberOfRounds->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        
+        
+        bigButtons.ButtonDown.Bind(this, &Game::MainMenuButtonDown);
+    }
+    
+    void MainMenuButtonDown(BigButtonEvent e) {
+        if (e.Button == BigButtonButton::Back) {
+            settings.maxRounds++;
+            if (settings.maxRounds>8) {
+                settings.maxRounds = 1;
+            }
+            std::stringstream s;
+            s<<settings.maxRounds;
+            numberOfRounds->GetComponent<Label>()->Text = s.str();
+        } else if (e.Button == BigButtonButton::Start) {
+            TryStartGame();
+        } else {
+            activePlayerLabels[e.PlayerIndex]->GetComponent<Colorable>()->Color = GetPlayerColor(e.PlayerIndex);
+            settings.activePlayers[e.PlayerIndex] = true;
+        }
     }
     
     void RemoveMainMenu() {
         title->Remove();
+        for(int i=0; i<4; i++) {
+            activePlayerLabels[i]->Remove();
+        }
+        numberOfRounds->Remove();
+        bigButtons.ButtonDown.Unbind(this, &Game::MainMenuButtonDown);
     }
     
     void CreateNewGame() {
         
         gameData = {};
         
+        Vector2 labelPositions[4] = {
+            0,
+            {Context().ScreenSize().x-200,0},
+            {Context().ScreenSize().x-200,Context().ScreenSize().y-200},
+            {0,Context().ScreenSize().y-200}
+        };
+        
+        /*
         scoreLabels[0]=CreateLabel(0, 200);
         scoreLabels[1]=CreateLabel({Context().ScreenSize().x-200,0}, 200);
         scoreLabels[2]=CreateLabel({Context().ScreenSize().x-200,Context().ScreenSize().y-200}, 200);
         scoreLabels[3]=CreateLabel({0,Context().ScreenSize().y-200}, 200);
+        */
     
         for(int i=0; i<4; i++) {
             gameData.players[i] = CreatePlayer(i);
-            scoreLabels[i]->AddComponent<Player>(gameData.players[i]);
-            scoreLabels[i]->GetComponent<Colorable>()->Color = gameData.players[i]->GetComponent<Colorable>()->Color;
+            
+            if (settings.activePlayers[i]) {
+                scoreLabels[i]=CreateLabel(labelPositions[i], 200);
+                scoreLabels[i]->AddComponent<Player>(gameData.players[i]);
+                scoreLabels[i]->GetComponent<Colorable>()->Color = gameData.players[i]->GetComponent<Colorable>()->Color;
+            } else {
+                scoreLabels[i]=0;
+            }
         }
     }
     
     void ClearGame() {
     
-         for(int i=0; i<4; i++) {
-            scoreLabels[i]->Remove();
+        for(int i=0; i<4; i++) {
+            if (scoreLabels[i]) {
+                scoreLabels[i]->Remove();
+            }
             gameData.players[i]->Remove();
+            settings.activePlayers[i]=false;
         }
         
         ClearBoard();
@@ -924,17 +1019,40 @@ public:
     }
     
     void CreateSnakes() {
+    
+        Point positions[4] = {
+            {-10,-10},
+            {10,-10},
+            {10,10},
+            {-10,10}
+        };
+        int dirs[4] = {0,2,2,2};
         
-        factory->CreateSnake(0,0, gameData.players[0]);
-        factory->CreateSnake(0,10, gameData.players[1]);
+        for(int i=0; i<4; i++) {
+            if (settings.activePlayers[i]) {
+                factory->CreateSnake(positions[i].x, positions[i].y, dirs[i], gameData.players[i]);
+            }
+        }
     }
     
+    void TryStartGame() {
+        if (settings.ActivePlayers()<=1) {
+            textEffect->CreateTextEffect(Context().ScreenSize*0.5f, "Too few players", 60);
+            return;
+        }
+        if (isGameStarting) return;
+        isGameStarting = true;
+        CreateTimedEvent(0, [this]{
+            isGameStarting = false;
+            SetState(State::StartNewGame);
+        });
+    }
     
     void ButtonDown(std::string button) {
         if (button == "q") exit(0);
         if (button == " ") {
             if (currentState == State::MainMenu) {
-                SetState(State::StartNewGame);
+                TryStartGame();
             } else {// if (currentState == State::PlayingRound){
                 SetState(State::MainMenu);
             }
@@ -1073,6 +1191,9 @@ public:
                     c++;
                 }
                 
+                CreateTimedEvent(8.0f, [this]{
+                    SetState(State::MainMenu);
+                });
                 break;
             }
         default:
@@ -1094,6 +1215,48 @@ public:
 };
 
 int main() {
+
+    Timer timer;
+
+    struct Component1 {
+        int x;
+    };
+    
+    struct ComponentSystem : public GameSystem<Component1> {
+    
+    };
+    
+    
+    timer.Begin();
+     for(int i = 0; i<100000; ++i) {
+            GameWorld wworld;
+            for(int j = 0; j<10; ++j) {
+                wworld.CreateObject();
+            }
+        }
+        double time = timer.End();
+        std::cout << time<<std::endl;
+    
+
+    GameWorld world;
+    world.CreateSystem<ComponentSystem>();
+    
+    std::vector<GameObject*> objects;
+    for (int i=0; i<1000000; i++) {
+        objects.push_back(world.CreateObject());
+        objects[i]->AddComponent<Component1>();
+    }
+    
+    timer.Begin();
+    for(int i = 0; i<objects.size(); i++) {
+        objects[i]->GetComponent<Component1>()->x++;
+    }
+    time = timer.End();
+    std::cout << time<<std::endl;
+    
+    
+return 0;
+
     Engine e;
     e.Start<Game>(1920,1080, true);
 	//e.Start<Game>();
