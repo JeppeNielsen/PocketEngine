@@ -12,7 +12,6 @@
 		723588181B0932D2008D6568 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588171B0932D2008D6568 /* OpenAL.framework */; };
 		7235881A1B0932D2008D6568 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 723588191B0932D2008D6568 /* IOKit.framework */; };
 		72358C4E1B0932E1008D6568 /* Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723588351B0932E0008D6568 /* Engine.cpp */; };
-		72358C4F1B0932E1008D6568 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723588371B0932E0008D6568 /* GameManager.cpp */; };
 		72358C501B0932E1008D6568 /* GameState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235883A1B0932E0008D6568 /* GameState.cpp */; };
 		72358C511B0932E1008D6568 /* InputDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235883C1B0932E0008D6568 /* InputDevice.cpp */; };
 		72358C521B0932E1008D6568 /* InputManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7235883E1B0932E0008D6568 /* InputManager.cpp */; };
@@ -300,6 +299,8 @@
 		726837851C8757A500785193 /* HierarchyOrder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726837841C8757A500785193 /* HierarchyOrder.cpp */; };
 		726837871C875A7100785193 /* RenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726837861C875A7100785193 /* RenderSystem.cpp */; };
 		7268378B1C875B8300785193 /* TransformHierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726837891C875B8300785193 /* TransformHierarchy.cpp */; };
+		726DFCF01D21BCA600C862B7 /* Rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFCEE1D21BCA600C862B7 /* Rect.cpp */; };
+		726DFCF31D21BE1000C862B7 /* EngineContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFCF11D21BE1000C862B7 /* EngineContext.cpp */; };
 		729953F31B87B8F80036A2DF /* File.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729953F11B87B8F80036A2DF /* File.mm */; };
 		729953F41B87B8F80036A2DF /* FileReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729953F21B87B8F80036A2DF /* FileReader.mm */; };
 		7299540F1B87B9940036A2DF /* Camera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953F71B87B9940036A2DF /* Camera.cpp */; };
@@ -356,8 +357,6 @@
 		723588191B0932D2008D6568 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = /System/Library/Frameworks/IOKit.framework; sourceTree = "<absolute>"; };
 		723588351B0932E0008D6568 /* Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Engine.cpp; sourceTree = "<group>"; };
 		723588361B0932E0008D6568 /* Engine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Engine.hpp; sourceTree = "<group>"; };
-		723588371B0932E0008D6568 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
-		723588381B0932E0008D6568 /* GameManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameManager.hpp; sourceTree = "<group>"; };
 		723588391B0932E0008D6568 /* GamePadManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GamePadManager.hpp; sourceTree = "<group>"; };
 		7235883A1B0932E0008D6568 /* GameState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameState.cpp; sourceTree = "<group>"; };
 		7235883B1B0932E0008D6568 /* GameState.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameState.hpp; sourceTree = "<group>"; };
@@ -1047,6 +1046,10 @@
 		726837841C8757A500785193 /* HierarchyOrder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyOrder.cpp; sourceTree = "<group>"; };
 		726837861C875A7100785193 /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystem.cpp; sourceTree = "<group>"; };
 		726837891C875B8300785193 /* TransformHierarchy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformHierarchy.cpp; sourceTree = "<group>"; };
+		726DFCEE1D21BCA600C862B7 /* Rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Rect.cpp; path = ../Math/Rect.cpp; sourceTree = "<group>"; };
+		726DFCEF1D21BCA600C862B7 /* Rect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Rect.hpp; path = ../Math/Rect.hpp; sourceTree = "<group>"; };
+		726DFCF11D21BE1000C862B7 /* EngineContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EngineContext.cpp; sourceTree = "<group>"; };
+		726DFCF21D21BE1000C862B7 /* EngineContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EngineContext.hpp; sourceTree = "<group>"; };
 		729953F11B87B8F80036A2DF /* File.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = File.mm; sourceTree = "<group>"; };
 		729953F21B87B8F80036A2DF /* FileReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileReader.mm; sourceTree = "<group>"; };
 		729953F71B87B9940036A2DF /* Camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Camera.cpp; sourceTree = "<group>"; };
@@ -1228,10 +1231,10 @@
 		723588341B0932E0008D6568 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				726DFCF11D21BE1000C862B7 /* EngineContext.cpp */,
+				726DFCF21D21BE1000C862B7 /* EngineContext.hpp */,
 				723588351B0932E0008D6568 /* Engine.cpp */,
 				723588361B0932E0008D6568 /* Engine.hpp */,
-				723588371B0932E0008D6568 /* GameManager.cpp */,
-				723588381B0932E0008D6568 /* GameManager.hpp */,
 				723588391B0932E0008D6568 /* GamePadManager.hpp */,
 				7235883A1B0932E0008D6568 /* GameState.cpp */,
 				7235883B1B0932E0008D6568 /* GameState.hpp */,
@@ -1250,6 +1253,8 @@
 		723588441B0932E0008D6568 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				726DFCEE1D21BCA600C862B7 /* Rect.cpp */,
+				726DFCEF1D21BCA600C862B7 /* Rect.hpp */,
 				723588451B0932E0008D6568 /* BezierCurve1.cpp */,
 				723588461B0932E0008D6568 /* BezierCurve1.hpp */,
 				723588471B0932E0008D6568 /* BezierCurve3.cpp */,
@@ -2669,7 +2674,6 @@
 				72358FD31B09338A008D6568 /* btConvexTriangleMeshShape.cpp in Sources */,
 				72358FAC1B09338A008D6568 /* btQuantizedBvh.cpp in Sources */,
 				723590141B09338A008D6568 /* btGpu3DGridBroadphase.cpp in Sources */,
-				72358C4F1B0932E1008D6568 /* GameManager.cpp in Sources */,
 				72358FFF1B09338A008D6568 /* btVoronoiSimplexSolver.cpp in Sources */,
 				723590351B09338A008D6568 /* btSerializer.cpp in Sources */,
 				72358CB21B0932E1008D6568 /* Transform.cpp in Sources */,
@@ -2849,8 +2853,10 @@
 				723590071B09338A008D6568 /* btHingeConstraint.cpp in Sources */,
 				7299540F1B87B9940036A2DF /* Camera.cpp in Sources */,
 				7268376C1C864D1B00785193 /* Gui.cpp in Sources */,
+				726DFCF01D21BCA600C862B7 /* Rect.cpp in Sources */,
 				7235901F1B09338A008D6568 /* boxBoxDistance.cpp in Sources */,
 				72358FF11B09338A008D6568 /* gim_contact.cpp in Sources */,
+				726DFCF31D21BE1000C862B7 /* EngineContext.cpp in Sources */,
 				72D7C8161C8C609E00A9AF8F /* GameWorld.cpp in Sources */,
 				72D7C8221C90AA6200A9AF8F /* LayoutSystem.cpp in Sources */,
 				72358FC31B09338A008D6568 /* btUnionFind.cpp in Sources */,

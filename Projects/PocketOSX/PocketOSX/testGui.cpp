@@ -43,7 +43,7 @@ public:
         Gui* gui = world.CreateSystem<Gui>();
         world.CreateSystem<ClickColorSystem>();
     
-        gui->Setup("images.png", "images.xml", Manager().Viewport(), Input);
+        gui->Setup("images.png", "images.xml", Context().Viewport(), Input);
         gui->CreateFont("Font.fnt", "Font");
         
         

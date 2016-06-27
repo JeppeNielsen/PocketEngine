@@ -54,7 +54,7 @@ public:
         world.CreateSystem<FirstPersonMoverSystem>()->Input = &Input;
         
         camera = world.CreateObject();
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         camera->AddComponent<FirstPersonMover>();
@@ -90,7 +90,7 @@ public:
     }
 };
 
-int main() {
+int main_cube() {
     Engine e;
     e.Start<Game>();
 	return 0;
