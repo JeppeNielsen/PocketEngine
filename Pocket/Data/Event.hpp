@@ -24,6 +24,7 @@ private:
     using Delegate = IDelegate<T...>;
     using Delegates = std::vector<Delegate*>;
     Delegates delegates;
+    short defaultDelegatesCount;
     
     template<typename Obj>
     struct IDelegateMember : public IDelegate<T...> {
@@ -63,14 +64,20 @@ private:
     
 public:
     
-    Event() = default;
-    Event(const Event<T...>& other) { delegates.clear(); }
-    Event(Event<T...>& other) { delegates.clear(); }
-    void operator=(const Event<T...>& other) { delegates.clear(); }
-    void operator=(Event<T...>& other) { delegates.clear(); }
+    Event() : defaultDelegatesCount(0) {}
+    Event(const Event<T...>& other) {
+        ClearNonDefaults();
+    }
+    Event(Event<T...>& other) {
+        ClearNonDefaults();
+    }
+    void operator=(Event<T...>& other) {
+        ClearNonDefaults();
+    }
     
     Event(Event&& other) {
         delegates = other.delegates;
+        defaultDelegatesCount = other.defaultDelegatesCount;
         other.delegates.clear();
     }
     
@@ -79,6 +86,18 @@ public:
     void Clear() noexcept {
         for(auto d : delegates) delete d;
         delegates.clear();
+        defaultDelegatesCount = 0;
+    }
+    
+    void ClearNonDefaults() noexcept {
+        for(int i=defaultDelegatesCount; i<delegates.size(); ++i) {
+            delete delegates[i];
+        }
+        delegates.resize(defaultDelegatesCount);
+    }
+    
+    void MarkDefaults() {
+        defaultDelegatesCount = (short)delegates.size();
     }
     
     bool Empty() const noexcept {

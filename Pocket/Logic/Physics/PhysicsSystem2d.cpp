@@ -27,7 +27,7 @@ PhysicsSystem2d::~PhysicsSystem2d() {
     delete physicsWorld;
 }
 
-void PhysicsSystem2d::Initialize(GameWorld* world) {
+void PhysicsSystem2d::Initialize() {
     jointSystem = world->CreateSystem<JointSystem>();
     jointSystem->physicsSystem = this;
 }

@@ -15,7 +15,7 @@ namespace Pocket {
     template<typename T>
     class SelectableCollection : public GameSystem<Selectable, T>  {
     public:
-    void Initialize(GameWorld* world) {
+    void Initialize() {
         hasChanged = false;
     }
 
@@ -54,7 +54,7 @@ namespace Pocket {
         }
     }
 
-    const IGameSystem::ObjectCollection& Selected() { return selectedObjects; }
+    const ObjectCollection& Selected() { return selectedObjects; }
 
     void Update(float dt) {
         if (hasChanged) {
@@ -66,7 +66,7 @@ namespace Pocket {
     Event<SelectableCollection*> SelectionChanged;
     
     private:
-        GameConcept::ObjectCollection selectedObjects;
+        ObjectCollection selectedObjects;
         bool hasChanged;
     };
 }

@@ -1,31 +1,44 @@
 //
-//  IGameSystem.cpp
-//  ComponentSystem
+//  GameSystem.cpp
+//  EntitySystem
 //
-//  Created by Jeppe Nielsen on 05/03/16.
+//  Created by Jeppe Nielsen on 08/06/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameSystem.hpp"
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 
-IGameSystem::~IGameSystem() { }
+GameSystemBase::GameSystemBase() : world(0) {}
+GameSystemBase::~GameSystemBase() {}
 
-const IGameSystem::ObjectCollection& IGameSystem::Objects() {
-    return objects;
+void GameSystemBase::TryAddComponentContainer(ComponentID id, std::function<IContainer *(std::string&)>&& constructor) {
+    world->TryAddComponentContainer(id, std::move(constructor));
 }
 
-void IGameSystem::SetMetaData(GameObject* object, void* data) {
-    metadata[object] = data;
+void GameSystemBase::Initialize() {}
+void GameSystemBase::ObjectAdded(Pocket::GameObject *object) {}
+void GameSystemBase::ObjectRemoved(Pocket::GameObject *object) {}
+void GameSystemBase::Update(float dt) {}
+void GameSystemBase::Render() {}
+const ObjectCollection& GameSystemBase::Objects() const { return objects; }
+
+int GameSystemBase::AddObject(Pocket::GameObject *object) {
+    int count = (int)objects.size();
+    objects.push_back(object);
+    return count;
 }
 
-void* IGameSystem::GetMetaData(GameObject* object) {
-    return metadata[object];
+void GameSystemBase::RemoveObject(Pocket::GameObject *object) {
+    objects.erase(std::find(objects.begin(), objects.end(), object));
 }
 
-void IGameSystem::Initialize(GameWorld* world) { }
-void IGameSystem::Update(float dt) { }
-void IGameSystem::Render() { }
-void IGameSystem::ObjectAdded(GameObject* object) {}
-void IGameSystem::ObjectRemoved(GameObject* object) {}
+void GameSystemBase::SetMetaData(Pocket::GameObject *object, void *data) {
+    metaData[object] = data;
+}
+
+void* GameSystemBase::GetMetaData(Pocket::GameObject *object) {
+    return metaData[object];
+}

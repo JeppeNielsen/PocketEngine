@@ -34,7 +34,7 @@ namespace Pocket {
     class Gui : public GameConcept {
     public:
         
-        void Initialize(GameWorld* world) ;
+        void Initialize() ;
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport, InputManager& inputManager);
         void Setup(GameObject *atlas, const Rect &viewport, InputManager &inputManager);
         GameObject* GetCamera();
@@ -57,7 +57,6 @@ namespace Pocket {
         void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation);
         GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot);
     private:
-        GameWorld* world;
         RenderSystem* renderer;
         GameObject* camera;
         GameObject* atlas;

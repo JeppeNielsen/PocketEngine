@@ -42,7 +42,7 @@ SoundSystem::~SoundSystem() {
     }
 }
 
-void SoundSystem::Initialize(GameWorld* world) {
+void SoundSystem::Initialize() {
     float f[]={0,0,-1,0,1,0};
     alListenerfv(AL_ORIENTATION, f);
     
@@ -69,7 +69,7 @@ void SoundSystem::Update(float dt) {
     
 }
 
-void SoundSystem::ListenerSystem::Initialize(GameWorld* world) {
+void SoundSystem::ListenerSystem::Initialize() {
     needsUpdate = false;
 }
 

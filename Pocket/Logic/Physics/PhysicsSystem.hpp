@@ -12,7 +12,6 @@ namespace Pocket {
 	public:
         PhysicsSystem();
         ~PhysicsSystem();
-        void Initialize();
 		void Update(float dt);
 		Property<Vector3> Gravity;
 	protected:

@@ -6,8 +6,7 @@
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
-#ifndef _CLANG_UTIL_H_
-#define _CLANG_UTIL_H_
+#pragma once
 
 #include <ostream>
 #include <string>
@@ -56,5 +55,3 @@ std::string toStdString(CXCursorKind kind);
 std::string toStdString(CXType type);
 
 LocationInfo getLocationInfo(const CXSourceLocation& location);
-
-#endif

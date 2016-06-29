@@ -12,7 +12,7 @@
 
 using namespace Pocket;
 
-void DragSelector::Initialize(GameWorld* world) {
+void DragSelector::Initialize() {
     draggingIndex = -1;
     
     cameraSystem = world->CreateSystem<CameraSystem>();

@@ -14,44 +14,6 @@ class TypeInfo;
 
 namespace Meta {
 
-template<class F, class...Ts, std::size_t...Is>
-constexpr void for_each_in_tuple(std::tuple<Ts...> & tuple, F&& func, std::index_sequence<Is...>){
-    using expander = int[];
-    (void)expander { 0, ((void)func(std::get<Is>(tuple)), 0)... };
-}
-
-template<class F, class...Ts>
-constexpr void for_each_in_tuple_non_const(std::tuple<Ts...> & tuple, F&& func){
-    for_each_in_tuple(tuple, func, std::make_index_sequence<sizeof...(Ts)>());
-}
-
-
-namespace static_if_detail {
-
-template<typename Param, bool Cond>
-struct statement {
-    template<typename F>
-    void then(Param param, const F& f){
-        f(param);
-    }
-};
-
-template<typename Param>
-struct statement<Param, false> {
-    template<typename F>
-    void then(Param param, const F&){}
-};
-
-} //end of namespace static_if_detail
-
-template<bool Cond, typename Param, typename F>
-static_if_detail::statement<Param, Cond> static_if(Param param, F const& f){
-    static_if_detail::statement<Param, Cond> if_;
-    if_.then(param, f);
-    return if_;
-}
-
-
 #define HAS_OPTIONAL_METHOD(methodName, signature) \
 template<typename, typename T>          \
 struct has_ ## methodName {                 \

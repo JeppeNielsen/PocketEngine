@@ -18,8 +18,7 @@ FirstPersonMoverSystem::FirstPersonMoverSystem() : draggableSystem(0) {
     FlipControls = false;
 }
 
-void FirstPersonMoverSystem::Initialize(GameWorld *world) {
-    this->world = world;
+void FirstPersonMoverSystem::Initialize() {
 }
 
 void FirstPersonMoverSystem::InputChanged() {

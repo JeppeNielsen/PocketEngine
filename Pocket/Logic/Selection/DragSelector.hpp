@@ -19,7 +19,7 @@
 namespace Pocket {
     class DragSelector : public GameSystem<Transform, Mesh, Selectable> {
     public:
-        void Initialize(GameWorld* world) override;
+        void Initialize() override;
         
         void Setup(const Rect& viewport, InputManager& input);
     

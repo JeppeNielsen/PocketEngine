@@ -14,10 +14,6 @@
 #include "Droppable.hpp"
 using namespace Pocket;
 
-void HierarchyEditorSystem::Initialize(GameWorld *world) {
-    this->world = world;
-}
-
 void HierarchyEditorSystem::ObjectAdded(GameObject *object) {
     object->GetComponent<HierarchyEditor>()->Object.Changed.Bind(this, &HierarchyEditorSystem::ObjectChanged, object);
     ObjectChanged(object);
@@ -68,7 +64,7 @@ void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
         childObject->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         childObject->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         childObject->AddComponent<HierarchyEditor>()->Object = child;
-        childObject->Parent = object;
+        childObject->Parent() = object;
     }
     
     GameObject* gameObjectName = gui->CreateTextBox(object, "Box", {20.0f * depth,0}, {200-depth*20.0f,20}, 0, s.str(), 14);
@@ -85,15 +81,15 @@ int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
     int depth = -1;
     while (object) {
         depth++;
-        object = object->Parent;
+        object = object->Parent();
     }
     return depth;
 }
 
 void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject *editorObject) {
     for (TouchData& touchData : d.droppedTouches) {
-        if (!touchData.object->Parent()) continue;
-        HierarchyEditor* editor = touchData.object->Parent()->GetComponent<HierarchyEditor>();
+        if (!touchData.object->Parent()()) continue;
+        HierarchyEditor* editor = touchData.object->Parent()()->GetComponent<HierarchyEditor>();
         if (!editor) continue;
         GameObject* newParent = editor->Object;
         
@@ -102,7 +98,7 @@ void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject 
         }
         Transform* transform = editorObject->GetComponent<Transform>();
         Vector3 worldPosition = transform->World().TransformPosition(0);
-        editorObject->Parent = newParent;
+        editorObject->Parent() = newParent;
         Vector3 localPosition = transform->World().Invert().TransformPosition(worldPosition);
         transform->Position = transform->Local().TransformPosition(localPosition);
         
@@ -113,7 +109,7 @@ void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject 
 bool HierarchyEditorSystem::IsParentLegal(Pocket::GameObject *parent, Pocket::GameObject *ancestor) {
     while (parent) {
         if (parent == ancestor) return false;
-        parent = parent->Parent;
+        parent = parent->Parent();
     }
     return true;
 }

@@ -16,7 +16,7 @@
 namespace Pocket {
     class SelectionVisualizer : public GameSystem<Transform, Mesh, Selectable>  {
     public:
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         

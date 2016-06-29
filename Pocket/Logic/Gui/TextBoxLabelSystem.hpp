@@ -21,7 +21,7 @@ namespace Pocket {
         
         const float cursorWidth = 1.05f;
     
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void TextBoxChanged(GameObject* object);
@@ -35,6 +35,5 @@ namespace Pocket {
         TextBox* activeTextboxAdded;
         GameObject* activeTextboxAddedGO;
         float timer;
-        GameWorld* world;
     };
 }

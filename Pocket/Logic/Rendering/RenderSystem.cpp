@@ -18,7 +18,7 @@ RenderSystem::~RenderSystem() {
     objectRenderers.clear();
 }
 
-void RenderSystem::Initialize(GameWorld* world) {
+void RenderSystem::Initialize() {
     cameras = world->CreateSystem<CameraSystem>();
     meshOctreeSystem = world->CreateSystem<OctreeSystem>();
     world->CreateSystem<TextureSystem>();

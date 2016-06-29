@@ -61,7 +61,18 @@ Camera::Camera() {
             Engine::Context().ScreenSize.Changed.Unbind(this, &Camera::ScreenSizeChanged);
         }
     });
+    
+    FieldOfView.Changed.MarkDefaults();
+    Near.Changed.MarkDefaults();
+    Far.Changed.MarkDefaults();
+    Viewport.Changed.MarkDefaults();
+    Aspect.Changed.MarkDefaults();
+    
     Engine::Context().ScreenSize.Changed.Bind(this, &Camera::ScreenSizeChanged);
+}
+
+Camera::~Camera() {
+    Engine::Context().ScreenSize.Changed.Unbind(this, &Camera::ScreenSizeChanged);
 }
 
 void Camera::ScreenSizeChanged() {

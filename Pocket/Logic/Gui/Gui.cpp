@@ -13,9 +13,7 @@ using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::Initialize(GameWorld* world) {
-
-    this->world = world;
+void Gui::Initialize() {
     renderer = world->CreateSystem<RenderSystem>();
     textboxSystem = world->CreateSystem<TextBoxSystem>();
     touchSystem = world->CreateSystem<TouchSystem>();
@@ -28,7 +26,7 @@ void Gui::Initialize(GameWorld* world) {
     world->CreateSystem<DraggableSystem>();
     world->CreateSystem<LayoutSystem>();
     world->CreateSystem<TextBoxLabelSystem>();
-    world->CreateSystem<MenuSystem>();
+    //world->CreateSystem<MenuSystem>();
     world->CreateSystem<MenuButtonSystem>();
     world->CreateSystem<ColorSystem>();
     world->CreateSystem<DraggableMotionSystem>();
@@ -45,7 +43,7 @@ void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, co
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng(atlasTexture);
     atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
-    atlas->SetID("Gui.Atlas");
+    //atlas->SetID("Gui.Atlas");
     
     Setup(atlas, viewport, inputManager);
 }
@@ -84,7 +82,7 @@ GameObject* Gui::CreatePivot(GameObject *parent) {
 
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
     GameObject* pivot = world->CreateObject();
-    pivot->Parent = parent;
+    pivot->Parent() = parent;
     pivot->AddComponent<Transform>()->Position = position;
     pivot->AddComponent<Orderable>();
     return pivot;
@@ -137,7 +135,7 @@ GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& font
     GameObject* font = world->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
-    font->SetID(fontFile);
+    //font->SetID(fontFile);
     fonts.push_back(font);
     return font;
 }

@@ -24,7 +24,14 @@ Transform::Transform() {
         useEulerRotation = true;
         Rotation = Quaternion(EulerRotation);
     });
-
+    
+    Position.Changed.MarkDefaults();
+    Rotation.Changed.MarkDefaults();
+    Scale.Changed.MarkDefaults();
+    Anchor.Changed.MarkDefaults();
+    Matrix.Changed.MarkDefaults();
+    EulerRotation.Changed.MarkDefaults();
+    
 	Local.Method = [this] (auto& local) {
         Matrix4x4 rotation;
         Rotation().ToRotationMatrix(rotation);

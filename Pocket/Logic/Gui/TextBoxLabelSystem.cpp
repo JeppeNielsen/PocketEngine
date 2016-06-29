@@ -11,8 +11,7 @@
 
 using namespace Pocket;
 
-void TextBoxLabelSystem::Initialize(GameWorld* world) {
-    this->world = world;
+void TextBoxLabelSystem::Initialize() {
     cursor = 0;
     activeTextbox = 0;
     timer = 0;
@@ -65,7 +64,7 @@ void TextBoxLabelSystem::TextBoxActiveChanged(bool& active, GameObject *object) 
         
         cursor = world->CreateObject();
         cursor->AddComponent<Transform>();
-        cursor->Parent = object;
+        cursor->Parent() = object;
         cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
         cursor->AddComponent<Material>();
         MoveCursor(textBox, object);
