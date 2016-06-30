@@ -60,7 +60,7 @@ void CompilationWindow::Compile() {
 
     scriptWorld.RemoveGameWorld(world);
     scriptWorld.SetWorldType(world);
-    scriptWorld.Build();
+    scriptWorld.Build(true);
     scriptWorld.AddGameWorld(world);
 
 
@@ -74,7 +74,7 @@ void CompilationWindow::Compile() {
     go->AddComponent<EditorObject>();
     
     for(int i=0; i<scriptWorld.ComponentCount(); ++i) {
-        go->AddScriptComponent(i);
+        go->AddComponent(0);
     }
     
     TypeInfo info = scriptWorld.GetTypeInfo(*go, 0);

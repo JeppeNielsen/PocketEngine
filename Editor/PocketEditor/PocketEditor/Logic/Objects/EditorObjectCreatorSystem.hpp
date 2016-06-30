@@ -18,7 +18,7 @@ using namespace Pocket;
 
 class EditorObjectCreatorSystem : public GameSystem<EditorObject> {
 public:
-    void Initialize(GameWorld* world);
+    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     GameWorld* editorWorld;

@@ -19,11 +19,6 @@
 #include "Touchable.hpp"
 #include "Draggable.hpp"
 
-
-void EditorTransformSystem::Initialize(Pocket::GameWorld *world) {
-    this->world = world;
-}
-
 void EditorTransformSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &EditorTransformSystem::SelectionChanged, object);
 }
@@ -40,7 +35,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         
         {
             GameObject* xaxis = world->CreateObject();
-            xaxis->Parent = transformerObject;
+            xaxis->Parent() = transformerObject;
             xaxis->AddComponent<Transform>(object);
             xaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({1,0,0}, {1,0.05f,0.05f});
             xaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(1.0f,0,0.0f, 0.5f));
@@ -52,7 +47,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         
         {
             GameObject* yaxis = world->CreateObject();
-            yaxis->Parent = transformerObject;
+            yaxis->Parent() = transformerObject;
             yaxis->AddComponent<Transform>(object);
             yaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,1,0}, {0.05f,1.0f,0.05f});
             yaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,1.0f,0.0f, 0.5f));
@@ -64,7 +59,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         
         {
             GameObject* zaxis = world->CreateObject();
-            zaxis->Parent = transformerObject;
+            zaxis->Parent() = transformerObject;
             zaxis->AddComponent<Transform>(object);
             zaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0,1}, {0.05f,0.05f,1.0f});
             zaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,0.0f,1.0f, 0.5f));

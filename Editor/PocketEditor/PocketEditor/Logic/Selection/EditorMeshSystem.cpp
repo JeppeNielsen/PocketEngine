@@ -8,10 +8,6 @@
 
 #include "EditorMeshSystem.hpp"
 
-void EditorMeshSystem::Initialize(Pocket::GameWorld *world) {
-    this->world = world;
-}
-
 void EditorMeshSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &EditorMeshSystem::SelectionChanged, object);
 }

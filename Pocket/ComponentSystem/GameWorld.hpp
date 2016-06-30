@@ -68,7 +68,12 @@ namespace Pocket {
         using Components = std::vector<IContainer*>;
         Components components;
         
-        using ObjectComponents = std::vector<std::vector<int>>;
+        struct ObjectComponent {
+            int index;
+            IContainer* container;
+        };
+        
+        using ObjectComponents = std::vector<std::vector<ObjectComponent>>;
         ObjectComponents objectComponents;
         
         using Systems = std::vector<IGameSystem*>;
@@ -108,10 +113,10 @@ namespace Pocket {
     template<typename T>
     T* GameObject::GetComponent() {
         ComponentID id = GameIDHelper::GetComponentID<T>();
-        int componentIndex = world->objectComponents[id][index];
-        if (componentIndex == -1) return 0;
-        Container<T>* container = static_cast<Container<T>*>(world->components[id]);
-        return &container->entries[componentIndex];
+        auto& objectComponent = world->objectComponents[id][index];
+        if (objectComponent.index == -1) return 0;
+        Container<T>* container = static_cast<Container<T>*>(objectComponent.container);
+        return &container->entries[objectComponent.index];
     }
 
     

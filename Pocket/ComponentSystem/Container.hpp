@@ -21,6 +21,7 @@ namespace Pocket {
         virtual void Reference(int index) = 0;
         virtual void Delete(int index) = 0;
         virtual int Clone(int index) = 0;
+        virtual int Clone(void* object) = 0;
         virtual void* Get(int index) = 0;
         virtual void Clear() = 0;
         virtual void Trim() = 0;
@@ -66,6 +67,13 @@ namespace Pocket {
         int Clone(int index) override {
             int cloneIndex = Create();
             entries[cloneIndex] = entries[index];
+            return cloneIndex;
+        }
+        
+        int Clone(void* object) override {
+            T* objectSpecific = static_cast<T*>(object);
+            int cloneIndex = Create();
+            entries[cloneIndex] = *objectSpecific;
             return cloneIndex;
         }
         

@@ -9,7 +9,7 @@
 #include "EditorObjectCreatorSystem.hpp"
 #include "Touchable.hpp"
 
-void EditorObjectCreatorSystem::Initialize(Pocket::GameWorld *world) {
+void EditorObjectCreatorSystem::Initialize() {
     world->CreateSystem<ComponentSystem<Transform>>()->creatorSystem = this;
     world->CreateSystem<ComponentSystem<Mesh>>()->creatorSystem = this;
 }
@@ -17,7 +17,7 @@ void EditorObjectCreatorSystem::Initialize(Pocket::GameWorld *world) {
 void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
     
     GameObject* editorObject = editorWorld->CreateObject();
-    editorObject->Parent = gameRoot;
+    editorObject->Parent() = gameRoot;
     editorObject->AddComponent<Selectable>();
     editorObject->AddComponent<Touchable>();
     

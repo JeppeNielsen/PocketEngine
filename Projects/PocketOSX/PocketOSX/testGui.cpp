@@ -66,7 +66,7 @@ public:
     }
 };
 
-int main() {
+int main_main() {
     Engine e;
     e.Start<GuiExample>();
 	return 0;

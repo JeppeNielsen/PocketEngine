@@ -51,7 +51,7 @@ GameObject* GameWorld::CreateObject() {
     }
     
     for(int i=0; i<numComponentTypes; i++) {
-        objectComponents[i][index] = -1;
+        objectComponents[i][index].index = -1;
     }
     ++objectCount;
     GameObject& object = objects[index].object;
@@ -237,7 +237,7 @@ void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContaine
         numComponentTypes = count;
         objectComponents.resize(count);
         for(int i=0; i<count; ++i) {
-            objectComponents[i].resize(objects.size(),-1);
+            objectComponents[i].resize(objects.size(), {-1,0});
         }
     }
 

@@ -81,8 +81,8 @@ bool GameObject::HasComponent(ComponentID id) const {
 void* GameObject::GetComponent(ComponentID id) {
     assert(id<world->numComponentTypes);
     if (!data->activeComponents[id]) return 0;
-    IContainer* container = world->components[id];
-    return container->Get(world->objectComponents[id][index]);
+    auto& objectComponent = world->objectComponents[id][index];
+    return objectComponent.container->Get(objectComponent.index);
 }
 
 void GameObject::AddComponent(ComponentID id) {
@@ -91,7 +91,7 @@ void GameObject::AddComponent(ComponentID id) {
         return;
     }
     IContainer* container = world->components[id];
-    world->objectComponents[id][index] = container->Create();
+    world->objectComponents[id][index] = { container->Create(), container };
     data->activeComponents.Set(id, true);
     world->createActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
@@ -104,12 +104,10 @@ void GameObject::AddComponent(ComponentID id, GameObject* source) {
     if (HasComponent(id)) {
         return;
     }
-    IContainer* container = world->components[id];
-    int referenceIndex = world->objectComponents[id][source->index];
-    world->objectComponents[id][index] = referenceIndex;
-    container->Reference(referenceIndex);
+    auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
+    world->objectComponents[id][index] = sourceObjectComponent;
+    sourceObjectComponent.container->Reference(sourceObjectComponent.index);
     data->activeComponents.Set(id, true);
-    
     world->createActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
@@ -122,10 +120,16 @@ void GameObject::CloneComponent(ComponentID id, GameObject* source) {
         return;
     }
     
+    auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
     IContainer* container = world->components[id];
-    world->objectComponents[id][index] = container->Clone(world->objectComponents[id][source->index]);
+    int componentIndex = 0;
+    if (container == sourceObjectComponent.container) {
+        componentIndex = container->Clone(sourceObjectComponent.index);
+    } else {
+        componentIndex = container->Clone(sourceObjectComponent.container->Get(sourceObjectComponent.index));
+    }
+    world->objectComponents[id][index] = { componentIndex, container };
     data->activeComponents.Set(id, true);
-    
     world->createActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
@@ -141,9 +145,9 @@ void GameObject::RemoveComponent(ComponentID id) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
         }
         TrySetComponentEnabled(id, false);
-        IContainer* container = world->components[id];
-        container->Delete(world->objectComponents[id][index]);
-        world->objectComponents[id][index] = -1;
+        auto& objectComponent = world->objectComponents[id][index];
+        objectComponent.container->Delete(objectComponent.index);
+        world->objectComponents[id][index].index = -1;
         data->activeComponents.Set(id, false);
     });
 }
