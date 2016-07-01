@@ -23,7 +23,6 @@ namespace Pocket {
         DirtyProperty(const DirtyProperty<Value>& other) {
             isDirty = true;
             value = other.value;
-            Method = other.Method;
         }
     
 	    void operator = (DirtyProperty<Value> &other) {
