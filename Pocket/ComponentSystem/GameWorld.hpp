@@ -89,8 +89,7 @@ namespace Pocket {
         
         using Action = std::function<void()>;
         using Actions = std::deque<Action>;
-        Actions createActions;
-        Actions removeActions;
+        Actions delayedActions;
         
         using ComponentNames = std::vector<std::string>;
         ComponentNames componentNames;
@@ -112,7 +111,6 @@ namespace Pocket {
     
     template<typename T>
     T* GameObject::GetComponent() {
-        if (this == world->Root()) return 0;
         ComponentID id = GameIDHelper::GetComponentID<T>();
         auto& objectComponent = world->objectComponents[id][index];
         if (objectComponent.index == -1) return 0;

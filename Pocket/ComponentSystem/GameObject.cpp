@@ -12,6 +12,8 @@
 
 using namespace Pocket;
 
+static bool forceSetNextParent = false;
+
 const ObjectCollection& GameObject::Children() const { return data->children; }
 Property<GameObject*>& GameObject::Parent() { return data->Parent; }
 Property<bool>& GameObject::Enabled() { return data->Enabled; }
@@ -34,13 +36,13 @@ GameObject::GameObject()
         GameObject* prevParent = data->Parent.PreviousValue();
         GameObject* currentParent = data->Parent;
         
-        if (!data->removed) {
-            if (!prevParent) {
-                prevParent = &world->root;
-            }
-            if (!currentParent) {
-                currentParent = &world->root;
-            }
+        if (data->removed && !forceSetNextParent) return;
+        
+        if (!prevParent) {
+            prevParent = &world->root;
+        }
+        if (!currentParent && !forceSetNextParent) {
+            currentParent = &world->root;
         }
         
         if (prevParent) {
@@ -90,10 +92,11 @@ void GameObject::AddComponent(ComponentID id) {
     if (HasComponent(id)) {
         return;
     }
+    if (data->removed) return;
     IContainer* container = world->components[id];
     world->objectComponents[id][index] = { container->Create(), container };
     data->activeComponents.Set(id, true);
-    world->createActions.emplace_back([this, id]() {
+    world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
@@ -104,11 +107,12 @@ void GameObject::AddComponent(ComponentID id, GameObject* source) {
     if (HasComponent(id)) {
         return;
     }
+    if (data->removed) return;
     auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
     world->objectComponents[id][index] = sourceObjectComponent;
     sourceObjectComponent.container->Reference(sourceObjectComponent.index);
     data->activeComponents.Set(id, true);
-    world->createActions.emplace_back([this, id]() {
+    world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
@@ -119,7 +123,7 @@ void GameObject::CloneComponent(ComponentID id, GameObject* source) {
     if (HasComponent(id)) {
         return;
     }
-    
+    if (data->removed) return;
     auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
     IContainer* container = world->components[id];
     int componentIndex = 0;
@@ -130,7 +134,7 @@ void GameObject::CloneComponent(ComponentID id, GameObject* source) {
     }
     world->objectComponents[id][index] = { componentIndex, container };
     data->activeComponents.Set(id, true);
-    world->createActions.emplace_back([this, id]() {
+    world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
@@ -140,7 +144,8 @@ void GameObject::RemoveComponent(ComponentID id) {
     if (!HasComponent(id)) {
         return;
     }
-    world->removeActions.emplace_back([this, id]() {
+    if (data->removed) return;
+    world->delayedActions.emplace_back([this, id]() {
         if (!data->activeComponents[id]) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
         }
@@ -155,8 +160,15 @@ void GameObject::RemoveComponent(ComponentID id) {
 void GameObject::Remove() {
     if (data->removed) return;
     int localIndex = index;
-    world->removeActions.emplace_back([this, localIndex]() {
-        data->Parent = 0;
+    world->delayedActions.emplace_back([this, localIndex]() {
+        forceSetNextParent = true;
+        if (data->Parent()) {
+            data->Parent = 0;
+        } else {
+            auto& children = world->root.data->children;
+            children.erase(std::find(children.begin(), children.end(), this));
+        }
+        forceSetNextParent = false;
         SetEnabled(false);
         world->objectsFreeIndicies.push_back(localIndex);
         --world->objectCount;
@@ -192,7 +204,7 @@ void GameObject::TryAddComponentContainer(ComponentID id, std::function<IContain
 
 void GameObject::SetWorldEnableDirty() {
     data->WorldEnabled.MakeDirty();
-    world->createActions.emplace_back([this](){
+    world->delayedActions.emplace_back([this](){
         SetEnabled(data->WorldEnabled);
     });
 }
