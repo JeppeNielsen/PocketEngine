@@ -112,6 +112,7 @@ namespace Pocket {
     template<typename T>
     T* GameObject::GetComponent() {
         ComponentID id = GameIDHelper::GetComponentID<T>();
+        if (id>=world->numComponentTypes) return 0;
         auto& objectComponent = world->objectComponents[id][index];
         if (objectComponent.index == -1) return 0;
         Container<T>* container = static_cast<Container<T>*>(objectComponent.container);

@@ -56,7 +56,12 @@ namespace Pocket {
         
         template<typename T>
         T* AddComponent(GameObject* source) {
-            AddComponent(GameIDHelper::GetComponentID<T>(), source);
+            ComponentID id = GameIDHelper::GetComponentID<T>();
+            TryAddComponentContainer(id, [](std::string& componentName){
+                componentName = GameIDHelper::GetClassName<T>();
+                return new Container<T>();
+            });
+            AddComponent(id, source);
             return GetComponent<T>();
         }
         
