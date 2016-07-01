@@ -60,14 +60,15 @@ GameObject* GameWorld::CreateObject() {
     object.Parent() = &root;
     object.index = index;
     object.world = this;
+    object.data->removed = false;
     return &object;
 }
 
 void GameWorld::Update(float dt) {
+    DoActions(createActions);
     for(auto system : systems) {
         system->Update(dt);
     }
-    DoActions(createActions);
     DoActions(removeActions);
 }
 

@@ -156,12 +156,12 @@ void GameObject::Remove() {
     if (data->removed) return;
     int localIndex = index;
     world->removeActions.emplace_back([this, localIndex]() {
+        data->Parent = 0;
         SetEnabled(false);
         world->objectsFreeIndicies.push_back(localIndex);
         --world->objectCount;
     });
     data->removed = true;
-    data->Parent = 0;
     for(auto child : data->children) {
         child->Remove();
     }

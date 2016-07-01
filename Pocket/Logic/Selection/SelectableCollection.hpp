@@ -32,7 +32,7 @@ namespace Pocket {
             selectedObjects.push_back(object);
             hasChanged = true;
         } else {
-           RemoveObject(object);
+           TryRemoveObject(object);
         }
     }
 
@@ -43,10 +43,10 @@ namespace Pocket {
 
     void ObjectRemoved(Pocket::GameObject *object) {
         object->template GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectableCollection<T>::SelectedChanged, object);
-        RemoveObject(object);
+        TryRemoveObject(object);
     }
 
-    void RemoveObject(Pocket::GameObject *object) {
+    void TryRemoveObject(Pocket::GameObject *object) {
         auto i = std::find(selectedObjects.begin(), selectedObjects.end(), object);
         if (i!=selectedObjects.end()) {
             selectedObjects.erase(i);
