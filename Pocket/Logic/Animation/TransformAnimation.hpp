@@ -20,6 +20,10 @@ namespace Pocket {
     public:
         TransformAnimation();
         ~TransformAnimation();
+        TransformAnimation& operator=(const TransformAnimation& a) {
+            *this = a;
+            return *this;
+        }
         
         BezierCurve3 position;
         BezierCurve3 rotation;
