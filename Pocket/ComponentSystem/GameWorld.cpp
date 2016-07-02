@@ -69,7 +69,6 @@ void GameWorld::Update(float dt) {
     for(auto system : systems) {
         system->Update(dt);
     }
-    DoActions(delayedActions);
 }
 
 void GameWorld::Render() {
