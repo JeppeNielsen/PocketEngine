@@ -223,12 +223,12 @@ void GameWorld::IterateObjects(std::function<void (GameObject *)> callback) {
     }
 }
 
-void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContainer *(std::string&)> &&constructor) {
+void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)> &&constructor) {
     if (id>=components.size()) {
         int count = id + 1;
         components.resize(count, 0);
-        componentNames.resize(count);
-       
+        componentInfos.resize(count);
+        
         IterateObjects([count](GameObject* o) {
             o->data->activeComponents.Resize(count);
             o->data->enabledComponents.Resize(count);
@@ -241,6 +241,6 @@ void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContaine
     }
 
     if (!components[id]) {
-        components[id] = constructor(componentNames[id]);
+        components[id] = constructor(componentInfos[id]);
     }
 }

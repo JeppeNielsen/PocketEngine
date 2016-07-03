@@ -37,11 +37,11 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     if (!editor->Object()) return;
     
     Vector2 size = { 200, 100 };
-    /*
+    
     auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
         return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
     });
-    
+    /*
     
 #ifdef SCRIPTING_ENABLED
     if (scriptWorld) {
@@ -55,6 +55,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         }
     }
 #endif
+    */
     
     int counter = 0;
     for (auto info : infos) {
@@ -105,5 +106,4 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     
         counter++;
     }
-    */
 }

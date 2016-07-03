@@ -33,7 +33,7 @@ namespace Pocket {
         friend class GameWorld;
         GameSystemBase();
         virtual ~GameSystemBase();
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(std::string&)>&& constructor);
+        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
         
         virtual void Initialize();
         virtual void ObjectAdded(GameObject* object);
@@ -64,8 +64,18 @@ namespace Pocket {
         template<typename Last>
         void ExtractComponents(std::vector<int>& components) {
             ComponentID id = GameIDHelper::GetComponentID<Last>();
-            TryAddComponentContainer(id, [](std::string& componentName){
-                componentName = GameIDHelper::GetClassName<Last>();
+            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
+                componentInfo.name = GameIDHelper::GetClassName<Last>();
+                componentInfo.getTypeInfo = 0;
+                Last* ptr = 0;
+                Meta::static_if<Meta::HasGetTypeFunction::apply<Last>::value, Last*>(ptr, [&componentInfo, id](auto p) {
+                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
+                        auto component = object->GetComponent<SerializedComponentType>();
+                        return component->GetType();
+                    };
+                });
+                
                 return new Container<Last>();
             });
             components.push_back(id);

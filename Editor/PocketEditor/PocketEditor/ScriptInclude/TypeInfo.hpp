@@ -7,9 +7,8 @@
 //
 
 #pragma once
-#include <vector>
 #include <string>
-#include "FieldInfoIndexer.hpp"
+#include <vector>
 #include <functional>
 
 namespace Pocket {
@@ -19,6 +18,9 @@ class FieldInfo;
 
 class TypeInfo;
 class IFieldInfoEditor;
+
+template<typename T>
+struct FieldInfoIndexer { static int Index() { return 0; } };
 
 namespace minijson {
     class object_writer;

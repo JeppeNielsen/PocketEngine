@@ -11,34 +11,39 @@
 
 class GameObject;
 
-class IScriptSystem {
-public:
-    virtual ~IScriptSystem() {}
+struct IGameSystem {
+    virtual ~IGameSystem() = default;
+    virtual void Initialize()=0;
     virtual void ObjectAdded(GameObject* object) = 0;
     virtual void ObjectRemoved(GameObject* object) = 0;
     virtual void Update(float dt) = 0;
+    virtual void Render() = 0;
     virtual int AddObject(GameObject* object) = 0;
-    virtual GameObject* RemoveObject(int indexToRemove) = 0;
+    virtual void RemoveObject(GameObject* object) = 0;
 };
 
 template<typename... T>
-class GameSystem : public IScriptSystem {
+class GameSystem : public IGameSystem {
 protected:
+    virtual ~GameSystem() { }
+    virtual void Initialize() override { }
     virtual void ObjectAdded(GameObject* object) override { }
     virtual void ObjectRemoved(GameObject* object) override { }
     virtual void Update(float dt) override {}
+    virtual void Render() override {}
     
-    virtual int AddObject(GameObject* object) override {
+    int AddObject(GameObject* object) override {
         int ret = (int)objects.size();
         objects.push_back(object);
         return ret;
     }
     
-    virtual GameObject* RemoveObject(int indexToRemove) override {
-        GameObject* lastObject = objects[objects.size()-1];
-        objects[indexToRemove] = lastObject;
-        objects.pop_back();
-        return lastObject;
+    void RemoveObject(GameObject* object) override {
+        objects.erase(std::find(objects.begin(), objects.end(), object));
+//        GameObject* lastObject = objects[objects.size()-1];
+//        objects[indexToRemove] = lastObject;
+//        objects.pop_back();
+//        //return lastObject;
     }
     
 private:

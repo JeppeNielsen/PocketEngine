@@ -32,6 +32,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
     camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
     camera->GetComponent<Camera>()->FieldOfView = 70;
 
+    return;
     
     for (int x=-1; x<=1; ++x) {
     for (int y=-1; y<=1; ++y) {

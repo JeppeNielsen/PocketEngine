@@ -91,8 +91,8 @@ namespace Pocket {
         using Actions = std::deque<Action>;
         Actions delayedActions;
         
-        using ComponentNames = std::vector<std::string>;
-        ComponentNames componentNames;
+        using ComponentInfos = std::vector<GameObject::ComponentInfo>;
+        ComponentInfos componentInfos;
         
         int objectCount;
         int numComponentTypes;
@@ -101,7 +101,7 @@ namespace Pocket {
         void TryRemoveSystem(SystemID id);
         void DoActions(Actions& actions);
         void IterateObjects(std::function<void(GameObject*)> callback);
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer *(std::string&)>&& constructor);
+        void TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor);
         
         friend class GameObject;
         friend class GameSystemBase;

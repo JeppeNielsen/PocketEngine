@@ -10,6 +10,7 @@
 #include "GameIDHelper.hpp"
 #include "Property.hpp"
 #include "DirtyProperty.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
     
@@ -35,6 +36,11 @@ namespace Pocket {
     class GameObject : public IGameObject {
     public:
     
+        struct ComponentInfo {
+            std::string name;
+            std::function<TypeInfo(GameObject*)> getTypeInfo;
+        };
+    
         template<typename T>
         bool HasComponent() const {
             return HasComponent(GameIDHelper::GetComponentID<T>());
@@ -46,8 +52,18 @@ namespace Pocket {
         template<typename T>
         T* AddComponent() {
             ComponentID id = GameIDHelper::GetComponentID<T>();
-            TryAddComponentContainer(id, [](std::string& componentName){
-                componentName = GameIDHelper::GetClassName<T>();
+            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
+                componentInfo.name = GameIDHelper::GetClassName<T>();
+                
+                componentInfo.getTypeInfo = 0;
+                T* ptr = 0;
+                Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
+                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
+                        auto component = object->GetComponent<SerializedComponentType>();
+                        return component->GetType();
+                    };
+                });
                 return new Container<T>();
             });
             AddComponent(id);
@@ -57,8 +73,19 @@ namespace Pocket {
         template<typename T>
         T* AddComponent(GameObject* source) {
             ComponentID id = GameIDHelper::GetComponentID<T>();
-            TryAddComponentContainer(id, [](std::string& componentName){
-                componentName = GameIDHelper::GetClassName<T>();
+            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
+                componentInfo.name = GameIDHelper::GetClassName<T>();
+                
+                componentInfo.getTypeInfo = 0;
+                T* ptr = 0;
+                Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
+                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
+                        auto component = object->GetComponent<SerializedComponentType>();
+                        return component->GetType();
+                    };
+                });
+                
                 return new Container<T>();
             });
             AddComponent(id, source);
@@ -87,6 +114,8 @@ namespace Pocket {
         DirtyProperty<bool>& WorldEnabled();
         Property<int>& Order();
         
+        std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate);
+        
     private:
     
         GameObject();
@@ -105,7 +134,7 @@ namespace Pocket {
         void CloneComponent(ComponentID id, GameObject* source) override;
         void RemoveComponent(ComponentID id) override;
     private:
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(std::string&)>&& constructor);
+        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
         void TrySetComponentEnabled(ComponentID id, bool enable);

@@ -197,8 +197,19 @@ GameObject* GameObject::Clone() {
     return clone;
 }
 
+std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int componentID)> predicate) {
+    std::vector<TypeInfo> infos;
+    for (int i=0; i<world->components.size(); ++i) {
+        if (!world->componentInfos[i].getTypeInfo) continue; // component has no type
+        if (!data->activeComponents[i]) continue; // gameobject hasn't got component
+        if (predicate && !predicate(i)) continue; // component type not allowed
+        infos.emplace_back(world->componentInfos[i].getTypeInfo(this));
+        infos[infos.size()-1].name = world->componentInfos[i].name;
+    }
+    return infos;
+}
 
-void GameObject::TryAddComponentContainer(ComponentID id, std::function<IContainer *(std::string&)>&& constructor) {
+void GameObject::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor) {
     world->TryAddComponentContainer(id, std::move(constructor));
 }
 

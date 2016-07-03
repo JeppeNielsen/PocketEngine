@@ -18,14 +18,23 @@ void CompilationWindow::OnInitialize() {
     ScriptWorld& scriptWorld = context->ScriptWorld();
     selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
 
+    scriptWorld.Types.Add<Vector3>();
+
+    scriptWorld.SetClangSdkPath("/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/");
     
     scriptWorld.SetFiles(
         "ScriptExample.so",
         "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
         {
             "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/Colour.cpp"
-        },
+            //"/Projects/PocketEngine/Pocket/Rendering/Colour.cpp"
+        }, {
+            "/Projects/PocketEngine/Pocket/Data/Property.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
+            "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
+            "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
+        }
+        /*
         {
             "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
@@ -38,6 +47,7 @@ void CompilationWindow::OnInitialize() {
             "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
         }
+        */
         );
     
     
@@ -58,7 +68,7 @@ void CompilationWindow::Compile() {
     std::cout<<"Compilation Started..."<<std::endl;
 
 
-    scriptWorld.RemoveGameWorld(world);
+    //scriptWorld.RemoveGameWorld(world);
     scriptWorld.SetWorldType(world);
     scriptWorld.Build(true);
     scriptWorld.AddGameWorld(world);
@@ -73,16 +83,24 @@ void CompilationWindow::Compile() {
     go->AddComponent<Touchable>();
     go->AddComponent<EditorObject>();
     
+    for(auto c : scriptWorld.Components()) {
+        go->AddComponent(c.second);
+    }
+    
+    /*
     for(int i=0; i<scriptWorld.ComponentCount(); ++i) {
         go->AddComponent(0);
     }
+    */
     
-    TypeInfo info = scriptWorld.GetTypeInfo(*go, 0);
+    /*
+    TypeInfo info = scriptWorld.GetTypeInfo(*go, scriptWorld.Components()[""]);
     
     {
         
     
     }
+    */
 
     /*
     GameObject* window = gui->CreateControl(0, "Box", {200,200});

@@ -14,7 +14,7 @@ using namespace Pocket;
 GameSystemBase::GameSystemBase() : world(0) {}
 GameSystemBase::~GameSystemBase() {}
 
-void GameSystemBase::TryAddComponentContainer(ComponentID id, std::function<IContainer *(std::string&)>&& constructor) {
+void GameSystemBase::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor) {
     world->TryAddComponentContainer(id, std::move(constructor));
 }
 

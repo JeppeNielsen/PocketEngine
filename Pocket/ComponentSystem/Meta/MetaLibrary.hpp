@@ -14,6 +14,32 @@ class TypeInfo;
 
 namespace Meta {
 
+
+namespace static_if_detail {
+
+template<typename Param, bool Cond>
+struct statement {
+    template<typename F>
+    void then(Param param, const F& f){
+        f(param);
+    }
+};
+
+template<typename Param>
+struct statement<Param, false> {
+    template<typename F>
+    void then(Param param, const F&){}
+};
+
+} //end of namespace static_if_detail
+
+template<bool Cond, typename Param, typename F>
+static_if_detail::statement<Param, Cond> static_if(Param param, F const& f){
+    static_if_detail::statement<Param, Cond> if_;
+    if_.then(param, f);
+    return if_;
+}
+
 #define HAS_OPTIONAL_METHOD(methodName, signature) \
 template<typename, typename T>          \
 struct has_ ## methodName {                 \
