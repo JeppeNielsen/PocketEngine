@@ -485,11 +485,10 @@ void ScriptWorld::WriteTypes(std::ofstream &file) {
     file << "#include <string>"<<std::endl;
     file << "#include <vector>"<<std::endl;
     file << "#include \"Property.hpp\""<<std::endl;
-    //file << "template<typename T> struct FieldInfoIndexer { static int Index() { return 0; } };" << std::endl;
     auto typeNames = Types.GetTypeNames();
     
     for(auto n : typeNames) {
-        file<<"template<> struct FieldInfoIndexer<"<< n.second << "> { static int Index() { return "<< n.first << "; } };"<<std::endl;
+        file<<"template<> struct Pocket::FieldInfoIndexer<"<< n.second << "> { static int Index() { return "<< n.first << "; } };"<<std::endl;
     }
     file<<""<<std::endl;
 }
