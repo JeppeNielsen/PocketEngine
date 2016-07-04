@@ -24,6 +24,7 @@ void LayoutSystem::ObjectRemoved(Pocket::GameObject *object) {
         }
     }
     delete layoutObject;
+    SetMetaData(object, 0);
 }
 
 LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layoutSystem) {
