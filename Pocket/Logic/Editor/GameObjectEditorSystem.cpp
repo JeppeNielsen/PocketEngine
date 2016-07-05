@@ -17,8 +17,7 @@ GameObjectEditorSystem::GameObjectEditorSystem()
 #endif
 {}
 
-void GameObjectEditorSystem::Initialize(GameWorld *world) {
-    this->world = world;
+void GameObjectEditorSystem::Initialize() {
 }
 
 void GameObjectEditorSystem::ObjectAdded(GameObject *object) {
@@ -42,6 +41,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
         return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
     });
+    /*
     
 #ifdef SCRIPTING_ENABLED
     if (scriptWorld) {
@@ -55,6 +55,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         }
     }
 #endif
+    */
     
     int counter = 0;
     for (auto info : infos) {
@@ -73,14 +74,14 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         
         
         GameObject* componentChild = world->CreateObject();
-        componentChild->Parent = object;
+        componentChild->Parent() = object;
         componentChild->AddComponent<Transform>()->Position = {0, counter*size.y,0};
         componentChild->AddComponent<Sizeable>()->Size = size;
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         
         GameObject* space = world->CreateObject();
-        space->Parent = componentChild;
+        space->Parent() = componentChild;
         space->AddComponent<Transform>();
         space->AddComponent<Sizeable>()->Size = {size.x, 10};
         space->AddComponent<Layoutable>();
@@ -88,7 +89,7 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
             if (!field->HasEditor()) continue;
             
             GameObject* editor = world->CreateObject();
-            editor->Parent = componentChild;
+            editor->Parent() = componentChild;
             editor->AddComponent<Transform>();
             editor->AddComponent<Sizeable>()->Size = {size.x, size.y/(info.fields.size()+1)};
             editor->AddComponent<Layoutable>();

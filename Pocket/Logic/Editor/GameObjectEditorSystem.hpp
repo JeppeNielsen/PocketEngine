@@ -20,7 +20,7 @@ namespace Pocket {
     class GameObjectEditorSystem : public GameSystem<GameObjectEditor, Transform, Sizeable> {
         public:
             GameObjectEditorSystem();
-            void Initialize(GameWorld* world);
+            void Initialize();
         
             Gui* gui;
 #ifdef SCRIPTING_ENABLED
@@ -31,10 +31,9 @@ namespace Pocket {
         
             template<class T>
             void IgnoreComponent() {
-                ignoredComponents.push_back(IDHelper::GetComponentID<T>());
+                ignoredComponents.push_back(GameIDHelper::GetComponentID<T>());
             }
         private:
-            GameWorld* world;
             void ObjectChanged(GameObject* object);
             typedef std::vector<int> IgnoredComponents;
             IgnoredComponents ignoredComponents;

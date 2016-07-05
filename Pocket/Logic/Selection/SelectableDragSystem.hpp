@@ -16,7 +16,6 @@
 namespace Pocket {
     class SelectableDragSystem : public GameSystem<Draggable, Selectable, Transform>  {
     public:
-        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);

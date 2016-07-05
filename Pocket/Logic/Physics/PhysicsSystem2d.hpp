@@ -23,7 +23,7 @@ namespace Pocket {
     public:
         PhysicsSystem2d();
         ~PhysicsSystem2d();
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);

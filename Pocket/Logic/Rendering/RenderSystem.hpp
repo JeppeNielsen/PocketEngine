@@ -27,7 +27,7 @@ public:
     using VisibleObjects = std::vector<VisibleObject>;
 
     virtual ~RenderSystem();
-    void Initialize(GameWorld* world);
+    void Initialize();
     void ObjectAdded(GameObject *object);
     OctreeSystem& Octree();
     void RenderCamera(GameObject* cameraObject);
@@ -49,7 +49,7 @@ private:
     VisibleObjects transparentObjects;
 
     RenderInfo renderInfo;
-    typename RenderSystem::ObjectCollection objectsInFrustum;
+    ObjectCollection objectsInFrustum;
 
     CameraSystem* cameras;
     OctreeSystem* meshOctreeSystem;

@@ -24,6 +24,7 @@ void LayoutSystem::ObjectRemoved(Pocket::GameObject *object) {
         }
     }
     delete layoutObject;
+    SetMetaData(object, 0);
 }
 
 LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layoutSystem) {
@@ -35,7 +36,7 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     transform = object->GetComponent<Transform>();
     parentSizeable = 0;
     parentLayoutObject = 0;
-    object->Parent.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentChanged);
+    object->Parent().Changed.Bind(this, &LayoutSystem::LayoutObject::ParentChanged);
     ParentChanged();
     if (layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
         layoutSystem->dirtyChildLayoutables.insert(this);
@@ -43,7 +44,7 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
 }
 
 LayoutSystem::LayoutObject::~LayoutObject() {
-    object->Parent.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentChanged);
+    object->Parent().Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentChanged);
     
     if (parentSizeable) {
         parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
@@ -79,13 +80,13 @@ void LayoutSystem::LayoutObject::ParentChanged() {
         parentLayoutObject = 0;
     }
     
-    if (object->Parent) {
-        parentSizeable = object->Parent()->GetComponent<Sizeable>();
+    if (object->Parent()) {
+        parentSizeable = object->Parent()()->GetComponent<Sizeable>();
         if (parentSizeable) {
             parentSizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
             
-            if (object->Parent()->GetComponent<Layoutable>()) {
-                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(object->Parent);
+            if (object->Parent()()->GetComponent<Layoutable>()) {
+                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(object->Parent());
                 if (parentLayoutObject) {
                     if (parentLayoutObject->layoutable->ChildLayouting==Layoutable::ChildLayouting::None) {
                         parentLayoutObject = 0;

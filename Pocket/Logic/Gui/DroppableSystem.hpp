@@ -15,7 +15,7 @@
 namespace Pocket {
     struct DroppableSystem : GameSystem<Droppable, Touchable> {
         
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void TouchUp(Pocket::TouchData d, GameObject* object);

@@ -17,7 +17,6 @@
 namespace Pocket {
 class MenuSystem : public GameSystem<Menu, MenuAnimator, TransformAnimator, TransformAnimationDatabase> {
 public:
-    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     

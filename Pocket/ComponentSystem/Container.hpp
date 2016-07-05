@@ -1,144 +1,121 @@
 //
 //  Container.hpp
-//  ComponentSystem
+//  EntitySystem
 //
-//  Created by Jeppe Nielsen on 29/12/15.
-//  Copyright © 2015 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 06/06/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
+#include <deque>
 #include <vector>
 #include <assert.h>
+#include <functional>
 
 namespace Pocket {
-  
-class IContainer {
-public:
-    virtual ~IContainer() {}
-    virtual void Initialize() = 0;
-};
 
-template<typename Object>
-class Container : public IContainer {
-public:
-    struct ObjectInstance {
-        Object object;
-        int references;
-        int index;
-        void* owner;
+    class IContainer {
+    public:
+        virtual ~IContainer() {}
+        virtual int Create() = 0;
+        virtual void Reference(int index) = 0;
+        virtual void Delete(int index) = 0;
+        virtual int Clone(int index) = 0;
+        virtual int Clone(void* object) = 0;
+        virtual void* Get(int index) = 0;
+        virtual void Clear() = 0;
+        virtual void Trim() = 0;
+        int Count() const { return count; }
+        int count;
     };
-    
-    ObjectInstance* CreateObject() {
-        TryGrow();
-        ObjectInstance* instance = objects[size++];
-        assert(instance->references == 0);
-        ++instance->references;
-        ResetInstance(instance);
-        return instance;
-    }
-    
-    ObjectInstance* CreateObjectNoReset() {
-        TryGrow();
-        ObjectInstance* instance = objects[size++];
-        ++instance->references;
-        return instance;
-    }
-    
-    int Size() const { return size; }
-    int Capacity() const { return capacity; }
-    
-    void RemoveObject(ObjectInstance* instance) {
-        --size;
-        objects[size]->index = instance->index;
-        std::swap(objects[instance->index], objects[size]);
-        instance->index = size;
-        instance->owner = 0;
-    }
-    
-    void DestroyObject(ObjectInstance* instance) {
-        --capacity;
-        --size;
-        objects[instance->index] = objects[size];
-        objects[size] = objects[capacity];
-        objects[instance->index]->index = instance->index;
-        objects[size]->index = size;
 
-        objects.pop_back();
-        instance->owner = 0;
-    }
+    template<typename T>
+    class Container : public IContainer {
+    public:
+        Container()  { count = 0; }
+        virtual ~Container() { }
     
-    Object* Get(int index) {
-        return &objects[index]->object;
-    }
-    
-    void Clear() {
-        for (int i=0; i<capacity; ++i) {
-            if (objects[i]->references==0) {
-                if (!objects[i]->owner) {
-                    DeleteInstance(objects[i]);
-                }
+        int Create() override {
+            int freeIndex;
+            if (freeIndicies.empty()) {
+                freeIndex = (int)references.size();
+                references.emplace_back(0);
+                entries.resize(freeIndex + 1);
             } else {
-                objects[i]->owner = 0;
+                freeIndex = freeIndicies.back();
+                freeIndicies.pop_back();
+            }
+            
+            ++count;
+            entries[freeIndex] = defaultObject;
+            references[freeIndex] = 1;
+            return freeIndex;
+        }
+        
+        void Reference(int index) override {
+            ++references[index];
+        }
+        
+        void Delete(int index) override {
+            --references[index];
+            if (references[index]==0) {
+                --count;
+                freeIndicies.push_back(index);
             }
         }
-        size = 0;
-        capacity = 0;
-        objects.clear();
-    }
-    
-private:
-    
-    void TryGrow() {
-        if (size<capacity) return;
-        Grow((capacity + 20) * 2);
-    }
-
-    void Grow(int newCapacity) {
-        objects.resize(newCapacity);
-        for (int i=size; i<newCapacity; ++i) {
-            objects[i] = CreateInstance();
-            objects[i]->references = 0;
-            objects[i]->owner = 0;
-            objects[i]->index = i;
+        
+        int Clone(int index) override {
+            int cloneIndex = Create();
+            entries[cloneIndex] = entries[index];
+            return cloneIndex;
         }
-        capacity = newCapacity;
-    }
+        
+        int Clone(void* object) override {
+            T* objectSpecific = static_cast<T*>(object);
+            int cloneIndex = Create();
+            entries[cloneIndex] = *objectSpecific;
+            return cloneIndex;
+        }
+        
+        void* Get(int index) override {
+            return &entries[index];
+        }
+        
+        void Clear() override {
+            entries.clear();
+            references.clear();
+            count = 0;
+        }
+        
+        void Trim() override {
+            int smallestSize = 0;
+            for(int i = (int)references.size() - 1; i>=0; --i) {
+                if (references[i]>0) {
+                    smallestSize = i + 1;
+                    break;
+                }
+            }
+            if (smallestSize<references.size()) {
+                references.resize(smallestSize);
+                entries.resize(smallestSize);
+                for(int i=0; i<freeIndicies.size(); ++i) {
+                    if (freeIndicies[i]>=smallestSize) {
+                        freeIndicies.erase(freeIndicies.begin() + i);
+                        --i;
+                    }
+                }
+            }
+        }
     
-    using Objects = std::vector<ObjectInstance*>;
-    Objects objects;
-    
-    int size;
-    int capacity;
-    
-    ObjectInstance* CreateInstance() {
-        return new ObjectInstance();
-    }
-    
-    void DeleteInstance(ObjectInstance* instance) {
-        delete instance;
-    }
-    
-    void ResetInstance(ObjectInstance* instance) {
-        instance->object = defaultObject->object;
-    }
-    
-public:
-    Container() : size(0), capacity(0), defaultObject(0) { }
-    ~Container() {
-        Clear();
-        DeleteInstance(defaultObject);
-    }
-    
-    void Initialize() override {
-        defaultObject = CreateInstance();
-    }
-    
-    void* createContext;
-    void* deleteContext;
-    void* resetContext;
-    int contextIndex;
-    
-    ObjectInstance* defaultObject;
-};
-
+        using Entries = std::deque<T>;
+        Entries entries;
+        
+        using References = std::vector<int>;
+        References references;
+        
+        using FreeIndicies = std::vector<int>;
+        FreeIndicies freeIndicies;
+        
+        T defaultObject;
+    };
 }

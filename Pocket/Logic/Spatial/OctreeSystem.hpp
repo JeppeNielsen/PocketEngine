@@ -43,12 +43,12 @@ namespace Pocket {
             octreeObjectsUpdateList.clear();
         }
 
-        void GetObjectsInFrustum(const Pocket::BoundingFrustum &frustum, typename OctreeSystem<ExtraComponents...>::ObjectCollection& objectList) {
+        void GetObjectsInFrustum(const Pocket::BoundingFrustum &frustum, ObjectCollection& objectList) {
             UpdateAllNodes();
             octree.Get<GameObject*>(frustum, objectList);
         }
 
-        void GetObjectsAtRay(const Pocket::Ray &ray, typename OctreeSystem<ExtraComponents...>::ObjectCollection& objectList) {
+        void GetObjectsAtRay(const Pocket::Ray &ray, ObjectCollection& objectList) {
             UpdateAllNodes();
             octree.Get<GameObject*>(ray, objectList);
         }

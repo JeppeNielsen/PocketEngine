@@ -24,7 +24,6 @@ namespace Pocket {
     private:
     
         using OctreeSystem = OctreeSystem<Touchable>;
-        using ObjectCollection = typename GameSystem<Transform, Mesh, Touchable>::ObjectCollection;
         
         struct CameraSystem : GameSystem<Transform, Camera> {};
         struct OrderableSystem : GameSystem<Orderable> {};
@@ -34,7 +33,7 @@ namespace Pocket {
     
         TouchSystem();
         ~TouchSystem();
-        void Initialize(GameWorld* world);
+        void Initialize();
         OctreeSystem& Octree();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);

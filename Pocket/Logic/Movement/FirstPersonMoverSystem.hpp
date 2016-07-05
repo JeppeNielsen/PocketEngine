@@ -21,7 +21,7 @@ namespace Pocket {
         FirstPersonMoverSystem();
         Property<InputManager*> Input;
         
-        void Initialize(GameWorld* world);
+        void Initialize();
         void Update(float dt);
         
         bool FlipControls;
@@ -40,6 +40,5 @@ private:
 
         DraggableSystem* draggableSystem;
         bool isDraggableSystemChecked;
-        GameWorld* world;
     };
 }

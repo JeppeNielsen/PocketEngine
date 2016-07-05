@@ -9,7 +9,7 @@
 #include "FieldEditorSystem.hpp"
 #include "SerializedFieldEditors.hpp"
 
-void FieldEditorSystem::Initialize(Pocket::GameWorld* world) {
+void FieldEditorSystem::Initialize() {
     CreateDefaultSerializedEditors();
 }
 

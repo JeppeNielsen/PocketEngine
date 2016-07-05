@@ -11,6 +11,7 @@
 #include "DirtyProperty.hpp"
 #include "GameObject.hpp"
 #include <vector>
+#include <map>
 
 namespace Pocket {
     struct VirtualTreeList {

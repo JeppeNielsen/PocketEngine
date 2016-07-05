@@ -14,7 +14,7 @@
 namespace Pocket {
     class ClickSelectorSystem : public GameSystem<Transform, Selectable, Touchable> {
     public:
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:

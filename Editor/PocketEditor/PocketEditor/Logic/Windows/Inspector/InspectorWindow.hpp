@@ -21,4 +21,11 @@ private:
     SelectableCollection<EditorObject>* selectables;
     GameObject* inspectorEditor;
     void SelectionChanged(SelectableCollection<EditorObject>* selectables);
+    void AddComponentClicked(TouchData d);
+    GameObject* listBox;
+    GameObject* addComponentButton;
+    
+    void ShowSelectionBox(EditorObject* editorObject);
+    GameObject* selectionBox;
+    void SelectionClicked(TouchData d, int index);
 };

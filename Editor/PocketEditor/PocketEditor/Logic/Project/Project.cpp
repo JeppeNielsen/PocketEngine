@@ -32,6 +32,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
     camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
     camera->GetComponent<Camera>()->FieldOfView = 70;
 
+    return;
     
     for (int x=-1; x<=1; ++x) {
     for (int y=-1; y<=1; ++y) {
@@ -50,7 +51,7 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
         }
         
         GameObject* child = world.CreateObject();
-        child->Parent = cube;
+        child->Parent() = cube;
         child->AddComponent<Transform>()->Position = {0,0,-2};
         child->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f);
         child->AddComponent<Material>();

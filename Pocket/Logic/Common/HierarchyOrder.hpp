@@ -14,7 +14,6 @@
 namespace Pocket {
     class HierarchyOrder : public GameSystem<Orderable> {
     public:
-        void Initialize(GameWorld* world);
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void SetDirty();
@@ -22,6 +21,5 @@ namespace Pocket {
         void CalculateOrder(int& orderOffset, GameObject *object);
     private:
         bool orderIsDirty;
-        GameWorld* world;
     };
 }

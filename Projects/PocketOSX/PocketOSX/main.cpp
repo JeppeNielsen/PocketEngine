@@ -90,7 +90,7 @@ public:
     }
 };
 
-int main_cube() {
+int main() {
     Engine e;
     e.Start<Game>();
 	return 0;

@@ -20,7 +20,7 @@ namespace Pocket {
         SoundSystem();
         ~SoundSystem();
         
-        void Initialize(GameWorld* world);
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
@@ -33,7 +33,7 @@ namespace Pocket {
         
         class ListenerSystem : public GameSystem<SoundListener, Transform> {
         public:
-            void Initialize(GameWorld* world);
+            void Initialize();
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
             void Update(float dt);

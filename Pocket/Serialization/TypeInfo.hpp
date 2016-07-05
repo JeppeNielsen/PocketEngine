@@ -12,7 +12,7 @@
 #include <type_traits>
 #include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
-#include "Vector3.hpp"
+#include "TypeIndexList.hpp"
 
 namespace Pocket {
 
@@ -240,32 +240,35 @@ public:
     std::string name;
     
     
-    void UpdateFromPointer(TypeInfo* info) {
+    void UpdateFromPointer(TypeInfo* info, TypeIndexList& list) {
         name = info->name;
         for(auto field : info->fields) {
-            AddField(field);
-        }
-    }
-    
-    void AddField(IFieldInfo* fieldInfo) {
-        switch (fieldInfo->type) {
-            case 0: AddField(*static_cast<FieldInfo<int>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1: AddField(*static_cast<FieldInfo<float>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 2: AddField(*static_cast<FieldInfo<double>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 3: AddField(*static_cast<FieldInfo<std::string>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 4: AddField(*static_cast<FieldInfo<Pocket::Vector2>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 5: AddField(*static_cast<FieldInfo<Pocket::Vector3>*>(fieldInfo)->field, fieldInfo->name); break;
-            
-            case 1000: AddField(*static_cast<FieldInfo<Property<int>>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1001: AddField(*static_cast<FieldInfo<Property<float>>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1002: AddField(*static_cast<FieldInfo<Property<double>>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1003: AddField(*static_cast<FieldInfo<Property<std::string>>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1004: AddField(*static_cast<FieldInfo<Property<Pocket::Vector2>>*>(fieldInfo)->field, fieldInfo->name); break;
-            case 1005: AddField(*static_cast<FieldInfo<Property<Pocket::Vector3>>*>(fieldInfo)->field, fieldInfo->name); break;
-            
+            list.AddToTypeInfo(this, field->type, field);
         }
     }
 };
+
+template<typename T>
+void TypeIndexList::TypeIndex<T>::AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) {
+    FieldInfo<T>* derived = static_cast<FieldInfo<T>*>(fieldInfo);
+    typeInfo->AddField<T>(*derived->field, fieldInfo->name);
+}
+
+
+
+template<typename T>
+struct TypeIndexList::TypeIndex<std::vector<T>> : public TypeIndexList::ITypeIndex {
+    
+    void AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) {
+        FieldInfo<std::vector<T>>* derived = static_cast<FieldInfo<std::vector<T>>*>(fieldInfo);
+        typeInfo->AddField<std::vector<T>>(*derived->field, fieldInfo->name);
+    }
+
+    std::string GetName() override {
+        return "std::vector<" + TypeIndexList::GetClassName<T>()+">";
+    };
+};
+
 
 template<typename T>
 struct JsonSerializer<T, typename std::enable_if_t< Pocket::Meta::HasGetTypeFunction::apply<T>::value >> {

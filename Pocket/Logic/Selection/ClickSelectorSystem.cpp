@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-void ClickSelectorSystem::Initialize(GameWorld* world) {
+void ClickSelectorSystem::Initialize() {
     selectables = world->CreateSystem<SelectableCollection<Transform>>();
 }
 

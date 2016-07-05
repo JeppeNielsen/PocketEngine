@@ -21,7 +21,6 @@ namespace Pocket {
             void ObjectAdded(GameObject* object);
             void ObjectRemoved(GameObject* object);
             void Update(float dt);
-            void Initialize(GameWorld* world);
         private:
             void ObjectChanged(GameObject* object);
             int CountDepth(GameObject* object);

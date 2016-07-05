@@ -14,7 +14,8 @@ namespace Pocket {
 	class Camera {
 	public:
 		Camera();
-
+        ~Camera();
+        
 		Property<float> FieldOfView;
 		Property<float> Near;
 		Property<float> Far;

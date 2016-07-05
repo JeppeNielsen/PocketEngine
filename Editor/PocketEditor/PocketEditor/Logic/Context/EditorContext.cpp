@@ -23,7 +23,7 @@ GameObject* EditorContext::GameRoot() { return gameRoot; }
 ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
 
 void EditorContext::NewProject() {
-    project = { };
+    //project = { };
     project.CreateDefaultScene(world, gameRoot, *input);
 }
 

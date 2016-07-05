@@ -18,7 +18,6 @@ using namespace Pocket;
 
 class EditorMeshSystem : public GameSystem<Transform, Mesh, Selectable> {
 public:
-    void Initialize(GameWorld* world);
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
 private:
@@ -26,5 +25,4 @@ private:
     void TryRemoveTransformObject(GameObject* object);
     using TransformObjects = std::map<GameObject*, GameObject*>;
     TransformObjects transformObjects;
-    GameWorld* world;
 };
