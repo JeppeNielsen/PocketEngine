@@ -62,13 +62,15 @@ void CompilationWindow::OnCreate() {
 
 void CompilationWindow::Compile() {
 
+    selectables->ClearSelection();
+
     GameWorld& world = context->Project().World();
     ScriptWorld& scriptWorld = context->ScriptWorld();
 
     std::cout<<"Compilation Started..."<<std::endl;
 
 
-    //scriptWorld.RemoveGameWorld(world);
+    scriptWorld.RemoveGameWorld(world);
     scriptWorld.SetWorldType(world);
     scriptWorld.Build(true);
     scriptWorld.AddGameWorld(world);
@@ -83,9 +85,9 @@ void CompilationWindow::Compile() {
     go->AddComponent<Touchable>();
     go->AddComponent<EditorObject>();
     
-    for(auto c : scriptWorld.Components()) {
-        go->AddComponent(c.second);
-    }
+    //for(auto c : scriptWorld.Components()) {
+    //    go->AddComponent(c.second);
+    //}
     
     /*
     for(int i=0; i<scriptWorld.ComponentCount(); ++i) {

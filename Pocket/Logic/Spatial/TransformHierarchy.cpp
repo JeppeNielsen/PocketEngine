@@ -18,7 +18,8 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
             world = transform->Local;
         }
     };
-
+    
+    transform->World.MakeDirty();
     object->Parent().Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
     HookParent(transform, object->Parent());
 }

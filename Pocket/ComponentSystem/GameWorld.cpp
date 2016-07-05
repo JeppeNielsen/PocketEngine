@@ -135,6 +135,10 @@ void GameWorld::Trim() {
     }
 }
 
+const GameWorld::ComponentInfos& GameWorld::ComponentTypes() {
+    return componentInfos;
+}
+
 IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(std::vector<int>& components)> constructor) {
     if (id>=systemsIndexed.size()) {
         systemsIndexed.resize(id + 1, 0);

@@ -34,7 +34,7 @@ vector<string> RunBashCommmand(const string &cmd) {
     return out;
 }
 
-ScriptWorld::ScriptWorld() : libHandle(0) {
+ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1) {
     Types.Add<int>();
     Types.Add<float>();
     Types.Add<double>();
@@ -607,6 +607,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
 }
 
 void ScriptWorld::RemoveGameWorld(GameWorld& world) {
+    if (baseSystemIndex == -1) return;
     int endSystemIndex = (int)world.systemsIndexed.size();
     for(int i=baseSystemIndex; i<endSystemIndex; ++i){
         world.TryRemoveSystem(i);

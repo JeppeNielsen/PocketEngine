@@ -75,21 +75,21 @@ class IGameSystem;
 #include <string>
 #include <vector>
 #include "Property.hpp"
-template<> struct FieldInfoIndexer<int> { static int Index() { return 0; } };
-template<> struct FieldInfoIndexer<std::vector<int>> { static int Index() { return 1; } };
-template<> struct FieldInfoIndexer<Pocket::Property<int>> { static int Index() { return 2; } };
-template<> struct FieldInfoIndexer<float> { static int Index() { return 3; } };
-template<> struct FieldInfoIndexer<std::vector<float>> { static int Index() { return 4; } };
-template<> struct FieldInfoIndexer<Pocket::Property<float>> { static int Index() { return 5; } };
-template<> struct FieldInfoIndexer<double> { static int Index() { return 6; } };
-template<> struct FieldInfoIndexer<std::vector<double>> { static int Index() { return 7; } };
-template<> struct FieldInfoIndexer<Pocket::Property<double>> { static int Index() { return 8; } };
-template<> struct FieldInfoIndexer<std::__1::basic_string<char>> { static int Index() { return 9; } };
-template<> struct FieldInfoIndexer<std::vector<std::__1::basic_string<char>>> { static int Index() { return 10; } };
-template<> struct FieldInfoIndexer<Pocket::Property<std::__1::basic_string<char> >> { static int Index() { return 11; } };
-template<> struct FieldInfoIndexer<Pocket::Vector3> { static int Index() { return 12; } };
-template<> struct FieldInfoIndexer<std::vector<Pocket::Vector3>> { static int Index() { return 13; } };
-template<> struct FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 14; } };
+template<> struct Pocket::FieldInfoIndexer<int> { static int Index() { return 0; } };
+template<> struct Pocket::FieldInfoIndexer<std::vector<int>> { static int Index() { return 1; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Property<int>> { static int Index() { return 2; } };
+template<> struct Pocket::FieldInfoIndexer<float> { static int Index() { return 3; } };
+template<> struct Pocket::FieldInfoIndexer<std::vector<float>> { static int Index() { return 4; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Property<float>> { static int Index() { return 5; } };
+template<> struct Pocket::FieldInfoIndexer<double> { static int Index() { return 6; } };
+template<> struct Pocket::FieldInfoIndexer<std::vector<double>> { static int Index() { return 7; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Property<double>> { static int Index() { return 8; } };
+template<> struct Pocket::FieldInfoIndexer<std::__1::basic_string<char>> { static int Index() { return 9; } };
+template<> struct Pocket::FieldInfoIndexer<std::vector<std::__1::basic_string<char>>> { static int Index() { return 10; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Property<std::__1::basic_string<char> >> { static int Index() { return 11; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Vector3> { static int Index() { return 12; } };
+template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { static int Index() { return 13; } };
+template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 14; } };
 
 extern "C" int CountSystems() {
    return 1;
@@ -135,7 +135,9 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      info->AddField(component->children, "children");
 	      info->AddField(component->coords, "coords");
 	      info->AddField(component->name, "name");
+	      info->AddField(component->timer, "timer");
 	      info->AddField(component->velocity, "velocity");
+	      info->AddField(component->wobble, "wobble");
       return info;
       break; }
       default: return 0;

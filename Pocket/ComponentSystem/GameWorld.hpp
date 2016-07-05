@@ -52,6 +52,9 @@ namespace Pocket {
         void Clear();
         void Trim();
         
+        using ComponentInfos = std::vector<GameObject::ComponentInfo>;
+        const ComponentInfos& ComponentTypes();
+        
     private:
     
         GameObject root;
@@ -91,7 +94,7 @@ namespace Pocket {
         using Actions = std::deque<Action>;
         Actions delayedActions;
         
-        using ComponentInfos = std::vector<GameObject::ComponentInfo>;
+        
         ComponentInfos componentInfos;
         
         int objectCount;

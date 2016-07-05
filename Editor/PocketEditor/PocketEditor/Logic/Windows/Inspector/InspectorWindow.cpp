@@ -55,20 +55,60 @@ void InspectorWindow::OnCreate() {
     gameObjectEditorSystem->gui = &gui;
     gameObjectEditorSystem->scriptWorld = &context->ScriptWorld();
     
+    addComponentButton = gui.CreateLabelControl(window, "Box", {0,400-40}, 40, 0, "+", 10);
+    addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);
+    addComponentButton->Enabled() = false;
     
     GameObject* pivot;
-    GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-50}, &pivot);
+    listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-80}, &pivot);
     listBox->RemoveComponent<Sprite>();
-    
-    gui.CreateControl(pivot, "Box", 100);
-    
     
     
     inspectorEditor = gui.CreatePivot(pivot);
     inspectorEditor->AddComponent<Sizeable>()->Size = {200,400};
     inspectorEditor->AddComponent<GameObjectEditor>()->Object = 0;
+    
+    selectionBox = 0;
 }
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
-    inspectorEditor->AddComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
+    addComponentButton->Enabled() = !selectables->Selected().empty();
+}
+
+void InspectorWindow::AddComponentClicked(Pocket::TouchData d) {
+    if (!selectionBox) {
+        ShowSelectionBox(selectables->Selected()[0]->GetComponent<EditorObject>());
+    } else {
+        selectionBox->Remove();
+        selectionBox = 0;
+    }
+}
+
+void InspectorWindow::ShowSelectionBox(EditorObject *editorObject) {
+    Gui& gui = context->Gui();
+
+    selectionBox = gui.CreateControl(window);
+    
+    auto& componentTypes = context->Project().World().ComponentTypes();
+    
+    Vector2 pos;
+    for(int i=0; i<componentTypes.size(); ++i) {
+        auto& componentType = componentTypes[i];
+        if (!componentType.getTypeInfo) continue;
+        if (editorObject->gameObject->GetComponent(i)) continue;
+        
+        GameObject* button = gui.CreateLabelControl(selectionBox, "Box", pos, {200,20}, 0, componentType.name, 20);
+        button->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::SelectionClicked, i);
+        pos += {0,-20};
+    }
+}
+
+void InspectorWindow::SelectionClicked(TouchData d, int index) {
+    selectionBox->Remove();
+    selectionBox = 0;
+    selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject->AddComponent(index);
+    
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
 }

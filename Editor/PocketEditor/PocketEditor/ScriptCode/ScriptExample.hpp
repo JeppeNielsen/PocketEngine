@@ -15,6 +15,8 @@ struct Velocity {
     std::vector<std::string> children;
     Pocket::Property<int> Size;
     std::vector<double> coords;
+    Vector3 wobble;
+    float timer;
 };
 
 struct MovementSystem : public GameSystem<Transform, Velocity> {
@@ -51,10 +53,22 @@ struct MovementSystem : public GameSystem<Transform, Velocity> {
             Transform* t = o->GetComponent<Transform>();
             Velocity* v = o->GetComponent<Velocity>();
             t->Position += v->velocity * dt;
+            
+            v->timer += dt;
+            
+            float sin = sinf(v->timer);
+            
+            t->Scale = v->wobble * sin;
+            
             //o->GetComponent<Position>()->x += o->GetComponent<Velocity>()->vx;
             //o->GetComponent<Position>()->y += o->GetComponent<Velocity>()->vy;
             //std::cout << " x:" << o->GetComponent<Position>()->x<<
             //    " y:" << o->GetComponent<Position>()->y<<std::endl;
+            
+            if (v->name != "") {
+                std::cout << " name : " << v->name<<std::endl;
+            }
+            
         }
     }
 };
