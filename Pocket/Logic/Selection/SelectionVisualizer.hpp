@@ -16,7 +16,6 @@
 namespace Pocket {
     class SelectionVisualizer : public GameSystem<Transform, Mesh, Selectable>  {
     public:
-        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         
@@ -26,7 +25,5 @@ namespace Pocket {
         
         typedef std::map<GameObject*, GameObject*> Selections;
         Selections selections;
-        
-        GameWorld* world;
     };
 }

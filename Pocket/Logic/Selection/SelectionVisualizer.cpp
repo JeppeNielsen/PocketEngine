@@ -12,9 +12,6 @@
 
 using namespace Pocket;
 
-void SelectionVisualizer::Initialize() {
-    this->world = world;
-}
 
 void SelectionVisualizer::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectionVisualizer::SelectionChanged, object);
