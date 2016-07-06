@@ -17,7 +17,6 @@ public:
         
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = {30,30,80};
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
         
         int width = 64;
         int height = 64;
@@ -101,7 +100,7 @@ public:
         std::cout<<"-------------"<<std::endl;
         
         
-        Input.ButtonDown += event_handler(this, &TestTriangle::ButtonDown);
+        Input.ButtonDown.Bind(this, &TestTriangle::ButtonDown);
         wireframe = false;
     }
     

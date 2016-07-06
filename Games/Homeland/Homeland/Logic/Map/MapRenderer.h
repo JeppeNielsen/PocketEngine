@@ -11,7 +11,7 @@
 
 using namespace Pocket;
 
-Component(MapRenderer)
+struct MapRenderer {
 
 	int width;
     int depth;

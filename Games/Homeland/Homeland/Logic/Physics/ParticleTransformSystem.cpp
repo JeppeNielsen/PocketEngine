@@ -8,12 +8,6 @@
 
 #include "ParticleTransformSystem.h"
 
-
-void ParticleTransformSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Particle>();
-}
-
 void ParticleTransformSystem::Update(float dt) {
     for (GameObject* go : Objects()) {
         Vector2 position = go->GetComponent<Particle>()->position;

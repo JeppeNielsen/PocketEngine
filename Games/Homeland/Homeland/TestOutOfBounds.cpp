@@ -24,7 +24,7 @@ public:
         
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = {0,30,80};
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->AddComponent<Camera>();
         
         particle = world.CreateObject();
         particle->AddComponent<Particle>()->position = {-10,30};
@@ -54,7 +54,7 @@ public:
         */
         
         
-        Input.ButtonDown += event_handler(this, &TestOutOfBounds::ButtonDown);
+        Input.ButtonDown.Bind(this, &TestOutOfBounds::ButtonDown);
         wireframe = false;
     }
     

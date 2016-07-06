@@ -10,10 +10,6 @@
 #include <cmath>
 #include <iostream>
 
-void ParticleUpdaterSystem::Initialize() {
-    AddComponent<Particle>();
-}
-
 void ParticleUpdaterSystem::Update(float dt) {
     dt = 0.02f;
     float damping = 0.6f;// pow(2.75, dt);

@@ -12,7 +12,7 @@
 
 using namespace Pocket;
 
-Component(Mappable)
-    void Reset();
-    Pointer<Map> Map;
+struct Mappable {
+    Mappable();
+    Map* Map;
 };

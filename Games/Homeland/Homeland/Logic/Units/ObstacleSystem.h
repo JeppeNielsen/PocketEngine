@@ -13,7 +13,7 @@
 #include "Mappable.h"
 #include <thread>
 
-SYSTEM(ObstacleSystem, Transform, Obstacle, Mappable)
+struct ObstacleSystem : public GameSystem<Transform, Obstacle, Mappable> {
 public:
     void AddedToWorld(GameWorld& world);
     void ObjectAdded(GameObject* object);

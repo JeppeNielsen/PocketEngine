@@ -8,6 +8,6 @@
 
 #include "Mappable.h"
 
-void Mappable::Reset() {
+Mappable::Mappable() {
     Map = 0;
 }

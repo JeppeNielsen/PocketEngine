@@ -14,6 +14,6 @@
 
 using namespace Pocket;
 
-SYSTEM(MoveSystem, Movable, Particle)
+struct MoveSystem : public GameSystem<Movable, Particle> {
     void Update(float dt);
 };

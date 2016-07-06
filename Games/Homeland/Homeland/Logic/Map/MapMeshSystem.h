@@ -16,7 +16,7 @@
 
 using namespace Pocket;
 
-SYSTEM(MapMeshSystem, Map, MapRenderer, Mesh, Transform)
+struct MapMeshSystem : public GameSystem<Map, MapRenderer, Mesh, Transform> {
 	void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

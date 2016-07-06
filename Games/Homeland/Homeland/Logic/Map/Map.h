@@ -23,8 +23,7 @@ struct MapRect {
     int depth;
 };
 
-Component(Map)
-
+struct Map {
 	struct Node {
     	Node() : height(0), normal(0,1,0), obstacles(0) {}
     	float height;

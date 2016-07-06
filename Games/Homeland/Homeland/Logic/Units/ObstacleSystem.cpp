@@ -44,7 +44,7 @@ void ObstacleSystem::UpdateMap(Map *map, Transform* transform, const Pocket::Poi
     this->map = map;
     for (float z = -size.y-0.55f; z<(size.y+0.55f); z+=0.5f) {
         for (float x = -size.x-0.55f; x<(size.x+0.55f); x+=0.5f) {
-            Vector3 worldPosition = transform->World.GetValue()->TransformPosition({x,0,z});
+            Vector3 worldPosition = transform->World().TransformPosition({x,0,z});
             int nodeX = (int)floorf(worldPosition.x);
             int nodeZ = (int)floorf(worldPosition.z);
             Map::Node& node = map->GetNode(nodeX, nodeZ);

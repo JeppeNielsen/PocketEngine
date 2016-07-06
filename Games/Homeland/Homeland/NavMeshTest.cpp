@@ -34,7 +34,7 @@ public:
         
         camera = world.CreateObject();
         camera->AddComponent<Transform>()->Position = {0,0,30};
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->AddComponent<Camera>();
         
         std::vector<Vector2> points {
             { 0,0 }, {0,10}, {10,0},
@@ -118,7 +118,7 @@ public:
         
                 
        
-        Input.ButtonDown += event_handler(this, &NavMeshTest::ButtonDown);
+        Input.ButtonDown.Bind(this, &NavMeshTest::ButtonDown);
         wireframe = false;
     }
     

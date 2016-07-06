@@ -10,6 +10,6 @@
 #include "GameWorld.hpp"
 #include "Point.hpp"
 
-Component(Obstacle)
-    Point size;
+struct Obstacle {
+    Pocket::Point size;
 };

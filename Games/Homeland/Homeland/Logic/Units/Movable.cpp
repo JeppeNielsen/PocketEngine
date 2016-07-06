@@ -8,7 +8,7 @@
 
 #include "Movable.h"
 
-Movable::Movable() : Target(this) {}
+Movable::Movable() {}
 
 void Movable::Reset() {
     Speed = 0.2f;

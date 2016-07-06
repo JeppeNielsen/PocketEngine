@@ -10,19 +10,16 @@
 #include "Particle.h"
 #include "Mappable.h"
 
-void ClickTargetSystem::AddedToWorld(Pocket::GameWorld &world) {
-    selectables = world.CreateSystem<SelectableCollection>();
-    selectables->AddComponent<Movable>();
-    selectables->AddComponent<Particle>();
-    selectables->AddComponent<Mappable>();
+void ClickTargetSystem::Initialize() {
+    selectables = world->CreateSystem<Selectables>();
 }
 
 void ClickTargetSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click += event_handler(this, &ClickTargetSystem::ObjectClicked);
+    object->GetComponent<Touchable>()->Click.Bind(this, &ClickTargetSystem::ObjectClicked);
 }
 
 void ClickTargetSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &ClickTargetSystem::ObjectClicked);
+    object->GetComponent<Touchable>()->Click.Unbind(this, &ClickTargetSystem::ObjectClicked);
 }
 
 void ClickTargetSystem::ObjectClicked(Pocket::TouchData d) {

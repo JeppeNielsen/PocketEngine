@@ -16,7 +16,7 @@
 
 using namespace Pocket;
 
-SYSTEM(PathFinderSystem, Mappable, Movable, Particle)
+struct PathFinderSystem : public GameSystem<Mappable, Movable, Particle> {
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

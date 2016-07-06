@@ -8,7 +8,7 @@
 
 #include "Particle.h"
 
-void Particle::Reset() {
+Particle::Particle() {
     mass = 1.0f;
     position = Vector2(0,0);
     positionOld = Vector2(0,0);

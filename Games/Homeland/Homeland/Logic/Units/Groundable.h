@@ -9,10 +9,11 @@
 #pragma once
 
 #include "GameWorld.hpp"
+#include "Vector2.hpp"
 
 using namespace Pocket;
 
-Component(Groundable)
+struct Groundable {
     float alignmentSpeed;
     std::vector<Vector2> positions;
 };

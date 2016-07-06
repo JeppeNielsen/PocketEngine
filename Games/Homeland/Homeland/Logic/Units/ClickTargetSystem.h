@@ -12,16 +12,19 @@
 #include "Movable.h"
 #include "SelectableCollection.hpp"
 #include "Touchable.hpp"
+#include "Particle.h"
+#include "Mappable.h"
 
 using namespace Pocket;
 
-SYSTEM(ClickTargetSystem, Touchable)
+struct ClickTargetSystem: public GameSystem<Touchable> {
 public:
-    void AddedToWorld(GameWorld& world);
+    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void ObjectClicked(TouchData d);
 
 private:
-    SelectableCollection* selectables;
+    using Selectables = SelectableCollection<Movable, Particle, Mappable>;
+    Selectables* selectables;
 };

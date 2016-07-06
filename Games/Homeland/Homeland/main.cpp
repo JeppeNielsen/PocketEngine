@@ -51,16 +51,15 @@ public:
         world.CreateSystem<MapMeshSystem>();
         renderer = world.CreateSystem<RenderSystem>();
         renderer->Shaders.LitTextured.SetValue("LightDirection", Vector3(-1,-1,-1).Normalized());
-        world.CreateSystem<DragSelector>()->Setup(Manager().Viewport(), Input);
+        world.CreateSystem<DragSelector>()->Setup(Context().Viewport(), Input);
         world.CreateSystem<SelectionVisualizer>();
         world.CreateSystem<VelocitySystem>();
         world.CreateSystem<PathFinderSystem>();
         world.CreateSystem<ClickTargetSystem>();
         
         world.CreateSystem<MoveSystem>();
-        world.CreateSystem<ParticleCollisionSystem>()->AddComponent<Groundable>();
-        world.CreateSystem<ParticleCollisionSystem>()->AddComponent<Airable>();
-        
+        world.CreateSystem<ParticleCollisionSystem<Groundable>>();
+        world.CreateSystem<ParticleCollisionSystem<Airable>>();
         world.CreateSystem<ParticleMapCollisionSystem>();
         world.CreateSystem<ParticleUpdaterSystem>();
         //world.CreateSystem<ParticleTransformSystem>();
@@ -136,14 +135,14 @@ public:
         cameraObject->AddComponent<Touchable>();
         
         camera = world.CreateObject();
-        camera->Parent = cameraObject;
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera->Parent() = cameraObject;
+        camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = Vector3(0, 10, 5) * 1.8f;
         camera->GetComponent<Transform>()->Rotation = Quaternion::LookAt(camera->GetComponent<Transform>()->Position, {0,0,0}, Vector3(0,1,0));
         camera->GetComponent<Camera>()->FieldOfView = 70;
         
         GameObject* waterPlane = world.CreateObject();
-        waterPlane->Parent = cameraObject;
+        waterPlane->Parent() = cameraObject;
         waterPlane->AddComponent<Transform>()->Position = {0,0.1f,0};
         waterPlane->AddComponent<Mesh>()->GetMesh<Vertex>().AddPlane(0, {76, 48}, {0,0,1,1});
         waterPlane->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f,0.5f));
@@ -172,7 +171,7 @@ public:
             cube->GetComponent<Movable>()->Speed = 2.0f;
         }
         GameObject* turret = world.CreateObject();
-        turret->Parent = cube;
+        turret->Parent() = cube;
         turret->AddComponent<Transform>()->Position = {0,0.4f,0};
         turret->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.0f,0,0.5f}, {0.04f, 0.04f, 0.8f});
         turret->AddComponent<Material>()->Shader = &renderer->Shaders.LitColored;
@@ -203,11 +202,11 @@ public:
     
         follow = false;
     
-        Input.ButtonDown += event_handler(this, &Game::ButtonDown);
-        cameraObject->GetComponent<Touchable>()->Down += event_handler(this, &Game::TerrainDown);
+        Input.ButtonDown.Bind(this, &Game::ButtonDown);
+        cameraObject->GetComponent<Touchable>()->Down.Bind(this, &Game::TerrainDown);
         wireframe = false;
         
-        map->GetComponent<Map>()->NavigationUpdated += event_handler(this, &Game::NavigationMeshUpdated);
+        map->GetComponent<Map>()->NavigationUpdated.Bind(this, &Game::NavigationMeshUpdated);
     }
     
     void NavigationMeshUpdated(Map* map) {
@@ -223,7 +222,7 @@ public:
             meshObject->AddComponent<Transform>();
             meshObject->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
             meshObject->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
-            meshObject->EnableComponent<Material>(false);
+            //meshObject->EnableComponent<Material>(false);
             auto& navMeshMesh = meshObject->AddComponent<Mesh>()->GetMesh<Vertex>();
             
             NavMesh::Vertices& vertices = i==0 ? mesh.navigation : mesh.collision;
@@ -282,9 +281,9 @@ public:
         } else if (b=="w") {
             wireframe = !wireframe;
         } else if (b=="n") {
-            navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
+            //navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
         }else if (b=="c") {
-            collisionMesh->EnableComponent<Material>(!collisionMesh->IsComponentEnabled<Material>());
+            //collisionMesh->EnableComponent<Material>(!collisionMesh->IsComponentEnabled<Material>());
         } else if (b=="b") {
             Point size(1 + MathHelper::Random(3), 1 + MathHelper::Random(3));
             GameObject* building = world.CreateObject();

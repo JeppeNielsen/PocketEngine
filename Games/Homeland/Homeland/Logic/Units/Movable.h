@@ -13,14 +13,14 @@
 
 using namespace Pocket;
 
-Component(Movable)
+struct Movable {
 public:
     Movable();
     float Speed;
     typedef std::vector<Vector2> Path;
     Path path;
     void Reset();
-    Property<Movable*, Vector2> Target;
+    Property<Vector2> Target;
 
     Vector2 prevPosition;
     int stillFrames;

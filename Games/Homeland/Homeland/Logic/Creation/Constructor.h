@@ -7,8 +7,11 @@
 //
 #pragma once
 #include "GameWorld.hpp"
+#include "Vector3.hpp"
 
-Component(Constructor)
-    Pointer<GameObject> ObjectToConstruct;
+using namespace Pocket;
+
+struct Constructor {
+    GameObject* ObjectToConstruct;
     Vector3 contructorPosition;
 };

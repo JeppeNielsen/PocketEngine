@@ -16,7 +16,7 @@
 
 using namespace Pocket;
 
-SYSTEM(ParticleGroundSystem, Transform, Mappable, Groundable, Particle)
+struct ParticleGroundSystem : public GameSystem<Transform, Mappable, Groundable, Particle> {
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

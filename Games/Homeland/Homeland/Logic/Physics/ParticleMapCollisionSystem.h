@@ -12,7 +12,7 @@
 #include "Mappable.h"
 #include "Groundable.h"
 
-SYSTEM(ParticleMapCollisionSystem, Groundable, Particle, Mappable)
+struct ParticleMapCollisionSystem : public GameSystem<Groundable, Particle, Mappable> {
     public:
         void Update(float dt);
 };
