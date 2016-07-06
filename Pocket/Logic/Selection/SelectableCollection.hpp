@@ -12,8 +12,8 @@
 #include "Selectable.hpp"
 
 namespace Pocket {
-    template<typename T>
-    class SelectableCollection : public GameSystem<Selectable, T>  {
+    template<typename ...T>
+    class SelectableCollection : public GameSystem<Selectable, T...>  {
     public:
     void Initialize() {
         hasChanged = false;
@@ -37,12 +37,12 @@ namespace Pocket {
     }
 
     void ObjectAdded(Pocket::GameObject *object) {
-        object->template GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectableCollection<T>::SelectedChanged, object);
+        object->template GetComponent<Selectable>()->Selected.Changed.Bind(this, &SelectableCollection<T...>::SelectedChanged, object);
         SelectedChanged(object);
     }
 
     void ObjectRemoved(Pocket::GameObject *object) {
-        object->template GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectableCollection<T>::SelectedChanged, object);
+        object->template GetComponent<Selectable>()->Selected.Changed.Unbind(this, &SelectableCollection<T...>::SelectedChanged, object);
         TryRemoveObject(object);
     }
 
