@@ -79,21 +79,25 @@ namespace Pocket {
         using ObjectComponents = std::vector<std::vector<ObjectComponent>>;
         ObjectComponents objectComponents;
         
+        struct SystemEntry {
+            SystemEntry() : system(0), deleteFunction(0) {}
+            IGameSystem* system;
+            Bitset bitset;
+            std::function<void()> deleteFunction;
+        };
+        
+        using SystemEntries = std::vector<SystemEntry>;
+        SystemEntries systemsIndexed;
+        
         using Systems = std::vector<IGameSystem*>;
-        Systems systemsIndexed;
         Systems systems;
+        
         using SystemsPerComponent = std::vector<std::vector<int>>;
         SystemsPerComponent systemsPerComponent;
-        using DeleteSystems = std::vector<std::function<void()>>;
-        DeleteSystems deleteSystems;
-        
-        using SystemBitsets = std::vector<Bitset>;
-        SystemBitsets systemBitsets;
         
         using Action = std::function<void()>;
         using Actions = std::deque<Action>;
         Actions delayedActions;
-        
         
         ComponentInfos componentInfos;
         

@@ -19,11 +19,14 @@ GameWorld::GameWorld() {
 
 GameWorld::~GameWorld() {
     Clear();
-    for(int i=0; i<systems.size(); ++i) {
-        if (deleteSystems[i]) {
-            deleteSystems[i]();
-        } else {
-            delete systems[i];
+
+    for(auto& system : systemsIndexed) {
+        if (system.system) {
+            if (system.deleteFunction) {
+                system.deleteFunction();
+            } else {
+                delete system.system;
+            }
         }
     }
     for(int i=0; i<numComponentTypes; ++i) {
@@ -141,14 +144,14 @@ const GameWorld::ComponentInfos& GameWorld::ComponentTypes() {
 
 IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(std::vector<int>& components)> constructor) {
     if (id>=systemsIndexed.size()) {
-        systemsIndexed.resize(id + 1, 0);
+        systemsIndexed.resize(id + 1);
     }
-    IGameSystem* system = systemsIndexed[id];
+    IGameSystem* system = systemsIndexed[id].system;
     if (!system) {
+        SystemEntry& systemEntry = systemsIndexed[id];
         std::vector<int> componentIndices;
-        system = constructor(componentIndices);
+        system = systemEntry.system = constructor(componentIndices);
         Bitset systemBitset;
-        int systemIndex = (int)systems.size();
         for(auto c : componentIndices) {
             if (c>=systemBitset.Size()) {
                 systemBitset.Resize(c + 1);
@@ -157,13 +160,12 @@ IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(st
             if (c>=systemsPerComponent.size()) {
                 systemsPerComponent.resize(c + 1);
             }
-            systemsPerComponent[c].push_back(systemIndex);
+            systemsPerComponent[c].push_back(id);
         }
-        systemsIndexed[id] = system;
         systems.push_back(system);
-        systemBitsets.push_back(systemBitset);
-        deleteSystems.push_back(0);
-        system->Initialize();
+        systemEntry.bitset = systemBitset;
+        systemEntry.deleteFunction = 0;
+        systemEntry.system->Initialize();
         
         IterateObjects([system, &systemBitset](GameObject* o) {
             if (systemBitset.Contains(o->data->enabledComponents)) {
@@ -177,16 +179,10 @@ IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(st
 
 void GameWorld::TryRemoveSystem(SystemID id) {
     if (id>=systemsIndexed.size()) return;
-    IGameSystem* system = systemsIndexed[id];
-    if (!system) return;
-    int systemIndex = 0;
-    for(auto s : systems) {
-        if (s == system) {
-            break;
-        }
-        systemIndex++;
-    }
-    Bitset& systemBitset = systemBitsets[systemIndex];
+    SystemEntry& systemEntry = systemsIndexed[id];
+    if (!systemEntry.system) return;
+    IGameSystem* system = systemEntry.system;
+    Bitset& systemBitset = systemEntry.bitset;
     
     IterateObjects([system, &systemBitset](GameObject* o) {
         if (systemBitset.Contains(o->data->enabledComponents)) {
@@ -198,18 +194,21 @@ void GameWorld::TryRemoveSystem(SystemID id) {
     for(int i=0; i<numComponentTypes; ++i) {
         if (systemBitset[i]) {
             auto& list = systemsPerComponent[i];
-            list.erase(std::find(list.begin(), list.end(), systemIndex));
+            list.erase(std::find(list.begin(), list.end(), id));
         }
     }
     
-    systems.erase(systems.begin() + systemIndex);
-    systemsIndexed[id] = 0;
-    if (deleteSystems[systemIndex]) {
-        deleteSystems[systemIndex]();
+    systems.erase(std::find(systems.begin(), systems.end(), system));
+    
+    systemEntry.system = 0;
+    systemEntry.bitset.Reset();
+    
+    if (systemEntry.deleteFunction) {
+        systemEntry.deleteFunction();
     } else {
         delete system;
     }
-    deleteSystems.erase(deleteSystems.begin()+systemIndex);
+    systemEntry.deleteFunction = 0;
 }
 
 void GameWorld::DoActions(Actions &actions) {

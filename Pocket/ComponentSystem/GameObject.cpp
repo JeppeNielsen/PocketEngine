@@ -242,24 +242,22 @@ void GameObject::TrySetComponentEnabled(ComponentID id, bool enable) {
         if (id>=world->systemsPerComponent.size()) return; // component id is beyond systems
         auto& systemsUsingComponent = world->systemsPerComponent[id];
         for(auto systemIndex : systemsUsingComponent) {
-            auto& bitset = world->systemBitsets[systemIndex];
-            bool isInterest = bitset.Contains(data->enabledComponents);
+            auto& systemEntry = world->systemsIndexed[systemIndex];
+            bool isInterest = systemEntry.bitset.Contains(data->enabledComponents);
             if (isInterest) {
-                auto* system = world->systems[systemIndex];
-                system->AddObject(this);
-                system->ObjectAdded(this);
+                systemEntry.system->AddObject(this);
+                systemEntry.system->ObjectAdded(this);
             }
         }
     } else {
         if (id>=world->systemsPerComponent.size()) return; // component id is beyond systems
         auto& systemsUsingComponent = world->systemsPerComponent[id];
         for(auto systemIndex : systemsUsingComponent) {
-            auto& bitset = world->systemBitsets[systemIndex];
-            bool wasInterest = bitset.Contains(data->enabledComponents);
+            auto& systemEntry = world->systemsIndexed[systemIndex];
+            bool wasInterest = systemEntry.bitset.Contains(data->enabledComponents);
             if (wasInterest) {
-                auto* system = world->systems[systemIndex];
-                system->ObjectRemoved(this);
-                system->RemoveObject(this);
+                systemEntry.system->ObjectRemoved(this);
+                systemEntry.system->RemoveObject(this);
             }
         }
         data->enabledComponents.Set(id, false);

@@ -12,6 +12,9 @@
 #include "DirtyProperty.hpp"
 #include "TypeInfo.hpp"
 
+template<typename T>
+class DUMMY;
+
 namespace Pocket {
     
     class ScriptWorld;
@@ -58,7 +61,8 @@ namespace Pocket {
                 componentInfo.getTypeInfo = 0;
                 T* ptr = 0;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
+                    
                     componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();
@@ -79,7 +83,7 @@ namespace Pocket {
                 componentInfo.getTypeInfo = 0;
                 T* ptr = 0;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
                     componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();

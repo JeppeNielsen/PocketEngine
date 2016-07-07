@@ -69,7 +69,7 @@ namespace Pocket {
                 componentInfo.getTypeInfo = 0;
                 Last* ptr = 0;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<Last>::value, Last*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = std::remove_pointer_t<decltype(p)>;
+                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
                     componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();
