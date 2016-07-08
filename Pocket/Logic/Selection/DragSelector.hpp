@@ -28,8 +28,6 @@ namespace Pocket {
         
         bool IsDragging();
         
-        void AddedToWorld(GameWorld& world);
-        
         int TouchDepth;
             
     private:
