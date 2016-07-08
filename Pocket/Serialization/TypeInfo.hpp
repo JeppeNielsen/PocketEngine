@@ -271,7 +271,7 @@ struct TypeIndexList::TypeIndex<std::vector<T>> : public TypeIndexList::ITypeInd
 
 
 template<typename T>
-struct JsonSerializer<T, typename std::enable_if_t< Pocket::Meta::HasGetTypeFunction::apply<T>::value >> {
+struct JsonSerializer<T, typename std::enable_if< Pocket::Meta::HasGetTypeFunction::apply<T>::value >::type> {
     static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
         auto type = ((T&)value).GetType();
         minijson::object_writer object = writer.nested_object(key.c_str());

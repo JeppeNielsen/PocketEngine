@@ -32,7 +32,7 @@ Transform::Transform() {
     Matrix.Changed.MarkDefaults();
     EulerRotation.Changed.MarkDefaults();
     
-	Local.Method = [this] (auto& local) {
+	Local.Method = [this] (Matrix4x4& local) {
         Matrix4x4 rotation;
         Rotation().ToRotationMatrix(rotation);
 
@@ -51,7 +51,7 @@ Transform::Transform() {
         local*=anchorMatrix;
     };
     
-    WorldInverse.Method = [this] (auto& worldInverse) {
+    WorldInverse.Method = [this] (Matrix4x4& worldInverse) {
         worldInverse = World().Invert();
     };
     
@@ -105,7 +105,7 @@ void Transform::Relative(const Pocket::Transform &a, const Pocket::Transform &b)
 }
 
 void Transform::ResetWorldCalculation() {
-    World.Method = [this] (auto& world) {
+    World.Method = [this] (Matrix4x4& world) {
         world = Local;
     };
 }
