@@ -5,11 +5,13 @@
 #include "GameSystem.hpp"
 #include "Property.hpp"
 #include "Transform.hpp"
+#include "Touchable.hpp"
+#include "Mesh.hpp"
 
 using namespace Pocket;
 
 struct Velocity {
-    Velocity() : velocity(0) {}
+    Velocity() : velocity(0), wobble(2,4,2) {}
     Vector3 velocity;
     std::string name;
     std::vector<std::string> children;
@@ -71,4 +73,33 @@ struct MovementSystem : public GameSystem<Transform, Velocity> {
             
         }
     }
+};
+
+struct ColorClicker {
+    bool useBlue;  
+};
+
+struct ColorSystem : public GameSystem<Pocket::Touchable, ColorClicker, Pocket::Mesh> {
+    
+    void ObjectAdded(GameObject* object) {
+        object->GetComponent<Pocket::Touchable>()->Down.Bind(this, &ColorSystem::TouchDown, object);
+        object->GetComponent<Pocket::Touchable>()->Up.Bind(this, &ColorSystem::TouchUp, object);
+    }  
+    
+    void ObjectRemoved(GameObject* object) {
+        object->GetComponent<Pocket::Touchable>()->Down.Unbind(this, &ColorSystem::TouchDown, object);
+        object->GetComponent<Pocket::Touchable>()->Up.Unbind(this, &ColorSystem::TouchUp, object);
+    }
+    
+    void TouchDown(Pocket::TouchData d, GameObject* object) {
+        std::cout << "Down"<<std::endl;
+        object->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(object->GetComponent<ColorClicker>()->useBlue ? Colour::Blue() : Colour::Yellow());
+    }
+    
+    void TouchUp(Pocket::TouchData d, GameObject* object) {
+        std::cout << "Up" <<std::endl;
+        object->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour::White());
+    }
+    
+    
 };

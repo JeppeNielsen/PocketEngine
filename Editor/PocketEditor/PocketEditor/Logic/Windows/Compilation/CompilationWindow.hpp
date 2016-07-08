@@ -20,4 +20,5 @@ protected:
 private:
     SelectableCollection<EditorObject>* selectables;
     void Compile();
+    void Build();
 };

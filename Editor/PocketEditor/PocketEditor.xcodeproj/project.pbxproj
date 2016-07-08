@@ -2667,6 +2667,7 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72EC13811D2D957B00B69802 /* Building */,
 				72CE8F071CBAF34E001F08E4 /* Objects */,
 				72CE8EFD1CBA468D001F08E4 /* Transforming */,
 				72CE8EF31CB59AB4001F08E4 /* Selection */,
@@ -2753,6 +2754,13 @@
 				72CE8F181CC02F0E001F08E4 /* EditorObjectCreatorSystem.hpp */,
 			);
 			path = Objects;
+			sourceTree = "<group>";
+		};
+		72EC13811D2D957B00B69802 /* Building */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Building;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

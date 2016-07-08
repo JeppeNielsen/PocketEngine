@@ -33,6 +33,12 @@ void CompilationWindow::OnInitialize() {
             "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
+            "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
         }
         /*
         {
@@ -54,10 +60,19 @@ void CompilationWindow::OnInitialize() {
 }
 
 void CompilationWindow::OnCreate() {
-    GameObject* button = CreateButton(window, 10, {100,50}, "Compile");
-    button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
-       Compile();
-    });
+    {
+        GameObject* button = CreateButton(window, 10, {100,50}, "Compile");
+        button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
+           Compile();
+        });
+    }
+    
+    {
+        GameObject* button = CreateButton(window, {10,60}, {100,50}, "Build");
+        button->GetComponent<Touchable>()->Click.Bind([this](auto d) {
+           Build();
+        });
+    }
 }
 
 void CompilationWindow::Compile() {
@@ -113,4 +128,10 @@ void CompilationWindow::Compile() {
     */
     
     std::cout<<"Compilation Ended..." <<std::endl;
+}
+
+void CompilationWindow::Build() {
+    ScriptWorld& scriptWorld = context->ScriptWorld();
+    
+    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
 }
