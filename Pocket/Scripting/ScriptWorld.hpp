@@ -48,6 +48,8 @@ public:
     
     TypeIndexList Types;
     
+    bool BuildExecutable(const std::string& pathToPocketEngineLib);
+    
 private:
     void ExtractScriptClasses();
     void WriteMainIncludes(std::ofstream &file);
@@ -57,6 +59,8 @@ private:
     void WriteMainComponents(std::ofstream& file);
     void WriteMainSerializedComponents(std::ofstream& file);
     void WriteTypes(std::ofstream& file);
+    
+    void WriteExecutableMain(const std::string& path);
     
     std::string ExtractHeaderPath(const std::string& headerFile);
     std::string ExtractHeaderName(const std::string& headerFile);
