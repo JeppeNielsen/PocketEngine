@@ -17,17 +17,14 @@ using namespace Pocket;
 
 template<typename ...T>
 class ParticleCollisionSystem : public GameSystem<Particle, T...> {
-protected:
+public:
 
     void Update(float dt) override {
-        
-        //int hej = Objects().size();
-        //hej++;
-        /*
-        for (int i=0; i<Objects().size(); i++) {
-            Particle* a = Objects()[i]->GetComponent<Particle>();
-            for (int j=i+1; j<Objects().size(); j++) {
-                Particle* b = Objects()[j]->GetComponent<Particle>();
+        //this->Objects()[0]->template GetComponent<Movable>();
+        for (int i=0; i<this->Objects().size(); i++) {
+            Particle* a = this->Objects()[i]->template GetComponent<Particle>();
+            for (int j=i+1; j<this->Objects().size(); j++) {
+                Particle* b = this->Objects()[j]->template GetComponent<Particle>();
                 
                 const float radius = 2.05f;
                 const float force = 0.1f;
@@ -44,8 +41,8 @@ protected:
                         b->position += vector * penetration * 0.5f*force;
                     }
                     
-                    bool isAMoving = Objects()[i]->GetComponent<Movable>() ? Objects()[i]->GetComponent<Movable>()->path.size()>0 : false;
-                    bool isBMoving = Objects()[j]->GetComponent<Movable>() ? Objects()[j]->GetComponent<Movable>()->path.size()>0 : false;
+                    bool isAMoving = this->Objects()[i]->template GetComponent<Movable>() ? this->Objects()[i]->template GetComponent<Movable>()->path.size()>0 : false;
+                    bool isBMoving = this->Objects()[j]->template GetComponent<Movable>() ? this->Objects()[j]->template GetComponent<Movable>()->path.size()>0 : false;
                     
                     if (isAMoving && !isBMoving) {
                         Vector2 normal = Vector2(-vector.y, vector.x);
@@ -64,10 +61,6 @@ protected:
                 }
             }
         }
-         */
     }
-
-
-
 
 };

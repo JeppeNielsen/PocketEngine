@@ -15,7 +15,7 @@
 
 struct ObstacleSystem : public GameSystem<Transform, Obstacle, Mappable> {
 public:
-    void AddedToWorld(GameWorld& world);
+    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

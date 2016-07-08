@@ -9,7 +9,7 @@
 #include "ObstacleSystem.h"
 #include <unistd.h>
 
-void ObstacleSystem::AddedToWorld(Pocket::GameWorld &world) {
+void ObstacleSystem::Initialize() {
     isDirty = false;
     isNavMeshReady = false;
     shouldCreateNavMesh = false;

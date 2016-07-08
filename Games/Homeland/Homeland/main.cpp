@@ -219,6 +219,7 @@ public:
         for (int i=0; i<2; i++) {
         
             GameObject* meshObject = world.CreateObject();
+            meshObject->Enabled() = false;
             meshObject->AddComponent<Transform>();
             meshObject->AddComponent<Material>()->Shader = &renderer->Shaders.Colored;
             meshObject->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
@@ -281,8 +282,10 @@ public:
         } else if (b=="w") {
             wireframe = !wireframe;
         } else if (b=="n") {
+            navMesh->Enabled() = !navMesh->Enabled();
             //navMesh->EnableComponent<Material>(!navMesh->IsComponentEnabled<Material>());
         }else if (b=="c") {
+            collisionMesh->Enabled() = !collisionMesh->Enabled();
             //collisionMesh->EnableComponent<Material>(!collisionMesh->IsComponentEnabled<Material>());
         } else if (b=="b") {
             Point size(1 + MathHelper::Random(3), 1 + MathHelper::Random(3));
