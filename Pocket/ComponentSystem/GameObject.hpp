@@ -12,9 +12,6 @@
 #include "DirtyProperty.hpp"
 #include "TypeInfo.hpp"
 
-template<typename T>
-class DUMMY;
-
 namespace Pocket {
     
     class ScriptWorld;
