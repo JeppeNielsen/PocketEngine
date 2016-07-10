@@ -161,6 +161,35 @@ struct JsonSerializer<std::vector<I>> {
     }
 };
 
+template<>
+struct JsonSerializer<std::vector<bool>> {
+    static void Serialize(std::string& key, const std::vector<bool>& value, minijson::object_writer& writer) {
+        minijson::array_writer array = writer.nested_array(key.c_str());
+        for (int i=0; i<value.size(); ++i) {
+            JsonSerializer<bool>::Serialize(value[i], array);
+        }
+        array.close();
+    }
+    
+    static void Serialize(const std::vector<bool>& value, minijson::array_writer& writer) {
+        minijson::array_writer array = writer.nested_array();
+        for (int i=0; i<value.size(); ++i) {
+            JsonSerializer<bool>::Serialize(value[i], array);
+        }
+        array.close();
+    }
+    
+    static void Deserialize(minijson::value& value, std::vector<bool>* field, minijson::istream_context& context) {
+        if (value.type() != minijson::Array) return;
+        std::vector<bool>& vector = *field;
+        minijson::parse_array(context, [&] (minijson::value v) {
+            bool item;
+            JsonSerializer<bool>::Deserialize(v, &item, context);
+            vector.push_back(item);
+        });
+    }
+};
+
 template<typename T>
 struct JsonSerializer<Property<T>> {
     static void Serialize(std::string& key, const Property<T>& value, minijson::object_writer& writer) {

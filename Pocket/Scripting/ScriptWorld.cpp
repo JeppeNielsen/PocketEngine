@@ -35,6 +35,7 @@ vector<string> RunBashCommmand(const string &cmd) {
 }
 
 ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1) {
+    Types.Add<bool>();
     Types.Add<int>();
     Types.Add<float>();
     Types.Add<double>();
