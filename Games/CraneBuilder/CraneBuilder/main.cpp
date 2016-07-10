@@ -3,7 +3,7 @@
 
 int main() {
     Engine e;
-    e.Start<Editor>();
-	//e.Start<Game>();
+    //e.Start<Editor>();
+	e.Start<Game>();
     return 0;
 }

@@ -30,11 +30,11 @@ void EditorFactory::Setup() {
 
     terrainTexture = world->CreateObject();
     terrainTexture->AddComponent<TextureComponent>()->Texture().LoadFromPng("Terrain.png");
-    //terrainTexture->SetID("terrain");
+    terrainTexture->SetID("terrain");
 
     dirtTexture = world->CreateObject();
     dirtTexture->AddComponent<TextureComponent>()->Texture().LoadFromPng("Dirt.png");
-    //dirtTexture->SetID("dirt");
+    dirtTexture->SetID("dirt");
 }
 
 GameObject* EditorFactory::CreateTerrain(Pocket::Vector3 position) {

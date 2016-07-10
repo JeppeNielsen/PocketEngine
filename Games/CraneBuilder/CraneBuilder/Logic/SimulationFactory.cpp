@@ -49,7 +49,7 @@ void SimulationFactory::Setup(Pocket::InputManager* input) {
     texture.LoadFromPng("images.png");
     atlas->AddComponent<class Atlas>()->Load("images.xml",Vector2(texture.GetWidth(), texture.GetHeight()));
     
-    //atlas->SetID("atlas");
+    atlas->SetID("atlas");
 }
 
 GameObject* SimulationFactory::CreateParticle(Vector2 p) {

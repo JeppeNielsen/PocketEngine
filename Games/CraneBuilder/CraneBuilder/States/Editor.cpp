@@ -139,21 +139,21 @@ void Editor::Render() {
 void Editor::SaveLevel(std::string filename) {
     std::ofstream file;
     file.open (filename);
-    /*
+    
     level->ToJson(file, [] (GameObject* o, int componentType) {
-        if (componentType == TerrainEditableVertices::ID) return false;
-        if (componentType == Selectable::ID) return false;
-        if (componentType == Draggable::ID) return false;
+        if (componentType == GameIDHelper::GetComponentID<TerrainEditableVertices>()) return false;
+        if (componentType == GameIDHelper::GetComponentID<Selectable>()) return false;
+        if (componentType == GameIDHelper::GetComponentID<Draggable>()) return false;
         if (o->GetComponent<Terrain>()) {
-            if (componentType == TouchableCanceller::ID) return false;
-            if (componentType == Touchable::ID) return false;
-            if (componentType == TerrainEditableVertices::ID) return false;
+            if (componentType == GameIDHelper::GetComponentID<TouchableCanceller>()) return false;
+            if (componentType == GameIDHelper::GetComponentID<Touchable>()) return false;
+            if (componentType == GameIDHelper::GetComponentID<TerrainEditableVertices>()) return false;
         }
-        if (componentType == ComponentEnabler::ID) return false;
-        if (componentType == Grid::ID) return false;
+        if (componentType == GameIDHelper::GetComponentID<ComponentEnabler>()) return false;
+        if (componentType == GameIDHelper::GetComponentID<Grid>()) return false;
         return true;
     });
-    */
+    
     file.close();
 }
 
@@ -161,8 +161,8 @@ void Editor::LoadLevel(std::string filename) {
     std::ifstream file;
     file.open(filename);
     level->Remove();
-    /*
-    level = world.CreateObjectFromJson(file, [this] (GameObject* o) {
+    
+    level = world.CreateObject(file, [this] (GameObject* o) {
         if (o->GetComponent<Terrain>()) {
             o->AddComponent<Touchable>();
             o->AddComponent<TouchableCanceller>()->MovementToCancel = 10.0f;
@@ -175,5 +175,4 @@ void Editor::LoadLevel(std::string filename) {
             o->AddComponent<Grid>()->Size = 2.0f;
         }
     });
-    */
 }

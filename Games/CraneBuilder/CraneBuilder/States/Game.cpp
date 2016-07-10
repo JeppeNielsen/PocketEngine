@@ -108,7 +108,7 @@ void Game::Initialize() {
         return buildType == BuildType::Beam;
     };
     
-    LoadLevel("Level.txt");
+    LoadLevel("Level copy.txt");
     
     Input.ButtonDown .Bind(this, &Game::ButtonDown);
     Input.ButtonUp .Bind(this, &Game::ButtonUp);
@@ -199,9 +199,9 @@ void Game::Render() {
 void Game::LoadLevel(std::string filename) {
     std::ifstream file;
     file.open(filename);
-    //world.CreateObjectFromJson(file, [this] (GameObject* o) {
-      //  if (o->GetComponent<Particle>()) {
-        //    o->AddComponent<Creator>(creator);
-       // }
-    //});
+    world.CreateObject(file, [this] (GameObject* o) {
+        if (o->GetComponent<Particle>()) {
+            o->AddComponent<Creator>(creator);
+        }
+    });
 }
