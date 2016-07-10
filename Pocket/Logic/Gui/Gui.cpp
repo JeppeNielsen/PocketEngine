@@ -43,7 +43,7 @@ void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, co
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng(atlasTexture);
     atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
-    //atlas->SetID("Gui.Atlas");
+    atlas->SetID("Gui.Atlas");
     
     Setup(atlas, viewport, inputManager);
 }
@@ -135,7 +135,7 @@ GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& font
     GameObject* font = world->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
-    //font->SetID(fontFile);
+    font->SetID(fontFile);
     fonts.push_back(font);
     return font;
 }

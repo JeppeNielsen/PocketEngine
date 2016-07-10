@@ -11,6 +11,8 @@
 
 using namespace Pocket;
 
+std::map<std::string, GameObject*> loadedObjects;
+
 GameWorld::GameWorld() {
     root.world = this;
     objectCount = 0;
@@ -65,6 +67,35 @@ GameObject* GameWorld::CreateObject() {
     object.index = index;
     object.world = this;
     return &object;
+}
+
+GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
+    minijson::istream_context context(jsonStream);
+    GameObject* object = 0;
+    try {
+        object = LoadObject(context, onCreated);
+        
+        GameObject* object;
+        int componentID;
+        std::string referenceID;
+        while (GameObject::GetAddReferenceComponent(&object, componentID, referenceID)) {
+            GameObject* referenceObject = 0;
+            auto foundObjectWithID = loadedObjects.find(referenceID);
+            if (foundObjectWithID!=loadedObjects.end()) {
+                referenceObject = foundObjectWithID->second;
+            } else {
+                referenceObject = FindObjectFromID(referenceID);
+                if (!referenceObject) {
+                    //object not found with id, try assign first object with this component
+                    referenceObject = FindFirstObjectWithComponentID(componentID);
+                }
+            }
+            object->AddComponent(componentID, referenceObject);
+        }
+    } catch (std::exception e) {
+        std::cout << e.what() << std::endl;
+    }
+    return object;
 }
 
 void GameWorld::Update(float dt) {
@@ -246,4 +277,112 @@ void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContaine
     if (!components[id]) {
         components[id] = constructor(componentInfos[id]);
     }
+}
+
+void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            o.id = id;
+            return;
+        }
+    }
+    objectIDs.push_back({object, id});
+}
+
+std::string* GameWorld::GetObjectID(Pocket::GameObject *object) {
+    for(auto& o : objectIDs) {
+        if (o.object == object) {
+            return &o.id;
+        }
+    }
+    return 0;
+}
+
+std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
+    for (auto& objectID : objectIDs) {
+        if (!objectID.object->data->activeComponents[componentID]) continue;
+        if (objectID.object->GetComponent(componentID) != referenceObject->GetComponent(componentID)) continue;
+        return &objectID.id;
+    }
+    return 0;
+}
+
+GameObject* GameWorld::FindObjectFromID(const std::string &id) {
+    for (auto& objectID : objectIDs) {
+        if (objectID.id == id) return objectID.object;
+    }
+    return 0;
+}
+
+GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
+    for(auto& entry : objects) {
+        if (entry.object.IsRemoved()) continue;
+        if (!entry.object.data->activeComponents[componentID]) continue;
+        return &entry.object;
+    }
+    return 0;
+}
+
+GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+    GameObject* object = 0;
+     minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+        std::string name = n;
+        if (name == "GameObject" && v.type() == minijson::Object) {
+            object = (GameObject*)CreateObject();
+            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string name = n;
+                if (name == "id" && v.type() == minijson::String) {
+                    loadedObjects[std::string(v.as_string())] = object;
+                } else if (name == "Components" && v.type() == minijson::Array && object) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        if (v.type() == minijson::Object) {
+                            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                object->AddComponent(context, n);
+                            });
+                        }
+                    });
+                } else if (name == "Children" && v.type() == minijson::Array && object) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        GameObject* child = LoadObject(context, onCreated);
+                        if (child) {
+                            child->Parent() = object;
+                        }
+                    });
+                }
+                
+                if (onCreated) {
+                    onCreated(object);
+                }
+            });
+        }
+    });
+    return object;
+}
+
+bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& index) {
+    for(int i=0; i<componentInfos.size(); ++i) {
+        if (componentInfos[i].name == componentName) {
+            index = i;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference) {
+    if (TryGetComponentIndex(componentName, index)) {
+        isReference = false;
+        return true;
+    }
+    if (componentName.size()>4) {
+        size_t refLocation = componentName.rfind(":ref");
+        if (refLocation!=-1) {
+            std::string componentNameNoRef = componentName.substr(0, refLocation);
+            if (TryGetComponentIndex(componentNameNoRef, index)) {
+                isReference = true;
+                return true;
+            }
+        }
+    }
+    return false;
 }

@@ -9,6 +9,8 @@
 #include "GameObject.hpp"
 #include <assert.h>
 #include "GameWorld.hpp"
+#include <map>
+#include <set>
 
 using namespace Pocket;
 
@@ -94,7 +96,7 @@ void GameObject::AddComponent(ComponentID id) {
     }
     if (data->removed) return;
     IContainer* container = world->components[id];
-    world->objectComponents[id][index] = { container->Create(), container };
+    world->objectComponents[id][index] = { container->Create(this), container };
     data->activeComponents.Set(id, true);
     world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
@@ -128,9 +130,9 @@ void GameObject::CloneComponent(ComponentID id, GameObject* source) {
     IContainer* container = world->components[id];
     int componentIndex = 0;
     if (container == sourceObjectComponent.container) {
-        componentIndex = container->Clone(sourceObjectComponent.index);
+        componentIndex = container->Clone(this, sourceObjectComponent.index);
     } else {
-        componentIndex = container->Clone(sourceObjectComponent.container->Get(sourceObjectComponent.index));
+        componentIndex = container->Clone(this, sourceObjectComponent.container->Get(sourceObjectComponent.index));
     }
     world->objectComponents[id][index] = { componentIndex, container };
     data->activeComponents.Set(id, true);
@@ -183,20 +185,6 @@ bool GameObject::IsRemoved() {
     return data->removed;
 }
 
-GameObject* GameObject::Clone() {
-    GameObject* clone = world->CreateObject();
-    for(int i=0; i<world->numComponentTypes; ++i) {
-        if (data->activeComponents[i]) {
-            clone->CloneComponent(i, this);
-        }
-    }
-    for(auto child : data->children) {
-        auto childClone = child->Clone();
-        childClone->Parent() = clone;
-    }
-    return clone;
-}
-
 std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int componentID)> predicate) {
     std::vector<TypeInfo> infos;
     for (int i=0; i<world->components.size(); ++i) {
@@ -208,6 +196,182 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int compo
     }
     return infos;
 }
+
+//SERIALIZATION
+
+
+std::map<GameObject*, std::string> serializedObjects;
+
+struct AddReferenceComponent {
+    GameObject* object;
+    int componentID;
+    std::string referenceID;
+};
+
+std::vector<AddReferenceComponent> addReferenceComponents;
+
+void RecurseTree(GameObject* object, std::map<GameObject*, std::string>& objects) {
+    std::string id = object->GetID();
+    if (id == "") {
+        std::stringstream s;
+        s<<(objects.size() + 1);
+        id = s.str();
+    }
+    objects[object] = id;
+    for(auto s : object->Children()) {
+        RecurseTree(s, objects);
+    }
+}
+
+struct CloneReferenceComponent {
+    GameObject* object;
+    int componentID;
+    GameObject* referencedObject;
+};
+
+std::set<GameObject*> clonedSourceObjects;
+std::vector<CloneReferenceComponent> clonedReferenceComponents;
+std::map<GameObject*, GameObject*> sourceToClonedObjects;
+
+void RecurseTree(GameObject* object, std::set<GameObject*>& objects) {
+    objects.insert(object);
+    for(auto s : object->Children()) {
+        RecurseTree(s, objects);
+    }
+}
+
+void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
+    serializedObjects.clear();
+    RecurseTree(this, serializedObjects);
+
+    minijson::writer_configuration config;
+    config = config.pretty_printing(true);
+    minijson::object_writer writer(stream, config);
+    WriteJson(writer, predicate);
+    writer.close();
+}
+
+void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) {
+
+    minijson::object_writer gameObject = writer.nested_object("GameObject");
+    gameObject.write("id", serializedObjects[this]);
+    minijson::array_writer components = gameObject.nested_array("Components");
+    
+    for(int i=0; i<world->components.size(); ++i) {
+        if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
+            GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
+            GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
+            bool isReference =  componentOwner != this;
+            if (isReference) {
+                if (predicate && !predicate(componentOwner, i)) {
+                    continue;
+                }
+            }
+            SerializeComponent(i, components, isReference, componentOwner);
+        }
+    }
+ 
+    components.close();
+    
+    if (!data->children.empty()) {
+        minijson::array_writer children_object = gameObject.nested_array("Children");
+        for(auto child : data->children) {
+            if (predicate && !predicate(child, -1)) {
+                continue;
+            }
+            GameObject* childSpecific = (GameObject*)child;
+            minijson::object_writer child_object = children_object.nested_object();
+            childSpecific->WriteJson(child_object, predicate);
+            child_object.close();
+        }
+        children_object.close();
+    }
+    
+    gameObject.close();
+}
+
+void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject ) {
+    minijson::object_writer componentWriter = writer.nested_object();
+    ComponentInfo& componentInfo = world->componentInfos[componentID];
+    
+    if (!isReference) {
+        minijson::object_writer jsonComponent = componentWriter.nested_object(componentInfo.name.c_str());
+        if (componentInfo.getTypeInfo) {
+            auto type = componentInfo.getTypeInfo(this);
+            type.Serialize(jsonComponent);
+        }
+        jsonComponent.close();
+    } else {
+        std::string referenceName = componentInfo.name + ":ref";
+        minijson::object_writer jsonComponent = componentWriter.nested_object(referenceName.c_str());
+        if (!referenceObject) {
+            jsonComponent.write("id", "");
+        } else {
+            std::string id = serializedObjects[referenceObject];
+            if (id=="") {
+                std::string* idFromObject = world->FindIDFromReferenceObject(this, componentID);
+                id = idFromObject ? *idFromObject : "";
+            }
+            jsonComponent.write("id", id);
+        }
+        jsonComponent.close();
+    }
+    componentWriter.close();
+}
+
+void GameObject::AddComponent(minijson::istream_context& context, std::string componentName) {
+    int componentID;
+    bool isReference;
+    if (world->TryGetComponentIndex(componentName, componentID, isReference) && !data->activeComponents[componentID]) {
+        if (!isReference) {
+            AddComponent(componentID);
+            ComponentInfo& componentInfo = world->componentInfos[componentID];
+            if (componentInfo.getTypeInfo) {
+                auto type = componentInfo.getTypeInfo(this);
+                type.Deserialize(context);
+            } else {
+                minijson::ignore(context);
+            }
+        } else {
+            std::string referenceID = "";
+            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string id = n;
+                if (id == "id" && v.type()==minijson::String) {
+                    referenceID = v.as_string();
+                    addReferenceComponents.push_back({ this, componentID, referenceID });
+                } else {
+                    minijson::ignore(context);
+                }
+            });
+        }
+    } else {
+        minijson::ignore(context);
+    }
+}
+
+//END SERIALIZATION
+
+void GameObject::SetID(std::string id) {
+    world->AddObjectID(this, id);
+}
+
+std::string GameObject::GetID() {
+    std::string* id = world->GetObjectID(this);
+    return id ? *id : "";
+}
+
+GameObject* GameObject::Clone(GameObject* parent, std::function<bool(GameObject*)> predicate) {
+    clonedSourceObjects.clear();
+    RecurseTree(this, clonedSourceObjects);
+    clonedReferenceComponents.clear();
+    sourceToClonedObjects.clear();
+    GameObject* clone = CloneInternal(parent, predicate);
+    for(auto& c : clonedReferenceComponents) {
+        c.object->AddComponent(c.componentID, sourceToClonedObjects[c.referencedObject]);
+    }
+    return clone;
+}
+
 
 void GameObject::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor) {
     world->TryAddComponentContainer(id, std::move(constructor));
@@ -262,4 +426,43 @@ void GameObject::TrySetComponentEnabled(ComponentID id, bool enable) {
         }
         data->enabledComponents.Set(id, false);
     }
+}
+
+bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, std::string &referenceID) {
+    if (addReferenceComponents.empty()) return false;
+    auto& refObj = addReferenceComponents.back();
+    addReferenceComponents.pop_back();
+    *object = refObj.object;
+    componentID = refObj.componentID;
+    referenceID = refObj.referenceID;
+    return true;
+}
+
+GameObject* GameObject::CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate) {
+    if (predicate && !predicate(this)) {
+        return 0;
+    }
+    GameObject* clone = world->CreateObject();
+    clone->Parent() = parent;
+    for(int i=0; i<world->components.size();++i) {
+        if (data->activeComponents[i]) {
+            GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
+            GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
+            bool isReference =  componentOwner != this;
+            if (!isReference) {
+                clone->CloneComponent(i, this);
+            } else {
+                if (clonedSourceObjects.find(componentOwner)==clonedSourceObjects.end()) {
+                    clone->AddComponent(i, this);
+                } else {
+                    clonedReferenceComponents.push_back({ clone, i, componentOwner });
+                }
+            }
+        }
+    }
+    sourceToClonedObjects[this] = clone;
+    for(auto child : data->children) {
+        child->CloneInternal(clone, predicate);
+    }
+    return clone;
 }

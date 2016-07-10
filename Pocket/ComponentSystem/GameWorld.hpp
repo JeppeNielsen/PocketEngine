@@ -21,6 +21,7 @@ namespace Pocket {
         const GameObject* Root();
         
         GameObject* CreateObject();
+        GameObject* CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated = 0);
         
         template<typename T>
         T* CreateSystem() {
@@ -104,11 +105,25 @@ namespace Pocket {
         int objectCount;
         int numComponentTypes;
         
+        struct ObjectID {
+            GameObject* object;
+            std::string id;
+        };
+        std::vector<ObjectID> objectIDs;
+        
         IGameSystem* TryAddSystem(SystemID id, std::function<IGameSystem*(std::vector<int>& components)> constructor);
         void TryRemoveSystem(SystemID id);
         void DoActions(Actions& actions);
         void IterateObjects(std::function<void(GameObject*)> callback);
         void TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor);
+        std::string* GetObjectID(GameObject* object);
+        void AddObjectID(GameObject* object, std::string id);
+        std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
+        GameObject* FindObjectFromID(const std::string &id);
+        GameObject* FindFirstObjectWithComponentID(int componentID);
+        GameObject* LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        bool TryGetComponentIndex(const std::string& componentName, int& index);
+        bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
         
         friend class GameObject;
         friend class GameSystemBase;

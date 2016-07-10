@@ -107,8 +107,6 @@ namespace Pocket {
         void Remove();
         bool IsRemoved();
         
-        GameObject* Clone();
-        
         const ObjectCollection& Children() const;
         Property<GameObject*>& Parent();
         Property<bool>& Enabled();
@@ -116,6 +114,14 @@ namespace Pocket {
         Property<int>& Order();
         
         std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate);
+        
+        using SerializePredicate = std::function<bool(GameObject*, int)>;
+        void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
+        
+        void SetID(std::string id);
+        std::string GetID();
+        
+        GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
         
     private:
     
@@ -135,10 +141,15 @@ namespace Pocket {
         void CloneComponent(ComponentID id, GameObject* source) override;
         void RemoveComponent(ComponentID id) override;
     private:
+        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
+        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
+        void AddComponent(minijson::istream_context& context, std::string componentName);
         void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
         void TrySetComponentEnabled(ComponentID id, bool enable);
+        static bool GetAddReferenceComponent(GameObject** object, int& componentID, std::string& referenceID);
+        GameObject* CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate);
         
         struct Data {
             bool removed;

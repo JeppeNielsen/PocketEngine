@@ -14,17 +14,20 @@
 
 namespace Pocket {
 
+    class GameObject;
+
     class IContainer {
     public:
         virtual ~IContainer() {}
-        virtual int Create() = 0;
+        virtual int Create(GameObject* owner) = 0;
         virtual void Reference(int index) = 0;
         virtual void Delete(int index) = 0;
-        virtual int Clone(int index) = 0;
-        virtual int Clone(void* object) = 0;
+        virtual int Clone(GameObject* owner, int index) = 0;
+        virtual int Clone(GameObject* owner, void* object) = 0;
         virtual void* Get(int index) = 0;
         virtual void Clear() = 0;
         virtual void Trim() = 0;
+        virtual GameObject* GetOwner(int index) = 0;
         int Count() const { return count; }
         int count;
     };
@@ -35,12 +38,13 @@ namespace Pocket {
         Container()  { count = 0; }
         virtual ~Container() { }
     
-        int Create() override {
+        int Create(GameObject* owner) override {
             int freeIndex;
             if (freeIndicies.empty()) {
                 freeIndex = (int)references.size();
                 references.emplace_back(0);
                 entries.resize(freeIndex + 1);
+                owners.push_back(0);
             } else {
                 freeIndex = freeIndicies.back();
                 freeIndicies.pop_back();
@@ -49,6 +53,7 @@ namespace Pocket {
             ++count;
             entries[freeIndex] = defaultObject;
             references[freeIndex] = 1;
+            owners[freeIndex] = owner;
             return freeIndex;
         }
         
@@ -64,15 +69,15 @@ namespace Pocket {
             }
         }
         
-        int Clone(int index) override {
-            int cloneIndex = Create();
+        int Clone(GameObject* owner, int index) override {
+            int cloneIndex = Create(owner);
             entries[cloneIndex] = entries[index];
             return cloneIndex;
         }
         
-        int Clone(void* object) override {
+        int Clone(GameObject* owner, void* object) override {
             T* objectSpecific = static_cast<T*>(object);
-            int cloneIndex = Create();
+            int cloneIndex = Create(owner);
             entries[cloneIndex] = *objectSpecific;
             return cloneIndex;
         }
@@ -84,6 +89,7 @@ namespace Pocket {
         void Clear() override {
             entries.clear();
             references.clear();
+            owners.clear();
             count = 0;
         }
         
@@ -98,6 +104,7 @@ namespace Pocket {
             if (smallestSize<references.size()) {
                 references.resize(smallestSize);
                 entries.resize(smallestSize);
+                owners.resize(smallestSize);
                 for(int i=0; i<freeIndicies.size(); ++i) {
                     if (freeIndicies[i]>=smallestSize) {
                         freeIndicies.erase(freeIndicies.begin() + i);
@@ -105,6 +112,10 @@ namespace Pocket {
                     }
                 }
             }
+        }
+        
+        GameObject* GetOwner(int index) {
+            return owners[index];
         }
     
         using Entries = std::deque<T>;
@@ -115,6 +126,9 @@ namespace Pocket {
         
         using FreeIndicies = std::vector<int>;
         FreeIndicies freeIndicies;
+        
+        using Owners = std::vector<GameObject*>;
+        Owners owners;
         
         T defaultObject;
     };
