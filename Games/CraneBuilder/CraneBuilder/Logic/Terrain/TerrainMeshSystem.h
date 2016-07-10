@@ -14,7 +14,7 @@
 
 using namespace Pocket;
 
-SYSTEM(TerrainMeshSystem, Terrain, Mesh)
+struct TerrainMeshSystem: public GameSystem<Terrain, Mesh> {
 public:
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);

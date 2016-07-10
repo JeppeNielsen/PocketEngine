@@ -7,10 +7,11 @@
 //
 #pragma once
 #include "GameWorld.hpp"
+#include "Vector3.hpp"
 
 using namespace Pocket;
 
-Component(CameraDragger)
+struct CameraDragger {
     Vector3 startDragPosition;
     Vector3 startTransformPosition;
     float zPos;

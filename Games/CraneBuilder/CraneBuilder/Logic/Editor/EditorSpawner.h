@@ -9,10 +9,11 @@
 #pragma once
 #include "GameWorld.hpp"
 #include <map>
+#include "Vector3.hpp"
 
 using namespace Pocket;
 
-Component(EditorSpawner)
+struct EditorSpawner {
 
     void Reset();
     typedef std::map<std::string, std::function<GameObject*(Vector3 p)>> StateObjects;

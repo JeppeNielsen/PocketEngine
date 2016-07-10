@@ -10,7 +10,7 @@
 #include "GameWorld.hpp"
 #include "EditorSpawner.h"
 
-class EditorFactory : public GameFactory {
+class EditorFactory : public GameConcept {
 public:
     void Initialize();
     void Setup();

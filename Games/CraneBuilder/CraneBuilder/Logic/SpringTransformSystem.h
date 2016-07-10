@@ -13,9 +13,7 @@
 
 using namespace Pocket;
 
-class SpringTransformSystem : public GameSystem {
+class SpringTransformSystem : public GameSystem<Transform, Spring> {
 public:
-    void Initialize();
     void Update(float dt);
-
 };

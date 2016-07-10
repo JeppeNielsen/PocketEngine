@@ -8,19 +8,19 @@
 
 #include "ComponentEnablerSystem.h"
 
-ComponentEnablerSystem::ComponentEnablerSystem() : CurrentState(this) {
+ComponentEnablerSystem::ComponentEnablerSystem()  {
 
 }
 
-void ComponentEnablerSystem::AddedToWorld(Pocket::GameWorld &world) {
-    CurrentState.Changed += event_handler(this, &ComponentEnablerSystem::StateChanged);
+void ComponentEnablerSystem::Initialize() {
+    CurrentState.Changed.Bind(this, &ComponentEnablerSystem::StateChanged);
 }
 
 void ComponentEnablerSystem::ObjectAdded(GameObject* object) {
     UpdateObject(object);
 }
 
-void ComponentEnablerSystem::StateChanged(ComponentEnablerSystem *system) {
+void ComponentEnablerSystem::StateChanged() {
     for(GameObject* go : Objects()) {
         UpdateObject(go);
     }
@@ -29,7 +29,8 @@ void ComponentEnablerSystem::StateChanged(ComponentEnablerSystem *system) {
 void ComponentEnablerSystem::UpdateObject(Pocket::GameObject *object) {
     std::string state = CurrentState;
     ComponentEnabler* enabler = object->GetComponent<ComponentEnabler>();
-    for(auto& c : enabler->components) {
-        object->EnableComponent(c.component, c.id == state);
-    }
+    //object->Enabled() =  c.id == state;
+   // for(auto& c : enabler->components) {
+     //   object->EnableComponent(c.component, c.id == state);
+    //}
 }

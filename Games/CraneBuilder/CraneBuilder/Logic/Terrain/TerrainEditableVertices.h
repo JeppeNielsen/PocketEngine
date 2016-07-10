@@ -12,7 +12,7 @@
 
 using namespace Pocket;
 
-Component(TerrainEditableVertices)
+struct TerrainEditableVertices {
     typedef std::vector<GameObject*> Vertices;
     Vertices vertices;
 };

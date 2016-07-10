@@ -23,37 +23,37 @@
 #include "Selectable.hpp"
 
 void SimulationFactory::Initialize() {
-    World()->CreateOrGetSystem<RenderSystem>();
+    world->CreateSystem<RenderSystem>();
     
-    touchSystem = World()->CreateOrGetSystem<TouchSystem>();
-    //creatorSystem = World()->CreateOrGetSystem<CreatorSystem>();
+    touchSystem = world->CreateSystem<TouchSystem>();
+    //creatorSystem = world->CreateSystem<CreatorSystem>();
     
-    World()->CreateOrGetSystem<DraggableSystem>();
-    World()->CreateOrGetSystem<ParticleFollowTransformSystem>();
-    simulation = World()->CreateOrGetSystem<SimulationSystem>();
-    World()->CreateOrGetSystem<ParticleTransformSystem>();
-    World()->CreateOrGetSystem<SpringTransformSystem>();
-    World()->CreateOrGetSystem<BeamMeshSystem>();
-    World()->CreateOrGetSystem<HydralicMeshSystem>();
-    World()->CreateOrGetSystem<ParticleMeshSystem>();
-    World()->CreateOrGetSystem<HydralicSystem>();
-    World()->CreateOrGetSystem<TerrainMeshSystem>();
+    world->CreateSystem<DraggableSystem>();
+    world->CreateSystem<ParticleFollowTransformSystem>();
+    simulation = world->CreateSystem<SimulationSystem>();
+    world->CreateSystem<ParticleTransformSystem>();
+    world->CreateSystem<SpringTransformSystem>();
+    world->CreateSystem<BeamMeshSystem>();
+    world->CreateSystem<HydralicMeshSystem>();
+    world->CreateSystem<ParticleMeshSystem>();
+    world->CreateSystem<HydralicSystem>();
+    world->CreateSystem<TerrainMeshSystem>();
 }
 
 void SimulationFactory::Setup(Pocket::InputManager* input) {
     
     touchSystem->Input = input;
     
-    atlas = World()->CreateObject();
+    atlas = world->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng("images.png");
     atlas->AddComponent<class Atlas>()->Load("images.xml",Vector2(texture.GetWidth(), texture.GetHeight()));
     
-    atlas->SetID("atlas");
+    //atlas->SetID("atlas");
 }
 
 GameObject* SimulationFactory::CreateParticle(Vector2 p) {
-    GameObject* p1 = World()->CreateObject();
+    GameObject* p1 = world->CreateObject();
     p1->AddComponent<Transform>()->Position = p;
     p1->AddComponent<Mesh>();
     p1->AddComponent<Atlas>(atlas);
@@ -76,7 +76,7 @@ GameObject* SimulationFactory::CreateParticle(Vector2 p) {
 }
 
 GameObject* SimulationFactory::CreateSpring(float elasticity) {
-    GameObject* go = World()->CreateObject();
+    GameObject* go = world->CreateObject();
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>();
     go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;

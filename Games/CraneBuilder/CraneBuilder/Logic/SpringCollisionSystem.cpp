@@ -68,14 +68,12 @@ bool Box::Intersect(const Box& other) const{
 
 
 void SpringCollisionSystem::Initialize() {
-    AddComponent<Spring>();
+    
     bodiesNeedsCalculating = false;
     quadtree.SetMinMax({-130,-140}, {130,140});
     UseTree = true;
-}
 
-void SpringCollisionSystem::AddedToWorld(Pocket::GameWorld &world) {
-    terrain = world.CreateSystem<TerrainBodySystem>();
+    terrain = world->CreateSystem<TerrainBodySystem>();
     terrain->quadTree = &quadtree;
 }
 
@@ -441,7 +439,7 @@ void SpringCollisionSystem::TerrainBodySystem::ObjectAdded(Pocket::GameObject *o
             body->particles[j]->mass = 1.0f;
             body->particles[j]->immovable = true;
             Vector3 localPosition =vertices[triangles[i*3+j]];
-            Vector3 position = transform->World.GetValue()->TransformPosition(localPosition);
+            Vector3 position = transform->World().TransformPosition(localPosition);
             body->particles[j]->SetPosition(position);
         }
         

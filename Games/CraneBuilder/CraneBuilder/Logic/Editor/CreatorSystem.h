@@ -17,9 +17,9 @@
 
 using namespace Pocket;
 
-SYSTEM(CreatorSystem, Creator, Particle, Transform, Touchable)
+struct CreatorSystem : public GameSystem<Creator, Particle, Transform, Touchable> {
 
-    void AddedToWorld(GameWorld& world);
+    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
 
@@ -37,11 +37,11 @@ private:
 
     Vector3 Grid(Vector3 position);
 
-    SYSTEM(Particles, Particle)
+    struct Particles: public GameSystem<Particle> {
         GameObject* FindNearestParticle(const Vector2& position, GameObject* excludeThis, float& minDistance);
     };
 
-    SYSTEM(Springs, Spring)
+    struct Springs : public GameSystem<Spring> {
         bool DoesSpringExists(Particle* p1, Particle* p2);
     };
 

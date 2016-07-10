@@ -8,23 +8,24 @@
 
 #include "CreatorSystem.h"
 #include "Plane.hpp"
+#include "Camera.hpp"
 
-void CreatorSystem::AddedToWorld(Pocket::GameWorld &world) {
+void CreatorSystem::Initialize() {
     currentState = State::Idle;
     sourceParticle = 0;
     createdParticle = 0;
     createdSpring = 0;
     
-    particles = world.CreateSystem<Particles>();
-    springs = world.CreateSystem<Springs>();
+    particles = world->CreateSystem<Particles>();
+    springs = world->CreateSystem<Springs>();
 }
 
 void CreatorSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click += event_handler(this, &CreatorSystem::ParticleClicked, object);
+    object->GetComponent<Touchable>()->Click .Bind(this, &CreatorSystem::ParticleClicked, object);
 }
 
 void CreatorSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &CreatorSystem::ParticleClicked, object);
+    object->GetComponent<Touchable>()->Click .Unbind(this, &CreatorSystem::ParticleClicked, object);
 }
 
 void CreatorSystem::ParticleClicked(Pocket::TouchData d, Pocket::GameObject *particleObject) {
@@ -32,7 +33,7 @@ void CreatorSystem::ParticleClicked(Pocket::TouchData d, Pocket::GameObject *par
     //if (!creator->particle || !creator->spring) return;
     if (currentState != State::Idle) return;
     currentTouch = d;
-    currentTouch.Input->TouchDown += event_handler(this, &CreatorSystem::TouchDown);
+    currentTouch.Input->TouchDown .Bind(this, &CreatorSystem::TouchDown);
     StartFromParticle(particleObject);
 }
 
@@ -51,7 +52,7 @@ void CreatorSystem::Update(float dt) {
         case State::Creating: {
             Plane plane({0,0,1},0);
             Ray ray = currentTouch.Camera->GetRay(
-                    currentTouch.CameraObject->GetComponent<Transform>(),
+                    currentTouch.CameraTransform,
                     currentTouch.Input->GetTouchPosition(currentTouch.Index));
 
             float dist;
@@ -89,7 +90,7 @@ void CreatorSystem::Update(float dt) {
                 }
             }
             if (!continuous) {
-                currentTouch.Input->TouchDown -= event_handler(this, &CreatorSystem::TouchDown);
+                currentTouch.Input->TouchDown .Unbind(this, &CreatorSystem::TouchDown);
                 currentState = State::Idle;
             }
             
@@ -98,7 +99,7 @@ void CreatorSystem::Update(float dt) {
         case State::Cancel: {
             createdParticle->Remove();
             createdSpring->Remove();
-            currentTouch.Input->TouchDown -= event_handler(this, &CreatorSystem::TouchDown);
+            currentTouch.Input->TouchDown .Unbind(this, &CreatorSystem::TouchDown);
             currentState = State::Idle;
             break;
         }

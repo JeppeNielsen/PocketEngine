@@ -23,23 +23,23 @@
 #include "TransformHierarchy.hpp"
 
 void EditorFactory::Initialize() {
-    World()->CreateOrGetSystem<TransformHierarchy>();
+    world->CreateSystem<TransformHierarchy>();
 }
 
 void EditorFactory::Setup() {
 
-    terrainTexture = World()->CreateObject();
+    terrainTexture = world->CreateObject();
     terrainTexture->AddComponent<TextureComponent>()->Texture().LoadFromPng("Terrain.png");
-    terrainTexture->SetID("terrain");
+    //terrainTexture->SetID("terrain");
 
-    dirtTexture = World()->CreateObject();
+    dirtTexture = world->CreateObject();
     dirtTexture->AddComponent<TextureComponent>()->Texture().LoadFromPng("Dirt.png");
-    dirtTexture->SetID("dirt");
+    //dirtTexture->SetID("dirt");
 }
 
 GameObject* EditorFactory::CreateTerrain(Pocket::Vector3 position) {
 
-    GameObject* t = World()->CreateObject();
+    GameObject* t = world->CreateObject();
     t->AddComponent<Transform>()->Position = position;
     t->AddComponent<Mesh>();
     t->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
@@ -106,8 +106,8 @@ GameObject* EditorFactory::CreateTerrain(Pocket::Vector3 position) {
     
     terrain->layers.push_back(bevel);
     
-    GameObject* center = World()->CreateObject();
-    center->Parent = t;
+    GameObject* center = world->CreateObject();
+    center->Parent() = t;
     center->AddComponent<Transform>();
     center->AddComponent<Mesh>();
     center->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
@@ -119,7 +119,7 @@ GameObject* EditorFactory::CreateTerrain(Pocket::Vector3 position) {
 }
 
 GameObject* EditorFactory::CreateStaticParticle(Pocket::Vector3 position) {
-    GameObject* p1 = World()->CreateObject();
+    GameObject* p1 = world->CreateObject();
     p1->AddComponent<Transform>()->Position = position;
     p1->AddComponent<Mesh>();
     p1->AddComponent<Atlas>(atlas);

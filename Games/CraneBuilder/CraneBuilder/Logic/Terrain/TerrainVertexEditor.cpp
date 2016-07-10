@@ -11,27 +11,28 @@
 #include "TouchSystem.hpp"
 #include "DraggableSystem.hpp"
 #include "ClickSelectorSystem.hpp"
+#include "Material.hpp"
 
-void TerrainVertexEditor::AddedToWorld(Pocket::GameWorld &world) {
-    touchSystem = world.CreateOrGetSystem<TouchSystem>();
-    world.CreateOrGetSystem<DraggableSystem>();
-    world.CreateSystem<AddVertexSystem>();
-    selectedVertices = world.CreateSystem<SelectableCollection>();
-    world.CreateOrGetSystem<ClickSelectorSystem>();
+void TerrainVertexEditor::Initialize() {
+    touchSystem = world->CreateSystem<TouchSystem>();
+    world->CreateSystem<DraggableSystem>();
+    world->CreateSystem<AddVertexSystem>();
+    selectedVertices = world->CreateSystem<SelectableCollection<>>();
+    world->CreateSystem<ClickSelectorSystem>();
 }
 
 void TerrainVertexEditor::SetInput(Pocket::InputManager *input) {
     if (!touchSystem->Input()) {
         touchSystem->Input = input;
     }
-    input->ButtonDown += event_handler(this, &TerrainVertexEditor::ButtonDown);
+    input->ButtonDown .Bind(this, &TerrainVertexEditor::ButtonDown);
 }
 
 void TerrainVertexEditor::ObjectAdded(Pocket::GameObject *object) {
     Terrain* terrain = object->GetComponent<Terrain>();
     TerrainEditableVertices* everts = object->GetComponent<TerrainEditableVertices>();
     for (int i=0; i<terrain->vertices.size(); i++) {
-        Vector3 position = object->GetComponent<Transform>()->World.GetValue()->TransformPosition(terrain->vertices[i]);
+        Vector3 position = object->GetComponent<Transform>()->World().TransformPosition(terrain->vertices[i]);
         everts->vertices.push_back(CreateVertexObject(position));
     }
 }
@@ -66,13 +67,13 @@ void TerrainVertexEditor::Update(float dt) {
         if (wasChanged) {
             for (int i=0; i<everts->vertices.size(); i++) {
                 everts->vertices[i]->GetComponent<Transform>()->Position =
-                go->GetComponent<Transform>()->World.GetValue()->TransformPosition(terrain->vertices[i]);
+                go->GetComponent<Transform>()->World().TransformPosition(terrain->vertices[i]);
             }
         }
         
         for (int i=0; i<everts->vertices.size(); i++) {
             Vector3 pos = everts->vertices[i]->GetComponent<Transform>()->Position;
-            terrain->vertices[i] = go->GetComponent<Transform>()->WorldInverse.GetValue()->TransformPosition(pos);
+            terrain->vertices[i] = go->GetComponent<Transform>()->WorldInverse().TransformPosition(pos);
         }
         terrain->CheckForChange();
         if (terrain->vertices.size()<2) go->Remove();
@@ -80,7 +81,7 @@ void TerrainVertexEditor::Update(float dt) {
 }
 
 GameObject* TerrainVertexEditor::CreateVertexObject(Vector2 position) {
-    GameObject* go = World()->CreateObject();
+    GameObject* go = world->CreateObject();
     go->AddComponent<Transform>()->Position = position;
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {1,1,0.2f});
     go->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour::Blue(0.8f));
@@ -92,17 +93,17 @@ GameObject* TerrainVertexEditor::CreateVertexObject(Vector2 position) {
 }
 
 void TerrainVertexEditor::AddVertexSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click += event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
+    object->GetComponent<Touchable>()->Click .Bind(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
 }
 
 void TerrainVertexEditor::AddVertexSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
+    object->GetComponent<Touchable>()->Click .Unbind(this, &TerrainVertexEditor::AddVertexSystem::Down, object);
 }
 
 void TerrainVertexEditor::AddVertexSystem::Down(Pocket::TouchData d, GameObject* object) {
     if (d.Index!=0) return;
     Terrain* terrain = object->GetComponent<Terrain>();
-    Vector3 localPosition = object->GetComponent<Transform>()->WorldInverse.GetValue()->TransformPosition(d.WorldPosition);
+    Vector3 localPosition = object->GetComponent<Transform>()->WorldInverse().TransformPosition(d.WorldPosition);
     int index = FindInsertPosition(terrain, localPosition);
     terrain->vertices.insert(terrain->vertices.begin() + index, localPosition);
 }

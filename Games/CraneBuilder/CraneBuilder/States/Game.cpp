@@ -30,8 +30,8 @@ void Game::Initialize() {
     creatorSystem = world.CreateSystem<CreatorSystem>();
     creatorSystem->gridSize = 2.0f;
     
-    simulationFactory = world.CreateFactory<SimulationFactory>();
-    editorFactory = world.CreateFactory<EditorFactory>();
+    simulationFactory = world.CreateSystem<SimulationFactory>();
+    editorFactory = world.CreateSystem<EditorFactory>();
     
     state = world.CreateSystem<ComponentEnablerSystem>();
     state->CurrentState = "editor";
@@ -47,7 +47,7 @@ void Game::Initialize() {
     editorFactory->Setup();
     
     camera = world.CreateObject();
-    camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+    camera->AddComponent<Camera>()->Viewport = Context().Viewport();
     camera->AddComponent<Transform>()->Position = { 0, 0, 50 };
     camera->GetComponent<Camera>()->FieldOfView = 60;
     camera->AddComponent<CameraDragger>();
@@ -110,8 +110,8 @@ void Game::Initialize() {
     
     LoadLevel("Level.txt");
     
-    Input.ButtonDown += event_handler(this, &Game::ButtonDown);
-    Input.ButtonUp += event_handler(this, &Game::ButtonUp);
+    Input.ButtonDown .Bind(this, &Game::ButtonDown);
+    Input.ButtonUp .Bind(this, &Game::ButtonUp);
     wireframe = false;
 }
 
@@ -199,9 +199,9 @@ void Game::Render() {
 void Game::LoadLevel(std::string filename) {
     std::ifstream file;
     file.open(filename);
-    world.CreateObjectFromJson(file, [this] (GameObject* o) {
-        if (o->GetComponent<Particle>()) {
-            o->AddComponent<Creator>(creator);
-        }
-    });
+    //world.CreateObjectFromJson(file, [this] (GameObject* o) {
+      //  if (o->GetComponent<Particle>()) {
+        //    o->AddComponent<Creator>(creator);
+       // }
+    //});
 }

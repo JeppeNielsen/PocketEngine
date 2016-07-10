@@ -11,12 +11,12 @@
 #include "Spring.h"
 #include "Mesh.hpp"
 #include "Beam.h"
+#include "Atlas.hpp"
 
 using namespace Pocket;
 
-class BeamMeshSystem : public GameSystem {
+class BeamMeshSystem : public GameSystem<Spring, Mesh, Atlas, Beam> {
 public:
-    void Initialize();
     void Update(float dt);
     void ObjectAdded(GameObject* object);
 };

@@ -12,11 +12,6 @@
 using namespace Pocket;
 
 
-void SpringSystem::Initialize() {
-    AddComponent<Spring>();
-}
-
-
 void SpringSystem::ResetTension() {
 
     for (auto it = Objects().begin(); it!=Objects().end(); ++it) {

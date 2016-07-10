@@ -7,13 +7,6 @@
 //
 
 #include "ParticleFollowTransformSystem.h"
-
-
-void ParticleFollowTransformSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Particle>();
-}
-
 void ParticleFollowTransformSystem::Update(float dt) {
 
     for (auto it = Objects().begin(); it!=Objects().end(); ++it) {

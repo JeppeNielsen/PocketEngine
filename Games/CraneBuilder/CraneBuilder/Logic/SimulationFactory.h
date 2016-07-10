@@ -14,7 +14,7 @@
 
 using namespace Pocket;
 
-class SimulationFactory : public GameFactory {
+class SimulationFactory : public GameConcept {
 public:
     void Initialize();
     void Setup(InputManager* input);

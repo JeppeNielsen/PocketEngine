@@ -14,7 +14,7 @@
 
 using namespace Pocket;
 
-SYSTEM(ParticleMeshSystem, Particle, Mesh, Atlas)
+struct ParticleMeshSystem: public GameSystem<Particle, Mesh, Atlas> {
 public:
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);

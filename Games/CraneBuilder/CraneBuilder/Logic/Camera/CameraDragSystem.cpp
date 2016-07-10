@@ -10,22 +10,24 @@
 #include "Plane.hpp"
 #include "MathHelper.hpp"
 
-CameraDragSystem::CameraDragSystem() : Input(this) {
+CameraDragSystem::CameraDragSystem() {
     Input = 0;
-    Input.ChangedWithOld += event_handler(this, &CameraDragSystem::InputChanged);
+    Input.Changed.Bind(this, &CameraDragSystem::InputChanged);
 }
 
-void CameraDragSystem::InputChanged(Property<CameraDragSystem *, InputManager *>::EventData e) {
-    if (e.Old) {
-        e.Old->TouchDown -= event_handler(this, &CameraDragSystem::TouchDown);
-        e.Old->TouchUp -= event_handler(this, &CameraDragSystem::TouchUp);
-        e.Current->ScrollChanged -= event_handler(this, &CameraDragSystem::ScrollChanged);
+void CameraDragSystem::InputChanged() {
+    InputManager* old = CameraDragSystem::Input.PreviousValue();
+    InputManager* current = Input;
+    if (old) {
+        old->TouchDown .Unbind(this, &CameraDragSystem::TouchDown);
+        old->TouchUp .Unbind(this, &CameraDragSystem::TouchUp);
+        old->ScrollChanged .Unbind(this, &CameraDragSystem::ScrollChanged);
     }
     
-    if (e.Current) {
-        e.Current->TouchDown += event_handler(this, &CameraDragSystem::TouchDown);
-        e.Current->TouchUp += event_handler(this, &CameraDragSystem::TouchUp);
-        e.Current->ScrollChanged += event_handler(this, &CameraDragSystem::ScrollChanged);
+    if (current) {
+        current->TouchDown .Bind(this, &CameraDragSystem::TouchDown);
+        current->TouchUp .Bind(this, &CameraDragSystem::TouchUp);
+        current->ScrollChanged .Bind(this, &CameraDragSystem::ScrollChanged);
     }
 }
 

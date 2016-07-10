@@ -10,14 +10,14 @@
 #include "GameWorld.hpp"
 #include "ComponentEnabler.h"
 
-SYSTEM(ComponentEnablerSystem, ComponentEnabler)
+struct ComponentEnablerSystem: public GameSystem<ComponentEnabler> {
 public:
     ComponentEnablerSystem();
-    Property<ComponentEnablerSystem*, std::string> CurrentState;
+    Property<std::string> CurrentState;
 
-    void AddedToWorld(GameWorld& world);
+    void Initialize();
     void ObjectAdded(GameObject* object);
 private:
-    void StateChanged(ComponentEnablerSystem* system);
+    void StateChanged();
     void UpdateObject(GameObject* object);
 };

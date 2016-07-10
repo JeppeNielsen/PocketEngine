@@ -14,7 +14,7 @@
 
 using namespace Pocket;
 
-Component(Terrain)
+struct Terrain {
     void Reset();
     typedef std::vector<Vector2> Vertices;
     Vertices vertices;
@@ -24,7 +24,7 @@ Component(Terrain)
 
     Vertices GetSmoothedVertices(const Terrain::Vertices& vertices, int segments);
 
-    struct Layer : public ISerializable{
+    struct Layer {
         Layer() {
             outerDepth = 0;
             innerDepth = 0;
@@ -49,18 +49,18 @@ Component(Terrain)
         float directionAmount;
         Colour color;
         
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(outerDepth);
-        SERIALIZE_FIELD(innerDepth);
-        SERIALIZE_FIELD(textureScale);
-        SERIALIZE_FIELD(outerV);
-        SERIALIZE_FIELD(innerV);
-        SERIALIZE_FIELD(isBevel);
-        SERIALIZE_FIELD(useDirection);
-        SERIALIZE_FIELD(direction);
-        SERIALIZE_FIELD(directionAmount);
-        SERIALIZE_FIELD(color);
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(outerDepth);
+        TYPE_FIELD(innerDepth);
+        TYPE_FIELD(textureScale);
+        TYPE_FIELD(outerV);
+        TYPE_FIELD(innerV);
+        TYPE_FIELD(isBevel);
+        TYPE_FIELD(useDirection);
+        TYPE_FIELD(direction);
+        TYPE_FIELD(directionAmount);
+        TYPE_FIELD(color);
+        TYPE_FIELDS_END
     };
 
     typedef std::vector<Layer> Layers;
@@ -72,8 +72,8 @@ Component(Terrain)
 
     Event<Terrain*> VerticesChanged;
 
-    SERIALIZE_FIELDS_BEGIN
-    SERIALIZE_FIELD(vertices)
-    SERIALIZE_FIELD(layers)
-    SERIALIZE_FIELDS_END
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(vertices)
+    TYPE_FIELD(layers)
+    TYPE_FIELDS_END
 };

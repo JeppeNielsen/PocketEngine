@@ -34,10 +34,9 @@ struct CollisionInfo {
     Particle* particle;
 };
 
-class SpringCollisionSystem : public GameSystem {
+class SpringCollisionSystem : public GameSystem<Spring> {
 public:
     void Initialize();
-    void AddedToWorld(GameWorld& world);
     void Simulate(float dt);
     
     void ObjectAdded(GameObject* object);
@@ -66,7 +65,7 @@ private:
     Bodies bodiesInQuery;
     Quadtree quadtree;
     
-    SYSTEM(TerrainBodySystem, Transform, Terrain)
+    struct TerrainBodySystem: public GameSystem<Transform, Terrain> {
     
         struct TerrainBody {
             std::vector<Body*> bodies;

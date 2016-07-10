@@ -12,9 +12,8 @@
 
 using namespace Pocket;
 
-class SpringSystem : public GameSystem {
+class SpringSystem : public GameSystem<Spring> {
 public:
-    void Initialize();
     void Simulate(float dt);
     void ResetTension();
     void CheckForBrokenSprings();

@@ -14,7 +14,7 @@
 
 using namespace Pocket;
 
-SYSTEM(EditorSpawnerSystem, EditorSpawner, Touchable, Mesh)
+struct EditorSpawnerSystem: public GameSystem<EditorSpawner, Touchable, Mesh> {
 public:
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);

@@ -9,16 +9,9 @@
 #include "ParticleTransformSystem.h"
 
 
-void ParticleTransformSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Particle>();
-}
-
 void ParticleTransformSystem::Update(float dt) {
-
     for (auto it = Objects().begin(); it!=Objects().end(); ++it) {
         GameObject* object = *it;
         object->GetComponent<Transform>()->Position = object->GetComponent<Particle>()->position;
     }
-
 }

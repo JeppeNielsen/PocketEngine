@@ -10,7 +10,7 @@
 
 using namespace Pocket;
 
-Component(Creator)
+struct Creator {
     void Reset();
     GameObject* particle;
     GameObject* spring;

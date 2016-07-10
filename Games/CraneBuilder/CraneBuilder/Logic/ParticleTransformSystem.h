@@ -13,9 +13,7 @@
 
 using namespace Pocket;
 
-class ParticleTransformSystem : public GameSystem {
+class ParticleTransformSystem : public GameSystem<Transform, Particle>  {
 public:
-    void Initialize();
     void Update(float dt);
-
 };

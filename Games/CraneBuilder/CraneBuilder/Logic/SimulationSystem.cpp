@@ -9,12 +9,12 @@
 #include "SimulationSystem.h"
 #include "Transform.hpp"
 
-SimulationSystem::SimulationSystem() : Running(this) { Running = false; Running.Changed += event_handler(this, &SimulationSystem::RunningChanged); }
+SimulationSystem::SimulationSystem() { Running = false; Running.Changed.Bind(this, &SimulationSystem::RunningChanged); }
 
-void SimulationSystem::AddedToWorld(Pocket::GameWorld &world) {
-    particleSystem = world.CreateSystem<ParticleUpdaterSystem>();
-    springSystem = world.CreateSystem<SpringSystem>();
-    springCollisionSystem = world.CreateSystem<SpringCollisionSystem>();
+void SimulationSystem::Initialize() {
+    particleSystem = world->CreateSystem<ParticleUpdaterSystem>();
+    springSystem = world->CreateSystem<SpringSystem>();
+    springCollisionSystem = world->CreateSystem<SpringCollisionSystem>();
 }
 
 void SimulationSystem::Update(float dt) {
@@ -30,7 +30,7 @@ void SimulationSystem::Update(float dt) {
     //springSystem->CheckForBrokenSprings();
 }
 
-void SimulationSystem::RunningChanged(SimulationSystem *system) {
+void SimulationSystem::RunningChanged() {
     if (!Running()) {
         Restore();
     } else {

@@ -13,7 +13,7 @@
 #include "Camera.hpp"
 using namespace Pocket;
 
-SYSTEM(BackgroundSystem, Background, Mesh)
+struct BackgroundSystem : public GameSystem<Background, Mesh> {
 public:
     GameObject* CameraObject;
     void ObjectAdded(GameObject* object);

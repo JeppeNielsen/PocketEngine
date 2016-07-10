@@ -11,12 +11,12 @@
 #include "Spring.h"
 #include "Mesh.hpp"
 #include "Hydralic.h"
+#include "Atlas.hpp"
 
 using namespace Pocket;
 
-class HydralicMeshSystem : public GameSystem {
+class HydralicMeshSystem : public GameSystem<Spring, Mesh, Atlas, Hydralic> {
 public:
-    void Initialize();
     void Update(float dt);
     void ObjectAdded(GameObject* object);
 };

@@ -11,7 +11,7 @@
 #include "Grid.h"
 #include "Transform.hpp"
 
-SYSTEM(GridSystem, Grid, Transform)
+struct GridSystem: public GameSystem<Grid, Transform> {
 
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);

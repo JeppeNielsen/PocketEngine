@@ -10,12 +10,12 @@
 #include "Triangulator.hpp"
 
 void TerrainMeshSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Terrain>()->VerticesChanged += event_handler(this, &TerrainMeshSystem::VerticesChanged, object);
+    object->GetComponent<Terrain>()->VerticesChanged .Bind(this, &TerrainMeshSystem::VerticesChanged, object);
     changedTerrains.insert(object);
 }
 
 void TerrainMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Terrain>()->VerticesChanged -= event_handler(this, &TerrainMeshSystem::VerticesChanged, object);
+    object->GetComponent<Terrain>()->VerticesChanged .Unbind(this, &TerrainMeshSystem::VerticesChanged, object);
     auto it = changedTerrains.find(object);
     if (it!=changedTerrains.end()) {
         changedTerrains.erase(object);

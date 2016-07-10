@@ -12,7 +12,7 @@
 #include "Hydralic.h"
 using namespace Pocket;
 
-SYSTEM(HydralicSystem, Spring, Hydralic)
+struct HydralicSystem : public GameSystem<Spring, Hydralic> {
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);

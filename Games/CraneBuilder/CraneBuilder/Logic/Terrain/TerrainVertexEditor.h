@@ -17,8 +17,8 @@
 
 using namespace Pocket;
 
-SYSTEM(TerrainVertexEditor, Terrain, Transform, TerrainEditableVertices)
-    void AddedToWorld(GameWorld& world);
+struct TerrainVertexEditor : public GameSystem<Terrain, Transform, TerrainEditableVertices> {
+    void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
     void Update(float dt);
@@ -27,7 +27,7 @@ private:
     TouchSystem* touchSystem;
     GameObject* CreateVertexObject(Vector2 position);
 
-    SYSTEM(AddVertexSystem, Terrain, Touchable, Transform, TerrainEditableVertices)
+    struct AddVertexSystem: public GameSystem<Terrain, Touchable, Transform, TerrainEditableVertices> {
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:
@@ -38,5 +38,5 @@ private:
 
     void ButtonDown(std::string button);
 
-    SelectableCollection* selectedVertices;
+    SelectableCollection<>* selectedVertices;
 };

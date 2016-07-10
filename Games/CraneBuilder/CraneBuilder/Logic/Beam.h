@@ -11,5 +11,5 @@
 
 using namespace Pocket;
 
-Component(Beam)
+struct Beam {
 };

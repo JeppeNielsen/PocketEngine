@@ -8,15 +8,7 @@
 
 #include "HydralicMeshSystem.h"
 #include "MathHelper.hpp"
-#include "Atlas.hpp"
 #include "Particle.h"
-
-void HydralicMeshSystem::Initialize() {
-    AddComponent<Spring>();
-    AddComponent<Mesh>();
-    AddComponent<Atlas>();
-    AddComponent<Hydralic>();
-}
 
 void HydralicMeshSystem::ObjectAdded(GameObject* object) {
     

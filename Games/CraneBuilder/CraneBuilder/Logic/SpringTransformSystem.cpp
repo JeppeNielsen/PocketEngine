@@ -10,10 +10,6 @@
 #include "Particle.h"
 #include <cmath>
 
-void SpringTransformSystem::Initialize() {
-    AddComponent<Transform>();
-    AddComponent<Spring>();
-}
 
 void SpringTransformSystem::Update(float dt) {
 

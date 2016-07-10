@@ -11,15 +11,15 @@
 
 using namespace Pocket;
 
-Component(ComponentEnabler)
+struct ComponentEnabler {
 
-    struct EnabledComponent : public ISerializable {
+    struct EnabledComponent {
         std::string id;
         int component;
-        SERIALIZE_FIELDS_BEGIN
-        SERIALIZE_FIELD(id);
-        SERIALIZE_FIELD(component);
-        SERIALIZE_FIELDS_END
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(id);
+        TYPE_FIELD(component);
+        TYPE_FIELDS_END
     };
 
     typedef std::vector<EnabledComponent> EnabledComponents;
@@ -29,11 +29,11 @@ Component(ComponentEnabler)
     void AddComponent(const std::string& id) {
         EnabledComponent e;
         e.id = id;
-        e.component = T::ID;
+        e.component =  GameIDHelper::GetComponentID<T>();
         components.push_back(e);
     }
 
-    SERIALIZE_FIELDS_BEGIN
-    SERIALIZE_FIELD(components)
-    SERIALIZE_FIELDS_END
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(components)
+    TYPE_FIELDS_END
 };

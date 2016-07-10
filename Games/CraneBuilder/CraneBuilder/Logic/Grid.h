@@ -10,7 +10,9 @@
 #include "GameWorld.hpp"
 #include "Vector2.hpp"
 
-Component(Grid)
+using namespace Pocket;
+
+struct Grid {
 public:
     Vector2 Size;
 };

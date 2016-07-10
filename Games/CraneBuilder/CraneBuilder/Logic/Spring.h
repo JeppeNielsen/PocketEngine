@@ -15,7 +15,7 @@ using namespace Pocket;
 
 class Particle;
 
-Component(Spring)
+struct Spring {
     public:
         void Reset();
         float length;

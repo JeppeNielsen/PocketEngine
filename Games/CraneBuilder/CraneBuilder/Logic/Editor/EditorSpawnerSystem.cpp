@@ -29,11 +29,11 @@ void EditorSpawnerSystem::ObjectAdded(Pocket::GameObject *object) {
     mesh.triangles[4]=3;
     mesh.triangles[5]=2;
 
-    object->GetComponent<Touchable>()->Click += event_handler(this, &EditorSpawnerSystem::Click);
+    object->GetComponent<Touchable>()->Click .Bind(this, &EditorSpawnerSystem::Click);
 }
 
 void EditorSpawnerSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Touchable>()->Click -= event_handler(this, &EditorSpawnerSystem::Click);
+    object->GetComponent<Touchable>()->Click .Unbind(this, &EditorSpawnerSystem::Click);
 }
 
 void EditorSpawnerSystem::Click(Pocket::TouchData d) {

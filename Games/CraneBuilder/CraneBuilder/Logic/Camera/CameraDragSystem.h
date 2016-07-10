@@ -13,13 +13,13 @@
 #include "InputManager.hpp"
 #include "Camera.hpp"
 
-SYSTEM(CameraDragSystem, Transform, CameraDragger, Camera)
+struct CameraDragSystem: public GameSystem<Transform, CameraDragger, Camera> {
 public:
     CameraDragSystem();
-    Property<CameraDragSystem*, InputManager*> Input;
+    Property<InputManager*> Input;
     void Update(float dt);
 private:
-    void InputChanged(Property<CameraDragSystem*, InputManager*>::EventData e);
+    void InputChanged();
     void TouchDown(TouchEvent e);
     void TouchUp(TouchEvent e);
     void ScrollChanged(float delta);

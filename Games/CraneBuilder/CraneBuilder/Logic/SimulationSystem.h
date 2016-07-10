@@ -15,20 +15,20 @@
 
 using namespace Pocket;
 
-class SimulationSystem : public GameSystem {
+class SimulationSystem : public GameConcept {
 public:
     SimulationSystem();
     
-    void AddedToWorld(GameWorld& world);
+    void Initialize();
     void Update(float dt);
     
-    Property<SimulationSystem*, bool> Running;
+    Property<bool> Running;
 
 private:
     ParticleUpdaterSystem* particleSystem;
     SpringSystem* springSystem;
     
-    void RunningChanged(SimulationSystem* system);
+    void RunningChanged();
     
     typedef std::map<Particle*, Vector2> StoredPositions;
     StoredPositions storedPositions;

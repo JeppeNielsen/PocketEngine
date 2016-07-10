@@ -23,31 +23,31 @@
 void Editor::Initialize() {
 
     world.CreateSystem<RenderSystem>();
-    
     world.CreateSystem<CameraDragSystem>()->Input = &Input;
+    BackgroundSystem* backgroundSystem = world.CreateSystem<BackgroundSystem>();
+    
     
     state = world.CreateSystem<ComponentEnablerSystem>();
     world.CreateSystem<EditorSpawnerSystem>()->state = state;
     world.CreateSystem<TouchCancelSystem>();
     
-    world.CreateSystem<DragSelector>()->Setup(Manager().Viewport(), Input);
+    world.CreateSystem<DragSelector>()->Setup(Context().Viewport(), Input);
     world.CreateSystem<SelectableDragSystem>();
     world.CreateSystem<TerrainVertexEditor>()->SetInput(&Input);
-    BackgroundSystem* backgroundSystem = world.CreateSystem<BackgroundSystem>();
     world.CreateSystem<TerrainMeshSystem>();
     
-    factory = world.CreateFactory<EditorFactory>();
-    simulationFactory = world.CreateFactory<SimulationFactory>();
+    factory = world.CreateSystem<EditorFactory>();
+    simulationFactory = world.CreateSystem<SimulationFactory>();
     
     world.CreateSystem<GridSystem>();
     
     factory->Setup();
     simulationFactory->Setup(&Input);
-    
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Transform>()->Position = {0,0,40};
-    camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+    camera->AddComponent<Camera>();
     camera->AddComponent<CameraDragger>();
+    
     
     backgroundSystem->CameraObject = camera;
     
@@ -77,7 +77,7 @@ void Editor::Initialize() {
         EditorSpawner::StateObjects terrainStates = {
             { "object", [this] (Vector3 p) {
                 GameObject* g = factory->CreateTerrain(p);
-                g->Parent = level;
+                g->Parent() = level;
                 return g;
             }}
         };
@@ -87,7 +87,7 @@ void Editor::Initialize() {
                 GameObject* g = simulationFactory->CreateParticle(p);
                 g->GetComponent<Particle>()->immovable = true;
                 g->AddComponent<ComponentEnabler>()->AddComponent<Touchable>("physics");
-                g->Parent = level;
+                g->Parent() = level;
                 g->AddComponent<Grid>()->Size = 2.0f;
                 return g;
             }}
@@ -106,7 +106,12 @@ void Editor::Initialize() {
             };
     }
     
-    Input.ButtonDown += event_handler(this, &Editor::ButtonDown);
+    GameObject* test = world.CreateObject();
+    test->AddComponent<Transform>();
+    test->AddComponent<Material>();
+    test->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 20);
+    
+    Input.ButtonDown .Bind(this, &Editor::ButtonDown);
 }
 
 void Editor::ButtonDown(std::string button) {
@@ -134,6 +139,7 @@ void Editor::Render() {
 void Editor::SaveLevel(std::string filename) {
     std::ofstream file;
     file.open (filename);
+    /*
     level->ToJson(file, [] (GameObject* o, int componentType) {
         if (componentType == TerrainEditableVertices::ID) return false;
         if (componentType == Selectable::ID) return false;
@@ -147,6 +153,7 @@ void Editor::SaveLevel(std::string filename) {
         if (componentType == Grid::ID) return false;
         return true;
     });
+    */
     file.close();
 }
 
@@ -154,6 +161,7 @@ void Editor::LoadLevel(std::string filename) {
     std::ifstream file;
     file.open(filename);
     level->Remove();
+    /*
     level = world.CreateObjectFromJson(file, [this] (GameObject* o) {
         if (o->GetComponent<Terrain>()) {
             o->AddComponent<Touchable>();
@@ -167,4 +175,5 @@ void Editor::LoadLevel(std::string filename) {
             o->AddComponent<Grid>()->Size = 2.0f;
         }
     });
+    */
 }

@@ -8,7 +8,7 @@
 
 #pragma once
 #include "GameWorld.hpp"
-Component(Hydralic)
+struct Hydralic {
     void Reset();
     float minLength;
     float maxLength;

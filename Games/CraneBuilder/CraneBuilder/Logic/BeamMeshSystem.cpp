@@ -8,15 +8,7 @@
 
 #include "BeamMeshSystem.h"
 #include "MathHelper.hpp"
-#include "Atlas.hpp"
 #include "Particle.h"
-
-void BeamMeshSystem::Initialize() {
-    AddComponent<Spring>();
-    AddComponent<Mesh>();
-    AddComponent<Atlas>();
-    AddComponent<Beam>();
-}
 
 void BeamMeshSystem::ObjectAdded(GameObject* object) {
     

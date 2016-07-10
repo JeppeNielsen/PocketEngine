@@ -13,7 +13,7 @@
 
 using namespace Pocket;
 
-class ParticleDragSystem : public GameSystem {
+class ParticleDragSystem : public GameSystem<> {
 public:
     void Initialize();
     void ObjectAdded(GameObject* object);

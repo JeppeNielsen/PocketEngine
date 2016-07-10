@@ -8,8 +8,11 @@
 
 #pragma once
 #include "GameWorld.hpp"
+#include "Colour.hpp"
 
-Component(Background)
+using namespace Pocket;
+
+struct Background {
 public:
     Colour colors[4];
 };

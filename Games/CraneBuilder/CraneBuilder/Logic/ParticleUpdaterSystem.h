@@ -12,9 +12,7 @@
 
 using namespace Pocket;
 
-class ParticleUpdaterSystem : public GameSystem {
+class ParticleUpdaterSystem : public GameSystem<Particle> {
 public:
-    void Initialize();
     void Simulate(float dt);
-
 };
