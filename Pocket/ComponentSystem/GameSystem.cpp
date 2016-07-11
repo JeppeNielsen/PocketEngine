@@ -33,6 +33,10 @@ int GameSystemBase::AddObject(Pocket::GameObject *object) {
 
 void GameSystemBase::RemoveObject(Pocket::GameObject *object) {
     objects.erase(std::find(objects.begin(), objects.end(), object));
+    auto it = metaData.find(object);
+    if (it!=metaData.end()) {
+        metaData.erase(it);
+    }
 }
 
 void GameSystemBase::SetMetaData(Pocket::GameObject *object, void *data) {
