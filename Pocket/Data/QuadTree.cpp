@@ -61,7 +61,7 @@ bool Quadtree::Insert(Quadtree::Node& node) {
 }
 
 void Quadtree::Remove(Node& node) {
-	    
+    if (!node.node) return;
 	Nodes& nodes = *node.node->nodes;
 	
 	if (nodes.size()<=1) {

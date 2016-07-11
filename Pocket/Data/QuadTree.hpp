@@ -8,7 +8,8 @@ namespace Pocket {
 	class Quadtree {
 	public:
 		struct Node {
-			Vector2 min;
+            Node() : node(0), data(0) {}
+        	Vector2 min;
             Vector2 max;
 			Quadtree* node;
 			size_t childIndex;
