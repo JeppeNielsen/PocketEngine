@@ -7,6 +7,7 @@
 #include "Span.hpp"
 #include "Sizeable.hpp"
 #include "MathHelper.hpp"
+#include "Velocity.hpp"
 
 using namespace Pocket;
 
@@ -134,11 +135,7 @@ struct PipeSpawner {
 struct PipeSpawnerSystem : public GameSystem<PipeSpawner, Transform, Sizeable> {
 public:
     GameObject* texture;
-    GameWorld* world;
-    void Initialize(GameWorld* world) {
-        this->world = world;
-    }
-    
+        
     void Update(float dt) {
         for (auto o : Objects()) {
             PipeSpawner* pipeSpawner = o->GetComponent<PipeSpawner>();
@@ -231,6 +228,7 @@ public:
         camera->AddComponent<Camera>()->Orthographic = true;
         camera->GetComponent<Camera>()->Near = 0.5f;
         camera->GetComponent<Camera>()->Far = 10.0f;
+        camera->GetComponent<Camera>()->OrthographicRectangle = { {0,0}, screenSize};
         
         Vector2 birdPixelSize(17,12);
         
@@ -246,7 +244,7 @@ public:
         bird->GetComponent<Material>()->BlendMode = BlendModeType::Alpha;
         
         GameObject* background = world.CreateObject();
-        background->Parent = camera;
+        background->Parent() = camera;
         background->AddComponent<Transform>()->Position = {screenSize.x*0.5f,screenSize.y*0.5f,-2};
         auto b = background->AddComponent<Background>();
         b->parallax = 0.002f;
