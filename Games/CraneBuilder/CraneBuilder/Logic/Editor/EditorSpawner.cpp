@@ -9,7 +9,7 @@
 #include "EditorSpawner.h"
 
 
-void EditorSpawner::Reset() {
+EditorSpawner::EditorSpawner() {
     objects.clear();
     CurrentObject = "";
 }

@@ -17,7 +17,7 @@ class Particle;
 
 struct Spring {
     public:
-        void Reset();
+        Spring();
         float length;
         float elasticity;
         float currentLength;

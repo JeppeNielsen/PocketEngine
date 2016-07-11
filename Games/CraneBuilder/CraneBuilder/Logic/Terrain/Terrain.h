@@ -15,7 +15,7 @@
 using namespace Pocket;
 
 struct Terrain {
-    void Reset();
+    Terrain();
     typedef std::vector<Vector2> Vertices;
     Vertices vertices;
     Vertices prevVertices;

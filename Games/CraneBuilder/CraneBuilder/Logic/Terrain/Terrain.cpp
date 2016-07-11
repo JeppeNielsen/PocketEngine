@@ -9,7 +9,7 @@
 #include "Terrain.h"
 
 
-void Terrain::Reset() {
+Terrain::Terrain() {
     vertices.clear();
     layers.clear();
 }

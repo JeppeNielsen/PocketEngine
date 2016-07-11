@@ -9,7 +9,7 @@
 #include "Creator.h"
 
 
-void Creator::Reset() {
+Creator::Creator() {
     particle = 0;
     spring = 0;
 }

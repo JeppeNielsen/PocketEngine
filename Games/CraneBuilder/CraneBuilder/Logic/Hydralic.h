@@ -9,7 +9,7 @@
 #pragma once
 #include "GameWorld.hpp"
 struct Hydralic {
-    void Reset();
+    Hydralic();
     float minLength;
     float maxLength;
     float speed;

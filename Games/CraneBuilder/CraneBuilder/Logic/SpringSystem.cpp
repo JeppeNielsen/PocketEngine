@@ -23,9 +23,7 @@ void SpringSystem::ResetTension() {
     
 void SpringSystem::Simulate(float dt) {
 
-    //Objects()[0]->GetComponent<Spring>()->length += dt * 0.1f;
-    for (auto it = Objects().begin(); it!=Objects().end(); ++it) {
-        GameObject* object = *it;
+    for (auto object : Objects()) {
 
         Spring* spring = object->GetComponent<Spring>();
         if (!spring->particleA) continue;

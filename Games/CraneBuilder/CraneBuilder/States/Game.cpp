@@ -47,9 +47,9 @@ void Game::Initialize() {
     editorFactory->Setup();
     
     camera = world.CreateObject();
-    camera->AddComponent<Camera>()->Viewport = Context().Viewport();
+    camera->AddComponent<Camera>();
     camera->AddComponent<Transform>()->Position = { 0, 0, 50 };
-    camera->GetComponent<Camera>()->FieldOfView = 60;
+    //camera->GetComponent<Camera>()->FieldOfView = 60;
     camera->AddComponent<CameraDragger>();
     
     
@@ -108,7 +108,7 @@ void Game::Initialize() {
         return buildType == BuildType::Beam;
     };
     
-    LoadLevel("Level copy.txt");
+    LoadLevel("Level.txt");
     
     Input.ButtonDown .Bind(this, &Game::ButtonDown);
     Input.ButtonUp .Bind(this, &Game::ButtonUp);

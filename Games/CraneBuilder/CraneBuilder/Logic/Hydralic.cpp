@@ -9,7 +9,7 @@
 #include "Hydralic.h"
 #include "MathHelper.hpp"
 
-void Hydralic::Reset() {
+Hydralic::Hydralic() {
     minLength = 4.0f;
     maxLength = 15.0f;
     speed = 0.0f;

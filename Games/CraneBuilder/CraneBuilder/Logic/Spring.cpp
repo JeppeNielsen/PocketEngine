@@ -10,7 +10,7 @@
 #include <cmath>
 #include "Particle.h"
 
-void Spring::Reset() {
+Spring::Spring() {
     length = 0.0f;
     particleA = 0;
     particleB = 0;

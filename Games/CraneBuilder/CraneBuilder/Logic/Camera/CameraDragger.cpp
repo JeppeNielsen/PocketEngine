@@ -8,7 +8,7 @@
 
 #include "CameraDragger.h"
 
-void CameraDragger::Reset() {
+CameraDragger::CameraDragger() {
     startDragPosition = {0,0,0};
     startTransformPosition = {0,0,0};
     isDragging = false;

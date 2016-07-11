@@ -11,7 +11,7 @@
 using namespace Pocket;
 
 struct Creator {
-    void Reset();
+    Creator();
     GameObject* particle;
     GameObject* spring;
 };

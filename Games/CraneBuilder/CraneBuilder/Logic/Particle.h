@@ -14,7 +14,7 @@ using namespace Pocket;
 
 struct Particle {
     public:
-        void Reset();
+        Particle();
         float mass;
         Vector2 position;
         Vector2 positionOld;

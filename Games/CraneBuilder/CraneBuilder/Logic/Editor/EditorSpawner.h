@@ -14,8 +14,7 @@
 using namespace Pocket;
 
 struct EditorSpawner {
-
-    void Reset();
+    EditorSpawner();
     typedef std::map<std::string, std::function<GameObject*(Vector3 p)>> StateObjects;
     typedef std::map<std::string, StateObjects> Objects;
     Objects objects;

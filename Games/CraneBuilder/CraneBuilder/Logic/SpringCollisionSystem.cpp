@@ -70,7 +70,7 @@ bool Box::Intersect(const Box& other) const{
 void SpringCollisionSystem::Initialize() {
     
     bodiesNeedsCalculating = false;
-    quadtree.SetMinMax({-130,-140}, {130,140});
+    quadtree.SetMinMax({-230,-240}, {230,240});
     UseTree = true;
 
     terrain = world->CreateSystem<TerrainBodySystem>();

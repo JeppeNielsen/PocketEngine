@@ -16,5 +16,5 @@ struct CameraDragger {
     Vector3 startTransformPosition;
     float zPos;
     bool isDragging;
-    void Reset();
+    CameraDragger();
 };
