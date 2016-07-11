@@ -114,7 +114,7 @@ namespace Pocket {
             }
         }
         
-        GameObject* GetOwner(int index) {
+        GameObject* GetOwner(int index) override {
             return owners[index];
         }
     
