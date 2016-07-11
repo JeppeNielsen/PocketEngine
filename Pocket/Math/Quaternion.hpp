@@ -162,7 +162,10 @@ namespace Pocket {
         }
     
         Quaternion static Deserialize(const std::string& data);
+        
+        friend std::ostream& operator<<(std::ostream& stream, const Pocket::Quaternion& q) {
+            stream<<q.w<<','<<q.x<<","<<q.y<<","<<q.z;
+            return stream;
+        }
     };
 }
-
-std::ostream& operator<<(std::ostream& stream, const Pocket::Quaternion& q);

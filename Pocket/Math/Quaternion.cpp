@@ -595,8 +595,3 @@ Quaternion Quaternion::Deserialize(const std::string &data) {
     StringHelper::splitToFloats(data, ',', v);
     return Quaternion(v.size()>0 ? v[0] : 0, v.size()>1 ? v[1] : 0, v.size()>2 ? v[2] : 0, v.size()>3 ? v[3] : 0);
 }
-
-std::ostream& operator<<(std::ostream& stream, const Pocket::Quaternion& q) {
-    stream<<q.w<<','<<q.x<<","<<q.y<<","<<q.z;
-    return stream;
-}
