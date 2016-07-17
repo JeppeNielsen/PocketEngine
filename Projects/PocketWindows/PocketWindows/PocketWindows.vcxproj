@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{CFEBF92D-639E-4441-A2DB-C05AF3C8BB29}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>PocketWindows</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\Pocket\ComponentSystem\;..\..\..\Pocket\ComponentSystem\Meta\;..\..\..\Pocket\Core\;..\..\..\Pocket\Data\;..\..\..\Pocket\Debugging\;..\..\..\Pocket\Logic\Animation\;..\..\..\Pocket\Logic\Audio\;..\..\..\Pocket\Logic\Common\;..\..\..\Pocket\Logic\Editor\;..\..\..\Pocket\Logic\Effects\;..\..\..\Pocket\Logic\Gui\;..\..\..\Pocket\Logic\Gui\Layout\;..\..\..\Pocket\Logic\Gui\Menu\;..\..\..\Pocket\Logic\Interaction\;..\..\..\Pocket\Logic\Movement\;..\..\..\Pocket\Logic\Physics\;..\..\..\Pocket\Logic\Rendering\;..\..\..\Pocket\Logic\Selection\;..\..\..\Pocket\Logic\Spatial\;..\..\..\Pocket\Math\;..\..\..\Pocket\OpenGL\;..\..\..\Pocket\Physics\;..\..\..\Pocket\Physics\Box2D\;..\..\..\Pocket\Physics\Box2D\Collision\;..\..\..\Pocket\Physics\Box2D\Collision\Shapes;..\..\..\Pocket\Physics\Box2D\Common\;..\..\..\Pocket\Physics\Box2D\Dynamics\;..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\;..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\;..\..\..\Pocket\Platform\Windows\;..\..\..\Pocket\PngLib\;..\..\..\Pocket\Profiler\;..\..\..\Pocket\Serialization\;..\..\..\Pocket\TinyXml\;..\..\..\Pocket\Rendering\;D:\Projects\Angle\include\</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:\Projects\Angle\src\Debug_Win32\lib\libGLESv2.lib;D:\Projects\Angle\src\Debug_Win32\lib\libEGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameIDHelper.cpp" />
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameObject.cpp" />
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameWorld.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\Engine.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\EngineContext.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\GameState.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\InputDevice.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\InputManager.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\Timer.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Core\Window.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\BezierCurve1.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\BezierCurve3.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\Bitset.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\ICellItem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\Octree.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\Pointer.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\QuadTree.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\StringHelper.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Data\Triangulator.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Debugging\TimeMeasurer.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Debugging\UnitTest.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Animation\TouchAnimatorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Animation\TransformAnimation.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Animation\TransformAnimationDatabase.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Animation\TransformAnimator.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Animation\TransformAnimatorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Common\HierarchyOrder.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\FieldEditor.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\FieldEditorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\GameObjectEditor.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\GameObjectEditorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\HierarchyEditor.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawner.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawnerSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Effects\ParticleEffect.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Effects\ParticleEmitter.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Effects\ParticleMeshUpdater.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Effects\ParticleUpdaterSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\DroppableSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Font.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Gui.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\Menu.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\MenuButton.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\MenuButtonSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\MenuSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\SpriteMeshSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\SpriteTextureSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\TextBoxLabelSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Gui\TextBoxSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Interaction\Touchable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Interaction\TouchCancelSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Interaction\TouchSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\DraggableMotion.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\DraggableMotionSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\DraggableSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\FirstPersonMover.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\FirstPersonMoverSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\Limitable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\LimitableSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Movement\VelocitySystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Physics\Collidable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Physics\Joint2d.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Physics\PhysicsSystem2d.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Physics\RigidBody2d.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\Atlas.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\Camera.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\Colorable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\ColorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\Lights\Light.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\RenderSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Rendering\TextureComponent.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\ClickSelectorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\DragSelector.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\Selectable.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\SelectableCollection.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\SelectableDragSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\SelectedColorer.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\SelectedColorerSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Selection\SelectionVisualizer.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Spatial\Transform.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Spatial\TransformHierarchy.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\BoundingBox.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\BoundingFrustum.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Box.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Interpolator.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\MathHelper.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Matrix3x3.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Matrix4x4.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Plane.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Point.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Point3.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Quaternion.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Ray.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Rect.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\TransitionHelper.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Vector2.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Math\Vector3.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Other\Chromecast\ChromecastMessage.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Other\Chromecast\ChromecastReceiver.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Other\Chromecast\ChromecastUser.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Other\Clipping\triangle\triangle.c" />
+    <ClCompile Include="..\..\..\Pocket\Packing\RectPacker.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2BroadPhase.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2CollideCircle.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2CollidePoly.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2Collision.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2Distance.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2PairManager.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\b2TimeOfImpact.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2CircleShape.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2Shape.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Common\b2BlockAllocator.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Common\b2Math.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Common\b2Settings.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2Body.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2ContactManager.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2Island.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2World.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2WorldCallbacks.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2CircleContact.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2Contact.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2ContactSolver.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2PolyAndCircleContact.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2PolyContact.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2DistanceJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2GearJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2Joint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2MouseJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\File.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\FileReader.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\GamePadManager.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\WindowWin.cpp" />
+    <ClCompile Include="..\..\..\Pocket\PngLib\jpeg_decoder.cpp" />
+    <ClCompile Include="..\..\..\Pocket\PngLib\lodepng.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Profiler\Profiler.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\Clipper.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\Colour.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\Shader.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\ShaderCollection.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\Texture.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\TextureAtlas.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Rendering\Vertex.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Serialization\TypeIndexList.cpp" />
+    <ClCompile Include="..\..\..\Pocket\TinyXml\tinystr.cpp" />
+    <ClCompile Include="..\..\..\Pocket\TinyXml\tinyxml.cpp" />
+    <ClCompile Include="..\..\..\Pocket\TinyXml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\..\..\Pocket\TinyXml\tinyxmlparser.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Zip\miniz.c" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\Container.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameIDHelper.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameObject.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameWorld.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\Meta\MetaLibrary.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\Engine.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\EngineContext.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\GamePadManager.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\GameState.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\InputDevice.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\InputManager.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\Timer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Core\Window.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\BezierCurve1.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\BezierCurve3.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Bitset.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\CellGrid.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Collection.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\DirtyProperty.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Event.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\File.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\FileReader.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\ICellItem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\IPointable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\NodeLine.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Octree.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Pointer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Property.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\PropertyListener.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\QuadTree.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Span.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\StringHelper.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Timeline.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Data\Triangulator.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Debugging\Assert.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Debugging\TimeMeasurer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Debugging\UnitTest.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TouchAnimator.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TouchAnimatorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TransformAnimation.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TransformAnimationDatabase.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TransformAnimator.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Animation\TransformAnimatorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Common\HierarchyOrder.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Common\Orderable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\FieldEditor.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\FieldEditorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\GameObjectEditor.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\GameObjectEditorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\HierarchyEditor.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawner.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawnerSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Effects\ParticleEffect.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Effects\ParticleEmitter.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Effects\ParticleMeshUpdater.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Effects\ParticleUpdaterSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Droppable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\DroppableSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Font.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Gui.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Label.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\Menu.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\MenuAnimator.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\MenuButton.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\MenuButtonSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\MenuSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Sizeable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Sprite.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\SpriteMeshSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\SpriteTextureSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\TextBox.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\TextBoxLabelSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Gui\TextBoxSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Interaction\Touchable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Interaction\TouchableCanceller.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Interaction\TouchCancelSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Interaction\TouchSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\Draggable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\DraggableMotion.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\DraggableMotionSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\DraggableSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\FirstPersonMover.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\FirstPersonMoverSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\Limitable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\LimitableSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\Velocity.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Movement\VelocitySystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Physics\Collidable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Physics\Joint2d.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Physics\PhysicsSystem2d.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Physics\RigidBody2d.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Atlas.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Camera.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Colorable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\ColorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Lights\Light.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Material.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Mesh.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\RenderSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\TextureComponent.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\ClickSelectorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\DragSelector.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\Selectable.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\SelectableCollection.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\SelectableDragSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\SelectedColorer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\SelectedColorerSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Selection\SelectionVisualizer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Spatial\OctreeSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Spatial\Transform.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Spatial\TransformHierarchy.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\BoundingBox.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\BoundingFrustum.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Box.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Interpolator.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\MathHelper.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Matrix3x3.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Matrix4x4.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Plane.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Point.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Point3.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Quaternion.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Ray.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Rect.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\TransitionHelper.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Vector2.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Math\Vector3.hpp" />
+    <ClInclude Include="..\..\..\Pocket\OpenGL\OpenGL.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Other\Chromecast\ChromecastMessage.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Other\Chromecast\ChromecastReceiver.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Other\Chromecast\ChromecastUser.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Other\Clipping\triangle\triangle.h" />
+    <ClInclude Include="..\..\..\Pocket\Packing\RectPacker.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\b2BroadPhase.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\b2Collision.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\b2PairManager.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2CircleShape.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2PolygonShape.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Collision\Shapes\b2Shape.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\b2BlockAllocator.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\b2Math.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\Fixed.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Common\jtypes.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2Body.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2ContactManager.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2Island.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2World.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\b2WorldCallbacks.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2CircleContact.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2Contact.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2ContactSolver.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2NullContact.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2PolyAndCircleContact.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\b2PolyContact.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2DistanceJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2GearJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2Joint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2MouseJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PrismaticJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
+    <ClInclude Include="..\..\..\Pocket\Platform\Windows\WindowWin.hpp" />
+    <ClInclude Include="..\..\..\Pocket\PngLib\jpeg_decoder.h" />
+    <ClInclude Include="..\..\..\Pocket\PngLib\lodepng.h" />
+    <ClInclude Include="..\..\..\Pocket\Profiler\Profiler.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\Clipper.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\Colour.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\ObjectRenderer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\Shader.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\ShaderCollection.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\Texture.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\TextureAtlas.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\Vertex.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\VertexMesh.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Rendering\VertexRenderer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ClangUtil.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptClass.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptInclude\FieldInfoIndexer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptInclude\GameSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptInclude\TypeInfo.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptParser.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Scripting\ScriptWorld.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Serialization\JsonSerializer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Serialization\minijson_reader.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Serialization\minijson_writer.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Serialization\TypeIndexList.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Serialization\TypeInfo.hpp" />
+    <ClInclude Include="..\..\..\Pocket\TinyXml\tinystr.h" />
+    <ClInclude Include="..\..\..\Pocket\TinyXml\tinyxml.h" />
+    <ClInclude Include="..\..\..\Pocket\Zip\miniz.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
