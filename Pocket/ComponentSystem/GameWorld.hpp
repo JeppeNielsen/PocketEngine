@@ -38,6 +38,17 @@ namespace Pocket {
                 }
             ));
         }
+
+		template<typename T>
+		T* TryGetSystem() {
+			int systemId = GameIDHelper::GetSystemID<T>();
+			if (systemId < systemsIndexed.size()) {
+				return static_cast<T*>(systemsIndexed[systemId].system);
+			}
+			else {
+				return 0;
+			}
+		}
         
         template<typename T>
         void RemoveSystem() {

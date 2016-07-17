@@ -58,7 +58,7 @@ void FirstPersonMoverSystem::TouchUp(Pocket::TouchEvent e) {
 void FirstPersonMoverSystem::Update(float dt) {
     if (!isDraggableSystemChecked) {
         isDraggableSystemChecked = true;
-        draggableSystem = world->CreateSystem<DraggableSystem>();
+        draggableSystem = world->TryGetSystem<DraggableSystem>();
     }
     
     if (!UpdateRotation(dt, FlipControls ? 0 : 1)) {
