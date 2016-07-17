@@ -12,6 +12,7 @@
 #include "DraggableSystem.hpp"
 #include "TouchSystem.hpp"
 #include "FirstPersonMoverSystem.hpp"
+#include <fstream>
 
 using namespace Pocket;
 
@@ -59,12 +60,26 @@ public:
         camera->GetComponent<Camera>()->FieldOfView = 40;
         camera->AddComponent<FirstPersonMover>();
         
+        /*
+        
         cube = world.CreateObject();
         cube->AddComponent<Transform>();
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         cube->AddComponent<Material>();
         cube->AddComponent<Draggable>();
         cube->AddComponent<Touchable>();
+        
+        std::ofstream file;
+        file.open("mesh.json");
+        cube->ToJson(file);
+        file.close();
+        */
+        
+        std::ifstream file;
+        file.open("mesh.json");
+        cube = world.CreateObject(file);
+        file.close();
+        
         
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         
@@ -74,7 +89,7 @@ public:
         
         rotation = 0;
     
-    
+        
     
     
     }
