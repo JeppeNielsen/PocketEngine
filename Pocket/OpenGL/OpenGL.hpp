@@ -76,6 +76,38 @@ void system_log(const char* format, ...)
 
 #ifdef WIN32
 
+#define STATUS_CASE(enum) case enum: return #enum
+static const char* _glStatusString(GLenum error)
+{
+	switch (error) {
+		STATUS_CASE(GL_NO_ERROR);
+		STATUS_CASE(GL_INVALID_ENUM);
+		STATUS_CASE(GL_INVALID_VALUE);
+		STATUS_CASE(GL_INVALID_OPERATION);
+		STATUS_CASE(GL_INVALID_FRAMEBUFFER_OPERATION);
+		STATUS_CASE(GL_OUT_OF_MEMORY);
+		STATUS_CASE(GL_FRAMEBUFFER_COMPLETE);
+		STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT);
+		STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT);
+		STATUS_CASE(GL_FRAMEBUFFER_UNSUPPORTED);
+	}
+	return 0;
+}
+#undef STATUS_CASE
+
+#define ASSERT_GL(x)                                        \
+            do {                                                \
+                GLenum _glError;                                \
+                x;                                              \
+                _glError = glGetError();                        \
+                if(_glError != GL_NO_ERROR) {                   \
+std::cout<<__FILE__<<":"<<__LINE__<<" "<<#x<<" "<<_glStatusString(_glError)<<std::endl; \
+                }                                               \
+            } while(__LINE__ == -1)
+
+
+
+
 #elif
 
 #define STATUS_CASE(enum) case enum: return #enum

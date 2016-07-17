@@ -39,6 +39,9 @@ struct VertexType : IVertexType {
 };
 
 struct VertexAttribute {
+	VertexAttribute() {}
+	VertexAttribute(GLint size, GLenum type, GLboolean normalized) :
+		size(size), type(type), normalized(normalized) {}
     GLint size;
     GLenum type;
     GLboolean normalized;

@@ -16,9 +16,9 @@ IVertexType::TypeList IVertexType::typelist;
 
 namespace Pocket {
  
-template<> const VertexAttribute VertexAttributeType<Vector3>::attribute {  3, GL_FLOAT, GL_FALSE };
-template<> const VertexAttribute VertexAttributeType<Vector2>::attribute {  2, GL_FLOAT, GL_FALSE };
-template<> const VertexAttribute VertexAttributeType<Colour>::attribute {  4, GL_UNSIGNED_BYTE, GL_TRUE };
+template<> const VertexAttribute VertexAttributeType<Vector3>::attribute = VertexAttribute(  3, GL_FLOAT, GL_FALSE );
+template<> const VertexAttribute VertexAttributeType<Vector2>::attribute = VertexAttribute(2, GL_FLOAT, GL_FALSE);
+template<> const VertexAttribute VertexAttributeType<Colour>::attribute = VertexAttribute(4, GL_UNSIGNED_BYTE, GL_TRUE);
 
 template<> void ShaderVariableType<float>::SetValue(GLint location, const float &value) {
     glUniform1f(location, value);

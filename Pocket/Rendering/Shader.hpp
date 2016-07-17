@@ -204,9 +204,9 @@ private:
                 //std::cout<< "Vertex attribute not found: "<< attributeName << std::endl;
                 //std::cout<< "Valid vertex attributes are: "<< std::endl;
                 
-                for(auto a : description.Attributes()) {
+                //for(auto a : description.Attributes()) {
                     //std::cout<<a.first<<std::endl;
-                }
+                //}
                 
                 return false;
             }
