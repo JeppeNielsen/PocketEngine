@@ -3,6 +3,7 @@
 #include "GameState.hpp"
 #include "GameWorld.hpp"
 #include "RenderSystem.hpp"
+#include "FirstPersonMoverSystem.hpp"
 
 using namespace Pocket;
 
@@ -28,9 +29,11 @@ class Game : public GameState<Game> {
 	void Initialize() {
 		world.CreateSystem<RenderSystem>();
 		world.CreateSystem<RotationSystem>();
+		world.CreateSystem<FirstPersonMoverSystem>()->Input = &Input;
 		GameObject* camera = world.CreateObject();
 		camera->AddComponent<Transform>()->Position = { 0,0,10 };
 		camera->AddComponent<Camera>();
+		camera->AddComponent<FirstPersonMover>();
 
 		GameObject* cube = world.CreateObject();
 		cube->AddComponent<Transform>();
