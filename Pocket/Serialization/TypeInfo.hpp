@@ -304,7 +304,7 @@ inline std::string className(const std::string& prettyFunction)
 }
 #ifdef WIN32
 #define __CLASS_NAME__ className(__FUNCTION__)
-#elif
+#else
 #define __CLASS_NAME__ className(__PRETTY_FUNCTION__)
 #endif
 #define TYPE_FIELDS_BEGIN \

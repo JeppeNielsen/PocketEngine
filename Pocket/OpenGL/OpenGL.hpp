@@ -108,7 +108,7 @@ std::cout<<__FILE__<<":"<<__LINE__<<" "<<#x<<" "<<_glStatusString(_glError)<<std
 
 
 
-#elif
+#else
 
 #define STATUS_CASE(enum) case enum: return #enum
 static const char* _glStatusString(GLenum error)
