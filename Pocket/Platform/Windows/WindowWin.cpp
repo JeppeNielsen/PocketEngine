@@ -227,7 +227,7 @@ void WindowWin::Create(int width, int height, bool fullScreen) {
 	correctSize.bottom = height;
 
 	//WS_OVERLAPPEDWINDOW
-	DWORD style = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX);
+	DWORD style = (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX);
 	
 	if (AdjustWindowRect(&correctSize, style, false)) {
 		width = correctSize.right - correctSize.left;
@@ -237,7 +237,7 @@ void WindowWin::Create(int width, int height, bool fullScreen) {
     window = CreateWindow(  TEXT("Pocket"),
                     TEXT("Pocket"),
                     style,
-                    100, 100, width, height,
+                    0, 0, width, height,
                     NULL,   // if you make this hwndConsole, then
                             // the console becomes this window's parent
                             // Then, this window wouldn't get an
@@ -299,6 +299,9 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
 			window->closed = true;
 			return 0;
 			break;
+		case WM_SIZE:
+			window->context->ScreenSize = Vector2((int)LOWORD(lparam), (int)HIWORD(lparam));
+			return 0;
 			/*
 		case WM_CREATE:
 			cout << "WINDOW SPEAKING TO YOU THROUGH THE CONSOLE." << endl;
