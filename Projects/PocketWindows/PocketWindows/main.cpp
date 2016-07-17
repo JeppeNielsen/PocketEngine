@@ -45,7 +45,13 @@ class Game : public GameState<Game> {
 				counter++;
 		}
 
+		Input.ButtonDown.Bind(this, &Game::KeyDown);
+	}
 
+	void KeyDown(std::string key) {
+		if (key == "Esc") {
+			exit(0);
+		}
 	}
 
 	void Update(float dt) {
