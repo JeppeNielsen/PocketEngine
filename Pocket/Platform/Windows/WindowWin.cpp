@@ -407,27 +407,6 @@ bool WindowWin::Update(IInputManagerIterator* inputManagers) {
 	return !closed;
 }
 
-bool TestEGLError(HWND hWnd, char* pszLocation)
-{
-	/*
-		eglGetError returns the last error that has happened using egl,
-		not the status of the last called function. The user has to
-		check after every single egl call or at least once every frame.
-	*/
-	EGLint iErr = eglGetError();
-	if (iErr != EGL_SUCCESS)
-	{
-//#ifndef NO_GDI
-		//TCHAR pszStr[256];
-		//_stprintf(pszStr, _T("%s failed (%d).\n"), pszLocation, iErr);
-		//MessageBox(hWnd, pszStr, _T("Error"), MB_OK|MB_ICONEXCLAMATION);
-//#endif
-		return false;
-	}
-
-	return true;
-}
-
 bool WindowWin::EnableOpenGL() {
 
 	hDC = GetDC(window);
@@ -451,16 +430,15 @@ bool WindowWin::EnableOpenGL() {
 	mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
 		reinterpret_cast<void *>(hDC),
 		&displayAttributes[0]);
+
 	if (mDisplay == EGL_NO_DISPLAY)
 	{
-		//destroyGL();
 		return false;
 	}
 
 	EGLint majorVersion, minorVersion;
 	if (eglInitialize(mDisplay, &majorVersion, &minorVersion) == EGL_FALSE)
 	{
-		//destroyGL();
 		return false;
 	}
 
@@ -470,14 +448,12 @@ bool WindowWin::EnableOpenGL() {
 	bool hasKHRCreateContext = strstr(displayExtensions, "EGL_KHR_create_context") != nullptr;
 	if (majorVersion != 2 && minorVersion != 0 && !hasKHRCreateContext)
 	{
-		//destroyGL();
 		return false;
 	}
 
 	eglBindAPI(EGL_OPENGL_ES_API);
 	if (eglGetError() != EGL_SUCCESS)
 	{
-		//destroyGL();
 		return false;
 	}
 
@@ -496,7 +472,6 @@ bool WindowWin::EnableOpenGL() {
 	EGLint configCount;
 	if (!eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
 	{
-		//destroyGL();
 		return false;
 	}
 
@@ -526,10 +501,8 @@ bool WindowWin::EnableOpenGL() {
 	mSurface = eglCreateWindowSurface(mDisplay, mConfig, (EGLNativeWindowType)window, &surfaceAttributes[0]);
 	if (eglGetError() != EGL_SUCCESS)
 	{
-		//destroyGL();
 		return false;
 	}
-	//ASSERT(mSurface != EGL_NO_SURFACE);
 
 	std::vector<EGLint> contextAttributes;
 	if (hasKHRCreateContext)
@@ -541,254 +514,39 @@ bool WindowWin::EnableOpenGL() {
 		contextAttributes.push_back(0);
 
 		contextAttributes.push_back(EGL_CONTEXT_OPENGL_DEBUG);
-		contextAttributes.push_back(EGL_FALSE);// mDebug ? EGL_TRUE : EGL_FALSE);
-
-		// TODO(jmadill): Check for the extension string.
-		// bool hasKHRCreateContextNoError = strstr(displayExtensions,
-		// "EGL_KHR_create_context_no_error") != nullptr;
+		contextAttributes.push_back(EGL_FALSE);
 
 		contextAttributes.push_back(EGL_CONTEXT_OPENGL_NO_ERROR_KHR);
-		contextAttributes.push_back(EGL_FALSE);// mNoError ? EGL_TRUE : EGL_FALSE);
+		contextAttributes.push_back(EGL_FALSE);
 	}
 	contextAttributes.push_back(EGL_NONE);
 
 	mContext = eglCreateContext(mDisplay, mConfig, nullptr, &contextAttributes[0]);
-	if (eglGetError() != EGL_SUCCESS)
-	{
-		//destroyGL();
+	if (eglGetError() != EGL_SUCCESS) {
 		return false;
 	}
 
 	eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
-	if (eglGetError() != EGL_SUCCESS)
-	{
-		//destroyGL();
+	if (eglGetError() != EGL_SUCCESS) {
 		return false;
 	}
-
-	/*if (mSwapInterval != -1)
-	{
-		eglSwapInterval(mDisplay, mSwapInterval);
-	}
-	*/
 
 	return true;
 }
 
-void WindowWin::EnableOpenGL_old()
-{
-	hDC = GetDC(window);
-
-	eglDisplay	= 0;
-	eglConfig	= 0;
-	eglSurface	= 0;
-	eglContext	= 0;
-	eglWindow	= window;
-	ui32Vbo = 0; // Vertex buffer object handle
-
-	bool g_bDemoDone = false;
-
-	/*
-		Step 1 - Get the default display.
-		EGL uses the concept of a "display" which in most environments
-		corresponds to a single physical screen. Since we usually want
-		to draw to the main screen or only have a single screen to begin
-		with, we let EGL pick the default display.
-		Querying other displays is platform specific.
-	*/
-
-	
-	
-	eglDisplay = eglGetDisplay((NativeDisplayType) hDC);
-
-    if(eglDisplay == EGL_NO_DISPLAY)
-         eglDisplay = eglGetDisplay((NativeDisplayType) EGL_DEFAULT_DISPLAY);
-	
-	/*
-	std::vector<EGLint> displayAttributes;
-	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
-	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
-	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
-	displayAttributes.push_back(2);
-	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
-	displayAttributes.push_back(0);
-
-	displayAttributes.push_back(EGL_NONE);
-
-	eglDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
-		reinterpret_cast<void *>(hDC),
-		&displayAttributes[0]);
-
-	*/
-
-
-
-	/*
-		Step 2 - Initialize EGL.
-		EGL has to be initialized with the display obtained in the
-		previous step. We cannot use other EGL functions except
-		eglGetDisplay and eglGetError before eglInitialize has been
-		called.
-		If we're not interested in the EGL version number we can just
-		pass NULL for the second and third parameters.
-	*/
-	EGLint iMajorVersion, iMinorVersion;
-	if (!eglInitialize(eglDisplay, &iMajorVersion, &iMinorVersion))
-	{
-		//MessageBox(0, _T("eglInitialize() failed."), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
-		g_bDemoDone = false;
-	}
-
-
-	eglBindAPI(EGL_OPENGL_ES_API);
-	if (eglGetError() != EGL_SUCCESS)
-	{
-		
-		return;
-	}
-
-	/*
-		Step 3 - Specify the required configuration attributes.
-		An EGL "configuration" describes the pixel format and type of
-		surfaces that can be used for drawing.
-		For now we just want to use a 16 bit RGB surface that is a
-		Window surface, i.e. it will be visible on screen. The list
-		has to contain key/value pairs, terminated with EGL_NONE.
-	*/
-	const EGLint configAttributes[] =
-	{
-		EGL_RED_SIZE,       8,
-		EGL_GREEN_SIZE,     8,
-		EGL_BLUE_SIZE,      8,
-		EGL_ALPHA_SIZE,     8,
-		EGL_DEPTH_SIZE,     16,
-		EGL_STENCIL_SIZE,   8,
-		EGL_SAMPLE_BUFFERS, 0,
-		EGL_NONE
-	};
-
-	/*
-		Step 4 - Find a config that matches all requirements.
-		eglChooseConfig provides a list of all available configurations
-		that meet or exceed the requirements given as the second
-		argument. In most cases we just want the first config that meets
-		all criteria, so we can limit the number of configs returned to 1.
-	*/
-	EGLint iConfigs;
-	if (!eglChooseConfig(eglDisplay, configAttributes, &eglConfig, 1, &iConfigs) || (iConfigs != 1))
-	{
-		//MessageBox(0, _T("eglChooseConfig() failed."), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
-		g_bDemoDone = false;
-	}
-
-	/*
-		Step 5 - Create a surface to draw to.
-		Use the config picked in the previous step and the native window
-		handle when available to create a window surface. A window surface
-		is one that will be visible on screen inside the native display (or
-		fullscreen if there is no windowing system).
-		Pixmaps and pbuffers are surfaces which only exist in off-screen
-		memory.
-	*/
-	eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, eglWindow, NULL);
-
-    if(eglSurface == EGL_NO_SURFACE)
-    {
-        eglGetError(); // Clear error
-        eglSurface = eglCreateWindowSurface(eglDisplay, eglConfig, NULL, NULL);
-	}
-
-	if (!TestEGLError(eglWindow, "eglCreateWindowSurface"))
-	{
-		g_bDemoDone = false;
-	}
-
-	/*
-		Step 6 - Create a context.
-		EGL has to create a context for OpenGL ES. Our OpenGL ES resources
-		like textures will only be valid inside this context
-		(or shared contexts)
-	*/
-
-
-	std::vector<EGLint> contextAttributes;
-	contextAttributes.push_back(EGL_NONE);
-
-	eglContext = eglCreateContext(eglDisplay, eglConfig, NULL, &contextAttributes[0]);
-	if (!TestEGLError(eglWindow, "eglCreateContext"))
-	{
-		g_bDemoDone = false;
-	}
-
-	
-
-	/*
-		Step 7 - Bind the context to the current thread and use our
-		window surface for drawing and reading.
-		Contexts are bound to a thread. This means you don't have to
-		worry about other threads and processes interfering with your
-		OpenGL ES application.
-		We need to specify a surface that will be the target of all
-		subsequent drawing operations, and one that will be the source
-		of read operations. They can be the same surface.
-	*/
-	eglMakeCurrent(eglDisplay, eglSurface, eglSurface, eglContext);
-	if (!TestEGLError(eglWindow, "eglMakeCurrent"))
-	{
-		g_bDemoDone = false;
-	}
-
-
-	/*
-
-
-	PIXELFORMATDESCRIPTOR pfd;
-	int format;
-	
-	// get the device context (DC)
-	*hDC = GetDC( hWnd );
-	
-	// set the pixel format for the DC
-	ZeroMemory( &pfd, sizeof( pfd ) );
-	pfd.nSize = sizeof( pfd );
-	pfd.nVersion = 1;
-	pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	pfd.iPixelType = PFD_TYPE_RGBA;
-	pfd.cColorBits = 24;
-	pfd.cDepthBits = 16;
-	pfd.iLayerType = PFD_MAIN_PLANE;
-	format = ChoosePixelFormat( *hDC, &pfd );
-	SetPixelFormat( *hDC, format, &pfd );
-	
-	// create and enable the render context (RC)
-	*hRC = wglCreateContext( *hDC );
-	wglMakeCurrent( *hDC, *hRC );
-
-	*/
-
-	glMapBuffer = (PFNGLMAPBUFFEROESPROC)eglGetProcAddress("glMapBufferOES");
-	glUnmapBuffer = (PFNGLUNMAPBUFFEROESPROC)eglGetProcAddress("glUnmapBufferOES");
-}
-
-// Disable OpenGL
-
 void WindowWin::DisableOpenGL()
 {
-	
-	eglMakeCurrent(eglDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
-	eglTerminate(eglDisplay);
-
+	eglMakeCurrent(mDisplay, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+	eglTerminate(mDisplay);
 }
+
 void WindowWin::PreRender() {
-	//glLoadIdentity();
 	const Vector2 screenSize = context->ScreenSize;
 	glViewport(0, 0, screenSize.x, screenSize.y);
-	glClearColor(0, 1, 1, 0);
+	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void WindowWin::PostRender() {
-
 	eglSwapBuffers(mDisplay, mSurface);
-	//SwapBuffers( hDC );
 }

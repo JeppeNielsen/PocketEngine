@@ -54,8 +54,6 @@ namespace Pocket {
 			void InitKeyMap();
 
 			bool EnableOpenGL();
-			void EnableOpenGL_old();
-
 			void DisableOpenGL();
 			
 	};

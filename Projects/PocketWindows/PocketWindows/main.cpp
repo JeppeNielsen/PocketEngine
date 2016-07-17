@@ -6,6 +6,20 @@
 
 using namespace Pocket;
 
+struct Rotator {
+	Vector3 rot;
+};
+
+struct RotationSystem : public GameSystem<Transform, Rotator> {
+
+	void Update(float dt) override {
+		for (auto o : Objects()) {
+			o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->rot * dt;
+		}
+	}
+
+};
+
 
 class Game : public GameState<Game> {
 	
@@ -13,14 +27,24 @@ class Game : public GameState<Game> {
 
 	void Initialize() {
 		world.CreateSystem<RenderSystem>();
+		world.CreateSystem<RotationSystem>();
 		GameObject* camera = world.CreateObject();
-		camera->AddComponent<Transform>()->Position = { 0,0,20 };
+		camera->AddComponent<Transform>()->Position = { 0,0,10 };
 		camera->AddComponent<Camera>();
 
 		GameObject* cube = world.CreateObject();
 		cube->AddComponent<Transform>();
 		cube->AddComponent<Material>();
 		cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+		cube->AddComponent<Rotator>()->rot = { 3,1,0 };
+
+		auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
+		int counter = 0;
+		for (auto& v : verts) {
+			v.Color = Colour::HslToRgb(20 * counter, 1.0, 1.0, 1.0);
+				counter++;
+		}
+
 
 	}
 
