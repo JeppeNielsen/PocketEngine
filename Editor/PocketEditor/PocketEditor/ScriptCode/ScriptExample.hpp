@@ -103,3 +103,18 @@ struct ColorSystem : public GameSystem<Pocket::Touchable, ColorClicker, Pocket::
     
     
 };
+
+struct Rotator {
+    Vector3 speed;
+};
+
+struct RotatorSystem : public GameSystem<Transform, Rotator> {
+    void Update(float dt) {
+        std::cout << "Rotator system: "<<dt<<std::endl;
+        for(auto o : Objects()) {
+            std::cout << "Rotator system: "<<o->GetComponent<Rotator>()->speed<<std::endl;
+            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Rotator>()->speed * dt;
+        }
+    }
+};
+

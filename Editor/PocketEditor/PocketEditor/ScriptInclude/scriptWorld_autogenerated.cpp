@@ -7,9 +7,9 @@ struct TextureComponent;
 struct Orderable;
 struct Touchable;
 struct EditorObject;
-struct Rotator;
 }
 struct ColorClicker;
+struct Rotator;
 struct Velocity;
 
 namespace Pocket {
@@ -59,18 +59,18 @@ template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::Editor
 template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(14); return (Pocket::EditorObject*) GetComponent(14); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(14); }
 template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(14, source); return (Pocket::EditorObject*) GetComponent(14); }
-template<> Pocket::Rotator* Pocket::GameObject::GetComponent<Pocket::Rotator>() { return (Pocket::Rotator*) GetComponent(27); }
-template<> Pocket::Rotator* Pocket::GameObject::AddComponent<Pocket::Rotator>() { AddComponent(27); return (Pocket::Rotator*) GetComponent(27); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::Rotator>() { RemoveComponent(27); }
-template<> Pocket::Rotator* Pocket::GameObject::CloneComponent<Pocket::Rotator>(GameObject* source) { CloneComponent(27, source); return (Pocket::Rotator*) GetComponent(27); }
-template<> ColorClicker* Pocket::GameObject::GetComponent<ColorClicker>() { return (ColorClicker*) GetComponent(28); }
-template<> ColorClicker* Pocket::GameObject::AddComponent<ColorClicker>() { AddComponent(28); return (ColorClicker*) GetComponent(28); }
-template<> void Pocket::GameObject::RemoveComponent<ColorClicker>() { RemoveComponent(28); }
-template<> ColorClicker* Pocket::GameObject::CloneComponent<ColorClicker>(GameObject* source) { CloneComponent(28, source); return (ColorClicker*) GetComponent(28); }
-template<> Velocity* Pocket::GameObject::GetComponent<Velocity>() { return (Velocity*) GetComponent(29); }
-template<> Velocity* Pocket::GameObject::AddComponent<Velocity>() { AddComponent(29); return (Velocity*) GetComponent(29); }
-template<> void Pocket::GameObject::RemoveComponent<Velocity>() { RemoveComponent(29); }
-template<> Velocity* Pocket::GameObject::CloneComponent<Velocity>(GameObject* source) { CloneComponent(29, source); return (Velocity*) GetComponent(29); }
+template<> ColorClicker* Pocket::GameObject::GetComponent<ColorClicker>() { return (ColorClicker*) GetComponent(15); }
+template<> ColorClicker* Pocket::GameObject::AddComponent<ColorClicker>() { AddComponent(15); return (ColorClicker*) GetComponent(15); }
+template<> void Pocket::GameObject::RemoveComponent<ColorClicker>() { RemoveComponent(15); }
+template<> ColorClicker* Pocket::GameObject::CloneComponent<ColorClicker>(GameObject* source) { CloneComponent(15, source); return (ColorClicker*) GetComponent(15); }
+template<> Rotator* Pocket::GameObject::GetComponent<Rotator>() { return (Rotator*) GetComponent(16); }
+template<> Rotator* Pocket::GameObject::AddComponent<Rotator>() { AddComponent(16); return (Rotator*) GetComponent(16); }
+template<> void Pocket::GameObject::RemoveComponent<Rotator>() { RemoveComponent(16); }
+template<> Rotator* Pocket::GameObject::CloneComponent<Rotator>(GameObject* source) { CloneComponent(16, source); return (Rotator*) GetComponent(16); }
+template<> Velocity* Pocket::GameObject::GetComponent<Velocity>() { return (Velocity*) GetComponent(17); }
+template<> Velocity* Pocket::GameObject::AddComponent<Velocity>() { AddComponent(17); return (Velocity*) GetComponent(17); }
+template<> void Pocket::GameObject::RemoveComponent<Velocity>() { RemoveComponent(17); }
+template<> Velocity* Pocket::GameObject::CloneComponent<Velocity>(GameObject* source) { CloneComponent(17, source); return (Velocity*) GetComponent(17); }
 class IGameSystem;
 #include "TypeInfo.hpp"
 #include "Property.hpp"
@@ -108,12 +108,13 @@ template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { stati
 template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 17; } };
 
 extern "C" int CountSystems() {
-   return 2;
+   return 3;
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 41: return new ColorSystem();
-      case 42: return new MovementSystem();
+      case 40: return new ColorSystem();
+      case 41: return new MovementSystem();
+      case 42: return new RotatorSystem();
       default: return 0;
    }
 }
@@ -121,27 +122,32 @@ extern "C" void DeleteSystem(IGameSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 2;
+   return 3;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 28: return new ColorClicker();
-      case 29: return new Velocity();
+      case 15: return new ColorClicker();
+      case 16: return new Rotator();
+      case 17: return new Velocity();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 28: { delete ((ColorClicker*)component); break; }
-      case 29: { delete ((Velocity*)component); break; }
+      case 15: { delete ((ColorClicker*)component); break; }
+      case 16: { delete ((Rotator*)component); break; }
+      case 17: { delete ((Velocity*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 28: { ColorClicker* co = (ColorClicker*)c; 
+      case 15: { ColorClicker* co = (ColorClicker*)c; 
       ColorClicker* so = ((ColorClicker*)s);
         co->operator=(*so);             break; }
-      case 29: { Velocity* co = (Velocity*)c; 
+      case 16: { Rotator* co = (Rotator*)c; 
+      Rotator* so = ((Rotator*)s);
+        co->operator=(*so);             break; }
+      case 17: { Velocity* co = (Velocity*)c; 
       Velocity* so = ((Velocity*)s);
         co->operator=(*so);             break; }
    }
@@ -149,14 +155,21 @@ extern "C" void ResetComponent(int componentID, void* c, void* s) {
 
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
-      case 28: {
+      case 15: {
       ColorClicker* component = (ColorClicker*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "ColorClicker";
 	      info->AddField(component->useBlue, "useBlue");
       return info;
       break; }
-      case 29: {
+      case 16: {
+      Rotator* component = (Rotator*)componentPtr;
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "Rotator";
+	      info->AddField(component->speed, "speed");
+      return info;
+      break; }
+      case 17: {
       Velocity* component = (Velocity*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Velocity";

@@ -134,4 +134,8 @@ void CompilationWindow::Build() {
     ScriptWorld& scriptWorld = context->ScriptWorld();
     
     scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+    std::ofstream file;
+    file.open ("world.json");
+    context->Project().World().ToJson(file);
+    file.close();
 }

@@ -19,7 +19,6 @@ GameWorld& Project::World() { return world; }
 void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input) {
 
     world.CreateSystem<RenderSystem>();
-    world.CreateSystem<RotatorSystem>();
     world.CreateSystem<TransformHierarchy>();
     world.CreateSystem<TouchSystem>()->Input = &input;
     world.CreateSystem<TouchSystem>()->TouchDepth = 1000;
@@ -39,7 +38,6 @@ void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, I
     
         GameObject* cube = world.CreateObject();
         cube->AddComponent<Transform>()->Position = {x*2.3f,y*2.3f,0};
-        cube->AddComponent<Rotator>()->speed = { 0,0.3f,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.2f);
         cube->AddComponent<Material>();
         cube->AddComponent<EditorObject>();
