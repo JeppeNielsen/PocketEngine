@@ -5,12 +5,6 @@
 #include "Vector2.hpp"
 #include <egl/eglext.h>
 
-PFNGLMAPBUFFEROESPROC glMapBuffer;
-PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
-
-using namespace Pocket;
-
-
 using namespace std;
 using namespace Pocket;
 
@@ -234,10 +228,13 @@ void WindowWin::Create(int width, int height, bool fullScreen) {
 		height = correctSize.bottom - correctSize.top;
 	}
 
+	int desktopSizeX = GetSystemMetrics(SM_CXSCREEN);
+	int desktopSizeY = GetSystemMetrics(SM_CYSCREEN);
+
     window = CreateWindow(  TEXT("Pocket"),
                     TEXT("Pocket"),
                     style,
-                    0, 0, width, height,
+					desktopSizeX/2-width/2, desktopSizeY / 2 - height / 2, width, height,
                     NULL,   // if you make this hwndConsole, then
                             // the console becomes this window's parent
                             // Then, this window wouldn't get an
