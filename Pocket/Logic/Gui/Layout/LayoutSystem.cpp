@@ -38,7 +38,7 @@ LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layou
     parentLayoutObject = 0;
     object->Parent().Changed.Bind(this, &LayoutSystem::LayoutObject::ParentChanged);
     ParentChanged();
-    if (layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
+    if (layoutable->ChildLayouting()!=Layoutable::ChildLayouting::None) {
         layoutSystem->dirtyChildLayoutables.insert(this);
     }
 }
@@ -65,7 +65,7 @@ LayoutSystem::LayoutObject::~LayoutObject() {
 
 void LayoutSystem::LayoutObject::SizeChanged() {
     if (!parentLayoutObject) return;
-    if (parentLayoutObject->layoutable->ChildLayouting!=Layoutable::ChildLayouting::None) {
+    if (parentLayoutObject->layoutable->ChildLayouting()!=Layoutable::ChildLayouting::None) {
         layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
     }
 }
@@ -88,7 +88,7 @@ void LayoutSystem::LayoutObject::ParentChanged() {
             if (object->Parent()()->GetComponent<Layoutable>()) {
                 parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(object->Parent());
                 if (parentLayoutObject) {
-                    if (parentLayoutObject->layoutable->ChildLayouting==Layoutable::ChildLayouting::None) {
+                    if (parentLayoutObject->layoutable->ChildLayouting()==Layoutable::ChildLayouting::None) {
                         parentLayoutObject = 0;
                     } else {
                         layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);

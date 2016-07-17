@@ -39,7 +39,11 @@ namespace Pocket {
         
         template<typename Class>
         static std::string GetClassName() {
+#ifdef WIN32
+			std::string functionName = __FUNCTION__;
+#elif
             std::string functionName = __PRETTY_FUNCTION__;
+#endif
             const std::string token = "Class = ";
             size_t equal = functionName.find(token) + token.size();
             return functionName.substr(equal, functionName.size() - equal - 1);

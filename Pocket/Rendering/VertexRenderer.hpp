@@ -62,7 +62,14 @@ public:
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexIndex, vertices, GL_DYNAMIC_DRAW);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * triangleIndex, triangles, GL_DYNAMIC_DRAW);
         
-        glDrawElements(GL_TRIANGLES, (int)triangleIndex, GL_UNSIGNED_SHORT, 0);
+		glDrawElements(GL_TRIANGLES, (int)triangleIndex, GL_UNSIGNED_SHORT, 0);
+		auto error = glGetError();
+		if (error == GL_NO_ERROR) {
+			std::cout << error << std::endl;
+		}
+
+		
+		
         drawCalls++;
         verticesRendered += vertexIndex;
         vertexIndex = 0;

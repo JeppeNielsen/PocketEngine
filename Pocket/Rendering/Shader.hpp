@@ -66,6 +66,17 @@ public:
         "precision highp int;"
         "precision lowp sampler2D;"
         + fragmentShader;
+#elif WIN32
+		vertexShader =
+			"precision highp float;"
+			"precision highp int;"
+			+ vertexShader;
+
+		fragmentShader =
+			"precision highp float;"
+			"precision highp int;"
+			"precision lowp sampler2D;"
+			+ fragmentShader;
 #endif
 
         

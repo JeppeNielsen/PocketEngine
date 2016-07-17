@@ -302,9 +302,11 @@ inline std::string className(const std::string& prettyFunction)
 
     return prettyFunction.substr(begin,end);
 }
-
+#ifdef WIN32
+#define __CLASS_NAME__ className(__FUNCTION__)
+#elif
 #define __CLASS_NAME__ className(__PRETTY_FUNCTION__)
-
+#endif
 #define TYPE_FIELDS_BEGIN \
 public: \
 TypeInfo GetType() { \

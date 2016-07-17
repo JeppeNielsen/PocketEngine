@@ -71,8 +71,13 @@ bool Engine::Update(float dt) {
 }
 
 void Engine::Render() {
+#ifdef ASSERT_GL
     ASSERT_GL(glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
     ASSERT_GL(glEnable(GL_CULL_FACE));
+#else
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_CULL_FACE);
+#endif
 	window->PreRender();
 	rootState->DoRender();
 	window->PostRender();

@@ -74,7 +74,9 @@ void system_log(const char* format, ...)
 */
 
 
+#ifdef WIN32
 
+#elif
 
 #define STATUS_CASE(enum) case enum: return #enum
 static const char* _glStatusString(GLenum error)
@@ -120,3 +122,6 @@ system_log("%s:%d:  %s Error: %s\n",        \
                                 __FILE__, __LINE__,             \
                                 #x, _glStatusString(_glError)); \
 */
+
+
+#endif

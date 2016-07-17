@@ -16,7 +16,7 @@ namespace Pocket {
 			
 			void Create(int width, int height, bool fullScreen);
 			void Destroy();
-			bool Update(InputManager& input);
+			bool Update(IInputManagerIterator* inputManagers);
 			void PreRender();
 			void PostRender();
 			bool closed;
@@ -41,12 +41,20 @@ namespace Pocket {
 			GLuint	ui32Vbo;
 
 
+			EGLConfig mConfig;
+			EGLDisplay mDisplay;
+			EGLSurface mSurface;
+			EGLContext mContext;
+
+
+
 			typedef std::map<int, std::string> KeyMap;
 			KeyMap keyMap;
 
 			void InitKeyMap();
 
-			void EnableOpenGL();
+			bool EnableOpenGL();
+			void EnableOpenGL_old();
 
 			void DisableOpenGL();
 			

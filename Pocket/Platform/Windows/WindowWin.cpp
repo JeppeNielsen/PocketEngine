@@ -3,6 +3,7 @@
 #include <iostream>
 #include <map>
 #include "Vector2.hpp"
+#include <egl/eglext.h>
 
 PFNGLMAPBUFFEROESPROC glMapBuffer;
 PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
@@ -147,7 +148,7 @@ void WindowWin::InitKeyMap() {
 
 void WindowWin::Create(int width, int height, bool fullScreen) {
 
-	screenSize = Vector2(width, height);
+	context->ScreenSize = Vector2(width, height);
 
 	inputDevice.Initialize(3);
 
@@ -372,7 +373,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
     return DefWindowProc( hwnd, message, wparam, lparam );
 }
 
-bool WindowWin::Update(InputManager& input) {
+bool WindowWin::Update(IInputManagerIterator* inputManagers) {
 	
 	Vector2 mousePosition;
 	POINT p;
@@ -402,7 +403,7 @@ bool WindowWin::Update(InputManager& input) {
         DispatchMessage(&msg);
     }
 
-	inputDevice.Update(input);
+	inputDevice.Update(inputManagers);
 	return !closed;
 }
 
@@ -427,9 +428,154 @@ bool TestEGLError(HWND hWnd, char* pszLocation)
 	return true;
 }
 
+bool WindowWin::EnableOpenGL() {
 
+	hDC = GetDC(window);
 
-void WindowWin::EnableOpenGL()
+	PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
+	if (!eglGetPlatformDisplayEXT)
+	{
+		return false;
+	}
+
+	std::vector<EGLint> displayAttributes;
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+	displayAttributes.push_back(2);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+	displayAttributes.push_back(0);
+
+	displayAttributes.push_back(EGL_NONE);
+
+	mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
+		reinterpret_cast<void *>(hDC),
+		&displayAttributes[0]);
+	if (mDisplay == EGL_NO_DISPLAY)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	EGLint majorVersion, minorVersion;
+	if (eglInitialize(mDisplay, &majorVersion, &minorVersion) == EGL_FALSE)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
+
+	// EGL_KHR_create_context is required to request a non-ES2 context.
+	bool hasKHRCreateContext = strstr(displayExtensions, "EGL_KHR_create_context") != nullptr;
+	if (majorVersion != 2 && minorVersion != 0 && !hasKHRCreateContext)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	eglBindAPI(EGL_OPENGL_ES_API);
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	const EGLint configAttributes[] =
+	{
+		EGL_RED_SIZE,       8,
+		EGL_GREEN_SIZE,     8,
+		EGL_BLUE_SIZE,      8,
+		EGL_ALPHA_SIZE,     8,
+		EGL_DEPTH_SIZE,     24,
+		EGL_STENCIL_SIZE,   8,
+		EGL_SAMPLE_BUFFERS, 0,
+		EGL_NONE
+	};
+
+	EGLint configCount;
+	if (!eglChooseConfig(mDisplay, configAttributes, &mConfig, 1, &configCount) || (configCount != 1))
+	{
+		//destroyGL();
+		return false;
+	}
+
+	int mRedBits;
+	int mGreenBits;
+	int mBlueBits;
+	int mAlphaBits;
+	int mDepthBits;
+	int mStencilBits;
+
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_RED_SIZE, &mRedBits);
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_GREEN_SIZE, &mGreenBits);
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_BLUE_SIZE, &mBlueBits);
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_ALPHA_SIZE, &mAlphaBits);
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_DEPTH_SIZE, &mDepthBits);
+	eglGetConfigAttrib(mDisplay, mConfig, EGL_STENCIL_SIZE, &mStencilBits);
+
+	std::vector<EGLint> surfaceAttributes;
+	if (strstr(displayExtensions, "EGL_NV_post_sub_buffer") != nullptr)
+	{
+		surfaceAttributes.push_back(EGL_POST_SUB_BUFFER_SUPPORTED_NV);
+		surfaceAttributes.push_back(EGL_TRUE);
+	}
+
+	surfaceAttributes.push_back(EGL_NONE);
+
+	mSurface = eglCreateWindowSurface(mDisplay, mConfig, (EGLNativeWindowType)window, &surfaceAttributes[0]);
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		//destroyGL();
+		return false;
+	}
+	//ASSERT(mSurface != EGL_NO_SURFACE);
+
+	std::vector<EGLint> contextAttributes;
+	if (hasKHRCreateContext)
+	{
+		contextAttributes.push_back(EGL_CONTEXT_MAJOR_VERSION_KHR);
+		contextAttributes.push_back(2);
+
+		contextAttributes.push_back(EGL_CONTEXT_MINOR_VERSION_KHR);
+		contextAttributes.push_back(0);
+
+		contextAttributes.push_back(EGL_CONTEXT_OPENGL_DEBUG);
+		contextAttributes.push_back(EGL_FALSE);// mDebug ? EGL_TRUE : EGL_FALSE);
+
+		// TODO(jmadill): Check for the extension string.
+		// bool hasKHRCreateContextNoError = strstr(displayExtensions,
+		// "EGL_KHR_create_context_no_error") != nullptr;
+
+		contextAttributes.push_back(EGL_CONTEXT_OPENGL_NO_ERROR_KHR);
+		contextAttributes.push_back(EGL_FALSE);// mNoError ? EGL_TRUE : EGL_FALSE);
+	}
+	contextAttributes.push_back(EGL_NONE);
+
+	mContext = eglCreateContext(mDisplay, mConfig, nullptr, &contextAttributes[0]);
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		//destroyGL();
+		return false;
+	}
+
+	/*if (mSwapInterval != -1)
+	{
+		eglSwapInterval(mDisplay, mSwapInterval);
+	}
+	*/
+
+	return true;
+}
+
+void WindowWin::EnableOpenGL_old()
 {
 	hDC = GetDC(window);
 
@@ -450,10 +596,33 @@ void WindowWin::EnableOpenGL()
 		with, we let EGL pick the default display.
 		Querying other displays is platform specific.
 	*/
+
+	
+	
 	eglDisplay = eglGetDisplay((NativeDisplayType) hDC);
 
     if(eglDisplay == EGL_NO_DISPLAY)
          eglDisplay = eglGetDisplay((NativeDisplayType) EGL_DEFAULT_DISPLAY);
+	
+	/*
+	std::vector<EGLint> displayAttributes;
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
+	displayAttributes.push_back(2);
+	displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE);
+	displayAttributes.push_back(0);
+
+	displayAttributes.push_back(EGL_NONE);
+
+	eglDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+		reinterpret_cast<void *>(hDC),
+		&displayAttributes[0]);
+
+	*/
+
+
+
 	/*
 		Step 2 - Initialize EGL.
 		EGL has to be initialized with the display obtained in the
@@ -470,6 +639,14 @@ void WindowWin::EnableOpenGL()
 		g_bDemoDone = false;
 	}
 
+
+	eglBindAPI(EGL_OPENGL_ES_API);
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		
+		return;
+	}
+
 	/*
 		Step 3 - Specify the required configuration attributes.
 		An EGL "configuration" describes the pixel format and type of
@@ -478,18 +655,17 @@ void WindowWin::EnableOpenGL()
 		Window surface, i.e. it will be visible on screen. The list
 		has to contain key/value pairs, terminated with EGL_NONE.
 	*/
-	int i = 0;
-	pi32ConfigAttribs[i++] = EGL_RED_SIZE;
-	pi32ConfigAttribs[i++] = 5;
-	pi32ConfigAttribs[i++] = EGL_GREEN_SIZE;
-	pi32ConfigAttribs[i++] = 6;
-	pi32ConfigAttribs[i++] = EGL_BLUE_SIZE;
-	pi32ConfigAttribs[i++] = 5;
-	pi32ConfigAttribs[i++] = EGL_ALPHA_SIZE;
-	pi32ConfigAttribs[i++] = 0;
-	pi32ConfigAttribs[i++] = EGL_SURFACE_TYPE;
-	pi32ConfigAttribs[i++] = EGL_WINDOW_BIT;
-	pi32ConfigAttribs[i++] = EGL_NONE;
+	const EGLint configAttributes[] =
+	{
+		EGL_RED_SIZE,       8,
+		EGL_GREEN_SIZE,     8,
+		EGL_BLUE_SIZE,      8,
+		EGL_ALPHA_SIZE,     8,
+		EGL_DEPTH_SIZE,     16,
+		EGL_STENCIL_SIZE,   8,
+		EGL_SAMPLE_BUFFERS, 0,
+		EGL_NONE
+	};
 
 	/*
 		Step 4 - Find a config that matches all requirements.
@@ -499,7 +675,7 @@ void WindowWin::EnableOpenGL()
 		all criteria, so we can limit the number of configs returned to 1.
 	*/
 	EGLint iConfigs;
-	if (!eglChooseConfig(eglDisplay, pi32ConfigAttribs, &eglConfig, 1, &iConfigs) || (iConfigs != 1))
+	if (!eglChooseConfig(eglDisplay, configAttributes, &eglConfig, 1, &iConfigs) || (iConfigs != 1))
 	{
 		//MessageBox(0, _T("eglChooseConfig() failed."), _T("Error"), MB_OK|MB_ICONEXCLAMATION);
 		g_bDemoDone = false;
@@ -533,7 +709,12 @@ void WindowWin::EnableOpenGL()
 		like textures will only be valid inside this context
 		(or shared contexts)
 	*/
-	eglContext = eglCreateContext(eglDisplay, eglConfig, NULL, NULL);
+
+
+	std::vector<EGLint> contextAttributes;
+	contextAttributes.push_back(EGL_NONE);
+
+	eglContext = eglCreateContext(eglDisplay, eglConfig, NULL, &contextAttributes[0]);
 	if (!TestEGLError(eglWindow, "eglCreateContext"))
 	{
 		g_bDemoDone = false;
@@ -600,10 +781,14 @@ void WindowWin::DisableOpenGL()
 }
 void WindowWin::PreRender() {
 	//glLoadIdentity();
+	const Vector2 screenSize = context->ScreenSize;
+	glViewport(0, 0, screenSize.x, screenSize.y);
+	glClearColor(0, 1, 1, 0);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void WindowWin::PostRender() {
 
-	eglSwapBuffers(eglDisplay, eglSurface);
+	eglSwapBuffers(mDisplay, mSurface);
 	//SwapBuffers( hDC );
 }
