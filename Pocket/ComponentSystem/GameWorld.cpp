@@ -173,6 +173,10 @@ const GameWorld::ComponentInfos& GameWorld::ComponentTypes() {
     return componentInfos;
 }
 
+void GameWorld::ToJson(std::ostream &stream, SerializePredicate predicate) {
+    root.ToJson(stream, predicate);
+}
+
 IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(std::vector<int>& components)> constructor) {
     if (id>=systemsIndexed.size()) {
         systemsIndexed.resize(id + 1);
@@ -276,6 +280,11 @@ void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContaine
 
     if (!components[id]) {
         components[id] = constructor(componentInfos[id]);
+        if (OnGetTypeInfo) {
+            if (!componentInfos[id].getTypeInfo) {
+                OnGetTypeInfo(id, componentInfos[id]);
+            }
+        }
     }
 }
 
@@ -386,3 +395,5 @@ bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& inde
     }
     return false;
 }
+
+std::function<void(int, GameObject::ComponentInfo&)> GameWorld::OnGetTypeInfo = 0;

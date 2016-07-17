@@ -257,20 +257,21 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
     gameObject.write("id", serializedObjects[this]);
     minijson::array_writer components = gameObject.nested_array("Components");
     
-    for(int i=0; i<world->components.size(); ++i) {
-        if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
-            GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
-            GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
-            bool isReference =  componentOwner != this;
-            if (isReference) {
-                if (predicate && !predicate(componentOwner, i)) {
-                    continue;
+    if (data->activeComponents.Size()>0) {
+        for(int i=0; i<world->components.size(); ++i) {
+            if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
+                GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
+                GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
+                bool isReference =  componentOwner != this;
+                if (isReference) {
+                    if (predicate && !predicate(componentOwner, i)) {
+                        continue;
+                    }
                 }
+                SerializeComponent(i, components, isReference, componentOwner);
             }
-            SerializeComponent(i, components, isReference, componentOwner);
         }
     }
- 
     components.close();
     
     if (!data->children.empty()) {

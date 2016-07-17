@@ -56,6 +56,10 @@ namespace Pocket {
         using ComponentInfos = std::vector<GameObject::ComponentInfo>;
         const ComponentInfos& ComponentTypes();
         
+        using SerializePredicate = std::function<bool(GameObject*, int)>;
+        void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
+        
+        static std::function<void(int, GameObject::ComponentInfo&)> OnGetTypeInfo;
     private:
     
         GameObject root;

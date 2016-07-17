@@ -53,6 +53,22 @@ struct JsonSerializer<int> {
 };
 
 template<>
+struct JsonSerializer<short> {
+    static void Serialize(std::string& key, const short& value, minijson::object_writer& writer) {
+        writer.write(key.c_str(), value);
+    }
+    
+    static void Serialize(const short& value, minijson::array_writer& writer) {
+        writer.write(value);
+    }
+    
+    static void Deserialize(minijson::value& value, short* field, minijson::istream_context& context) {
+        if (value.type() != minijson::Number) return;
+        (*field) = (short)value.as_long();
+    }
+};
+
+template<>
 struct JsonSerializer<float> {
     static void Serialize(std::string& key, const float value, minijson::object_writer& writer) {
         writer.write(key.c_str(), value);

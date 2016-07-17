@@ -61,6 +61,7 @@ private:
     void WriteTypes(std::ofstream& file);
     
     void WriteExecutableMain(const std::string& path);
+    void WriteExecutableTypeInfos(const std::string &path);
     
     std::string ExtractHeaderPath(const std::string& headerFile);
     std::string ExtractHeaderName(const std::string& headerFile);

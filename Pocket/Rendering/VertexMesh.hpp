@@ -14,6 +14,7 @@
 #include "Colour.hpp"
 #include "Ray.hpp"
 #include "Vertex.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
 
@@ -72,6 +73,7 @@ public:
         return true;
     }
     
+    virtual TypeInfo GetType() = 0;
 };
 
 template<class Vertex>
@@ -80,18 +82,26 @@ public:
     typedef std::vector<Vertex> Vertices;
     Vertices vertices;
     
-    const Vector3& GetPosition(size_t index) {
+    TypeInfo GetType() override {
+        TypeInfo info;
+        info.name = "VertexMesh";
+        info.AddField(vertices, "vertices");
+        info.AddField(triangles, "triangles");
+        return info;
+    }
+    
+    const Vector3& GetPosition(size_t index) override {
         return vertices[index].Position;
     }
-    size_t Size() { return vertices.size(); }
+    size_t Size() override { return vertices.size(); }
     
-    IVertexMesh* Clone() {
+    IVertexMesh* Clone() override {
         VertexMesh<Vertex>* clone = new VertexMesh<Vertex>();
         clone->operator=(*this);
         return clone;
     }
     
-    void CalcBoundingBox(BoundingBox& box) {
+    void CalcBoundingBox(BoundingBox& box) override {
         size_t size = vertices.size();
         if (size==0) {
             box.center = Vector3(0,0,0);
@@ -201,7 +211,7 @@ public:
         }
     }
 
-    void Clear() {
+    void Clear() override {
         vertices.clear();
         triangles.clear();
     }
@@ -402,7 +412,7 @@ public:
 
 
     bool IntersectsRay(const Ray& ray,
-                             float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) {
+                             float* pickDistance, float* barycentricU, float* barycentricV, size_t* triangleIndex, Vector3* normal) override {
         if (triangles.empty()) return false;
         
         float minDistance = 10000000.0f;

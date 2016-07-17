@@ -110,6 +110,17 @@ struct Vertex {
     
     static int ID;
     static VertexDescription<Vertex> Description;
+    
+    friend std::ostream& operator<<(std::ostream& stream, const Vertex& v) {
+        stream << v.Position;
+        return stream;
+    }
+    
+    Vertex static Deserialize(const std::string& data, const char delim = ',') {
+        Vertex v;
+        v.Position = Vector3::Deserialize(data);
+        return v;
+    }
 };
 
 }
