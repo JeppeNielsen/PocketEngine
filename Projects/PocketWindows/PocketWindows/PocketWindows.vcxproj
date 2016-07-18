@@ -118,13 +118,15 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\Pocket\ComponentSystem\;..\..\..\Pocket\ComponentSystem\Meta\;..\..\..\Pocket\Core\;..\..\..\Pocket\Data\;..\..\..\Pocket\Debugging\;..\..\..\Pocket\Logic\Animation\;..\..\..\Pocket\Logic\Audio\;..\..\..\Pocket\Logic\Common\;..\..\..\Pocket\Logic\Editor\;..\..\..\Pocket\Logic\Effects\;..\..\..\Pocket\Logic\Gui\;..\..\..\Pocket\Logic\Gui\Layout\;..\..\..\Pocket\Logic\Gui\Menu\;..\..\..\Pocket\Logic\Interaction\;..\..\..\Pocket\Logic\Movement\;..\..\..\Pocket\Logic\Physics\;..\..\..\Pocket\Logic\Rendering\;..\..\..\Pocket\Logic\Selection\;..\..\..\Pocket\Logic\Spatial\;..\..\..\Pocket\Math\;..\..\..\Pocket\OpenGL\;..\..\..\Pocket\Physics\;..\..\..\Pocket\Physics\Box2D\;..\..\..\Pocket\Physics\Box2D\Collision\;..\..\..\Pocket\Physics\Box2D\Collision\Shapes;..\..\..\Pocket\Physics\Box2D\Common\;..\..\..\Pocket\Physics\Box2D\Dynamics\;..\..\..\Pocket\Physics\Box2D\Dynamics\Contacts\;..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\;..\..\..\Pocket\Platform\Windows\;..\..\..\Pocket\PngLib\;..\..\..\Pocket\Profiler\;..\..\..\Pocket\Serialization\;..\..\..\Pocket\TinyXml\;..\..\..\Pocket\Rendering\;D:\Projects\Angle\include\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>D:\Projects\Angle\src\Release_Win32\lib\libGLESv2.lib;D:\Projects\Angle\src\Release_Win32\lib\libEGL.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
