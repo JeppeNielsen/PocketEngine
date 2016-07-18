@@ -384,7 +384,7 @@ bool WindowWin::Update(IInputManagerIterator* inputManagers) {
 		}
 
 		mousePosition.x = (float)p.x;
-		mousePosition.y = (float)p.y;
+		mousePosition.y = context->ScreenSize().y-(float)p.y;
 	}
 	
 	inputDevice.SetTouchPosition(0, mousePosition);
