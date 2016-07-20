@@ -149,7 +149,7 @@ CXChildVisitResult visitor(CXCursor cursor, CXCursor parent, CXClientData client
 
 
 
-bool ScriptParser::ParseCode(ScriptClass& root, std::string cppFile, std::vector<std::string> includePaths) {
+bool ScriptParser::ParseCode(ScriptClass& root, std::vector<std::string> cppFiles, std::vector<std::string> includePaths) {
 
     std::vector<const char*> arguments;
     arguments.push_back("c++");
@@ -167,6 +167,7 @@ bool ScriptParser::ParseCode(ScriptClass& root, std::string cppFile, std::vector
     
     currentClass = &root;
     
+    for(auto cppFile : cppFiles) {
     CXIndex index = clang_createIndex(0,1);
 
     // create Translation Unit
@@ -178,6 +179,8 @@ bool ScriptParser::ParseCode(ScriptClass& root, std::string cppFile, std::vector
 
     CXCursor startCursor = clang_getTranslationUnitCursor(tu);
     clang_visitChildren(startCursor, visitor, 0);
+    
+    }
 
     return true;
 }

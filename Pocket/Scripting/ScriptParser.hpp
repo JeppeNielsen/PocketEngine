@@ -14,7 +14,7 @@ namespace Pocket {
 
 class ScriptParser {
 public:
-    bool ParseCode(ScriptClass& root, std::string cppFile, std::vector<std::string> includePaths);
+    bool ParseCode(ScriptClass& root, std::vector<std::string> cppFiles, std::vector<std::string> includePaths);
     ScriptClass ExtractSystemsAndComponents(const ScriptClass& root);
 };
 
