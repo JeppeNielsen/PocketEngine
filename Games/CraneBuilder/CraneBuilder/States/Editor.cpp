@@ -106,11 +106,6 @@ void Editor::Initialize() {
             };
     }
     
-    GameObject* test = world.CreateObject();
-    test->AddComponent<Transform>();
-    test->AddComponent<Material>();
-    test->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 20);
-    
     Input.ButtonDown .Bind(this, &Editor::ButtonDown);
 }
 
