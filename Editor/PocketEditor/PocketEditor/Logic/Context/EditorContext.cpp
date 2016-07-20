@@ -20,10 +20,8 @@ Project& EditorContext::Project() { return project; }
 
 GameObject* EditorContext::GameRoot() { return gameRoot; }
 
-ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
-
 void EditorContext::NewProject() {
-    //project = { };
+    project.CreateNew("/Projects/PocketEngine/Editor/TestProject/");
     project.CreateDefaultScene(world, gameRoot, *input);
 }
 

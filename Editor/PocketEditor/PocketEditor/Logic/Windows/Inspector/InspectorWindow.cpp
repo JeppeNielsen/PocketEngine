@@ -53,7 +53,7 @@ void InspectorWindow::OnCreate() {
     guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
     GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.CreateSystem<GameObjectEditorSystem>();
     gameObjectEditorSystem->gui = &gui;
-    gameObjectEditorSystem->scriptWorld = &context->ScriptWorld();
+    gameObjectEditorSystem->scriptWorld = &context->Project().ScriptWorld();
     
     addComponentButton = gui.CreateLabelControl(window, "Box", {0,400-40}, 40, 0, "+", 10);
     addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);

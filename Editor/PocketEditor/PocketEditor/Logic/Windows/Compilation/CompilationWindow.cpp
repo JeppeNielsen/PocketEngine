@@ -10,53 +10,13 @@
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "EditorObject.hpp"
+#include "Timer.hpp"
 
 std::string CompilationWindow::Name() { return "Compiler"; }
 
 void CompilationWindow::OnInitialize() {
     GameWorld& world = context->World();
-    ScriptWorld& scriptWorld = context->ScriptWorld();
     selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
-
-    scriptWorld.Types.Add<Vector3>();
-
-    scriptWorld.SetClangSdkPath("/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/");
-    
-    scriptWorld.SetFiles(
-        "ScriptExample.so",
-        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
-        {
-            "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp",
-            //"/Projects/PocketEngine/Pocket/Rendering/Colour.cpp"
-        }, {
-            "/Projects/PocketEngine/Pocket/Data/Property.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
-        }
-        /*
-        {
-            "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
-            "/Projects/PocketEngine/Pocket/Data/Property.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
-        }
-        */
-        );
-    
-    
 }
 
 void CompilationWindow::OnCreate() {
@@ -77,20 +37,24 @@ void CompilationWindow::OnCreate() {
 
 void CompilationWindow::Compile() {
 
+    
+    
     selectables->ClearSelection();
 
-    GameWorld& world = context->Project().World();
-    ScriptWorld& scriptWorld = context->ScriptWorld();
-
+    
+    Pocket::Timer timer;
+    timer.Begin();
     std::cout<<"Compilation Started..."<<std::endl;
+    context->Project().Compile();
+    std::cout<<"Compilation Ended... time = "<< timer.End() <<" seconds "<<std::endl;
+//
+//        scriptWorld.RemoveGameWorld(world);
+//        scriptWorld.SetWorldType(world);
+//        scriptWorld.Build(true);
+//        scriptWorld.AddGameWorld(world);
 
 
-    scriptWorld.RemoveGameWorld(world);
-    scriptWorld.SetWorldType(world);
-    scriptWorld.Build(true);
-    scriptWorld.AddGameWorld(world);
-
-
+    GameWorld& world = context->Project().World();
 
     GameObject* go = world.CreateObject();
 
@@ -127,15 +91,12 @@ void CompilationWindow::Compile() {
     window->AddScriptComponent(1);
     */
     
-    std::cout<<"Compilation Ended..." <<std::endl;
+    
 }
 
 void CompilationWindow::Build() {
-    ScriptWorld& scriptWorld = context->ScriptWorld();
-    
-    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
-    std::ofstream file;
-    file.open ("world.json");
-    context->Project().World().ToJson(file);
-    file.close();
-}
+    std::cout<<"Build Started..."<<std::endl;
+    Pocket::Timer timer;
+    timer.Begin();
+    context->Project().Build();
+    std::cout<<"Build Ended... time = "<<timer.End()<<"seconds" <<std::endl;}

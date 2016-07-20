@@ -8,10 +8,24 @@ TypeInfo typeInfo;
 	      typeInfo.AddField(component->useBlue, "useBlue");
 return typeInfo;
 };
+componentToFunction[GameIDHelper::GetComponentID<ReverseClicker>()] = [](GameObject* object) -> TypeInfo {
+ReverseClicker* component = object->GetComponent<ReverseClicker>();
+TypeInfo typeInfo;
+	      typeInfo.name = "ReverseClicker";
+return typeInfo;
+};
 componentToFunction[GameIDHelper::GetComponentID<Rotator>()] = [](GameObject* object) -> TypeInfo {
 Rotator* component = object->GetComponent<Rotator>();
 TypeInfo typeInfo;
 	      typeInfo.name = "Rotator";
+	      typeInfo.AddField(component->speed, "speed");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<Turner>()] = [](GameObject* object) -> TypeInfo {
+Turner* component = object->GetComponent<Turner>();
+TypeInfo typeInfo;
+	      typeInfo.name = "Turner";
+	      typeInfo.AddField(component->reverse, "reverse");
 	      typeInfo.AddField(component->speed, "speed");
 return typeInfo;
 };
