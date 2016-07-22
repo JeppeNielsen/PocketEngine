@@ -32,25 +32,8 @@ public:
     Windows windows;
     
     void Initialize() {
-        
-        /*
-        scriptWorld.SetFiles(
-        "ScriptExample.so",
-        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
-        {
-            "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp"
-        },
-        {
-            "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
-            "/Projects/PocketEngine/Pocket/Data/Property.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
-        }
-        );
-        */
-        
+
         GameWorld& world = context.World();
-        
         
         context.World().CreateSystem<RenderSystem>();
         context.World().CreateSystem<TouchSystem>()->Input = &Input;
@@ -83,13 +66,23 @@ public:
             window->Create();
         }
         
-        
-        
         Input.ButtonDown.Bind([this] (auto key) {
             if (key == "n") {
                 context.NewProject();
             }
         });
+        
+        {
+            auto& menu = Context().Menu().AddChild("Project");
+                menu.AddChild("New").Clicked.Bind([] () {
+                    std::cout << " new Project"<<std::endl;
+                });
+                menu.AddChild("Open").Clicked.Bind([] () {
+                    std::cout << " open project"<<std::endl;
+                });
+            
+        }
+        
     }
     
 //    void Compile() {
