@@ -38,6 +38,8 @@ namespace Pocket {
         void ButtonUp(const std::string& button);
         void SetScroll(float delta);
         
+        void* win;
+        
     private:
         static OSXWindowCreator* instance;
         

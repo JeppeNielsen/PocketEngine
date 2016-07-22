@@ -49,6 +49,7 @@ void WindowOSX::osxWindowCreated(void* win) {
     
     
     context->ScreenSize = Vector2(backingPixelWidth, backingPixelHeight);
+    OSXWindowCreator::Instance()->win = win;
 }
 
 void WindowOSX::Loop(bool ee) {

@@ -16,5 +16,7 @@
 - (void) drawRect: (NSRect) bounds;
 - (void) prepareOpenGL;
 - (void)windowDidResize:(NSNotification *)n;
+-(NSMenuItem*) createMenuItem: (NSMenu*)menu withText:(NSString*)text withObject:(void*)object;
+-(void) menuItemClicked:(id)sender;
 
 @end

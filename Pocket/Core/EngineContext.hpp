@@ -10,11 +10,17 @@
 #include "Property.hpp"
 #include "Vector2.hpp"
 #include "Rect.hpp"
+#include "AppMenu.hpp"
 
 namespace Pocket {
     class EngineContext {
     public:
+        EngineContext();
+        ~EngineContext();
         Property<Vector2> ScreenSize;
         Rect Viewport() const;
+        AppMenu& Menu();
+    private:
+        AppMenu* menu;
     };
 }

@@ -13,3 +13,16 @@ using namespace Pocket;
 Rect EngineContext::Viewport() const {
     return Rect(0, ScreenSize());
 }
+
+AppMenu& EngineContext::Menu() {
+    if (!menu) {
+        menu = new AppMenu();
+    }
+    return *menu;
+}
+
+EngineContext::EngineContext() : menu(0) { }
+
+EngineContext::~EngineContext() {
+    delete menu;
+}

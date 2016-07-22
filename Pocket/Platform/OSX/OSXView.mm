@@ -9,6 +9,7 @@
 #include "OSXWindowCreator.h"
 #include <OpenGL/gl.h>
 #include "Window.hpp"
+#include "AppMenu.hpp"
 
 @implementation OSXView
 
@@ -37,6 +38,15 @@
     glGetIntegerv(GL_FRAMEBUFFER_BINDING, &defaultFBO);
     
     Pocket::Window::Framebuffer = (uint)defaultFBO;
+    
+    NSApplication* app = [NSApplication sharedApplication];
+    NSMenu* menu = [[NSMenu alloc] initWithTitle: @""];
+
+    {
+        [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
+    }
+
+    [app setMainMenu:menu];
 }
 
 - (void) updateGLView:(NSTimer *)timer
@@ -109,6 +119,21 @@
 
 - (void)windowDidResize:(NSNotification *)notification {
     NSLog(@"test");
+}
+
+std::map<NSMenuItem*, Pocket::AppMenu*> menuItemToAppMenu;
+
+-(NSMenuItem*)createMenuItem:(NSMenu *)menu withText:(NSString*)text withObject:(void*)object
+{
+    NSMenuItem* menuItem = [menu addItemWithTitle:text action:@selector(menuItemClicked:) keyEquivalent:@"A"];
+    menuItemToAppMenu[menuItem] = (Pocket::AppMenu*)object;
+    return menuItem;
+}
+
+-(void)menuItemClicked:(id)sender
+{
+    NSMenuItem* menuItem = (NSMenuItem*)sender;
+    menuItemToAppMenu[menuItem]->Clicked();
 }
 
 @end
