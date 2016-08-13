@@ -376,6 +376,7 @@
 		72F063381D2D5364004BC3F8 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F061BE1D2D5364004BC3F8 /* tinyxmlerror.cpp */; };
 		72F063391D2D5364004BC3F8 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F061BF1D2D5364004BC3F8 /* tinyxmlparser.cpp */; };
 		72F0633D1D2D5364004BC3F8 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 72F061C71D2D5364004BC3F8 /* miniz.c */; };
+		72FA3F4C1D4D0A9100EA07A3 /* AppMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72FA3F4B1D4D0A9100EA07A3 /* AppMenu.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1245,6 +1246,8 @@
 		72F061BF1D2D5364004BC3F8 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		72F061C71D2D5364004BC3F8 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		72F061C81D2D5364004BC3F8 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
+		72FA3F4B1D4D0A9100EA07A3 /* AppMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppMenu.mm; sourceTree = "<group>"; };
+		72FA3F4D1D4D0A9800EA07A3 /* AppMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AppMenu.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1467,6 +1470,7 @@
 		72F05E261D2D5363004BC3F8 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				72FA3F4D1D4D0A9800EA07A3 /* AppMenu.hpp */,
 				72F05E271D2D5363004BC3F8 /* Engine.cpp */,
 				72F05E281D2D5363004BC3F8 /* Engine.hpp */,
 				72F05E291D2D5363004BC3F8 /* EngineContext.cpp */,
@@ -2652,6 +2656,7 @@
 		72F061651D2D5364004BC3F8 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				72FA3F4B1D4D0A9100EA07A3 /* AppMenu.mm */,
 				72F061661D2D5364004BC3F8 /* AppDelegate.h */,
 				72F061671D2D5364004BC3F8 /* AppDelegate.mm */,
 				72F061681D2D5364004BC3F8 /* BigButtonManager.cpp */,
@@ -2916,6 +2921,7 @@
 				72F062501D2D5364004BC3F8 /* b2Shape.cpp in Sources */,
 				72F0625C1D2D5364004BC3F8 /* b2ContactSolver.cpp in Sources */,
 				72F0625E1D2D5364004BC3F8 /* b2PolyContact.cpp in Sources */,
+				72FA3F4C1D4D0A9100EA07A3 /* AppMenu.mm in Sources */,
 				72F062A21D2D5364004BC3F8 /* btStaticPlaneShape.cpp in Sources */,
 				72F0623E1D2D5364004BC3F8 /* TransitionHelper.cpp in Sources */,
 				723E7E151B5EECED00007AEA /* MapRenderer.cpp in Sources */,

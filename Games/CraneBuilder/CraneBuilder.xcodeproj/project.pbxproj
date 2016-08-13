@@ -190,6 +190,7 @@
 		72EC13AD1D3055DE00B69802 /* Bitset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EC13AA1D3055DE00B69802 /* Bitset.cpp */; };
 		72EC13B41D30561200B69802 /* TypeIndexList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EC13B11D30561200B69802 /* TypeIndexList.cpp */; };
 		72EC13B71D30573B00B69802 /* Rect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EC13B51D30573B00B69802 /* Rect.cpp */; };
+		72FA3F491D4D06F100EA07A3 /* AppMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72FA3F481D4D06F100EA07A3 /* AppMenu.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -594,6 +595,8 @@
 		72EC13B31D30561200B69802 /* TypeInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeInfo.hpp; sourceTree = "<group>"; };
 		72EC13B51D30573B00B69802 /* Rect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Rect.cpp; sourceTree = "<group>"; };
 		72EC13B61D30573B00B69802 /* Rect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Rect.hpp; sourceTree = "<group>"; };
+		72FA3F481D4D06F100EA07A3 /* AppMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppMenu.mm; sourceTree = "<group>"; };
+		72FA3F4A1D4D06FC00EA07A3 /* AppMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AppMenu.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -656,6 +659,7 @@
 		72411D881BE423AE00269FFB /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				72FA3F4A1D4D06FC00EA07A3 /* AppMenu.hpp */,
 				72EC13941D3054D700B69802 /* Engine.cpp */,
 				72EC13951D3054D700B69802 /* Engine.hpp */,
 				72EC13961D3054D700B69802 /* EngineContext.cpp */,
@@ -1075,6 +1079,7 @@
 		724120CB1BE423B200269FFB /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				72FA3F481D4D06F100EA07A3 /* AppMenu.mm */,
 				724120CC1BE423B200269FFB /* AppDelegate.h */,
 				724120CD1BE423B200269FFB /* AppDelegate.mm */,
 				724120CE1BE423B200269FFB /* BigButtonManager.cpp */,
@@ -1467,6 +1472,7 @@
 				724121FA1BE423B300269FFB /* DraggableMotionSystem.cpp in Sources */,
 				724123B61BEFE3AB00269FFB /* BackgroundSystem.cpp in Sources */,
 				724121F21BE423B300269FFB /* TextBoxLabelSystem.cpp in Sources */,
+				72FA3F491D4D06F100EA07A3 /* AppMenu.mm in Sources */,
 				724121FE1BE423B300269FFB /* Limitable.cpp in Sources */,
 				724123CB1BF14EE900269FFB /* SimulationFactory.cpp in Sources */,
 				727578AF1A44ED2900A2D8EF /* SpringTransformSystem.cpp in Sources */,
