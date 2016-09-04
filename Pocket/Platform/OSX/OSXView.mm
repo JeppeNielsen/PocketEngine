@@ -123,9 +123,9 @@
 
 std::map<NSMenuItem*, Pocket::AppMenu*> menuItemToAppMenu;
 
--(NSMenuItem*)createMenuItem:(NSMenu *)menu withText:(NSString*)text withObject:(void*)object
+-(NSMenuItem*)createMenuItem:(NSMenu *)menu withText:(NSString*)text withObject:(void*)object withShortCut:(NSString*)shortCut
 {
-    NSMenuItem* menuItem = [menu addItemWithTitle:text action:@selector(menuItemClicked:) keyEquivalent:@"A"];
+    NSMenuItem* menuItem = [menu addItemWithTitle:text action:@selector(menuItemClicked:) keyEquivalent:shortCut];
     menuItemToAppMenu[menuItem] = (Pocket::AppMenu*)object;
     return menuItem;
 }

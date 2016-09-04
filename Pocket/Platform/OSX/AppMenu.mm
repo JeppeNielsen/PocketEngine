@@ -27,7 +27,7 @@ AppMenu::~AppMenu() {
         delete child;
     }
 }
-AppMenu::AppMenu(AppMenu* parent, const std::string& text) : text(text), parent(parent) {
+AppMenu::AppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut) : text(text), parent(parent) {
 
 /*
 
@@ -46,6 +46,7 @@ NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
 
     
     NSString* textString = [[NSString alloc] initWithUTF8String:text.c_str()];
+    NSString* shortCutString = [[NSString alloc] initWithUTF8String:shortcut.c_str()];
 
     Data data;
     
@@ -54,7 +55,7 @@ NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
     if (!parent->parent) {
         NSMenu* menu = [NSApp mainMenu];
         //data.menuItem = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-        data.menuItem = [osxView createMenuItem:menu withText:@"" withObject:this];
+        data.menuItem = [osxView createMenuItem:menu withText:@"" withObject:this withShortCut:shortCutString];
         data.menu =  [[NSMenu alloc] initWithTitle:textString];
         [data.menuItem setSubmenu:data.menu];
         
@@ -63,7 +64,7 @@ NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
 
         NSMenu* menu = it->second.menu;
     
-        data.menuItem = [osxView createMenuItem:menu withText:textString withObject:this]; //[menu addItemWithTitle:textString action:@selector(Selected) keyEquivalent:@""];
+        data.menuItem = [osxView createMenuItem:menu withText:textString withObject:this withShortCut:shortCutString]; //[menu addItemWithTitle:textString action:@selector(Selected) keyEquivalent:@""];
         //data.menu = [[NSMenu alloc] initWithTitle:textString];
         //data.menuItem = [data.menu addItemWithTitle:textString action:nil keyEquivalent:@""];
 
@@ -72,8 +73,8 @@ NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
     menuData[this] = data;
 }
 
-AppMenu& AppMenu::AddChild(const std::string &text) {
-    children.push_back( new AppMenu(this, text) );
+AppMenu& AppMenu::AddChild(const std::string &text, const std::string& shortcut) {
+    children.push_back( new AppMenu(this, text, shortcut) );
     return *children.back();
 }
 

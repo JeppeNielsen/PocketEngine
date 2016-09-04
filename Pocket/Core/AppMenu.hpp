@@ -17,10 +17,10 @@ namespace Pocket {
         ~AppMenu();
         
         Event<> Clicked;
-        AppMenu& AddChild(const std::string& text);
+        AppMenu& AddChild(const std::string& text, const std::string& shortcut="");
     private:
     
-        AppMenu(AppMenu* parent, const std::string& text);
+        AppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut="");
     
         std::string text;
         std::vector<AppMenu*> children;
