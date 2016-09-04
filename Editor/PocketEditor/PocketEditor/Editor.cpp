@@ -19,6 +19,8 @@
 #include "SelectableDragSystem.hpp"
 #include "CompilationWindow.hpp"
 #include "InspectorWindow.hpp"
+#include "GameMenu.hpp"
+#include "GameObjectMenu.hpp"
 
 #include <vector>
 
@@ -30,6 +32,8 @@ public:
     ScriptWorld scriptWorld;
     using Windows = std::vector<BaseWindow*>;
     Windows windows;
+    using Menus = std::vector<BaseMenu*>;
+    Menus menus;
     
     void Initialize() {
 
@@ -46,12 +50,16 @@ public:
         context.World().CreateSystem<TouchSystem>()->TouchDepth = 5;
         
         windows.push_back(new HierarchyWindow());
-        windows.push_back(new ProjectWindow());
-        windows.push_back(new CompilationWindow());
         windows.push_back(new InspectorWindow());
+        
+        menus.push_back(new GameObjectMenu());
+        menus.push_back(new GameMenu());
         
         for(auto window : windows) {
             window->Initialize(&context);
+        }
+        for(auto menu : menus) {
+            menu->Initialize(&Context(), &context);
         }
         context.Initialize(Input);
         
@@ -66,12 +74,20 @@ public:
             window->Create();
         }
         
+        for(auto menu : menus) {
+            menu->Create();
+        }
+        
         Input.ButtonDown.Bind([this] (auto key) {
             if (key == "n") {
                 context.NewProject();
             }
         });
         
+        //CreateMenus();
+    }
+        
+    void CreateMenus() {
         {
             auto& menu = Context().Menu().AddChild("Project");
                 menu.AddChild("New").Clicked.Bind([] () {
@@ -80,9 +96,18 @@ public:
                 menu.AddChild("Open").Clicked.Bind([] () {
                     std::cout << " open project"<<std::endl;
                 });
-            
         }
-        
+        {
+            auto& fileMenu = Context().Menu().AddChild("Edit");
+                fileMenu.AddChild("Cut");
+                fileMenu.AddChild("Copy");
+                fileMenu.AddChild("Paste");
+        }
+        {
+            auto& fileMenu = Context().Menu().AddChild("Game");
+                fileMenu.AddChild("Compile");
+                fileMenu.AddChild("Build");
+        }
     }
     
 //    void Compile() {
