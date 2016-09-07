@@ -129,8 +129,8 @@ public:
     
     void Update(float dt) {
         
-        context.GuiWorld().Update(dt);
         context.Project().World().Update(dt);
+        context.GuiWorld().Update(dt);
         context.World().Update(dt);
     }
     

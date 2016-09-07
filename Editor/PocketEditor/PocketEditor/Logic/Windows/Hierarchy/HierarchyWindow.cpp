@@ -18,11 +18,14 @@ void HierarchyWindow::OnInitialize() {
 
     GameWorld& world = context->World();
 
-    world.CreateSystem<VirtualTreeListSystem>();
-    world.CreateSystem<VirtualTreeListSpawnerSystem>();
     world.CreateSystem<SelectedColorerSystem>();
 
     selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
+    
+    GameWorld& guiWorld = context->GuiWorld();
+    guiWorld.CreateSystem<VirtualTreeListSystem>();
+    guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
+    guiWorld.CreateSystem<SelectedColorerSystem>();
 }
 
 void HierarchyWindow::OnCreate() {
