@@ -166,10 +166,10 @@ void RenderSystem::Render() {
         RenderCamera(camera);
     }
     
-    static int counter = 0;
+    /*static int counter = 0;
     if (counter++%300==0) {
         std::cout<<"Draw calls : " << renderInfo.drawCalls<< ", Vertices Rendered : " << renderInfo.verticesRendered<<", Objects rendered : "<< renderInfo.objectsRendered<<std::endl;
-    }
+    }*/
 }
 
 bool RenderSystem::SortOpaqueObjects(const VisibleObject& a, const VisibleObject& b) {

@@ -30,7 +30,7 @@ void FileHelper::FindFilesAtPath(std::vector<std::string> &list, const std::stri
         
         if (entry->d_type == DT_DIR ) {
             if (filename!="." && filename!="..") {
-                FindFilesAtPath(list, path + filename, extension);
+                FindFilesAtPath(list, path +"/"+ filename, extension);
             }
         } else {
             if (filename.find(extension)!=std::string::npos) {

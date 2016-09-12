@@ -19,6 +19,7 @@
 #include "InspectorWindow.hpp"
 #include "GameMenu.hpp"
 #include "GameObjectMenu.hpp"
+#include "ProjectWindow.hpp"
 
 #include <vector>
 
@@ -49,6 +50,7 @@ public:
         
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
+        windows.push_back(new ProjectWindow());
         
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
@@ -81,7 +83,6 @@ public:
                 context.NewProject();
             }
         });
-        
     }
     
     void Update(float dt) {
