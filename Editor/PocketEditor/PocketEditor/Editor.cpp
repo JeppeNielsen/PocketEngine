@@ -9,7 +9,6 @@
 #include "ScriptWorld.hpp"
 #include "EditorContext.hpp"
 #include "HierarchyWindow.hpp"
-#include "ProjectWindow.hpp"
 #include "ClickSelectorSystem.hpp"
 #include "EditorTransformSystem.hpp"
 #include "RenderSystem.hpp"
@@ -17,7 +16,6 @@
 #include "ClickSelectorSystem.hpp"
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
-#include "CompilationWindow.hpp"
 #include "InspectorWindow.hpp"
 #include "GameMenu.hpp"
 #include "GameObjectMenu.hpp"
@@ -84,48 +82,7 @@ public:
             }
         });
         
-        //CreateMenus();
     }
-        
-    void CreateMenus() {
-        {
-            auto& menu = Context().Menu().AddChild("Project");
-                menu.AddChild("New").Clicked.Bind([] () {
-                    std::cout << " new Project"<<std::endl;
-                });
-                menu.AddChild("Open").Clicked.Bind([] () {
-                    std::cout << " open project"<<std::endl;
-                });
-        }
-        {
-            auto& fileMenu = Context().Menu().AddChild("Edit");
-                fileMenu.AddChild("Cut");
-                fileMenu.AddChild("Copy");
-                fileMenu.AddChild("Paste");
-        }
-        {
-            auto& fileMenu = Context().Menu().AddChild("Game");
-                fileMenu.AddChild("Compile");
-                fileMenu.AddChild("Build");
-        }
-    }
-    
-//    void Compile() {
-//        std::cout<<"Compilation Started..."<<std::endl;
-//    
-//        scriptWorld.RemoveGameWorld(world);
-//        scriptWorld.Build();
-//        scriptWorld.AddGameWorld(world);
-//        /*
-//        GameObject* window = gui->CreateControl(0, "Box", {200,200});
-//        window->AddComponent<Draggable>();
-//        window->GetComponent<Colorable>()->Color = Colour(0.0f,0.0f,1.0f,0.5f);
-//        window->GetComponent<Transform>()->Position = {300,300};
-//        window->AddScriptComponent(1);
-//        */
-//        
-//        std::cout<<"Compilation Ended..." <<std::endl;
-//    }
     
     void Update(float dt) {
         

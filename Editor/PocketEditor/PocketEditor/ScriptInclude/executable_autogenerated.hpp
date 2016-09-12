@@ -1,11 +1,26 @@
 GameWorld::OnGetTypeInfo = [] (int componentID, GameObject::ComponentInfo& info) {
  static std::map<int, std::function<TypeInfo(GameObject*)>> componentToFunction; 
  if (!componentToFunction.empty()) {
+componentToFunction[GameIDHelper::GetComponentID<Blinker>()] = [](GameObject* object) -> TypeInfo {
+Blinker* component = object->GetComponent<Blinker>();
+TypeInfo typeInfo;
+	      typeInfo.name = "Blinker";
+	      typeInfo.AddField(component->speed, "speed");
+	      typeInfo.AddField(component->time, "time");
+return typeInfo;
+};
 componentToFunction[GameIDHelper::GetComponentID<ColorClicker>()] = [](GameObject* object) -> TypeInfo {
 ColorClicker* component = object->GetComponent<ColorClicker>();
 TypeInfo typeInfo;
 	      typeInfo.name = "ColorClicker";
 	      typeInfo.AddField(component->useBlue, "useBlue");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<Mover>()] = [](GameObject* object) -> TypeInfo {
+Mover* component = object->GetComponent<Mover>();
+TypeInfo typeInfo;
+	      typeInfo.name = "Mover";
+	      typeInfo.AddField(component->speed, "speed");
 return typeInfo;
 };
 componentToFunction[GameIDHelper::GetComponentID<ReverseClicker>()] = [](GameObject* object) -> TypeInfo {
