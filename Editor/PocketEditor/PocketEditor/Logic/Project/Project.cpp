@@ -47,56 +47,17 @@ Project::Project() {
 ScriptWorld& Project::ScriptWorld() { return scriptWorld; }
 
 void Project::CreateNew(const std::string& path) {
-    scriptWorld.RemoveGameWorld(world);
-    world.Clear();
+    //scriptWorld.RemoveGameWorld(world);
+    //world.Clear();
     this->path = path;
+    Worlds.Clear();
 }
 
-GameWorld& Project::World() { return world; }
+GameWorld& Project::World() { return Worlds.ActiveWorld()->World(); }
 
-void Project::CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input) {
-
-    world.CreateSystem<RenderSystem>();
-    world.CreateSystem<TransformHierarchy>();
-    world.CreateSystem<TouchSystem>()->Input = &input;
-    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
-    auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
-    creatorSystem->editorWorld = &editorWorld;
-    creatorSystem->gameRoot = gameRoot;
-    
-    GameObject* camera = world.CreateObject();
-    camera->AddComponent<Camera>();
-    camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-    camera->GetComponent<Camera>()->FieldOfView = 70;
-
-    return;
-    
-    for (int x=-1; x<=1; ++x) {
-    for (int y=-1; y<=1; ++y) {
-    
-        GameObject* cube = world.CreateObject();
-        cube->AddComponent<Transform>()->Position = {x*2.3f,y*2.3f,0};
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.2f);
-        cube->AddComponent<Material>();
-        cube->AddComponent<EditorObject>();
-        
-        auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
-        
-        for (int i=0; i<verts.size(); i++) {
-            verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
-        }
-        
-        GameObject* child = world.CreateObject();
-        child->Parent() = cube;
-        child->AddComponent<Transform>()->Position = {0,0,-2};
-        child->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f);
-        child->AddComponent<Material>();
-        child->AddComponent<EditorObject>();
-        }
-    }
-}
 
 bool Project::Compile() {
+    /*
     std::vector<std::string> foundIncludeFiles = defaultIncludes;
     FileHelper::FindFiles(foundIncludeFiles, path, ".hpp");
     
@@ -121,15 +82,37 @@ bool Project::Compile() {
     scriptWorld.SetWorldType(world);
     scriptWorld.Build(true);
     scriptWorld.AddGameWorld(world);
-    
+    */
     return true;
 }
 
 void Project::Build() {
+    /*
     scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
     std::ofstream file;
     file.open ("world.json");
     world.ToJson(file);
     file.close();
+    */
 }
 
+void Project::Initialize(InputManager& input) {
+    this->Worlds.Initialize(input);
+}
+
+void Project::Update(float dt) {
+    if (!Worlds.ActiveWorld()) return;
+    Worlds.ActiveWorld()->World().Update(dt);
+    Worlds.ActiveWorld()->EditorWorld().Update(dt);
+}
+
+void Project::Render() {
+    if (!Worlds.ActiveWorld()) return;
+    Worlds.ActiveWorld()->World().Render();
+    Worlds.ActiveWorld()->EditorWorld().Render();
+}
+
+SelectableCollection<EditorObject>* Project::GetSelectables() {
+    if (!Worlds.ActiveWorld()) return 0;
+    return Worlds.ActiveWorld()->selectables;
+}

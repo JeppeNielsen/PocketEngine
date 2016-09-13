@@ -18,5 +18,4 @@ protected:
     std::string Name() override;
 private:
     void Clicked(TouchData d, GameObject* object);
-    SelectableCollection<EditorObject>* selectables;
 };

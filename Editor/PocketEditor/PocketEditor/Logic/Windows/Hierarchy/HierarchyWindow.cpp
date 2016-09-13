@@ -15,13 +15,6 @@
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
 void HierarchyWindow::OnInitialize() {
-
-    GameWorld& world = context->World();
-
-    world.CreateSystem<SelectedColorerSystem>();
-
-    selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
-    
     GameWorld& guiWorld = context->GuiWorld();
     guiWorld.CreateSystem<VirtualTreeListSystem>();
     guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
@@ -31,6 +24,7 @@ void HierarchyWindow::OnInitialize() {
 void HierarchyWindow::OnCreate() {
     Gui& gui = context->Gui();
 
+    return;
     GameObject* pivot;
     GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, {200,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
     listBox->RemoveComponent<Sprite>();
@@ -69,6 +63,7 @@ void HierarchyWindow::OnCreate() {
 }
 
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {
+    auto selectables = context->Project().GetSelectables();
     selectables->ClearSelection();
     object->GetComponent<Selectable>()->Selected = true;
     //factory->GetSelectable(object)->Selected = true;

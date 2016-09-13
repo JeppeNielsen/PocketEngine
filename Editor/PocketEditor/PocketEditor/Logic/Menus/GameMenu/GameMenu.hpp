@@ -17,5 +17,4 @@ protected:
     std::string Name() override;
     void OnCreate() override;
     void OnInitialize() override;
-    SelectableCollection<EditorObject>* selectables;
 };

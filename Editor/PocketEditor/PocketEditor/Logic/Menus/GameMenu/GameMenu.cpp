@@ -14,12 +14,11 @@ std::string GameMenu::Name() {
 }
 
 void GameMenu::OnInitialize() {
-    GameWorld& world = context->World();
-    selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
 }
 
 void GameMenu::OnCreate() {
     menu->AddChild("Compile").Clicked.Bind([this] {
+        auto selectables = context->Project().GetSelectables();
         selectables->ClearSelection();
         Timer timer;
         std::cout << "Compilation started..."<< std::endl;

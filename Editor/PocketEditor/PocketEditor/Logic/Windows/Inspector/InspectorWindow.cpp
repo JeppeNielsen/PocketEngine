@@ -18,9 +18,9 @@
 std::string InspectorWindow::Name() { return "Inspector"; }
 
 void InspectorWindow::OnInitialize() {
-    GameWorld& world = context->World();
-    selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
-    selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
+    
+    //selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
+    //selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     
     GameWorld& guiWorld = context->GuiWorld();
     
@@ -30,6 +30,23 @@ void InspectorWindow::OnInitialize() {
     guiWorld.CreateSystem<LayoutSystem>();
     
     CreateDefaultSerializedEditors();
+    selectables = 0;
+    context->Project().Worlds.ActiveWorld.Changed.Bind(this, &InspectorWindow::OpenWorldChanged);
+}
+
+void InspectorWindow::OpenWorldChanged() {
+    OpenWorld* prev = context->Project().Worlds.ActiveWorld.PreviousValue();
+    OpenWorld* current = context->Project().Worlds.ActiveWorld;
+    if (prev) {
+        prev->selectables->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+    }
+    
+    if (current) {
+        current->selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
+    }
+    
+    selectables = current->selectables;
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
 }
 
 void InspectorWindow::OnCreate() {

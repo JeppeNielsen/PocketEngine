@@ -15,10 +15,8 @@ std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
 
-    GameWorld& world = context->World();
-    world.CreateSystem<FileSystemListenerSystem>();
-
-   
+    GameWorld& contextWorld = context->ContextWorld();
+    contextWorld.CreateSystem<FileSystemListenerSystem>();
     
     GameWorld& guiWorld = context->GuiWorld();
     guiWorld.CreateSystem<VirtualTreeListSystem>();
@@ -27,9 +25,9 @@ void ProjectWindow::OnInitialize() {
 }
 
 void ProjectWindow::OnCreate() {
-    GameWorld& world = context->World();
+    GameWorld& contextWorld = context->ContextWorld();
     
-    GameObject* fileRoot = world.CreateObject();
+    GameObject* fileRoot = contextWorld.CreateObject();
     fileRoot->AddComponent<FileSystemListener>()->path = "/Projects/PocketEngine/Editor/TestProject/Code";
 
 

@@ -12,16 +12,22 @@
 #include "InputManager.hpp"
 #include "ScriptWorld.hpp"
 #include <vector>
+#include "OpenWorldCollection.hpp"
+#include "SelectableCollection.hpp"
+#include "EditorObject.hpp"
 
 using namespace Pocket;
 
 class Project {
 private:
-    GameWorld world;
+    
     ScriptWorld scriptWorld;
     std::string path;
     std::vector<std::string> defaultIncludes;
+    
 public:
+    OpenWorldCollection Worlds;
+
     Project();
     void CreateNew(const std::string& path);
     GameWorld& World();
@@ -29,4 +35,10 @@ public:
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
     bool Compile();
     void Build();
+    
+    void Initialize(InputManager& input);
+    void Update(float dt);
+    void Render();
+    
+    SelectableCollection<EditorObject>* GetSelectables();
 };

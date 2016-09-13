@@ -34,19 +34,10 @@ public:
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
     
+    OpenWorld* worlds[2];
+    
     void Initialize() {
 
-        GameWorld& world = context.World();
-        
-        context.World().CreateSystem<RenderSystem>();
-        context.World().CreateSystem<TouchSystem>()->Input = &Input;
-        context.World().CreateSystem<DraggableSystem>();
-        context.World().CreateSystem<EditorTransformSystem>();
-        context.World().CreateSystem<EditorMeshSystem>();
-        context.World().CreateSystem<ClickSelectorSystem>();
-        context.World().CreateSystem<DragSelector>()->Setup(Context().ScreenSize(), Input);
-        context.World().CreateSystem<SelectableDragSystem>();
-        context.World().CreateSystem<TouchSystem>()->TouchDepth = 5;
         
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
@@ -63,12 +54,9 @@ public:
         }
         context.Initialize(Input);
         
-        GameObject* camera = world.CreateObject();
-        camera->AddComponent<Camera>();
-        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-        camera->GetComponent<Camera>()->FieldOfView = 70;
         
-        context.NewProject();
+        
+        
         
         for(auto window : windows) {
             window->Create();
@@ -82,21 +70,30 @@ public:
             if (key == "n") {
                 context.NewProject();
             }
+            if (key == "1") {
+                context.Project().Worlds.ActiveWorld = worlds[0];
+            }
+            if (key == "2") {
+                context.Project().Worlds.ActiveWorld = worlds[1];
+            }
         });
+        
+        
+        context.NewProject();
+        worlds[0] = context.Project().Worlds.LoadWorld("");
+        worlds[1] = context.Project().Worlds.LoadWorld("");
     }
     
     void Update(float dt) {
-        
-        context.Project().World().Update(dt);
+        context.ContextWorld().Update(dt);
+        context.Project().Update(dt);
         context.GuiWorld().Update(dt);
-        context.World().Update(dt);
     }
     
     void Render() {
         //glClearColor(1, 1, 0, 1);
         //glClear(GL_COLOR_BUFFER_BIT);
-        context.Project().World().Render();
-        context.World().Render();
+        context.Project().Render();
         context.GuiWorld().Render();
     }
 };

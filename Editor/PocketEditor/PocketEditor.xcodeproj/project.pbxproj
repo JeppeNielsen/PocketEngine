@@ -12,6 +12,8 @@
 		723689A01D8732F2006480F0 /* FileSystemListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7236899E1D8732F2006480F0 /* FileSystemListener.cpp */; };
 		723689A31D873346006480F0 /* FileSystemListenerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A11D873346006480F0 /* FileSystemListenerSystem.cpp */; };
 		723689A71D873A4E006480F0 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A51D873A4E006480F0 /* ProjectWindow.cpp */; };
+		723689AA1D888BD6006480F0 /* OpenWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A81D888BD6006480F0 /* OpenWorld.cpp */; };
+		723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */; };
 		726DFD101D24740200C862B7 /* GameIDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD081D24740200C862B7 /* GameIDHelper.cpp */; };
 		726DFD111D24740200C862B7 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD0A1D24740200C862B7 /* GameObject.cpp */; };
 		726DFD121D24740200C862B7 /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD0C1D24740200C862B7 /* GameSystem.cpp */; };
@@ -393,6 +395,10 @@
 		723689A21D873346006480F0 /* FileSystemListenerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileSystemListenerSystem.hpp; sourceTree = "<group>"; };
 		723689A51D873A4E006480F0 /* ProjectWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectWindow.cpp; sourceTree = "<group>"; };
 		723689A61D873A4E006480F0 /* ProjectWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectWindow.hpp; sourceTree = "<group>"; };
+		723689A81D888BD6006480F0 /* OpenWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenWorld.cpp; sourceTree = "<group>"; };
+		723689A91D888BD6006480F0 /* OpenWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpenWorld.hpp; sourceTree = "<group>"; };
+		723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenWorldCollection.cpp; sourceTree = "<group>"; };
+		723689AC1D888D9E006480F0 /* OpenWorldCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpenWorldCollection.hpp; sourceTree = "<group>"; };
 		726DFD071D24740200C862B7 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		726DFD081D24740200C862B7 /* GameIDHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameIDHelper.cpp; sourceTree = "<group>"; };
 		726DFD091D24740200C862B7 /* GameIDHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameIDHelper.hpp; sourceTree = "<group>"; };
@@ -2753,6 +2759,10 @@
 			children = (
 				72CE8EEC1CB437F5001F08E4 /* Project.cpp */,
 				72CE8EED1CB437F5001F08E4 /* Project.hpp */,
+				723689A81D888BD6006480F0 /* OpenWorld.cpp */,
+				723689A91D888BD6006480F0 /* OpenWorld.hpp */,
+				723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */,
+				723689AC1D888D9E006480F0 /* OpenWorldCollection.hpp */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -3083,6 +3093,7 @@
 				729954811C99F76100DAAE5D /* btConvexPointCloudShape.cpp in Sources */,
 				729953FB1C99F76100DAAE5D /* TextBoxSystem.cpp in Sources */,
 				726DFD161D24741000C862B7 /* Bitset.cpp in Sources */,
+				723689AA1D888BD6006480F0 /* OpenWorld.cpp in Sources */,
 				72CE8EFC1CB5A18E001F08E4 /* EditorMeshSystem.cpp in Sources */,
 				729953E71C99F76100DAAE5D /* HierarchyEditor.cpp in Sources */,
 				729954731C99F76100DAAE5D /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
@@ -3123,6 +3134,7 @@
 				729953EA1C99F76100DAAE5D /* ParticleEffect.cpp in Sources */,
 				729953DB1C99F76100DAAE5D /* TransformAnimationDatabase.cpp in Sources */,
 				7299542D1C99F76100DAAE5D /* TransitionHelper.cpp in Sources */,
+				723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */,
 				729954021C99F76100DAAE5D /* FirstPersonMover.cpp in Sources */,
 				729953C71C99F76100DAAE5D /* Timer.cpp in Sources */,
 				729955021C99F76100DAAE5D /* WindowOSX.mm in Sources */,

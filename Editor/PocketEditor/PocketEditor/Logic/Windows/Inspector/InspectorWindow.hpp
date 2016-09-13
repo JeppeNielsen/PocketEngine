@@ -28,4 +28,7 @@ private:
     void ShowSelectionBox(EditorObject* editorObject);
     GameObject* selectionBox;
     void SelectionClicked(TouchData d, int index);
+    
+    void OpenWorldChanged();
+    
 };
