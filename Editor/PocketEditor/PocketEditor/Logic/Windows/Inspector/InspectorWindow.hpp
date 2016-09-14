@@ -17,6 +17,7 @@ protected:
     void OnInitialize() override;
     void OnCreate() override;
     std::string Name() override;
+    void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
 private:
     SelectableCollection<EditorObject>* selectables;
     GameObject* inspectorEditor;
@@ -28,7 +29,4 @@ private:
     void ShowSelectionBox(EditorObject* editorObject);
     GameObject* selectionBox;
     void SelectionClicked(TouchData d, int index);
-    
-    void OpenWorldChanged();
-    
 };

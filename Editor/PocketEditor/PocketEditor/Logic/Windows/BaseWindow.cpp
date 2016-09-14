@@ -12,8 +12,11 @@ BaseWindow::~BaseWindow() { }
 
 void BaseWindow::Initialize(EditorContext *context) {
     this->context = context;
+    this->context->Project().Worlds.ActiveWorld.Changed.Bind(this, &BaseWindow::ActiveWorldChangedInternal);
     OnInitialize();
 }
+
+
 
 void BaseWindow::Create() {
 
@@ -51,4 +54,13 @@ GameObject* BaseWindow::CreateButton(GameObject* parent, const Vector2& position
     label->GetComponent<Colorable>()->Color = Colour::Black();
 
     return button;
+}
+
+void BaseWindow::ActiveWorldChangedInternal() {
+    OpenWorld* prev = context->Project().Worlds.ActiveWorld.PreviousValue();
+    OpenWorld* current = context->Project().Worlds.ActiveWorld;
+    ActiveWorldChanged(prev, current);
+}
+
+void BaseWindow::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
 }

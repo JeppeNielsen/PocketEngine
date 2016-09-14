@@ -31,14 +31,12 @@ void InspectorWindow::OnInitialize() {
     
     CreateDefaultSerializedEditors();
     selectables = 0;
-    context->Project().Worlds.ActiveWorld.Changed.Bind(this, &InspectorWindow::OpenWorldChanged);
 }
 
-void InspectorWindow::OpenWorldChanged() {
-    OpenWorld* prev = context->Project().Worlds.ActiveWorld.PreviousValue();
-    OpenWorld* current = context->Project().Worlds.ActiveWorld;
-    if (prev) {
-        prev->selectables->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+void InspectorWindow::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
+   
+    if (old) {
+        old->selectables->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
     }
     
     if (current) {

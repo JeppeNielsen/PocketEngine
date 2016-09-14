@@ -2727,9 +2727,9 @@
 		72CE8EDF1CB2E580001F08E4 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
-				723689A41D873A4E006480F0 /* Project */,
 				72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */,
 				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
+				723689A41D873A4E006480F0 /* Project */,
 				72CE8EE71CB43569001F08E4 /* Hierarchy */,
 				727729F61CD4FF2F005AC1D8 /* Inspector */,
 			);

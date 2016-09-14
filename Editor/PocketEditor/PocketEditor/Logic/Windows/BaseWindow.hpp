@@ -8,6 +8,7 @@
 
 #pragma once
 #include "EditorContext.hpp"
+#include "OpenWorld.hpp"
 #include <string>
 
 class BaseWindow {
@@ -16,6 +17,9 @@ public:
     void Initialize(EditorContext* context);
     virtual void Create();
     
+private:
+    void ActiveWorldChangedInternal();
+
 protected:
     EditorContext* context;
     GameObject* window;
@@ -23,6 +27,7 @@ protected:
     virtual std::string Name() = 0;
     virtual void OnInitialize();
     virtual void OnCreate();
+    virtual void ActiveWorldChanged(OpenWorld* old, OpenWorld* current);
     
     GameObject* CreateButton(GameObject* parent, const Vector2& position, const Vector2& size, const std::string& text);
 };
