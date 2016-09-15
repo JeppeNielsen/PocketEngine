@@ -28,6 +28,7 @@ protected:
     virtual void OnInitialize();
     virtual void OnCreate();
     virtual void ActiveWorldChanged(OpenWorld* old, OpenWorld* current);
+    virtual bool CreateBar();
     
     GameObject* CreateButton(GameObject* parent, const Vector2& position, const Vector2& size, const std::string& text);
 };

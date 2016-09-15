@@ -11,23 +11,27 @@
 #include "GameWorld.hpp"
 
 void FileSystemListenerSystem::ObjectAdded(Pocket::GameObject *object) {
-    auto& watcher = object->GetComponent<FileSystemListener>()->watcher;
-    watcher.Start(object->GetComponent<FileSystemListener>()->path);
-    watcher.Changed.Bind(this, &FileSystemListenerSystem::SomethingChanged, object);
+    FileSystemListener* listener = object->GetComponent<FileSystemListener>();
+    listener->watcher.Start(listener->Path);
+    listener->watcher.Changed.Bind(this, &FileSystemListenerSystem::SomethingChanged, object);
+    listener->Extension.Changed.Bind(this, &FileSystemListenerSystem::SomethingChanged, object);
+    
     SomethingChanged(object);
 }
 
 void FileSystemListenerSystem::ObjectRemoved(Pocket::GameObject *object) {
-    auto& watcher = object->GetComponent<FileSystemListener>()->watcher;
-    watcher.Stop();
-    watcher.Changed.Unbind(this, &FileSystemListenerSystem::SomethingChanged, object);
+    FileSystemListener* listener = object->GetComponent<FileSystemListener>();
+    listener->watcher.Stop();
+    listener->watcher.Changed.Unbind(this, &FileSystemListenerSystem::SomethingChanged, object);
+    listener->Extension.Changed.Unbind(this, &FileSystemListenerSystem::SomethingChanged, object);
 }
 
 void FileSystemListenerSystem::SomethingChanged(Pocket::GameObject *object) {
     for (auto child : object->Children()) {
         child->Remove();
     }
-    FindFilesAtPath(object, object->GetComponent<FileSystemListener>()->path, "cpp");
+    FileSystemListener* listener = object->GetComponent<FileSystemListener>();
+    FindFilesAtPath(object, listener->Path, listener->Extension);
 }
 
 void FileSystemListenerSystem::FindFilesAtPath(GameObject* parent, const std::string &path, const std::string &extension) {

@@ -22,20 +22,25 @@ void ProjectWindow::OnInitialize() {
     guiWorld.CreateSystem<VirtualTreeListSystem>();
     guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
     guiWorld.CreateSystem<SelectedColorerSystem>();
+    
+    context->EngineContext().ScreenSize.Changed.Bind(this, &ProjectWindow::ScreenSizeChanged);
 }
 
 void ProjectWindow::OnCreate() {
     GameWorld& contextWorld = context->ContextWorld();
     
     GameObject* fileRoot = contextWorld.CreateObject();
-    fileRoot->AddComponent<FileSystemListener>()->path = "/Projects/PocketEngine/Editor/TestProject/Code";
-
+    auto listener = fileRoot->AddComponent<FileSystemListener>();
+    listener->Path = "/Projects/PocketEngine/Editor/TestProject/";
+    listener->Extension = ".json";
 
     Gui& gui = context->Gui();
 
     GameObject* pivot;
-    GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, {200,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
+    listBox = gui.CreateListbox(window, "Box", {0,0}, {200,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
     listBox->RemoveComponent<Sprite>();
+    
+    pivot->GetComponent<Transform>()->Position = {0,400};
     
     auto treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->Root = fileRoot;
@@ -69,13 +74,25 @@ void ProjectWindow::OnCreate() {
     spawner->OnRemove = [] (GameObject* node, GameObject* control) {
         
     };
+    
+    ScreenSizeChanged();
 }
+
+bool ProjectWindow::CreateBar() { return false; }
 
 void ProjectWindow::Clicked(TouchData d, GameObject* object) {
     std::cout << object->GetComponent<FilePath>()->path << std::endl;
     //object->GetComponent<Selectable>()->Selected = true;
     //factory->GetSelectable(object)->Selected = true;
     //object->GetComponent<Selectable>()->Selected = true;
+    FilePath* filePath =object->GetComponent<FilePath>();
+    context->Project().Worlds.LoadWorld(filePath->path, filePath->filename);
 }
 
+void ProjectWindow::ScreenSizeChanged() {
+    Vector2 size = context->EngineContext().ScreenSize;
+    window->GetComponent<Sizeable>()->Size = {200, size.y};
+    window->GetComponent<Transform>()->Position = 0;
+    listBox->GetComponent<Sizeable>()->Size = window->GetComponent<Sizeable>()->Size;
+}
 

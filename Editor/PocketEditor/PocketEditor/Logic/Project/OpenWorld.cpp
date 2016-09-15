@@ -21,6 +21,7 @@
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
 #include "SelectedColorerSystem.hpp"
+#include <fstream>
 
 GameWorld& OpenWorld::World() {
     return world;
@@ -42,6 +43,7 @@ void OpenWorld::CreateDefault(InputManager& input) {
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
     
+    if (false)
     {
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Camera>();
@@ -68,8 +70,18 @@ void OpenWorld::CreateDefault(InputManager& input) {
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 70;
     }
-    
-    
-    
+}
 
+bool OpenWorld::Save() {
+    bool succes = false;
+    try {
+        succes = true;
+        std::fstream file;
+        file.open(Path);
+        world.ToJson(file);
+        file.close();
+    } catch (std::exception e) {
+      succes = false;
+    }
+    return succes;
 }

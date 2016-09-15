@@ -41,9 +41,12 @@ void InspectorWindow::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     
     if (current) {
         current->selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
+        selectables = current->selectables;
+    } else {
+        selectables = 0;
     }
     
-    selectables = current->selectables;
+    
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
 }
 
@@ -84,6 +87,9 @@ void InspectorWindow::OnCreate() {
     inspectorEditor->AddComponent<GameObjectEditor>()->Object = 0;
     
     selectionBox = 0;
+    
+    
+    window->GetComponent<Transform>()->Position += {600,200};
 }
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {

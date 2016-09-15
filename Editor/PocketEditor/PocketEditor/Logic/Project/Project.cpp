@@ -12,6 +12,7 @@
 #include "EditorObjectCreatorSystem.hpp"
 #include "TransformHierarchy.hpp"
 #include "FileHelper.hpp"
+#include <fstream>
 
 Project::Project() {
     scriptWorld.Types.Add<Vector3>();
@@ -96,6 +97,20 @@ void Project::Build() {
     */
 }
 
+void Project::CreateNewWorld(const std::string &worldPath) {
+    GameWorld world;
+    
+    GameObject* camera = world.CreateObject();
+    camera->AddComponent<Camera>();
+    camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
+    camera->GetComponent<Camera>()->FieldOfView = 70;
+    
+    std::ofstream file;
+    file.open(path + worldPath);
+    world.ToJson(file);
+    file.close();
+}
+
 void Project::Initialize(InputManager& input) {
     this->Worlds.Initialize(input);
 }
@@ -116,3 +131,9 @@ SelectableCollection<EditorObject>* Project::GetSelectables() {
     if (!Worlds.ActiveWorld()) return 0;
     return Worlds.ActiveWorld()->selectables;
 }
+
+void Project::SaveWorld() {
+    if (!Worlds.ActiveWorld) return;
+    Worlds.ActiveWorld()->Save();
+}
+

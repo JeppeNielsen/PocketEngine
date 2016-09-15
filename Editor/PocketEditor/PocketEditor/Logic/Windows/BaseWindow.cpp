@@ -23,16 +23,18 @@ void BaseWindow::Create() {
     Gui& gui = context->Gui();
     
     window = gui.CreateControl(0, "Box", {200,400});
-    GameObject* bar = gui.CreateControl(window, "TextBox", {200,50});
-    bar->GetComponent<Transform>()->Position = {0,400-50};
-    bar->RemoveComponent<Touchable>();
-    bar->AddComponent<Touchable>(window);
-    window->AddComponent<Draggable>();
-    GameObject* label = gui.CreateLabel(bar, 0, {200,50}, 0, Name(), 20);
-    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
-    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
-    label->GetComponent<Colorable>()->Color = Colour::Black();
     
+    if (CreateBar()) {
+        GameObject* bar = gui.CreateControl(window, "TextBox", {200,50});
+        bar->GetComponent<Transform>()->Position = {0,400-50};
+        bar->RemoveComponent<Touchable>();
+        bar->AddComponent<Touchable>(window);
+        window->AddComponent<Draggable>();
+        GameObject* label = gui.CreateLabel(bar, 0, {200,50}, 0, Name(), 20);
+        label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+        label->GetComponent<Colorable>()->Color = Colour::Black();
+    }
     OnCreate();
 }
 
@@ -63,4 +65,8 @@ void BaseWindow::ActiveWorldChangedInternal() {
 }
 
 void BaseWindow::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
+}
+
+bool BaseWindow::CreateBar() {
+    return true;
 }

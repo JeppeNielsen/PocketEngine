@@ -20,10 +20,13 @@ public:
     GameWorld& EditorWorld();
     
     std::string Path;
+    std::string Filename;
     
     void CreateDefault(InputManager& input);
     
     SelectableCollection<EditorObject>* selectables;
+    
+    bool Save();
     
 private:
     GameWorld world;

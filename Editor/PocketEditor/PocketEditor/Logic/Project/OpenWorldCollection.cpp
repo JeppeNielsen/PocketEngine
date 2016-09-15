@@ -7,6 +7,7 @@
 //
 
 #include "OpenWorldCollection.hpp"
+#include <fstream>
 
 OpenWorldCollection::OpenWorldCollection() {
     ActiveWorld = 0;
@@ -24,11 +25,33 @@ void OpenWorldCollection::Clear() {
     ActiveWorld = 0;
 }
 
-OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path) {
-    OpenWorld* world = new OpenWorld();
-    world->Path = path;
-    worlds.push_back(world);
-    world->CreateDefault(*input);
+bool OpenWorldCollection::TryFindOpenWorld(const std::string &path, OpenWorld** world) {
+    for(auto w : worlds) {
+        if (w->Path == path) {
+            *world = w;
+            return w;
+        }
+    }
+    *world = 0;
+    return false;
+}
+
+OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename) {
+    OpenWorld* world;
+    if (!TryFindOpenWorld(path, &world)) {
+        world = new OpenWorld();
+        world->Path = path;
+        world->Filename = filename;
+        worlds.push_back(world);
+        world->CreateDefault(*input);
+        if (path != "") {
+            std::fstream file;
+            file.open(path);
+            world->World().CreateObject(file);
+            file.close();
+        }
+        WorldLoaded(world);
+    }
     ActiveWorld = world;
     return world;
 }
@@ -37,6 +60,7 @@ void OpenWorldCollection::CloseWorld(OpenWorld *world) {
     if (ActiveWorld()==world) {
         ActiveWorld = 0;
     }
+    WorldClosed(world);
     auto it = std::find(worlds.begin(), worlds.end(), world);
     worlds.erase(it);
     delete world;

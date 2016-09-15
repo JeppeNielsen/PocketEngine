@@ -65,6 +65,8 @@ void HierarchyWindow::OnCreate() {
     spawner->OnRemove = [] (GameObject* node, GameObject* control) {
         
     };
+    
+    window->GetComponent<Transform>()->Position += {300,200};
 }
 
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {

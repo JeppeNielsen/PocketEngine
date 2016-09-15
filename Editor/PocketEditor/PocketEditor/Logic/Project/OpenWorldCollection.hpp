@@ -16,8 +16,9 @@ using namespace Pocket;
 
 class OpenWorldCollection {
 public:
-    OpenWorld* LoadWorld(const std::string& path);
+    OpenWorld* LoadWorld(const std::string& path, const std::string& filename);
     void CloseWorld(OpenWorld* world);
+    bool TryFindOpenWorld(const std::string& path, OpenWorld** world);
     
     OpenWorldCollection();
     ~OpenWorldCollection();
@@ -27,6 +28,9 @@ public:
     void Clear();
     
     void Initialize(InputManager& input);
+    
+    Event<OpenWorld*> WorldLoaded;
+    Event<OpenWorld*> WorldClosed;
     
 private:
     using Worlds = std::vector<OpenWorld*>;

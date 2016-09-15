@@ -9,9 +9,14 @@
 #pragma once
 #include <string>
 #include "FileSystemWatcher.hpp"
+#include "Property.hpp"
+
+using namespace Pocket;
 
 struct FileSystemListener {
-    std::string path;
+    Property<std::string> Path;
+    Property<std::string> Extension;
+    
     float latency;
     FileSystemWatcher watcher;
 };

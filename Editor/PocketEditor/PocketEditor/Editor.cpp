@@ -17,9 +17,11 @@
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
 #include "InspectorWindow.hpp"
+#include "FileMenu.hpp"
 #include "GameMenu.hpp"
 #include "GameObjectMenu.hpp"
 #include "ProjectWindow.hpp"
+#include "WorldTab.hpp"
 
 #include <vector>
 
@@ -38,13 +40,16 @@ public:
     
     void Initialize() {
 
-        
+        windows.push_back(new WorldTab());
+        windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
-        windows.push_back(new ProjectWindow());
         
+        menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
+        
+        context.Initialize(Input, Context());
         
         for(auto window : windows) {
             window->Initialize(&context);
@@ -52,11 +57,6 @@ public:
         for(auto menu : menus) {
             menu->Initialize(&Context(), &context);
         }
-        context.Initialize(Input);
-        
-        
-        
-        
         
         for(auto window : windows) {
             window->Create();
@@ -66,22 +66,15 @@ public:
             menu->Create();
         }
         
+        
+        
         Input.ButtonDown.Bind([this] (auto key) {
             if (key == "n") {
                 context.NewProject();
             }
-            if (key == "1") {
-                context.Project().Worlds.ActiveWorld = worlds[0];
-            }
-            if (key == "2") {
-                context.Project().Worlds.ActiveWorld = worlds[1];
-            }
         });
         
-        
         context.NewProject();
-        worlds[0] = context.Project().Worlds.LoadWorld("");
-        worlds[1] = context.Project().Worlds.LoadWorld("");
     }
     
     void Update(float dt) {

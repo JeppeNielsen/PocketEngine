@@ -10,16 +10,26 @@
 #include "BaseWindow.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include <map>
 
-class ProjectWindow : public BaseWindow {
+class WorldTab : public BaseWindow {
 protected:
     void OnInitialize() override;
     void OnCreate() override;
     std::string Name() override;
     bool CreateBar() override;
 private:
+
     void ScreenSizeChanged();
-    void Clicked(TouchData d, GameObject* object);
+    void WorldLoaded(OpenWorld* world);
+    void WorldClosed(OpenWorld* world);
+    void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
+    
+    void AlignTabs();
+
+    void Clicked(TouchData d, OpenWorld* clickedWorld);
     GameObject* fileRoot;
-    GameObject* listBox;
+    
+    using OpenedTabs = std::map<OpenWorld*, GameObject*>;
+    OpenedTabs openedTabs;
 };

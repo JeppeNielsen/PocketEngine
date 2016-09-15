@@ -20,8 +20,13 @@ void EditorContext::NewProject() {
     project.CreateNew("/Projects/PocketEngine/Editor/TestProject/");
 }
 
-void EditorContext::Initialize(InputManager& input) {
+EngineContext& EditorContext::EngineContext() {
+    return *engineContext;
+}
+
+void EditorContext::Initialize(InputManager& input, class EngineContext& engineContext) {
     this->input = &input;
+    this->engineContext = &engineContext;
     
     gui = guiWorld.CreateSystem<class Gui>();
     guiWorld.CreateSystem<TouchSystem>()->TouchDepth = 10;
