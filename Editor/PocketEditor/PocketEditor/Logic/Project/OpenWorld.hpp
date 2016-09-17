@@ -29,7 +29,7 @@ public:
     bool Save();
     
 private:
-    GameWorld world;
     GameWorld editorWorld;
+    GameWorld world;
 };
 
