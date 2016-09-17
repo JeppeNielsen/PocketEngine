@@ -43,7 +43,8 @@ public:
     
 private:
     
-    ObjectRenderers objectRenderers;
+    static ObjectRenderers objectRenderers;
+    static int objectRenderersRefCounter;
     
     VisibleObjects opaqueObjects;
     VisibleObjects transparentObjects;
