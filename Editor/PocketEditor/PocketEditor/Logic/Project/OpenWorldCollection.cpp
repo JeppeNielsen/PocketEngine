@@ -43,7 +43,7 @@ OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::st
         world->Path = path;
         world->Filename = filename;
         worlds.push_back(world);
-        world->CreateDefault(*input);
+        world->CreateDefault();
         if (path != "") {
             std::fstream file;
             file.open(path);
@@ -64,8 +64,4 @@ void OpenWorldCollection::CloseWorld(OpenWorld *world) {
     auto it = std::find(worlds.begin(), worlds.end(), world);
     worlds.erase(it);
     delete world;
-}
-
-void OpenWorldCollection::Initialize(Pocket::InputManager& input) {
-    this->input = &input;
 }

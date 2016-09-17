@@ -22,7 +22,7 @@ public:
     std::string Path;
     std::string Filename;
     
-    void CreateDefault(InputManager& input);
+    void CreateDefault();
     
     SelectableCollection<EditorObject>* selectables;
     

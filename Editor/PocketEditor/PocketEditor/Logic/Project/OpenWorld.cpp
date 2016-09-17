@@ -31,13 +31,12 @@ GameWorld& OpenWorld::EditorWorld() {
     return editorWorld;
 }
 
-void OpenWorld::CreateDefault(InputManager& input) {
+void OpenWorld::CreateDefault() {
 
     GameObject* gameRoot = editorWorld.CreateObject();
 
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<TransformHierarchy>();
-    world.CreateSystem<TouchSystem>()->Input = &input;
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
@@ -52,12 +51,12 @@ void OpenWorld::CreateDefault(InputManager& input) {
     }
 
     editorWorld.CreateSystem<RenderSystem>();
-    editorWorld.CreateSystem<TouchSystem>()->Input = &input;
+    editorWorld.CreateSystem<TouchSystem>();
     editorWorld.CreateSystem<DraggableSystem>();
     editorWorld.CreateSystem<EditorTransformSystem>();
     editorWorld.CreateSystem<EditorMeshSystem>();
     editorWorld.CreateSystem<ClickSelectorSystem>();
-    editorWorld.CreateSystem<DragSelector>()->Setup({2000,2000}, input);
+    editorWorld.CreateSystem<DragSelector>()->Setup({2000,2000});
     editorWorld.CreateSystem<SelectableDragSystem>();
     editorWorld.CreateSystem<TouchSystem>()->TouchDepth = 5;
     editorWorld.CreateSystem<SelectedColorerSystem>();

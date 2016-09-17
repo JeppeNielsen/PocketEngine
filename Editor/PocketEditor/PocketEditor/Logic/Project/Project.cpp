@@ -111,10 +111,6 @@ void Project::CreateNewWorld(const std::string &worldPath) {
     file.close();
 }
 
-void Project::Initialize(InputManager& input) {
-    this->Worlds.Initialize(input);
-}
-
 void Project::Update(float dt) {
     if (!Worlds.ActiveWorld()) return;
     Worlds.ActiveWorld()->World().Update(dt);

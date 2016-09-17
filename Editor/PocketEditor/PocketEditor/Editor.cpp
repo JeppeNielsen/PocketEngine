@@ -49,7 +49,7 @@ public:
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
         
-        context.Initialize(Input, Context());
+        context.Initialize(Context());
         
         for(auto window : windows) {
             window->Initialize(&context);

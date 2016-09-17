@@ -37,7 +37,6 @@ public:
     void Build();
     void CreateNewWorld(const std::string& worldPath);
     
-    void Initialize(InputManager& input);
     void Update(float dt);
     void Render();
     

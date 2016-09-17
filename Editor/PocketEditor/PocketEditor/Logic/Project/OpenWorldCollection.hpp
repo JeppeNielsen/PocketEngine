@@ -27,8 +27,6 @@ public:
     
     void Clear();
     
-    void Initialize(InputManager& input);
-    
     Event<OpenWorld*> WorldLoaded;
     Event<OpenWorld*> WorldClosed;
     

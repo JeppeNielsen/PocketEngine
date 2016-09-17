@@ -22,16 +22,14 @@ private:
     GameWorld contextWorld;
     GameWorld guiWorld;
     Gui* gui;
-    InputManager* input;
     EngineContext* engineContext;
 public:
     GameWorld& ContextWorld();
     GameWorld& GuiWorld();
     Gui& Gui();
-    InputManager& Input();
     Project& Project();
     EngineContext& EngineContext();
     
-    void Initialize(InputManager& input, class EngineContext& engineContext);
+    void Initialize(class EngineContext& engineContext);
     void NewProject();
 };
