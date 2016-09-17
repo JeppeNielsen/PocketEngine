@@ -15,13 +15,15 @@ class GameObject;
 
 struct IGameSystem {
     virtual ~IGameSystem() = default;
-    virtual void Initialize()=0;
+    virtual void Initialize() = 0;
+    virtual void Destroy() = 0;
     virtual void ObjectAdded(Pocket::GameObject* object) = 0;
     virtual void ObjectRemoved(Pocket::GameObject* object) = 0;
     virtual void Update(float dt) = 0;
     virtual void Render() = 0;
     virtual int AddObject(Pocket::GameObject* object) = 0;
     virtual void RemoveObject(Pocket::GameObject* object) = 0;
+    virtual int Order() = 0;
 };
 
 namespace Pocket {
@@ -31,6 +33,7 @@ class GameSystem : public IGameSystem {
 protected:
     virtual ~GameSystem() { }
     virtual void Initialize() override { }
+    virtual void Destroy() override { }
     virtual void ObjectAdded(GameObject* object) override { }
     virtual void ObjectRemoved(GameObject* object) override { }
     virtual void Update(float dt) override {}
@@ -49,6 +52,8 @@ protected:
 //        objects.pop_back();
 //        //return lastObject;
     }
+    
+    virtual int Order() override { return 0; }
     
 private:
     using ObjectCollection = std::vector<GameObject*>;
