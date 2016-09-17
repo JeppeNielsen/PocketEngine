@@ -58,8 +58,11 @@ public:
 
     void Render() {
         if (vertexIndex==0) return;
-
+        
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexIndex, vertices, GL_DYNAMIC_DRAW);
+        
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * triangleIndex, triangles, GL_DYNAMIC_DRAW);
         
 		glDrawElements(GL_TRIANGLES, (int)triangleIndex, GL_UNSIGNED_SHORT, 0);
