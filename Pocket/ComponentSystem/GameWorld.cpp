@@ -7,6 +7,7 @@
 //
 
 #include "GameWorld.hpp"
+#include "Engine.hpp"
 #include <iostream>
 
 using namespace Pocket;
@@ -99,6 +100,7 @@ GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void
 }
 
 void GameWorld::Update(float dt) {
+    Engine::Context().InputDevice().UpdateInputManager(&input);
     DoActions(delayedActions);
     for(auto system : systems) {
         system->Update(dt);
@@ -237,6 +239,7 @@ void GameWorld::TryRemoveSystem(SystemID id) {
     
     systemEntry.system = 0;
     systemEntry.bitset.Reset();
+    systemEntry.system->Destroy();
     
     if (systemEntry.deleteFunction) {
         systemEntry.deleteFunction();
@@ -397,3 +400,5 @@ bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& inde
 }
 
 std::function<void(int, GameObject::ComponentInfo&)> GameWorld::OnGetTypeInfo = 0;
+
+InputManager& GameWorld::Input() { return input; }

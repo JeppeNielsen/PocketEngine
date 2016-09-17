@@ -12,29 +12,21 @@
 
 using namespace Pocket;
 
-TouchSystem::TouchSystem() : TouchDepth(0) {
-    Input = 0;
-    Input.Changed.Bind([this]() {
-        if (Input.PreviousValue()) {
-            Input.PreviousValue()->TouchDown.Unbind(this, &TouchSystem::TouchDown);
-            Input.PreviousValue()->TouchUp.Unbind(this, &TouchSystem::TouchUp);
-        }
-        
-        if (Input) {
-            Input()->TouchDown.Bind(this, &TouchSystem::TouchDown);
-            Input()->TouchUp.Bind(this, &TouchSystem::TouchUp);
-        }
-    });
-}
+TouchSystem::TouchSystem() : TouchDepth(0) { }
 
-TouchSystem::~TouchSystem() {
-    Input = 0;
-}
+TouchSystem::~TouchSystem() { }
 
 void TouchSystem::Initialize() {
+    world->Input().TouchDown.Bind(this, &TouchSystem::TouchDown);
+    world->Input().TouchUp.Bind(this, &TouchSystem::TouchUp);
     octree = world->CreateSystem<OctreeSystem>();
     cameraSystem = world->CreateSystem<TouchSystem::CameraSystem>();
     world->CreateSystem<OrderableSystem>();
+}
+
+void TouchSystem::Destroy() {
+    world->Input().TouchDown.Unbind(this, &TouchSystem::TouchDown);
+    world->Input().TouchUp.Unbind(this, &TouchSystem::TouchUp);
 }
 
 TouchSystem::OctreeSystem& TouchSystem::Octree() { return *octree; }
@@ -108,7 +100,7 @@ void TouchSystem::Update(float dt) {
 }
 
 bool TouchSystem::IsTouchValid(const Pocket::TouchData &touchData) {
-    return !Input()->IsTouchSwallowed(touchData.Index, TouchDepth);
+    return !world->Input().IsTouchSwallowed(touchData.Index, TouchDepth);
 }
 
 void TouchSystem::TouchDown(Pocket::TouchEvent e) {
@@ -122,7 +114,7 @@ void TouchSystem::TouchDown(Pocket::TouchEvent e) {
     }
     
     if (!list.empty()) {
-        Input()->SwallowTouch(e.Index, TouchDepth);
+        world->Input().SwallowTouch(e.Index, TouchDepth);
     }
 }
 
@@ -333,7 +325,7 @@ void TouchSystem::FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched
         
         TouchData touch;
         touch.object = foundIntersection->object;
-        touch.Input = Input;
+        touch.Input = &world->Input();
         touch.CameraTransform = cameraObject->GetComponent<Transform>();
         touch.Camera = camera;
         touch.Touchable = foundIntersection->touchable->touchable;

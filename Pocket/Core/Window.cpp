@@ -34,7 +34,7 @@ Window::~Window() {
 void Window::Create(int width, int height, bool fullScreen) {
 }
 
-bool Window::Update(IInputManagerIterator* inputManagers) {
+bool Window::Update() {
 	return false;
 }
 

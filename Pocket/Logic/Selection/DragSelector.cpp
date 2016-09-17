@@ -18,10 +18,18 @@ void DragSelector::Initialize() {
     cameraSystem = world->CreateSystem<CameraSystem>();
     selectables = world->CreateSystem<SelectableCollection<Transform>>();
     
+    world->Input().TouchDown.Bind(this, &DragSelector::Down);
+    world->Input().TouchUp.Bind(this, &DragSelector::Up);
+    
     TouchDepth = 0;
 }
 
-void DragSelector::Setup(const Pocket::Rect &viewport, InputManager& input) {
+void DragSelector::Destroy() {
+    world->Input().TouchDown.Unbind(this, &DragSelector::Down);
+    world->Input().TouchUp.Unbind(this, &DragSelector::Up);
+}
+
+void DragSelector::Setup(const Pocket::Rect &viewport) {
 
     BoundingBox bounds(0, Vector3(viewport.width * 2.0f, viewport.height * 2.0f, 3000.0f));
     
@@ -42,11 +50,6 @@ void DragSelector::Setup(const Pocket::Rect &viewport, InputManager& input) {
     dragRectangle->AddComponent<Transform>();
     dragRectangle->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(1.0f, 1.0f, 1.0f, 0.15f));
     dragRectangle->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
-    
-    input.TouchDown.Bind(this, &DragSelector::Down);
-    input.TouchUp.Bind(this, &DragSelector::Up);
-    
-    this->input = &input;
 }
 
 void DragSelector::Down(Pocket::TouchEvent e) {
@@ -54,26 +57,26 @@ void DragSelector::Down(Pocket::TouchEvent e) {
     if (e.Index != 0) return;
     draggingIndex = e.Index;
     dragStart = e.Position;
-    input->SwallowTouch(e.Index, TouchDepth);
+    world->Input().SwallowTouch(e.Index, TouchDepth);
 }
 
 void DragSelector::Up(Pocket::TouchEvent e) {
     if (draggingIndex==-1) return;
-    bool wasSwallowed = input->IsTouchSwallowed(draggingIndex, TouchDepth);
+    bool wasSwallowed = world->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
     draggingIndex = -1;
     if (wasSwallowed) return;
     SelectObjects(dragStart, e.Position);
 }
 
 bool DragSelector::IsDragging() {
-    return draggingIndex!=-1 && !input->IsTouchSwallowed(draggingIndex, TouchDepth);
+    return draggingIndex!=-1 && !world->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
 }
 
 void DragSelector::Update(float dt) {
     
     if (IsDragging()) {
         
-        Vector2 dragNow = input->GetTouchPosition(draggingIndex);
+        Vector2 dragNow = world->Input().GetTouchPosition(draggingIndex);
         
         dragRectangle->GetComponent<Transform>()->Position = (dragStart + dragNow) * 0.5f;
         

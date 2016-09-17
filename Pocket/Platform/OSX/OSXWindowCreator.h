@@ -27,8 +27,6 @@ namespace Pocket {
         Event<bool> OnUpdate;
         Event<int, int> ScreenSizeChanged;
         
-        InputDevice inputDevice;
-        
         void Down(int index, int x, int y);
         void Up(int index, int x, int y);
         void Move(int index, int x, int y);
@@ -51,6 +49,7 @@ namespace Pocket {
         
         bool isKeyboardActive;
         
+        InputDevice& inputDevice();
     };
 }
 

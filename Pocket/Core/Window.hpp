@@ -14,7 +14,7 @@ namespace Pocket {
 
 		virtual void Create(int width, int height, bool fullScreen);
 		virtual void Destroy();
-		virtual bool Update(IInputManagerIterator* inputManagers);
+		virtual bool Update();
 		virtual void PreRender();
 		virtual void PostRender();
         virtual void Begin();

@@ -19,6 +19,7 @@ namespace Pocket {
     struct IGameSystem {
         virtual ~IGameSystem() = default;
         virtual void Initialize() = 0;
+        virtual void Destroy() = 0;
         virtual void ObjectAdded(GameObject* object) = 0;
         virtual void ObjectRemoved(GameObject* object) = 0;
         virtual void Update(float dt) = 0;
@@ -36,6 +37,7 @@ namespace Pocket {
         void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
         
         virtual void Initialize();
+        virtual void Destroy();
         virtual void ObjectAdded(GameObject* object);
         virtual void ObjectRemoved(GameObject* object);
         virtual void Update(float dt);

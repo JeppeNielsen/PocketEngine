@@ -49,20 +49,20 @@ void TextBoxSystem::ActiveTextBoxChanged(GameObject* object) {
             }
         }
         
-        Input->KeyboardText = textBox->Text;
-        Input->KeyboardActive = true;
+        world->Input().KeyboardText = textBox->Text;
+        world->Input().KeyboardActive = true;
         
-        Input->KeyboardActive.Changed.Bind(this, &TextBoxSystem::KeyboardActiveChanged);
-        Input->KeyboardText.Changed.Bind(this, &TextBoxSystem::KeyboardTextChanged);
-        Input->TouchDown.Bind(this, &TextBoxSystem::TouchInputUp);
+        world->Input().KeyboardActive.Changed.Bind(this, &TextBoxSystem::KeyboardActiveChanged);
+        world->Input().KeyboardText.Changed.Bind(this, &TextBoxSystem::KeyboardTextChanged);
+        world->Input().TouchDown.Bind(this, &TextBoxSystem::TouchInputUp);
         
     } else {
         if (textBox == ActiveTextBox()) {
             ActiveTextBox = 0;
-            Input->KeyboardActive.Changed.Unbind(this, &TextBoxSystem::KeyboardActiveChanged);
-            Input->KeyboardText.Changed.Unbind(this, &TextBoxSystem::KeyboardTextChanged);
-            Input->TouchDown.Unbind(this, &TextBoxSystem::TouchInputUp);
-            Input->KeyboardActive = false;
+            world->Input().KeyboardActive.Changed.Unbind(this, &TextBoxSystem::KeyboardActiveChanged);
+            world->Input().KeyboardText.Changed.Unbind(this, &TextBoxSystem::KeyboardTextChanged);
+            world->Input().TouchDown.Unbind(this, &TextBoxSystem::TouchInputUp);
+            world->Input().KeyboardActive = false;
         }
     }
 }
@@ -113,14 +113,14 @@ void TextBoxSystem::Update(float dt) {
 }
 
 void TextBoxSystem::KeyboardActiveChanged() {
-    if (!Input->KeyboardActive && ActiveTextBox()) {
+    if (!world->Input().KeyboardActive && ActiveTextBox()) {
         ActiveTextBox()->Active = false;
     }
 }
 
 void TextBoxSystem::KeyboardTextChanged() {
     if (ActiveTextBox()) {
-        ActiveTextBox()->Text = Input->KeyboardText;
+        ActiveTextBox()->Text = world->Input().KeyboardText;
     }
 }
         

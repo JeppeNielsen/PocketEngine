@@ -60,7 +60,9 @@ void InputDevice::ReleaseAllButtons() {
 	currentButtons.clear();
 }
 
-void InputDevice::Update(IInputManagerIterator* inputManagers) {
+void InputDevice::StartFrame(IInputManagerIterator* inputManagers) {
+
+    
 
     for (unsigned i=0; i<currentTouches.size(); i++) {
         Touch& current = currentTouches[i];
@@ -75,9 +77,12 @@ void InputDevice::Update(IInputManagerIterator* inputManagers) {
     updating = true;
     inputManagers->UpdateInput(this);
     updating = false;
-    
+}
+
+void InputDevice::EndFrame() {
     previousTouches = currentTouches;
 	previousButtons = currentButtons;
+    scrollValues.clear();
 }
 
 void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
@@ -113,7 +118,6 @@ void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
     for(float v : scrollValues) {
         inputManager->ScrollChanged(v);
     }
-    scrollValues.clear();
 }
 
 void InputDevice::SetKeyboard(std::string text, bool active) {

@@ -19,6 +19,7 @@ void GameSystemBase::TryAddComponentContainer(ComponentID id, std::function<ICon
 }
 
 void GameSystemBase::Initialize() {}
+void GameSystemBase::Destroy() {}
 void GameSystemBase::ObjectAdded(Pocket::GameObject *object) {}
 void GameSystemBase::ObjectRemoved(Pocket::GameObject *object) {}
 void GameSystemBase::Update(float dt) {}

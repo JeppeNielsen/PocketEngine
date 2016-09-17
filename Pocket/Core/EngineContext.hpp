@@ -11,6 +11,7 @@
 #include "Vector2.hpp"
 #include "Rect.hpp"
 #include "AppMenu.hpp"
+#include "InputDevice.hpp"
 
 namespace Pocket {
     class EngineContext {
@@ -20,7 +21,9 @@ namespace Pocket {
         Property<Vector2> ScreenSize;
         Rect Viewport() const;
         AppMenu& Menu();
+        InputDevice& InputDevice();
     private:
         AppMenu* menu;
+        class InputDevice inputDevice;
     };
 }

@@ -7,10 +7,7 @@
 #include "Property.hpp"
 
 namespace Pocket {
-    
-
-    
-	class InputDevice : public IInputManagerUpdater
+    class InputDevice : public IInputManagerUpdater
 	{
 	public:
 		InputDevice();
@@ -29,7 +26,8 @@ namespace Pocket {
 		void SetTouch(int index, bool isDown, const Vector2& position);
 		const Vector2& GetTouchPosition(int index);
 
-		void Update(IInputManagerIterator* inputManagers);
+		void StartFrame(IInputManagerIterator* inputManagers);
+        void EndFrame();
 
 		void SetButton(const std::string& button, bool isDown);
 		void ReleaseAllButtons();

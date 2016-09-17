@@ -26,3 +26,7 @@ EngineContext::EngineContext() : menu(0) { }
 EngineContext::~EngineContext() {
     delete menu;
 }
+
+InputDevice& EngineContext::InputDevice() {
+    return inputDevice;
+}

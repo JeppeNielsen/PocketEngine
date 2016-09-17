@@ -26,7 +26,6 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
 	this->window = Window::CreatePlatformWindow();
 	this->window->context = &context;
 	this->window->Create(width, height, fullScreen);
-    //this->rootState->DoInitialize(&manager);
     firstFrame = true;
     window->MainLoop.Bind(this, &Engine::Loop);
 	window->Begin();
@@ -50,10 +49,6 @@ void Engine::Loop(bool* exit) {
         delta = targetDelta;
     }
     timer->Begin();
-    //if (gameStateManager->CheckForChanges()) {
-    //    (*exit) = true;
-    //    return;
-    //}
     
     if(!Update(delta)) {
         (*exit) = true;
@@ -65,9 +60,11 @@ void Engine::Loop(bool* exit) {
 
 
 bool Engine::Update(float dt) {
-	bool running = window->Update(rootState);
-	rootState->DoUpdate(dt);
-	return running;
+    context.InputDevice().StartFrame(rootState);
+	bool running = window->Update();
+    rootState->DoUpdate(dt);
+	context.InputDevice().EndFrame();
+    return running;
 }
 
 void Engine::Render() {

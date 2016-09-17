@@ -12,28 +12,18 @@
 using namespace Pocket;
 
 FirstPersonMoverSystem::FirstPersonMoverSystem() : draggableSystem(0) {
-    Input = 0;
-    Input.Changed.Bind(this, &FirstPersonMoverSystem::InputChanged);
     isDraggableSystemChecked = false;
     FlipControls = false;
 }
 
 void FirstPersonMoverSystem::Initialize() {
+    world->Input().TouchDown.Bind(this, &FirstPersonMoverSystem::TouchDown);
+    world->Input().TouchUp.Bind(this, &FirstPersonMoverSystem::TouchUp);
 }
 
-void FirstPersonMoverSystem::InputChanged() {
-    InputManager* old = Input.PreviousValue();
-    InputManager* current = Input;
-    if (old) {
-        old->TouchDown.Unbind(this, &FirstPersonMoverSystem::TouchDown);
-        old->TouchUp.Unbind(this, &FirstPersonMoverSystem::TouchUp);
-        touches.clear();
-    }
-    
-    if (current) {
-        current->TouchDown.Bind(this, &FirstPersonMoverSystem::TouchDown);
-        current->TouchUp.Bind(this, &FirstPersonMoverSystem::TouchUp);
-    }
+void FirstPersonMoverSystem::Destroy() {
+    world->Input().TouchDown.Unbind(this, &FirstPersonMoverSystem::TouchDown);
+    world->Input().TouchUp.Unbind(this, &FirstPersonMoverSystem::TouchUp);
 }
 
 void FirstPersonMoverSystem::TouchDown(Pocket::TouchEvent e) {
@@ -72,7 +62,7 @@ void FirstPersonMoverSystem::UpdateMovement(float dt, int touchIndex) {
     Touches::iterator it = touches.find(touchIndex);
     if (it==touches.end()) return;
     
-    Vector2 delta = Input()->GetTouchPosition(touchIndex) - it->second;
+    Vector2 delta = world->Input().GetTouchPosition(touchIndex) - it->second;
     
     const ObjectCollection& list = Objects();
     
@@ -89,7 +79,7 @@ bool FirstPersonMoverSystem::UpdateRotation(float dt, int touchIndex) {
     Touches::iterator it = touches.find(touchIndex);
     if (it==touches.end()) return false;
     
-    Vector2 delta = Input()->GetTouchPosition(touchIndex) - it->second;
+    Vector2 delta = world->Input().GetTouchPosition(touchIndex) - it->second;
     
     const ObjectCollection& list = Objects();
     

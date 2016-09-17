@@ -9,7 +9,6 @@
 #pragma once
 #include "GameWorld.hpp"
 #include "TextBox.hpp"
-#include "InputManager.hpp"
 #include "Touchable.hpp"
 #include <map>
 
@@ -42,8 +41,7 @@ namespace Pocket {
         
         bool touchWasUp;
         bool anyTextboxUp;
-        
-        InputManager* Input;
+
     public:
         Property<TextBox*> ActiveTextBox;
         

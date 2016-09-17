@@ -12,7 +12,6 @@
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "RenderSystem.hpp"
-#include "InputManager.hpp"
 #include "DraggableSystem.hpp"
 #include "SelectableCollection.hpp"
 
@@ -20,8 +19,9 @@ namespace Pocket {
     class DragSelector : public GameSystem<Transform, Mesh, Selectable> {
     public:
         void Initialize() override;
+        void Destroy() override;
         
-        void Setup(const Rect& viewport, InputManager& input);
+        void Setup(const Rect& viewport);
     
         void Update(float dt) override;
         void Render() override;
@@ -41,8 +41,6 @@ namespace Pocket {
         
         void Down(TouchEvent e);
         void Up(TouchEvent e);
-        
-        InputManager* input;
         
         class CameraSystem : public GameSystem<Transform, Camera> { };
         

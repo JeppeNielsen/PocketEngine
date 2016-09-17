@@ -20,7 +20,7 @@ namespace Pocket {
     public:
         void Create(int width, int height, bool fullScreen);
         void Destroy();
-        bool Update(IInputManagerIterator* inputManagers);
+        bool Update();
         void PreRender();
         void PostRender();
         void Begin();

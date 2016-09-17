@@ -19,16 +19,15 @@ namespace Pocket {
     class FirstPersonMoverSystem : public GameSystem<Transform, FirstPersonMover>  {
     public:
         FirstPersonMoverSystem();
-        Property<InputManager*> Input;
         
         void Initialize();
+        void Destroy();
         void Update(float dt);
         
         bool FlipControls;
         
 private:
-        void InputChanged();
-
+        
         void TouchDown(TouchEvent e);
         void TouchUp(TouchEvent e);
         

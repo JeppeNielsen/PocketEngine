@@ -14,7 +14,6 @@
 #include "Mesh.hpp"
 #include "Camera.hpp"
 #include "Touchable.hpp"
-#include "InputManager.hpp"
 #include "Orderable.hpp"
 #include <set>
 
@@ -34,12 +33,11 @@ namespace Pocket {
         TouchSystem();
         ~TouchSystem();
         void Initialize();
+        void Destroy();
         OctreeSystem& Octree();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
-        
-        Property<InputManager*> Input;
         
         int TouchDepth;
         

@@ -62,9 +62,8 @@ void WindowOSX::Destroy() {
 	
 }
 
-bool WindowOSX::Update(IInputManagerIterator* inputManagers) {
-    OSXWindowCreator::Instance()->inputDevice.Update(inputManagers);
-	return true;
+bool WindowOSX::Update() {
+    return true;
 }
 
 void WindowOSX::PreRender() {

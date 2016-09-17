@@ -10,6 +10,7 @@
 #include "GameObject.hpp"
 #include "Container.hpp"
 #include "GameSystem.hpp"
+#include "InputManager.hpp"
 
 namespace Pocket {
     class ScriptWorld;
@@ -71,6 +72,8 @@ namespace Pocket {
         void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
         
         static std::function<void(int, GameObject::ComponentInfo&)> OnGetTypeInfo;
+        
+        InputManager& Input();
     private:
     
         GameObject root;
@@ -125,6 +128,8 @@ namespace Pocket {
             std::string id;
         };
         std::vector<ObjectID> objectIDs;
+        
+        InputManager input;
         
         IGameSystem* TryAddSystem(SystemID id, std::function<IGameSystem*(std::vector<int>& components)> constructor);
         void TryRemoveSystem(SystemID id);
