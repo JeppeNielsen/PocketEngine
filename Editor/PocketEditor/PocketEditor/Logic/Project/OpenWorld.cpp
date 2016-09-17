@@ -21,6 +21,7 @@
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
 #include "SelectedColorerSystem.hpp"
+#include "ClonerSystem.hpp"
 #include <fstream>
 
 GameWorld& OpenWorld::World() {
@@ -41,6 +42,7 @@ void OpenWorld::CreateDefault() {
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
+    world.CreateSystem<ClonerSystem>();
     
     if (false)
     {

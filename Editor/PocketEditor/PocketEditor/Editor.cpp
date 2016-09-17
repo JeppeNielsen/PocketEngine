@@ -70,7 +70,7 @@ public:
         
         Input.ButtonDown.Bind([this] (auto key) {
             if (key == "n") {
-                context.NewProject();
+                //context.NewProject();
             }
         });
         
