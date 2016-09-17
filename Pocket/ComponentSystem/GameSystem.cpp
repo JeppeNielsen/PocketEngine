@@ -40,6 +40,8 @@ void GameSystemBase::RemoveObject(Pocket::GameObject *object) {
     }
 }
 
+int GameSystemBase::Order() { return 0; }
+
 void GameSystemBase::SetMetaData(Pocket::GameObject *object, void *data) {
     metaData[object] = data;
 }

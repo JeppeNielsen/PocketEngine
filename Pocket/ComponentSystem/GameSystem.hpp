@@ -26,6 +26,7 @@ namespace Pocket {
         virtual void Render() = 0;
         virtual int AddObject(GameObject* object) = 0;
         virtual void RemoveObject(GameObject* object) = 0;
+        virtual int Order() = 0;
     };
     
     class GameSystemBase : public IGameSystem {
@@ -42,6 +43,7 @@ namespace Pocket {
         virtual void ObjectRemoved(GameObject* object);
         virtual void Update(float dt);
         virtual void Render();
+        virtual int Order();
         
         int AddObject(GameObject* object);
         void RemoveObject(GameObject* object);

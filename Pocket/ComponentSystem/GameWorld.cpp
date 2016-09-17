@@ -204,6 +204,10 @@ IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(st
         systemEntry.deleteFunction = 0;
         systemEntry.system->Initialize();
         
+        std::sort(systems.begin(), systems.end(), [] (IGameSystem* a, IGameSystem* b) {
+            return a->Order() < b->Order();
+        });
+        
         IterateObjects([system, &systemBitset](GameObject* o) {
             if (systemBitset.Contains(o->data->enabledComponents)) {
                 system->AddObject(o);
