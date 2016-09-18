@@ -77,7 +77,7 @@ bool OpenWorld::Save() {
     bool succes = false;
     try {
         succes = true;
-        std::fstream file;
+        std::ofstream file;
         file.open(Path);
         world.ToJson(file);
         file.close();
