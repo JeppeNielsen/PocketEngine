@@ -74,9 +74,8 @@ void InputDevice::StartFrame(IInputManagerIterator* inputManagers) {
         }
     }
 
-    updating = true;
+    
     inputManagers->UpdateInput(this);
-    updating = false;
 }
 
 void InputDevice::EndFrame() {
@@ -110,8 +109,10 @@ void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
         if (isUp) inputManager->ButtonUp(it->first);
     }
     
+    updating = true;
     inputManager->KeyboardActive = KeyboardActive;
     inputManager->KeyboardText = KeyboardText;
+    updating = false;
     
     inputManager->GamePad.Update();
     
