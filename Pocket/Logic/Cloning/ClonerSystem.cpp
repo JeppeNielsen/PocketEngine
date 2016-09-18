@@ -30,9 +30,6 @@ void ClonerSystem::ClonePathChanged(Pocket::GameObject *object) {
     
     std::fstream file;
     file.open(path);
-    GameObject* clone = world->CreateObject(file);
-    if (clone) {
-        clone->Parent() = object;
-    }
+    world->CreateObject(file, object);
     file.close();
 }
