@@ -253,26 +253,31 @@ void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
 
 void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) {
 
-    minijson::object_writer gameObject = writer.nested_object("GameObject");
-    gameObject.write("id", serializedObjects[this]);
-    minijson::array_writer components = gameObject.nested_array("Components");
+    bool isRoot = this==world->Root();
+
+    minijson::object_writer gameObject = writer.nested_object(!isRoot ? "GameObject" : "World");
     
-    if (data->activeComponents.Size()>0) {
-        for(int i=0; i<world->components.size(); ++i) {
-            if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
-                GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
-                GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
-                bool isReference =  componentOwner != this;
-                if (isReference) {
-                    if (predicate && !predicate(componentOwner, i)) {
-                        continue;
+    if (!isRoot) {
+        gameObject.write("id", serializedObjects[this]);
+        minijson::array_writer components = gameObject.nested_array("Components");
+        
+        if (data->activeComponents.Size()>0) {
+            for(int i=0; i<world->components.size(); ++i) {
+                if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
+                    GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
+                    GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
+                    bool isReference =  componentOwner != this;
+                    if (isReference) {
+                        if (predicate && !predicate(componentOwner, i)) {
+                            continue;
+                        }
                     }
+                    SerializeComponent(i, components, isReference, componentOwner);
                 }
-                SerializeComponent(i, components, isReference, componentOwner);
             }
         }
+        components.close();
     }
-    components.close();
     
     if (!data->children.empty()) {
         minijson::array_writer children_object = gameObject.nested_array("Children");

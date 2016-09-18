@@ -70,11 +70,11 @@ GameObject* GameWorld::CreateObject() {
     return &object;
 }
 
-GameObject* GameWorld::CreateObject(std::istream &jsonStream, std::function<void(GameObject*)> onCreated) {
+GameObject* GameWorld::CreateObject(std::istream &jsonStream, GameObject* parent, std::function<void(GameObject*)> onCreated) {
     minijson::istream_context context(jsonStream);
     GameObject* object = 0;
     try {
-        object = LoadObject(context, onCreated);
+        object = LoadObject(parent, context, onCreated);
         
         GameObject* object;
         int componentID;
@@ -339,12 +339,19 @@ GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
     return 0;
 }
 
-GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+    if (parent == &root) parent = 0;
     GameObject* object = 0;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
         std::string name = n;
-        if (name == "GameObject" && v.type() == minijson::Object) {
-            object = (GameObject*)CreateObject();
+        bool isGameObject = name == "GameObject";
+        bool isRoot = name == "World";
+        
+        if ((isGameObject || isRoot) && v.type() == minijson::Object) {
+            object = !isRoot ? (GameObject*)CreateObject() : &root;
+            if (!isRoot) {
+                object->Parent() = parent;
+            }
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::String) {
@@ -359,9 +366,9 @@ GameObject* GameWorld::LoadObject(minijson::istream_context &context, std::funct
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
-                        GameObject* child = LoadObject(context, onCreated);
-                        if (child) {
-                            child->Parent() = object;
+                        GameObject* child = LoadObject(isRoot ? parent : object, context, onCreated);
+                        if (object == &root) {
+                            object = child;
                         }
                     });
                 }
