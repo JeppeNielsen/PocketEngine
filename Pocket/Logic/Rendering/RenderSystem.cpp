@@ -218,3 +218,11 @@ bool RenderSystem::SortTransparentObjects(const VisibleObject& a, const VisibleO
 
     return a.distanceToCamera>b.distanceToCamera;
 }
+
+void RenderSystem::SetCameras(Pocket::RenderSystem::CameraSystem *cameraSystem) {
+    cameras = cameraSystem;
+}
+
+Pocket::RenderSystem::CameraSystem * RenderSystem::GetCameras() {
+    return cameras;
+}

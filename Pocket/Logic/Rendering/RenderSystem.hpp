@@ -41,6 +41,9 @@ public:
     IShader* DefaultShader;
     IShader* DefaultTexturedShader;
     
+    void SetCameras(CameraSystem* cameraSystem);
+    CameraSystem* GetCameras();
+    
 private:
     
     static ObjectRenderers objectRenderers;
