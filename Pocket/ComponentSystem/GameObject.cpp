@@ -263,7 +263,7 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
         
         if (data->activeComponents.Size()>0) {
             for(int i=0; i<world->components.size(); ++i) {
-                if (!(predicate && !predicate(this, i)) && data->activeComponents[i]) {
+                if (data->activeComponents[i] && !(predicate && !predicate(this, i))) {
                     GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
                     GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
                     bool isReference =  componentOwner != this;
