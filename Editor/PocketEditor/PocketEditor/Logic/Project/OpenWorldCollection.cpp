@@ -40,16 +40,8 @@ OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::st
     OpenWorld* world;
     if (!TryFindOpenWorld(path, &world)) {
         world = new OpenWorld();
-        world->Path = path;
-        world->Filename = filename;
+        world->Load(path, filename);
         worlds.push_back(world);
-        world->CreateDefault();
-        if (path != "") {
-            std::fstream file;
-            file.open(path);
-            world->World().CreateObject(file);
-            file.close();
-        }
         WorldLoaded(world);
     }
     ActiveWorld = world;

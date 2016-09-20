@@ -22,6 +22,7 @@
 #include "SelectableDragSystem.hpp"
 #include "SelectedColorerSystem.hpp"
 #include "ClonerSystem.hpp"
+#include "FirstPersonMoverSystem.hpp"
 #include <fstream>
 
 GameWorld& OpenWorld::World() {
@@ -32,19 +33,35 @@ GameWorld& OpenWorld::EditorWorld() {
     return editorWorld;
 }
 
+struct Turner {
+    Vector3 speed;
+    
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(speed)
+    TYPE_FIELDS_END
+};
+
+struct TurnerSystem : public GameSystem<Transform, Turner> {
+    void Update(float dt) {
+        for(auto o : Objects()) {
+            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Turner>()->speed * dt;
+        }
+    }
+};
+
 void OpenWorld::CreateDefault() {
 
     GameObject* gameRoot = editorWorld.CreateObject();
 
-    world.CreateSystem<RenderSystem>();
+    RenderSystem* worldRenderSystem = world.CreateSystem<RenderSystem>();
     world.CreateSystem<TransformHierarchy>();
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
     world.CreateSystem<ClonerSystem>();
+    world.CreateSystem<TurnerSystem>();
     
-    if (false)
     {
         GameObject* camera = world.CreateObject();
         camera->AddComponent<Camera>();
@@ -52,7 +69,7 @@ void OpenWorld::CreateDefault() {
         camera->GetComponent<Camera>()->FieldOfView = 70;
     }
 
-    editorWorld.CreateSystem<RenderSystem>();
+    RenderSystem* editorRenderSystem = editorWorld.CreateSystem<RenderSystem>();
     editorWorld.CreateSystem<TouchSystem>();
     editorWorld.CreateSystem<DraggableSystem>();
     editorWorld.CreateSystem<EditorTransformSystem>();
@@ -62,6 +79,7 @@ void OpenWorld::CreateDefault() {
     editorWorld.CreateSystem<SelectableDragSystem>();
     editorWorld.CreateSystem<TouchSystem>()->TouchDepth = 5;
     editorWorld.CreateSystem<SelectedColorerSystem>();
+    editorWorld.CreateSystem<FirstPersonMoverSystem>();
     
     selectables = editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
     
@@ -70,7 +88,10 @@ void OpenWorld::CreateDefault() {
         camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 70;
+        camera->AddComponent<FirstPersonMover>();
     }
+    
+    worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
 }
 
 bool OpenWorld::Save() {
@@ -79,10 +100,32 @@ bool OpenWorld::Save() {
         succes = true;
         std::ofstream file;
         file.open(Path);
-        world.ToJson(file);
+        world.ToJson(file, [] (GameObject* go, int componentID) {
+            if (componentID == Pocket::GameIDHelper::GetComponentID<EditorObject>()) return false;
+            if (go->Parent() && go->Parent()()->GetComponent<Cloner>()) return false;
+            return true;
+        });
         file.close();
     } catch (std::exception e) {
-      succes = false;
+        succes = false;
     }
     return succes;
+}
+
+bool OpenWorld::Load(const std::string &path, const std::string &filename) {
+    Path = path;
+    Filename = filename;
+    
+    CreateDefault();
+    
+    if (path != "") {
+        std::ifstream file;
+        file.open(path);
+        world.CreateObject(file, 0, [](GameObject* go) {
+            go->AddComponent<EditorObject>();
+        });
+        file.close();
+    }
+
+    return true;
 }
