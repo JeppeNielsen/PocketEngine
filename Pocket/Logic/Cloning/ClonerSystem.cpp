@@ -15,7 +15,9 @@ using namespace Pocket;
 
 void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Cloner>()->ClonePath.Changed.Bind(this, &ClonerSystem::ClonePathChanged, object);
-    ClonePathChanged(object);
+    if (object->Children().empty()) {
+        ClonePathChanged(object);
+    }
 }
 
 void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
