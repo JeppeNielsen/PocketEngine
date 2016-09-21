@@ -19,13 +19,13 @@ namespace Pocket {
     class TextBoxLabelSystem : public GameSystem<TextBox, Label, Mesh, Sizeable> {
     public:
         
-        const float cursorWidth = 1.05f;
+        const float cursorWidth = 2.0f;
     
         void Initialize();
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void TextBoxChanged(GameObject* object);
-        void TextBoxActiveChanged(bool& active, GameObject *object);
+        void TextBoxActiveChanged(GameObject *object);
         void MoveCursor(Pocket::TextBox *textBox, GameObject *object);
         void Update(float dt);
 
