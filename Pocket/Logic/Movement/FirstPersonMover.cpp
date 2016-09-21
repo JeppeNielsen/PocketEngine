@@ -14,5 +14,11 @@ FirstPersonMover::FirstPersonMover() {
     MovementSpeed = 0.2f;
     RotationSpeed = 0.15f;
     MaxPitch = 89.0f;
+    MovementTouchIndex = 0;
+    RotationTouchIndex = 1;
 }
 
+void FirstPersonMover::SetTouchIndices(int movementTouchIndex, int rotationTouchIndex) {
+    MovementTouchIndex = movementTouchIndex;
+    RotationTouchIndex = rotationTouchIndex;
+}

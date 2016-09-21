@@ -24,15 +24,13 @@ namespace Pocket {
         void Destroy();
         void Update(float dt);
         
-        bool FlipControls;
-        
 private:
         
         void TouchDown(TouchEvent e);
         void TouchUp(TouchEvent e);
         
-        void UpdateMovement(float dt, int touchIndex);
-        bool UpdateRotation(float dt, int touchIndex);
+        void UpdateMovement(float dt, GameObject* object);
+        bool UpdateRotation(float dt, GameObject* object);
         
         typedef std::map<int, Vector2> Touches;
         Touches touches;

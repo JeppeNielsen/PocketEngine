@@ -17,5 +17,9 @@ namespace Pocket {
         float RotationSpeed;
         float MaxPitch;
         Quaternion initialRotation;
+        int MovementTouchIndex;
+        int RotationTouchIndex;
+        
+        void SetTouchIndices(int movementTouchIndex, int rotationTouchIndex);
     };
 }
