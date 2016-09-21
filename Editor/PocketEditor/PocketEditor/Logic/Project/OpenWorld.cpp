@@ -88,7 +88,7 @@ void OpenWorld::CreateDefault() {
         camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 70;
-        camera->AddComponent<FirstPersonMover>();
+        camera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
     }
     
     worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());

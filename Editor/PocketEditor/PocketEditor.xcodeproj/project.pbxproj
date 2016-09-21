@@ -333,7 +333,6 @@
 		729954FD1C99F76100DAAE5D /* FileReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952E61C99F76100DAAE5D /* FileReader.mm */; };
 		729954FE1C99F76100DAAE5D /* GamePadManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952E71C99F76100DAAE5D /* GamePadManager.mm */; };
 		729954FF1C99F76100DAAE5D /* OSXView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952E91C99F76100DAAE5D /* OSXView.mm */; };
-		729955001C99F76100DAAE5D /* OSXWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952EB1C99F76100DAAE5D /* OSXWindow.mm */; };
 		729955011C99F76100DAAE5D /* OSXWindowCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952ED1C99F76100DAAE5D /* OSXWindowCreator.mm */; };
 		729955021C99F76100DAAE5D /* WindowOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 729952EF1C99F76100DAAE5D /* WindowOSX.mm */; };
 		729955051C99F76100DAAE5D /* jpeg_decoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729952F51C99F76100DAAE5D /* jpeg_decoder.cpp */; };
@@ -1174,8 +1173,6 @@
 		729952E71C99F76100DAAE5D /* GamePadManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GamePadManager.mm; sourceTree = "<group>"; };
 		729952E81C99F76100DAAE5D /* OSXView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXView.h; sourceTree = "<group>"; };
 		729952E91C99F76100DAAE5D /* OSXView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXView.mm; sourceTree = "<group>"; };
-		729952EA1C99F76100DAAE5D /* OSXWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXWindow.h; sourceTree = "<group>"; };
-		729952EB1C99F76100DAAE5D /* OSXWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXWindow.mm; sourceTree = "<group>"; };
 		729952EC1C99F76100DAAE5D /* OSXWindowCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXWindowCreator.h; sourceTree = "<group>"; };
 		729952ED1C99F76100DAAE5D /* OSXWindowCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXWindowCreator.mm; sourceTree = "<group>"; };
 		729952EE1C99F76100DAAE5D /* WindowOSX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WindowOSX.hpp; sourceTree = "<group>"; };
@@ -2666,8 +2663,6 @@
 				729952E71C99F76100DAAE5D /* GamePadManager.mm */,
 				729952E81C99F76100DAAE5D /* OSXView.h */,
 				729952E91C99F76100DAAE5D /* OSXView.mm */,
-				729952EA1C99F76100DAAE5D /* OSXWindow.h */,
-				729952EB1C99F76100DAAE5D /* OSXWindow.mm */,
 				729952EC1C99F76100DAAE5D /* OSXWindowCreator.h */,
 				729952ED1C99F76100DAAE5D /* OSXWindowCreator.mm */,
 				729952EE1C99F76100DAAE5D /* WindowOSX.hpp */,
@@ -3218,7 +3213,6 @@
 				72CE8F061CBA4FC3001F08E4 /* EditorTransformSystem.cpp in Sources */,
 				729954301C99F76100DAAE5D /* ChromecastMessage.cpp in Sources */,
 				7299549D1C99F76100DAAE5D /* btGImpactCollisionAlgorithm.cpp in Sources */,
-				729955001C99F76100DAAE5D /* OSXWindow.mm in Sources */,
 				729954801C99F76100DAAE5D /* btConvexInternalShape.cpp in Sources */,
 				729954B51C99F76100DAAE5D /* btGeneric6DofConstraint.cpp in Sources */,
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
