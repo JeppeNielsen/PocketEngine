@@ -102,6 +102,26 @@
     Pocket::OSXWindowCreator::Instance()->Move(1, location.x, location.y);
 }
 
+-(void)otherMouseDown:(NSEvent *)theEvent {
+    if (theEvent.type == NSOtherMouseDown) {
+        NSPoint location = [self convertLocation:theEvent.locationInWindow];
+        Pocket::OSXWindowCreator::Instance()->Down(2, location.x, location.y);
+    }
+}
+
+-(void)otherMouseUp:(NSEvent *)theEvent {
+    if (theEvent.type == NSOtherMouseUp) {
+        NSPoint location = [self convertLocation:theEvent.locationInWindow];
+        Pocket::OSXWindowCreator::Instance()->Up(2, location.x, location.y);
+    }
+}
+
+-(void)otherMouseDragged:(NSEvent *)theEvent {
+    if (theEvent.type == NSOtherMouseDragged) {
+        NSPoint location = [self convertLocation:theEvent.locationInWindow];
+        Pocket::OSXWindowCreator::Instance()->Move(2, location.x, location.y);
+    }
+}
 
 -(void)keyDown:(NSEvent *)theEvent {
     unichar cd = [[theEvent characters] characterAtIndex:0];

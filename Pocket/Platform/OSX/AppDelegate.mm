@@ -43,7 +43,7 @@
         styleMask |=NSFullScreenWindowMask;
     }
     NSRect rect = [NSWindow contentRectForFrameRect:frame styleMask:styleMask];
-    window =  [[OSXWindow alloc] initWithContentRect:rect styleMask:styleMask backing: NSBackingStoreBuffered    defer:false];
+    window =  [[NSWindow alloc] initWithContentRect:rect styleMask:styleMask backing: NSBackingStoreBuffered    defer:false];
     [window makeKeyAndOrderFront: window];
     [window setDelegate:self];
     [window setAcceptsMouseMovedEvents:YES];
@@ -79,7 +79,7 @@
     [view setPixelFormat:fmt];
 
     NSTrackingAreaOptions options = (NSTrackingActiveAlways | NSTrackingInVisibleRect |  
-                         NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved);
+                         NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved | NSOtherMouseDownMask | NSOtherMouseUpMask);
 
     NSTrackingArea *area = [[NSTrackingArea alloc] initWithRect:[view bounds]
                                                     options:options

@@ -8,12 +8,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import "OSXView.h"
-#import "OSXWindow.h"
 
 @interface AppDelegate : NSResponder <NSApplicationDelegate, NSWindowDelegate>
 {
     NSTimer* renderTimer;
-    OSXWindow* window;
+    NSWindow* window;
     OSXView* view;
 }
 
