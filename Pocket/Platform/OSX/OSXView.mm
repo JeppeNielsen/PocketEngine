@@ -20,6 +20,10 @@
     
 }
 
+-(void) setWindow:(NSWindow*) win {
+    window = win;
+}
+
 - (void)prepareOpenGL {
     [super prepareOpenGL];
     
@@ -81,10 +85,18 @@
 }
 
 -(NSPoint) convertLocation: (NSPoint) point {
-    NSPoint p;
-    p.x = point.x;
-    p.y = point.y;//_bounds.size.height - point.y;
-    return [self convertPointToBacking:p];;
+    return [self convertPointToBacking:point];
+}
+
+-(NSPoint) convertViewLocationToWorldPoint: (NSPoint) point {
+    point = [self convertPointFromBacking:point];
+    NSPoint p = [self convertPoint:point toView:nil];
+    NSRect rect;
+    rect.origin.x = p.x;
+    rect.origin.y = p.y;
+    
+    rect = [window convertRectToScreen:rect];
+    return rect.origin;
 }
 
 -(void)rightMouseDown:(NSEvent *)theEvent {
@@ -137,15 +149,11 @@
     Pocket::OSXWindowCreator::Instance()->ButtonUp([str UTF8String]);
 }
 
-- (void)windowDidResize:(NSNotification *)notification {
-    NSLog(@"test");
-}
-
 std::map<NSMenuItem*, Pocket::AppMenu*> menuItemToAppMenu;
 
 -(NSMenuItem*)createMenuItem:(NSMenu *)menu withText:(NSString*)text withObject:(void*)object withShortCut:(NSString*)shortCut
 {
-    NSMenuItem* menuItem = [menu addItemWithTitle:text action:@selector(menuItemClicked:) keyEquivalent:shortCut];
+    NSMenuItem* menuItem = [[menu addItemWithTitle:text action:@selector(menuItemClicked:) keyEquivalent:shortCut] retain];
     menuItemToAppMenu[menuItem] = (Pocket::AppMenu*)object;
     return menuItem;
 }

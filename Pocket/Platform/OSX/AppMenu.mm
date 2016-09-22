@@ -15,6 +15,7 @@
 using namespace Pocket;
 
 struct Data {
+    Data() : menu(0), menuItem(0) {}
     NSMenu* menu;
     NSMenuItem* menuItem;
 };
@@ -26,24 +27,33 @@ AppMenu::~AppMenu() {
     for(auto child : children) {
         delete child;
     }
-}
-AppMenu::AppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut) : text(text), parent(parent) {
+    auto it = menuData.find(this);
+    
+    if (it->second.menu && it->second.menu != [NSApp mainMenu]) {
+        [it->second.menu release];
+    }
 
-/*
-
-
-{
-NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-    NSMenu* appMenu = [[NSMenu alloc] initWithTitle:@"My App"];
-        [appMenu addItemWithTitle:@"Item 1" action:nil keyEquivalent:@""];
-
-    [mi setSubmenu:appMenu];
+    if (it->second.menuItem) {
+        [it->second.menuItem release];
+    }
+    menuData.erase(it);
 }
 
+void AppMenu::InitializeMainMenu() {
+    Data data;
+    data.menu = [NSApp mainMenu];
+    menuData[this] = data;
+}
 
+void AppMenu::InitializePopUp() {
+    Data data;
+    data.menu = [[NSMenu alloc] initWithTitle:@""];
+    menuData[this] = data;
+}
 
-*/
-
+void AppMenu::CreateAppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut) {
+    this->text = text;
+    this->parent = parent;
     
     NSString* textString = [[NSString alloc] initWithUTF8String:text.c_str()];
     NSString* shortCutString = [[NSString alloc] initWithUTF8String:shortcut.c_str()];
@@ -51,30 +61,36 @@ NSMenuItem* mi = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
     Data data;
     
     OSXView* osxView = (OSXView*)OSXWindowCreator::Instance()->win;
-
-    if (!parent->parent) {
-        NSMenu* menu = [NSApp mainMenu];
-        //data.menuItem = [menu addItemWithTitle:@"" action:nil keyEquivalent:@""];
-        data.menuItem = [osxView createMenuItem:menu withText:@"" withObject:this withShortCut:shortCutString];
-        data.menu =  [[NSMenu alloc] initWithTitle:textString];
-        [data.menuItem setSubmenu:data.menu];
-        
-    } else {
+    if (parent) {
         auto it = menuData.find(parent);
-
-        NSMenu* menu = it->second.menu;
-    
-        data.menuItem = [osxView createMenuItem:menu withText:textString withObject:this withShortCut:shortCutString]; //[menu addItemWithTitle:textString action:@selector(Selected) keyEquivalent:@""];
-        //data.menu = [[NSMenu alloc] initWithTitle:textString];
-        //data.menuItem = [data.menu addItemWithTitle:textString action:nil keyEquivalent:@""];
-
-        //[data.menuItem setSubmenu:data.menu];
+        if (!it->second.menu) {
+            NSString* parentTextString = [[NSString alloc] initWithUTF8String:parent->text.c_str()];
+            it->second.menu = [[[NSMenu alloc] initWithTitle:parentTextString] retain];
+            [it->second.menuItem setSubmenu:it->second.menu];
+        }
+        
+        data.menuItem = [osxView createMenuItem:it->second.menu withText:textString withObject:this withShortCut:shortCutString];
     }
+    
     menuData[this] = data;
 }
 
 AppMenu& AppMenu::AddChild(const std::string &text, const std::string& shortcut) {
-    children.push_back( new AppMenu(this, text, shortcut) );
+    AppMenu* menu = new AppMenu();
+    menu->CreateAppMenu(this, text, shortcut);
+    children.push_back( menu );
     return *children.back();
 }
 
+void AppMenu::ShowPopup(const Vector2& location) {
+    NSMenu* menu = menuData[this].menu;
+    NSPoint point;
+    point.x = location.x;
+    point.y = location.y;
+    
+    OSXView* osxView = (OSXView*)OSXWindowCreator::Instance()->win;
+    
+    point = [osxView convertViewLocationToWorldPoint:point];
+    
+    [menu popUpMenuPositioningItem:nil atLocation:point inView:nil];
+}

@@ -17,6 +17,7 @@ Rect EngineContext::Viewport() const {
 AppMenu& EngineContext::Menu() {
     if (!menu) {
         menu = new AppMenu();
+        menu->InitializeMainMenu();
     }
     return *menu;
 }
