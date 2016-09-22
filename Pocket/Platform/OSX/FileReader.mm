@@ -11,6 +11,7 @@
 #include <map>
 #include "StringHelper.hpp"
 #include <istream>
+#include <AppKit/AppKit.h>
 
 using namespace Pocket;
 
@@ -48,4 +49,62 @@ std::string FileReader::GetBundleDir() {
         path += dirs[i] + "/";
     }
     return path;
+}
+
+std::vector<std::string> FileReader::ShowOpenFileRequester(const std::string &path, bool allowFiles, bool allowDirectories) {
+
+    std::vector<std::string> files;
+
+    NSOpenPanel* openDlg = [NSOpenPanel openPanel];
+
+    // Enable the selection of files in the dialog.
+    [openDlg setCanChooseFiles:allowFiles ? YES : NO];
+
+    // Enable the selection of directories in the dialog.
+    [openDlg setCanChooseDirectories: allowDirectories ? YES : NO];
+    
+    NSString* pathString = [[NSString alloc]initWithUTF8String:path.c_str()];
+
+    // Display the dialog.  If the OK button was pressed,
+    // process the files.
+    if ( [openDlg runModalForDirectory:pathString file:nil] == NSModalResponseOK )
+    {
+        // Get an array containing the full filenames of all
+        // files and directories selected.
+        NSArray* filesSelected = [openDlg filenames];
+
+        // Loop through all the files and process them.
+        for( int i = 0; i < [filesSelected count]; i++ )
+        {
+            NSString* fileName = [filesSelected objectAtIndex:i];
+            files.push_back([fileName UTF8String]);
+        }
+    }
+
+    return files;
+}
+
+std::string FileReader::ShowSaveFileRequester(const std::string &path) {
+    
+    NSSavePanel* openDlg = [NSSavePanel savePanel];
+
+    NSString* pathString = [[NSString alloc]initWithUTF8String:path.c_str()];
+
+    // Display the dialog.  If the OK button was pressed,
+    // process the files.
+    if ( [openDlg runModalForDirectory:pathString file:nil] == NSModalResponseOK )
+    {
+        // Get an array containing the full filenames of all
+        // files and directories selected.
+        NSArray* filesSelected = [openDlg filenames];
+
+        // Loop through all the files and process them.
+        for( int i = 0; i < [filesSelected count]; i++ )
+        {
+            NSString* fileName = [filesSelected objectAtIndex:i];
+            return std::string([fileName UTF8String]);
+        }
+    }
+
+    return "";
 }

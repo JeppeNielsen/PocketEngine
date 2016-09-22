@@ -6,6 +6,7 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 #include <string>
+#include <vector>
 
 namespace Pocket {
     class FileReader {
@@ -16,6 +17,9 @@ namespace Pocket {
         static std::string GetExecutablePath();
         static std::string GetBundlePath();
         static std::string GetBundleDir();
+        
+        static std::vector<std::string> ShowOpenFileRequester(const std::string& path, bool allowFiles, bool allowDirectories);
+        static std::string ShowSaveFileRequester(const std::string& path);
         
     };
 }
