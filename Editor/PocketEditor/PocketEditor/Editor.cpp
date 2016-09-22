@@ -35,6 +35,7 @@ public:
     Windows windows;
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
+    AppMenu popUpMenu;
     
     OpenWorld* worlds[2];
     
@@ -67,10 +68,18 @@ public:
         }
         
         
+        popUpMenu.InitializePopUp();
+        auto& createMenu = popUpMenu.AddChild("Create");
+        createMenu.AddChild("GameObject");
+        createMenu.AddChild("Component");
+        popUpMenu.AddChild("Remove");
+        
         
         Input.ButtonDown.Bind([this] (auto key) {
             if (key == "n") {
                 //context.NewProject();
+                
+                popUpMenu.ShowPopup(Input.GetTouchPosition(0));
             }
         });
         
