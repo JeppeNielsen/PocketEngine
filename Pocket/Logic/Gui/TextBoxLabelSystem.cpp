@@ -29,6 +29,7 @@ void TextBoxLabelSystem::ObjectAdded(GameObject *object) {
         activeTextboxAddedGO = object;
     }
     TextBoxChanged(object);
+    TextBoxActiveChanged(object);
 }
 
 void TextBoxLabelSystem::ObjectRemoved(GameObject *object) {
