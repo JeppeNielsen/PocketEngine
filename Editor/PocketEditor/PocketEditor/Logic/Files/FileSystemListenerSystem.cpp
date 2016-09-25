@@ -54,7 +54,7 @@ void FileSystemListenerSystem::FindFilesAtPath(GameObject* parent, const std::st
             if (filename!="." && filename!="..") {
                 GameObject* go = world->CreateObject();
                 go->Parent() = parent;
-                go->AddComponent<FilePath>()->path = path + "/" + filename;
+                go->AddComponent<FilePath>()->path = path;
                 go->GetComponent<FilePath>()->filename = filename;
                 go->GetComponent<FilePath>()->isFolder = true;
                 

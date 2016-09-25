@@ -11,8 +11,10 @@
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "FileSystemListenerSystem.hpp"
 #include "FileReader.hpp"
+#include "ClickSelectorSystem.hpp"
 
 #include <sys/stat.h>
+#include <stdio.h>
 
 std::string ProjectWindow::Name() { return "Project"; }
 
@@ -25,6 +27,7 @@ void ProjectWindow::OnInitialize() {
     guiWorld.CreateSystem<VirtualTreeListSystem>();
     guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
     guiWorld.CreateSystem<SelectedColorerSystem>();
+    guiWorld.CreateSystem<ClickSelectorSystem>();
     
     context->EngineContext().ScreenSize.Changed.Bind(this, &ProjectWindow::ScreenSizeChanged);
     
@@ -33,7 +36,7 @@ void ProjectWindow::OnInitialize() {
         AppMenu& createMenu = popupMenu.AddChild("Create");
         createMenu.AddChild("Folder").Clicked.Bind([this]() {
             
-            std::string folderPath = selectedPath->path + "/New Folder";
+            std::string folderPath = selectedNode.filePath->GetFilePath() + "/New Folder";
             
             std::cout <<" Folder path: "<< folderPath<<std::endl;
             
@@ -44,7 +47,7 @@ void ProjectWindow::OnInitialize() {
         
         createMenu.AddChild("World").Clicked.Bind([this]() {
         
-            std::string newWorldPath = selectedPath->path + "/NewWorld.json";
+            std::string newWorldPath = selectedNode.filePath->GetFilePath() + "/NewWorld.json";
         
             std::cout <<" Folder path: "<< newWorldPath<<std::endl;
         
@@ -64,10 +67,38 @@ void ProjectWindow::OnInitialize() {
     }
     {
         popupMenu.AddChild("Reveal in Finder").Clicked.Bind([this] () {
-            FileReader::OpenPathInFileExplorer(selectedPath->path);
+            FileReader::OpenPathInFileExplorer(selectedNode.filePath->path);
         });
     }
-    
+    {
+        popupMenu.AddChild("Rename").Clicked.Bind([this] () {
+            
+            Gui& gui = context->Gui();
+            
+            GameObject* textBox = gui.CreateTextBox(selectedNode.guiNodeObject, "TextBox", 0, selectedNode.guiNodeObject->GetComponent<Sizeable>()->Size, 0, selectedNode.filePath->filename, 12);
+            GameObject* textBoxLabel = textBox->Children()[0];
+            
+            textBoxLabel->GetComponent<Label>()->HAlignment = Font::Left;
+            textBoxLabel->GetComponent<Label>()->VAlignment = Font::Middle;
+            
+            textBoxLabel->GetComponent<TextBox>()->Active = true;
+            textBoxLabel->GetComponent<TextBox>()->Active.Changed.Bind([textBox, textBoxLabel, this] () {
+                std::string oldPath = selectedNode.filePath->path +"/"+ selectedNode.filePath->filename;
+                std::string newPath = selectedNode.filePath->path +"/"+ textBoxLabel->GetComponent<TextBox>()->Text;
+                
+                std::cout << "Rename from: " << oldPath << " to: " << newPath << std::endl;
+                
+                int result = rename(oldPath.c_str(), newPath.c_str());
+                if (result == 0) {
+                    textBox->Remove();
+                    fileSystemListener->watcher.Changed();
+                } else {
+                    textBoxLabel->GetComponent<TextBox>()->Text = selectedNode.filePath->filename;
+                }
+            });
+            
+        });
+    }
 }
 
 void ProjectWindow::OnCreate() {
@@ -109,13 +140,17 @@ void ProjectWindow::OnCreate() {
         
         if (node!=fileRoot) {
             GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-            selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, node);
+            
             
             if (filePath) {
                 auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, filePath->filename, 12);
                 l->GetComponent<Colorable>()->Color = Colour::Black();
                 l->GetComponent<Label>()->HAlignment = Font::Left;
                 l->GetComponent<Label>()->VAlignment = Font::Middle;
+                
+                selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { node, selectButton, 0 });
+                selectButton->AddComponent<Selectable>();
+                selectButton->AddComponent<SelectedColorer>()->Selected = Colour(0.8f,0.8f,0.8f,1.0f);
             }
             
         } else {
@@ -133,18 +168,14 @@ void ProjectWindow::OnCreate() {
 
 bool ProjectWindow::CreateBar() { return false; }
 
-void ProjectWindow::Clicked(TouchData d, GameObject* object) {
-    std::cout << object->GetComponent<FilePath>()->GetFilePath() << std::endl;
-    //object->GetComponent<Selectable>()->Selected = true;
-    //factory->GetSelectable(object)->Selected = true;
-    //object->GetComponent<Selectable>()->Selected = true;
-    FilePath* filePath =object->GetComponent<FilePath>();
+void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
+    selectedNode = nodeInfo;
+    selectedNode.filePath = nodeInfo.fileObject->GetComponent<FilePath>();
     if (d.Index == 0) {
-        if (!filePath->isFolder) {
-            context->Project().Worlds.LoadWorld(filePath->GetFilePath(), filePath->filename);
+        if (!selectedNode.filePath->isFolder) {
+            context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(), selectedNode.filePath->filename);
         }
     } else if (d.Index == 1) {
-        selectedPath = filePath;
         popupMenu.ShowPopup(d.Input->GetTouchPosition(1));
     }
 }

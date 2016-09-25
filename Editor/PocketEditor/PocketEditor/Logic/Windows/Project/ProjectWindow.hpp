@@ -22,10 +22,17 @@ protected:
     bool CreateBar() override;
 private:
     void ScreenSizeChanged();
-    void Clicked(TouchData d, GameObject* object);
+    
+    struct ClickedNodeInfo {
+        GameObject* fileObject;
+        GameObject* guiNodeObject;
+        FilePath* filePath;
+    };
+    
+    void Clicked(TouchData d, ClickedNodeInfo nodeInfo);
     GameObject* fileRoot;
     GameObject* listBox;
     AppMenu popupMenu;
-    FilePath* selectedPath;
+    ClickedNodeInfo selectedNode;
     FileSystemListener* fileSystemListener;
 };
