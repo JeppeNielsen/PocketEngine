@@ -12,6 +12,7 @@ namespace Pocket {
     class FileReader {
       
     public:
+        static std::vector<std::string> RunCommmand(const std::string& cmd);
         static std::string GetFile(std::string localFile);
         static std::string GetWritablePath();
         static std::string GetExecutablePath();
@@ -20,6 +21,8 @@ namespace Pocket {
         
         static std::vector<std::string> ShowOpenFileRequester(const std::string& path, bool allowFiles, bool allowDirectories);
         static std::string ShowSaveFileRequester(const std::string& path);
+        
+        static void OpenPathInFileExplorer(const std::string& path);
         
     };
 }

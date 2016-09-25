@@ -21,17 +21,21 @@ namespace Pocket {
         Property<GameObject*> Pivot;
         Property<GameObject*> Root;
         
+        std::function<std::string(GameObject*)> ExpandedHashFunction;
+        
         struct ExpandedNode {
             DirtyProperty<int> Height;
         };
         
-        using ExpandedNodes = std::map<GameObject*, ExpandedNode>;
+        using ExpandedNodes = std::map<std::string, ExpandedNode>;
         ExpandedNodes expandedNodes;
         
         void SetNodeExpanded(GameObject* node, bool expand);
         bool IsNodeExpanded(GameObject* node);
         
         int GetNodeHeight(GameObject* node);
+        
+        std::string DefaultExpandedHashFunction(GameObject* go);
         
         struct Node {
             GameObject* node;

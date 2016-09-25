@@ -12,8 +12,29 @@
 #include "StringHelper.hpp"
 #include <istream>
 #include <AppKit/AppKit.h>
+#include <stdio.h>
+#include <vector>
 
 using namespace Pocket;
+using namespace std;
+
+vector<string> FileReader::RunCommmand(const string &cmd) {
+    FILE*           fp;
+    const int       SIZEBUF = 1234;
+    char            buf [SIZEBUF];
+    vector<string> out;
+    
+    if ((fp = popen(cmd.c_str (), "r")) == NULL) {
+        return out;
+    }
+    string cur_string = "";
+    while (fgets(buf, sizeof (buf), fp)) {
+        cur_string += buf;
+    }
+    out.push_back(cur_string.substr (0, cur_string.size () - 1));
+    pclose(fp);
+    return out;
+}
 
 std::string FileReader::GetFile(std::string localFile) {
     NSString* file = [NSString stringWithUTF8String:localFile.c_str()];
@@ -107,4 +128,8 @@ std::string FileReader::ShowSaveFileRequester(const std::string &path) {
     }
 
     return "";
+}
+
+void FileReader::OpenPathInFileExplorer(const std::string &path) {
+    RunCommmand("open " + path);
 }

@@ -7,11 +7,15 @@
 //
 
 #include "VirtualTreeList.hpp"
+#include <sstream>
 
 using namespace Pocket;
 
 VirtualTreeList::VirtualTreeList() {
     Root = 0;
+    ExpandedHashFunction = [this] (GameObject* go) {
+        return DefaultExpandedHashFunction(go);
+    };
 }
 
 void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
@@ -19,9 +23,10 @@ void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
 }
 
 void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
-    auto it = expandedNodes.find(node);
+    std::string hash = ExpandedHashFunction(node);
+    auto it = expandedNodes.find(hash);
     if (expand && it==expandedNodes.end()) {
-        ExpandedNode& expandedNode = expandedNodes[node];
+        ExpandedNode& expandedNode = expandedNodes[hash];
         expandedNode.Height.Method = [this, node](auto& v) {
             v = 1;
             for(auto o : node->Children()) {
@@ -30,22 +35,24 @@ void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
         };
         expandedNode.Height.MakeDirty();
         if (node->Parent()) {
-            expandedNodes[node->Parent()].Height.MakeDirty();
+            expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
         }
     } else if (!expand && it!=expandedNodes.end()) {
         expandedNodes.erase(it);
         if (node->Parent()) {
-            expandedNodes[node->Parent()].Height.MakeDirty();
+            expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
         }
     }
 }
 
 bool VirtualTreeList::IsNodeExpanded(Pocket::GameObject *node) {
-    return expandedNodes.find(node) != expandedNodes.end();
+    std::string hash = ExpandedHashFunction(node);
+    return expandedNodes.find(hash) != expandedNodes.end();
 }
 
 int VirtualTreeList::GetNodeHeight(Pocket::GameObject *node) {
-    auto it = expandedNodes.find(node);
+    std::string hash = ExpandedHashFunction(node);
+    auto it = expandedNodes.find(hash);
     return it!=expandedNodes.end() ? it->second.Height() : 1;
 }
 
@@ -76,5 +83,10 @@ void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, i
     }
 }
 
+std::string VirtualTreeList::DefaultExpandedHashFunction(Pocket::GameObject *go) {
+    std::stringstream s;
+    s<<go;
+    return s.str();
+}
 
 

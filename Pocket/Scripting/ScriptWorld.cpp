@@ -12,27 +12,10 @@
 #include <set>
 #include <iostream>
 #include <stdio.h>
+#include "FileReader.hpp"
 
 using namespace std;
 using namespace Pocket;
-
-vector<string> RunBashCommmand(const string &cmd) {
-    FILE*           fp;
-    const int       SIZEBUF = 1234;
-    char            buf [SIZEBUF];
-    vector<string> out;
-    
-    if ((fp = popen(cmd.c_str (), "r")) == NULL) {
-        return out;
-    }
-    string cur_string = "";
-    while (fgets(buf, sizeof (buf), fp)) {
-        cur_string += buf;
-    }
-    out.push_back(cur_string.substr (0, cur_string.size () - 1));
-    pclose(fp);
-    return out;
-}
 
 ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1) {
     Types.Add<bool>();
@@ -131,13 +114,13 @@ bool ScriptWorld::Build(bool enableOutput) {
     }
     
     //remove old library file
-    RunBashCommmand("rm " + dynamicLibPath);
+    FileReader::RunCommmand("rm " + dynamicLibPath);
     
     //remove old library dSYM folder
     std::string dsymFile = dynamicLibPath + ".dSYM";
-    RunBashCommmand("rm -r " + dsymFile);
+    FileReader::RunCommmand("rm -r " + dsymFile);
     
-    auto out = RunBashCommmand(compilerArgs);
+    auto out = FileReader::RunCommmand(compilerArgs);
     
     if (enableOutput) {
         for(auto s : out) {
@@ -215,13 +198,13 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
     
     string compilerArgs = compilerPath + " " + compilerFlags + " ";
     
-    auto out = RunBashCommmand(compilerArgs);
+    auto out = FileReader::RunCommmand(compilerArgs);
 
     for(auto s : out) {
         std::cout << s << std::endl;
     }
     
-    //RunBashCommmand("./game");
+    //FileReader::RunCommmand(("./game");
     
     std::cout << "Build completed..."<<std::endl;
     
