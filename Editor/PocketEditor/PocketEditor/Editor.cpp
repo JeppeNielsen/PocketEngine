@@ -35,9 +35,6 @@ public:
     Windows windows;
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
-    AppMenu popUpMenu;
-    
-    OpenWorld* worlds[2];
     
     void Initialize() {
 
@@ -66,30 +63,6 @@ public:
         for(auto menu : menus) {
             menu->Create();
         }
-        
-        
-        popUpMenu.InitializePopUp();
-        auto& createMenu = popUpMenu.AddChild("Create");
-        createMenu.AddChild("GameObject").Clicked.Bind([]() {
-            std::cout << " GameObject" << std::endl;
-        });
-
-        createMenu.AddChild("Component").Clicked.Bind([]() {
-            std::cout << " Component" << std::endl;
-        });
-
-        popUpMenu.AddChild("Remove").Clicked.Bind([]() {
-            std::cout << " Removed" << std::endl;
-        });
-        
-        
-        Input.ButtonDown.Bind([this] (auto key) {
-            if (key == "n") {
-                //context.NewProject();
-                
-                popUpMenu.ShowPopup(Input.GetTouchPosition(0));
-            }
-        });
         
         context.NewProject();
     }
