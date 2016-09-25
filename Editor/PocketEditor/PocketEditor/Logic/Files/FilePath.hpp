@@ -12,5 +12,7 @@
 struct FilePath {
     std::string path;
     std::string filename;
+    bool isFolder;
+    std::string GetFilePath();
 };
 

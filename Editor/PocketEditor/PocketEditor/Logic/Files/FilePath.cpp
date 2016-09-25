@@ -7,3 +7,7 @@
 //
 
 #include "FilePath.hpp"
+
+std::string FilePath::GetFilePath() {
+    return path + "/" + filename;
+}

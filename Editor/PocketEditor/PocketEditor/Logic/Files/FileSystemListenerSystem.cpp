@@ -48,21 +48,25 @@ void FileSystemListenerSystem::FindFilesAtPath(GameObject* parent, const std::st
         //puts(entry->d_name);
         
         std::string filename(entry->d_name);
+        if (filename.size()>0 && filename[0]=='.') continue;
         
         if (entry->d_type == DT_DIR ) {
             if (filename!="." && filename!="..") {
                 GameObject* go = world->CreateObject();
                 go->Parent() = parent;
-                go->AddComponent<FilePath>()->path = path +"/"+ filename;
+                go->AddComponent<FilePath>()->path = path + "/" + filename;
                 go->GetComponent<FilePath>()->filename = filename;
+                go->GetComponent<FilePath>()->isFolder = true;
+                
                 FindFilesAtPath(go, path +"/"+ filename, extension);
             }
         } else {
             if (filename.find(extension)!=std::string::npos) {
                 GameObject* go = world->CreateObject();
                 go->Parent() = parent;
-                go->AddComponent<FilePath>()->path = path+ "/"+ filename;
+                go->AddComponent<FilePath>()->path = path;
                 go->GetComponent<FilePath>()->filename = filename;
+                go->GetComponent<FilePath>()->isFolder = false;
             }
         }
     }

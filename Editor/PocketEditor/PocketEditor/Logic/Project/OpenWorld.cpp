@@ -62,13 +62,8 @@ void OpenWorld::CreateDefault() {
     world.CreateSystem<ClonerSystem>();
     world.CreateSystem<TurnerSystem>();
     
-    {
-        GameObject* camera = world.CreateObject();
-        camera->AddComponent<Camera>();
-        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-        camera->GetComponent<Camera>()->FieldOfView = 70;
-    }
-
+    
+    
     RenderSystem* editorRenderSystem = editorWorld.CreateSystem<RenderSystem>();
     editorWorld.CreateSystem<TouchSystem>();
     editorWorld.CreateSystem<DraggableSystem>();

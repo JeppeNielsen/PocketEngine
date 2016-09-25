@@ -10,6 +10,9 @@
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "FileSystemListenerSystem.hpp"
+#include "FileReader.hpp"
+
+#include <sys/stat.h>
 
 std::string ProjectWindow::Name() { return "Project"; }
 
@@ -24,15 +27,56 @@ void ProjectWindow::OnInitialize() {
     guiWorld.CreateSystem<SelectedColorerSystem>();
     
     context->EngineContext().ScreenSize.Changed.Bind(this, &ProjectWindow::ScreenSizeChanged);
+    
+    popupMenu.InitializePopUp();
+    {
+        AppMenu& createMenu = popupMenu.AddChild("Create");
+        createMenu.AddChild("Folder").Clicked.Bind([this]() {
+            
+            std::string folderPath = selectedPath->path + "/New Folder";
+            
+            std::cout <<" Folder path: "<< folderPath<<std::endl;
+            
+            mkdir(folderPath.c_str(), 0777);
+            fileSystemListener->watcher.Changed();
+            
+        });
+        
+        createMenu.AddChild("World").Clicked.Bind([this]() {
+        
+            std::string newWorldPath = selectedPath->path + "/NewWorld.json";
+        
+            std::cout <<" Folder path: "<< newWorldPath<<std::endl;
+        
+            context->Project().CreateNewWorld(newWorldPath);
+            
+            fileSystemListener->watcher.Changed();
+        });
+        
+        createMenu.AddChild("Header File").Clicked.Bind([this]() {
+        
+        });
+        
+        createMenu.AddChild("C++ File").Clicked.Bind([this] () {
+        
+        });
+        
+    }
+    {
+        popupMenu.AddChild("Reveal in Finder").Clicked.Bind([this] () {
+            FileReader::OpenPathInFileExplorer(selectedPath->path);
+        });
+    }
+    
 }
 
 void ProjectWindow::OnCreate() {
     GameWorld& contextWorld = context->ContextWorld();
     
     GameObject* fileRoot = contextWorld.CreateObject();
-    auto listener = fileRoot->AddComponent<FileSystemListener>();
-    listener->Path = "/Projects/PocketEngine/Editor/TestProject/";
-    listener->Extension = ".json";
+    fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
+    fileSystemListener->Path = "/Projects/PocketEngine/Editor/TestProject/";
+    fileSystemListener->Extension = "";
 
     Gui& gui = context->Gui();
 
@@ -46,6 +90,15 @@ void ProjectWindow::OnCreate() {
     treeView->Root = fileRoot;
     treeView->SetNodeExpanded(fileRoot, true);
     treeView->Pivot = listBox;
+    treeView->ExpandedHashFunction = [treeView] (GameObject* go) {
+        FilePath* filePath = go->GetComponent<FilePath>();
+        if (filePath)  {
+            return filePath->GetFilePath();
+        } else {
+            return treeView->DefaultExpandedHashFunction(go);
+        }
+    };
+    
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
     spawner->OnCreate = [&, fileRoot, this](GameObject* node, GameObject* parent) -> GameObject* {
@@ -81,12 +134,19 @@ void ProjectWindow::OnCreate() {
 bool ProjectWindow::CreateBar() { return false; }
 
 void ProjectWindow::Clicked(TouchData d, GameObject* object) {
-    std::cout << object->GetComponent<FilePath>()->path << std::endl;
+    std::cout << object->GetComponent<FilePath>()->GetFilePath() << std::endl;
     //object->GetComponent<Selectable>()->Selected = true;
     //factory->GetSelectable(object)->Selected = true;
     //object->GetComponent<Selectable>()->Selected = true;
     FilePath* filePath =object->GetComponent<FilePath>();
-    context->Project().Worlds.LoadWorld(filePath->path, filePath->filename);
+    if (d.Index == 0) {
+        if (!filePath->isFolder) {
+            context->Project().Worlds.LoadWorld(filePath->GetFilePath(), filePath->filename);
+        }
+    } else if (d.Index == 1) {
+        selectedPath = filePath;
+        popupMenu.ShowPopup(d.Input->GetTouchPosition(1));
+    }
 }
 
 void ProjectWindow::ScreenSizeChanged() {

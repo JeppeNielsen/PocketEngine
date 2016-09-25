@@ -90,7 +90,7 @@ void FileSystemWatcher::Start(const std::string& pathToWatch) {
     FSEventStreamRef stream;
 
 
-    stream = FSEventStreamCreate(NULL, &fileSystemEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, 3.0, kFSEventStreamCreateFlagFileEvents);
+    stream = FSEventStreamCreate(NULL, &fileSystemEventCallback, &context, pathsToWatch, kFSEventStreamEventIdSinceNow, 1.0, kFSEventStreamCreateFlagFileEvents);
     FSEventStreamScheduleWithRunLoop(stream, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
     FSEventStreamStart(stream);
 

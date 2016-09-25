@@ -11,6 +11,9 @@
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
 
+class FilePath;
+class FileSystemListener;
+
 class ProjectWindow : public BaseWindow {
 protected:
     void OnInitialize() override;
@@ -22,4 +25,7 @@ private:
     void Clicked(TouchData d, GameObject* object);
     GameObject* fileRoot;
     GameObject* listBox;
+    AppMenu popupMenu;
+    FilePath* selectedPath;
+    FileSystemListener* fileSystemListener;
 };

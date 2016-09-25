@@ -101,12 +101,12 @@ void Project::CreateNewWorld(const std::string &worldPath) {
     GameWorld world;
     
     GameObject* camera = world.CreateObject();
-    camera->AddComponent<Camera>();
-    camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-    camera->GetComponent<Camera>()->FieldOfView = 70;
+    camera->AddComponent<Transform>();
+    camera->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+    camera->AddComponent<Material>();
     
     std::ofstream file;
-    file.open(path + worldPath);
+    file.open(worldPath);
     world.ToJson(file);
     file.close();
 }

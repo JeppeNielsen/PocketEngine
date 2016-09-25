@@ -70,9 +70,17 @@ public:
         
         popUpMenu.InitializePopUp();
         auto& createMenu = popUpMenu.AddChild("Create");
-        createMenu.AddChild("GameObject");
-        createMenu.AddChild("Component");
-        popUpMenu.AddChild("Remove");
+        createMenu.AddChild("GameObject").Clicked.Bind([]() {
+            std::cout << " GameObject" << std::endl;
+        });
+
+        createMenu.AddChild("Component").Clicked.Bind([]() {
+            std::cout << " Component" << std::endl;
+        });
+
+        popUpMenu.AddChild("Remove").Clicked.Bind([]() {
+            std::cout << " Removed" << std::endl;
+        });
         
         
         Input.ButtonDown.Bind([this] (auto key) {
