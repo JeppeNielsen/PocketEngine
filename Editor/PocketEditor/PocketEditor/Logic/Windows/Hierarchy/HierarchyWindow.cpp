@@ -54,11 +54,7 @@ void HierarchyWindow::OnCreate() {
                 selectButton->AddComponent<Selectable>(editorObject->editorObject);
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
             }
-            
-        } else {
-            std::cout << "yes"<<std::endl;
         }
-        
         return clone;
     };
     
