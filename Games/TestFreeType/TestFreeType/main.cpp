@@ -65,16 +65,17 @@ public:
         
         mesh = world.CreateObject();
         mesh->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f);
-        
         auto& verts = mesh->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
-        
         for (int i=0; i<verts.size(); i++) {
             verts[i].Color = Colour::HslToRgb(i * 10, 1, 1, 1);
         }
+
         
-        CreateCube(0);
         
-        filename      = "/Projects/PocketEngine/Games/TestFreeType/SourceSansPro-Regular.ttf";                           /* first argument     */
+        //filename      = "/Projects/PocketEngine/Games/TestFreeType/SourceSansPro-Regular.ttf";                           /* first argument     */
+        //filename = "/Users/Jeppe/Library/Fonts/D3Mouldism.ttf";
+        filename = "/Users/Jeppe/Library/Fonts/Don't Waste That Napkin.otf";
+        
         text          = "Pocket Engine";                           /* second argument    */
         num_chars     = strlen( text );
         angle         = 0;//( 25.0 / 360 ) * 3.14159 * 2;      /* use 25 degrees     */
