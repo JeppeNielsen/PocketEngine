@@ -14,5 +14,6 @@ struct FilePath {
     std::string filename;
     bool isFolder;
     std::string GetFilePath();
+    std::string GetFolderPath();
 };
 

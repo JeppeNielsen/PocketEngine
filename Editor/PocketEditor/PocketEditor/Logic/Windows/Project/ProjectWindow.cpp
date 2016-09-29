@@ -36,7 +36,7 @@ void ProjectWindow::OnInitialize() {
         AppMenu& createMenu = popupMenu.AddChild("Create");
         createMenu.AddChild("Folder").Clicked.Bind([this]() {
             
-            std::string folderPath = selectedNode.filePath->GetFilePath() + "/New Folder";
+            std::string folderPath = selectedNode.filePath->GetFolderPath() + "/New Folder";
             
             std::cout <<" Folder path: "<< folderPath<<std::endl;
             
@@ -47,7 +47,7 @@ void ProjectWindow::OnInitialize() {
         
         createMenu.AddChild("World").Clicked.Bind([this]() {
         
-            std::string newWorldPath = selectedNode.filePath->GetFilePath() + "/NewWorld.json";
+            std::string newWorldPath = selectedNode.filePath->GetFolderPath() + "/NewWorld.json";
         
             std::cout <<" Folder path: "<< newWorldPath<<std::endl;
         
@@ -173,7 +173,7 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode.filePath = nodeInfo.fileObject->GetComponent<FilePath>();
     if (d.Index == 0) {
         if (!selectedNode.filePath->isFolder) {
-            context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(), selectedNode.filePath->filename);
+            context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(), selectedNode.filePath->filename, context->Project().ScriptWorld());
         }
     } else if (d.Index == 1) {
         popupMenu.ShowPopup(d.Input->GetTouchPosition(1));

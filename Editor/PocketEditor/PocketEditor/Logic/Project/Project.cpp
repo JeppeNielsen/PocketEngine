@@ -58,7 +58,7 @@ GameWorld& Project::World() { return Worlds.ActiveWorld()->World(); }
 
 
 bool Project::Compile() {
-    /*
+    
     std::vector<std::string> foundIncludeFiles = defaultIncludes;
     FileHelper::FindFiles(foundIncludeFiles, path, ".hpp");
     
@@ -79,11 +79,10 @@ bool Project::Compile() {
         foundIncludeFiles
     );
     
-    scriptWorld.RemoveGameWorld(world);
+    GameWorld world;
+    OpenWorld::CreateDefaultSystems(world);
     scriptWorld.SetWorldType(world);
     scriptWorld.Build(true);
-    scriptWorld.AddGameWorld(world);
-    */
     return true;
 }
 

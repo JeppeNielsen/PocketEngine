@@ -27,7 +27,9 @@ public:
     SelectableCollection<EditorObject>* selectables;
     
     bool Save();
-    bool Load(const std::string& path, const std::string& filename);
+    bool Load(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld);
+    
+    static void CreateDefaultSystems(GameWorld& world);
     
 private:
     GameWorld editorWorld;

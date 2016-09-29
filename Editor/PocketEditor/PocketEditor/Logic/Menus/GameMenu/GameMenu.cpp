@@ -19,7 +19,9 @@ void GameMenu::OnInitialize() {
 void GameMenu::OnCreate() {
     menu->AddChild("Compile").Clicked.Bind([this] {
         auto selectables = context->Project().GetSelectables();
-        selectables->ClearSelection();
+        if (selectables) {
+            selectables->ClearSelection();
+        }
         Timer timer;
         std::cout << "Compilation started..."<< std::endl;
         timer.Begin();

@@ -36,11 +36,11 @@ bool OpenWorldCollection::TryFindOpenWorld(const std::string &path, OpenWorld** 
     return false;
 }
 
-OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename) {
+OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename, ScriptWorld& scriptWorld) {
     OpenWorld* world;
     if (!TryFindOpenWorld(path, &world)) {
         world = new OpenWorld();
-        world->Load(path, filename);
+        world->Load(path, filename, scriptWorld);
         worlds.push_back(world);
         WorldLoaded(world);
     }

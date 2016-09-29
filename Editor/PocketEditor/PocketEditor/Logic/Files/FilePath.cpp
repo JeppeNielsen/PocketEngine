@@ -11,3 +11,7 @@
 std::string FilePath::GetFilePath() {
     return path +"/"+ filename;
 }
+
+std::string FilePath::GetFolderPath() {
+    return isFolder ? GetFilePath() : path;
+}

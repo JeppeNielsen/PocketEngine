@@ -6,15 +6,12 @@ struct Camera;
 struct TextureComponent;
 struct Orderable;
 struct Touchable;
+struct Cloner;
+struct Turner;
 struct EditorObject;
 }
 struct Blinker;
-struct ColorClicker;
-struct Mover;
-struct ReverseClicker;
-struct Rotator;
-struct Turner;
-struct Velocity;
+struct Jumper;
 
 namespace Pocket {
 class GameObject {
@@ -55,42 +52,30 @@ template<> Pocket::Orderable* Pocket::GameObject::GetComponent<Pocket::Orderable
 template<> Pocket::Orderable* Pocket::GameObject::AddComponent<Pocket::Orderable>() { AddComponent(5); return (Pocket::Orderable*) GetComponent(5); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::Orderable>() { RemoveComponent(5); }
 template<> Pocket::Orderable* Pocket::GameObject::CloneComponent<Pocket::Orderable>(GameObject* source) { CloneComponent(5, source); return (Pocket::Orderable*) GetComponent(5); }
-template<> Pocket::Touchable* Pocket::GameObject::GetComponent<Pocket::Touchable>() { return (Pocket::Touchable*) GetComponent(6); }
-template<> Pocket::Touchable* Pocket::GameObject::AddComponent<Pocket::Touchable>() { AddComponent(6); return (Pocket::Touchable*) GetComponent(6); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::Touchable>() { RemoveComponent(6); }
-template<> Pocket::Touchable* Pocket::GameObject::CloneComponent<Pocket::Touchable>(GameObject* source) { CloneComponent(6, source); return (Pocket::Touchable*) GetComponent(6); }
-template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) GetComponent(11); }
-template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(11); return (Pocket::EditorObject*) GetComponent(11); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(11); }
-template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(11, source); return (Pocket::EditorObject*) GetComponent(11); }
-template<> Blinker* Pocket::GameObject::GetComponent<Blinker>() { return (Blinker*) GetComponent(12); }
-template<> Blinker* Pocket::GameObject::AddComponent<Blinker>() { AddComponent(12); return (Blinker*) GetComponent(12); }
-template<> void Pocket::GameObject::RemoveComponent<Blinker>() { RemoveComponent(12); }
-template<> Blinker* Pocket::GameObject::CloneComponent<Blinker>(GameObject* source) { CloneComponent(12, source); return (Blinker*) GetComponent(12); }
-template<> ColorClicker* Pocket::GameObject::GetComponent<ColorClicker>() { return (ColorClicker*) GetComponent(13); }
-template<> ColorClicker* Pocket::GameObject::AddComponent<ColorClicker>() { AddComponent(13); return (ColorClicker*) GetComponent(13); }
-template<> void Pocket::GameObject::RemoveComponent<ColorClicker>() { RemoveComponent(13); }
-template<> ColorClicker* Pocket::GameObject::CloneComponent<ColorClicker>(GameObject* source) { CloneComponent(13, source); return (ColorClicker*) GetComponent(13); }
-template<> Mover* Pocket::GameObject::GetComponent<Mover>() { return (Mover*) GetComponent(14); }
-template<> Mover* Pocket::GameObject::AddComponent<Mover>() { AddComponent(14); return (Mover*) GetComponent(14); }
-template<> void Pocket::GameObject::RemoveComponent<Mover>() { RemoveComponent(14); }
-template<> Mover* Pocket::GameObject::CloneComponent<Mover>(GameObject* source) { CloneComponent(14, source); return (Mover*) GetComponent(14); }
-template<> ReverseClicker* Pocket::GameObject::GetComponent<ReverseClicker>() { return (ReverseClicker*) GetComponent(15); }
-template<> ReverseClicker* Pocket::GameObject::AddComponent<ReverseClicker>() { AddComponent(15); return (ReverseClicker*) GetComponent(15); }
-template<> void Pocket::GameObject::RemoveComponent<ReverseClicker>() { RemoveComponent(15); }
-template<> ReverseClicker* Pocket::GameObject::CloneComponent<ReverseClicker>(GameObject* source) { CloneComponent(15, source); return (ReverseClicker*) GetComponent(15); }
-template<> Rotator* Pocket::GameObject::GetComponent<Rotator>() { return (Rotator*) GetComponent(16); }
-template<> Rotator* Pocket::GameObject::AddComponent<Rotator>() { AddComponent(16); return (Rotator*) GetComponent(16); }
-template<> void Pocket::GameObject::RemoveComponent<Rotator>() { RemoveComponent(16); }
-template<> Rotator* Pocket::GameObject::CloneComponent<Rotator>(GameObject* source) { CloneComponent(16, source); return (Rotator*) GetComponent(16); }
-template<> Turner* Pocket::GameObject::GetComponent<Turner>() { return (Turner*) GetComponent(17); }
-template<> Turner* Pocket::GameObject::AddComponent<Turner>() { AddComponent(17); return (Turner*) GetComponent(17); }
-template<> void Pocket::GameObject::RemoveComponent<Turner>() { RemoveComponent(17); }
-template<> Turner* Pocket::GameObject::CloneComponent<Turner>(GameObject* source) { CloneComponent(17, source); return (Turner*) GetComponent(17); }
-template<> Velocity* Pocket::GameObject::GetComponent<Velocity>() { return (Velocity*) GetComponent(18); }
-template<> Velocity* Pocket::GameObject::AddComponent<Velocity>() { AddComponent(18); return (Velocity*) GetComponent(18); }
-template<> void Pocket::GameObject::RemoveComponent<Velocity>() { RemoveComponent(18); }
-template<> Velocity* Pocket::GameObject::CloneComponent<Velocity>(GameObject* source) { CloneComponent(18, source); return (Velocity*) GetComponent(18); }
+template<> Pocket::Touchable* Pocket::GameObject::GetComponent<Pocket::Touchable>() { return (Pocket::Touchable*) GetComponent(7); }
+template<> Pocket::Touchable* Pocket::GameObject::AddComponent<Pocket::Touchable>() { AddComponent(7); return (Pocket::Touchable*) GetComponent(7); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::Touchable>() { RemoveComponent(7); }
+template<> Pocket::Touchable* Pocket::GameObject::CloneComponent<Pocket::Touchable>(GameObject* source) { CloneComponent(7, source); return (Pocket::Touchable*) GetComponent(7); }
+template<> Pocket::Cloner* Pocket::GameObject::GetComponent<Pocket::Cloner>() { return (Pocket::Cloner*) GetComponent(28); }
+template<> Pocket::Cloner* Pocket::GameObject::AddComponent<Pocket::Cloner>() { AddComponent(28); return (Pocket::Cloner*) GetComponent(28); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::Cloner>() { RemoveComponent(28); }
+template<> Pocket::Cloner* Pocket::GameObject::CloneComponent<Pocket::Cloner>(GameObject* source) { CloneComponent(28, source); return (Pocket::Cloner*) GetComponent(28); }
+template<> Pocket::Turner* Pocket::GameObject::GetComponent<Pocket::Turner>() { return (Pocket::Turner*) GetComponent(29); }
+template<> Pocket::Turner* Pocket::GameObject::AddComponent<Pocket::Turner>() { AddComponent(29); return (Pocket::Turner*) GetComponent(29); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::Turner>() { RemoveComponent(29); }
+template<> Pocket::Turner* Pocket::GameObject::CloneComponent<Pocket::Turner>(GameObject* source) { CloneComponent(29, source); return (Pocket::Turner*) GetComponent(29); }
+template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) GetComponent(30); }
+template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(30); return (Pocket::EditorObject*) GetComponent(30); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(30); }
+template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(30, source); return (Pocket::EditorObject*) GetComponent(30); }
+template<> Blinker* Pocket::GameObject::GetComponent<Blinker>() { return (Blinker*) GetComponent(31); }
+template<> Blinker* Pocket::GameObject::AddComponent<Blinker>() { AddComponent(31); return (Blinker*) GetComponent(31); }
+template<> void Pocket::GameObject::RemoveComponent<Blinker>() { RemoveComponent(31); }
+template<> Blinker* Pocket::GameObject::CloneComponent<Blinker>(GameObject* source) { CloneComponent(31, source); return (Blinker*) GetComponent(31); }
+template<> Jumper* Pocket::GameObject::GetComponent<Jumper>() { return (Jumper*) GetComponent(32); }
+template<> Jumper* Pocket::GameObject::AddComponent<Jumper>() { AddComponent(32); return (Jumper*) GetComponent(32); }
+template<> void Pocket::GameObject::RemoveComponent<Jumper>() { RemoveComponent(32); }
+template<> Jumper* Pocket::GameObject::CloneComponent<Jumper>(GameObject* source) { CloneComponent(32, source); return (Jumper*) GetComponent(32); }
 class IGameSystem;
 #include "TypeInfo.hpp"
 #include "Property.hpp"
@@ -103,13 +88,8 @@ class IGameSystem;
 #include "TextureAtlas.hpp"
 #include "Colour.hpp"
 #include "Touchable.hpp"
-#include "Turner.hpp"
 #include "Blinker.cpp"
-#include "Mover.cpp"
-#include "ReverseClicker.cpp"
-#include "Rotator.cpp"
-#include "ScriptExample.cpp"
-#include "Turner.hpp"
+#include "Jumper.cpp"
 
 #include <string>
 #include <vector>
@@ -134,17 +114,12 @@ template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { stati
 template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 17; } };
 
 extern "C" int CountSystems() {
-   return 7;
+   return 2;
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 46: return new BlinkerSystem();
-      case 47: return new ColorSystem();
-      case 48: return new MovementSystem();
-      case 49: return new MoverSystem();
-      case 50: return new ReverseClickerSystem();
-      case 51: return new RotatorSystem();
-      case 52: return new TurnerSystem();
+      case 37: return new BlinkerSystem();
+      case 38: return new JumperSystem();
       default: return 0;
    }
 }
@@ -152,60 +127,35 @@ extern "C" void DeleteSystem(IGameSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 7;
+   return 2;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 12: return new Blinker();
-      case 13: return new ColorClicker();
-      case 14: return new Mover();
-      case 15: return new ReverseClicker();
-      case 16: return new Rotator();
-      case 17: return new Turner();
-      case 18: return new Velocity();
+      case 31: return new Blinker();
+      case 32: return new Jumper();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 12: { delete ((Blinker*)component); break; }
-      case 13: { delete ((ColorClicker*)component); break; }
-      case 14: { delete ((Mover*)component); break; }
-      case 15: { delete ((ReverseClicker*)component); break; }
-      case 16: { delete ((Rotator*)component); break; }
-      case 17: { delete ((Turner*)component); break; }
-      case 18: { delete ((Velocity*)component); break; }
+      case 31: { delete ((Blinker*)component); break; }
+      case 32: { delete ((Jumper*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 12: { Blinker* co = (Blinker*)c; 
+      case 31: { Blinker* co = (Blinker*)c; 
       Blinker* so = ((Blinker*)s);
         co->operator=(*so);             break; }
-      case 13: { ColorClicker* co = (ColorClicker*)c; 
-      ColorClicker* so = ((ColorClicker*)s);
-        co->operator=(*so);             break; }
-      case 14: { Mover* co = (Mover*)c; 
-      Mover* so = ((Mover*)s);
-        co->operator=(*so);             break; }
-      case 15: { ReverseClicker* co = (ReverseClicker*)c; 
-      ReverseClicker* so = ((ReverseClicker*)s);
-        co->operator=(*so);             break; }
-      case 16: { Rotator* co = (Rotator*)c; 
-      Rotator* so = ((Rotator*)s);
-        co->operator=(*so);             break; }
-      case 17: { Turner* co = (Turner*)c; 
-      Turner* so = ((Turner*)s);
-        co->operator=(*so);             break; }
-      case 18: { Velocity* co = (Velocity*)c; 
-      Velocity* so = ((Velocity*)s);
+      case 32: { Jumper* co = (Jumper*)c; 
+      Jumper* so = ((Jumper*)s);
         co->operator=(*so);             break; }
    }
 }
 
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
-      case 12: {
+      case 31: {
       Blinker* component = (Blinker*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Blinker";
@@ -213,52 +163,13 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      info->AddField(component->time, "time");
       return info;
       break; }
-      case 13: {
-      ColorClicker* component = (ColorClicker*)componentPtr;
+      case 32: {
+      Jumper* component = (Jumper*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "ColorClicker";
-	      info->AddField(component->useBlue, "useBlue");
-      return info;
-      break; }
-      case 14: {
-      Mover* component = (Mover*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Mover";
+	      info->name = "Jumper";
+	      info->AddField(component->height, "height");
 	      info->AddField(component->speed, "speed");
-      return info;
-      break; }
-      case 15: {
-      ReverseClicker* component = (ReverseClicker*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "ReverseClicker";
-      return info;
-      break; }
-      case 16: {
-      Rotator* component = (Rotator*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Rotator";
-	      info->AddField(component->speed, "speed");
-      return info;
-      break; }
-      case 17: {
-      Turner* component = (Turner*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Turner";
-	      info->AddField(component->reverse, "reverse");
-	      info->AddField(component->speed, "speed");
-      return info;
-      break; }
-      case 18: {
-      Velocity* component = (Velocity*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Velocity";
-	      info->AddField(component->Size, "Size");
-	      info->AddField(component->children, "children");
-	      info->AddField(component->coords, "coords");
-	      info->AddField(component->name, "name");
-	      info->AddField(component->timer, "timer");
-	      info->AddField(component->velocity, "velocity");
-	      info->AddField(component->wobble, "wobble");
+	      info->AddField(component->time, "time");
       return info;
       break; }
       default: return 0;

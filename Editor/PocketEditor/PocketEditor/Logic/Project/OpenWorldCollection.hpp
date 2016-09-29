@@ -16,7 +16,7 @@ using namespace Pocket;
 
 class OpenWorldCollection {
 public:
-    OpenWorld* LoadWorld(const std::string& path, const std::string& filename);
+    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld);
     void CloseWorld(OpenWorld* world);
     bool TryFindOpenWorld(const std::string& path, OpenWorld** world);
     

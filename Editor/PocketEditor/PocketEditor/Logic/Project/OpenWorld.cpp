@@ -23,6 +23,7 @@
 #include "SelectedColorerSystem.hpp"
 #include "ClonerSystem.hpp"
 #include "FirstPersonMoverSystem.hpp"
+#include "ScriptWorld.hpp"
 #include <fstream>
 
 GameWorld& OpenWorld::World() {
@@ -49,20 +50,25 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
     }
 };
 
-void OpenWorld::CreateDefault() {
-
-    GameObject* gameRoot = editorWorld.CreateObject();
-
-    RenderSystem* worldRenderSystem = world.CreateSystem<RenderSystem>();
+void OpenWorld::CreateDefaultSystems(Pocket::GameWorld &world) {
+    world.CreateSystem<RenderSystem>();
     world.CreateSystem<TransformHierarchy>();
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
+    world.CreateSystem<ClonerSystem>();
+    world.CreateSystem<TurnerSystem>();
+    world.CreateSystem<EditorObjectCreatorSystem>();
+}
+
+void OpenWorld::CreateDefault() {
+
+    CreateDefaultSystems(world);
+
+    GameObject* gameRoot = editorWorld.CreateObject();
+    
+    RenderSystem* worldRenderSystem = world.CreateSystem<RenderSystem>();
     auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
     creatorSystem->editorWorld = &editorWorld;
     creatorSystem->gameRoot = gameRoot;
-    world.CreateSystem<ClonerSystem>();
-    world.CreateSystem<TurnerSystem>();
-    
-    
     
     RenderSystem* editorRenderSystem = editorWorld.CreateSystem<RenderSystem>();
     editorWorld.CreateSystem<TouchSystem>();
@@ -87,6 +93,8 @@ void OpenWorld::CreateDefault() {
     }
     
     worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
+    
+    
 }
 
 bool OpenWorld::Save() {
@@ -107,11 +115,12 @@ bool OpenWorld::Save() {
     return succes;
 }
 
-bool OpenWorld::Load(const std::string &path, const std::string &filename) {
+bool OpenWorld::Load(const std::string &path, const std::string &filename, ScriptWorld& scriptWorld) {
     Path = path;
     Filename = filename;
     
     CreateDefault();
+    scriptWorld.AddGameWorld(world);
     
     if (path != "") {
         std::ifstream file;
