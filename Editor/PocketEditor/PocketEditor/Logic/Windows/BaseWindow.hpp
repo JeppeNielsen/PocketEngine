@@ -23,6 +23,7 @@ private:
 protected:
     EditorContext* context;
     GameObject* window;
+    OpenWorld* currentWorld;
     
     virtual std::string Name() = 0;
     virtual void OnInitialize();

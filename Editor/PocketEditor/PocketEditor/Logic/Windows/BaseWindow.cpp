@@ -11,6 +11,7 @@
 BaseWindow::~BaseWindow() { }
 
 void BaseWindow::Initialize(EditorContext *context) {
+    currentWorld = 0;
     this->context = context;
     this->context->Project().Worlds.ActiveWorld.Changed.Bind(this, &BaseWindow::ActiveWorldChangedInternal);
     OnInitialize();
@@ -61,6 +62,7 @@ GameObject* BaseWindow::CreateButton(GameObject* parent, const Vector2& position
 void BaseWindow::ActiveWorldChangedInternal() {
     OpenWorld* prev = context->Project().Worlds.ActiveWorld.PreviousValue();
     OpenWorld* current = context->Project().Worlds.ActiveWorld;
+    currentWorld = current;
     ActiveWorldChanged(prev, current);
 }
 

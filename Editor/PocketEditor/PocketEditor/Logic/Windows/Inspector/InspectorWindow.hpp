@@ -11,6 +11,8 @@
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
 #include "ScriptWorld.hpp"
+#include "AppMenu.hpp"
+#include "GameObjectEditor.hpp"
 
 class InspectorWindow : public BaseWindow {
 protected:
@@ -29,4 +31,10 @@ private:
     void ShowSelectionBox(EditorObject* editorObject);
     GameObject* selectionBox;
     void SelectionClicked(TouchData d, int index);
+    
+    AppMenu removeComponentMenu;
+    GameObjectEditor::ComponentCreatedData clickedComponent;
+    
+    void ComponentClicked(TouchData d, GameObjectEditor::ComponentCreatedData data);
+    void RefreshInspector();
 };
