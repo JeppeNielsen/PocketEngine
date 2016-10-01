@@ -160,6 +160,7 @@ namespace Pocket {
             DirtyProperty<bool> WorldEnabled;
             ObjectCollection children;
             Property<int> Order;
+            void Reset();
         };
         
         int index;

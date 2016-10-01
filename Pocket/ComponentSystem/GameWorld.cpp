@@ -61,9 +61,7 @@ GameObject* GameWorld::CreateObject() {
     }
     ++objectCount;
     GameObject& object = objects[index].object;
-    object.data->activeComponents.Reset();
-    object.data->enabledComponents.Reset();
-    object.data->removed = false;
+    object.data->Reset();
     root.data->children.push_back(&object);
     object.index = index;
     object.world = this;
@@ -100,7 +98,9 @@ GameObject* GameWorld::CreateObject(std::istream &jsonStream, GameObject* parent
 }
 
 void GameWorld::Update(float dt) {
-    Engine::Context().InputDevice().UpdateInputManager(&input);
+    if (Engine::HasContext()) {
+        Engine::Context().InputDevice().UpdateInputManager(&input);
+    }
     DoActions(delayedActions);
     for(auto system : systems) {
         system->Update(dt);
@@ -241,9 +241,9 @@ void GameWorld::TryRemoveSystem(SystemID id) {
     
     systems.erase(std::find(systems.begin(), systems.end(), system));
     
+    systemEntry.system->Destroy();
     systemEntry.system = 0;
     systemEntry.bitset.Reset();
-    systemEntry.system->Destroy();
     
     if (systemEntry.deleteFunction) {
         systemEntry.deleteFunction();

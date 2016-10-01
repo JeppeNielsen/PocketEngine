@@ -27,11 +27,8 @@ GameObject::GameObject()
     world(0), index(0), data(0)
 {
     data = new Data();
-
-    data->removed = false;
-    data->Enabled = true;
+    data->Reset();
     data->Parent = 0;
-    data->Order = 0;
     
     data->Parent.Changed.Bind([this]() {
         assert(data->Parent!=this);
@@ -471,4 +468,12 @@ GameObject* GameObject::CloneInternal(GameObject* parent, std::function<bool(Gam
         child->CloneInternal(clone, predicate);
     }
     return clone;
+}
+
+void GameObject::Data::Reset() {
+    activeComponents.Reset();
+    enabledComponents.Reset();
+    removed = false;
+    Enabled = true;
+    Order = 0;
 }

@@ -18,6 +18,7 @@ Engine::~Engine() {
 		delete window;
 	}
     delete timer;
+    staticContext = 0;
 }
 
 void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullScreen) {
@@ -83,3 +84,5 @@ void Engine::Render() {
 EngineContext& Engine::Context() { return *staticContext; }
 
 EngineContext* Engine::staticContext = 0;
+
+bool Engine::HasContext() { return staticContext; }

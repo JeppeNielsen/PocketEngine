@@ -21,6 +21,7 @@ namespace Pocket {
         );
         
         static EngineContext& Context();
+        static bool HasContext();
 
 	private:
 		bool fullScreen;
