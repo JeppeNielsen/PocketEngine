@@ -142,9 +142,10 @@ namespace Pocket {
         GameObject* FindObjectFromID(const std::string &id);
         GameObject* FindFirstObjectWithComponentID(int componentID);
         GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+    public:
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
-        
+    private:
         friend class GameObject;
         friend class GameSystemBase;
         friend class ScriptWorld;

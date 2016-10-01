@@ -69,14 +69,10 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
             }
         }
         if (hasNoEditors) {
-            continue;
+            //continue;
         }
         
-        
-        GameObject* componentChild = world->CreateObject();
-        componentChild->Parent() = object;
-        componentChild->AddComponent<Transform>()->Position = {0, counter*size.y,0};
-        componentChild->AddComponent<Sizeable>()->Size = size;
+        GameObject* componentChild = gui->CreateControl(object, "Box", {0, counter*size.y}, size);
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         
@@ -103,7 +99,8 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         componentName->GetComponent<Label>()->VAlignment = Font::Middle;
         componentName->GetComponent<Colorable>()->Color = Colour::Black();
         componentName->AddComponent<Layoutable>();
-    
+        
+        editor->ComponentEditorCreated({ info, componentChild });
         counter++;
     }
 }

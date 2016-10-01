@@ -9,11 +9,19 @@
 #pragma once
 #include "Property.hpp"
 #include "GameObject.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
-  class GameObjectEditor {
+    class GameObjectEditor {
     public:
         GameObjectEditor();
         Property<GameObject*> Object;
-  };
+
+        struct ComponentCreatedData {
+            TypeInfo typeInfo;
+            GameObject* editorPivot;
+        };
+        
+        Event<ComponentCreatedData> ComponentEditorCreated;
+    };
 }
