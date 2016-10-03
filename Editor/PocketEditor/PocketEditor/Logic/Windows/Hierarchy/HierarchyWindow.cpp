@@ -11,6 +11,7 @@
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "SelectedColorer.hpp"
 #include "Selectable.hpp"
+#include "DroppableSystem.hpp"
 
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
@@ -19,9 +20,11 @@ void HierarchyWindow::OnInitialize() {
     guiWorld.CreateSystem<VirtualTreeListSystem>();
     guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
     guiWorld.CreateSystem<SelectedColorerSystem>();
+    guiWorld.CreateSystem<DraggableSystem>();
 }
 
 void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
+    rootItem = 0;
     if (current) {
          treeView->Root = (GameObject*)current->World().Root();
     } else {
@@ -44,8 +47,15 @@ void HierarchyWindow::OnCreate() {
     
     spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
         GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
-        clone->RemoveComponent<Touchable>();
+        clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, node);
         gui.CreateControl(clone, "TextBox", 0, {25,25});
+        
+        clone->GetComponent<Droppable>()->OnCreate = [&gui, this](GameObject* o, TouchData d) -> GameObject* {
+            Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
+            GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
+            return control;
+        };
+        
         if (node!=treeView->Root()) {
             EditorObject* editorObject = node->GetComponent<EditorObject>();
             if (editorObject && editorObject->editorObject) {
@@ -53,13 +63,19 @@ void HierarchyWindow::OnCreate() {
                 selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
                 selectButton->AddComponent<Selectable>(editorObject->editorObject);
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
+                selectButton->GetComponent<Touchable>()->ClickThrough = true;
+                selectButton->AddComponent<EditorObject>(node);
             }
+        } else {
+            rootItem = clone;
         }
         return clone;
     };
     
-    spawner->OnRemove = [] (GameObject* node, GameObject* control) {
-        
+    spawner->OnRemove = [this] (GameObject* node, GameObject* control) {
+        if (control == rootItem) {
+            rootItem = 0;
+        }
     };
     
     window->GetComponent<Transform>()->Position += {300,200};
@@ -71,4 +87,33 @@ void HierarchyWindow::Clicked(TouchData d, GameObject* object) {
     object->GetComponent<Selectable>()->Selected = true;
     //factory->GetSelectable(object)->Selected = true;
     //object->GetComponent<Selectable>()->Selected = true;
+}
+
+void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object) {
+
+    EditorObject* source = object->GetComponent<EditorObject>();
+    if (!source) {
+        return;
+    }
+    
+    for(auto& t : d.droppedTouches) {
+        EditorObject* destination = t.object->GetComponent<EditorObject>();
+        if (destination) {
+            if (source!=destination && IsParentValid(source->gameObject, destination->gameObject)) {
+                source->gameObject->Parent() = destination->gameObject;
+                return;
+            }
+        } else if (t.object == rootItem) {
+            source->gameObject->Parent() = 0;
+        }
+    }
+}
+
+bool HierarchyWindow::IsParentValid(Pocket::GameObject *object, Pocket::GameObject *possibleParent) {
+    GameObject* o = possibleParent;
+    while (o) {
+        if (o == object) return false;
+        o = o->Parent();
+    }
+    return true;
 }

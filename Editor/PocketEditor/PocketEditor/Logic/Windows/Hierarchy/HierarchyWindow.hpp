@@ -20,6 +20,9 @@ protected:
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
 private:
     void Clicked(TouchData d, GameObject* object);
+    void Dropped(DroppedData d, GameObject* object);
+    bool IsParentValid(GameObject* object, GameObject* possibleParent);
     
     VirtualTreeList* treeView;
+    GameObject* rootItem;
 };
