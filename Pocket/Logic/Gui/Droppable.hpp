@@ -7,6 +7,7 @@
 //
 #pragma once
 #include "Touchable.hpp"
+#include <functional>
 
 namespace Pocket {
     struct DroppedData {
@@ -16,6 +17,9 @@ namespace Pocket {
     };
 
     struct Droppable {
+        Droppable() { activateThreshhold = 10.0f; }
         Event<DroppedData> Dropped;
+        std::function<GameObject*(GameObject*, TouchData)> OnCreate;
+        float activateThreshhold;
     };
 }

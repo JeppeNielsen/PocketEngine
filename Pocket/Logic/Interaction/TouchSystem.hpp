@@ -39,6 +39,8 @@ namespace Pocket {
         void ObjectRemoved(GameObject* object);
         void Update(float dt);
         
+        void EnqueueDown(GameObject* touchObject, TouchData touchData);
+        
         int TouchDepth;
         
     private:
@@ -89,6 +91,8 @@ namespace Pocket {
         Touched downs;
         Touched clicks;
         Touched ups;
+        
+        Touched equeuedDowns;
         
     public:
         void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);

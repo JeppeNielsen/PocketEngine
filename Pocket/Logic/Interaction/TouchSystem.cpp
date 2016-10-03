@@ -77,7 +77,10 @@ void TouchSystem::Update(float dt) {
         cancelledTouchables.clear();
     }
     
-    
+    for(auto& d : equeuedDowns) {
+        downs.push_back(d);
+    }
+    equeuedDowns.clear();
     
     for (unsigned i=0; i<downs.size(); i++) {
         if (IsTouchValid(downs[i])) {
@@ -385,4 +388,11 @@ bool TouchSystem::IsTouchInList(const Pocket::TouchData &touchData, const Touche
 
 void TouchSystem::TouchableCancelled(Pocket::Touchable *touchable) {
     cancelledTouchables.insert(touchable);
+}
+
+void TouchSystem::EnqueueDown(Pocket::GameObject *touchObject, Pocket::TouchData touchData) {
+    touchData.object = touchObject;
+    touchData.Touchable = touchObject->GetComponent<Touchable>();
+    equeuedDowns.push_back(touchData);
+    touches[touchData.Index].push_back(touchData);
 }
