@@ -74,7 +74,7 @@ public:
         
         //filename      = "/Projects/PocketEngine/Games/TestFreeType/SourceSansPro-Regular.ttf";                           /* first argument     */
         //filename = "/Users/Jeppe/Library/Fonts/D3Mouldism.ttf";
-        filename = "/Users/Jeppe/Library/Fonts/Don't Waste That Napkin.otf";
+        filename = "/Users/Jeppe/Library/Fonts/NuevaStd-Bold_ttf.ttf";
         
         text          = "Pocket Engine";                           /* second argument    */
         num_chars     = strlen( text );
@@ -87,7 +87,7 @@ public:
         /* error handling omitted */
 
         /* use 50pt at 100dpi */
-        error = FT_Set_Char_Size( face, 100 * 64, 0,
+        error = FT_Set_Char_Size( face, 40 * 64, 0,
                             50, 0 );                /* set character size */
         /* error handling omitted */
 
@@ -144,8 +144,9 @@ public:
                  unsigned char pixel = bitmap->buffer[y * bitmap->width + x];
                 
                 if (pixel>0) {
-                    float color = pixel / 255.0f;
-                    CreateColorCube(position+Vector3((float)x,(float)-y,0), Colour(color, color, color, 1.0f));
+                    float alpha = pixel / 255.0f;
+                    Colour color = Colour::HslToRgb(x*10, 1, alpha, 1.0f);
+                    CreateColorCube(position+Vector3((float)x,(float)-y,0), color);
                 }
             }
         }
