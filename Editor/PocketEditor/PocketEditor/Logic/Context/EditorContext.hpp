@@ -31,5 +31,4 @@ public:
     EngineContext& EngineContext();
     
     void Initialize(class EngineContext& engineContext);
-    void NewProject();
 };

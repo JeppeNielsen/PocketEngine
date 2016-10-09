@@ -10,6 +10,7 @@
 #include "BaseWindow.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include "FilePath.hpp"
 
 class FilePath;
 class FileSystemListener;
@@ -20,6 +21,7 @@ protected:
     void OnCreate() override;
     std::string Name() override;
     bool CreateBar() override;
+    void SetProjectPath(const std::string& path);
 private:
     void ScreenSizeChanged();
     
@@ -35,4 +37,6 @@ private:
     AppMenu popupMenu;
     ClickedNodeInfo selectedNode;
     FileSystemListener* fileSystemListener;
+    
+    FilePath projectFilePath;
 };

@@ -47,18 +47,28 @@ Project::Project() {
 
 ScriptWorld& Project::ScriptWorld() { return scriptWorld; }
 
-void Project::CreateNew(const std::string& path) {
-    //scriptWorld.RemoveGameWorld(world);
-    //world.Clear();
+void Project::Open(const std::string& path) {
     this->path = path;
     Worlds.Clear();
+    
+    GameWorld world;
+    OpenWorld::CreateDefaultSystems(world);
+    scriptWorld.SetWorldType(world);
+    RefreshSourceFiles();
+    scriptWorld.LoadLib();
+    
+    Opened();
 }
 
 GameWorld& Project::World() { return Worlds.ActiveWorld()->World(); }
 
-
 bool Project::Compile() {
-    
+    RefreshSourceFiles();
+    scriptWorld.Build(true);
+    return true;
+}
+
+void Project::RefreshSourceFiles() {
     std::vector<std::string> foundIncludeFiles = defaultIncludes;
     FileHelper::FindFiles(foundIncludeFiles, path, ".hpp");
     
@@ -79,11 +89,7 @@ bool Project::Compile() {
         foundIncludeFiles
     );
     
-    GameWorld world;
-    OpenWorld::CreateDefaultSystems(world);
-    scriptWorld.SetWorldType(world);
-    scriptWorld.Build(true);
-    return true;
+    scriptWorld.ExtractScriptClasses();
 }
 
 void Project::Build() {
@@ -112,8 +118,7 @@ void Project::CreateNewWorld(const std::string &worldPath) {
 
 void Project::Update(float dt) {
     if (!Worlds.ActiveWorld()) return;
-    Worlds.ActiveWorld()->World().Update(dt);
-    Worlds.ActiveWorld()->EditorWorld().Update(dt);
+    Worlds.ActiveWorld()->Update(dt);
 }
 
 void Project::Render() {
@@ -132,3 +137,4 @@ void Project::SaveWorld() {
     Worlds.ActiveWorld()->Save();
 }
 
+std::string& Project::Path() { return path; }

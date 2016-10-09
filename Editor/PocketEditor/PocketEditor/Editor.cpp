@@ -22,6 +22,7 @@
 #include "GameObjectMenu.hpp"
 #include "ProjectWindow.hpp"
 #include "WorldTab.hpp"
+#include "PlayButtons.hpp"
 
 #include <vector>
 
@@ -39,6 +40,7 @@ public:
     void Initialize() {
 
         windows.push_back(new WorldTab());
+        windows.push_back(new PlayButtons());
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
@@ -64,7 +66,7 @@ public:
             menu->Create();
         }
         
-        context.NewProject();
+        context.Project().Open("/Projects/PocketEngine/Editor/Pong/");
     }
     
     void Update(float dt) {

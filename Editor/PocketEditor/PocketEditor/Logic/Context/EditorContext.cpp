@@ -14,10 +14,6 @@ Gui& EditorContext::Gui() { return *gui; }
 
 Project& EditorContext::Project() { return project; }
 
-void EditorContext::NewProject() {
-    project.CreateNew("/Projects/PocketEngine/Editor/TestProject/");
-}
-
 EngineContext& EditorContext::EngineContext() {
     return *engineContext;
 }

@@ -98,6 +98,7 @@ void OpenWorld::CreateDefault() {
 }
 
 bool OpenWorld::Save() {
+    Stop();
     bool succes = false;
     try {
         succes = true;
@@ -132,4 +133,28 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Scrip
     }
 
     return true;
+}
+
+void OpenWorld::Play() {
+    if (IsPlaying) return;
+    storedWorld.clear();
+    world.ToJson(storedWorld);
+    IsPlaying = true;
+}
+
+void OpenWorld::Stop() {
+    if (!IsPlaying) return;
+    for(auto o : world.Root()->Children()) {
+        o->Remove();
+    }
+    world.Update(0);
+    world.CreateObject(storedWorld, 0, [](GameObject* go) {
+    
+    });
+    IsPlaying = false;
+}
+
+void OpenWorld::Update(float dt) {
+    world.Update(IsPlaying ? dt : 0);
+    editorWorld.Update(dt);
 }

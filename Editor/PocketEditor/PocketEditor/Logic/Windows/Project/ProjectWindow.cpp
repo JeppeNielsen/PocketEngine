@@ -46,11 +46,8 @@ void ProjectWindow::OnInitialize() {
         });
         
         createMenu.AddChild("World").Clicked.Bind([this]() {
-        
             std::string newWorldPath = selectedNode.filePath->GetFolderPath() + "/NewWorld.json";
-        
             std::cout <<" Folder path: "<< newWorldPath<<std::endl;
-        
             context->Project().CreateNewWorld(newWorldPath);
             
             fileSystemListener->watcher.Changed();
@@ -72,6 +69,8 @@ void ProjectWindow::OnInitialize() {
     }
     {
         popupMenu.AddChild("Rename").Clicked.Bind([this] () {
+            
+            if (!selectedNode.guiNodeObject) return;
             
             Gui& gui = context->Gui();
             
@@ -106,7 +105,6 @@ void ProjectWindow::OnCreate() {
     
     GameObject* fileRoot = contextWorld.CreateObject();
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
-    fileSystemListener->Path = "/Projects/PocketEngine/Editor/TestProject/";
     fileSystemListener->Extension = "";
 
     Gui& gui = context->Gui();
@@ -138,23 +136,20 @@ void ProjectWindow::OnCreate() {
         clone->RemoveComponent<Touchable>();
         gui.CreateControl(clone, "TextBox", 0, {25,25});
         
-        if (node!=fileRoot) {
-            GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-            
-            
-            if (filePath) {
-                auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, filePath->filename, 12);
-                l->GetComponent<Colorable>()->Color = Colour::Black();
-                l->GetComponent<Label>()->HAlignment = Font::Left;
-                l->GetComponent<Label>()->VAlignment = Font::Middle;
-                
-                selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { node, selectButton, 0 });
+        GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
+        
+        auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, node!=fileRoot ? filePath->filename : "Project", 12);
+        l->GetComponent<Colorable>()->Color = Colour::Black();
+        l->GetComponent<Label>()->HAlignment = Font::Left;
+        l->GetComponent<Label>()->VAlignment = Font::Middle;
+    
+        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { node, node!=fileRoot ? selectButton : 0, filePath ? filePath : &projectFilePath });
+        
+        if (filePath) {
+            if (node!=fileRoot) {
                 selectButton->AddComponent<Selectable>();
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour(0.8f,0.8f,0.8f,1.0f);
             }
-            
-        } else {
-        
         }
         return clone;
     };
@@ -164,13 +159,16 @@ void ProjectWindow::OnCreate() {
     };
     
     ScreenSizeChanged();
+    
+    context->Project().Opened.Bind([this] () {
+        SetProjectPath(context->Project().Path());
+    });
 }
 
 bool ProjectWindow::CreateBar() { return false; }
 
 void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode = nodeInfo;
-    selectedNode.filePath = nodeInfo.fileObject->GetComponent<FilePath>();
     if (d.Index == 0) {
         if (!selectedNode.filePath->isFolder) {
             context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(), selectedNode.filePath->filename, context->Project().ScriptWorld());
@@ -187,3 +185,8 @@ void ProjectWindow::ScreenSizeChanged() {
     listBox->GetComponent<Sizeable>()->Size = window->GetComponent<Sizeable>()->Size;
 }
 
+void ProjectWindow::SetProjectPath(const std::string &path) {
+    projectFilePath.path = path;
+    projectFilePath.isFolder = true;
+    fileSystemListener->Path = path;
+}

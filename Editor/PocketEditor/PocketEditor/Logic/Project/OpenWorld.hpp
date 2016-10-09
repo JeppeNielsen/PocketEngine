@@ -11,6 +11,7 @@
 #include "InputManager.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include <sstream>
 
 using namespace Pocket;
 
@@ -31,8 +32,16 @@ public:
     
     static void CreateDefaultSystems(GameWorld& world);
     
+    void Play();
+    void Stop();
+    
+    Property<bool> IsPlaying;
+    
+    void Update(float dt);
+    
 private:
     GameWorld editorWorld;
     GameWorld world;
+    std::stringstream storedWorld;
 };
 

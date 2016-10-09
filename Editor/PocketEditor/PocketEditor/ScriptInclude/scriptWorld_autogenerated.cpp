@@ -10,8 +10,7 @@ struct Cloner;
 struct Turner;
 struct EditorObject;
 }
-struct Blinker;
-struct Jumper;
+struct Controller;
 
 namespace Pocket {
 class GameObject {
@@ -56,26 +55,22 @@ template<> Pocket::Touchable* Pocket::GameObject::GetComponent<Pocket::Touchable
 template<> Pocket::Touchable* Pocket::GameObject::AddComponent<Pocket::Touchable>() { AddComponent(7); return (Pocket::Touchable*) GetComponent(7); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::Touchable>() { RemoveComponent(7); }
 template<> Pocket::Touchable* Pocket::GameObject::CloneComponent<Pocket::Touchable>(GameObject* source) { CloneComponent(7, source); return (Pocket::Touchable*) GetComponent(7); }
-template<> Pocket::Cloner* Pocket::GameObject::GetComponent<Pocket::Cloner>() { return (Pocket::Cloner*) GetComponent(28); }
-template<> Pocket::Cloner* Pocket::GameObject::AddComponent<Pocket::Cloner>() { AddComponent(28); return (Pocket::Cloner*) GetComponent(28); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::Cloner>() { RemoveComponent(28); }
-template<> Pocket::Cloner* Pocket::GameObject::CloneComponent<Pocket::Cloner>(GameObject* source) { CloneComponent(28, source); return (Pocket::Cloner*) GetComponent(28); }
-template<> Pocket::Turner* Pocket::GameObject::GetComponent<Pocket::Turner>() { return (Pocket::Turner*) GetComponent(29); }
-template<> Pocket::Turner* Pocket::GameObject::AddComponent<Pocket::Turner>() { AddComponent(29); return (Pocket::Turner*) GetComponent(29); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::Turner>() { RemoveComponent(29); }
-template<> Pocket::Turner* Pocket::GameObject::CloneComponent<Pocket::Turner>(GameObject* source) { CloneComponent(29, source); return (Pocket::Turner*) GetComponent(29); }
-template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) GetComponent(30); }
-template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(30); return (Pocket::EditorObject*) GetComponent(30); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(30); }
-template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(30, source); return (Pocket::EditorObject*) GetComponent(30); }
-template<> Blinker* Pocket::GameObject::GetComponent<Blinker>() { return (Blinker*) GetComponent(31); }
-template<> Blinker* Pocket::GameObject::AddComponent<Blinker>() { AddComponent(31); return (Blinker*) GetComponent(31); }
-template<> void Pocket::GameObject::RemoveComponent<Blinker>() { RemoveComponent(31); }
-template<> Blinker* Pocket::GameObject::CloneComponent<Blinker>(GameObject* source) { CloneComponent(31, source); return (Blinker*) GetComponent(31); }
-template<> Jumper* Pocket::GameObject::GetComponent<Jumper>() { return (Jumper*) GetComponent(32); }
-template<> Jumper* Pocket::GameObject::AddComponent<Jumper>() { AddComponent(32); return (Jumper*) GetComponent(32); }
-template<> void Pocket::GameObject::RemoveComponent<Jumper>() { RemoveComponent(32); }
-template<> Jumper* Pocket::GameObject::CloneComponent<Jumper>(GameObject* source) { CloneComponent(32, source); return (Jumper*) GetComponent(32); }
+template<> Pocket::Cloner* Pocket::GameObject::GetComponent<Pocket::Cloner>() { return (Pocket::Cloner*) GetComponent(27); }
+template<> Pocket::Cloner* Pocket::GameObject::AddComponent<Pocket::Cloner>() { AddComponent(27); return (Pocket::Cloner*) GetComponent(27); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::Cloner>() { RemoveComponent(27); }
+template<> Pocket::Cloner* Pocket::GameObject::CloneComponent<Pocket::Cloner>(GameObject* source) { CloneComponent(27, source); return (Pocket::Cloner*) GetComponent(27); }
+template<> Pocket::Turner* Pocket::GameObject::GetComponent<Pocket::Turner>() { return (Pocket::Turner*) GetComponent(28); }
+template<> Pocket::Turner* Pocket::GameObject::AddComponent<Pocket::Turner>() { AddComponent(28); return (Pocket::Turner*) GetComponent(28); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::Turner>() { RemoveComponent(28); }
+template<> Pocket::Turner* Pocket::GameObject::CloneComponent<Pocket::Turner>(GameObject* source) { CloneComponent(28, source); return (Pocket::Turner*) GetComponent(28); }
+template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::EditorObject>() { return (Pocket::EditorObject*) GetComponent(29); }
+template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(29); return (Pocket::EditorObject*) GetComponent(29); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(29); }
+template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(29, source); return (Pocket::EditorObject*) GetComponent(29); }
+template<> Controller* Pocket::GameObject::GetComponent<Controller>() { return (Controller*) GetComponent(30); }
+template<> Controller* Pocket::GameObject::AddComponent<Controller>() { AddComponent(30); return (Controller*) GetComponent(30); }
+template<> void Pocket::GameObject::RemoveComponent<Controller>() { RemoveComponent(30); }
+template<> Controller* Pocket::GameObject::CloneComponent<Controller>(GameObject* source) { CloneComponent(30, source); return (Controller*) GetComponent(30); }
 class IGameSystem;
 #include "TypeInfo.hpp"
 #include "Property.hpp"
@@ -88,8 +83,7 @@ class IGameSystem;
 #include "TextureAtlas.hpp"
 #include "Colour.hpp"
 #include "Touchable.hpp"
-#include "Blinker.cpp"
-#include "Jumper.cpp"
+#include "Controller.cpp"
 
 #include <string>
 #include <vector>
@@ -114,12 +108,11 @@ template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { stati
 template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 17; } };
 
 extern "C" int CountSystems() {
-   return 2;
+   return 1;
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 37: return new BlinkerSystem();
-      case 38: return new JumperSystem();
+      case 37: return new ControllerSystem();
       default: return 0;
    }
 }
@@ -127,49 +120,35 @@ extern "C" void DeleteSystem(IGameSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 2;
+   return 1;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 31: return new Blinker();
-      case 32: return new Jumper();
+      case 30: return new Controller();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 31: { delete ((Blinker*)component); break; }
-      case 32: { delete ((Jumper*)component); break; }
+      case 30: { delete ((Controller*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 31: { Blinker* co = (Blinker*)c; 
-      Blinker* so = ((Blinker*)s);
-        co->operator=(*so);             break; }
-      case 32: { Jumper* co = (Jumper*)c; 
-      Jumper* so = ((Jumper*)s);
+      case 30: { Controller* co = (Controller*)c; 
+      Controller* so = ((Controller*)s);
         co->operator=(*so);             break; }
    }
 }
 
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
-      case 31: {
-      Blinker* component = (Blinker*)componentPtr;
+      case 30: {
+      Controller* component = (Controller*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Blinker";
-	      info->AddField(component->speed, "speed");
-	      info->AddField(component->time, "time");
-      return info;
-      break; }
-      case 32: {
-      Jumper* component = (Jumper*)componentPtr;
-	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
-	      info->name = "Jumper";
-	      info->AddField(component->height, "height");
-	      info->AddField(component->speed, "speed");
-	      info->AddField(component->time, "time");
+	      info->name = "Controller";
+	      info->AddField(component->downKey, "downKey");
+	      info->AddField(component->upKey, "upKey");
       return info;
       break; }
       default: return 0;

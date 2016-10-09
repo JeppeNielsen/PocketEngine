@@ -25,11 +25,13 @@ private:
     std::string path;
     std::vector<std::string> defaultIncludes;
     
+    void RefreshSourceFiles();
+    
 public:
     OpenWorldCollection Worlds;
 
     Project();
-    void CreateNew(const std::string& path);
+    void Open(const std::string& path);
     GameWorld& World();
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
@@ -43,4 +45,8 @@ public:
     void SaveWorld();
     
     SelectableCollection<EditorObject>* GetSelectables();
+    
+    std::string& Path();
+    
+    Event<> Opened;
 };

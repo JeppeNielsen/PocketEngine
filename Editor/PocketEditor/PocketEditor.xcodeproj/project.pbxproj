@@ -351,6 +351,7 @@
 		729955551C99F76100DAAE5D /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B11C99F76100DAAE5D /* tinyxml.cpp */; };
 		729955561C99F76100DAAE5D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */; };
 		729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */; };
+		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1214,6 +1215,8 @@
 		729953B21C99F76100DAAE5D /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
 		729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
+		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -2745,6 +2748,15 @@
 			path = TinyXml;
 			sourceTree = "<group>";
 		};
+		72AE74CB1DAAA1B800CEB998 /* PlayButtons */ = {
+			isa = PBXGroup;
+			children = (
+				72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */,
+				72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */,
+			);
+			path = PlayButtons;
+			sourceTree = "<group>";
+		};
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -2768,6 +2780,7 @@
 				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
 				72CE8EE71CB43569001F08E4 /* Hierarchy */,
 				727729F61CD4FF2F005AC1D8 /* Inspector */,
+				72AE74CB1DAAA1B800CEB998 /* PlayButtons */,
 				723689A41D873A4E006480F0 /* Project */,
 				720B3D3C1D8B2424006195E8 /* WorldTab */,
 			);
@@ -3244,6 +3257,7 @@
 				72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */,
 				729954851C99F76100DAAE5D /* btCylinderShape.cpp in Sources */,
 				7299549A1C99F76100DAAE5D /* btContactProcessing.cpp in Sources */,
+				72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */,
 				7299544C1C99F76100DAAE5D /* b2PolyAndCircleContact.cpp in Sources */,
 				729953F71C99F76100DAAE5D /* MenuSystem.cpp in Sources */,
 				7299548C1C99F76100DAAE5D /* btPolyhedralConvexShape.cpp in Sources */,
