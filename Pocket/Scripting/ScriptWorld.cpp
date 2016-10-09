@@ -300,6 +300,7 @@ void ScriptWorld::UnloadLib() {
     if (!libHandle) return;
     dlclose(libHandle);
 }
+
 void ScriptWorld::ExtractScriptClasses() {
     ScriptClass allClasses;
 

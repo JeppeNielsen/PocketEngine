@@ -50,8 +50,8 @@ public:
     
     bool BuildExecutable(const std::string& pathToPocketEngineLib);
     
-private:
     void ExtractScriptClasses();
+private:
     void WriteMainIncludes(std::ofstream &file);
     void WriteMainCppFile(const std::string& path);
     void WriteMainGameObject(std::ofstream& file);
