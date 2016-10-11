@@ -25,14 +25,32 @@ void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void ClonerSystem::ClonePathChanged(Pocket::GameObject *object) {
+    Cloner* cloner = object->GetComponent<Cloner>();
+    
+    for(int i : cloner->storedComponents) {
+        object->RemoveComponent(i);
+    }
+    
     for(auto child : object->Children()) {
         child->Remove();
     }
     
+    cloner->storedComponents.clear();
     std::string path = object->GetComponent<Cloner>()->ClonePath;
+    
+    std::vector<int> previousComponents = object->GetComponentIndicies();
     
     std::fstream file;
     file.open(path);
-    world->CreateObject(file, object);
+    world->CreateObject(file, object, 0, object);
     file.close();
+    
+    std::vector<int> afterComponents = object->GetComponentIndicies();
+    
+    for (auto i : afterComponents) {
+        auto it = std::find(previousComponents.begin(), previousComponents.end(), i);
+        if (it == previousComponents.end()) {
+            cloner->storedComponents.push_back(i);
+        }
+    }
 }

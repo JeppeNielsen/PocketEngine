@@ -8,6 +8,7 @@
 
 #pragma once
 #include <string>
+#include <vector>
 #include "Property.hpp"
 #include "TypeInfo.hpp"
 
@@ -15,7 +16,7 @@ namespace Pocket {
     class Cloner {
     public:
         Property<std::string> ClonePath;
-        
+        std::vector<int> storedComponents;
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(ClonePath)
         TYPE_FIELDS_END
