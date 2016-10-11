@@ -9,9 +9,27 @@
 #pragma once
 #include <vector>
 
-namespace Pocket {
+/*namespace Pocket {
 class GameObject;
+}*/
+
+
+namespace Pocket {
+class GameObject {
+private:
+    virtual void* GetComponent(int componentID) = 0;
+    virtual void AddComponent(int componentID) = 0;
+    virtual void AddComponent(int componentID, GameObject* referenceObject) = 0;
+    virtual void RemoveComponent(int componentID) = 0;
+    virtual void CloneComponent(int componentID, GameObject* source) = 0;
+public:
+    template<typename T> T* GetComponent() { return (T*)0; }
+    template<typename T> T* AddComponent() { }
+    template<typename T> void RemoveComponent() { }
+    template<typename T> T* CloneComponent(GameObject* source) { }
+};
 }
+
 
 struct IGameSystem {
     virtual ~IGameSystem() = default;

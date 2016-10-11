@@ -9,24 +9,14 @@ struct Touchable;
 struct Cloner;
 struct Turner;
 struct EditorObject;
+struct InputMapper;
+struct InputController;
 }
+struct Collidable;
 struct Controller;
+struct Velocity;
 
-namespace Pocket {
-class GameObject {
-private:
-    virtual void* GetComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID, GameObject* referenceObject) = 0;
-    virtual void RemoveComponent(int componentID) = 0;
-    virtual void CloneComponent(int componentID, GameObject* source) = 0;
-public:
-    template<typename T> T* GetComponent() { return (T*)0; }
-    template<typename T> T* AddComponent() { }
-    template<typename T> void RemoveComponent() { }
-    template<typename T> T* CloneComponent(GameObject* source) { }
-};
-}
+#include "GameSystem.hpp"
 template<> Pocket::Transform* Pocket::GameObject::GetComponent<Pocket::Transform>() { return (Pocket::Transform*) GetComponent(0); }
 template<> Pocket::Transform* Pocket::GameObject::AddComponent<Pocket::Transform>() { AddComponent(0); return (Pocket::Transform*) GetComponent(0); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::Transform>() { RemoveComponent(0); }
@@ -67,10 +57,26 @@ template<> Pocket::EditorObject* Pocket::GameObject::GetComponent<Pocket::Editor
 template<> Pocket::EditorObject* Pocket::GameObject::AddComponent<Pocket::EditorObject>() { AddComponent(29); return (Pocket::EditorObject*) GetComponent(29); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::EditorObject>() { RemoveComponent(29); }
 template<> Pocket::EditorObject* Pocket::GameObject::CloneComponent<Pocket::EditorObject>(GameObject* source) { CloneComponent(29, source); return (Pocket::EditorObject*) GetComponent(29); }
-template<> Controller* Pocket::GameObject::GetComponent<Controller>() { return (Controller*) GetComponent(30); }
-template<> Controller* Pocket::GameObject::AddComponent<Controller>() { AddComponent(30); return (Controller*) GetComponent(30); }
-template<> void Pocket::GameObject::RemoveComponent<Controller>() { RemoveComponent(30); }
-template<> Controller* Pocket::GameObject::CloneComponent<Controller>(GameObject* source) { CloneComponent(30, source); return (Controller*) GetComponent(30); }
+template<> Pocket::InputMapper* Pocket::GameObject::GetComponent<Pocket::InputMapper>() { return (Pocket::InputMapper*) GetComponent(30); }
+template<> Pocket::InputMapper* Pocket::GameObject::AddComponent<Pocket::InputMapper>() { AddComponent(30); return (Pocket::InputMapper*) GetComponent(30); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::InputMapper>() { RemoveComponent(30); }
+template<> Pocket::InputMapper* Pocket::GameObject::CloneComponent<Pocket::InputMapper>(GameObject* source) { CloneComponent(30, source); return (Pocket::InputMapper*) GetComponent(30); }
+template<> Pocket::InputController* Pocket::GameObject::GetComponent<Pocket::InputController>() { return (Pocket::InputController*) GetComponent(31); }
+template<> Pocket::InputController* Pocket::GameObject::AddComponent<Pocket::InputController>() { AddComponent(31); return (Pocket::InputController*) GetComponent(31); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::InputController>() { RemoveComponent(31); }
+template<> Pocket::InputController* Pocket::GameObject::CloneComponent<Pocket::InputController>(GameObject* source) { CloneComponent(31, source); return (Pocket::InputController*) GetComponent(31); }
+template<> Collidable* Pocket::GameObject::GetComponent<Collidable>() { return (Collidable*) GetComponent(32); }
+template<> Collidable* Pocket::GameObject::AddComponent<Collidable>() { AddComponent(32); return (Collidable*) GetComponent(32); }
+template<> void Pocket::GameObject::RemoveComponent<Collidable>() { RemoveComponent(32); }
+template<> Collidable* Pocket::GameObject::CloneComponent<Collidable>(GameObject* source) { CloneComponent(32, source); return (Collidable*) GetComponent(32); }
+template<> Controller* Pocket::GameObject::GetComponent<Controller>() { return (Controller*) GetComponent(33); }
+template<> Controller* Pocket::GameObject::AddComponent<Controller>() { AddComponent(33); return (Controller*) GetComponent(33); }
+template<> void Pocket::GameObject::RemoveComponent<Controller>() { RemoveComponent(33); }
+template<> Controller* Pocket::GameObject::CloneComponent<Controller>(GameObject* source) { CloneComponent(33, source); return (Controller*) GetComponent(33); }
+template<> Velocity* Pocket::GameObject::GetComponent<Velocity>() { return (Velocity*) GetComponent(34); }
+template<> Velocity* Pocket::GameObject::AddComponent<Velocity>() { AddComponent(34); return (Velocity*) GetComponent(34); }
+template<> void Pocket::GameObject::RemoveComponent<Velocity>() { RemoveComponent(34); }
+template<> Velocity* Pocket::GameObject::CloneComponent<Velocity>(GameObject* source) { CloneComponent(34, source); return (Velocity*) GetComponent(34); }
 class IGameSystem;
 #include "TypeInfo.hpp"
 #include "Property.hpp"
@@ -83,7 +89,11 @@ class IGameSystem;
 #include "TextureAtlas.hpp"
 #include "Colour.hpp"
 #include "Touchable.hpp"
+#include "InputController.hpp"
+#include "Collidable.cpp"
 #include "Controller.cpp"
+#include "Velocity.cpp"
+#include "VelocityCollider.cpp"
 
 #include <string>
 #include <vector>
@@ -108,11 +118,14 @@ template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { stati
 template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 17; } };
 
 extern "C" int CountSystems() {
-   return 1;
+   return 4;
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 37: return new ControllerSystem();
+      case 38: return new CollisionSystem();
+      case 39: return new ControllerSystem();
+      case 40: return new VelocityCollider();
+      case 41: return new VelocitySystem();
       default: return 0;
    }
 }
@@ -120,35 +133,60 @@ extern "C" void DeleteSystem(IGameSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 1;
+   return 3;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 30: return new Controller();
+      case 32: return new Collidable();
+      case 33: return new Controller();
+      case 34: return new Velocity();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 30: { delete ((Controller*)component); break; }
+      case 32: { delete ((Collidable*)component); break; }
+      case 33: { delete ((Controller*)component); break; }
+      case 34: { delete ((Velocity*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 30: { Controller* co = (Controller*)c; 
+      case 32: { Collidable* co = (Collidable*)c; 
+      Collidable* so = ((Collidable*)s);
+        co->operator=(*so);             break; }
+      case 33: { Controller* co = (Controller*)c; 
       Controller* so = ((Controller*)s);
+        co->operator=(*so);             break; }
+      case 34: { Velocity* co = (Velocity*)c; 
+      Velocity* so = ((Velocity*)s);
         co->operator=(*so);             break; }
    }
 }
 
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
-      case 30: {
+      case 32: {
+      Collidable* component = (Collidable*)componentPtr;
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "Collidable";
+	      info->AddField(component->radius, "radius");
+      return info;
+      break; }
+      case 33: {
       Controller* component = (Controller*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Controller";
 	      info->AddField(component->downKey, "downKey");
+	      info->AddField(component->speed, "speed");
 	      info->AddField(component->upKey, "upKey");
+      return info;
+      break; }
+      case 34: {
+      Velocity* component = (Velocity*)componentPtr;
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "Velocity";
+	      info->AddField(component->velocity, "velocity");
       return info;
       break; }
       default: return 0;

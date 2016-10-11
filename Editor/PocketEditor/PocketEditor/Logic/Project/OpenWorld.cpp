@@ -24,6 +24,7 @@
 #include "ClonerSystem.hpp"
 #include "FirstPersonMoverSystem.hpp"
 #include "ScriptWorld.hpp"
+#include "InputMapperSystem.hpp"
 #include <fstream>
 
 GameWorld& OpenWorld::World() {
@@ -57,6 +58,7 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameWorld &world) {
     world.CreateSystem<ClonerSystem>();
     world.CreateSystem<TurnerSystem>();
     world.CreateSystem<EditorObjectCreatorSystem>();
+    world.CreateSystem<InputMapperSystem>();
 }
 
 void OpenWorld::CreateDefault() {
@@ -151,6 +153,7 @@ void OpenWorld::Stop() {
     world.CreateObject(storedWorld, 0, [](GameObject* go) {
     
     });
+    world.Update(0);
     IsPlaying = false;
 }
 

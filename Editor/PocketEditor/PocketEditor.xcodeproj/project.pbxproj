@@ -352,6 +352,9 @@
 		729955561C99F76100DAAE5D /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B31C99F76100DAAE5D /* tinyxmlerror.cpp */; };
 		729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
+		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
+		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
+		72AE74D81DAC284D00CEB998 /* InputMapperSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D61DAC284D00CEB998 /* InputMapperSystem.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1217,6 +1220,12 @@
 		729953B41C99F76100DAAE5D /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
+		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
+		72AE74D11DAC16C600CEB998 /* InputController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputController.hpp; sourceTree = "<group>"; };
+		72AE74D31DAC254E00CEB998 /* InputMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputMapper.cpp; sourceTree = "<group>"; };
+		72AE74D41DAC254E00CEB998 /* InputMapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputMapper.hpp; sourceTree = "<group>"; };
+		72AE74D61DAC284D00CEB998 /* InputMapperSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputMapperSystem.cpp; sourceTree = "<group>"; };
+		72AE74D71DAC284D00CEB998 /* InputMapperSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputMapperSystem.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -1550,6 +1559,7 @@
 				729950071C99F76000DAAE5D /* Editor */,
 				729950161C99F76000DAAE5D /* Effects */,
 				7299501F1C99F76000DAAE5D /* Gui */,
+				72AE74CF1DAC166D00CEB998 /* Input */,
 				729950441C99F76000DAAE5D /* Interaction */,
 				7299504C1C99F76000DAAE5D /* Movement */,
 				7299505F1C99F76000DAAE5D /* Physics */,
@@ -2757,6 +2767,19 @@
 			path = PlayButtons;
 			sourceTree = "<group>";
 		};
+		72AE74CF1DAC166D00CEB998 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				72AE74D01DAC16C600CEB998 /* InputController.cpp */,
+				72AE74D11DAC16C600CEB998 /* InputController.hpp */,
+				72AE74D31DAC254E00CEB998 /* InputMapper.cpp */,
+				72AE74D41DAC254E00CEB998 /* InputMapper.hpp */,
+				72AE74D61DAC284D00CEB998 /* InputMapperSystem.cpp */,
+				72AE74D71DAC284D00CEB998 /* InputMapperSystem.hpp */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -3021,6 +3044,7 @@
 				729954E21C99F76100DAAE5D /* btConvexHullComputer.cpp in Sources */,
 				729954641C99F76100DAAE5D /* btCollisionObject.cpp in Sources */,
 				729954FE1C99F76100DAAE5D /* GamePadManager.mm in Sources */,
+				72AE74D81DAC284D00CEB998 /* InputMapperSystem.cpp in Sources */,
 				7299550E1C99F76100DAAE5D /* TextureAtlas.cpp in Sources */,
 				729954431C99F76100DAAE5D /* b2StackAllocator.cpp in Sources */,
 				729954821C99F76100DAAE5D /* btConvexPolyhedron.cpp in Sources */,
@@ -3127,6 +3151,7 @@
 				72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */,
 				729954791C99F76100DAAE5D /* btCapsuleShape.cpp in Sources */,
 				720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */,
+				72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */,
 				729954FC1C99F76100DAAE5D /* File.mm in Sources */,
 				729955061C99F76100DAAE5D /* lodepng.cpp in Sources */,
 				729954D11C99F76100DAAE5D /* SpuCollisionShapes.cpp in Sources */,
@@ -3284,6 +3309,7 @@
 				729954A21C99F76100DAAE5D /* gim_contact.cpp in Sources */,
 				7299548A1C99F76100DAAE5D /* btMultiSphereShape.cpp in Sources */,
 				729953E11C99F76100DAAE5D /* SoundSystem.cpp in Sources */,
+				72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */,
 				729954D31C99F76100DAAE5D /* SpuGatheringCollisionTask.cpp in Sources */,
 				729954CD1C99F76100DAAE5D /* SpuFakeDma.cpp in Sources */,
 				7299550C1C99F76100DAAE5D /* ShaderCollection.cpp in Sources */,
