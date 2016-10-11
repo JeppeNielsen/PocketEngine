@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		72AE74E31DAC419D00CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74DD1DAC419D00CEB998 /* InputController.cpp */; };
+		72AE74E41DAC419D00CEB998 /* InputController.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72AE74DE1DAC419D00CEB998 /* InputController.hpp */; };
+		72AE74E51DAC419D00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74DF1DAC419D00CEB998 /* InputMapper.cpp */; };
+		72AE74E61DAC419D00CEB998 /* InputMapper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72AE74E01DAC419D00CEB998 /* InputMapper.hpp */; };
+		72AE74E71DAC419D00CEB998 /* InputMapperSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74E11DAC419D00CEB998 /* InputMapperSystem.cpp */; };
+		72AE74E81DAC419D00CEB998 /* InputMapperSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72AE74E21DAC419D00CEB998 /* InputMapperSystem.hpp */; };
+		72AE74EA1DAC41B300CEB998 /* AppMenu.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72AE74E91DAC41B300CEB998 /* AppMenu.hpp */; };
+		72AE74EC1DAC41C100CEB998 /* AppMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74EB1DAC41C100CEB998 /* AppMenu.mm */; };
 		72EC10281D2D912C00B69802 /* Container.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0C7A1D2D912B00B69802 /* Container.hpp */; };
 		72EC10291D2D912C00B69802 /* GameIDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EC0C7B1D2D912B00B69802 /* GameIDHelper.cpp */; };
 		72EC102A1D2D912C00B69802 /* GameIDHelper.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0C7C1D2D912B00B69802 /* GameIDHelper.hpp */; };
@@ -259,8 +267,6 @@
 		72EC13301D2D912C00B69802 /* GamePadManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72EC0FCB1D2D912C00B69802 /* GamePadManager.mm */; };
 		72EC13311D2D912C00B69802 /* OSXView.h in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0FCC1D2D912C00B69802 /* OSXView.h */; };
 		72EC13321D2D912C00B69802 /* OSXView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72EC0FCD1D2D912C00B69802 /* OSXView.mm */; };
-		72EC13331D2D912C00B69802 /* OSXWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0FCE1D2D912C00B69802 /* OSXWindow.h */; };
-		72EC13341D2D912C00B69802 /* OSXWindow.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72EC0FCF1D2D912C00B69802 /* OSXWindow.mm */; };
 		72EC13351D2D912C00B69802 /* OSXWindowCreator.h in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0FD01D2D912C00B69802 /* OSXWindowCreator.h */; };
 		72EC13361D2D912C00B69802 /* OSXWindowCreator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72EC0FD11D2D912C00B69802 /* OSXWindowCreator.mm */; };
 		72EC13371D2D912C00B69802 /* WindowOSX.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 72EC0FD21D2D912C00B69802 /* WindowOSX.hpp */; };
@@ -311,6 +317,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		72AE74DD1DAC419D00CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
+		72AE74DE1DAC419D00CEB998 /* InputController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputController.hpp; sourceTree = "<group>"; };
+		72AE74DF1DAC419D00CEB998 /* InputMapper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputMapper.cpp; sourceTree = "<group>"; };
+		72AE74E01DAC419D00CEB998 /* InputMapper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputMapper.hpp; sourceTree = "<group>"; };
+		72AE74E11DAC419D00CEB998 /* InputMapperSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputMapperSystem.cpp; sourceTree = "<group>"; };
+		72AE74E21DAC419D00CEB998 /* InputMapperSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputMapperSystem.hpp; sourceTree = "<group>"; };
+		72AE74E91DAC41B300CEB998 /* AppMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AppMenu.hpp; sourceTree = "<group>"; };
+		72AE74EB1DAC41C100CEB998 /* AppMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppMenu.mm; sourceTree = "<group>"; };
 		72EC0C711D2D911600B69802 /* libPocketEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPocketEngine.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		72EC0C7A1D2D912B00B69802 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		72EC0C7B1D2D912B00B69802 /* GameIDHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameIDHelper.cpp; sourceTree = "<group>"; };
@@ -564,8 +578,6 @@
 		72EC0FCB1D2D912C00B69802 /* GamePadManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GamePadManager.mm; sourceTree = "<group>"; };
 		72EC0FCC1D2D912C00B69802 /* OSXView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXView.h; sourceTree = "<group>"; };
 		72EC0FCD1D2D912C00B69802 /* OSXView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXView.mm; sourceTree = "<group>"; };
-		72EC0FCE1D2D912C00B69802 /* OSXWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXWindow.h; sourceTree = "<group>"; };
-		72EC0FCF1D2D912C00B69802 /* OSXWindow.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXWindow.mm; sourceTree = "<group>"; };
 		72EC0FD01D2D912C00B69802 /* OSXWindowCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXWindowCreator.h; sourceTree = "<group>"; };
 		72EC0FD11D2D912C00B69802 /* OSXWindowCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXWindowCreator.mm; sourceTree = "<group>"; };
 		72EC0FD21D2D912C00B69802 /* WindowOSX.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WindowOSX.hpp; sourceTree = "<group>"; };
@@ -626,6 +638,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		72AE74DC1DAC419D00CEB998 /* Input */ = {
+			isa = PBXGroup;
+			children = (
+				72AE74DD1DAC419D00CEB998 /* InputController.cpp */,
+				72AE74DE1DAC419D00CEB998 /* InputController.hpp */,
+				72AE74DF1DAC419D00CEB998 /* InputMapper.cpp */,
+				72AE74E01DAC419D00CEB998 /* InputMapper.hpp */,
+				72AE74E11DAC419D00CEB998 /* InputMapperSystem.cpp */,
+				72AE74E21DAC419D00CEB998 /* InputMapperSystem.hpp */,
+			);
+			path = Input;
+			sourceTree = "<group>";
+		};
 		72EC0C681D2D911600B69802 = {
 			isa = PBXGroup;
 			children = (
@@ -694,6 +719,7 @@
 		72EC0C851D2D912B00B69802 /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				72AE74E91DAC41B300CEB998 /* AppMenu.hpp */,
 				72EC0C861D2D912B00B69802 /* Engine.cpp */,
 				72EC0C871D2D912B00B69802 /* Engine.hpp */,
 				72EC0C881D2D912B00B69802 /* EngineContext.cpp */,
@@ -771,6 +797,7 @@
 				72EC0CE11D2D912B00B69802 /* Editor */,
 				72EC0CF81D2D912B00B69802 /* Effects */,
 				72EC0D011D2D912B00B69802 /* Gui */,
+				72AE74DC1DAC419D00CEB998 /* Input */,
 				72EC0D261D2D912B00B69802 /* Interaction */,
 				72EC0D2E1D2D912B00B69802 /* Movement */,
 				72EC0D4E1D2D912B00B69802 /* Rendering */,
@@ -1096,6 +1123,7 @@
 		72EC0FC41D2D912C00B69802 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				72AE74EB1DAC41C100CEB998 /* AppMenu.mm */,
 				72EC0FC51D2D912C00B69802 /* AppDelegate.h */,
 				72EC0FC61D2D912C00B69802 /* AppDelegate.mm */,
 				72EC0FC71D2D912C00B69802 /* BigButtonManager.cpp */,
@@ -1105,8 +1133,6 @@
 				72EC0FCB1D2D912C00B69802 /* GamePadManager.mm */,
 				72EC0FCC1D2D912C00B69802 /* OSXView.h */,
 				72EC0FCD1D2D912C00B69802 /* OSXView.mm */,
-				72EC0FCE1D2D912C00B69802 /* OSXWindow.h */,
-				72EC0FCF1D2D912C00B69802 /* OSXWindow.mm */,
 				72EC0FD01D2D912C00B69802 /* OSXWindowCreator.h */,
 				72EC0FD11D2D912C00B69802 /* OSXWindowCreator.mm */,
 				72EC0FD21D2D912C00B69802 /* WindowOSX.hpp */,
@@ -1257,7 +1283,6 @@
 				72EC11131D2D912C00B69802 /* Transform.hpp in Headers */,
 				72EC104A1D2D912C00B69802 /* Event.hpp in Headers */,
 				72EC11311D2D912C00B69802 /* TransitionHelper.hpp in Headers */,
-				72EC13331D2D912C00B69802 /* OSXWindow.h in Headers */,
 				72EC13651D2D912C00B69802 /* minijson_reader.hpp in Headers */,
 				72EC10311D2D912C00B69802 /* MetaLibrary.hpp in Headers */,
 				72EC13541D2D912C00B69802 /* Vertex.hpp in Headers */,
@@ -1276,6 +1301,7 @@
 				72EC133F1D2D912C00B69802 /* lodepng.h in Headers */,
 				72EC10801D2D912C00B69802 /* SoundListener.hpp in Headers */,
 				72EC108F1D2D912C00B69802 /* HierarchyEditor.hpp in Headers */,
+				72AE74E61DAC419D00CEB998 /* InputMapper.hpp in Headers */,
 				72EC10281D2D912C00B69802 /* Container.hpp in Headers */,
 				72EC10381D2D912C00B69802 /* GameState.hpp in Headers */,
 				72EC13521D2D912C00B69802 /* TexturePacker.hpp in Headers */,
@@ -1325,6 +1351,7 @@
 				72EC10BE1D2D912C00B69802 /* SpriteMeshSystem.hpp in Headers */,
 				72EC10911D2D912C00B69802 /* HierarchyEditorSystem.hpp in Headers */,
 				72EC103C1D2D912C00B69802 /* InputManager.hpp in Headers */,
+				72AE74EA1DAC41B300CEB998 /* AppMenu.hpp in Headers */,
 				72EC10581D2D912C00B69802 /* QuadTree.hpp in Headers */,
 				72EC10DE1D2D912C00B69802 /* VelocitySystem.hpp in Headers */,
 				72EC10AF1D2D912C00B69802 /* Layoutable.hpp in Headers */,
@@ -1346,7 +1373,9 @@
 				72EC10EE1D2D912C00B69802 /* Camera.hpp in Headers */,
 				72EC10CF1D2D912C00B69802 /* DraggableMotion.hpp in Headers */,
 				72EC10C51D2D912C00B69802 /* TextBoxSystem.hpp in Headers */,
+				72AE74E81DAC419D00CEB998 /* InputMapperSystem.hpp in Headers */,
 				72EC109D1D2D912C00B69802 /* ParticleEffect.hpp in Headers */,
+				72AE74E41DAC419D00CEB998 /* InputController.hpp in Headers */,
 				72EC110C1D2D912C00B69802 /* SelectedColorer.hpp in Headers */,
 				72EC10541D2D912C00B69802 /* Pointer.hpp in Headers */,
 				72EC11251D2D912C00B69802 /* Plane.hpp in Headers */,
@@ -1444,6 +1473,7 @@
 				72EC10601D2D912C00B69802 /* TimeMeasurer.cpp in Sources */,
 				72EC10861D2D912C00B69802 /* FieldEditor.cpp in Sources */,
 				72EC110B1D2D912C00B69802 /* SelectedColorer.cpp in Sources */,
+				72AE74E71DAC419D00CEB998 /* InputMapperSystem.cpp in Sources */,
 				72EC107F1D2D912C00B69802 /* SoundListener.cpp in Sources */,
 				72EC11121D2D912C00B69802 /* Transform.cpp in Sources */,
 				72EC10AC1D2D912C00B69802 /* LabelMeshSystem.cpp in Sources */,
@@ -1480,7 +1510,6 @@
 				72EC10C91D2D912C00B69802 /* TouchCancelSystem.cpp in Sources */,
 				72EC10831D2D912C00B69802 /* HierarchyOrder.cpp in Sources */,
 				72EC10D01D2D912C00B69802 /* DraggableMotionSystem.cpp in Sources */,
-				72EC13341D2D912C00B69802 /* OSXWindow.mm in Sources */,
 				72EC102D1D2D912C00B69802 /* GameSystem.cpp in Sources */,
 				72EC13491D2D912C00B69802 /* Shader.cpp in Sources */,
 				72EC105D1D2D912C00B69802 /* Triangulator.cpp in Sources */,
@@ -1519,6 +1548,7 @@
 				72EC10F91D2D912C00B69802 /* RenderSystem.cpp in Sources */,
 				72EC111C1D2D912C00B69802 /* Interpolator.cpp in Sources */,
 				72EC10901D2D912C00B69802 /* HierarchyEditorSystem.cpp in Sources */,
+				72AE74E31DAC419D00CEB998 /* InputController.cpp in Sources */,
 				72EC13761D2D912C00B69802 /* tinyxml.cpp in Sources */,
 				72EC13421D2D912C00B69802 /* Clipper.cpp in Sources */,
 				72EC13461D2D912C00B69802 /* DeferredBuffers.cpp in Sources */,
@@ -1539,6 +1569,7 @@
 				72EC10BF1D2D912C00B69802 /* SpriteTextureSystem.cpp in Sources */,
 				72EC108C1D2D912C00B69802 /* GameObjectEditorSystem.cpp in Sources */,
 				72EC10F11D2D912C00B69802 /* ColorSystem.cpp in Sources */,
+				72AE74EC1DAC41C100CEB998 /* AppMenu.mm in Sources */,
 				72EC10D61D2D912C00B69802 /* FirstPersonMoverSystem.cpp in Sources */,
 				72EC11411D2D912C00B69802 /* RectPacker.cpp in Sources */,
 				72EC10981D2D912C00B69802 /* VirtualTreeListSpawnerSystem.cpp in Sources */,
@@ -1564,6 +1595,7 @@
 				72EC13741D2D912C00B69802 /* tinystr.cpp in Sources */,
 				72EC10771D2D912C00B69802 /* TransformAnimator.cpp in Sources */,
 				72EC10B21D2D912C00B69802 /* Menu.cpp in Sources */,
+				72AE74E51DAC419D00CEB998 /* InputMapper.cpp in Sources */,
 				72EC10B51D2D912C00B69802 /* MenuButton.cpp in Sources */,
 				72EC107B1D2D912C00B69802 /* Sound.cpp in Sources */,
 				72EC11161D2D912C00B69802 /* BoundingBox.cpp in Sources */,
@@ -1703,6 +1735,7 @@
 				72EC0C771D2D911600B69802 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
