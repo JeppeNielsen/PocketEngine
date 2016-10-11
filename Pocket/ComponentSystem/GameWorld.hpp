@@ -22,7 +22,7 @@ namespace Pocket {
         const GameObject* Root();
         
         GameObject* CreateObject();
-        GameObject* CreateObject(std::istream &jsonStream, GameObject* parent = 0, std::function<void(GameObject*)> onCreated = 0);
+        GameObject* CreateObject(std::istream &jsonStream, GameObject* parent = 0, std::function<void(GameObject*)> onCreated = 0, GameObject* rootObject = 0);
         
         template<typename T>
         T* CreateSystem() {
@@ -141,7 +141,7 @@ namespace Pocket {
         std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
         GameObject* FindObjectFromID(const std::string &id);
         GameObject* FindFirstObjectWithComponentID(int componentID);
-        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated, GameObject* rootObject);
     public:
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);

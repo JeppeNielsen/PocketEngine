@@ -114,6 +114,7 @@ namespace Pocket {
         Property<int>& Order();
         
         std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate);
+        std::vector<int> GetComponentIndicies();
         
         using SerializePredicate = std::function<bool(GameObject*, int)>;
         void ToJson(std::ostream& stream, SerializePredicate predicate = 0);

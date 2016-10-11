@@ -194,6 +194,16 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int compo
     return infos;
 }
 
+std::vector<int> GameObject::GetComponentIndicies() {
+    std::vector<int> indicies;
+    for (int i=0; i<world->components.size(); ++i) {
+        if (data->activeComponents[i]) {
+            indicies.push_back(i);
+        }
+    }
+    return indicies;
+}
+
 //SERIALIZATION
 
 
