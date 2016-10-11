@@ -1,0 +1,138 @@
+{
+    "World": {
+        "Children": [
+            {
+                "GameObject": {
+                    "id": "2",
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "-30,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Paddle.json"
+                            }
+                        },
+                        {
+                            "Pocket::InputMapper": {
+                                "map": [
+                                    [
+                                        "a",
+                                        "down"
+                                    ],
+                                    [
+                                        "l",
+                                        "down"
+                                    ],
+                                    [
+                                        "o",
+                                        "up"
+                                    ],
+                                    [
+                                        "q",
+                                        "up"
+                                    ]
+                                ]
+                            }
+                        },
+                        {
+                            "Pocket::InputController": {
+                                "downButtons": []
+                            }
+                        },
+                        {
+                            "Collidable": {
+                                "radius": 3
+                            }
+                        },
+                        {
+                            "Controller": {
+                                "downKey": "down",
+                                "speed": 30,
+                                "upKey": "up"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": "4",
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "30,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Paddle.json"
+                            }
+                        },
+                        {
+                            "Pocket::InputController": {
+                                "downButtons": []
+                            }
+                        },
+                        {
+                            "Collidable": {
+                                "radius": 3
+                            }
+                        },
+                        {
+                            "Controller": {
+                                "downKey": "down",
+                                "speed": 10,
+                                "upKey": "up"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": "6",
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Ball.json"
+                            }
+                        },
+                        {
+                            "Collidable": {
+                                "radius": 1
+                            }
+                        },
+                        {
+                            "Velocity": {
+                                "velocity": "-10,5,0"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            }
+        ]
+    }
+}
