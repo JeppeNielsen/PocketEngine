@@ -33,7 +33,7 @@ public:
                   const std::vector<std::string>& headerFiles);
     
     void SetWorldType(GameWorld& world);
-    bool Build(bool enableOutput);
+    bool Build(bool enableOutput, const std::string &pathToPocketEngineLib);
     bool LoadLib();
     void UnloadLib();
     
@@ -67,6 +67,8 @@ private:
     std::string ExtractHeaderName(const std::string& headerFile);
     
     bool FindComponentIndex(std::string componentName, bool& staticComponent, int& index);
+    
+    bool IsFieldValid(const ScriptClass::Field& field);
     
     std::string clangSdkPath;
     std::string dynamicLibPath;
