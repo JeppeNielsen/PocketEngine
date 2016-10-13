@@ -7,20 +7,18 @@
 
 using namespace Pocket;
 
-struct CollisionData {
-    GameObject* a;
-    GameObject* b; 
-};
-
 struct Collidable {
     float radius;
 
-    Event<CollisionData> OnCollision;
+    std::vector<GameObject*> collisions;
+    std::vector<GameObject*> previousCollisions;
+    
+    Event<GameObject*> Enter;
+    Event<GameObject*> Exit;
 };
 
 struct CollisionSystem : public GameSystem<Transform, Collidable> {
     void Update(float dt) override {
-        std::cout << "Objects : "<<Objects().size()<<std::endl;
         for(int i = 0; i<Objects().size(); ++i) {
             GameObject* a = Objects()[i];
             Transform* ta = a->GetComponent<Transform>();
@@ -38,10 +36,31 @@ struct CollisionSystem : public GameSystem<Transform, Collidable> {
                 std::cout << vector << std::endl;
 
                 if (vector.Length()<totalRadii) {
-                    ca->OnCollision({ a, b });
-                    cb->OnCollision({ b, a });
+                    
+                    ca->collisions.push_back(b);
+                    cb->collisions.push_back(a);
                 }
             }
+        }
+
+        for(auto o : Objects()) {
+            auto collidable = o->GetComponent<Collidable>();
+
+            for(auto c : collidable->collisions) {
+                auto prev = std::find(collidable->previousCollisions.begin(), collidable->previousCollisions.end(), c);
+                if (prev == collidable->previousCollisions.end()) {
+                    collidable->Enter(c);
+                }
+            }
+
+            for(auto c : collidable->previousCollisions) {
+                auto current = std::find(collidable->collisions.begin(), collidable->collisions.end(), c);
+                if (current == collidable->collisions.end()) {
+                    collidable->Exit(c);
+                }
+            }
+             collidable->previousCollisions = collidable->collisions;
+             collidable->collisions.clear();
         }
     }
 };

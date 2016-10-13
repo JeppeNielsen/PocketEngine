@@ -48,6 +48,8 @@
                         },
                         {
                             "Collidable": {
+                                "collisions": false,
+                                "previousCollisions": false,
                                 "radius": 3
                             }
                         },
@@ -81,12 +83,36 @@
                             }
                         },
                         {
+                            "Pocket::InputMapper": {
+                                "map": [
+                                    [
+                                        "a",
+                                        "down"
+                                    ],
+                                    [
+                                        "l",
+                                        "down"
+                                    ],
+                                    [
+                                        "o",
+                                        "up"
+                                    ],
+                                    [
+                                        "q",
+                                        "up"
+                                    ]
+                                ]
+                            }
+                        },
+                        {
                             "Pocket::InputController": {
                                 "downButtons": []
                             }
                         },
                         {
                             "Collidable": {
+                                "collisions": false,
+                                "previousCollisions": false,
                                 "radius": 3
                             }
                         },
@@ -121,12 +147,14 @@
                         },
                         {
                             "Collidable": {
+                                "collisions": false,
+                                "previousCollisions": false,
                                 "radius": 1
                             }
                         },
                         {
                             "Velocity": {
-                                "velocity": "-10,5,0"
+                                "velocity": "-20,1,0"
                             }
                         }
                     ],

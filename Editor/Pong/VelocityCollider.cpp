@@ -9,17 +9,16 @@ using namespace Pocket;
 struct VelocityCollider : public GameSystem<Velocity, Collidable> {
 
     void ObjectAdded(GameObject* object) {
-        object->GetComponent<Collidable>()->OnCollision.Bind(this, &VelocityCollider::OnCollision, object);
+        object->GetComponent<Collidable>()->Enter.Bind(this, &VelocityCollider::OnCollision, object);
     }
 
     void ObjectRemoved(GameObject* object) {
-        object->GetComponent<Collidable>()->OnCollision.Unbind(this, &VelocityCollider::OnCollision, object);
+        object->GetComponent<Collidable>()->Enter.Unbind(this, &VelocityCollider::OnCollision, object);
     }
 
-    void OnCollision(CollisionData e, GameObject* object) {
+    void OnCollision(GameObject* collisionObject, GameObject* object) {
         std::cout << "COLLISION"<<std::endl;
-        GameObject* other = e.a == object ? e.b : e.a;
-        Transform* otherTransform = other->GetComponent<Transform>();
+        Transform* otherTransform = collisionObject->GetComponent<Transform>();
         if (!otherTransform) return;
 
         Velocity* vel = object->GetComponent<Velocity>();
