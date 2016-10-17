@@ -1,5 +1,6 @@
 {
     "World": {
+        "id": "FRUOhBRvTEia1WbejGESAw==",
         "Children": [
             {
                 "GameObject": {
@@ -16,7 +17,7 @@
                         },
                         {
                             "Pocket::Cloner": {
-                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Paddle.json"
+                                "SourceID": "FKi6r3NFQq+lvlfhK+mC9Q=="
                             }
                         },
                         {
@@ -66,12 +67,12 @@
             },
             {
                 "GameObject": {
-                    "id": "4",
+                    "id": "5",
                     "Components": [
                         {
                             "Pocket::Transform": {
                                 "Position": "30,0,0",
-                                "Rotation": "1,0,0,0",
+                                "Rotation": "-4.37114e-08,0,0,1",
                                 "Scale": "1,1,1",
                                 "Anchor": "0,0,0",
                                 "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
@@ -79,7 +80,7 @@
                         },
                         {
                             "Pocket::Cloner": {
-                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Paddle.json"
+                                "SourceID": "FKi6r3NFQq+lvlfhK+mC9Q=="
                             }
                         },
                         {
@@ -129,7 +130,7 @@
             },
             {
                 "GameObject": {
-                    "id": "6",
+                    "id": "8",
                     "Components": [
                         {
                             "Pocket::Transform": {
@@ -142,7 +143,7 @@
                         },
                         {
                             "Pocket::Cloner": {
-                                "ClonePath": "/Projects/PocketEngine/Editor/Pong/Ball.json"
+                                "SourceID": "BdXNKpfoT62znpbppR+i5Q=="
                             }
                         },
                         {

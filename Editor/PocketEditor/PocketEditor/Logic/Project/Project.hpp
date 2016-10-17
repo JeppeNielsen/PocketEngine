@@ -15,6 +15,7 @@
 #include "OpenWorldCollection.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include "GameWorldDatabase.hpp"
 
 using namespace Pocket;
 
@@ -24,6 +25,7 @@ private:
     ScriptWorld scriptWorld;
     std::string path;
     std::vector<std::string> defaultIncludes;
+    GameWorldDatabase worldDatabase;
     
     void RefreshSourceFiles();
     
@@ -49,4 +51,7 @@ public:
     std::string& Path();
     
     Event<> Opened;
+    
+    GameWorldDatabase& WorldDatabase();
+    void RefreshWorldDatabase();
 };

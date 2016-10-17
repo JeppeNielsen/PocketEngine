@@ -29,7 +29,7 @@ bool OpenWorldCollection::TryFindOpenWorld(const std::string &path, OpenWorld** 
     for(auto w : worlds) {
         if (w->Path == path) {
             *world = w;
-            return w;
+            return true;
         }
     }
     *world = 0;
@@ -40,7 +40,7 @@ OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::st
     OpenWorld* world;
     if (!TryFindOpenWorld(path, &world)) {
         world = new OpenWorld();
-        world->Load(path, filename, scriptWorld);
+        world->Load(path, filename, scriptWorld, worldDatabase);
         worlds.push_back(world);
         WorldLoaded(world);
     }

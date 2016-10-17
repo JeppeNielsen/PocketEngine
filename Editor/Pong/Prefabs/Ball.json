@@ -1,5 +1,6 @@
 {
     "World": {
+        "id": "BdXNKpfoT62znpbppR+i5Q==",
         "Children": [
             {
                 "GameObject": {
@@ -16,7 +17,8 @@
                         },
                         {
                             "Collidable": {
-                                "OnCollision": false,
+                                "collisions": false,
+                                "previousCollisions": false,
                                 "radius": 1
                             }
                         },
@@ -114,6 +116,11 @@
                                         "Pocket::Material": {
                                             "BlendMode": 0,
                                             "Mask": 0
+                                        }
+                                    },
+                                    {
+                                        "Turner": {
+                                            "speed": "3,2,1"
                                         }
                                     }
                                 ]

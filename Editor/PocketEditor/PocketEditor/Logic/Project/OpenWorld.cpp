@@ -118,10 +118,11 @@ bool OpenWorld::Save() {
     return succes;
 }
 
-bool OpenWorld::Load(const std::string &path, const std::string &filename, ScriptWorld& scriptWorld) {
+bool OpenWorld::Load(const std::string &path, const std::string &filename, ScriptWorld& scriptWorld, Pocket::GameWorldDatabase* database) {
     Path = path;
     Filename = filename;
     
+    world.SetDatabase(database);
     CreateDefault();
     scriptWorld.AddGameWorld(world);
     

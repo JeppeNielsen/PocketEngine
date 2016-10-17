@@ -5,6 +5,8 @@ componentToFunction[GameIDHelper::GetComponentID<Collidable>()] = [](GameObject*
 Collidable* component = object->GetComponent<Collidable>();
 TypeInfo typeInfo;
 	      typeInfo.name = "Collidable";
+	      typeInfo.AddField(component->collisions, "collisions");
+	      typeInfo.AddField(component->previousCollisions, "previousCollisions");
 	      typeInfo.AddField(component->radius, "radius");
 return typeInfo;
 };

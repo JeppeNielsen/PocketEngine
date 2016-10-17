@@ -1,12 +1,40 @@
 {
-    "GameObject": {
-        "id": "1",
-        "Components": [],
+    "World": {
+        "id": "FKi6r3NFQq+lvlfhK+mC9Q==",
         "Children": [
             {
                 "GameObject": {
                     "id": "2",
-                    "Components": [],
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::InputController": {
+                                "downButtons": []
+                            }
+                        },
+                        {
+                            "Collidable": {
+                                "collisions": false,
+                                "previousCollisions": false,
+                                "radius": 3
+                            }
+                        },
+                        {
+                            "Controller": {
+                                "downKey": "down",
+                                "speed": 30,
+                                "upKey": "up"
+                            }
+                        }
+                    ],
                     "Children": [
                         {
                             "GameObject": {
@@ -14,22 +42,114 @@
                                 "Components": [
                                     {
                                         "Pocket::Transform": {
-                                            "Position": "0,0,10",
+                                            "Position": "-1,0,0",
                                             "Rotation": "1,0,0,0",
-                                            "Scale": "1,1,1",
+                                            "Scale": "0.5,3,1",
                                             "Anchor": "0,0,0",
                                             "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                                         }
                                     },
                                     {
-                                        "Pocket::Camera": {
-                                            "FieldOfView": 70,
-                                            "Near": 0.1,
-                                            "Far": 512,
-                                            "Viewport": "0,0,1,1",
-                                            "Aspect": 0,
-                                            "Orthographic": false,
+                                        "Pocket::Mesh": {
+                                            "VertexMesh": {
+                                                "vertices": [
+                                                    "-1,1,1",
+                                                    "1,1,1",
+                                                    "1,-1,1",
+                                                    "-1,-1,1",
+                                                    "1,1,-1",
+                                                    "-1,1,-1",
+                                                    "-1,-1,-1",
+                                                    "1,-1,-1",
+                                                    "-1,1,-1",
+                                                    "1,1,-1",
+                                                    "1,1,1",
+                                                    "-1,1,1",
+                                                    "-1,-1,1",
+                                                    "1,-1,1",
+                                                    "1,-1,-1",
+                                                    "-1,-1,-1",
+                                                    "1,1,1",
+                                                    "1,1,-1",
+                                                    "1,-1,-1",
+                                                    "1,-1,1",
+                                                    "-1,1,-1",
+                                                    "-1,1,1",
+                                                    "-1,-1,1",
+                                                    "-1,-1,-1"
+                                                ],
+                                                "triangles": [
+                                                    0,
+                                                    2,
+                                                    1,
+                                                    0,
+                                                    3,
+                                                    2,
+                                                    4,
+                                                    6,
+                                                    5,
+                                                    4,
+                                                    7,
+                                                    6,
+                                                    8,
+                                                    10,
+                                                    9,
+                                                    8,
+                                                    11,
+                                                    10,
+                                                    12,
+                                                    14,
+                                                    13,
+                                                    12,
+                                                    15,
+                                                    14,
+                                                    16,
+                                                    18,
+                                                    17,
+                                                    16,
+                                                    19,
+                                                    18,
+                                                    20,
+                                                    22,
+                                                    21,
+                                                    20,
+                                                    23,
+                                                    22
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Material": {
+                                            "BlendMode": 0,
                                             "Mask": 0
+                                        }
+                                    },
+                                    {
+                                        "Pocket::InputMapper": {
+                                            "map": [
+                                                [
+                                                    "a",
+                                                    "down"
+                                                ],
+                                                [
+                                                    "l",
+                                                    "down"
+                                                ],
+                                                [
+                                                    "o",
+                                                    "up"
+                                                ],
+                                                [
+                                                    "q",
+                                                    "up"
+                                                ]
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "Pocket::InputController": {
+                                            "downButtons": []
                                         }
                                     }
                                 ]
@@ -41,9 +161,9 @@
                                 "Components": [
                                     {
                                         "Pocket::Transform": {
-                                            "Position": "-3.94606,1.7711,3.36361e-07",
-                                            "Rotation": "-0.685396,-0,-0.728171,0",
-                                            "Scale": "1,1,1",
+                                            "Position": "0,0,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "0.5,5,1",
                                             "Anchor": "0,0,0",
                                             "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                                         }
@@ -125,102 +245,31 @@
                                         }
                                     },
                                     {
-                                        "EditorObject": {}
-                                    }
-                                ]
-                            }
-                        },
-                        {
-                            "GameObject": {
-                                "id": "5",
-                                "Components": [
-                                    {
-                                        "Pocket::Transform": {
-                                            "Position": "0.748826,-3.30449,1.02512",
-                                            "Rotation": "-0.967212,0,0.25397,-0",
-                                            "Scale": "1,1,1",
-                                            "Anchor": "0,0,0",
-                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
-                                        }
-                                    },
-                                    {
-                                        "Pocket::Mesh": {
-                                            "VertexMesh": {
-                                                "vertices": [
-                                                    "-1,1,1",
-                                                    "1,1,1",
-                                                    "1,-1,1",
-                                                    "-1,-1,1",
-                                                    "1,1,-1",
-                                                    "-1,1,-1",
-                                                    "-1,-1,-1",
-                                                    "1,-1,-1",
-                                                    "-1,1,-1",
-                                                    "1,1,-1",
-                                                    "1,1,1",
-                                                    "-1,1,1",
-                                                    "-1,-1,1",
-                                                    "1,-1,1",
-                                                    "1,-1,-1",
-                                                    "-1,-1,-1",
-                                                    "1,1,1",
-                                                    "1,1,-1",
-                                                    "1,-1,-1",
-                                                    "1,-1,1",
-                                                    "-1,1,-1",
-                                                    "-1,1,1",
-                                                    "-1,-1,1",
-                                                    "-1,-1,-1"
+                                        "Pocket::InputMapper": {
+                                            "map": [
+                                                [
+                                                    "a",
+                                                    "down"
                                                 ],
-                                                "triangles": [
-                                                    0,
-                                                    2,
-                                                    1,
-                                                    0,
-                                                    3,
-                                                    2,
-                                                    4,
-                                                    6,
-                                                    5,
-                                                    4,
-                                                    7,
-                                                    6,
-                                                    8,
-                                                    10,
-                                                    9,
-                                                    8,
-                                                    11,
-                                                    10,
-                                                    12,
-                                                    14,
-                                                    13,
-                                                    12,
-                                                    15,
-                                                    14,
-                                                    16,
-                                                    18,
-                                                    17,
-                                                    16,
-                                                    19,
-                                                    18,
-                                                    20,
-                                                    22,
-                                                    21,
-                                                    20,
-                                                    23,
-                                                    22
+                                                [
+                                                    "l",
+                                                    "down"
+                                                ],
+                                                [
+                                                    "o",
+                                                    "up"
+                                                ],
+                                                [
+                                                    "q",
+                                                    "up"
                                                 ]
-                                            }
+                                            ]
                                         }
                                     },
                                     {
-                                        "Pocket::Material": {
-                                            "BlendMode": 0,
-                                            "Mask": 0
+                                        "Pocket::InputController": {
+                                            "downButtons": []
                                         }
-                                    },
-                                    {
-                                        "EditorObject": {}
                                     }
                                 ]
                             }

@@ -23,6 +23,7 @@
 #include "ProjectWindow.hpp"
 #include "WorldTab.hpp"
 #include "PlayButtons.hpp"
+#include "Guid.hpp"
 
 #include <vector>
 
@@ -67,6 +68,10 @@ public:
         }
         
         context.Project().Open("/Projects/PocketEngine/Editor/Pong/");
+        
+        std::cout<< Guid::CreateNew() << std::endl;
+        std::cout<< Guid::CreateNew() << std::endl;
+        std::cout<< Guid::CreateNew() << std::endl;
     }
     
     void Update(float dt) {

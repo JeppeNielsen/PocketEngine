@@ -15,6 +15,10 @@
 
 using namespace Pocket;
 
+namespace Pocket {
+    class GameWorldDatabase;
+}
+
 class OpenWorld {
 public:
     GameWorld& World();
@@ -28,7 +32,7 @@ public:
     SelectableCollection<EditorObject>* selectables;
     
     bool Save();
-    bool Load(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld);
+    bool Load(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld, Pocket::GameWorldDatabase* database);
     
     static void CreateDefaultSystems(GameWorld& world);
     

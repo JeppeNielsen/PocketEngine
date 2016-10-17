@@ -170,6 +170,8 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
       Collidable* component = (Collidable*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Collidable";
+	      info->AddField(component->collisions, "collisions");
+	      info->AddField(component->previousCollisions, "previousCollisions");
 	      info->AddField(component->radius, "radius");
       return info;
       break; }

@@ -12,6 +12,7 @@
 #include "FileSystemListenerSystem.hpp"
 #include "FileReader.hpp"
 #include "ClickSelectorSystem.hpp"
+#include "FileHelper.hpp"
 
 #include <sys/stat.h>
 #include <stdio.h>
@@ -106,6 +107,9 @@ void ProjectWindow::OnCreate() {
     GameObject* fileRoot = contextWorld.CreateObject();
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
+    fileSystemListener->watcher.Changed.Bind([this] {
+        Project().RefreshWorldDatabase();
+    });
 
     Gui& gui = context->Gui();
 

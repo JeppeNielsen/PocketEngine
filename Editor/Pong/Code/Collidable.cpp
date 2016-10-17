@@ -33,10 +33,7 @@ struct CollisionSystem : public GameSystem<Transform, Collidable> {
 
                 Vector3 vector = ta->Position() - tb->Position();
 
-                std::cout << vector << std::endl;
-
                 if (vector.Length()<totalRadii) {
-                    
                     ca->collisions.push_back(b);
                     cb->collisions.push_back(a);
                 }

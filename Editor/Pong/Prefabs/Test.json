@@ -1,5 +1,6 @@
 {
     "World": {
+        "id": "E8wZAjWwR9iMHz5KilFRKw==",
         "Children": [
             {
                 "GameObject": {
@@ -7,34 +8,7 @@
                     "Components": [
                         {
                             "Pocket::Transform": {
-                                "Position": "0,0,10",
-                                "Rotation": "1,0,0,0",
-                                "Scale": "1,1,1",
-                                "Anchor": "0,0,0",
-                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
-                            }
-                        },
-                        {
-                            "Pocket::Camera": {
-                                "FieldOfView": 70,
-                                "Near": 0.1,
-                                "Far": 512,
-                                "Viewport": "0,0,1,1",
-                                "Aspect": 0,
-                                "Orthographic": false,
-                                "Mask": 0
-                            }
-                        }
-                    ]
-                }
-            },
-            {
-                "GameObject": {
-                    "id": "3",
-                    "Components": [
-                        {
-                            "Pocket::Transform": {
-                                "Position": "0,2.49892,0",
+                                "Position": "0,0,0",
                                 "Rotation": "1,0,0,0",
                                 "Scale": "1,1,1",
                                 "Anchor": "0,0,0",
@@ -116,14 +90,8 @@
                                 "BlendMode": 0,
                                 "Mask": 0
                             }
-                        },
-                        {
-                            "Pocket::Cloner": {
-                                "ClonePath": "/Projects/PocketEngine/Editor/TestProject/testWorld.json"
-                            }
                         }
-                    ],
-                    "Children": []
+                    ]
                 }
             }
         ]

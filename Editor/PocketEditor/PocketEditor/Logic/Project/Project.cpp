@@ -44,6 +44,8 @@ Project::Project() {
         defaultIncludes
     );
     */
+    
+    Worlds.worldDatabase = &worldDatabase;
 }
 
 ScriptWorld& Project::ScriptWorld() { return scriptWorld; }
@@ -57,6 +59,8 @@ void Project::Open(const std::string& path) {
     scriptWorld.SetWorldType(world);
     //RefreshSourceFiles();
     //scriptWorld.LoadLib();
+    
+    RefreshWorldDatabase();
     
     Opened();
 }
@@ -105,6 +109,7 @@ void Project::Build() {
 
 void Project::CreateNewWorld(const std::string &worldPath) {
     GameWorld world;
+    world.AssignUniqueGuid();
     
     GameObject* camera = world.CreateObject();
     camera->AddComponent<Transform>();
@@ -139,3 +144,18 @@ void Project::SaveWorld() {
 }
 
 std::string& Project::Path() { return path; }
+GameWorldDatabase& Project::WorldDatabase() { return worldDatabase; }
+
+void Project::RefreshWorldDatabase() {
+    std::vector<std::string> files;
+    FileHelper::FindFiles(files, path, ".json");
+    worldDatabase.Clear();
+    for(auto& f : files) {
+        worldDatabase.AddPath(f);
+    }
+    
+    std::cout << "Guid paths:"<<std::endl;
+    for(auto d : worldDatabase.GetPaths()) {
+        std::cout << "GUID: " << d.first << " : " << d.second<<std::endl;
+    }
+}
