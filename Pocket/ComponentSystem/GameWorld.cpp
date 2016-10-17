@@ -7,10 +7,8 @@
 //
 
 #include "GameWorld.hpp"
-#include "Engine.hpp"
 #include "StringHelper.hpp"
 #include <iostream>
-#include "GameWorldDatabase.hpp"
 
 using namespace Pocket;
 
@@ -20,7 +18,6 @@ GameWorld::GameWorld() {
     root.world = this;
     objectCount = 0;
     numComponentTypes = 0;
-    database = 0;
 }
 
 GameWorld::~GameWorld() {
@@ -101,9 +98,6 @@ GameObject* GameWorld::CreateObject(std::istream &jsonStream, GameObject* parent
 }
 
 void GameWorld::Update(float dt) {
-    if (Engine::HasContext()) {
-        Engine::Context().InputDevice().UpdateInputManager(&input);
-    }
     DoActions(delayedActions);
     for(auto system : systems) {
         system->Update(dt);
@@ -424,16 +418,4 @@ std::string& GameWorld::Guid() { return guid; }
 
 void GameWorld::AssignUniqueGuid() {
     guid = StringHelper::CreateGuid();
-}
-
-void GameWorld::SetDatabase(Pocket::GameWorldDatabase *database) {
-    this->database = database;
-}
-
-GameObject* GameWorld::FindObject(const std::string &guid, const std::string& objectId) {
-    if (!database) return 0;
-    if (this->guid == guid) {
-        return root.Children()[0];
-    }
-    return database->FindGameObject(guid, objectId);
 }
