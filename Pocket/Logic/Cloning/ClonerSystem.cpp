@@ -14,17 +14,17 @@
 using namespace Pocket;
 
 void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Cloner>()->ClonePath.Changed.Bind(this, &ClonerSystem::ClonePathChanged, object);
+    object->GetComponent<Cloner>()->SourceID.Changed.Bind(this, &ClonerSystem::CloneSourceChanged, object);
     if (object->Children().empty()) {
-        ClonePathChanged(object);
+        CloneSourceChanged(object);
     }
 }
 
 void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<Cloner>()->ClonePath.Changed.Unbind(this, &ClonerSystem::ClonePathChanged, object);
+    object->GetComponent<Cloner>()->SourceID.Changed.Unbind(this, &ClonerSystem::CloneSourceChanged, object);
 }
 
-void ClonerSystem::ClonePathChanged(Pocket::GameObject *object) {
+void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     Cloner* cloner = object->GetComponent<Cloner>();
     
     for(int i : cloner->storedComponents) {
@@ -36,7 +36,13 @@ void ClonerSystem::ClonePathChanged(Pocket::GameObject *object) {
     }
     
     cloner->storedComponents.clear();
-    std::string path = object->GetComponent<Cloner>()->ClonePath;
+    
+    GameObject* source = world->FindObject(cloner->SourceID);
+    if (!source) return;
+
+    source->Clone(object, world);
+    
+    /*std::string path = object->GetComponent<Cloner>()->ClonePath;
     
     std::vector<int> previousComponents = object->GetComponentIndicies();
     
@@ -53,4 +59,5 @@ void ClonerSystem::ClonePathChanged(Pocket::GameObject *object) {
             cloner->storedComponents.push_back(i);
         }
     }
+    */
 }

@@ -15,10 +15,10 @@
 namespace Pocket {
     class Cloner {
     public:
-        Property<std::string> ClonePath;
+        Property<std::string> SourceID;
         std::vector<int> storedComponents;
         TYPE_FIELDS_BEGIN
-        TYPE_FIELD(ClonePath)
+        TYPE_FIELD(SourceID)
         TYPE_FIELDS_END
     };
 }

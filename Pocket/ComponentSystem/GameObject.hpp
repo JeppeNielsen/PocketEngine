@@ -122,7 +122,7 @@ namespace Pocket {
         void SetID(std::string id);
         std::string GetID();
         
-        GameObject* Clone(GameObject* parent = 0, std::function<bool(GameObject*)> predicate = 0);
+        GameObject* Clone(GameObject* parent = 0, GameWorld* world = 0, std::function<bool(GameObject*)> predicate = 0);
         
     private:
     
@@ -150,7 +150,7 @@ namespace Pocket {
         void SetEnabled(bool enabled);
         void TrySetComponentEnabled(ComponentID id, bool enable);
         static bool GetAddReferenceComponent(GameObject** object, int& componentID, std::string& referenceID);
-        GameObject* CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate);
+        GameObject* CloneInternal(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate);
         
         struct Data {
             bool removed;

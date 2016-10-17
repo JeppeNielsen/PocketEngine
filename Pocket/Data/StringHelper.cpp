@@ -16,6 +16,10 @@
 #include <bits/codecvt.h>
 #endif
 #include <iostream>
+#ifdef OSX
+#include <CoreFoundation/CFUUID.h>
+#endif
+#include <array>
 
 using namespace Pocket;
 
@@ -496,5 +500,36 @@ std::string StringHelper::base64_decode(const std::string& encoded_string) {
     return ret;
 }
 
+std::string StringHelper::CreateGuid() {
+    std::string guid;
+#ifdef OSX
+    auto newId = CFUUIDCreate(NULL);
+    auto bytes = CFUUIDGetUUIDBytes(newId);
+    CFRelease(newId);
+    
+    std::array<unsigned char, 16> byteArray;
+    
+    byteArray[0]=bytes.byte0;
+    byteArray[1]=bytes.byte1;
+    byteArray[2]=bytes.byte2;
+    byteArray[3]=bytes.byte3;
+    byteArray[4]=bytes.byte4;
+    byteArray[5]=bytes.byte5;
+    byteArray[6]=bytes.byte6;
+    byteArray[7]=bytes.byte7;
+    byteArray[8]=bytes.byte8;
+    byteArray[9]=bytes.byte9;
+    byteArray[10]=bytes.byte10;
+    byteArray[11]=bytes.byte11;
+    byteArray[12]=bytes.byte12;
+    byteArray[13]=bytes.byte13;
+    byteArray[14]=bytes.byte14;
+    byteArray[15]=bytes.byte15;
+    
+    guid = base64_encode(&byteArray[0], 16);
+    
+#endif
+    return guid;
+}
 
 

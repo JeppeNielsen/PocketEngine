@@ -16,6 +16,6 @@ namespace Pocket {
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:
-        void ClonePathChanged(GameObject* object);
+        void CloneSourceChanged(GameObject* object);
     };
 }

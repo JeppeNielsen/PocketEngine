@@ -14,6 +14,7 @@
 
 namespace Pocket {
     class ScriptWorld;
+    class GameWorldDatabase;
     class GameWorld {
     public:
         GameWorld();
@@ -74,6 +75,14 @@ namespace Pocket {
         static std::function<void(int, GameObject::ComponentInfo&)> OnGetTypeInfo;
         
         InputManager& Input();
+        std::string& Guid();
+        
+        void AssignUniqueGuid();
+        
+        void SetDatabase(GameWorldDatabase* database);
+        
+        GameObject* FindObject(const std::string& guid, const std::string& objectId = "");
+        
     private:
     
         GameObject root;
@@ -130,6 +139,8 @@ namespace Pocket {
         std::vector<ObjectID> objectIDs;
         
         InputManager input;
+        std::string guid;
+        GameWorldDatabase* database;
         
         IGameSystem* TryAddSystem(SystemID id, std::function<IGameSystem*(std::vector<int>& components)> constructor);
         void TryRemoveSystem(SystemID id);

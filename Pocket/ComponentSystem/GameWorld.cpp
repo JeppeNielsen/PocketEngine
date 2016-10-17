@@ -8,7 +8,9 @@
 
 #include "GameWorld.hpp"
 #include "Engine.hpp"
+#include "StringHelper.hpp"
 #include <iostream>
+#include "GameWorldDatabase.hpp"
 
 using namespace Pocket;
 
@@ -18,6 +20,7 @@ GameWorld::GameWorld() {
     root.world = this;
     objectCount = 0;
     numComponentTypes = 0;
+    database = 0;
 }
 
 GameWorld::~GameWorld() {
@@ -355,7 +358,11 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::String) {
-                    loadedObjects[std::string(v.as_string())] = object;
+                    if (!isRoot) {
+                        loadedObjects[std::string(v.as_string())] = object;
+                    } else {
+                        this->guid = v.as_string();
+                    }
                 } else if (name == "Components" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {
@@ -373,7 +380,7 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
                     });
                 }
                 
-                if (onCreated) {
+                if (!isRoot && onCreated) {
                     onCreated(object);
                 }
             });
@@ -413,3 +420,20 @@ bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& inde
 std::function<void(int, GameObject::ComponentInfo&)> GameWorld::OnGetTypeInfo = 0;
 
 InputManager& GameWorld::Input() { return input; }
+std::string& GameWorld::Guid() { return guid; }
+
+void GameWorld::AssignUniqueGuid() {
+    guid = StringHelper::CreateGuid();
+}
+
+void GameWorld::SetDatabase(Pocket::GameWorldDatabase *database) {
+    this->database = database;
+}
+
+GameObject* GameWorld::FindObject(const std::string &guid, const std::string& objectId) {
+    if (!database) return 0;
+    if (this->guid == guid) {
+        return root.Children()[0];
+    }
+    return database->FindGameObject(guid, objectId);
+}

@@ -284,6 +284,8 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
             }
         }
         components.close();
+    } else {
+        gameObject.write("id", world->Guid().c_str());
     }
     
     if (!data->children.empty()) {
@@ -373,12 +375,12 @@ std::string GameObject::GetID() {
     return id ? *id : "";
 }
 
-GameObject* GameObject::Clone(GameObject* parent, std::function<bool(GameObject*)> predicate) {
+GameObject* GameObject::Clone(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate) {
     clonedSourceObjects.clear();
     RecurseTree(this, clonedSourceObjects);
     clonedReferenceComponents.clear();
     sourceToClonedObjects.clear();
-    GameObject* clone = CloneInternal(parent, predicate);
+    GameObject* clone = CloneInternal(parent, world ? world : this->world, predicate);
     for(auto& c : clonedReferenceComponents) {
         c.object->AddComponent(c.componentID, sourceToClonedObjects[c.referencedObject]);
     }
@@ -451,7 +453,7 @@ bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &comp
     return true;
 }
 
-GameObject* GameObject::CloneInternal(GameObject* parent, std::function<bool(GameObject*)> predicate) {
+GameObject* GameObject::CloneInternal(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate) {
     if (predicate && !predicate(this)) {
         return 0;
     }
@@ -475,7 +477,7 @@ GameObject* GameObject::CloneInternal(GameObject* parent, std::function<bool(Gam
     }
     sourceToClonedObjects[this] = clone;
     for(auto child : data->children) {
-        child->CloneInternal(clone, predicate);
+        child->CloneInternal(clone, world, predicate);
     }
     return clone;
 }
