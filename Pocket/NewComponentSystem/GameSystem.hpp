@@ -9,25 +9,9 @@
 #pragma once
 #include <vector>
 #include <map>
-#include "GameIdHelper.hpp"
-#include "GameObject.hpp"
+#include "GameWorld.hpp"
 
 namespace Pocket {
-    
-    class GameWorld;
-    
-    struct IGameSystem {
-        virtual ~IGameSystem() = default;
-        virtual void Initialize() = 0;
-        virtual void Destroy() = 0;
-        virtual void ObjectAdded(GameObject* object) = 0;
-        virtual void ObjectRemoved(GameObject* object) = 0;
-        virtual void Update(float dt) = 0;
-        virtual void Render() = 0;
-        virtual int AddObject(GameObject* object) = 0;
-        virtual void RemoveObject(GameObject* object) = 0;
-        virtual int Order() = 0;
-    };
     
     class GameSystemBase : public IGameSystem {
     protected:
@@ -35,7 +19,6 @@ namespace Pocket {
         friend class GameWorld;
         GameSystemBase();
         virtual ~GameSystemBase();
-        void AddComponentType(ComponentId componentId, std::function<(GameWorld::ComponentInfo&)>&& constructor);
         
         virtual void Initialize();
         virtual void Destroy();
@@ -56,8 +39,7 @@ namespace Pocket {
         MetaData metaData;
     
         ObjectCollection objects;
-        Bitset componentMask;
-        friend class GameObject;
+        friend class GameWorld;
     public:
         const ObjectCollection& Objects() const;
     };
@@ -66,33 +48,20 @@ namespace Pocket {
     class GameSystem : public GameSystemBase {
     private:
         template<typename Last>
-        void ExtractComponents(std::vector<int>& components) {
-            ComponentID id = GameIDHelper::GetComponentID<Last>();
-            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
-                componentInfo.name = GameIDHelper::GetClassName<Last>();
-                componentInfo.getTypeInfo = 0;
-                Last* ptr = 0;
-                Meta::static_if<Meta::HasGetTypeFunction::apply<Last>::value, Last*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
-                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
-                        auto component = object->GetComponent<SerializedComponentType>();
-                        return component->GetType();
-                    };
-                });
-                
-                return new Container<Last>();
-            });
+        static void ExtractComponents(GameWorld& world, std::vector<ComponentId>& components) {
+            world.AddComponentType<Last>();
+            ComponentId id = GameIdHelper::GetComponentID<Last>();
             components.push_back(id);
         }
         
         template<typename First, typename Second, typename ...Rest>
-        void ExtractComponents(std::vector<int>& components) {
-            ExtractComponents<First>(components);
-            ExtractComponents<Second, Rest...>(components);
+        static void ExtractComponents(GameWorld& world, std::vector<int>& components) {
+            ExtractComponents<First>(world, components);
+            ExtractComponents<Second, Rest...>(world, components);
         }
     
-        void ExtractAllComponents(std::vector<int>& components) {
-            ExtractComponents<T...>(components);
+        static void ExtractAllComponents(GameWorld& world, std::vector<ComponentId>& components) {
+            ExtractComponents<T...>(world, components);
         }
         
         friend class GameWorld;
@@ -100,7 +69,7 @@ namespace Pocket {
     
     class GameConcept : public GameSystemBase {
     private:
-        void ExtractAllComponents(std::vector<int>& components) {
+        static void ExtractAllComponents(std::vector<int>& components) {
         }
         friend class GameWorld;
     };
