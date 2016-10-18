@@ -77,16 +77,6 @@
 		72AE75A51DB5387C00CEB998 /* GameWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameWorld.cpp; sourceTree = "<group>"; };
 		72AE75A61DB5387C00CEB998 /* GameWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameWorld.hpp; sourceTree = "<group>"; };
 		72AE75A91DB552C800CEB998 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
-		72AE75BB1DB5532C00CEB998 /* Container.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
-		72AE75BC1DB5532C00CEB998 /* GameIDHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameIDHelper.cpp; sourceTree = "<group>"; };
-		72AE75BD1DB5532C00CEB998 /* GameIDHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameIDHelper.hpp; sourceTree = "<group>"; };
-		72AE75BE1DB5532C00CEB998 /* GameObject.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
-		72AE75BF1DB5532C00CEB998 /* GameObject.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
-		72AE75C01DB5532C00CEB998 /* GameSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameSystem.cpp; sourceTree = "<group>"; };
-		72AE75C11DB5532C00CEB998 /* GameSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameSystem.hpp; sourceTree = "<group>"; };
-		72AE75C21DB5532C00CEB998 /* GameWorld.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameWorld.cpp; sourceTree = "<group>"; };
-		72AE75C31DB5532C00CEB998 /* GameWorld.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameWorld.hpp; sourceTree = "<group>"; };
-		72AE75C51DB5532C00CEB998 /* MetaLibrary.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
 		72AE75C91DB5671B00CEB998 /* GameIdHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameIdHelper.cpp; sourceTree = "<group>"; };
 		72AE75CA1DB5671B00CEB998 /* GameIdHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameIdHelper.hpp; sourceTree = "<group>"; };
 		72AE75CC1DB56AF900CEB998 /* GameSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameSystem.cpp; sourceTree = "<group>"; };
@@ -94,6 +84,7 @@
 		72AE75D01DB56C0100CEB998 /* MetaLibrary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
 		72AE75D11DB56E5200CEB998 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
 		72AE75D21DB56E5200CEB998 /* GameObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
+		72AE75D51DB57C7400CEB998 /* IGameSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IGameSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,7 +146,6 @@
 		72772F6B1D076432005AC1D8 /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
-				72AE75BA1DB5532C00CEB998 /* ComponentSystem */,
 				72AE75A41DB5385A00CEB998 /* NewComponentSystem */,
 				72AE758C1DB534A900CEB998 /* OSX */,
 				72AE75541DB5340900CEB998 /* Math */,
@@ -229,43 +219,19 @@
 		72AE75A41DB5385A00CEB998 /* NewComponentSystem */ = {
 			isa = PBXGroup;
 			children = (
-				72AE75CF1DB56C0100CEB998 /* Meta */,
-				72AE75CC1DB56AF900CEB998 /* GameSystem.cpp */,
-				72AE75CD1DB56AF900CEB998 /* GameSystem.hpp */,
+				72AE75A91DB552C800CEB998 /* Container.hpp */,
 				72AE75C91DB5671B00CEB998 /* GameIdHelper.cpp */,
 				72AE75CA1DB5671B00CEB998 /* GameIdHelper.hpp */,
-				72AE75A91DB552C800CEB998 /* Container.hpp */,
-				72AE75A51DB5387C00CEB998 /* GameWorld.cpp */,
-				72AE75A61DB5387C00CEB998 /* GameWorld.hpp */,
 				72AE75D11DB56E5200CEB998 /* GameObject.cpp */,
 				72AE75D21DB56E5200CEB998 /* GameObject.hpp */,
+				72AE75CC1DB56AF900CEB998 /* GameSystem.cpp */,
+				72AE75CD1DB56AF900CEB998 /* GameSystem.hpp */,
+				72AE75A51DB5387C00CEB998 /* GameWorld.cpp */,
+				72AE75A61DB5387C00CEB998 /* GameWorld.hpp */,
+				72AE75D51DB57C7400CEB998 /* IGameSystem.hpp */,
+				72AE75CF1DB56C0100CEB998 /* Meta */,
 			);
 			path = NewComponentSystem;
-			sourceTree = "<group>";
-		};
-		72AE75BA1DB5532C00CEB998 /* ComponentSystem */ = {
-			isa = PBXGroup;
-			children = (
-				72AE75BB1DB5532C00CEB998 /* Container.hpp */,
-				72AE75BC1DB5532C00CEB998 /* GameIDHelper.cpp */,
-				72AE75BD1DB5532C00CEB998 /* GameIDHelper.hpp */,
-				72AE75BE1DB5532C00CEB998 /* GameObject.cpp */,
-				72AE75BF1DB5532C00CEB998 /* GameObject.hpp */,
-				72AE75C01DB5532C00CEB998 /* GameSystem.cpp */,
-				72AE75C11DB5532C00CEB998 /* GameSystem.hpp */,
-				72AE75C21DB5532C00CEB998 /* GameWorld.cpp */,
-				72AE75C31DB5532C00CEB998 /* GameWorld.hpp */,
-				72AE75C41DB5532C00CEB998 /* Meta */,
-			);
-			path = ComponentSystem;
-			sourceTree = "<group>";
-		};
-		72AE75C41DB5532C00CEB998 /* Meta */ = {
-			isa = PBXGroup;
-			children = (
-				72AE75C51DB5532C00CEB998 /* MetaLibrary.hpp */,
-			);
-			path = Meta;
 			sourceTree = "<group>";
 		};
 		72AE75CF1DB56C0100CEB998 /* Meta */ = {
