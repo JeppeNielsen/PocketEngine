@@ -58,23 +58,32 @@ void GameWorld::DoActions(Actions &actions) {
     actions.clear();
 }
 
-const SceneCollection GameWorld::Scenes() { return scenes.GetCollection(); }
+const ObjectCollection GameWorld::Roots() { return roots; }
 
-GameScene* GameWorld::CreateScene() {
-    int index = scenes.CreateNoInit();
-    GameScene* scene = &scenes.entries[index];
-    scene->removed = false;
+GameObject* GameWorld::CreateRoot() {
+
+    int sceneIndex = scenes.Create();
+    GameScene* scene = &scenes.entries[sceneIndex];
+    scene->index=sceneIndex;
     scene->world = this;
-    scene->index = index;
-    scene->Active = true;
-    return scene;
+    activeScenes.push_back(scene);
+
+    int index = objects.CreateNoInit();
+    GameObject* root = &objects.entries[index];
+    root->scene = scene;
+    root->index = index;
+    root->Reset();
+    scene->root = root;
+    roots.push_back(root);
+    
+    return root;
 }
 
 void GameWorld::Update(float dt) {
-    DoActions(delayedActions);
     for(auto scene : activeScenes) {
         scene->Update(dt);
     }
+    DoActions(delayedActions);
 }
 
 void GameWorld::Render() {
@@ -84,8 +93,19 @@ void GameWorld::Render() {
 }
 
 void GameWorld::Clear() {
-   scenes.Iterate([] (GameScene* scene) {
-        scene->Remove();
-   });
+   for(auto root : roots) {
+        root->Remove();
+        root->scene->DoActions(root->scene->delayedActions);
+   }
    DoActions(delayedActions);
+}
+
+void GameWorld::RemoveRoot(Pocket::GameObject *root) {
+    delayedActions.emplace_back([this, root] {
+        roots.erase(std::find(roots.begin(), roots.end(), root));
+        GameScene* scene = root->scene;
+        scene->DestroySystems();
+        scenes.Delete(scene->index);
+        activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
+    });
 }

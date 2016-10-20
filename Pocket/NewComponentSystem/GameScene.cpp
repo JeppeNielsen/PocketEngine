@@ -14,9 +14,6 @@ using namespace Pocket;
 GameScene::GameScene() { }
 
 GameScene::~GameScene() {
-
-    
-
     for (int i=0; i<systemsIndexed.size(); ++i) {
         if (!systemsIndexed[i]) continue;
         if (world->systems[i].deleteFunction) {
@@ -35,20 +32,17 @@ GameScene::GameScene(const GameScene& other) {
     for (int i=0; i<other.world->systems.size(); ++i) {
         if (other.world->systems[i].createFunction) {
             systemsIndexed[i] = other.world->systems[i].createFunction();
+            systemsIndexed[i]->Initialize();
         }
     }
-    
-    Active.Changed.Bind([this] {
-        if (Active()) {
-            world->delayedActions.emplace_back([this]() {
-               world->activeScenes.push_back(this);
-            });
-        } else {
-            world->delayedActions.emplace_back([this]() {
-               std::find(world->activeScenes.begin(), world->activeScenes.end(), this);
-            });
+}
+
+void GameScene::DestroySystems() {
+    for (int i=0; i<world->systems.size(); ++i) {
+        if (systemsIndexed[i]) {
+            systemsIndexed[i]->Destroy();
         }
-    });
+    }
 }
 
 void GameScene::DoActions(Actions &actions) {
@@ -69,40 +63,4 @@ void GameScene::Render() {
     for(auto system : activeSystems) {
         system->Render();
     }
-}
-
-const GameObject* GameScene::Root() { return &root; }
-
-GameObject* GameScene::CreateObject() {
-    auto& worldObjects = world->objects;
-    int index = worldObjects.CreateNoInit();
-    GameObject* object = &worldObjects.entries[index];
-    object->scene = this;
-    object->index = index;
-    object->Reset();
-    object->Parent = &root;
-    return object;
-}
-
-void GameScene::Remove() {
-    if (removed) return;
-    removed = true;
-    Clear();
-    world->delayedActions.emplace_back([this] () {
-        world->scenes.Delete(index);
-    });
-}
-
-void GameScene::Clear() {
-    world->delayedActions.emplace_back([this] () {
-        world->objects.Iterate([this](GameObject* object) {
-            if (object->scene != this) return;
-            object->Remove();
-        });
-        DoActions(delayedActions);
-    });
-}
-
-Handle<GameScene> GameScene::GetHandle() {
-    return world->scenes.GetHandle(index);
 }

@@ -24,12 +24,10 @@ namespace Pocket {
         Actions delayedActions;
         
         GameWorld* world;
+        GameObject* root;
         int index;
         std::vector<IGameSystem*> systemsIndexed;
         std::vector<IGameSystem*> activeSystems;
-        
-        GameObject root;
-        bool removed;
         
         GameScene();
         ~GameScene();
@@ -37,15 +35,8 @@ namespace Pocket {
         void DoActions(Actions &actions);
         void Update(float dt);
         void Render();
+        void DestroySystems();
         
         friend class Container<GameScene>;
-    public:
-        Property<bool> Active;
-        const GameObject* Root();
-        GameObject* CreateObject();
-        void Remove();
-        void Clear();
-        
-        Handle<GameScene> GetHandle();
     };
 }

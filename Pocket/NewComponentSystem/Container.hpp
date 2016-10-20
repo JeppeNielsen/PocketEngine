@@ -189,7 +189,11 @@ namespace Pocket {
             if (!container) return 0;
             if (index>=container->versions.size()) return 0;
             if (version != container->versions[index]) return 0;
-            return container->entries[index];
+            return &container->entries[index];
+        }
+        
+        explicit operator bool() {
+            return operator->();
         }
         
         friend class Container<T>;

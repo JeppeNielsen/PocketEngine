@@ -19,8 +19,6 @@
 
 namespace Pocket {
 
-    using SceneCollection = HandleCollection<GameScene>;
-
     class GameWorld {
     private:
         
@@ -50,6 +48,7 @@ namespace Pocket {
         
         Container<GameScene> scenes;
         std::vector<GameScene*> activeScenes;
+        std::vector<GameObject*> roots;
         
         using Actions = std::deque<std::function<void()>>;
         Actions delayedActions;
@@ -61,6 +60,7 @@ namespace Pocket {
         void AddSystemType(SystemId systemId, const SystemTypeFunction& function);
 
         void DoActions(Actions &actions);
+        void RemoveRoot(GameObject* root);
                 
     public:
     
@@ -93,9 +93,9 @@ namespace Pocket {
             });
         }
         
-        GameScene* CreateScene();
+        GameObject* CreateRoot();
         
-        const SceneCollection Scenes();
+        const ObjectCollection Roots();
         
         void Update(float dt);
         void Render();

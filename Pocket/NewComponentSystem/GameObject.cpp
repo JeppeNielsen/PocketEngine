@@ -23,18 +23,16 @@ GameObject::GameObject(const GameObject& other) {
     componentIndicies.resize(other.activeComponents.Size());
     
     Parent.Changed.Bind([this]() {
-        assert(Parent!=this);
+        assert(scene->root!=this); // roots are not allowed to have a parent
+        assert(Parent!=this); // parent cannot be self
+        if (!forceSetNextParent) {
+            assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
+            assert(Parent());// objects must have a parent
+        }
         GameObject* prevParent = Parent.PreviousValue();
         GameObject* currentParent = Parent;
         
         if (removed && !forceSetNextParent) return;
-        
-        if (!prevParent) {
-            prevParent = &scene->root;
-        }
-        if (!currentParent && !forceSetNextParent) {
-            currentParent = &scene->root;
-        }
         
         if (prevParent) {
             auto& children = prevParent->children;
@@ -177,7 +175,7 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
                 system->ObjectRemoved(this);
                 system->RemoveObject(this);
                 if (system->ObjectCount() == 0) {
-                    std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system);
+                    scene->activeSystems.erase(std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system));
                 }
             }
         }
@@ -190,11 +188,10 @@ void GameObject::Remove() {
     int localIndex = index;
     scene->delayedActions.emplace_back([this, localIndex]() {
         forceSetNextParent = true;
-        if (Parent()) {
-            Parent = 0;
+        if (scene->root == this) {
+            scene->world->RemoveRoot(this);
         } else {
-            auto& children = scene->root.children;
-            children.erase(std::find(children.begin(), children.end(), this));
+            Parent = 0;
         }
         forceSetNextParent = false;
         SetEnabled(false);
@@ -213,3 +210,19 @@ bool GameObject::IsRemoved() {
 Handle<GameObject> GameObject::GetHandle() {
     return scene->world->objects.GetHandle(index);
 }
+
+GameObject* GameObject::CreateChild() {
+    auto& worldObjects = scene->world->objects;
+    int index = worldObjects.CreateNoInit();
+    GameObject* object = &worldObjects.entries[index];
+    object->scene = scene;
+    object->index = index;
+    object->Reset();
+    object->Parent = this;
+    return object;
+}
+
+const ObjectCollection& GameObject::Children() {
+    return children;
+}
+

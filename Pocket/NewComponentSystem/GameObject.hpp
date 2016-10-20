@@ -82,6 +82,10 @@ namespace Pocket {
         void Remove();
         bool IsRemoved();
         
+        GameObject* CreateChild();
+        
+        const ObjectCollection& Children();
+        
         Handle<GameObject> GetHandle();
     };
     
