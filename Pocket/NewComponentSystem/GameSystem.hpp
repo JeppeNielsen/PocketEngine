@@ -20,16 +20,17 @@ namespace Pocket {
         GameSystemBase();
         virtual ~GameSystemBase();
         
-        virtual void Initialize();
-        virtual void Destroy();
-        virtual void ObjectAdded(GameObject* object);
-        virtual void ObjectRemoved(GameObject* object);
-        virtual void Update(float dt);
-        virtual void Render();
-        virtual int Order();
+        virtual void Initialize() override;
+        virtual void Destroy() override;
+        virtual void ObjectAdded(GameObject* object) override;
+        virtual void ObjectRemoved(GameObject* object) override;
+        virtual void Update(float dt) override;
+        virtual void Render() override;
+        virtual int Order() override;
+        int ObjectCount() override;
         
-        int AddObject(GameObject* object);
-        void RemoveObject(GameObject* object);
+        int AddObject(GameObject* object) override;
+        void RemoveObject(GameObject* object) override;
         
         void SetMetaData(GameObject* object, void* data);
         void* GetMetaData(GameObject* object);

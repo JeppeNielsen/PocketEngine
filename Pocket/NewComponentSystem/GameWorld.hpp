@@ -15,10 +15,11 @@
 #include "GameIdHelper.hpp"
 #include "GameObject.hpp"
 #include "IGameSystem.hpp"
+#include "GameScene.hpp"
 
 namespace Pocket {
 
-    using ObjectCollection = std::vector<GameObject*>;
+    using SceneCollection = HandleCollection<GameScene>;
 
     class GameWorld {
     private:
@@ -38,19 +39,34 @@ namespace Pocket {
             SystemInfo() : createFunction(0), deleteFunction(0) {}
             Bitset bitset;
             std::function<IGameSystem*()> createFunction;
-            std::function<void()> deleteFunction;
+            std::function<void(IGameSystem*)> deleteFunction;
         };
         
         using Systems = std::vector<SystemInfo>;
         Systems systems;
+        
+        Container<GameObject> objects;
+        int componentTypesCount;
+        
+        Container<GameScene> scenes;
+        std::vector<GameScene*> activeScenes;
+        
+        using Actions = std::deque<std::function<void()>>;
+        Actions delayedActions;
         
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
     
         void AddComponentType(ComponentId componentId, const ComponentTypeFunction& function);
         void AddSystemType(SystemId systemId, const SystemTypeFunction& function);
-        
+
+        void DoActions(Actions &actions);
+                
     public:
+    
+        GameWorld();
+        ~GameWorld();
+    
         template<typename T>
         void AddComponentType() {
             AddComponentType(GameIdHelper::GetComponentID<T>(), [] (ComponentInfo& componentInfo) {
@@ -76,5 +92,17 @@ namespace Pocket {
                 };
             });
         }
+        
+        GameScene* CreateScene();
+        
+        const SceneCollection Scenes();
+        
+        void Update(float dt);
+        void Render();
+        
+        void Clear();
+        
+        friend class GameScene;
+        friend class GameObject;
     };
 }
