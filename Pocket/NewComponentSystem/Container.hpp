@@ -136,9 +136,9 @@ namespace Pocket {
             }
         }
         
-        Handle<T> GetHandle(int index);
+        Handle<T> GetHandle(int index) const;
         
-        HandleCollection<T> GetCollection() {
+        HandleCollection<T> GetCollection() const {
             HandleCollection<T> collection;
             for(int i=0; i<references.size();++i) {
                 if (references[i]>0) {
@@ -168,10 +168,10 @@ namespace Pocket {
     template<typename T>
     class Handle {
     private:
-        Container<T>* container;
+        const Container<T>* container;
         int index;
         int version;
-        Handle(Container<T>* container, int index, int version) :
+        Handle(const Container<T>* container, int index, int version) :
             container(container), index(index), version(version) {
         }
     public:
@@ -185,14 +185,14 @@ namespace Pocket {
         
         Handle(T* ptr) : Handle(ptr->GetHandle()) { }
         
-        T* operator -> () {
+        T* operator -> () const {
             if (!container) return 0;
             if (index>=container->versions.size()) return 0;
             if (version != container->versions[index]) return 0;
-            return &container->entries[index];
+            return (T*)&container->entries[index];
         }
         
-        explicit operator bool() {
+        explicit operator bool() const {
             return operator->();
         }
         
@@ -200,7 +200,7 @@ namespace Pocket {
     };
     
     template<typename T>
-    Handle<T> Container<T>::GetHandle(int index) {
+    Handle<T> Container<T>::GetHandle(int index) const {
         return Handle<T>(this, index, versions[index]);
     }
     
