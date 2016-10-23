@@ -26,6 +26,7 @@
 		72AE75CB1DB5671B00CEB998 /* GameIdHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE75C91DB5671B00CEB998 /* GameIdHelper.cpp */; };
 		72AE75CE1DB56AF900CEB998 /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE75CC1DB56AF900CEB998 /* GameSystem.cpp */; };
 		72AE75D31DB56E5200CEB998 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE75D11DB56E5200CEB998 /* GameObject.cpp */; };
+		72B491CD1DB6958C0063518A /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491CB1DB6958C0063518A /* GameScene.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -85,6 +86,9 @@
 		72AE75D11DB56E5200CEB998 /* GameObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObject.cpp; sourceTree = "<group>"; };
 		72AE75D21DB56E5200CEB998 /* GameObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObject.hpp; sourceTree = "<group>"; };
 		72AE75D51DB57C7400CEB998 /* IGameSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IGameSystem.hpp; sourceTree = "<group>"; };
+		72B491CB1DB6958C0063518A /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
+		72B491CC1DB6958C0063518A /* GameScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameScene.hpp; sourceTree = "<group>"; };
+		72B491CE1DB6A9F00063518A /* IGameObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IGameObject.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +234,9 @@
 				72AE75A61DB5387C00CEB998 /* GameWorld.hpp */,
 				72AE75D51DB57C7400CEB998 /* IGameSystem.hpp */,
 				72AE75CF1DB56C0100CEB998 /* Meta */,
+				72B491CB1DB6958C0063518A /* GameScene.cpp */,
+				72B491CC1DB6958C0063518A /* GameScene.hpp */,
+				72B491CE1DB6A9F00063518A /* IGameObject.hpp */,
 			);
 			path = NewComponentSystem;
 			sourceTree = "<group>";
@@ -304,6 +311,7 @@
 				72AE75831DB5340900CEB998 /* Vector2.cpp in Sources */,
 				72AE75101DB5339000CEB998 /* TypeIndexList.cpp in Sources */,
 				724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */,
+				72B491CD1DB6958C0063518A /* GameScene.cpp in Sources */,
 				72AE753A1DB533A000CEB998 /* StringHelper.cpp in Sources */,
 				72AE75341DB533A000CEB998 /* Bitset.cpp in Sources */,
 				72AE758A1DB5348800CEB998 /* InputDevice.cpp in Sources */,
@@ -403,7 +411,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = NO;
-				GCC_OPTIMIZATION_LEVEL = fast;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					OSX,
