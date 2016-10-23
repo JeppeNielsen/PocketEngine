@@ -12,6 +12,7 @@
 namespace Pocket {
     class GameObject;
     struct IGameObject {
+        virtual bool HasComponent(ComponentId id) = 0;
         virtual void* GetComponent(ComponentId id) = 0;
         virtual void AddComponent(ComponentId id) = 0;
         virtual void AddComponent(ComponentId id, GameObject* referenceObject) = 0;

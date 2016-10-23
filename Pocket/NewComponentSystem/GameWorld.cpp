@@ -51,6 +51,33 @@ void GameWorld::AddSystemType(SystemId systemId, const SystemTypeFunction& funct
     }
 }
 
+void GameWorld::RemoveSystemType(SystemId systemId) {
+    SystemInfo& systemInfo = systems[systemId];
+    if (!systemInfo.createFunction) return;
+    scenes.Iterate([this, &systemInfo, systemId] (GameScene* scene) {
+        IGameSystem* system = scene->systemsIndexed[systemId];
+        objects.Iterate([&systemInfo, system] (GameObject* object) {
+            if (systemInfo.bitset.Contains(object->enabledComponents)) {
+                system->ObjectRemoved(object);
+                system->RemoveObject(object);
+            }
+        });
+        systemInfo.deleteFunction(system);
+        scene->systemsIndexed[systemId] = 0;
+        scene->activeSystems.erase(std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system));
+    });
+
+    for(int i=0; i<systemInfo.bitset.Size(); ++i) {
+        if (systemInfo.bitset[i]) {
+            auto& list = components[i].systemsUsingComponent;
+            list.erase(std::find(list.begin(), list.end(), systemId));
+        }
+    }
+    systemInfo.createFunction = 0;
+    systemInfo.deleteFunction = 0;
+    systemInfo.bitset.Reset();
+}
+
 void GameWorld::DoActions(Actions &actions) {
     for(int i=0; i<actions.size();++i) {
         actions[i]();
@@ -58,7 +85,7 @@ void GameWorld::DoActions(Actions &actions) {
     actions.clear();
 }
 
-const ObjectCollection GameWorld::Roots() { return roots; }
+const ObjectCollection& GameWorld::Roots() { return roots; }
 
 GameObject* GameWorld::CreateRoot() {
 
@@ -77,6 +104,16 @@ GameObject* GameWorld::CreateRoot() {
     roots.push_back(root);
     
     return root;
+}
+
+void GameWorld::RemoveRoot(Pocket::GameObject *root) {
+    delayedActions.emplace_back([this, root] {
+        roots.erase(std::find(roots.begin(), roots.end(), root));
+        GameScene* scene = root->scene;
+        scene->DestroySystems();
+        scenes.Delete(scene->index);
+        activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
+    });
 }
 
 void GameWorld::Update(float dt) {
@@ -100,12 +137,4 @@ void GameWorld::Clear() {
    DoActions(delayedActions);
 }
 
-void GameWorld::RemoveRoot(Pocket::GameObject *root) {
-    delayedActions.emplace_back([this, root] {
-        roots.erase(std::find(roots.begin(), roots.end(), root));
-        GameScene* scene = root->scene;
-        scene->DestroySystems();
-        scenes.Delete(scene->index);
-        activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
-    });
-}
+int GameWorld::ObjectCount() { return objects.count; }

@@ -69,7 +69,14 @@ void GameObject::Reset() {
     Order = 0;
 }
 
+bool GameObject::HasComponent(ComponentId id) {
+    assert(id<activeComponents.Size());
+    return activeComponents[id];
+}
+
 void* GameObject::GetComponent(ComponentId id) {
+    assert(id<activeComponents.Size());
+    if (!activeComponents[id]) return 0;
     return scene->world->components[id].container->Get(componentIndicies[id]);
 }
 
@@ -226,3 +233,6 @@ const ObjectCollection& GameObject::Children() {
     return children;
 }
 
+IGameSystem* GameObject::GetSystem(SystemId id) {
+    return scene->systemsIndexed[id];
+}

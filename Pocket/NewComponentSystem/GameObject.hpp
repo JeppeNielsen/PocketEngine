@@ -16,6 +16,7 @@ namespace Pocket {
     class GameWorld;
     class GameScene;
     class GameObject;
+    class IGameSystem;
     
     using ObjectCollection = std::vector<GameObject*>;
     
@@ -26,6 +27,7 @@ namespace Pocket {
         friend class Handle<GameObject>;
         friend class Container<GameObject>;
         friend class std::allocator<GameObject>;
+        friend class ScriptWorld;
         
         using ComponentIndicies = std::vector<int>;
         
@@ -58,14 +60,21 @@ namespace Pocket {
         void TrySetComponentEnabled(ComponentId id, bool enable);
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
+        IGameSystem* GetSystem(SystemId id);
 
     public:
         
+        bool HasComponent(ComponentId id) override;
         void* GetComponent(ComponentId id) override;
         void AddComponent(ComponentId id) override;
         void AddComponent(ComponentId id, GameObject* referenceObject) override;
         void RemoveComponent(ComponentId id) override;
         void CloneComponent(ComponentId id, GameObject* object) override;
+        
+        template<typename T>
+        bool HasComponent() {
+            return HasComponent(GameIdHelper::GetComponentID<T>());
+        }
         
         template<typename T>
         T* GetComponent() {
@@ -77,6 +86,30 @@ namespace Pocket {
             ComponentId componentId = GameIdHelper::GetComponentID<T>();
             AddComponent(componentId);
             return static_cast<T*>(GetComponent(componentId));
+        }
+        
+        template<typename T>
+        T* AddComponent(GameObject* source) {
+            ComponentId componentId = GameIdHelper::GetComponentID<T>();
+            AddComponent(componentId, source);
+            return static_cast<T*>(GetComponent(componentId));
+        }
+        
+        template<typename T>
+        void RemoveComponent() {
+            RemoveComponent(GameIdHelper::GetComponentID<T>());
+        }
+        
+        template<typename T>
+        T* CloneComponent(GameObject* source) {
+            ComponentId componentId = GameIdHelper::GetComponentID<T>();
+            CloneComponent(componentId, source);
+            return static_cast<T*>(GetComponent(componentId));
+        }
+        
+        template<typename T>
+        T* GetSystem() {
+            return static_cast<T*>(GetSystem(GameIdHelper::GetSystemID<T>()));
         }
         
         void Remove();

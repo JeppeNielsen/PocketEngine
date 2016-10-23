@@ -698,8 +698,8 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
 
 void ScriptWorld::SetWorldType(GameWorld& world) {
     worldComponentNames.clear();
-    for(int i=0; i<world.componentInfos.size(); ++i) {
-        std::string& name = world.componentInfos[i].name;
+    for(int i=0; i<world.components.size(); ++i) {
+        std::string& name = world.components[i].name;
         size_t namespaceColons = name.find("::");
         std::string nameWithoutNamespace;
         if (namespaceColons!=std::string::npos) {
@@ -713,7 +713,7 @@ void ScriptWorld::SetWorldType(GameWorld& world) {
     }
     
     baseComponentIndex = world.components.size();
-    baseSystemIndex = world.systemsIndexed.size();
+    baseSystemIndex = world.systems.size();
 }
 
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
@@ -725,12 +725,12 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
     componentCount = numberOfComponents;
 
     assert(baseComponentIndex == (int)world.components.size());
-    assert(baseSystemIndex == (int)world.systemsIndexed.size());
+    assert(baseSystemIndex == (int)world.systems.size());
     
     
     for(int i=0; i<numberOfComponents; ++i) {
         int componentIndex = baseComponentIndex + i;
-        world.TryAddComponentContainer(componentIndex, [this, componentIndex](GameObject::ComponentInfo& componentInfo) {
+        world.AddComponentType(componentIndex, [this, componentIndex](GameWorld::ComponentInfo& componentInfo) {
             Container<ScriptComponent>* container = new Container<ScriptComponent>();
             container->defaultObject.world = this;
             container->defaultObject.componentID = componentIndex;
@@ -745,7 +745,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         int componentNameCounter = 0;
         for(auto c : components) {
             if (componentNameCounter == i) {
-                world.componentInfos[componentIndex].name = c.second.name;
+                world.components[componentIndex].name = c.second.name;
                 scriptComponents[c.second.name] = componentIndex;
             }
             componentNameCounter++;
@@ -758,7 +758,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
     int index = 0;
     for (auto& scriptSystem : scriptSystems) {
         int systemIndex = baseSystemIndex + index;
-        world.TryAddSystem(systemIndex, [this, &scriptSystem, &systemIndex](std::vector<int>& components) {
+        world.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameWorld::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
             
             for (auto& component : scriptSystem.second.templateArguments) {
                 int componentIndex;
@@ -767,45 +767,41 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
                     components.push_back(staticComponent ? componentIndex : (baseComponentIndex + componentIndex));
                 }
             }
-            
-            return createSystem(systemIndex);
+            systemInfo.createFunction = [this, systemIndex] () {
+                return createSystem(systemIndex);
+            };
+            systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
+                deleteSystem(system);
+            };
         });
-        world.systemsIndexed[systemIndex].deleteFunction = [this, &world, systemIndex]() {
-            deleteSystem(world.systemsIndexed[systemIndex].system);
-        };
         index++;
     }
-
     return true;
 }
 
 void ScriptWorld::RemoveGameWorld(GameWorld& world) {
     if (baseSystemIndex == -1) return;
-    int endSystemIndex = (int)world.systemsIndexed.size();
+    int endSystemIndex = (int)world.systems.size();
     for(int i=baseSystemIndex; i<endSystemIndex; ++i){
-        world.TryRemoveSystem(i);
+        world.RemoveSystemType(i);
     }
-    world.systemsIndexed.resize(endSystemIndex);
+    world.systems.resize(endSystemIndex);
     int endComponentIndex = (int)world.components.size();
     for(int i=baseComponentIndex; i<endComponentIndex; ++i) {
-        delete world.components[i];
+        delete world.components[i].container;
     }
     world.components.resize(baseComponentIndex);
-    world.componentInfos.resize(baseComponentIndex);
-    world.numComponentTypes = baseComponentIndex;
-    
-    world.IterateObjects([this](GameObject* o) {
-        o->data->activeComponents.Resize(baseComponentIndex);
-        o->data->enabledComponents.Resize(baseComponentIndex);
+    world.objects.Iterate([this](GameObject* o) {
+        o->activeComponents.Resize(baseComponentIndex);
+        o->enabledComponents.Resize(baseComponentIndex);
     });
-    world.objectComponents.resize(baseComponentIndex);
+    world.components.resize(baseComponentIndex);
     for(int i=0; i<baseComponentIndex; ++i) {
-        world.objectComponents[i].resize(baseComponentIndex);
+        world.components[i].systemsUsingComponent.resize(baseComponentIndex);
     }
-    world.systemsPerComponent.resize(baseComponentIndex);
 }
 
-TypeInfo ScriptWorld::GetTypeInfo(GameObject& object, ComponentID id) {
+TypeInfo ScriptWorld::GetTypeInfo(GameObject& object, ComponentId id) {
     void* component = object.GetComponent(id);
     if (!component) {
         return TypeInfo();

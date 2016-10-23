@@ -33,7 +33,7 @@ GameScene::GameScene(const GameScene& other) {
         if (other.world->systems[i].createFunction) {
             systemsIndexed[i] = other.world->systems[i].createFunction();
             systemsIndexed[i]->Initialize();
-        }
+        } 
     }
 }
 

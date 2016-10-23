@@ -19,6 +19,8 @@
 
 namespace Pocket {
 
+    class ScriptWorld;
+    
     class GameWorld {
     private:
         
@@ -58,6 +60,7 @@ namespace Pocket {
     
         void AddComponentType(ComponentId componentId, const ComponentTypeFunction& function);
         void AddSystemType(SystemId systemId, const SystemTypeFunction& function);
+        void RemoveSystemType(SystemId systemId);
 
         void DoActions(Actions &actions);
         void RemoveRoot(GameObject* root);
@@ -95,14 +98,17 @@ namespace Pocket {
         
         GameObject* CreateRoot();
         
-        const ObjectCollection Roots();
+        const ObjectCollection& Roots();
         
         void Update(float dt);
         void Render();
         
         void Clear();
         
+        int ObjectCount();
+        
         friend class GameScene;
         friend class GameObject;
+        friend class ScriptWorld;
     };
 }
