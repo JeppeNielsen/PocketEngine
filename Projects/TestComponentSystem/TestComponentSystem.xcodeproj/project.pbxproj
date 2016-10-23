@@ -27,6 +27,12 @@
 		72AE75CE1DB56AF900CEB998 /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE75CC1DB56AF900CEB998 /* GameSystem.cpp */; };
 		72AE75D31DB56E5200CEB998 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE75D11DB56E5200CEB998 /* GameObject.cpp */; };
 		72B491CD1DB6958C0063518A /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491CB1DB6958C0063518A /* GameScene.cpp */; };
+		72B491DE1DBD14D10063518A /* ClangUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491D01DBD14D10063518A /* ClangUtil.cpp */; };
+		72B491DF1DBD14D10063518A /* ScriptClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491D21DBD14D10063518A /* ScriptClass.cpp */; };
+		72B491E11DBD14D10063518A /* ScriptParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491DA1DBD14D10063518A /* ScriptParser.cpp */; };
+		72B491E21DBD14D10063518A /* ScriptWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491DC1DBD14D10063518A /* ScriptWorld.cpp */; };
+		72B491E41DBD15A50063518A /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B491E31DBD15A50063518A /* libclang.dylib */; };
+		72B491E71DBD35C70063518A /* FileReader.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72B491E61DBD35C70063518A /* FileReader.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -89,6 +95,17 @@
 		72B491CB1DB6958C0063518A /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
 		72B491CC1DB6958C0063518A /* GameScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameScene.hpp; sourceTree = "<group>"; };
 		72B491CE1DB6A9F00063518A /* IGameObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IGameObject.hpp; sourceTree = "<group>"; };
+		72B491D01DBD14D10063518A /* ClangUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClangUtil.cpp; sourceTree = "<group>"; };
+		72B491D11DBD14D10063518A /* ClangUtil.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClangUtil.hpp; sourceTree = "<group>"; };
+		72B491D21DBD14D10063518A /* ScriptClass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptClass.cpp; sourceTree = "<group>"; };
+		72B491D31DBD14D10063518A /* ScriptClass.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptClass.hpp; sourceTree = "<group>"; };
+		72B491DA1DBD14D10063518A /* ScriptParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptParser.cpp; sourceTree = "<group>"; };
+		72B491DB1DBD14D10063518A /* ScriptParser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptParser.hpp; sourceTree = "<group>"; };
+		72B491DC1DBD14D10063518A /* ScriptWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptWorld.cpp; sourceTree = "<group>"; };
+		72B491DD1DBD14D10063518A /* ScriptWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptWorld.hpp; sourceTree = "<group>"; };
+		72B491E31DBD15A50063518A /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = TestComponentSystem/clang/lib/libclang.dylib; sourceTree = "<group>"; };
+		72B491E51DBD35A30063518A /* FileReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileReader.hpp; sourceTree = "<group>"; };
+		72B491E61DBD35C70063518A /* FileReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = FileReader.mm; path = Platform/OSX/FileReader.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72B491E41DBD15A50063518A /* libclang.dylib in Frameworks */,
 				724E32511D0E141C0007E8CA /* OpenAL.framework in Frameworks */,
 				724E324F1D0E14150007E8CA /* OpenGL.framework in Frameworks */,
 				724E324D1D0E14100007E8CA /* Cocoa.framework in Frameworks */,
@@ -120,6 +138,7 @@
 		72772F581D0763FD005AC1D8 = {
 			isa = PBXGroup;
 			children = (
+				72B491E31DBD15A50063518A /* libclang.dylib */,
 				724E32501D0E141C0007E8CA /* OpenAL.framework */,
 				724E324E1D0E14150007E8CA /* OpenGL.framework */,
 				724E324C1D0E140F0007E8CA /* Cocoa.framework */,
@@ -150,6 +169,8 @@
 		72772F6B1D076432005AC1D8 /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
+				72B491E61DBD35C70063518A /* FileReader.mm */,
+				72B491CF1DBD14D10063518A /* Scripting */,
 				72AE75A41DB5385A00CEB998 /* NewComponentSystem */,
 				72AE758C1DB534A900CEB998 /* OSX */,
 				72AE75541DB5340900CEB998 /* Math */,
@@ -177,6 +198,7 @@
 		72AE75111DB533A000CEB998 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				72B491E51DBD35A30063518A /* FileReader.hpp */,
 				72AE75161DB533A000CEB998 /* Bitset.cpp */,
 				72AE75171DB533A000CEB998 /* Bitset.hpp */,
 				72AE751A1DB533A000CEB998 /* DirtyProperty.hpp */,
@@ -249,6 +271,21 @@
 			path = Meta;
 			sourceTree = "<group>";
 		};
+		72B491CF1DBD14D10063518A /* Scripting */ = {
+			isa = PBXGroup;
+			children = (
+				72B491D01DBD14D10063518A /* ClangUtil.cpp */,
+				72B491D11DBD14D10063518A /* ClangUtil.hpp */,
+				72B491D21DBD14D10063518A /* ScriptClass.cpp */,
+				72B491D31DBD14D10063518A /* ScriptClass.hpp */,
+				72B491DA1DBD14D10063518A /* ScriptParser.cpp */,
+				72B491DB1DBD14D10063518A /* ScriptParser.hpp */,
+				72B491DC1DBD14D10063518A /* ScriptWorld.cpp */,
+				72B491DD1DBD14D10063518A /* ScriptWorld.hpp */,
+			);
+			path = Scripting;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -305,22 +342,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72B491E71DBD35C70063518A /* FileReader.mm in Sources */,
 				72AE75CE1DB56AF900CEB998 /* GameSystem.cpp in Sources */,
 				724E32491D0DFB9F0007E8CA /* LogicTest.cpp in Sources */,
 				72AE75A01DB534A900CEB998 /* GamePadManager.mm in Sources */,
+				72B491DF1DBD14D10063518A /* ScriptClass.cpp in Sources */,
 				72AE75831DB5340900CEB998 /* Vector2.cpp in Sources */,
 				72AE75101DB5339000CEB998 /* TypeIndexList.cpp in Sources */,
 				724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */,
 				72B491CD1DB6958C0063518A /* GameScene.cpp in Sources */,
+				72B491E21DBD14D10063518A /* ScriptWorld.cpp in Sources */,
 				72AE753A1DB533A000CEB998 /* StringHelper.cpp in Sources */,
 				72AE75341DB533A000CEB998 /* Bitset.cpp in Sources */,
 				72AE758A1DB5348800CEB998 /* InputDevice.cpp in Sources */,
+				72B491E11DBD14D10063518A /* ScriptParser.cpp in Sources */,
 				72AE75CB1DB5671B00CEB998 /* GameIdHelper.cpp in Sources */,
 				72AE75A71DB5387C00CEB998 /* GameWorld.cpp in Sources */,
 				72772F651D0763FD005AC1D8 /* main.cpp in Sources */,
 				72AE75511DB533DF00CEB998 /* InputManager.cpp in Sources */,
 				72AE75871DB5347000CEB998 /* MathHelper.cpp in Sources */,
 				72AE75D31DB56E5200CEB998 /* GameObject.cpp in Sources */,
+				72B491DE1DBD14D10063518A /* ClangUtil.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +459,11 @@
 					OSX,
 					"$(inherited)",
 				);
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/TestComponentSystem/clang/include\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestComponentSystem/clang/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -427,6 +474,11 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
+				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/TestComponentSystem/clang/include\"";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestComponentSystem/clang/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
