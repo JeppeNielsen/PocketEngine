@@ -403,7 +403,7 @@ void LogicTests::RunTests() {
         struct RenderSystem : public GameSystem<Transform, Renderable> {
             int* Counter;
             int* ConstuctorDestructorCounter;
-            ~RenderSystem() {
+            void Destroy() {
                 (*ConstuctorDestructorCounter)++;
             }
             void ObjectAdded(GameObject* object) { (*Counter)++; }
