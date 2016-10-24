@@ -12,10 +12,10 @@
 
 int main(int argc, const char * argv[]) {
 
-    LogicTests tests;
-    tests.Run();
-    //ScriptTests scriptTests;
-    //scriptTests.Run();
+    //LogicTests tests;
+    //tests.Run();
+    ScriptTests scriptTests;
+    scriptTests.Run();
     
     return 0;
 }

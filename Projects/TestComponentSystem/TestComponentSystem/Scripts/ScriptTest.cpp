@@ -7,10 +7,11 @@
 //
 
 #include "GameSystem.hpp"
+#include <iostream>
 
 using namespace Pocket;
 
-struct Transform {
+struct Position {
     int position;
 };
 
@@ -18,12 +19,12 @@ struct Velocity {
     int velocity;
 };
 
-struct VelocitySystem : public GameSystem<Transform, Velocity> {
+struct VelocitySystem : public GameSystem<Position, Velocity> {
     void ObjectAdded(GameObject* object) {
-    
+        std::cout << "Object added "<< std::endl;
     }
     
     void ObjectRemoved(GameObject* object) {
-    
+        std::cout << "Object removed "<< std::endl;
     }
 };
