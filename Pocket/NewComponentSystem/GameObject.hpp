@@ -11,6 +11,8 @@
 #include "Property.hpp"
 #include "DirtyProperty.hpp"
 #include "IGameObject.hpp"
+#include "InputManager.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
     class GameWorld;
@@ -111,6 +113,11 @@ namespace Pocket {
         T* GetSystem() {
             return static_cast<T*>(GetSystem(GameIdHelper::GetSystemID<T>()));
         }
+        
+        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate);
+        std::vector<int> GetComponentIndicies();
+        
+        InputManager& Input();
         
         void Remove();
         bool IsRemoved();

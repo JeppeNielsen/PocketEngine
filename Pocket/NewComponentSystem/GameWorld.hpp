@@ -129,7 +129,7 @@ namespace Pocket {
         GameWorld* world;
     public:
         template<typename T>
-        void AddSubSystem() {
+        void AddSystemType() {
             world->AddSystemType<T>();
         }
     };

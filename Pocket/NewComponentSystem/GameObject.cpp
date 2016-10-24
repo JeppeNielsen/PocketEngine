@@ -246,5 +246,32 @@ const ObjectCollection& GameObject::Children() {
 }
 
 IGameSystem* GameObject::GetSystem(SystemId id) {
+    if (id>=scene->systemsIndexed.size()) return 0;
     return scene->systemsIndexed[id];
 }
+
+InputManager& GameObject::Input() { return scene->world->Input(); }
+
+std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) {
+    std::vector<TypeInfo> infos;
+    GameWorld* world = scene->world;
+    for (int i=0; i<world->components.size(); ++i) {
+        if (!world->components[i].getTypeInfo) continue; // component has no type
+        if (!activeComponents[i]) continue; // gameobject hasn't got component
+        if (predicate && !predicate(i)) continue; // component type not allowed
+        infos.emplace_back(world->components[i].getTypeInfo(this));
+        infos[infos.size()-1].name = world->components[i].name;
+    }
+    return infos;
+}
+
+std::vector<int> GameObject::GetComponentIndicies() {
+    std::vector<int> indicies;
+    for (int i=0; i<activeComponents.Size(); ++i) {
+        if (activeComponents[i]) {
+            indicies.push_back(i);
+        }
+    }
+    return indicies;
+}
+
