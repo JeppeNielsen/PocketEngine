@@ -332,7 +332,7 @@ void ScriptWorld::WriteMainCppFile(const std::string &path) {
 
 void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
 
-    file<<"class IGameSystem;"<<std::endl;
+    file<<"namespace Pocket { class IGameSystem; }"<<std::endl;
     
     auto& components = scriptClasses.children["Components"].children;
     auto& systems = scriptClasses.children["Systems"].children;
@@ -738,6 +738,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             componentInfo.getTypeInfo = [this, componentIndex](GameObject* object) -> TypeInfo {
                 return GetTypeInfo(*object, componentIndex);
             };
+            componentInfo.container = container;
             return container;
         });
         
