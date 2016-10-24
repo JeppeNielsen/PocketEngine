@@ -13,8 +13,12 @@
 
 using namespace Pocket;
 
+void DroppableSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
+    creator.AddSystemType<TouchSystem>();
+}
+
 void DroppableSystem::Initialize() {
-    touchSystem = world->CreateSystem<TouchSystem>();
+    touchSystem = root->GetSystem<TouchSystem>();
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {
@@ -33,7 +37,7 @@ void DroppableSystem::ObjectRemoved(GameObject *object) {
 
 void DroppableSystem::Update(float dt) {
     for(auto it = downObjects.begin(); it!=downObjects.end();) {
-        Vector2 pos = world->Input().GetTouchPosition(it->second.touchData.Index);
+        Vector2 pos = root->Input().GetTouchPosition(it->second.touchData.Index);
         Vector2 delta = pos - it->second.prevPosition;
         if (delta.Length()>it->second.maxMovement) {
             DropStarted(it->second.touchData, it->first);

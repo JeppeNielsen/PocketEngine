@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Sound.hpp"
 #include "SoundEmitter.hpp"
 #include "SoundListener.hpp"
@@ -20,6 +20,7 @@ namespace Pocket {
         SoundSystem();
         ~SoundSystem();
         
+        void CreateSubSystems(SubSystemCreator& creator);
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);

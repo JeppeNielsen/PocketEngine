@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "GameObjectEditor.hpp"
 #include "Transform.hpp"
 #include "Sizeable.hpp"
@@ -31,7 +31,7 @@ namespace Pocket {
         
             template<class T>
             void IgnoreComponent() {
-                ignoredComponents.push_back(GameIDHelper::GetComponentID<T>());
+                ignoredComponents.push_back(GameIdHelper::GetComponentID<T>());
             }
         private:
             void ObjectChanged(GameObject* object);

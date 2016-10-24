@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "TypeInfo.hpp"
 
 namespace Pocket {

@@ -76,16 +76,14 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
         componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         
-        GameObject* space = world->CreateObject();
-        space->Parent() = componentChild;
+        GameObject* space = componentChild->CreateChild();
         space->AddComponent<Transform>();
         space->AddComponent<Sizeable>()->Size = {size.x, 10};
         space->AddComponent<Layoutable>();
         for (auto field : info.fields) {
             if (!field->HasEditor()) continue;
             
-            GameObject* editor = world->CreateObject();
-            editor->Parent() = componentChild;
+            GameObject* editor = componentChild->CreateChild();
             editor->AddComponent<Transform>();
             editor->AddComponent<Sizeable>()->Size = {size.x, size.y/(info.fields.size()+1)};
             editor->AddComponent<Layoutable>();

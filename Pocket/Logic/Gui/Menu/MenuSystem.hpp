@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Menu.hpp"
 #include "MenuAnimator.hpp"
 #include "TransformAnimator.hpp"

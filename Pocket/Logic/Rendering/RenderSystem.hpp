@@ -26,8 +26,9 @@ public:
     using ObjectRenderers = std::vector<IObjectRenderer*>;
     using VisibleObjects = std::vector<VisibleObject>;
 
-    virtual ~RenderSystem();
+    void CreateSubSystems(SubSystemCreator& creator);
     void Initialize();
+    void Destroy();
     void ObjectAdded(GameObject *object);
     OctreeSystem& Octree();
     void RenderCamera(GameObject* cameraObject);

@@ -11,14 +11,14 @@
 using namespace Pocket;
 
 void HierarchyOrder::ObjectAdded(GameObject *object) {
-    object->Parent().Changed.Bind(this, &HierarchyOrder::SetDirty);
-    object->Order().Changed.Bind(this, &HierarchyOrder::SetDirty);
+    object->Parent.Changed.Bind(this, &HierarchyOrder::SetDirty);
+    object->Order.Changed.Bind(this, &HierarchyOrder::SetDirty);
     orderIsDirty = true;
 }
 
 void HierarchyOrder::ObjectRemoved(GameObject *object) {
-   object->Parent().Changed.Unbind(this, &HierarchyOrder::SetDirty);
-   object->Order().Changed.Unbind(this, &HierarchyOrder::SetDirty);
+   object->Parent.Changed.Unbind(this, &HierarchyOrder::SetDirty);
+   object->Order.Changed.Unbind(this, &HierarchyOrder::SetDirty);
 }
 
 void HierarchyOrder::SetDirty() {
@@ -30,10 +30,10 @@ void HierarchyOrder::Update(float dt) {
     orderIsDirty = false;
 
     int order = 0;
-    const auto& children = world->Root()->Children();
+    /*const auto& children = world->Root()->Children();
     for(auto child : children) {
         CalculateOrder(order, child);
-    }
+    }*/
 }
 
 void HierarchyOrder::CalculateOrder(int& orderOffset, GameObject *object) {

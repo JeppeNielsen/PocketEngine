@@ -49,20 +49,20 @@ void TextBoxSystem::ActiveTextBoxChanged(GameObject* object) {
             }
         }
         
-        world->Input().KeyboardText = textBox->Text;
-        world->Input().KeyboardActive = true;
+        root->Input().KeyboardText = textBox->Text;
+        root->Input().KeyboardActive = true;
         
-        world->Input().KeyboardActive.Changed.Bind(this, &TextBoxSystem::KeyboardActiveChanged);
-        world->Input().KeyboardText.Changed.Bind(this, &TextBoxSystem::KeyboardTextChanged);
-        world->Input().TouchDown.Bind(this, &TextBoxSystem::TouchInputUp);
+        root->Input().KeyboardActive.Changed.Bind(this, &TextBoxSystem::KeyboardActiveChanged);
+        root->Input().KeyboardText.Changed.Bind(this, &TextBoxSystem::KeyboardTextChanged);
+        root->Input().TouchDown.Bind(this, &TextBoxSystem::TouchInputUp);
         
     } else {
         if (textBox == ActiveTextBox()) {
             ActiveTextBox = 0;
-            world->Input().KeyboardActive.Changed.Unbind(this, &TextBoxSystem::KeyboardActiveChanged);
-            world->Input().KeyboardText.Changed.Unbind(this, &TextBoxSystem::KeyboardTextChanged);
-            world->Input().TouchDown.Unbind(this, &TextBoxSystem::TouchInputUp);
-            world->Input().KeyboardActive = false;
+            root->Input().KeyboardActive.Changed.Unbind(this, &TextBoxSystem::KeyboardActiveChanged);
+            root->Input().KeyboardText.Changed.Unbind(this, &TextBoxSystem::KeyboardTextChanged);
+            root->Input().TouchDown.Unbind(this, &TextBoxSystem::TouchInputUp);
+            root->Input().KeyboardActive = false;
         }
     }
 }
@@ -113,14 +113,14 @@ void TextBoxSystem::Update(float dt) {
 }
 
 void TextBoxSystem::KeyboardActiveChanged() {
-    if (!world->Input().KeyboardActive && ActiveTextBox()) {
+    if (!root->Input().KeyboardActive && ActiveTextBox()) {
         ActiveTextBox()->Active = false;
     }
 }
 
 void TextBoxSystem::KeyboardTextChanged() {
     if (ActiveTextBox()) {
-        ActiveTextBox()->Text = world->Input().KeyboardText;
+        ActiveTextBox()->Text = root->Input().KeyboardText;
     }
 }
         

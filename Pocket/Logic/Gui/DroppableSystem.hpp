@@ -15,6 +15,7 @@
 namespace Pocket {
     class DroppableSystem : public GameSystem<Droppable, Touchable> {
     public:
+        void CreateSubSystems(SubSystemCreator& creator);
         void Initialize();
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);

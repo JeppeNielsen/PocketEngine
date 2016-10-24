@@ -8,7 +8,7 @@
 
 #pragma once
 #include <vector>
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
 #include "Octree.hpp"

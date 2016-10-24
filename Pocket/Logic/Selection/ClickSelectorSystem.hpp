@@ -7,13 +7,14 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "SelectableCollection.hpp"
 #include "Touchable.hpp"
 
 namespace Pocket {
     class ClickSelectorSystem : public GameSystem<Transform, Selectable, Touchable> {
     public:
+        void CreateSubSystems(SubSystemCreator& creator);
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);

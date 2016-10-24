@@ -13,37 +13,43 @@ using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::Initialize() {
-    renderer = world->CreateSystem<RenderSystem>();
-    textboxSystem = world->CreateSystem<TextBoxSystem>();
-    touchSystem = world->CreateSystem<TouchSystem>();
+void Gui::CreateSubSystems(Pocket::SubSystemCreator &creator) {
+    creator.AddSystemType<RenderSystem>();
+    creator.AddSystemType<TextBoxSystem>();
+    creator.AddSystemType<TouchSystem>();
     
-    world->CreateSystem<TransformHierarchy>();
-    world->CreateSystem<LabelMeshSystem>();
-    world->CreateSystem<SpriteMeshSystem>();
-    world->CreateSystem<SpriteTextureSystem>();
-    world->CreateSystem<HierarchyOrder>();
-    world->CreateSystem<DraggableSystem>();
-    world->CreateSystem<LayoutSystem>();
-    world->CreateSystem<TextBoxLabelSystem>();
-    //world->CreateSystem<MenuSystem>();
-    world->CreateSystem<MenuButtonSystem>();
-    world->CreateSystem<ColorSystem>();
-    world->CreateSystem<DraggableMotionSystem>();
-    world->CreateSystem<VelocitySystem>();
-    world->CreateSystem<LimitableSystem>();
-    world->CreateSystem<SelectedColorerSystem>();
-    world->CreateSystem<DroppableSystem>();
-    world->CreateSystem<DraggableMotionSystem>();
+    creator.AddSystemType<TransformHierarchy>();
+    creator.AddSystemType<LabelMeshSystem>();
+    creator.AddSystemType<SpriteMeshSystem>();
+    creator.AddSystemType<SpriteTextureSystem>();
+    creator.AddSystemType<HierarchyOrder>();
+    creator.AddSystemType<DraggableSystem>();
+    creator.AddSystemType<LayoutSystem>();
+    creator.AddSystemType<TextBoxLabelSystem>();
+    //creator.AddSystemType<MenuSystem>();
+    creator.AddSystemType<MenuButtonSystem>();
+    creator.AddSystemType<ColorSystem>();
+    creator.AddSystemType<DraggableMotionSystem>();
+    creator.AddSystemType<VelocitySystem>();
+    creator.AddSystemType<LimitableSystem>();
+    creator.AddSystemType<SelectedColorerSystem>();
+    creator.AddSystemType<DroppableSystem>();
+    creator.AddSystemType<DraggableMotionSystem>();
+}
+
+void Gui::Initialize() {
+    renderer = root->GetSystem<RenderSystem>();
+    textboxSystem = root->GetSystem<TextBoxSystem>();
+    touchSystem = root->GetSystem<TouchSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
 
-    atlas = world->CreateObject();
+    atlas = root->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng(atlasTexture);
     atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
-    atlas->SetID("Gui.Atlas");
+    //atlas->SetID("Gui.Atlas");
     
     Setup(atlas, viewport);
 }
@@ -56,7 +62,7 @@ void Gui::Setup(GameObject *atlas, const Rect &viewport) {
     renderer->Octree().SetWorldBounds(bounds);
     touchSystem->Octree().SetWorldBounds(bounds);
     
-    camera = world->CreateObject();
+    camera = root->CreateObject();
     camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = camera->AddComponent<Camera>();
     
@@ -78,8 +84,7 @@ GameObject* Gui::CreatePivot(GameObject *parent) {
 }
 
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
-    GameObject* pivot = world->CreateObject();
-    pivot->Parent() = parent;
+    GameObject* pivot = parent->CreateChild();
     pivot->AddComponent<Transform>()->Position = position;
     pivot->AddComponent<Orderable>();
     return pivot;
@@ -129,10 +134,10 @@ GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
 }
 
 GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& fontAtlasName) {
-    GameObject* font = world->CreateObject();
+    GameObject* font = root->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
-    font->SetID(fontFile);
+    //font->SetID(fontFile);
     fonts.push_back(font);
     return font;
 }

@@ -33,8 +33,8 @@
 namespace Pocket {
     class Gui : public GameConcept {
     public:
-        
-        void Initialize() ;
+        void CreateSubSystems(SubSystemCreator& creator);
+        void Initialize();
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport);
         void Setup(GameObject *atlas, const Rect &viewport);
         GameObject* GetCamera();

@@ -58,13 +58,12 @@ void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
     for (auto child : children) {
         if (!child->GetComponent<Atlas>()) continue;
         
-        GameObject* childObject = world->CreateObject();
+        GameObject* childObject = object->CreateChild();
         childObject->AddComponent<Transform>();
         childObject->AddComponent<Sizeable>()->Size = {200,10};
         childObject->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
         childObject->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         childObject->AddComponent<HierarchyEditor>()->Object = child;
-        childObject->Parent() = object;
     }
     
     GameObject* gameObjectName = gui->CreateTextBox(object, "Box", {20.0f * depth,0}, {200-depth*20.0f,20}, 0, s.str(), 14);
@@ -88,8 +87,8 @@ int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
 
 void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject *editorObject) {
     for (TouchData& touchData : d.droppedTouches) {
-        if (!touchData.object->Parent()()) continue;
-        HierarchyEditor* editor = touchData.object->Parent()()->GetComponent<HierarchyEditor>();
+        if (!touchData.object->Parent()) continue;
+        HierarchyEditor* editor = touchData.object->Parent()->GetComponent<HierarchyEditor>();
         if (!editor) continue;
         GameObject* newParent = editor->Object;
         
@@ -98,7 +97,7 @@ void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject 
         }
         Transform* transform = editorObject->GetComponent<Transform>();
         Vector3 worldPosition = transform->World().TransformPosition(0);
-        editorObject->Parent() = newParent;
+        editorObject->Parent = newParent;
         Vector3 localPosition = transform->World().Invert().TransformPosition(worldPosition);
         transform->Position = transform->Local().TransformPosition(localPosition);
         
