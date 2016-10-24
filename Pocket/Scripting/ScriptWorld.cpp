@@ -767,7 +767,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
                     components.push_back(staticComponent ? componentIndex : (baseComponentIndex + componentIndex));
                 }
             }
-            systemInfo.createFunction = [this, systemIndex] () {
+            systemInfo.createFunction = [this, systemIndex] (GameObject* root) {
                 return createSystem(systemIndex);
             };
             systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
