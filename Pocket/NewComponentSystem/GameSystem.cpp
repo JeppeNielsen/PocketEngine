@@ -11,9 +11,10 @@
 
 using namespace Pocket;
 
-GameSystemBase::GameSystemBase() : world(0) {}
+GameSystemBase::GameSystemBase() : root(0) {}
 GameSystemBase::~GameSystemBase() {}
 
+void GameSystemBase::CreateSubSystems(SubSystemCreator& creator) {}
 void GameSystemBase::Initialize() {}
 void GameSystemBase::Destroy() {}
 void GameSystemBase::ObjectAdded(Pocket::GameObject *object) {}

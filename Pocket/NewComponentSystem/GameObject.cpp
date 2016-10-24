@@ -23,7 +23,7 @@ GameObject::GameObject(const GameObject& other) {
     componentIndicies.resize(other.activeComponents.Size());
     
     Parent.Changed.Bind([this]() {
-        assert(scene->root!=this); // roots are not allowed to have a parent
+        assert(!IsRoot()); // roots are not allowed to have a parent
         assert(Parent!=this); // parent cannot be self
         if (!forceSetNextParent) {
             assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
@@ -195,7 +195,7 @@ void GameObject::Remove() {
     int localIndex = index;
     scene->delayedActions.emplace_back([this, localIndex]() {
         forceSetNextParent = true;
-        if (scene->root == this) {
+        if (IsRoot()) {
             scene->world->RemoveRoot(this);
         } else {
             Parent = 0;
@@ -227,6 +227,18 @@ GameObject* GameObject::CreateChild() {
     object->Reset();
     object->Parent = this;
     return object;
+}
+
+GameObject* GameObject::CreateObject() {
+    return scene->root->CreateChild();
+}
+
+GameObject* GameObject::Root() {
+    return scene->root;
+}
+
+bool GameObject::IsRoot() {
+    return scene->root == this;
 }
 
 const ObjectCollection& GameObject::Children() {

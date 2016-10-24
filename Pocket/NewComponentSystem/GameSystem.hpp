@@ -15,11 +15,11 @@ namespace Pocket {
     
     class GameSystemBase : public IGameSystem {
     protected:
-        GameWorld* const world;
+        GameObject* const root;
         friend class GameWorld;
         GameSystemBase();
         virtual ~GameSystemBase();
-        
+        virtual void CreateSubSystems(SubSystemCreator& creator) override;
         virtual void Initialize() override;
         virtual void Destroy() override;
         virtual void ObjectAdded(GameObject* object) override;

@@ -12,6 +12,7 @@ using namespace Pocket;
 
 GameWorld::GameWorld() : componentTypesCount(0) {
     scenes.defaultObject.world = this;
+    objects.count = 0;
 }
 GameWorld::~GameWorld() { Clear(); }
 
@@ -48,6 +49,11 @@ void GameWorld::AddSystemType(SystemId systemId, const SystemTypeFunction& funct
         }
         systemInfo.bitset = systemBitset;
         objects.defaultObject.activeComponents.Resize(componentTypesCount);
+        IGameSystem* system = systemInfo.createFunction(0);
+        SubSystemCreator creator;
+        creator.world = this;
+        system->CreateSubSystems(creator);
+        systemInfo.deleteFunction(system);
     }
 }
 
@@ -138,3 +144,5 @@ void GameWorld::Clear() {
 }
 
 int GameWorld::ObjectCount() { return objects.count; }
+
+InputManager& GameWorld::Input() { return input; }

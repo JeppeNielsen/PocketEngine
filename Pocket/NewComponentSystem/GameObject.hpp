@@ -116,6 +116,10 @@ namespace Pocket {
         bool IsRemoved();
         
         GameObject* CreateChild();
+        GameObject* CreateObject();
+        GameObject* Root();
+        
+        bool IsRoot();
         
         const ObjectCollection& Children();
         

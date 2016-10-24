@@ -31,7 +31,7 @@ GameScene::GameScene(const GameScene& other) {
     
     for (int i=0; i<other.world->systems.size(); ++i) {
         if (other.world->systems[i].createFunction) {
-            systemsIndexed[i] = other.world->systems[i].createFunction();
+            systemsIndexed[i] = other.world->systems[i].createFunction(root);
             systemsIndexed[i]->Initialize();
         } 
     }

@@ -16,6 +16,7 @@
 #include "GameObject.hpp"
 #include "IGameSystem.hpp"
 #include "GameScene.hpp"
+#include "InputManager.hpp"
 
 namespace Pocket {
 
@@ -38,7 +39,7 @@ namespace Pocket {
         struct SystemInfo {
             SystemInfo() : createFunction(0), deleteFunction(0) {}
             Bitset bitset;
-            std::function<IGameSystem*()> createFunction;
+            std::function<IGameSystem*(GameObject*)> createFunction;
             std::function<void(IGameSystem*)> deleteFunction;
         };
         
@@ -54,6 +55,8 @@ namespace Pocket {
         
         using Actions = std::deque<std::function<void()>>;
         Actions delayedActions;
+        
+        InputManager input;
         
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
@@ -90,8 +93,14 @@ namespace Pocket {
         void AddSystemType() {
             AddSystemType(GameIdHelper::GetSystemID<T>(), [this] (SystemInfo& systemInfo, std::vector<ComponentId>& components) {
                 T::ExtractAllComponents(*this, components);
-                systemInfo.createFunction = [] {
-                    return new T();
+                systemInfo.createFunction = [] (GameObject* root) {
+                    T* system = new T();
+                    GameObject** systemRoot = ((GameObject**)&system->root);
+                    *(systemRoot) = root;
+                    return system;
+                };
+                systemInfo.deleteFunction = [] (IGameSystem* system) {
+                    delete ((T*)system);
                 };
             });
         }
@@ -107,8 +116,21 @@ namespace Pocket {
         
         int ObjectCount();
         
+        InputManager& Input();
+        
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;
+    };
+    
+    class SubSystemCreator {
+    private:
+        friend class GameWorld;
+        GameWorld* world;
+    public:
+        template<typename T>
+        void AddSubSystem() {
+            world->AddSystemType<T>();
+        }
     };
 }
