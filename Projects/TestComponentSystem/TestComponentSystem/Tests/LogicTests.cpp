@@ -487,4 +487,24 @@ void LogicTests::RunTests() {
         mustBeEnabled &&
         wasOneObjectSecondTime;
     });
+    
+    AddTest("Two roots, different system instances", []() {
+        struct RenderSystem;
+        static std::vector<RenderSystem*> renderSystems;
+        struct Renderable { int imageNo; };
+        struct RenderSystem : public GameSystem<Renderable> {
+            void Initialize() override {
+                renderSystems.push_back(this);
+            }
+        };
+        
+        GameWorld world;
+        world.AddSystemType<RenderSystem>();
+        world.CreateRoot();
+        world.CreateRoot();
+        
+        return renderSystems.size() == 2 && renderSystems[0] && renderSystems[1] &&
+        renderSystems[0]!=renderSystems[1];
+    });
+
 }
