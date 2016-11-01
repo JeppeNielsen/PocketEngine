@@ -51,8 +51,45 @@ void ScriptTests::RunTests() {
         GameObject* root = world.CreateRoot();
         root->AddComponent(0);
         root->AddComponent(1);
+        
+        GameObject* root2 = world.CreateRoot();
+        root2->AddComponent(0);
+        root2->AddComponent(1);
+        
+        auto types = root2->GetComponentTypes([](int i) {
+            return true;
+        });
+        
+        auto* fieldType = types[1].GetField("velocity");
+        FieldInfo<int>* info = (FieldInfo<int>*)fieldType;
+        
+        *info->field = 12;
+        
+        {
+            minijson::writer_configuration config;
+            config = config.pretty_printing(true);
+            minijson::object_writer writer(std::cout, config);
+            
+            types[0].Serialize(writer);
+            types[1].Serialize(writer);
+            
+            writer.close();
+        }
     
         world.Update(1.0f);
+        
+        {
+            minijson::writer_configuration config;
+            config = config.pretty_printing(true);
+            minijson::object_writer writer(std::cout, config);
+            
+            types[0].Serialize(writer);
+            types[1].Serialize(writer);
+            
+            writer.close();
+        }
+        
+        root2->ToJson(std::cout, 0);
     
         return true;
     });

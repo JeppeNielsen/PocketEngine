@@ -17,6 +17,7 @@ class GameObject;
 namespace Pocket {
 class GameObject {
 private:
+    virtual bool HasComponent(int componentID) = 0;
     virtual void* GetComponent(int componentID) = 0;
     virtual void AddComponent(int componentID) = 0;
     virtual void AddComponent(int componentID, GameObject* referenceObject) = 0;

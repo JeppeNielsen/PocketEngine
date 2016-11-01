@@ -12,19 +12,30 @@
 using namespace Pocket;
 
 struct Position {
+    Position() : position(0) { }
     int position;
 };
 
 struct Velocity {
+    Velocity() : velocity(0) { }
     int velocity;
 };
 
 struct VelocitySystem : public GameSystem<Position, Velocity> {
     void ObjectAdded(GameObject* object) {
-        std::cout << "Object added "<< std::endl;
+        std::cout << "Object added "<< (this) <<  std::endl;
     }
     
     void ObjectRemoved(GameObject* object) {
         std::cout << "Object removed "<< std::endl;
+    }
+    
+    void Update(float dt) {
+        for(auto object : Objects()) {
+            auto pos = object->GetComponent<Position>();
+            auto vel = object->GetComponent<Velocity>();
+            
+            pos->position += vel->velocity;
+        }
     }
 };
