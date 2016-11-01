@@ -67,7 +67,10 @@ namespace Pocket {
 
         void DoActions(Actions &actions);
         void RemoveRoot(GameObject* root);
-                
+        GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene);
+        GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        
     public:
     
         GameWorld();
@@ -106,6 +109,7 @@ namespace Pocket {
         }
         
         GameObject* CreateRoot();
+        GameObject* CreateRootFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
         
         const ObjectCollection& Roots();
         
@@ -117,6 +121,9 @@ namespace Pocket {
         int ObjectCount();
         
         InputManager& Input();
+        
+        bool TryGetComponentIndex(const std::string& componentName, int& index);
+        bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
         
         friend class GameScene;
         friend class GameObject;

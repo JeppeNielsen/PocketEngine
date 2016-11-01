@@ -22,6 +22,8 @@ namespace Pocket {
     
     using ObjectCollection = std::vector<GameObject*>;
     
+    using SerializePredicate = std::function<bool(GameObject*, int)>;
+    
     class GameObject : public IGameObject {
     private:
         friend class GameWorld;
@@ -63,7 +65,11 @@ namespace Pocket {
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
         IGameSystem* GetSystem(SystemId id);
-
+        
+        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
+        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
+        void AddComponent(minijson::istream_context& context, std::string componentName);
+        
     public:
         
         bool HasComponent(ComponentId id) override;
@@ -125,6 +131,9 @@ namespace Pocket {
         GameObject* CreateChild();
         GameObject* CreateObject();
         GameObject* Root();
+        GameObject* CreateChildFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        
+        void ToJson(std::ostream& stream, SerializePredicate predicate);
         
         bool IsRoot();
         
