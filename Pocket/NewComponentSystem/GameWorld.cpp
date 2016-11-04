@@ -176,6 +176,7 @@ GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::ist
     } catch (std::exception e) {
         std::cout << e.what() << std::endl;
     }
+    GameObject::EndGetAddReferenceComponent();
     return object;
 }
 

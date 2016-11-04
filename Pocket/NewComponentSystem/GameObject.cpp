@@ -453,7 +453,6 @@ bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &comp
 
 void GameObject::EndGetAddReferenceComponent() {
     addReferenceComponentObjects.clear();
-    addReferenceComponents.clear();
 }
 
 //END SERIALIZATION
