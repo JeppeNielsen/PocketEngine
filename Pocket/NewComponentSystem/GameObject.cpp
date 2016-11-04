@@ -69,12 +69,12 @@ void GameObject::Reset() {
     Order = 0;
 }
 
-bool GameObject::HasComponent(ComponentId id) {
+bool GameObject::HasComponent(ComponentId id) const {
     assert(id<activeComponents.Size());
     return activeComponents[id];
 }
 
-void* GameObject::GetComponent(ComponentId id) {
+void* GameObject::GetComponent(ComponentId id) const {
     assert(id<activeComponents.Size());
     if (!activeComponents[id]) return 0;
     return scene->world->components[id].container->Get(componentIndicies[id]);
@@ -85,7 +85,7 @@ void GameObject::AddComponent(ComponentId id) {
     if (removed) return;
     if (activeComponents[id]) return;
 
-    componentIndicies[id] = scene->world->components[id].container->Create();
+    componentIndicies[id] = scene->world->components[id].container->Create(index);
     activeComponents.Set(id, true);
     scene->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
@@ -115,7 +115,7 @@ void GameObject::RemoveComponent(ComponentId id) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
         }
         TrySetComponentEnabled(id, false);
-        scene->world->components[id].container->Delete(componentIndicies[id]);
+        scene->world->components[id].container->Delete(componentIndicies[id], index);
         activeComponents.Set(id, false);
     });
 }
@@ -125,7 +125,7 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     if (removed) return;
     if (activeComponents[id]) return;
     if (!object->activeComponents[id]) return;
-    componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id]);
+    componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
     scene->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
@@ -202,7 +202,7 @@ void GameObject::Remove() {
         }
         forceSetNextParent = false;
         SetEnabled(false);
-        scene->world->objects.Delete(index);
+        scene->world->objects.Delete(index, 0);
     });
     removed = true;
     for(auto child : children) {
@@ -210,7 +210,7 @@ void GameObject::Remove() {
     }
 }
 
-bool GameObject::IsRemoved() {
+bool GameObject::IsRemoved() const {
     return removed;
 }
 
@@ -218,8 +218,12 @@ Handle<GameObject> GameObject::GetHandle() {
     return scene->world->objects.GetHandle(index);
 }
 
+int GameObject::RootId() const {
+    return rootId;
+}
+
 GameObject* GameObject::CreateChild() {
-    return scene->world->CreateEmptyObject(this, scene);
+    return scene->world->CreateEmptyObject(this, scene, true);
 }
 
 GameObject* GameObject::CreateObject() {
@@ -234,7 +238,7 @@ GameObject* GameObject::Root() {
     return scene->root;
 }
 
-bool GameObject::IsRoot() {
+bool GameObject::IsRoot() const {
     return scene->root == this;
 }
 
@@ -278,7 +282,7 @@ std::vector<int> GameObject::GetComponentIndicies() {
 
 //SERIALIZATION
 
-void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
+void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) const {
     minijson::writer_configuration config;
     config = config.pretty_printing(true);
     minijson::object_writer writer(stream, config);
@@ -286,11 +290,18 @@ void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
     writer.close();
 }
 
-void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) {
+void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const {
 
     minijson::object_writer gameObject = writer.nested_object("GameObject");
 
-    gameObject.write("id", "TODO:AddIdHere");
+    if (IsRoot()) {
+        gameObject.write("id", rootId);
+        gameObject.write("guid", scene->guid);
+        gameObject.write("counter", scene->idCounter);
+    } else {
+        gameObject.write("id", rootId);
+    }
+    
     minijson::array_writer components = gameObject.nested_array("Components");
     
     GameWorld* world = scene->world;
@@ -298,16 +309,19 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
     if (activeComponents.Size()>0) {
         for(int i=0; i<world->components.size(); ++i) {
             if (activeComponents[i] && !(predicate && !predicate(this, i))) {
-                //GameWorld::ComponentInfo& objectComponent = world->components[i];
-                /*
-                GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
-                bool isReference =  componentOwner != this;
+            
+                int ownerIndex = world->components[i].container->GetOwner(componentIndicies[i]);
+                bool isReference = !(ownerIndex == index);
+                GameObject* componentOwner;
                 if (isReference) {
+                    componentOwner = &world->objects.entries[ownerIndex];
                     if (predicate && !predicate(componentOwner, i)) {
                         continue;
                     }
-                }*/
-                SerializeComponent(i, components, false, 0);//componentOwner);
+                } else {
+                    componentOwner = 0;
+                }
+                SerializeComponent(i, components, isReference, componentOwner);
             }
         }
     }
@@ -329,7 +343,7 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
     gameObject.close();
 }
 
-void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject ) {
+void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject ) const {
     minijson::object_writer componentWriter = writer.nested_object();
     
     GameWorld* world = scene->world;
@@ -343,24 +357,32 @@ void GameObject::SerializeComponent(int componentID, minijson::array_writer& wri
             type.Serialize(jsonComponent);
         }
         jsonComponent.close();
-    } /*else {
+    } else {
         std::string referenceName = componentInfo.name + ":ref";
         minijson::object_writer jsonComponent = componentWriter.nested_object(referenceName.c_str());
         if (!referenceObject) {
             jsonComponent.write("id", "");
         } else {
-            std::string id = serializedObjects[referenceObject];
-            if (id=="") {
-                std::string* idFromObject = world->FindIDFromReferenceObject(this, componentID);
-                id = idFromObject ? *idFromObject : "";
+            if (referenceObject->scene == scene) {
+                jsonComponent.write("id", referenceObject->rootId);
+            } else {
+                std::stringstream s;
+                s<<referenceObject->rootId;
+                jsonComponent.write("id", referenceObject->scene->guid +":"+s.str());
             }
-            jsonComponent.write("id", id);
         }
         jsonComponent.close();
     }
-    */
     componentWriter.close();
 }
+
+struct AddReferenceComponent {
+    GameObject* object;
+    int componentID;
+    std::string referenceId;
+};
+
+std::vector<AddReferenceComponent> addReferenceComponents;
 
 void GameObject::AddComponent(minijson::istream_context& context, std::string componentName) {
     GameWorld* world = scene->world;
@@ -376,21 +398,62 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
             } else {
                 minijson::ignore(context);
             }
-        } /*else {
+        } else {
             std::string referenceID = "";
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string id = n;
                 if (id == "id" && v.type()==minijson::String) {
-                    referenceID = v.as_string();
-                    addReferenceComponents.push_back({ this, componentID, referenceID });
+                    addReferenceComponents.push_back({ this, componentID, v.as_string() });
                 } else {
                     minijson::ignore(context);
                 }
             });
-        }*/
+        }
     } else {
         minijson::ignore(context);
     }
+}
+
+std::map<std::pair<std::string, GameScene*>, GameObject*> addReferenceComponentObjects;
+
+bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, GameObject** referenceObject) {
+    if (addReferenceComponents.empty()) return false;
+    auto& refObj = addReferenceComponents.back();
+    *object = refObj.object;
+    componentID = refObj.componentID;
+    
+    GameScene* scene = refObj.object->scene;
+    
+    auto pair = std::make_pair(refObj.referenceId, scene);
+    auto it = addReferenceComponentObjects.find(pair);
+    
+    if (it == addReferenceComponentObjects.end()) {
+    
+        size_t colonLocation = refObj.referenceId.rfind(":");
+        GameScene* referenceScene;
+        int objectId;
+        if (colonLocation==-1) {
+            referenceScene = scene;
+            objectId = ::atoi(refObj.referenceId.c_str());
+        } else {
+            std::string sceneId = refObj.referenceId.substr(0, colonLocation);
+            std::string objectIdStr = refObj.referenceId.substr(colonLocation+1, refObj.referenceId.size() - colonLocation-1);
+            referenceScene = scene->world->TryGetScene(sceneId);
+            objectId = ::atoi(objectIdStr.c_str());
+        }
+        
+        *referenceObject = referenceScene->FindObject(objectId);
+        addReferenceComponentObjects.insert(std::make_pair(pair, *referenceObject));
+    } else {
+        *referenceObject = it->second;
+    }
+    addReferenceComponents.pop_back();
+    return true;
+}
+
+void GameObject::EndGetAddReferenceComponent() {
+    addReferenceComponentObjects.clear();
+    addReferenceComponents.clear();
 }
 
 //END SERIALIZATION

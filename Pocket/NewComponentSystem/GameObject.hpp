@@ -22,7 +22,7 @@ namespace Pocket {
     
     using ObjectCollection = std::vector<GameObject*>;
     
-    using SerializePredicate = std::function<bool(GameObject*, int)>;
+    using SerializePredicate = std::function<bool(const GameObject*, int)>;
     
     class GameObject : public IGameObject {
     private:
@@ -48,6 +48,7 @@ namespace Pocket {
         
         bool removed;
         int index;
+        int rootId;
         
     public:
         Property<bool> Enabled;
@@ -66,26 +67,28 @@ namespace Pocket {
         void SetEnabled(bool enabled);
         IGameSystem* GetSystem(SystemId id);
         
-        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
-        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
+        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
+        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
         void AddComponent(minijson::istream_context& context, std::string componentName);
         
+        static bool GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
+        static void EndGetAddReferenceComponent();
     public:
         
-        bool HasComponent(ComponentId id) override;
-        void* GetComponent(ComponentId id) override;
+        bool HasComponent(ComponentId id) const override;
+        void* GetComponent(ComponentId id) const override;
         void AddComponent(ComponentId id) override;
         void AddComponent(ComponentId id, GameObject* referenceObject) override;
         void RemoveComponent(ComponentId id) override;
         void CloneComponent(ComponentId id, GameObject* object) override;
         
         template<typename T>
-        bool HasComponent() {
+        bool HasComponent() const {
             return HasComponent(GameIdHelper::GetComponentID<T>());
         }
         
         template<typename T>
-        T* GetComponent() {
+        T* GetComponent() const {
             return static_cast<T*>(GetComponent(GameIdHelper::GetComponentID<T>()));
         }
         
@@ -126,20 +129,22 @@ namespace Pocket {
         InputManager& Input();
         
         void Remove();
-        bool IsRemoved();
+        bool IsRemoved() const;
         
         GameObject* CreateChild();
         GameObject* CreateObject();
         GameObject* Root();
         GameObject* CreateChildFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
         
-        void ToJson(std::ostream& stream, SerializePredicate predicate);
+        void ToJson(std::ostream& stream, SerializePredicate predicate = 0) const;
         
-        bool IsRoot();
+        bool IsRoot() const;
         
         const ObjectCollection& Children();
         
         Handle<GameObject> GetHandle();
+        
+        int RootId() const;
     };
     
     

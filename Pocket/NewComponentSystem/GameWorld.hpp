@@ -29,7 +29,7 @@ namespace Pocket {
             ComponentInfo() : container(0), getTypeInfo(0) {}
             IContainer* container;
             std::string name;
-            std::function<TypeInfo(GameObject*)> getTypeInfo;
+            std::function<TypeInfo(const GameObject*)> getTypeInfo;
             std::vector<int> systemsUsingComponent;
         };
     
@@ -67,9 +67,11 @@ namespace Pocket {
 
         void DoActions(Actions &actions);
         void RemoveRoot(GameObject* root);
-        GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene);
+        GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene, bool assignId);
         GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
         GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        GameScene* TryGetScene(const std::string& guid);
+        GameObject* FindObject(const std::string& guid, int objectId);
         
     public:
     
@@ -84,7 +86,7 @@ namespace Pocket {
                 T* ptr;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo](auto p) {
                     using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
-                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
+                    componentInfo.getTypeInfo = [](const GameObject* object) -> TypeInfo {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();
                     };

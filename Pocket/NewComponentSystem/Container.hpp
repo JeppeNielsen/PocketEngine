@@ -17,14 +17,15 @@ namespace Pocket {
     class IContainer {
     public:
         virtual ~IContainer() {}
-        virtual int Create() = 0;
-        virtual int CreateNoInit() = 0;
+        virtual int Create(int owner) = 0;
+        virtual int CreateNoInit(int owner) = 0;
         virtual void Reference(int index) = 0;
-        virtual void Delete(int index) = 0;
-        virtual int Clone(int index) = 0;
+        virtual void Delete(int index, int owner) = 0;
+        virtual int Clone(int index, int owner) = 0;
         virtual void* Get(int index) = 0;
         virtual void Clear() = 0;
         virtual void Trim() = 0;
+        virtual int GetOwner(int index) = 0;
         int Count() const { return count; }
         int count;
     };
@@ -41,35 +42,39 @@ namespace Pocket {
         Container() : maxVersion(0) { }
         virtual ~Container() { }
     
-        int Create() override {
+        int Create(int owner) override {
             int freeIndex;
             if (freeIndicies.empty()) {
                 freeIndex = (int)references.size();
                 references.emplace_back(1);
                 versions.emplace_back(maxVersion);
                 entries.resize(freeIndex + 1, defaultObject);
+                owners.emplace_back(owner);
             } else {
                 freeIndex = freeIndicies.back();
                 freeIndicies.pop_back();
                 entries[freeIndex] = defaultObject;
                 references[freeIndex] = 1;
+                owners[freeIndex] = owner;
             }
             
             ++count;
             return freeIndex;
         }
         
-        int CreateNoInit() override {
+        int CreateNoInit(int owner) override {
             int freeIndex;
             if (freeIndicies.empty()) {
                 freeIndex = (int)references.size();
                 references.emplace_back(1);
                 versions.emplace_back(maxVersion);
                 entries.resize(freeIndex + 1, defaultObject);
+                owners.emplace_back(owner);
             } else {
                 freeIndex = freeIndicies.back();
                 freeIndicies.pop_back();
                 references[freeIndex] = 1;
+                owners[freeIndex] = owner;
             }
             
             ++count;
@@ -80,17 +85,20 @@ namespace Pocket {
             ++references[index];
         }
         
-        void Delete(int index) override {
+        void Delete(int index, int owner) override {
             --references[index];
             if (references[index]==0) {
                 ++versions[index];
                 --count;
                 freeIndicies.push_back(index);
+                owners[index] = -1;
+            } else if (owners[index] == owner) {
+                owners[index] = -1;
             }
         }
         
-        int Clone(int index) override {
-            int cloneIndex = Create();
+        int Clone(int index, int owner) override {
+            int cloneIndex = CreateNoInit(owner);
             entries[cloneIndex] = entries[index];
             return cloneIndex;
         }
@@ -130,6 +138,10 @@ namespace Pocket {
             }
         }
         
+        int GetOwner(int index) override {
+            return owners[index];
+        }
+        
         void Iterate(const std::function<void(T*)>& callback) {
             for(int i=0; i<references.size(); ++i) {
                 if (references[i]>0) callback(&entries[i]);
@@ -156,6 +168,9 @@ namespace Pocket {
         
         using Versions = std::vector<int>;
         Versions versions;
+        
+        using Owners = std::vector<int>;
+        Owners owners;
         
         using FreeIndicies = std::vector<int>;
         FreeIndicies freeIndicies;

@@ -28,6 +28,8 @@ namespace Pocket {
         int index;
         std::vector<IGameSystem*> systemsIndexed;
         std::vector<IGameSystem*> activeSystems;
+        int idCounter;
+        std::string guid;
         
         GameScene();
         ~GameScene();
@@ -36,6 +38,7 @@ namespace Pocket {
         void Update(float dt);
         void Render();
         void DestroySystems();
+        GameObject* FindObject(int objectId);
         
         friend class Container<GameScene>;
     };

@@ -735,7 +735,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             container->defaultObject.world = this;
             container->defaultObject.componentID = componentIndex;
             container->defaultObject.data = createComponent(componentIndex);
-            componentInfo.getTypeInfo = [this, componentIndex](GameObject* object) -> TypeInfo {
+            componentInfo.getTypeInfo = [this, componentIndex](const GameObject* object) -> TypeInfo {
                 return GetTypeInfo(*object, componentIndex);
             };
             componentInfo.container = container;
@@ -802,7 +802,7 @@ void ScriptWorld::RemoveGameWorld(GameWorld& world) {
     }
 }
 
-TypeInfo ScriptWorld::GetTypeInfo(GameObject& object, ComponentId id) {
+TypeInfo ScriptWorld::GetTypeInfo(const GameObject& object, ComponentId id) {
     void* component = object.GetComponent(id);
     if (!component) {
         return TypeInfo();

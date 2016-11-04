@@ -39,7 +39,7 @@ public:
     
     bool AddGameWorld(GameWorld& world);
     void RemoveGameWorld(GameWorld& world);
-    TypeInfo GetTypeInfo(GameObject& object, ComponentId id);
+    TypeInfo GetTypeInfo(const GameObject& object, ComponentId id);
     
     int ComponentCount();
     

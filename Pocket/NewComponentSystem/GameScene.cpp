@@ -8,10 +8,11 @@
 
 #include "GameScene.hpp"
 #include "GameWorld.hpp"
+#include "StringHelper.hpp"
 
 using namespace Pocket;
 
-GameScene::GameScene() { }
+GameScene::GameScene() : idCounter(0) { }
 
 GameScene::~GameScene() {
     for (int i=0; i<systemsIndexed.size(); ++i) {
@@ -63,4 +64,18 @@ void GameScene::Render() {
     for(auto system : activeSystems) {
         system->Render();
     }
+}
+
+GameObject* GameScene::FindObject(int objectId) {
+    std::vector<GameObject*> nodesToVisit;
+    nodesToVisit.push_back(root);
+    
+    while (!nodesToVisit.empty()) {
+        GameObject* current = nodesToVisit.back();
+        if (current->rootId == objectId) return current;
+        nodesToVisit.pop_back();
+        nodesToVisit.insert(nodesToVisit.begin(), current->Children().begin(), current->Children().end());
+    }
+    
+    return 0;
 }
