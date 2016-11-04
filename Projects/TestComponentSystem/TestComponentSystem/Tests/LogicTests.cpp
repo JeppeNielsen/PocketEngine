@@ -8,7 +8,6 @@
 
 #include "LogicTests.hpp"
 #include <cstdlib>
-#include "GameWorld.hpp"
 #include "GameSystem.hpp"
 
 using namespace Pocket;
@@ -505,6 +504,26 @@ void LogicTests::RunTests() {
         
         return renderSystems.size() == 2 && renderSystems[0] && renderSystems[1] &&
         renderSystems[0]!=renderSystems[1];
+    });
+
+    AddTest("Unique GameObject ids per root", []() {
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        GameObject* object1 = root->CreateChild();
+        GameObject* object2 = root->CreateChild();
+        return object1->RootId()!=object2->RootId();
+    });
+
+    AddTest("Deleted GameObject new id", []() {
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        GameObject* object1 = root->CreateChild();
+        int id1 = object1->RootId();
+        object1->Remove();
+        world.Update(0);
+        GameObject* object2 = root->CreateChild();
+        int id2 = object2->RootId();
+        return id1!=id2 && object1 == object2;
     });
 
 }
