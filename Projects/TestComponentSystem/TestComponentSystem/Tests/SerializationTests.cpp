@@ -87,8 +87,42 @@ void SerializationTests::RunTests() {
         
         return rootId1 == rootId2 && childId1 == childId2 && savedWorld.str() == savedWorld2.str();
     });
+    
+     AddTest("Reference Component same root", [] {
+        
+        GameWorld world;
+        world.AddSystemType<RenderSystem>();
+        GameObject* root = world.CreateRoot();
+        
+        GameObject* meshObject = root->CreateChild();
+        
+        auto& verts = meshObject->AddComponent<Mesh>()->vertices;
+        for (int i=0; i<10; ++i) {
+            verts.push_back(i);
+        }
+        
+        GameObject* clonedObject = root->CreateChild();
+        
+        clonedObject->AddComponent<Mesh>(meshObject);
+        
+        std::stringstream savedRoot;
+        
+        root->ToJson(savedRoot);
+        
+        LogStream("Root", savedRoot);
+        
+        GameWorld loadWorld;
+        loadWorld.AddSystemType<RenderSystem>();
+        
+        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* object) { });
+        Mesh* mesh = loadedRoot->Children()[0]->GetComponent<Mesh>();
+        Mesh* mesh2 = loadedRoot->Children()[1]->GetComponent<Mesh>();
+    
+        return mesh == mesh2 && mesh->vertices.size() == 10;
+    });
+    
 
-    AddTest("Reference Component", [] {
+    AddTest("Reference Component Different roots", [] {
         
         GameWorld world;
         world.AddSystemType<RenderSystem>();
@@ -120,10 +154,10 @@ void SerializationTests::RunTests() {
         GameObject* loadedMeshRoot = loadWorld.CreateRootFromJson(savedMeshRoot, [](GameObject* object) { });
         GameObject* loadedWorldRoot = loadWorld.CreateRootFromJson(savedObjectRoot, [](GameObject* object) { });
         
-        Mesh* mesh = loadedWorldRoot->Children()[0]->GetComponent<Mesh>();
-    
-    
-        return mesh->vertices.size() == 10;
+        Mesh* mesh1 = loadedMeshRoot->GetComponent<Mesh>();
+        Mesh* mesh2 = loadedWorldRoot->Children()[0]->GetComponent<Mesh>();
+        
+        return mesh1 == mesh2 && mesh2->vertices.size() == 10;
     });
     
 
