@@ -202,6 +202,12 @@ void GameObject::Remove() {
         }
         forceSetNextParent = false;
         SetEnabled(false);
+        for(int i=0; i<activeComponents.Size(); ++i) {
+            if (activeComponents[i]) {
+                scene->world->components[i].container->Delete(componentIndicies[i], index);
+                activeComponents.Set(i, false);
+            }
+        }
         scene->world->objects.Delete(index, 0);
     });
     removed = true;
@@ -311,7 +317,7 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
             if (activeComponents[i] && !(predicate && !predicate(this, i))) {
             
                 int ownerIndex = world->components[i].container->GetOwner(componentIndicies[i]);
-                bool isReference = !(ownerIndex == index);
+                bool isReference = (ownerIndex != index) && ownerIndex>=0;
                 GameObject* componentOwner;
                 if (isReference) {
                     componentOwner = &world->objects.entries[ownerIndex];
@@ -402,7 +408,7 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
             std::string referenceID = "";
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string id = n;
-                if (id == "id" && v.type()==minijson::String) {
+                if (id == "id") {
                     addReferenceComponents.push_back({ this, componentID, v.as_string() });
                 } else {
                     minijson::ignore(context);
