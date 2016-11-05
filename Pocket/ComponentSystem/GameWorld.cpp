@@ -1,253 +1,88 @@
 //
 //  GameWorld.cpp
-//  EntitySystem
+//  TestComponentSystem
 //
-//  Created by Jeppe Nielsen on 06/06/16.
+//  Created by Jeppe Nielsen on 17/10/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameWorld.hpp"
 #include "StringHelper.hpp"
-#include <iostream>
 
 using namespace Pocket;
 
-std::map<std::string, GameObject*> loadedObjects;
-
-GameWorld::GameWorld() {
-    root.world = this;
-    objectCount = 0;
-    numComponentTypes = 0;
+GameWorld::GameWorld() : componentTypesCount(0) {
+    scenes.defaultObject.world = this;
+    objects.count = 0;
 }
+GameWorld::~GameWorld() { Clear(); }
 
-GameWorld::~GameWorld() {
-    Clear();
-
-    for(auto& system : systemsIndexed) {
-        if (system.system) {
-            if (system.deleteFunction) {
-                system.deleteFunction();
-            } else {
-                delete system.system;
-            }
-        }
-    }
-    for(int i=0; i<numComponentTypes; ++i) {
-        delete components[i];
-    }
-}
-
-const GameObject* GameWorld::Root() { return &root; }
-
-GameObject* GameWorld::CreateObject() {
-    int index;
-    if (objectsFreeIndicies.empty()) {
-        index = (int)objects.size();
-        objects.resize(index + 1);
-        if (numComponentTypes>0 && index>=objectComponents[0].size()) {
-            for(int i=0; i<numComponentTypes; i++) {
-                objectComponents[i].resize(index + 32);
-            }
-        }
-        objects[index].object.data->activeComponents.Resize(numComponentTypes);
-        objects[index].object.data->enabledComponents.Resize(numComponentTypes);
-    } else {
-        index = objectsFreeIndicies.back();
-        objectsFreeIndicies.pop_back();
+void GameWorld::AddComponentType(ComponentId componentId, const ComponentTypeFunction& function) {
+    if (componentId>=components.size()) {
+        components.resize(componentId + 1);
     }
     
-    for(int i=0; i<numComponentTypes; i++) {
-        objectComponents[i][index].index = -1;
-    }
-    ++objectCount;
-    GameObject& object = objects[index].object;
-    object.data->Reset();
-    root.data->children.push_back(&object);
-    object.index = index;
-    object.world = this;
-    return &object;
-}
-
-GameObject* GameWorld::CreateObject(std::istream &jsonStream, GameObject* parent, std::function<void(GameObject*)> onCreated, GameObject* rootObject) {
-    minijson::istream_context context(jsonStream);
-    GameObject* object = 0;
-    try {
-        object = LoadObject(parent, context, onCreated, rootObject);
-        
-        GameObject* object;
-        int componentID;
-        std::string referenceID;
-        while (GameObject::GetAddReferenceComponent(&object, componentID, referenceID)) {
-            GameObject* referenceObject = 0;
-            auto foundObjectWithID = loadedObjects.find(referenceID);
-            if (foundObjectWithID!=loadedObjects.end()) {
-                referenceObject = foundObjectWithID->second;
-            } else {
-                referenceObject = FindObjectFromID(referenceID);
-                if (!referenceObject) {
-                    //object not found with id, try assign first object with this component
-                    referenceObject = FindFirstObjectWithComponentID(componentID);
-                }
-            }
-            object->AddComponent(componentID, referenceObject);
-        }
-    } catch (std::exception e) {
-        std::cout << e.what() << std::endl;
-    }
-    return object;
-}
-
-void GameWorld::Update(float dt) {
-    DoActions(delayedActions);
-    for(auto system : systems) {
-        system->Update(dt);
+    if (!components[componentId].container) {
+        function(components[componentId]);
     }
 }
 
-void GameWorld::Render() {
-    for(auto system : systems) {
-        system->Render();
-    }
-}
-
-int GameWorld::ObjectCount() const {
-    return objectCount;
-}
-
-int GameWorld::CapacityCount() const {
-    return (int)objects.size();
-}
-
-void GameWorld::Clear() {
-    IterateObjects([](GameObject* o) {
-        o->SetEnabled(false);
-    });
-
-    objects.clear();
-    objectsFreeIndicies.clear();
-    objectCount = 0;
-    for(int i=0; i<numComponentTypes; ++i) {
-        if (components[i]) {
-            components[i]->Clear();
-        }
-        objectComponents[i].clear();
-    }
-    components.clear();
-    objectComponents.clear();
-    numComponentTypes = 0;
-}
-
-void GameWorld::Trim() {
-
-    DoActions(delayedActions);
-    
-    for(int i=0; i<numComponentTypes; ++i) {
-        if (components[i]) {
-            components[i]->Trim();
-        }
+void GameWorld::AddSystemType(SystemId systemId, const SystemTypeFunction& function) {
+    if (systemId>=systems.size()) {
+        systems.resize(systemId + 1);
     }
     
-    int smallestSize = 0;
-    for(int i = (int)objects.size() - 1; i>=0; --i) {
-        if (!objects[i].object.IsRemoved()) {
-            smallestSize = i + 1;
-            break;
-        }
-    }
-    if (smallestSize<objects.size()) {
-        for(int i=0; i<numComponentTypes; ++i) {
-            objectComponents[i].resize(smallestSize);
-        }
-        objects.resize(smallestSize);
-        for(int i=0; i<objectsFreeIndicies.size(); ++i) {
-            if (objectsFreeIndicies[i]>=smallestSize) {
-                objectsFreeIndicies.erase(objectsFreeIndicies.begin() + i);
-                --i;
-            }
-        }
-    }
-}
-
-const GameWorld::ComponentInfos& GameWorld::ComponentTypes() {
-    return componentInfos;
-}
-
-void GameWorld::ToJson(std::ostream &stream, SerializePredicate predicate) {
-    root.ToJson(stream, predicate);
-}
-
-IGameSystem* GameWorld::TryAddSystem(SystemID id, std::function<IGameSystem *(std::vector<int>& components)> constructor) {
-    if (id>=systemsIndexed.size()) {
-        systemsIndexed.resize(id + 1);
-    }
-    IGameSystem* system = systemsIndexed[id].system;
-    if (!system) {
-        SystemEntry& systemEntry = systemsIndexed[id];
-        std::vector<int> componentIndices;
-        system = systemEntry.system = constructor(componentIndices);
+    SystemInfo& systemInfo = systems[systemId];
+    
+    if (!systemInfo.createFunction) {
+        std::vector<ComponentId> componentIndices;
+        function(systemInfo, componentIndices);
         Bitset systemBitset;
         for(auto c : componentIndices) {
             if (c>=systemBitset.Size()) {
                 systemBitset.Resize(c + 1);
             }
             systemBitset.Set(c, true);
-            if (c>=systemsPerComponent.size()) {
-                systemsPerComponent.resize(c + 1);
+            components[c].systemsUsingComponent.push_back(systemId);
+            if (c>=componentTypesCount) {
+                componentTypesCount = c + 1;
             }
-            systemsPerComponent[c].push_back(id);
         }
-        systems.push_back(system);
-        systemEntry.bitset = systemBitset;
-        systemEntry.deleteFunction = 0;
-        systemEntry.system->Initialize();
-        
-        std::sort(systems.begin(), systems.end(), [] (IGameSystem* a, IGameSystem* b) {
-            return a->Order() < b->Order();
-        });
-        
-        IterateObjects([system, &systemBitset](GameObject* o) {
-            if (systemBitset.Contains(o->data->enabledComponents)) {
-                system->AddObject(o);
-                system->ObjectAdded(o);
-            }
-        });
+        systemInfo.bitset = systemBitset;
+        objects.defaultObject.activeComponents.Resize(componentTypesCount);
+        IGameSystem* system = systemInfo.createFunction(0);
+        SubSystemCreator creator;
+        creator.world = this;
+        system->CreateSubSystems(creator);
+        systemInfo.deleteFunction(system);
     }
-    return system;
 }
 
-void GameWorld::TryRemoveSystem(SystemID id) {
-    if (id>=systemsIndexed.size()) return;
-    SystemEntry& systemEntry = systemsIndexed[id];
-    if (!systemEntry.system) return;
-    IGameSystem* system = systemEntry.system;
-    Bitset& systemBitset = systemEntry.bitset;
-    
-    IterateObjects([system, &systemBitset](GameObject* o) {
-        if (systemBitset.Contains(o->data->enabledComponents)) {
-            system->ObjectRemoved(o);
-            system->RemoveObject(o);
-        }
+void GameWorld::RemoveSystemType(SystemId systemId) {
+    SystemInfo& systemInfo = systems[systemId];
+    if (!systemInfo.createFunction) return;
+    scenes.Iterate([this, &systemInfo, systemId] (GameScene* scene) {
+        IGameSystem* system = scene->systemsIndexed[systemId];
+        objects.Iterate([&systemInfo, system] (GameObject* object) {
+            if (systemInfo.bitset.Contains(object->enabledComponents)) {
+                system->ObjectRemoved(object);
+                system->RemoveObject(object);
+            }
+        });
+        systemInfo.deleteFunction(system);
+        scene->systemsIndexed[systemId] = 0;
+        scene->activeSystems.erase(std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system));
     });
-    
-    for(int i=0; i<numComponentTypes; ++i) {
-        if (systemBitset[i]) {
-            auto& list = systemsPerComponent[i];
-            list.erase(std::find(list.begin(), list.end(), id));
+
+    for(int i=0; i<systemInfo.bitset.Size(); ++i) {
+        if (systemInfo.bitset[i]) {
+            auto& list = components[i].systemsUsingComponent;
+            list.erase(std::find(list.begin(), list.end(), systemId));
         }
     }
-    
-    systems.erase(std::find(systems.begin(), systems.end(), system));
-    
-    systemEntry.system->Destroy();
-    systemEntry.system = 0;
-    systemEntry.bitset.Reset();
-    
-    if (systemEntry.deleteFunction) {
-        systemEntry.deleteFunction();
-    } else {
-        delete system;
-    }
-    systemEntry.deleteFunction = 0;
+    systemInfo.createFunction = 0;
+    systemInfo.deleteFunction = 0;
+    systemInfo.bitset.Reset();
 }
 
 void GameWorld::DoActions(Actions &actions) {
@@ -257,106 +92,103 @@ void GameWorld::DoActions(Actions &actions) {
     actions.clear();
 }
 
-void GameWorld::IterateObjects(std::function<void (GameObject *)> callback) {
-    for(auto& o : objects) {
-        if (!o.object.IsRemoved()) {
-            callback(&o.object);
-        }
+const ObjectCollection& GameWorld::Roots() { return roots; }
+
+GameObject* GameWorld::CreateRoot() {
+    int sceneIndex = scenes.Create(0);
+    GameScene* scene = &scenes.entries[sceneIndex];
+    scene->index=sceneIndex;
+    scene->world = this;
+    scene->guid = StringHelper::CreateGuid();
+    activeScenes.push_back(scene);
+    GameObject* root = CreateEmptyObject(0, scene, true);
+    scene->root = root;
+    roots.push_back(root);
+    return root;
+}
+
+GameObject* GameWorld::CreateRootFromJson(std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
+    return CreateObjectFromJson(0, jsonStream, onCreated);
+}
+
+void GameWorld::RemoveRoot(Pocket::GameObject *root) {
+    delayedActions.emplace_back([this, root] {
+        roots.erase(std::find(roots.begin(), roots.end(), root));
+        GameScene* scene = root->scene;
+        scene->DestroySystems();
+        scenes.Delete(scene->index, 0);
+        activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
+    });
+}
+
+void GameWorld::Update(float dt) {
+    for(auto scene : activeScenes) {
+        scene->Update(dt);
+    }
+    DoActions(delayedActions);
+}
+
+void GameWorld::Render() {
+    for(auto scene : activeScenes) {
+        scene->Render();
     }
 }
 
-void GameWorld::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)> &&constructor) {
-    if (id>=components.size()) {
-        int count = id + 1;
-        components.resize(count, 0);
-        componentInfos.resize(count);
-        
-        IterateObjects([count](GameObject* o) {
-            o->data->activeComponents.Resize(count);
-            o->data->enabledComponents.Resize(count);
-        });
-        numComponentTypes = count;
-        objectComponents.resize(count);
-        for(int i=0; i<count; ++i) {
-            objectComponents[i].resize(objects.size(), {-1,0});
-        }
-    }
+void GameWorld::Clear() {
+   for(auto root : roots) {
+        root->Remove();
+        root->scene->DoActions(root->scene->delayedActions);
+   }
+   DoActions(delayedActions);
+}
 
-    if (!components[id]) {
-        components[id] = constructor(componentInfos[id]);
-        if (OnGetTypeInfo) {
-            if (!componentInfos[id].getTypeInfo) {
-                OnGetTypeInfo(id, componentInfos[id]);
+int GameWorld::ObjectCount() { return objects.count; }
+
+InputManager& GameWorld::Input() { return input; }
+
+GameObject* GameWorld::CreateEmptyObject(GameObject *parent, GameScene* scene, bool assignId) {
+    int index = objects.CreateNoInit(0);
+    GameObject* object = &objects.entries[index];
+    object->scene = scene;
+    object->index = index;
+    if (assignId) {
+        object->rootId = ++scene->idCounter;
+    }
+    object->Reset();
+    object->Parent = parent;
+    return object;
+}
+
+GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
+    minijson::istream_context context(jsonStream);
+    GameObject* object = 0;
+    try {
+        object = LoadObject(parent, context, onCreated);
+        
+        GameObject* object;
+        int componentID;
+        GameObject* referenceObject;
+        while (GameObject::GetAddReferenceComponent(&object, componentID, &referenceObject)) {
+            if (referenceObject) {
+                object->AddComponent(componentID, referenceObject);
             }
         }
+    } catch (std::exception e) {
+        std::cout << e.what() << std::endl;
     }
+    GameObject::EndGetAddReferenceComponent();
+    return object;
 }
 
-void GameWorld::AddObjectID(Pocket::GameObject *object, std::string id) {
-    for(auto& o : objectIDs) {
-        if (o.object == object) {
-            o.id = id;
-            return;
-        }
-    }
-    objectIDs.push_back({object, id});
-}
-
-std::string* GameWorld::GetObjectID(Pocket::GameObject *object) {
-    for(auto& o : objectIDs) {
-        if (o.object == object) {
-            return &o.id;
-        }
-    }
-    return 0;
-}
-
-std::string* GameWorld::FindIDFromReferenceObject(GameObject* referenceObject, int componentID) {
-    for (auto& objectID : objectIDs) {
-        if (!objectID.object->data->activeComponents[componentID]) continue;
-        if (objectID.object->GetComponent(componentID) != referenceObject->GetComponent(componentID)) continue;
-        return &objectID.id;
-    }
-    return 0;
-}
-
-GameObject* GameWorld::FindObjectFromID(const std::string &id) {
-    for (auto& objectID : objectIDs) {
-        if (objectID.id == id) return objectID.object;
-    }
-    return 0;
-}
-
-GameObject* GameWorld::FindFirstObjectWithComponentID(int componentID) {
-    for(auto& entry : objects) {
-        if (entry.object.IsRemoved()) continue;
-        if (!entry.object.data->activeComponents[componentID]) continue;
-        return &entry.object;
-    }
-    return 0;
-}
-
-GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated, GameObject* rootObject) {
-    if (parent == &root) parent = 0;
+GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
     GameObject* object = 0;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-        std::string name = n;
-        bool isGameObject = name == "GameObject";
-        bool isRoot = name == "World";
-        
-        if ((isGameObject || isRoot) && v.type() == minijson::Object) {
-            object = !isRoot ? (!rootObject ? (GameObject*)CreateObject() : rootObject) : &root;
-            if (!isRoot && !rootObject) {
-                object->Parent() = parent;
-            }
+        if (v.type() == minijson::Object) {
+            object = !parent ? CreateRoot() : CreateEmptyObject(parent, parent->scene, false);
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
-                if (name == "id" && v.type() == minijson::String) {
-                    if (!isRoot) {
-                        loadedObjects[std::string(v.as_string())] = object;
-                    } else {
-                        this->guid = v.as_string();
-                    }
+                if (name == "id" && v.type() == minijson::Number) {
+                    object->rootId = (int)v.as_long();
                 } else if (name == "Components" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {
@@ -367,14 +199,15 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
-                        GameObject* child = LoadObject(isRoot ? parent : object, context, onCreated, isRoot ? rootObject : 0);
-                        if (object == &root) {
-                            object = child;
-                        }
+                        LoadObject(object, context, onCreated);
                     });
+                } else if (!parent && name == "guid" && v.type() == minijson::String) {
+                    object->scene->guid = std::string(v.as_string());
+                } else if (!parent && name == "counter" && v.type() == minijson::Number) {
+                    object->scene->idCounter = (int)v.as_long();
                 }
                 
-                if (!isRoot && onCreated) {
+                if (onCreated) {
                     onCreated(object);
                 }
             });
@@ -384,8 +217,8 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
 }
 
 bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& index) {
-    for(int i=0; i<componentInfos.size(); ++i) {
-        if (componentInfos[i].name == componentName) {
+    for(int i=0; i<components.size(); ++i) {
+        if (components[i].name == componentName) {
             index = i;
             return true;
         }
@@ -411,11 +244,14 @@ bool GameWorld::TryGetComponentIndex(const std::string& componentName, int& inde
     return false;
 }
 
-std::function<void(int, GameObject::ComponentInfo&)> GameWorld::OnGetTypeInfo = 0;
+GameScene* GameWorld::TryGetScene(const std::string &guid) {
+    for(auto s : activeScenes) {
+        if (s->guid == guid) return s;
+    }
+    return 0;
+}
 
-InputManager& GameWorld::Input() { return input; }
-std::string& GameWorld::Guid() { return guid; }
-
-void GameWorld::AssignUniqueGuid() {
-    guid = StringHelper::CreateGuid();
+GameObject* GameWorld::FindObject(const std::string &guid, int objectId) {
+    GameScene* scene = TryGetScene(guid);
+    return scene->FindObject(objectId);
 }

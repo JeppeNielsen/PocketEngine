@@ -1,172 +1,145 @@
 //
 //  GameWorld.hpp
-//  EntitySystem
+//  TestComponentSystem
 //
-//  Created by Jeppe Nielsen on 06/06/16.
+//  Created by Jeppe Nielsen on 17/10/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-#include "GameObject.hpp"
+#include <vector>
+#include <functional>
+#include "MetaLibrary.hpp"
 #include "Container.hpp"
-#include "GameSystem.hpp"
+#include "TypeInfo.hpp"
+#include "GameIdHelper.hpp"
+#include "GameObject.hpp"
+#include "IGameSystem.hpp"
+#include "GameScene.hpp"
 #include "InputManager.hpp"
 
 namespace Pocket {
+
     class ScriptWorld;
+    
     class GameWorld {
+    private:
+        
+        struct ComponentInfo {
+            ComponentInfo() : container(0), getTypeInfo(0) {}
+            IContainer* container;
+            std::string name;
+            std::function<TypeInfo(const GameObject*)> getTypeInfo;
+            std::vector<int> systemsUsingComponent;
+        };
+    
+        using Components = std::vector<ComponentInfo>;
+        Components components;
+        
+        struct SystemInfo {
+            SystemInfo() : createFunction(0), deleteFunction(0) {}
+            Bitset bitset;
+            std::function<IGameSystem*(GameObject*)> createFunction;
+            std::function<void(IGameSystem*)> deleteFunction;
+        };
+        
+        using Systems = std::vector<SystemInfo>;
+        Systems systems;
+        
+        Container<GameObject> objects;
+        int componentTypesCount;
+        
+        Container<GameScene> scenes;
+        std::vector<GameScene*> activeScenes;
+        std::vector<GameObject*> roots;
+        
+        using Actions = std::deque<std::function<void()>>;
+        Actions delayedActions;
+        
+        InputManager input;
+        
+        using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
+        using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
+    
+        void AddComponentType(ComponentId componentId, const ComponentTypeFunction& function);
+        void AddSystemType(SystemId systemId, const SystemTypeFunction& function);
+        void RemoveSystemType(SystemId systemId);
+
+        void DoActions(Actions &actions);
+        void RemoveRoot(GameObject* root);
+        GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene, bool assignId);
+        GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        GameScene* TryGetScene(const std::string& guid);
+        GameObject* FindObject(const std::string& guid, int objectId);
+        
     public:
+    
         GameWorld();
         ~GameWorld();
-        
-        const GameObject* Root();
-        
-        GameObject* CreateObject();
-        GameObject* CreateObject(std::istream &jsonStream, GameObject* parent = 0, std::function<void(GameObject*)> onCreated = 0, GameObject* rootObject = 0);
-        
+    
         template<typename T>
-        T* CreateSystem() {
-            return static_cast<T*>(
-            TryAddSystem(
-            GameIDHelper::GetSystemID<T>(),
-            [this](std::vector<int>& components)
-                {
-                    T* system = new T;
-                    GameWorld** worldC = ((GameWorld**)&system->world);
-                    *(worldC) = this;
-                    system->ExtractAllComponents(components);
+        void AddComponentType() {
+            AddComponentType(GameIdHelper::GetComponentID<T>(), [] (ComponentInfo& componentInfo) {
+                componentInfo.container = new Container<T>();
+                componentInfo.name = GameIdHelper::GetClassName<T>();
+                T* ptr;
+                Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo](auto p) {
+                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
+                    componentInfo.getTypeInfo = [](const GameObject* object) -> TypeInfo {
+                        auto component = object->GetComponent<SerializedComponentType>();
+                        return component->GetType();
+                    };
+                });
+            });
+        }
+    
+        template<typename T>
+        void AddSystemType() {
+            AddSystemType(GameIdHelper::GetSystemID<T>(), [this] (SystemInfo& systemInfo, std::vector<ComponentId>& components) {
+                T::ExtractAllComponents(*this, components);
+                systemInfo.createFunction = [] (GameObject* root) {
+                    T* system = new T();
+                    GameObject** systemRoot = ((GameObject**)&system->root);
+                    *(systemRoot) = root;
                     return system;
-                }
-            ));
+                };
+                systemInfo.deleteFunction = [] (IGameSystem* system) {
+                    delete ((T*)system);
+                };
+            });
         }
-
-		template<typename T>
-		T* TryGetSystem() {
-			int systemId = GameIDHelper::GetSystemID<T>();
-			if (systemId < systemsIndexed.size()) {
-				return static_cast<T*>(systemsIndexed[systemId].system);
-			}
-			else {
-				return 0;
-			}
-		}
         
-        template<typename T>
-        void RemoveSystem() {
-            TryRemoveSystem(GameIDHelper::GetSystemID<T>());
-        }
+        GameObject* CreateRoot();
+        GameObject* CreateRootFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        
+        const ObjectCollection& Roots();
         
         void Update(float dt);
         void Render();
         
-        int ObjectCount() const;
-        int CapacityCount() const;
-        
         void Clear();
-        void Trim();
         
-        using ComponentInfos = std::vector<GameObject::ComponentInfo>;
-        const ComponentInfos& ComponentTypes();
-        
-        using SerializePredicate = std::function<bool(GameObject*, int)>;
-        void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
-        
-        static std::function<void(int, GameObject::ComponentInfo&)> OnGetTypeInfo;
+        int ObjectCount();
         
         InputManager& Input();
-        std::string& Guid();
         
-        void AssignUniqueGuid();
-
-    private:
-    
-        GameObject root;
-        
-        struct GameObjectEntry {
-            GameObject object;
-        };
-    
-        using Objects = std::deque<GameObjectEntry>;
-        Objects objects;
-        using ObjectsFreeIndicies = std::vector<int>;
-        ObjectsFreeIndicies objectsFreeIndicies;
-        
-        using Components = std::vector<IContainer*>;
-        Components components;
-        
-        struct ObjectComponent {
-            int index;
-            IContainer* container;
-        };
-        
-        using ObjectComponents = std::vector<std::vector<ObjectComponent>>;
-        ObjectComponents objectComponents;
-        
-        struct SystemEntry {
-            SystemEntry() : system(0), deleteFunction(0) {}
-            IGameSystem* system;
-            Bitset bitset;
-            std::function<void()> deleteFunction;
-        };
-        
-        using SystemEntries = std::vector<SystemEntry>;
-        SystemEntries systemsIndexed;
-        
-        using Systems = std::vector<IGameSystem*>;
-        Systems systems;
-        
-        using SystemsPerComponent = std::vector<std::vector<int>>;
-        SystemsPerComponent systemsPerComponent;
-        
-        using Action = std::function<void()>;
-        using Actions = std::deque<Action>;
-        Actions delayedActions;
-        
-        ComponentInfos componentInfos;
-        
-        int objectCount;
-        int numComponentTypes;
-        
-        struct ObjectID {
-            GameObject* object;
-            std::string id;
-        };
-        std::vector<ObjectID> objectIDs;
-        
-        InputManager input;
-        std::string guid;
-        
-        IGameSystem* TryAddSystem(SystemID id, std::function<IGameSystem*(std::vector<int>& components)> constructor);
-        void TryRemoveSystem(SystemID id);
-        void DoActions(Actions& actions);
-        void IterateObjects(std::function<void(GameObject*)> callback);
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor);
-        std::string* GetObjectID(GameObject* object);
-        void AddObjectID(GameObject* object, std::string id);
-        std::string* FindIDFromReferenceObject(GameObject* referenceObject, int componentID);
-        GameObject* FindObjectFromID(const std::string &id);
-        GameObject* FindFirstObjectWithComponentID(int componentID);
-        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated, GameObject* rootObject);
-    public:
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
-    private:
+        
+        friend class GameScene;
         friend class GameObject;
-        friend class GameSystemBase;
         friend class ScriptWorld;
     };
     
-    
-    template<typename T>
-    T* GameObject::GetComponent() {
-        ComponentID id = GameIDHelper::GetComponentID<T>();
-        if (id>=world->numComponentTypes) return 0;
-        auto& objectComponent = world->objectComponents[id][index];
-        if (objectComponent.index == -1) return 0;
-        Container<T>* container = static_cast<Container<T>*>(objectComponent.container);
-        return &container->entries[objectComponent.index];
-    }
-
-    
-    
+    class SubSystemCreator {
+    private:
+        friend class GameWorld;
+        GameWorld* world;
+    public:
+        template<typename T>
+        void AddSystemType() {
+            world->AddSystemType<T>();
+        }
+    };
 }

@@ -1,256 +1,294 @@
 //
 //  GameObject.cpp
-//  EntitySystem
+//  TestComponentSystem
 //
-//  Created by Jeppe Nielsen on 06/06/16.
+//  Created by Jeppe Nielsen on 17/10/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "GameObject.hpp"
-#include <assert.h>
 #include "GameWorld.hpp"
-#include <map>
-#include <set>
 
 using namespace Pocket;
 
 static bool forceSetNextParent = false;
 
-const ObjectCollection& GameObject::Children() const { return data->children; }
-Property<GameObject*>& GameObject::Parent() { return data->Parent; }
-Property<bool>& GameObject::Enabled() { return data->Enabled; }
-DirtyProperty<bool>& GameObject::WorldEnabled() { return data->WorldEnabled; }
-Property<int>& GameObject::Order() { return data->Order; }
+GameObject::GameObject() { }
 
-GameObject::GameObject()
-    :
-    world(0), index(0), data(0)
-{
-    data = new Data();
-    data->Reset();
-    data->Parent = 0;
+GameObject::~GameObject() { }
+
+GameObject::GameObject(const GameObject& other) {
+    activeComponents.Resize(other.activeComponents.Size());
+    enabledComponents.Resize(other.activeComponents.Size());
+    componentIndicies.resize(other.activeComponents.Size());
     
-    data->Parent.Changed.Bind([this]() {
-        assert(data->Parent!=this);
-        GameObject* prevParent = data->Parent.PreviousValue();
-        GameObject* currentParent = data->Parent;
-        
-        if (data->removed && !forceSetNextParent) return;
-        
-        if (!prevParent) {
-            prevParent = &world->root;
+    Parent.Changed.Bind([this]() {
+        assert(!IsRoot()); // roots are not allowed to have a parent
+        assert(Parent!=this); // parent cannot be self
+        if (!forceSetNextParent) {
+            assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
+            assert(Parent());// objects must have a parent
         }
-        if (!currentParent && !forceSetNextParent) {
-            currentParent = &world->root;
-        }
+        GameObject* prevParent = Parent.PreviousValue();
+        GameObject* currentParent = Parent;
+        
+        if (removed && !forceSetNextParent) return;
         
         if (prevParent) {
-            auto& children = prevParent->data->children;
+            auto& children = prevParent->children;
             children.erase(std::find(children.begin(), children.end(), this));
-            prevParent->data->WorldEnabled.HasBecomeDirty.Unbind(this, &GameObject::SetWorldEnableDirty);
+            prevParent->WorldEnabled.HasBecomeDirty.Unbind(this, &GameObject::SetWorldEnableDirty);
         }
         
         if (currentParent) {
-            auto& children = currentParent->data->children;
+            auto& children = currentParent->children;
             children.push_back(this);
-            currentParent->data->WorldEnabled.HasBecomeDirty.Bind(this, &GameObject::SetWorldEnableDirty);
+            currentParent->WorldEnabled.HasBecomeDirty.Bind(this, &GameObject::SetWorldEnableDirty);
             
-            bool prevWorldEnabled = data->WorldEnabled;
-            data->WorldEnabled.MakeDirty();
-            if (data->WorldEnabled()!=prevWorldEnabled) {
+            bool prevWorldEnabled = WorldEnabled;
+            WorldEnabled.MakeDirty();
+            if (WorldEnabled()!=prevWorldEnabled) {
                 SetWorldEnableDirty();
             }
         }
     });
     
-    data->WorldEnabled.Method = [this](bool& value) {
-        value = (data->Parent) ? data->Parent()->data->WorldEnabled && data->Enabled : data->Enabled;
+    WorldEnabled.Method = [this](bool& value) {
+        value = (Parent) ? Parent()->WorldEnabled && Enabled : Enabled;
     };
     
-    data->Enabled.Changed.Bind(this, &GameObject::SetWorldEnableDirty);
+    Enabled.Changed.Bind(this, &GameObject::SetWorldEnableDirty);
+    
 }
 
-GameObject::~GameObject() {
-    delete data;
+void GameObject::Reset() {
+    removed = false;
+    Parent = 0;
+    Enabled = true;
+    children.clear();
+    Order = 0;
 }
 
-bool GameObject::HasComponent(ComponentID id) const {
-    assert(id<world->numComponentTypes);
-    return data->activeComponents[id];
+bool GameObject::HasComponent(ComponentId id) const {
+    assert(id<activeComponents.Size());
+    return activeComponents[id];
 }
 
-void* GameObject::GetComponent(ComponentID id) {
-    assert(id<world->numComponentTypes);
-    if (!data->activeComponents[id]) return 0;
-    auto& objectComponent = world->objectComponents[id][index];
-    return objectComponent.container->Get(objectComponent.index);
+void* GameObject::GetComponent(ComponentId id) const {
+    assert(id<activeComponents.Size());
+    if (!activeComponents[id]) return 0;
+    return scene->world->components[id].container->Get(componentIndicies[id]);
 }
 
-void GameObject::AddComponent(ComponentID id) {
-    assert(id<world->numComponentTypes);
-    if (HasComponent(id)) {
-        return;
-    }
-    if (data->removed) return;
-    IContainer* container = world->components[id];
-    world->objectComponents[id][index] = { container->Create(this), container };
-    data->activeComponents.Set(id, true);
-    world->delayedActions.emplace_back([this, id]() {
+void GameObject::AddComponent(ComponentId id) {
+    assert(id<activeComponents.Size());
+    if (removed) return;
+    if (activeComponents[id]) return;
+
+    componentIndicies[id] = scene->world->components[id].container->Create(index);
+    activeComponents.Set(id, true);
+    scene->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
 
-void GameObject::AddComponent(ComponentID id, GameObject* source) {
-    assert(id<world->numComponentTypes);
-    assert(source->HasComponent(id));
-    if (HasComponent(id)) {
-        return;
-    }
-    if (data->removed) return;
-    auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
-    world->objectComponents[id][index] = sourceObjectComponent;
-    sourceObjectComponent.container->Reference(sourceObjectComponent.index);
-    data->activeComponents.Set(id, true);
-    world->delayedActions.emplace_back([this, id]() {
+void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
+    assert(id<activeComponents.Size());
+    if (removed) return;
+    if (activeComponents[id]) return;
+    if (!referenceObject->activeComponents[id]) return;
+    
+    componentIndicies[id] = referenceObject->componentIndicies[id];
+    scene->world->components[id].container->Reference(referenceObject->componentIndicies[id]);
+    activeComponents.Set(id, true);
+    scene->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
 
-void GameObject::CloneComponent(ComponentID id, GameObject* source) {
-    assert(id<world->numComponentTypes);
-    assert(source->HasComponent(id));
-    if (HasComponent(id)) {
-        return;
-    }
-    if (data->removed) return;
-    auto& sourceObjectComponent = source->world->objectComponents[id][source->index];
-    IContainer* container = world->components[id];
-    int componentIndex = 0;
-    if (container == sourceObjectComponent.container) {
-        componentIndex = container->Clone(this, sourceObjectComponent.index);
-    } else {
-        componentIndex = container->Clone(this, sourceObjectComponent.container->Get(sourceObjectComponent.index));
-    }
-    world->objectComponents[id][index] = { componentIndex, container };
-    data->activeComponents.Set(id, true);
-    world->delayedActions.emplace_back([this, id]() {
-        TrySetComponentEnabled(id, true);
-    });
-}
-
-void GameObject::RemoveComponent(ComponentID id) {
-    if (id>=world->numComponentTypes) return;
-    if (!HasComponent(id)) {
-        return;
-    }
-    if (data->removed) return;
-    world->delayedActions.emplace_back([this, id]() {
-        if (!data->activeComponents[id]) {
+void GameObject::RemoveComponent(ComponentId id) {
+    assert(id<activeComponents.Size());
+    if (removed) return;
+    if (!activeComponents[id]) return;
+    scene->delayedActions.emplace_back([this, id]() {
+        if (!activeComponents[id]) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
         }
         TrySetComponentEnabled(id, false);
-        auto& objectComponent = world->objectComponents[id][index];
-        objectComponent.container->Delete(objectComponent.index);
-        world->objectComponents[id][index].index = -1;
-        data->activeComponents.Set(id, false);
+        scene->world->components[id].container->Delete(componentIndicies[id], index);
+        activeComponents.Set(id, false);
     });
 }
 
+void GameObject::CloneComponent(ComponentId id, GameObject* object) {
+    assert(id<activeComponents.Size());
+    if (removed) return;
+    if (activeComponents[id]) return;
+    if (!object->activeComponents[id]) return;
+    componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id], index);
+    activeComponents.Set(id, true);
+    scene->delayedActions.emplace_back([this, id]() {
+        TrySetComponentEnabled(id, true);
+    });
+}
+
+void GameObject::SetWorldEnableDirty() {
+    WorldEnabled.MakeDirty();
+    scene->delayedActions.emplace_back([this](){
+        SetEnabled(WorldEnabled);
+    });
+}
+
+void GameObject::SetEnabled(bool enabled) {
+    for(int i=0; i<activeComponents.Size(); ++i) {
+        if (activeComponents[i]) {
+            TrySetComponentEnabled(i, enabled);
+        }
+    }
+}
+
+void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
+    
+    enable = enable && WorldEnabled();
+
+    bool isEnabled = enabledComponents[id];
+    if (isEnabled==enable) {
+        return; //cannot double enable/disable components
+    }
+    
+    GameWorld* world = scene->world;
+    GameWorld::ComponentInfo& componentInfo = world->components[id];
+    
+    if (enable) {
+        enabledComponents.Set(id, true);
+        for(auto systemIndex : componentInfo.systemsUsingComponent) {
+            auto& systemBitset = world->systems[systemIndex].bitset;
+            bool isInterest = systemBitset.Contains(enabledComponents);
+            if (isInterest) {
+                IGameSystem* system = scene->systemsIndexed[systemIndex];
+                system->AddObject(this);
+                system->ObjectAdded(this);
+                if (system->ObjectCount() == 1) {
+                    scene->activeSystems.push_back(system);
+                }
+            }
+        }
+    } else {
+        for(auto systemIndex : componentInfo.systemsUsingComponent) {
+            auto& systemBitset = world->systems[systemIndex].bitset;
+            bool wasInterest = systemBitset.Contains(enabledComponents);
+            if (wasInterest) {
+                IGameSystem* system = scene->systemsIndexed[systemIndex];
+                system->ObjectRemoved(this);
+                system->RemoveObject(this);
+                if (system->ObjectCount() == 0) {
+                    scene->activeSystems.erase(std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system));
+                }
+            }
+        }
+        enabledComponents.Set(id, false);
+    }
+}
+
 void GameObject::Remove() {
-    if (data->removed) return;
+    if (removed) return;
     int localIndex = index;
-    world->delayedActions.emplace_back([this, localIndex]() {
+    scene->delayedActions.emplace_back([this, localIndex]() {
         forceSetNextParent = true;
-        if (data->Parent()) {
-            data->Parent = 0;
+        if (IsRoot()) {
+            scene->world->RemoveRoot(this);
         } else {
-            auto& children = world->root.data->children;
-            children.erase(std::find(children.begin(), children.end(), this));
+            Parent = 0;
         }
         forceSetNextParent = false;
         SetEnabled(false);
-        world->objectsFreeIndicies.push_back(localIndex);
-        --world->objectCount;
+        for(int i=0; i<activeComponents.Size(); ++i) {
+            if (activeComponents[i]) {
+                scene->world->components[i].container->Delete(componentIndicies[i], index);
+                activeComponents.Set(i, false);
+            }
+        }
+        scene->world->objects.Delete(index, 0);
     });
-    data->removed = true;
-    for(auto child : data->children) {
+    removed = true;
+    for(auto child : children) {
         child->Remove();
     }
 }
 
-bool GameObject::IsRemoved() {
-    return data->removed;
+bool GameObject::IsRemoved() const {
+    return removed;
 }
 
-std::vector<TypeInfo> GameObject::GetComponentTypes(std::function<bool(int componentID)> predicate) {
+Handle<GameObject> GameObject::GetHandle() {
+    return scene->world->objects.GetHandle(index);
+}
+
+int GameObject::RootId() const {
+    return rootId;
+}
+
+GameObject* GameObject::CreateChild() {
+    return scene->world->CreateEmptyObject(this, scene, true);
+}
+
+GameObject* GameObject::CreateObject() {
+    return scene->root->CreateChild();
+}
+
+GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
+    return scene->world->CreateObjectFromJson(this, jsonStream, onCreated);
+}
+
+GameObject* GameObject::Root() {
+    return scene->root;
+}
+
+bool GameObject::IsRoot() const {
+    return scene->root == this;
+}
+
+const ObjectCollection& GameObject::Children() {
+    return children;
+}
+
+IGameSystem* GameObject::GetSystem(SystemId id) {
+    if (id>=scene->systemsIndexed.size()) return 0;
+    return scene->systemsIndexed[id];
+}
+
+InputManager& GameObject::Input() { return scene->world->Input(); }
+
+std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) {
     std::vector<TypeInfo> infos;
+    GameWorld* world = scene->world;
     for (int i=0; i<world->components.size(); ++i) {
-        if (!world->componentInfos[i].getTypeInfo) continue; // component has no type
-        if (!data->activeComponents[i]) continue; // gameobject hasn't got component
+        if (!world->components[i].getTypeInfo) continue; // component has no type
+        if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
-        infos.emplace_back(world->componentInfos[i].getTypeInfo(this));
-        infos[infos.size()-1].name = world->componentInfos[i].name;
+        infos.emplace_back(world->components[i].getTypeInfo(this));
+        infos[infos.size()-1].name = world->components[i].name;
     }
     return infos;
 }
 
 std::vector<int> GameObject::GetComponentIndicies() {
     std::vector<int> indicies;
-    for (int i=0; i<world->components.size(); ++i) {
-        if (data->activeComponents[i]) {
+    for (int i=0; i<activeComponents.Size(); ++i) {
+        if (activeComponents[i]) {
             indicies.push_back(i);
         }
     }
     return indicies;
 }
 
+
+
+
+
 //SERIALIZATION
 
-
-std::map<GameObject*, std::string> serializedObjects;
-
-struct AddReferenceComponent {
-    GameObject* object;
-    int componentID;
-    std::string referenceID;
-};
-
-std::vector<AddReferenceComponent> addReferenceComponents;
-
-void RecurseTree(GameObject* object, std::map<GameObject*, std::string>& objects) {
-    std::string id = object->GetID();
-    if (id == "") {
-        std::stringstream s;
-        s<<(objects.size() + 1);
-        id = s.str();
-    }
-    objects[object] = id;
-    for(auto s : object->Children()) {
-        RecurseTree(s, objects);
-    }
-}
-
-struct CloneReferenceComponent {
-    GameObject* object;
-    int componentID;
-    GameObject* referencedObject;
-};
-
-std::set<GameObject*> clonedSourceObjects;
-std::vector<CloneReferenceComponent> clonedReferenceComponents;
-std::map<GameObject*, GameObject*> sourceToClonedObjects;
-
-void RecurseTree(GameObject* object, std::set<GameObject*>& objects) {
-    objects.insert(object);
-    for(auto s : object->Children()) {
-        RecurseTree(s, objects);
-    }
-}
-
-void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
-    serializedObjects.clear();
-    RecurseTree(this, serializedObjects);
-
+void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) const {
     minijson::writer_configuration config;
     config = config.pretty_printing(true);
     minijson::object_writer writer(stream, config);
@@ -258,45 +296,51 @@ void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) {
     writer.close();
 }
 
-void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) {
+void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const {
 
-    bool isRoot = this==world->Root();
+    minijson::object_writer gameObject = writer.nested_object("GameObject");
 
-    minijson::object_writer gameObject = writer.nested_object(!isRoot ? "GameObject" : "World");
-    
-    if (!isRoot) {
-        gameObject.write("id", serializedObjects[this]);
-        minijson::array_writer components = gameObject.nested_array("Components");
-        
-        if (data->activeComponents.Size()>0) {
-            for(int i=0; i<world->components.size(); ++i) {
-                if (data->activeComponents[i] && !(predicate && !predicate(this, i))) {
-                    GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
-                    GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
-                    bool isReference =  componentOwner != this;
-                    if (isReference) {
-                        if (predicate && !predicate(componentOwner, i)) {
-                            continue;
-                        }
-                    }
-                    SerializeComponent(i, components, isReference, componentOwner);
-                }
-            }
-        }
-        components.close();
+    if (IsRoot()) {
+        gameObject.write("id", rootId);
+        gameObject.write("guid", scene->guid);
+        gameObject.write("counter", scene->idCounter);
     } else {
-        gameObject.write("id", world->Guid().c_str());
+        gameObject.write("id", rootId);
     }
     
-    if (!data->children.empty()) {
+    minijson::array_writer components = gameObject.nested_array("Components");
+    
+    GameWorld* world = scene->world;
+    
+    if (activeComponents.Size()>0) {
+        for(int i=0; i<world->components.size(); ++i) {
+            if (activeComponents[i] && !(predicate && !predicate(this, i))) {
+            
+                int ownerIndex = world->components[i].container->GetOwner(componentIndicies[i]);
+                bool isReference = (ownerIndex != index) && ownerIndex>=0;
+                GameObject* componentOwner;
+                if (isReference) {
+                    componentOwner = &world->objects.entries[ownerIndex];
+                    if (predicate && !predicate(componentOwner, i)) {
+                        continue;
+                    }
+                } else {
+                    componentOwner = 0;
+                }
+                SerializeComponent(i, components, isReference, componentOwner);
+            }
+        }
+    }
+    components.close();
+    
+    if (!children.empty()) {
         minijson::array_writer children_object = gameObject.nested_array("Children");
-        for(auto child : data->children) {
+        for(auto child : children) {
             if (predicate && !predicate(child, -1)) {
                 continue;
             }
-            GameObject* childSpecific = (GameObject*)child;
             minijson::object_writer child_object = children_object.nested_object();
-            childSpecific->WriteJson(child_object, predicate);
+            child->WriteJson(child_object, predicate);
             child_object.close();
         }
         children_object.close();
@@ -305,9 +349,12 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
     gameObject.close();
 }
 
-void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject ) {
+void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject ) const {
     minijson::object_writer componentWriter = writer.nested_object();
-    ComponentInfo& componentInfo = world->componentInfos[componentID];
+    
+    GameWorld* world = scene->world;
+    
+    GameWorld::ComponentInfo& componentInfo = world->components[componentID];
     
     if (!isReference) {
         minijson::object_writer jsonComponent = componentWriter.nested_object(componentInfo.name.c_str());
@@ -322,25 +369,35 @@ void GameObject::SerializeComponent(int componentID, minijson::array_writer& wri
         if (!referenceObject) {
             jsonComponent.write("id", "");
         } else {
-            std::string id = serializedObjects[referenceObject];
-            if (id=="") {
-                std::string* idFromObject = world->FindIDFromReferenceObject(this, componentID);
-                id = idFromObject ? *idFromObject : "";
+            if (referenceObject->scene == scene) {
+                jsonComponent.write("id", referenceObject->rootId);
+            } else {
+                std::stringstream s;
+                s<<referenceObject->rootId;
+                jsonComponent.write("id", referenceObject->scene->guid +":"+s.str());
             }
-            jsonComponent.write("id", id);
         }
         jsonComponent.close();
     }
     componentWriter.close();
 }
 
+struct AddReferenceComponent {
+    GameObject* object;
+    int componentID;
+    std::string referenceId;
+};
+
+std::vector<AddReferenceComponent> addReferenceComponents;
+
 void GameObject::AddComponent(minijson::istream_context& context, std::string componentName) {
+    GameWorld* world = scene->world;
     int componentID;
     bool isReference;
-    if (world->TryGetComponentIndex(componentName, componentID, isReference) && !data->activeComponents[componentID]) {
+    if (world->TryGetComponentIndex(componentName, componentID, isReference) && !activeComponents[componentID]) {
         if (!isReference) {
             AddComponent(componentID);
-            ComponentInfo& componentInfo = world->componentInfos[componentID];
+            GameWorld::ComponentInfo& componentInfo = world->components[componentID];
             if (componentInfo.getTypeInfo) {
                 auto type = componentInfo.getTypeInfo(this);
                 type.Deserialize(context);
@@ -351,9 +408,8 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
             std::string referenceID = "";
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string id = n;
-                if (id == "id" && v.type()==minijson::String) {
-                    referenceID = v.as_string();
-                    addReferenceComponents.push_back({ this, componentID, referenceID });
+                if (id == "id") {
+                    addReferenceComponents.push_back({ this, componentID, v.as_string() });
                 } else {
                     minijson::ignore(context);
                 }
@@ -364,128 +420,48 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
     }
 }
 
-//END SERIALIZATION
+std::map<std::pair<std::string, GameScene*>, GameObject*> addReferenceComponentObjects;
 
-void GameObject::SetID(std::string id) {
-    world->AddObjectID(this, id);
-}
-
-std::string GameObject::GetID() {
-    std::string* id = world->GetObjectID(this);
-    return id ? *id : "";
-}
-
-GameObject* GameObject::Clone(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate) {
-    clonedSourceObjects.clear();
-    RecurseTree(this, clonedSourceObjects);
-    clonedReferenceComponents.clear();
-    sourceToClonedObjects.clear();
-    GameObject* clone = CloneInternal(parent, world ? world : this->world, predicate);
-    for(auto& c : clonedReferenceComponents) {
-        c.object->AddComponent(c.componentID, sourceToClonedObjects[c.referencedObject]);
-    }
-    return clone;
-}
-
-
-void GameObject::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor) {
-    world->TryAddComponentContainer(id, std::move(constructor));
-}
-
-void GameObject::SetWorldEnableDirty() {
-    data->WorldEnabled.MakeDirty();
-    world->delayedActions.emplace_back([this](){
-        SetEnabled(data->WorldEnabled);
-    });
-}
-
-void GameObject::SetEnabled(bool enabled) {
-    for(int i=0; i<world->numComponentTypes; ++i) {
-        if (data->activeComponents[i]) {
-            TrySetComponentEnabled(i, enabled);
-        }
-    }
-}
-
-void GameObject::TrySetComponentEnabled(ComponentID id, bool enable) {
-    
-    enable = enable && WorldEnabled();
-
-    bool isEnabled = data->enabledComponents[id];
-    if (isEnabled==enable) {
-        return; //cannot double enable/disable components
-    }
-    
-    if (enable) {
-        data->enabledComponents.Set(id, true);
-        if (id>=world->systemsPerComponent.size()) return; // component id is beyond systems
-        auto& systemsUsingComponent = world->systemsPerComponent[id];
-        for(auto systemIndex : systemsUsingComponent) {
-            auto& systemEntry = world->systemsIndexed[systemIndex];
-            bool isInterest = systemEntry.bitset.Contains(data->enabledComponents);
-            if (isInterest) {
-                systemEntry.system->AddObject(this);
-                systemEntry.system->ObjectAdded(this);
-            }
-        }
-    } else {
-        if (id>=world->systemsPerComponent.size()) return; // component id is beyond systems
-        auto& systemsUsingComponent = world->systemsPerComponent[id];
-        for(auto systemIndex : systemsUsingComponent) {
-            auto& systemEntry = world->systemsIndexed[systemIndex];
-            bool wasInterest = systemEntry.bitset.Contains(data->enabledComponents);
-            if (wasInterest) {
-                systemEntry.system->ObjectRemoved(this);
-                systemEntry.system->RemoveObject(this);
-            }
-        }
-        data->enabledComponents.Set(id, false);
-    }
-}
-
-bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, std::string &referenceID) {
+bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, GameObject** referenceObject) {
     if (addReferenceComponents.empty()) return false;
     auto& refObj = addReferenceComponents.back();
-    addReferenceComponents.pop_back();
     *object = refObj.object;
     componentID = refObj.componentID;
-    referenceID = refObj.referenceID;
+    
+    GameScene* scene = refObj.object->scene;
+    
+    auto pair = std::make_pair(refObj.referenceId, scene);
+    auto it = addReferenceComponentObjects.find(pair);
+    
+    if (it == addReferenceComponentObjects.end()) {
+    
+        size_t colonLocation = refObj.referenceId.rfind(":");
+        GameScene* referenceScene;
+        int objectId;
+        if (colonLocation==-1) {
+            referenceScene = scene;
+            objectId = ::atoi(refObj.referenceId.c_str());
+        } else {
+            std::string sceneId = refObj.referenceId.substr(0, colonLocation);
+            std::string objectIdStr = refObj.referenceId.substr(colonLocation+1, refObj.referenceId.size() - colonLocation-1);
+            referenceScene = scene->world->TryGetScene(sceneId);
+            objectId = ::atoi(objectIdStr.c_str());
+        }
+        
+        *referenceObject = referenceScene->FindObject(objectId);
+        addReferenceComponentObjects.insert(std::make_pair(pair, *referenceObject));
+    } else {
+        *referenceObject = it->second;
+    }
+    addReferenceComponents.pop_back();
     return true;
 }
 
-GameObject* GameObject::CloneInternal(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate) {
-    if (predicate && !predicate(this)) {
-        return 0;
-    }
-    GameObject* clone = world->CreateObject();
-    clone->Parent() = parent;
-    for(int i=0; i<world->components.size();++i) {
-        if (data->activeComponents[i]) {
-            GameWorld::ObjectComponent& objectComponent = world->objectComponents[i][index];
-            GameObject* componentOwner = objectComponent.container->GetOwner(objectComponent.index);
-            bool isReference =  componentOwner != this;
-            if (!isReference) {
-                clone->CloneComponent(i, this);
-            } else {
-                if (clonedSourceObjects.find(componentOwner)==clonedSourceObjects.end()) {
-                    clone->AddComponent(i, this);
-                } else {
-                    clonedReferenceComponents.push_back({ clone, i, componentOwner });
-                }
-            }
-        }
-    }
-    sourceToClonedObjects[this] = clone;
-    for(auto child : data->children) {
-        child->CloneInternal(clone, world, predicate);
-    }
-    return clone;
+void GameObject::EndGetAddReferenceComponent() {
+    addReferenceComponentObjects.clear();
 }
 
-void GameObject::Data::Reset() {
-    activeComponents.Reset();
-    enabledComponents.Reset();
-    removed = false;
-    Enabled = true;
-    Order = 0;
-}
+//END SERIALIZATION
+
+
+

@@ -10,5 +10,5 @@
 
 using namespace Pocket;
 
-ComponentID GameIDHelper::componentIDCounter = 0;
-SystemID GameIDHelper::systemIDCounter = 0;
+ComponentId GameIdHelper::componentIDCounter = 0;
+SystemId GameIdHelper::systemIDCounter = 0;
