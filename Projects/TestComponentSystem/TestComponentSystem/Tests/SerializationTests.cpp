@@ -52,8 +52,8 @@ struct RenderSystem : public GameSystem<Transform, Mesh, Renderable> {
 };
 
 void LogStream(const std::string& text, const std::stringstream& s) {
-    std::cout << text << ":" <<std::endl;
-    std::cout << s.str() << std::endl<<std::endl;
+    //std::cout << text << ":" <<std::endl;
+    //std::cout << s.str() << std::endl<<std::endl;
 }
 
 void SerializationTests::RunTests() {
@@ -160,7 +160,34 @@ void SerializationTests::RunTests() {
         return mesh1 == mesh2 && mesh2->vertices.size() == 10;
     });
     
-
+    AddTest("Reference Component, source removed", [] () {
+        GameWorld world;
+        world.AddSystemType<RenderSystem>();
+        
+        GameObject* root = world.CreateRoot();
+        GameObject* mesh = root->CreateChild();
+        GameObject* reference = root->CreateChild();
+        
+        mesh->AddComponent<Mesh>()->vertices.resize(5);
+        reference->AddComponent<Mesh>(mesh);
+        
+        mesh->Remove();
+        
+        world.Update(0);
+        
+        std::stringstream savedRoot;
+        root->ToJson(savedRoot);
+        
+        LogStream("", savedRoot);
+        
+        GameWorld loadWorld;
+        loadWorld.AddSystemType<RenderSystem>();
+        
+        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* o) {});
+        
+        Mesh* mesh1 = loadedRoot->Children()[0]->GetComponent<Mesh>();
+        return mesh1->vertices.size() == 5;
+    });
 
 }
 

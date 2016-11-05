@@ -525,5 +525,22 @@ void LogicTests::RunTests() {
         int id2 = object2->RootId();
         return id1!=id2 && object1 == object2;
     });
-
+    
+    AddTest("Remove object will remove component", [] () {
+        struct TestComponent { int bla; };
+        struct TestSystem : public GameSystem<TestComponent> { };
+    
+        GameWorld world;
+        world.AddSystemType<TestSystem>();
+        GameObject* root = world.CreateRoot();
+        GameObject* object1 = root->CreateChild();
+        TestComponent* comp1 = object1->AddComponent<TestComponent>();
+        object1->Remove();
+        world.Update(0);
+        GameObject* object2 = root->CreateChild();
+        TestComponent* comp2 = object2->AddComponent<TestComponent>();
+        
+        return comp1 == comp2;
+    });
+    
 }
