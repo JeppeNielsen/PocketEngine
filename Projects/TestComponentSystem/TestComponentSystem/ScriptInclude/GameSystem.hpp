@@ -30,11 +30,8 @@ public:
     template<typename T> T* CloneComponent(GameObject* source) { }
 };
 
-class SubSystemCreator;
-
 struct IGameSystem {
     virtual ~IGameSystem() = default;
-    virtual void CreateSubSystems(SubSystemCreator& creator) = 0;
     virtual void Initialize() = 0;
     virtual void Destroy() = 0;
     virtual void ObjectAdded(GameObject* object) = 0;
@@ -47,13 +44,10 @@ struct IGameSystem {
     virtual int ObjectCount() = 0;
 };
 
-class SubSystemCreator { };
-
 template<typename... T>
 class GameSystem : public IGameSystem {
 protected:
     virtual ~GameSystem() { }
-    virtual void CreateSubSystems(SubSystemCreator& creator) override { }
     virtual void Initialize() override { }
     virtual void Destroy() override { }
     virtual void ObjectAdded(GameObject* object) override { }

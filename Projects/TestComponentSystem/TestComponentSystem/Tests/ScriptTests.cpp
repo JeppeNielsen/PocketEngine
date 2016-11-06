@@ -49,10 +49,12 @@ void ScriptTests::RunTests() {
         scriptWorld.AddGameWorld(world);
     
         GameObject* root = world.CreateRoot();
+        scriptWorld.AddGameRoot(root);
         root->AddComponent(0);
         root->AddComponent(1);
         
         GameObject* root2 = world.CreateRoot();
+        scriptWorld.AddGameRoot(root2);
         root2->AddComponent(0);
         root2->AddComponent(1);
         

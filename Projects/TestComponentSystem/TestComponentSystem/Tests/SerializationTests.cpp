@@ -62,8 +62,9 @@ void SerializationTests::RunTests() {
     AddTest("Serialize gameobject id", [] {
         
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<VelocitySystem>();
+        
         GameObject* child = root->CreateChild();
         
         int rootId1 = root->RootId();
@@ -74,8 +75,8 @@ void SerializationTests::RunTests() {
         LogStream("Before", savedWorld);
     
         GameWorld world2;
-        GameObject* root2 = world2.CreateRootFromJson(savedWorld, [] (GameObject* object) {
-            
+        GameObject* root2 = world2.CreateRootFromJson(savedWorld, [] (GameObject* root) {
+            root->CreateSystem<VelocitySystem>();
         });
         
         int rootId2 = root2->RootId();
@@ -91,8 +92,8 @@ void SerializationTests::RunTests() {
      AddTest("Reference Component same root", [] {
         
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<RenderSystem>();
         
         GameObject* meshObject = root->CreateChild();
         
@@ -112,9 +113,10 @@ void SerializationTests::RunTests() {
         LogStream("Root", savedRoot);
         
         GameWorld loadWorld;
-        loadWorld.AddSystemType<RenderSystem>();
         
-        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* object) { });
+        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* root) {
+            root->CreateSystem<RenderSystem>();
+        });
         Mesh* mesh = loadedRoot->Children()[0]->GetComponent<Mesh>();
         Mesh* mesh2 = loadedRoot->Children()[1]->GetComponent<Mesh>();
     
@@ -125,14 +127,15 @@ void SerializationTests::RunTests() {
     AddTest("Reference Component Different roots", [] {
         
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* meshRoot = world.CreateRoot();
+        meshRoot->CreateSystem<RenderSystem>();
         auto& verts = meshRoot->AddComponent<Mesh>()->vertices;
         for (int i=0; i<10; ++i) {
             verts.push_back(i);
         }
         
         GameObject* objectRoot = world.CreateRoot();
+        objectRoot->CreateSystem<RenderSystem>();
         
         GameObject* cube1 = objectRoot->CreateChild();
         cube1->AddComponent<Transform>();
@@ -149,10 +152,9 @@ void SerializationTests::RunTests() {
         LogStream("ObjectRoot", savedObjectRoot);
         
         GameWorld loadWorld;
-        loadWorld.AddSystemType<RenderSystem>();
         
-        GameObject* loadedMeshRoot = loadWorld.CreateRootFromJson(savedMeshRoot, [](GameObject* object) { });
-        GameObject* loadedWorldRoot = loadWorld.CreateRootFromJson(savedObjectRoot, [](GameObject* object) { });
+        GameObject* loadedMeshRoot = loadWorld.CreateRootFromJson(savedMeshRoot, [](GameObject* root) { root->CreateSystem<RenderSystem>(); });
+        GameObject* loadedWorldRoot = loadWorld.CreateRootFromJson(savedObjectRoot, [](GameObject* root) { root->CreateSystem<RenderSystem>(); });
         
         Mesh* mesh1 = loadedMeshRoot->GetComponent<Mesh>();
         Mesh* mesh2 = loadedWorldRoot->Children()[0]->GetComponent<Mesh>();
@@ -162,9 +164,9 @@ void SerializationTests::RunTests() {
     
     AddTest("Reference Component, source removed", [] () {
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<RenderSystem>();
         GameObject* mesh = root->CreateChild();
         GameObject* reference = root->CreateChild();
         
@@ -181,10 +183,8 @@ void SerializationTests::RunTests() {
         LogStream("", savedRoot);
         
         GameWorld loadWorld;
-        loadWorld.AddSystemType<RenderSystem>();
         
-        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* o) {});
-        
+        GameObject* loadedRoot = loadWorld.CreateRootFromJson(savedRoot, [](GameObject* root) { root->CreateSystem<RenderSystem>(); });
         Mesh* mesh1 = loadedRoot->Children()[0]->GetComponent<Mesh>();
         return mesh1->vertices.size() == 5;
     });

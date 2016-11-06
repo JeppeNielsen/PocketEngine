@@ -91,8 +91,8 @@ void LogicTests::RunTests() {
         };
     
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
-        world.CreateRoot();
+        GameObject* root = world.CreateRoot();
+        root->CreateSystem<VelocitySystem>();
         return isSystemInitialized;
     });
     
@@ -108,8 +108,7 @@ void LogicTests::RunTests() {
         
         {
             GameWorld world;
-            world.AddSystemType<VelocitySystem>();
-            world.CreateRoot();
+            world.CreateRoot()->CreateSystem<VelocitySystem>();
         }
         return isSystemDestroyed;
     });
@@ -125,9 +124,8 @@ void LogicTests::RunTests() {
         };
     
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
-        world.CreateRoot();
-        world.CreateRoot();
+        world.CreateRoot()->CreateSystem<VelocitySystem>();
+        world.CreateRoot()->CreateSystem<VelocitySystem>();
         return initializedSystems.size() == 2 &&
         initializedSystems[0]!=initializedSystems[1] &&
         initializedSystems[0] && initializedSystems[1];
@@ -144,8 +142,8 @@ void LogicTests::RunTests() {
         };
     
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<VelocitySystem>();
         root->AddComponent<Transform>();
         root->AddComponent<Velocity>();
         world.Update(0);
@@ -167,8 +165,8 @@ void LogicTests::RunTests() {
         };
     
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<VelocitySystem>();
         root->AddComponent<Transform>();
         root->AddComponent<Velocity>();
         world.Update(0);
@@ -192,8 +190,8 @@ void LogicTests::RunTests() {
         };
     
         GameWorld world;
-        world.AddSystemType<VelocitySystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<VelocitySystem>();
         root->AddComponent<Transform>();
         root->AddComponent<Velocity>();
         root->Enabled = false;
@@ -230,8 +228,8 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         transform->x = 4;
         return object && transform && transform->x == 4;
@@ -241,8 +239,8 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         transform->x = 4;
         auto* transform2 = object->AddComponent<Transform>();
@@ -253,8 +251,8 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         return object && transform && object->HasComponent<Transform>();
     });
@@ -263,20 +261,32 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         auto transform2 = object->GetComponent<Transform>();
         return object && transform && transform == transform2;
     });
     
+    AddTest("Object::GetComponent is 0 on non owned component", []() {
+        struct Transform { int x; };
+        struct Velocity { int x; };
+        struct VelocitySystem : public GameSystem<Transform, Velocity> {};
+        GameWorld world;
+        auto object = world.CreateRoot();
+        object->CreateSystem<VelocitySystem>();
+        auto transform = object->AddComponent<Transform>();
+        auto velocity = object->GetComponent<Velocity>();
+        return object && transform && !velocity;
+    });
+
     
     AddTest("Object::RemoveComponent", []() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         transform->x = 123;
         bool firstTest = object && transform && transform->x == 123;
@@ -291,8 +301,8 @@ void LogicTests::RunTests() {
         struct Transform { Transform() : x(666) {} int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         auto transform = object->AddComponent<Transform>();
         transform->x = 123;
         bool firstTest = object && transform && transform->x == 123;
@@ -307,8 +317,8 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         auto object = world.CreateRoot();
+        object->CreateSystem<TransformSystem>();
         
         for(int i=0; i<100; i++) {
             if (std::rand() % 2==0) {
@@ -326,8 +336,8 @@ void LogicTests::RunTests() {
         struct Transform { int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<TransformSystem>();
         
         auto source = root->CreateChild();
         auto sourceTransform = source->AddComponent<Transform>();
@@ -344,8 +354,8 @@ void LogicTests::RunTests() {
         struct Transform { Transform() : x(666) {} int x; };
         struct TransformSystem : public GameSystem<Transform> {};
         GameWorld world;
-        world.AddSystemType<TransformSystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<TransformSystem>();
         auto source = root->CreateChild();
         auto sourceTransform = source->AddComponent<Transform>();
         sourceTransform->x = 123;
@@ -365,9 +375,9 @@ void LogicTests::RunTests() {
         struct Renderable { int imageNo; };
         struct RenderSystem : public GameSystem<Transform, Renderable> { };
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* root = world.CreateRoot();
-        RenderSystem* system = root->GetSystem<RenderSystem>();
+        RenderSystem* system = root->CreateSystem<RenderSystem>();
+
         bool wasNone = system->Objects().size() == 0;
         GameObject* object = root->CreateChild();
         object->AddComponent<Transform>();
@@ -382,9 +392,9 @@ void LogicTests::RunTests() {
         struct Renderable { int imageNo; };
         struct RenderSystem : public GameSystem<Transform, Renderable> { };
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* root = world.CreateRoot();
-        RenderSystem* system = root->GetSystem<RenderSystem>();
+        RenderSystem* system = root->CreateSystem<RenderSystem>();
+
         bool wasNone = system->Objects().size() == 0;
         GameObject* object = root->CreateChild();
         object->AddComponent<Transform>();
@@ -413,9 +423,8 @@ void LogicTests::RunTests() {
         bool wasOne;
         {
             GameWorld world;
-            world.AddSystemType<RenderSystem>();
             GameObject* root = world.CreateRoot();
-            RenderSystem* system = root->GetSystem<RenderSystem>();
+            RenderSystem* system = root->CreateSystem<RenderSystem>();
             system->Counter = &Counter;
             system->ConstuctorDestructorCounter = &ConstuctorDestructorCounter;
             GameObject* object = root->CreateChild();;
@@ -432,9 +441,9 @@ void LogicTests::RunTests() {
         struct Renderable { int imageNo; };
         struct RenderSystem : public GameSystem<Transform, Renderable> { };
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* root = world.CreateRoot();
-        RenderSystem* system = root->GetSystem<RenderSystem>();
+        RenderSystem* system = root->CreateSystem<RenderSystem>();
+        
         bool wasNone = system->Objects().size() == 0;
         GameObject* object = root->CreateChild();
         object->AddComponent<Transform>();
@@ -460,8 +469,9 @@ void LogicTests::RunTests() {
         };
         
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<RenderSystem>();
+        
         auto object = root->CreateChild();
         object->AddComponent<Renderable>();
         world.Update(0);
@@ -498,9 +508,8 @@ void LogicTests::RunTests() {
         };
         
         GameWorld world;
-        world.AddSystemType<RenderSystem>();
-        world.CreateRoot();
-        world.CreateRoot();
+        world.CreateRoot()->CreateSystem<RenderSystem>();
+        world.CreateRoot()->CreateSystem<RenderSystem>();
         
         return renderSystems.size() == 2 && renderSystems[0] && renderSystems[1] &&
         renderSystems[0]!=renderSystems[1];
@@ -531,8 +540,9 @@ void LogicTests::RunTests() {
         struct TestSystem : public GameSystem<TestComponent> { };
     
         GameWorld world;
-        world.AddSystemType<TestSystem>();
         GameObject* root = world.CreateRoot();
+        root->CreateSystem<TestSystem>();
+        
         GameObject* object1 = root->CreateChild();
         TestComponent* comp1 = object1->AddComponent<TestComponent>();
         object1->Remove();
@@ -542,5 +552,33 @@ void LogicTests::RunTests() {
         
         return comp1 == comp2;
     });
+    
+    AddTest("Different root systems", [] () {
+    
+        struct Component1 {};
+        struct Component2 {};
+        
+        struct System1 : public GameSystem<Component1> {};
+        struct System2 : public GameSystem<Component2> {};
+        
+        GameWorld world;
+        GameObject* root1 = world.CreateRoot();
+        root1->CreateSystem<System1>();
+        
+        GameObject* child1 = root1->CreateChild();
+        Component1* comp1_1 = child1->AddComponent<Component1>();
+        
+        GameObject* root2 = world.CreateRoot();
+        root2->CreateSystem<System2>();
+        
+        Component2* comp1_2 = child1->AddComponent<Component2>();
+        
+        GameObject* child2 = root2->CreateChild();
+        Component1* comp2_1 = child2->AddComponent<Component1>();
+        Component2* comp2_2 = child2->AddComponent<Component2>();
+        
+        return comp1_1 && comp1_2 && comp2_1 && comp2_2;
+    });
+    
     
 }
