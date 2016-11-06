@@ -26,7 +26,6 @@ public:
     using ObjectRenderers = std::vector<IObjectRenderer*>;
     using VisibleObjects = std::vector<VisibleObject>;
 
-    void CreateSubSystems(SubSystemCreator& creator);
     void Initialize();
     void Destroy();
     void ObjectAdded(GameObject *object);

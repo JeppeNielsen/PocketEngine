@@ -10,12 +10,8 @@
 
 using namespace Pocket;
 
-void ClickSelectorSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<SelectableCollection<Transform>>();
-}
-
 void ClickSelectorSystem::Initialize() {
-    selectables = root->GetSystem<SelectableCollection<Transform>>();
+    selectables = root->CreateSystem<SelectableCollection<Transform>>();
 }
 
 void ClickSelectorSystem::ObjectAdded(GameObject *object) {

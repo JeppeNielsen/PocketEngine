@@ -32,7 +32,7 @@ namespace Pocket {
     
         TouchSystem();
         ~TouchSystem();
-        void CreateSubSystems(SubSystemCreator& creator) override;
+        
         void Initialize() override;
         void Destroy() override;
         OctreeSystem& Octree();

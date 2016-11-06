@@ -47,7 +47,7 @@ void FirstPersonMoverSystem::TouchUp(Pocket::TouchEvent e) {
 void FirstPersonMoverSystem::Update(float dt) {
     if (!isDraggableSystemChecked) {
         isDraggableSystemChecked = true;
-        draggableSystem = root->GetSystem<DraggableSystem>();
+        draggableSystem = root->CreateSystem<DraggableSystem>(); // this was GetSystem<>
     }
     
     for(auto o : Objects()) {

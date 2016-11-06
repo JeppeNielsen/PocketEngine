@@ -42,15 +42,11 @@ SoundSystem::~SoundSystem() {
     }
 }
 
-void SoundSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<ListenerSystem>();
-    creator.AddSystemType<SoundTransformSystem>();
-}
-
 void SoundSystem::Initialize() {
+    root->CreateSystem<ListenerSystem>();
     float f[]={0,0,-1,0,1,0};
     alListenerfv(AL_ORIENTATION, f);
-    SoundTransformSystem* transformSystem = root->GetSystem<SoundTransformSystem>();
+    SoundTransformSystem* transformSystem = root->CreateSystem<SoundTransformSystem>();
     transformSystem->soundSystem = this;
 }
 

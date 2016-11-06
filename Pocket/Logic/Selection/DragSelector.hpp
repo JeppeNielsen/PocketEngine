@@ -18,7 +18,7 @@
 namespace Pocket {
     class DragSelector : public GameSystem<Transform, Mesh, Selectable> {
     public:
-        void CreateSubSystems(SubSystemCreator& creator) override;
+        
         void Initialize() override;
         void Destroy() override;
         

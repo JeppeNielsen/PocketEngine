@@ -12,16 +12,11 @@
 
 using namespace Pocket;
 
-void DragSelector::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<CameraSystem>();
-    creator.AddSystemType<SelectableCollection<Transform>>();
-}
-
 void DragSelector::Initialize() {
     draggingIndex = -1;
     
-    cameraSystem = root->GetSystem<CameraSystem>();
-    selectables = root->GetSystem<SelectableCollection<Transform>>();
+    cameraSystem = root->CreateSystem<CameraSystem>();
+    selectables = root->CreateSystem<SelectableCollection<Transform>>();
     
     root->Input().TouchDown.Bind(this, &DragSelector::Down);
     root->Input().TouchUp.Bind(this, &DragSelector::Up);
@@ -39,9 +34,8 @@ void DragSelector::Setup(const Pocket::Rect &viewport) {
     BoundingBox bounds(0, Vector3(viewport.width * 2.0f, viewport.height * 2.0f, 3000.0f));
     
     renderWorld.Clear();
-    renderWorld.AddSystemType<RenderSystem>();
     GameObject* root = renderWorld.CreateRoot();
-    renderer = root->GetSystem<RenderSystem>();
+    renderer = root->CreateSystem<RenderSystem>();
     
     renderer->Octree().SetWorldBounds(bounds);
     

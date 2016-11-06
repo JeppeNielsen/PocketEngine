@@ -16,18 +16,13 @@ TouchSystem::TouchSystem() : TouchDepth(0) { }
 
 TouchSystem::~TouchSystem() { }
 
-
-void TouchSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<OctreeSystem>();
-    creator.AddSystemType<TouchSystem::CameraSystem>();
-    creator.AddSystemType<OrderableSystem>();
-}
-
 void TouchSystem::Initialize() {
+    octree = root->CreateSystem<OctreeSystem>();
+    cameraSystem = root->CreateSystem<TouchSystem::CameraSystem>();
+    root->CreateSystem<OrderableSystem>();
+
     root->Input().TouchDown.Bind(this, &TouchSystem::TouchDown);
     root->Input().TouchUp.Bind(this, &TouchSystem::TouchUp);
-    octree = root->GetSystem<OctreeSystem>();
-    cameraSystem = root->GetSystem<TouchSystem::CameraSystem>();
 }
 
 void TouchSystem::Destroy() {

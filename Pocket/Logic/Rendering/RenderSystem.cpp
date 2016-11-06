@@ -14,15 +14,12 @@ using namespace Pocket;
 RenderSystem::ObjectRenderers RenderSystem::objectRenderers;
 int RenderSystem::objectRenderersRefCounter = 0;
 
-void RenderSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<CameraSystem>();
-    creator.AddSystemType<OctreeSystem>();
-    creator.AddSystemType<TextureSystem>();
-}
-
 void RenderSystem::Initialize() {
-    cameras = root->GetSystem<CameraSystem>();
-    meshOctreeSystem = root->GetSystem<OctreeSystem>();
+    
+    cameras = root->CreateSystem<CameraSystem>();
+    meshOctreeSystem = root->CreateSystem<OctreeSystem>();
+    root->CreateSystem<TextureSystem>();
+
     Shaders.Initialize();
     DefaultShader = &Shaders.Colored;
     DefaultTexturedShader = &Shaders.Textured;

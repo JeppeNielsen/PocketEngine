@@ -20,7 +20,7 @@ namespace Pocket {
         SoundSystem();
         ~SoundSystem();
         
-        void CreateSubSystems(SubSystemCreator& creator);
+        
         void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);

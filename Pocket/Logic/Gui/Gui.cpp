@@ -13,34 +13,28 @@ using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<RenderSystem>();
-    creator.AddSystemType<TextBoxSystem>();
-    creator.AddSystemType<TouchSystem>();
-    
-    creator.AddSystemType<TransformHierarchy>();
-    creator.AddSystemType<LabelMeshSystem>();
-    creator.AddSystemType<SpriteMeshSystem>();
-    creator.AddSystemType<SpriteTextureSystem>();
-    creator.AddSystemType<HierarchyOrder>();
-    creator.AddSystemType<DraggableSystem>();
-    creator.AddSystemType<LayoutSystem>();
-    creator.AddSystemType<TextBoxLabelSystem>();
-    //creator.AddSystemType<MenuSystem>();
-    creator.AddSystemType<MenuButtonSystem>();
-    creator.AddSystemType<ColorSystem>();
-    creator.AddSystemType<DraggableMotionSystem>();
-    creator.AddSystemType<VelocitySystem>();
-    creator.AddSystemType<LimitableSystem>();
-    creator.AddSystemType<SelectedColorerSystem>();
-    creator.AddSystemType<DroppableSystem>();
-    creator.AddSystemType<DraggableMotionSystem>();
-}
-
 void Gui::Initialize() {
-    renderer = root->GetSystem<RenderSystem>();
-    textboxSystem = root->GetSystem<TextBoxSystem>();
-    touchSystem = root->GetSystem<TouchSystem>();
+    renderer = root->CreateSystem<RenderSystem>();
+    textboxSystem = root->CreateSystem<TextBoxSystem>();
+    touchSystem = root->CreateSystem<TouchSystem>();
+    
+    root->CreateSystem<TransformHierarchy>();
+    root->CreateSystem<LabelMeshSystem>();
+    root->CreateSystem<SpriteMeshSystem>();
+    root->CreateSystem<SpriteTextureSystem>();
+    root->CreateSystem<HierarchyOrder>();
+    root->CreateSystem<DraggableSystem>();
+    root->CreateSystem<LayoutSystem>();
+    root->CreateSystem<TextBoxLabelSystem>();
+    //root->CreateSystem<MenuSystem>();
+    root->CreateSystem<MenuButtonSystem>();
+    root->CreateSystem<ColorSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<VelocitySystem>();
+    root->CreateSystem<LimitableSystem>();
+    root->CreateSystem<SelectedColorerSystem>();
+    root->CreateSystem<DroppableSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {

@@ -13,12 +13,8 @@
 
 using namespace Pocket;
 
-void DroppableSystem::CreateSubSystems(Pocket::SubSystemCreator &creator) {
-    creator.AddSystemType<TouchSystem>();
-}
-
 void DroppableSystem::Initialize() {
-    touchSystem = root->GetSystem<TouchSystem>();
+    touchSystem = root->CreateSystem<TouchSystem>();
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {
