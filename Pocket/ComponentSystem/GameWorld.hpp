@@ -68,10 +68,26 @@ namespace Pocket {
         void DoActions(Actions &actions);
         void RemoveRoot(GameObject* root);
         GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene, bool assignId);
-        GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
-        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated);
+        GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated);
+        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated);
         GameScene* TryGetScene(const std::string& guid);
         GameObject* FindObject(const std::string& guid, int objectId);
+        
+        template<typename T>
+        void AddSystemType() {
+            AddSystemType(GameIdHelper::GetSystemID<T>(), [this] (SystemInfo& systemInfo, std::vector<ComponentId>& components) {
+                T::ExtractAllComponents(*this, components);
+                systemInfo.createFunction = [] (GameObject* root) {
+                    T* system = new T();
+                    GameObject** systemRoot = ((GameObject**)&system->root);
+                    *(systemRoot) = root;
+                    return system;
+                };
+                systemInfo.deleteFunction = [] (IGameSystem* system) {
+                    delete ((T*)system);
+                };
+            });
+        }
         
     public:
     
@@ -94,24 +110,10 @@ namespace Pocket {
             });
         }
     
-        template<typename T>
-        void AddSystemType() {
-            AddSystemType(GameIdHelper::GetSystemID<T>(), [this] (SystemInfo& systemInfo, std::vector<ComponentId>& components) {
-                T::ExtractAllComponents(*this, components);
-                systemInfo.createFunction = [] (GameObject* root) {
-                    T* system = new T();
-                    GameObject** systemRoot = ((GameObject**)&system->root);
-                    *(systemRoot) = root;
-                    return system;
-                };
-                systemInfo.deleteFunction = [] (IGameSystem* system) {
-                    delete ((T*)system);
-                };
-            });
-        }
-        
         GameObject* CreateRoot();
-        GameObject* CreateRootFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        GameObject* CreateRootFromJson(std::istream& jsonStream,
+                                       const std::function<void(GameObject*)>& rootCreated,
+                                       const std::function<void(GameObject*)>& childCreated = 0);
         
         const ObjectCollection& Roots();
         
@@ -132,14 +134,9 @@ namespace Pocket {
         friend class ScriptWorld;
     };
     
-    class SubSystemCreator {
-    private:
-        friend class GameWorld;
-        GameWorld* world;
-    public:
-        template<typename T>
-        void AddSystemType() {
-            world->AddSystemType<T>();
-        }
-    };
+    template<typename T>
+    T* GameObject::CreateSystem() {
+        scene->world->AddSystemType<T>();
+        return static_cast<T*>(scene->CreateSystem(GameIdHelper::GetSystemID<T>()));
+    }
 }

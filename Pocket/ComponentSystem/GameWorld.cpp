@@ -49,12 +49,14 @@ void GameWorld::AddSystemType(SystemId systemId, const SystemTypeFunction& funct
             }
         }
         systemInfo.bitset = systemBitset;
-        objects.defaultObject.activeComponents.Resize(componentTypesCount);
-        IGameSystem* system = systemInfo.createFunction(0);
-        SubSystemCreator creator;
-        creator.world = this;
-        system->CreateSubSystems(creator);
-        systemInfo.deleteFunction(system);
+        if (objects.defaultObject.activeComponents.Size()<componentTypesCount) {
+            objects.defaultObject.activeComponents.Resize(componentTypesCount);
+            for(auto& o : objects.entries) {
+                o.activeComponents.Resize(componentTypesCount);
+                o.enabledComponents.Resize(componentTypesCount);
+                o.componentIndicies.resize(componentTypesCount);
+            }
+        }
     }
 }
 
@@ -107,8 +109,17 @@ GameObject* GameWorld::CreateRoot() {
     return root;
 }
 
-GameObject* GameWorld::CreateRootFromJson(std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
-    return CreateObjectFromJson(0, jsonStream, onCreated);
+static std::function<void(GameObject*)> rootCreatedStatic = 0;
+
+GameObject* GameWorld::CreateRootFromJson(std::istream &jsonStream,
+                                       const std::function<void(GameObject*)>& rootCreated,
+                                       const std::function<void(GameObject*)>& childCreated) {
+    rootCreatedStatic = [&rootCreated](GameObject* o) {
+        rootCreated(o);
+    };
+    GameObject* root = CreateObjectFromJson(0, jsonStream, childCreated);
+    rootCreatedStatic = 0;
+    return root;
 }
 
 void GameWorld::RemoveRoot(Pocket::GameObject *root) {
@@ -159,11 +170,11 @@ GameObject* GameWorld::CreateEmptyObject(GameObject *parent, GameScene* scene, b
     return object;
 }
 
-GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
+GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::istream &jsonStream, const std::function<void (GameObject *)>& objectCreated) {
     minijson::istream_context context(jsonStream);
     GameObject* object = 0;
     try {
-        object = LoadObject(parent, context, onCreated);
+        object = LoadObject(parent, context, objectCreated);
         
         GameObject* object;
         int componentID;
@@ -180,11 +191,16 @@ GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::ist
     return object;
 }
 
-GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, std::function<void(GameObject*)>& onCreated) {
+GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated) {
     GameObject* object = 0;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
         if (v.type() == minijson::Object) {
-            object = !parent ? CreateRoot() : CreateEmptyObject(parent, parent->scene, false);
+            if (!parent) {
+                object = CreateRoot();
+                rootCreatedStatic(object);
+            } else {
+                object = CreateEmptyObject(parent, parent->scene, false);
+            }
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::Number) {
@@ -199,7 +215,7 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
-                        LoadObject(object, context, onCreated);
+                        LoadObject(object, context, objectCreated);
                     });
                 } else if (!parent && name == "guid" && v.type() == minijson::String) {
                     object->scene->guid = std::string(v.as_string());
@@ -207,8 +223,8 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
                     object->scene->idCounter = (int)v.as_long();
                 }
                 
-                if (onCreated) {
-                    onCreated(object);
+                if (objectCreated) {
+                    objectCreated(object);
                 }
             });
         }

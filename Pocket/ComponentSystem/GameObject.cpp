@@ -162,10 +162,12 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
     if (enable) {
         enabledComponents.Set(id, true);
         for(auto systemIndex : componentInfo.systemsUsingComponent) {
+            if (systemIndex>=scene->systemsIndexed.size()) break; // systemindex is beyond scene's systems list, thus nothing else to do
             auto& systemBitset = world->systems[systemIndex].bitset;
             bool isInterest = systemBitset.Contains(enabledComponents);
             if (isInterest) {
                 IGameSystem* system = scene->systemsIndexed[systemIndex];
+                if (!system) continue; // system is not part of scene/root
                 system->AddObject(this);
                 system->ObjectAdded(this);
                 if (system->ObjectCount() == 1) {
@@ -175,10 +177,13 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
         }
     } else {
         for(auto systemIndex : componentInfo.systemsUsingComponent) {
+            if (systemIndex>=scene->systemsIndexed.size()) break; // systemindex is beyond scene's systems list, thus nothing else to do
             auto& systemBitset = world->systems[systemIndex].bitset;
             bool wasInterest = systemBitset.Contains(enabledComponents);
             if (wasInterest) {
                 IGameSystem* system = scene->systemsIndexed[systemIndex];
+                if (!system) continue; // system is not part of scene/root
+
                 system->ObjectRemoved(this);
                 system->RemoveObject(this);
                 if (system->ObjectCount() == 0) {
@@ -236,8 +241,8 @@ GameObject* GameObject::CreateObject() {
     return scene->root->CreateChild();
 }
 
-GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, std::function<void (GameObject *)> onCreated) {
-    return scene->world->CreateObjectFromJson(this, jsonStream, onCreated);
+GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, const std::function<void (GameObject *)>& objectCreated) {
+    return scene->world->CreateObjectFromJson(this, jsonStream, objectCreated);
 }
 
 GameObject* GameObject::Root() {
@@ -250,11 +255,6 @@ bool GameObject::IsRoot() const {
 
 const ObjectCollection& GameObject::Children() {
     return children;
-}
-
-IGameSystem* GameObject::GetSystem(SystemId id) {
-    if (id>=scene->systemsIndexed.size()) return 0;
-    return scene->systemsIndexed[id];
 }
 
 InputManager& GameObject::Input() { return scene->world->Input(); }

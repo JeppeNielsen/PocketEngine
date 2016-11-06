@@ -65,7 +65,6 @@ namespace Pocket {
         void TrySetComponentEnabled(ComponentId id, bool enable);
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
-        IGameSystem* GetSystem(SystemId id);
         
         void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
         void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
@@ -118,11 +117,6 @@ namespace Pocket {
             return static_cast<T*>(GetComponent(componentId));
         }
         
-        template<typename T>
-        T* GetSystem() {
-            return static_cast<T*>(GetSystem(GameIdHelper::GetSystemID<T>()));
-        }
-        
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate);
         std::vector<int> GetComponentIndicies();
         
@@ -134,7 +128,7 @@ namespace Pocket {
         GameObject* CreateChild();
         GameObject* CreateObject();
         GameObject* Root();
-        GameObject* CreateChildFromJson(std::istream& jsonStream, std::function<void(GameObject*)> onCreated);
+        GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated);
         
         void ToJson(std::ostream& stream, SerializePredicate predicate = 0) const;
         
@@ -145,7 +139,8 @@ namespace Pocket {
         Handle<GameObject> GetHandle();
         
         int RootId() const;
+        
+        template<typename T>
+        T* CreateSystem();
     };
-    
-    
 }

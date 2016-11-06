@@ -15,7 +15,6 @@ namespace Pocket {
     
     struct IGameSystem {
         virtual ~IGameSystem() = default;
-        virtual void CreateSubSystems(SubSystemCreator& creator) = 0;
         virtual void Initialize() = 0;
         virtual void Destroy() = 0;
         virtual void ObjectAdded(GameObject* object) = 0;

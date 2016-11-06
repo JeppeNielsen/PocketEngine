@@ -752,7 +752,6 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             componentNameCounter++;
         }
     }
-
     
     auto& scriptSystems = scriptClasses.children["Systems"].children;
     
@@ -777,7 +776,19 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         });
         index++;
     }
+
     return true;
+}
+
+void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
+    
+    auto& scriptSystems = scriptClasses.children["Systems"].children;
+    GameScene* scene = root->scene;
+    
+    for (int i=0; i<scriptSystems.size(); ++i) {
+        int systemIndex = baseSystemIndex + i;
+        scene->CreateSystem(systemIndex);
+    }
 }
 
 void ScriptWorld::RemoveGameWorld(GameWorld& world) {

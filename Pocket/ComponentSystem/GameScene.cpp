@@ -27,19 +27,12 @@ GameScene::~GameScene() {
 
 GameScene::GameScene(const GameScene& other) {
     activeSystems.clear();
-    systemsIndexed.resize(other.world->systems.size(), 0);
+    systemsIndexed.clear();
     delayedActions.clear();
-    
-    for (int i=0; i<other.world->systems.size(); ++i) {
-        if (other.world->systems[i].createFunction) {
-            systemsIndexed[i] = other.world->systems[i].createFunction(root);
-            systemsIndexed[i]->Initialize();
-        } 
-    }
 }
 
 void GameScene::DestroySystems() {
-    for (int i=0; i<world->systems.size(); ++i) {
+    for (int i=0; i<systemsIndexed.size(); ++i) {
         if (systemsIndexed[i]) {
             systemsIndexed[i]->Destroy();
         }
@@ -78,4 +71,16 @@ GameObject* GameScene::FindObject(int objectId) {
     }
     
     return 0;
+}
+
+IGameSystem* GameScene::CreateSystem(int systemId) {
+    if (systemId>=systemsIndexed.size()) {
+        systemsIndexed.resize(systemId + 1, 0);
+    }
+
+    if (!systemsIndexed[systemId]) {
+        systemsIndexed[systemId] = world->systems[systemId].createFunction(root);
+        systemsIndexed[systemId]->Initialize();
+    }
+    return systemsIndexed[systemId];
 }

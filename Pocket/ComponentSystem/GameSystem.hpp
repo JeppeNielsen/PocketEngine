@@ -19,7 +19,6 @@ namespace Pocket {
         friend class GameWorld;
         GameSystemBase();
         virtual ~GameSystemBase();
-        virtual void CreateSubSystems(SubSystemCreator& creator) override;
         virtual void Initialize() override;
         virtual void Destroy() override;
         virtual void ObjectAdded(GameObject* object) override;
