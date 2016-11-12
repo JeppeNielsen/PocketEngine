@@ -612,4 +612,54 @@ void LogicTests::RunTests() {
                 updatedSystems[0] == s2 &&
                 updatedSystems[1] == s1;
     });
+    
+    AddTest("Create child clone", [] () {
+        struct Transform {
+            int position;
+        };
+        
+        struct Moveable {
+            int speed;
+        };
+        
+        struct MoverSystem : public GameSystem<Transform, Moveable> {};
+    
+        GameWorld world;
+        GameObject* sourceRoot = world.CreateRoot();
+        sourceRoot->CreateSystem<MoverSystem>();
+        GameObject* source = sourceRoot->CreateChild();
+        source->AddComponent<Transform>()->position = 12345;
+        source->AddComponent<Moveable>()->speed = 67890;
+    
+        GameObject* destRoot = world.CreateRoot();
+        GameObject* clone = destRoot->CreateChildClone(source);
+        
+        return clone->GetComponent<Transform>() &&
+               clone->GetComponent<Moveable>() &&
+               clone->GetComponent<Transform>()->position == source->GetComponent<Transform>()->position &&
+               clone->GetComponent<Moveable>()->speed == source->GetComponent<Moveable>()->speed &&
+               clone->GetComponent<Transform>()!=source->GetComponent<Transform>() &&
+               clone->GetComponent<Moveable>()!=source->GetComponent<Moveable>();
+    });
+    
+    
+    AddTest("Create copy", [] () {
+        struct Transform {
+            int position;
+        };
+        struct TransformSystem : public GameSystem<Transform> {};
+    
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        root->CreateSystem<TransformSystem>();
+        GameObject* source = root->CreateChild();
+        source->AddComponent<Transform>()->position = 12345;
+        
+        GameObject* copy = source->CreateCopy();
+        
+        return copy->GetComponent<Transform>() &&
+                copy->GetComponent<Transform>()!=source->GetComponent<Transform>() &&
+                copy->GetComponent<Transform>()->position == source->GetComponent<Transform>()->position &&
+                source->Parent()==copy->Parent();
+        });
 }
