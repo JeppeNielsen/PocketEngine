@@ -22,12 +22,12 @@ void InspectorWindow::OnInitialize() {
     //selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
     //selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     
-    GameWorld& guiWorld = context->GuiWorld();
+    GameObject& guiRoot = context->GuiRoot();
     
-    guiWorld.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
-    guiWorld.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
     
-    guiWorld.CreateSystem<LayoutSystem>();
+    guiRoot.CreateSystem<LayoutSystem>();
     
     CreateDefaultSerializedEditors();
     selectables = 0;
@@ -36,7 +36,7 @@ void InspectorWindow::OnInitialize() {
     removeComponentMenu.AddChild("Remove").Clicked.Bind([this] () {
         if (!currentWorld) return;
         int componentIndex;
-        if (!currentWorld->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
+        if (!context->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
             return;
         }
         for(auto o : selectables->Selected()) {
@@ -79,7 +79,7 @@ void InspectorWindow::OnCreate() {
 
 */
 
-    GameWorld& guiWorld = context->GuiWorld();
+    GameObject& guiWorld = context->GuiRoot();
     Gui& gui = context->Gui();
     
     guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
@@ -89,7 +89,7 @@ void InspectorWindow::OnCreate() {
     
     addComponentButton = gui.CreateLabelControl(window, "Box", {0,400-40}, 40, 0, "+", 10);
     addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);
-    addComponentButton->Enabled() = false;
+    addComponentButton->Enabled = false;
     
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-80}, &pivot);
@@ -118,7 +118,7 @@ void InspectorWindow::ComponentClicked(Pocket::TouchData d, GameObjectEditor::Co
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
-    addComponentButton->Enabled() = !selectables->Selected().empty();
+    addComponentButton->Enabled = !selectables->Selected().empty();
 }
 
 void InspectorWindow::AddComponentClicked(Pocket::TouchData d) {
@@ -135,7 +135,7 @@ void InspectorWindow::ShowSelectionBox(EditorObject *editorObject) {
 
     selectionBox = gui.CreateControl(window);
     
-    auto& componentTypes = context->Project().World().ComponentTypes();
+    auto componentTypes = context->World().GetComponentTypes();
     
     Vector2 pos;
     for(int i=0; i<componentTypes.size(); ++i) {

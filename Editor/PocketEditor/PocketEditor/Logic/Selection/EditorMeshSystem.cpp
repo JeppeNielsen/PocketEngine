@@ -19,7 +19,7 @@ void EditorMeshSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void EditorMeshSystem::SelectionChanged(Pocket::GameObject *object) {
     if (object->GetComponent<Selectable>()->Selected) {
-        GameObject* selectionObject = world->CreateObject();
+        GameObject* selectionObject = root->CreateObject();
         selectionObject->AddComponent<Transform>(object);
         selectionObject->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1.05f);
         selectionObject->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f, 0.5f));

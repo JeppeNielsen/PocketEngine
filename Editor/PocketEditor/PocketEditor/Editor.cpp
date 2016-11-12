@@ -75,16 +75,14 @@ public:
     }
     
     void Update(float dt) {
-        context.ContextWorld().Update(dt);
-        context.Project().Update(dt);
-        context.GuiWorld().Update(dt);
+        context.Update(dt);
     }
     
     void Render() {
         //glClearColor(1, 1, 0, 1);
         //glClear(GL_COLOR_BUFFER_BIT);
-        context.Project().Render();
-        context.GuiWorld().Render();
+        
+        context.Render();
     }
 };
 

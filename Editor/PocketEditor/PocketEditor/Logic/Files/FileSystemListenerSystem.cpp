@@ -10,6 +10,10 @@
 #include <dirent.h>
 #include "GameWorld.hpp"
 
+void FileSystemListenerSystem::Initialize() {
+
+}
+
 void FileSystemListenerSystem::ObjectAdded(Pocket::GameObject *object) {
     FileSystemListener* listener = object->GetComponent<FileSystemListener>();
     listener->watcher.Start(listener->Path);
@@ -52,8 +56,7 @@ void FileSystemListenerSystem::FindFilesAtPath(GameObject* parent, const std::st
         
         if (entry->d_type == DT_DIR ) {
             if (filename!="." && filename!="..") {
-                GameObject* go = world->CreateObject();
-                go->Parent() = parent;
+                GameObject* go = parent->CreateChild();
                 go->AddComponent<FilePath>()->path = path;
                 go->GetComponent<FilePath>()->filename = filename;
                 go->GetComponent<FilePath>()->isFolder = true;
@@ -62,8 +65,7 @@ void FileSystemListenerSystem::FindFilesAtPath(GameObject* parent, const std::st
             }
         } else {
             if (filename.find(extension)!=std::string::npos) {
-                GameObject* go = world->CreateObject();
-                go->Parent() = parent;
+                GameObject* go = parent->CreateChild();
                 go->AddComponent<FilePath>()->path = path;
                 go->GetComponent<FilePath>()->filename = filename;
                 go->GetComponent<FilePath>()->isFolder = false;

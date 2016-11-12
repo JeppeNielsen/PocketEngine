@@ -18,17 +18,22 @@ using namespace Pocket;
 
 class EditorContext {
 private:
-    Project project;
-    GameWorld contextWorld;
-    GameWorld guiWorld;
+    GameWorld world;
+    GameObject* contextRoot;
+    GameObject* guiRoot;
     Gui* gui;
     EngineContext* engineContext;
+    Project project;
+    
 public:
-    GameWorld& ContextWorld();
-    GameWorld& GuiWorld();
+    GameWorld& World();
+    GameObject& ContextRoot();
+    GameObject& GuiRoot();
     Gui& Gui();
-    Project& Project();
     EngineContext& EngineContext();
+    Project& Project();
     
     void Initialize(class EngineContext& engineContext);
+    void Update(float dt);
+    void Render();
 };

@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "EditorObject.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
@@ -21,8 +21,7 @@ public:
     void Initialize();
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
-    GameWorld* editorWorld;
-    GameObject* gameRoot;
+    GameObject* editorRoot;
     
 private:
     template<typename T>

@@ -30,12 +30,11 @@ void EditorTransformSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
     if (object->GetComponent<Selectable>()->Selected) {
-        GameObject* transformerObject = world->CreateObject();
+        GameObject* transformerObject = root->CreateObject();
         transformerObject->AddComponent<Transform>(object);
         
         {
-            GameObject* xaxis = world->CreateObject();
-            xaxis->Parent() = transformerObject;
+            GameObject* xaxis = transformerObject->CreateChild();
             xaxis->AddComponent<Transform>(object);
             xaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({1,0,0}, {1,0.05f,0.05f});
             xaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(1.0f,0,0.0f, 0.5f));
@@ -46,8 +45,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         }
         
         {
-            GameObject* yaxis = world->CreateObject();
-            yaxis->Parent() = transformerObject;
+            GameObject* yaxis = transformerObject->CreateChild();
             yaxis->AddComponent<Transform>(object);
             yaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,1,0}, {0.05f,1.0f,0.05f});
             yaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,1.0f,0.0f, 0.5f));
@@ -58,8 +56,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         }
         
         {
-            GameObject* zaxis = world->CreateObject();
-            zaxis->Parent() = transformerObject;
+            GameObject* zaxis = transformerObject->CreateChild();
             zaxis->AddComponent<Transform>(object);
             zaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0,1}, {0.05f,0.05f,1.0f});
             zaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,0.0f,1.0f, 0.5f));

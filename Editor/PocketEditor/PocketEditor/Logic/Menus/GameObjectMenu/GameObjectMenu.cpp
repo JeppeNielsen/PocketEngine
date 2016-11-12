@@ -18,9 +18,9 @@ void GameObjectMenu::OnInitialize() {
 }
 
 void GameObjectMenu::OnCreate() {
-
+    
     menu->AddChild("New", "N").Clicked.Bind([this] {
-        auto object = context->Project().Worlds.ActiveWorld()->World().CreateObject();
+        auto object = context->Project().Worlds.ActiveWorld()->Root()->CreateObject();
         object->AddComponent<Transform>()->Position = {0,0,0};
         object->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
         object->AddComponent<Material>();
@@ -35,7 +35,9 @@ void GameObjectMenu::OnCreate() {
     menu->AddChild("Clone", "C").Clicked.Bind([this] {
         selectables = context->Project().GetSelectables();
         for(auto o : selectables->Selected()) {
-            o->GetComponent<EditorObject>()->gameObject->Clone();
-        }
+            GameObject* source = o->GetComponent<EditorObject>()->gameObject;
+            if (source->IsRoot()) continue;
+            source->CreateCopy();
+         }
     });
 }

@@ -26,14 +26,7 @@
 #include "ScriptWorld.hpp"
 #include "InputMapperSystem.hpp"
 #include <fstream>
-
-GameWorld& OpenWorld::World() {
-    return world;
-}
-
-GameWorld& OpenWorld::EditorWorld() {
-    return editorWorld;
-}
+#include "Project.hpp"
 
 struct Turner {
     Vector3 speed;
@@ -51,7 +44,13 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
     }
 };
 
-void OpenWorld::CreateDefaultSystems(Pocket::GameWorld &world) {
+OpenWorld::OpenWorld() : root(0) {
+    IsPlaying.Changed.Bind([this] () {
+        UpdateTimeScale();
+    });
+}
+
+void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<RenderSystem>();
     world.CreateSystem<TransformHierarchy>();
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
@@ -61,18 +60,8 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameWorld &world) {
     world.CreateSystem<InputMapperSystem>();
 }
 
-void OpenWorld::CreateDefault() {
-
-    CreateDefaultSystems(world);
-
-    GameObject* gameRoot = editorWorld.CreateObject();
-    
-    RenderSystem* worldRenderSystem = world.CreateSystem<RenderSystem>();
-    auto creatorSystem = world.CreateSystem<EditorObjectCreatorSystem>();
-    creatorSystem->editorWorld = &editorWorld;
-    creatorSystem->gameRoot = gameRoot;
-    
-    RenderSystem* editorRenderSystem = editorWorld.CreateSystem<RenderSystem>();
+void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
+    editorWorld.CreateSystem<RenderSystem>();
     editorWorld.CreateSystem<TouchSystem>();
     editorWorld.CreateSystem<DraggableSystem>();
     editorWorld.CreateSystem<EditorTransformSystem>();
@@ -83,20 +72,7 @@ void OpenWorld::CreateDefault() {
     editorWorld.CreateSystem<TouchSystem>()->TouchDepth = 5;
     editorWorld.CreateSystem<SelectedColorerSystem>();
     editorWorld.CreateSystem<FirstPersonMoverSystem>();
-    
-    selectables = editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
-    
-    {
-        GameObject* camera = editorWorld.CreateObject();
-        camera->AddComponent<Camera>();
-        camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-        camera->GetComponent<Camera>()->FieldOfView = 70;
-        camera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
-    }
-    
-    worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
-    
-    
+    editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
 }
 
 bool OpenWorld::Save() {
@@ -106,9 +82,9 @@ bool OpenWorld::Save() {
         succes = true;
         std::ofstream file;
         file.open(Path);
-        world.ToJson(file, [] (GameObject* go, int componentID) {
-            if (componentID == Pocket::GameIDHelper::GetComponentID<EditorObject>()) return false;
-            if (go->Parent() && go->Parent()()->GetComponent<Cloner>()) return false;
+        root->ToJson(file, [] (const GameObject* go, int componentID) {
+            if (componentID == Pocket::GameIdHelper::GetComponentID<EditorObject>()) return false;
+            if (go->Parent() && go->Parent()->GetComponent<Cloner>()) return false;
             return true;
         });
         file.close();
@@ -118,47 +94,100 @@ bool OpenWorld::Save() {
     return succes;
 }
 
-bool OpenWorld::Load(const std::string &path, const std::string &filename, ScriptWorld& scriptWorld, Pocket::GameWorldDatabase* database) {
+bool OpenWorld::Load(const std::string &path, const std::string &filename, GameWorld& w, ScriptWorld& s) {
     Path = path;
     Filename = filename;
-    
-    world.SetDatabase(database);
-    CreateDefault();
-    scriptWorld.AddGameWorld(world);
+    world = &w;
+    scriptWorld = &s;
     
     if (path != "") {
         std::ifstream file;
         file.open(path);
-        world.CreateObject(file, 0, [](GameObject* go) {
+        root = world->CreateRootFromJson(file, [this] (GameObject* root) {
+            OpenWorld::CreateDefaultSystems(*root);
+            scriptWorld->AddGameRoot(root);
+        },
+        [](GameObject* go) {
             go->AddComponent<EditorObject>();
         });
         file.close();
+    } else {
+        root = world->CreateRoot();
+        CreateDefaultSystems(*root);
     }
+    
+    editorRoot = world->CreateRoot();
+    //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;
+    editorRoot->Order = 1;
+    CreateEditorSystems(*editorRoot);
+    selectables = editorRoot->CreateSystem<SelectableCollection<EditorObject>>();
+    
+    editorCamera = editorRoot->CreateObject();
+    editorCamera->AddComponent<Camera>();
+    editorCamera->AddComponent<Transform>()->Position = { 0, 0, 10 };
+    editorCamera->GetComponent<Camera>()->FieldOfView = 70;
+    editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
 
+    InitializeRoot();
     return true;
+}
+
+void OpenWorld::InitializeRoot() {
+    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
+    RenderSystem* worldRenderSystem = root->CreateSystem<RenderSystem>();
+    RenderSystem* editorRenderSystem = editorRoot->CreateSystem<RenderSystem>();
+    worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
+    
+    UpdateTimeScale();
 }
 
 void OpenWorld::Play() {
     if (IsPlaying) return;
     storedWorld.clear();
-    world.ToJson(storedWorld);
+    root->ToJson(storedWorld);
     IsPlaying = true;
 }
 
 void OpenWorld::Stop() {
     if (!IsPlaying) return;
-    for(auto o : world.Root()->Children()) {
-        o->Remove();
-    }
-    world.Update(0);
-    world.CreateObject(storedWorld, 0, [](GameObject* go) {
+    root->Remove();
     
+    //std::cout << storedWorld.str() << std::endl;
+    root = world->CreateRootFromJson(storedWorld, [] (GameObject* root) {
+        CreateDefaultSystems(*root);
     });
-    world.Update(0);
+    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
+    InitializeRoot();
+    //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;
+    
     IsPlaying = false;
 }
 
-void OpenWorld::Update(float dt) {
-    world.Update(IsPlaying ? dt : 0);
-    editorWorld.Update(dt);
+GameObject* OpenWorld::Root() {
+    return root;
+}
+
+void OpenWorld::Close() {
+    root->Remove();
+    editorRoot->Remove();
+}
+
+void OpenWorld::Enable() {
+    root->UpdateEnabled() = true;
+    root->RenderEnabled() = true;
+    editorRoot->UpdateEnabled() = true;
+    editorRoot->RenderEnabled() = true;
+}
+
+void OpenWorld::Disable() {
+    root->UpdateEnabled() = false;
+    root->RenderEnabled() = false;
+    editorRoot->UpdateEnabled() = false;
+    editorRoot->RenderEnabled() = false;
+}
+
+void OpenWorld::UpdateTimeScale() {
+    if (root) {
+        root->TimeScale() = IsPlaying() ? 1.0f : 0.0f;
+    }
 }

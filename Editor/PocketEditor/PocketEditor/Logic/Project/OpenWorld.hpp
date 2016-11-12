@@ -15,37 +15,48 @@
 
 using namespace Pocket;
 
-namespace Pocket {
-    class GameWorldDatabase;
-}
+class Project;
 
 class OpenWorld {
 public:
-    GameWorld& World();
-    GameWorld& EditorWorld();
+
+    OpenWorld();
     
     std::string Path;
     std::string Filename;
     
-    void CreateDefault();
-    
     SelectableCollection<EditorObject>* selectables;
     
     bool Save();
-    bool Load(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld, Pocket::GameWorldDatabase* database);
+    bool Load(const std::string& path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld);
     
-    static void CreateDefaultSystems(GameWorld& world);
+    static void CreateDefaultSystems(GameObject& root);
+    static void CreateEditorSystems(GameObject& root);
     
     void Play();
     void Stop();
     
     Property<bool> IsPlaying;
     
-    void Update(float dt);
+    void Close();
+    
+    GameObject* Root();
+    GameObject* EditorRoot();
+    
+    void Enable();
+    void Disable();
     
 private:
-    GameWorld editorWorld;
-    GameWorld world;
+    GameWorld* world;
+    ScriptWorld* scriptWorld;
+    
+    GameObject* root;
+    GameObject* editorRoot;
+    GameObject* editorCamera;
+    
+    void InitializeRoot();
+    void UpdateTimeScale();
+    
     std::stringstream storedWorld;
 };
 

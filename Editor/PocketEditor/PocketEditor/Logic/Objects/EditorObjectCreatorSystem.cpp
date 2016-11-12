@@ -10,14 +10,13 @@
 #include "Touchable.hpp"
 
 void EditorObjectCreatorSystem::Initialize() {
-    world->CreateSystem<ComponentSystem<Transform>>()->creatorSystem = this;
-    world->CreateSystem<ComponentSystem<Mesh>>()->creatorSystem = this;
+    root->CreateSystem<ComponentSystem<Transform>>()->creatorSystem = this;
+    root->CreateSystem<ComponentSystem<Mesh>>()->creatorSystem = this;
 }
 
 void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
     
-    GameObject* editorObject = editorWorld->CreateObject();
-    editorObject->Parent() = gameRoot;
+    GameObject* editorObject = editorRoot->CreateObject();
     editorObject->AddComponent<Selectable>();
     editorObject->AddComponent<Touchable>();
     
@@ -25,7 +24,6 @@ void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<EditorObject>()->editorObject = editorObject;
     
     editorObject->AddComponent<EditorObject>(object);
-    
     SetMetaData(object, editorObject);
 }
 

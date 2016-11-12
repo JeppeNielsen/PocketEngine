@@ -7,6 +7,7 @@
 //
 
 #include "OpenWorldCollection.hpp"
+#include "Project.hpp"
 #include <fstream>
 
 OpenWorldCollection::OpenWorldCollection() {
@@ -19,6 +20,7 @@ OpenWorldCollection::~OpenWorldCollection() {
 
 void OpenWorldCollection::Clear() {
     for(auto w : worlds) {
+        w->Close();
         delete w;
     }
     worlds.clear();
@@ -36,16 +38,16 @@ bool OpenWorldCollection::TryFindOpenWorld(const std::string &path, OpenWorld** 
     return false;
 }
 
-OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename, ScriptWorld& scriptWorld) {
-    OpenWorld* world;
-    if (!TryFindOpenWorld(path, &world)) {
-        world = new OpenWorld();
-        world->Load(path, filename, scriptWorld, worldDatabase);
-        worlds.push_back(world);
-        WorldLoaded(world);
+OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld) {
+    OpenWorld* openWorld;
+    if (!TryFindOpenWorld(path, &openWorld)) {
+        openWorld = new OpenWorld();
+        openWorld->Load(path, filename, world, scriptWorld);
+        worlds.push_back(openWorld);
+        WorldLoaded(openWorld);
     }
-    ActiveWorld = world;
-    return world;
+    ActiveWorld = openWorld;
+    return openWorld;
 }
 
 void OpenWorldCollection::CloseWorld(OpenWorld *world) {
@@ -55,5 +57,6 @@ void OpenWorldCollection::CloseWorld(OpenWorld *world) {
     WorldClosed(world);
     auto it = std::find(worlds.begin(), worlds.end(), world);
     worlds.erase(it);
+    world->Close();
     delete world;
 }

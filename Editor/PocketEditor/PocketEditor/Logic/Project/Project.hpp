@@ -15,17 +15,16 @@
 #include "OpenWorldCollection.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
-#include "GameWorldDatabase.hpp"
 
 using namespace Pocket;
 
 class Project {
 private:
     
+    GameWorld* world;
     ScriptWorld scriptWorld;
     std::string path;
     std::vector<std::string> defaultIncludes;
-    GameWorldDatabase worldDatabase;
     
     void RefreshSourceFiles();
     
@@ -33,16 +32,15 @@ public:
     OpenWorldCollection Worlds;
 
     Project();
+    
+    void Initialize(GameWorld& world);
+    
     void Open(const std::string& path);
-    GameWorld& World();
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
     bool Compile();
     void Build();
     void CreateNewWorld(const std::string& worldPath);
-    
-    void Update(float dt);
-    void Render();
     
     void SaveWorld();
     
@@ -51,7 +49,4 @@ public:
     std::string& Path();
     
     Event<> Opened;
-    
-    GameWorldDatabase& WorldDatabase();
-    void RefreshWorldDatabase();
 };

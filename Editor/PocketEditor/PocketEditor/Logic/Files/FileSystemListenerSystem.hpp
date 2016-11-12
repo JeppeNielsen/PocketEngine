@@ -15,6 +15,7 @@ using namespace Pocket;
 
 class FileSystemListenerSystem : public GameSystem<FileSystemListener> {
     protected:
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void SomethingChanged(GameObject* object);

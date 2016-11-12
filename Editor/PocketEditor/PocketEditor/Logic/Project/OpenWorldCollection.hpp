@@ -14,13 +14,11 @@
 
 using namespace Pocket;
 
-namespace Pocket {
-class GameWorldDatabase;
-}
+class Project;
 
 class OpenWorldCollection {
 public:
-    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld);
+    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld);
     void CloseWorld(OpenWorld* world);
     bool TryFindOpenWorld(const std::string& path, OpenWorld** world);
     
@@ -33,8 +31,6 @@ public:
     
     Event<OpenWorld*> WorldLoaded;
     Event<OpenWorld*> WorldClosed;
-    
-    Pocket::GameWorldDatabase* worldDatabase;
     
 private:
     using Worlds = std::vector<OpenWorld*>;
