@@ -8,7 +8,6 @@
 
 #include "GameWorld.hpp"
 #include "StringHelper.hpp"
-#include "Engine.hpp"
 
 using namespace Pocket;
 
@@ -136,10 +135,6 @@ void GameWorld::RemoveRoot(Pocket::GameObject *root) {
 }
 
 void GameWorld::Update(float dt) {
-    if (Engine::HasContext()) {
-        Engine::Context().InputDevice().UpdateInputManager(&input);
-    }
-    
     if (sortScenes) {
         sortScenes = false;
         std::sort(activeScenes.begin(), activeScenes.end(), [] (GameScene* a, GameScene* b) {
