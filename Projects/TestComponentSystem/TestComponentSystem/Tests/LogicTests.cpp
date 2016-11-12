@@ -108,7 +108,10 @@ void LogicTests::RunTests() {
         
         {
             GameWorld world;
-            world.CreateRoot()->CreateSystem<VelocitySystem>();
+            GameObject* root = world.CreateRoot();
+            root->CreateSystem<VelocitySystem>();
+            root->Remove();
+            world.Update(0);
         }
         return isSystemDestroyed;
     });
@@ -580,5 +583,33 @@ void LogicTests::RunTests() {
         return comp1_1 && comp1_2 && comp2_1 && comp2_2;
     });
     
-    
+    AddTest("System order", [] () {
+        struct Component1 {};
+        struct Component2 {};
+        
+        static std::vector<IGameSystem*> updatedSystems;
+        
+        struct System1 : public GameSystem<Component1> {
+            void Update(float dt) { updatedSystems.push_back(this); }
+            int Order() { return 1; }
+        };
+        struct System2 : public GameSystem<Component2> {
+            void Update(float dt) { updatedSystems.push_back(this); }
+            int Order() { return 0; }
+        };
+        
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        System1* s1 = root->CreateSystem<System1>();
+        System2* s2 = root->CreateSystem<System2>();
+        
+        root->AddComponent<Component1>();
+        root->AddComponent<Component2>();
+        
+        world.Update(0);
+        
+        return updatedSystems.size() == 2 &&
+                updatedSystems[0] == s2 &&
+                updatedSystems[1] == s1;
+    });
 }
