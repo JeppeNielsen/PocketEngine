@@ -12,7 +12,11 @@
 
 using namespace Pocket;
 
-GameScene::GameScene() : idCounter(0) { }
+GameScene::GameScene() : idCounter(0) {
+    updateEnabled = true;
+    renderEnabled = true;
+    timeScale = 1.0f;
+}
 
 GameScene::~GameScene() {
     for (int i=0; i<systemsIndexed.size(); ++i) {
@@ -29,6 +33,9 @@ GameScene::GameScene(const GameScene& other) {
     activeSystems.clear();
     systemsIndexed.clear();
     delayedActions.clear();
+    updateEnabled = true;
+    renderEnabled = true;
+    timeScale = 1.0f;
 }
 
 void GameScene::DestroySystems() {
@@ -48,12 +55,15 @@ void GameScene::DoActions(Actions &actions) {
 
 void GameScene::Update(float dt) {
     DoActions(delayedActions);
+    if (!updateEnabled()) return;
+    dt = timeScale() * dt;
     for(auto system : activeSystems) {
         system->Update(dt);
     }
 }
 
 void GameScene::Render() {
+    if (!renderEnabled()) return;
     for(auto system : activeSystems) {
         system->Render();
     }

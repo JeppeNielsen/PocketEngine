@@ -22,6 +22,13 @@ namespace Pocket {
 
     class ScriptWorld;
     
+    struct ComponentType {
+        std::string name;
+        std::function<TypeInfo(const GameObject*)> getTypeInfo;
+    };
+    
+    using ComponentTypeCollection = std::vector<ComponentType>;
+    
     class GameWorld {
     private:
         
@@ -57,6 +64,8 @@ namespace Pocket {
         Actions delayedActions;
         
         InputManager input;
+        
+        bool sortScenes;
         
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
@@ -129,6 +138,8 @@ namespace Pocket {
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
         
+        ComponentTypeCollection GetComponentTypes();
+        
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;
@@ -139,4 +150,21 @@ namespace Pocket {
         scene->world->AddSystemType<T>();
         return static_cast<T*>(scene->CreateSystem(GameIdHelper::GetSystemID<T>()));
     }
+    
+    template<typename T>
+    T* GameObject::AddComponent() {
+        scene->world->AddComponentType<T>();
+        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        AddComponent(componentId);
+        return static_cast<T*>(GetComponent(componentId));
+    }
+
+    template<typename T>
+    T* GameObject::AddComponent(GameObject* source) {
+        scene->world->AddComponentType<T>();
+        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        AddComponent(componentId, source);
+        return static_cast<T*>(GetComponent(componentId));
+    }
+    
 }

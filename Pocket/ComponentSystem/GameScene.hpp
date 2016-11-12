@@ -32,6 +32,9 @@ namespace Pocket {
         std::vector<IGameSystem*> activeSystems;
         int idCounter;
         std::string guid;
+        Property<float> timeScale;
+        Property<bool> updateEnabled;
+        Property<bool> renderEnabled;
         
         GameScene();
         ~GameScene();

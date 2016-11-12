@@ -8,10 +8,11 @@
 
 #include "GameWorld.hpp"
 #include "StringHelper.hpp"
+#include "Engine.hpp"
 
 using namespace Pocket;
 
-GameWorld::GameWorld() : componentTypesCount(0) {
+GameWorld::GameWorld() : componentTypesCount(0), sortScenes(false) {
     scenes.defaultObject.world = this;
     objects.count = 0;
 }
@@ -19,7 +20,17 @@ GameWorld::~GameWorld() { Clear(); }
 
 void GameWorld::AddComponentType(ComponentId componentId, const ComponentTypeFunction& function) {
     if (componentId>=components.size()) {
-        components.resize(componentId + 1);
+        componentTypesCount = componentId + 1;
+        components.resize(componentTypesCount);
+        
+        if (objects.defaultObject.activeComponents.Size()<componentTypesCount) {
+            objects.defaultObject.activeComponents.Resize(componentTypesCount);
+            for(auto& o : objects.entries) {
+                o.activeComponents.Resize(componentTypesCount);
+                o.enabledComponents.Resize(componentTypesCount);
+                o.componentIndicies.resize(componentTypesCount);
+            }
+        }
     }
     
     if (!components[componentId].container) {
@@ -44,19 +55,8 @@ void GameWorld::AddSystemType(SystemId systemId, const SystemTypeFunction& funct
             }
             systemBitset.Set(c, true);
             components[c].systemsUsingComponent.push_back(systemId);
-            if (c>=componentTypesCount) {
-                componentTypesCount = c + 1;
-            }
         }
         systemInfo.bitset = systemBitset;
-        if (objects.defaultObject.activeComponents.Size()<componentTypesCount) {
-            objects.defaultObject.activeComponents.Resize(componentTypesCount);
-            for(auto& o : objects.entries) {
-                o.activeComponents.Resize(componentTypesCount);
-                o.enabledComponents.Resize(componentTypesCount);
-                o.componentIndicies.resize(componentTypesCount);
-            }
-        }
     }
 }
 
@@ -106,6 +106,8 @@ GameObject* GameWorld::CreateRoot() {
     GameObject* root = CreateEmptyObject(0, scene, true);
     scene->root = root;
     roots.push_back(root);
+    sortScenes = true;
+    root->Order.Changed.Bind([this] () { sortScenes = true; });
     return root;
 }
 
@@ -123,9 +125,10 @@ GameObject* GameWorld::CreateRootFromJson(std::istream &jsonStream,
 }
 
 void GameWorld::RemoveRoot(Pocket::GameObject *root) {
-    delayedActions.emplace_back([this, root] {
+    GameScene* scene = root->scene;
+    delayedActions.emplace_back([this, scene, root] {
+        scene->DoActions(root->scene->delayedActions);
         roots.erase(std::find(roots.begin(), roots.end(), root));
-        GameScene* scene = root->scene;
         scene->DestroySystems();
         scenes.Delete(scene->index, 0);
         activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
@@ -133,6 +136,17 @@ void GameWorld::RemoveRoot(Pocket::GameObject *root) {
 }
 
 void GameWorld::Update(float dt) {
+    if (Engine::HasContext()) {
+        Engine::Context().InputDevice().UpdateInputManager(&input);
+    }
+    
+    if (sortScenes) {
+        sortScenes = false;
+        std::sort(activeScenes.begin(), activeScenes.end(), [] (GameScene* a, GameScene* b) {
+            return a->root->Order()<b->root->Order();
+        });
+    }
+    
     for(auto scene : activeScenes) {
         scene->Update(dt);
     }
@@ -148,7 +162,7 @@ void GameWorld::Render() {
 void GameWorld::Clear() {
    for(auto root : roots) {
         root->Remove();
-        root->scene->DoActions(root->scene->delayedActions);
+        DoActions(root->scene->delayedActions);
    }
    DoActions(delayedActions);
 }
@@ -270,4 +284,12 @@ GameScene* GameWorld::TryGetScene(const std::string &guid) {
 GameObject* GameWorld::FindObject(const std::string &guid, int objectId) {
     GameScene* scene = TryGetScene(guid);
     return scene->FindObject(objectId);
+}
+
+ComponentTypeCollection GameWorld::GetComponentTypes() {
+    ComponentTypeCollection componentTypes;
+    for(auto& c : components) {
+        componentTypes.push_back({ c.name, c.getTypeInfo });
+    }
+    return componentTypes;
 }

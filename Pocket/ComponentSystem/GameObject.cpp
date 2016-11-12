@@ -172,6 +172,11 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
                 system->ObjectAdded(this);
                 if (system->ObjectCount() == 1) {
                     scene->activeSystems.push_back(system);
+                    std::sort(scene->activeSystems.begin(),
+                        scene->activeSystems.end(),
+                        [](IGameSystem* a, IGameSystem* b) {
+                            return a->Order()<b->Order();
+                        });
                 }
             }
         }
@@ -225,7 +230,7 @@ bool GameObject::IsRemoved() const {
     return removed;
 }
 
-Handle<GameObject> GameObject::GetHandle() {
+Handle<GameObject> GameObject::GetHandle() const {
     return scene->world->objects.GetHandle(index);
 }
 
@@ -282,9 +287,9 @@ std::vector<int> GameObject::GetComponentIndicies() {
     return indicies;
 }
 
-
-
-
+Property<bool>& GameObject::UpdateEnabled() { return scene->updateEnabled; }
+Property<float>& GameObject::TimeScale() { return scene->timeScale; }
+Property<bool>& GameObject::RenderEnabled() { return scene->renderEnabled; }
 
 //SERIALIZATION
 

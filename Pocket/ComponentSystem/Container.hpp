@@ -48,15 +48,15 @@ namespace Pocket {
                 freeIndex = (int)references.size();
                 references.emplace_back(1);
                 versions.emplace_back(maxVersion);
-                entries.resize(freeIndex + 1, defaultObject);
+                entries.resize(freeIndex + 1);
                 owners.emplace_back(owner);
             } else {
                 freeIndex = freeIndicies.back();
                 freeIndicies.pop_back();
-                entries[freeIndex] = defaultObject;
                 references[freeIndex] = 1;
                 owners[freeIndex] = owner;
             }
+            entries[freeIndex] = defaultObject;
             
             ++count;
             return freeIndex;
@@ -98,7 +98,7 @@ namespace Pocket {
         }
         
         int Clone(int index, int owner) override {
-            int cloneIndex = CreateNoInit(owner);
+            int cloneIndex = Create(owner);
             entries[cloneIndex] = entries[index];
             return cloneIndex;
         }
@@ -199,6 +199,7 @@ namespace Pocket {
         }
         
         Handle(T* ptr) : Handle(ptr->GetHandle()) { }
+        Handle(T& ptr) : Handle(ptr.GetHandle()) { }
         
         T* operator -> () const {
             if (!container) return 0;

@@ -92,18 +92,10 @@ namespace Pocket {
         }
         
         template<typename T>
-        T* AddComponent() {
-            ComponentId componentId = GameIdHelper::GetComponentID<T>();
-            AddComponent(componentId);
-            return static_cast<T*>(GetComponent(componentId));
-        }
+        T* AddComponent();
         
         template<typename T>
-        T* AddComponent(GameObject* source) {
-            ComponentId componentId = GameIdHelper::GetComponentID<T>();
-            AddComponent(componentId, source);
-            return static_cast<T*>(GetComponent(componentId));
-        }
+        T* AddComponent(GameObject* source);
         
         template<typename T>
         void RemoveComponent() {
@@ -117,7 +109,7 @@ namespace Pocket {
             return static_cast<T*>(GetComponent(componentId));
         }
         
-        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate);
+        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
         std::vector<int> GetComponentIndicies();
         
         InputManager& Input();
@@ -136,11 +128,15 @@ namespace Pocket {
         
         const ObjectCollection& Children();
         
-        Handle<GameObject> GetHandle();
+        Handle<GameObject> GetHandle() const;
         
         int RootId() const;
         
         template<typename T>
         T* CreateSystem();
+    
+        Property<bool>& UpdateEnabled();
+        Property<float>& TimeScale();
+        Property<bool>& RenderEnabled();
     };
 }
