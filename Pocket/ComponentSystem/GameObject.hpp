@@ -121,6 +121,8 @@ namespace Pocket {
         GameObject* CreateObject();
         GameObject* Root();
         GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated);
+        GameObject* CreateChildClone(GameObject* source);
+        GameObject* CreateCopy();
         
         void ToJson(std::ostream& stream, SerializePredicate predicate = 0) const;
         

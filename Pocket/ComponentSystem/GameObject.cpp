@@ -250,6 +250,25 @@ GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, const std:
     return scene->world->CreateObjectFromJson(this, jsonStream, objectCreated);
 }
 
+GameObject* GameObject::CreateChildClone(Pocket::GameObject *source) {
+    GameObject* clone = CreateChild();
+    
+    for (int i=0; i<source->activeComponents.Size(); ++i) {
+        if (source->activeComponents[i]) {
+            clone->CloneComponent(i, source);
+        }
+    }
+    for(auto child : source->children) {
+        clone->CreateChildClone(child);
+    }
+    return clone;
+}
+
+GameObject* GameObject::CreateCopy() {
+    if (IsRoot()) return 0;
+    return Parent()->CreateChildClone(this);
+}
+
 GameObject* GameObject::Root() {
     return scene->root;
 }
