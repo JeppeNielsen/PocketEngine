@@ -37,10 +37,10 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     
     cloner->storedComponents.clear();
     
-    GameObject* source = world->FindObject(cloner->SourceID);
-    if (!source) return;
+    //GameObject* source = world->FindObject(cloner->SourceID);
+    //if (!source) return;
 
-    source->Clone(object, world);
+    //source->Clone(object, world);
     
     /*std::string path = object->GetComponent<Cloner>()->ClonePath;
     

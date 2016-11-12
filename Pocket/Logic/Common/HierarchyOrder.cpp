@@ -30,10 +30,7 @@ void HierarchyOrder::Update(float dt) {
     orderIsDirty = false;
 
     int order = 0;
-    /*const auto& children = world->Root()->Children();
-    for(auto child : children) {
-        CalculateOrder(order, child);
-    }*/
+    CalculateOrder(order, root);
 }
 
 void HierarchyOrder::CalculateOrder(int& orderOffset, GameObject *object) {

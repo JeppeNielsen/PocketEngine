@@ -70,14 +70,15 @@ GameObject* Gui::GetCamera() {
 }
 
 GameObject* Gui::CreatePivot() {
-    return CreatePivot(0, {0,0});
+    return CreatePivot(root, {0,0});
 }
 
 GameObject* Gui::CreatePivot(GameObject *parent) {
-    return CreatePivot(parent,{0,0});
+    return CreatePivot(parent ? parent : root,{0,0});
 }
 
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
+    if (!parent) parent = root;
     GameObject* pivot = parent->CreateChild();
     pivot->AddComponent<Transform>()->Position = position;
     pivot->AddComponent<Orderable>();
