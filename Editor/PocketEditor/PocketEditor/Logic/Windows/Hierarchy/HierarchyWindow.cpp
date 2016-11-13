@@ -104,7 +104,7 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
                 return;
             }
         } else if (t.object == rootItem) {
-            source->gameObject->Parent = 0;
+            source->gameObject->Parent = source->gameObject->Root();
         }
     }
 }

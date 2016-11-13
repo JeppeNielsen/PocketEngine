@@ -358,6 +358,7 @@
 		72B492611DCE59D10063518A /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492561DCE59D10063518A /* GameSystem.cpp */; };
 		72B492621DCE59D10063518A /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492581DCE59D10063518A /* GameWorld.cpp */; };
 		72B4926A1DD3AE510063518A /* testGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492691DD3AE510063518A /* testGui.cpp */; };
+		72B4926D1DD7B0CC0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1236,6 +1237,8 @@
 		72B4925B1DCE59D10063518A /* IGameSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IGameSystem.hpp; sourceTree = "<group>"; };
 		72B4925D1DCE59D10063518A /* MetaLibrary.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MetaLibrary.hpp; sourceTree = "<group>"; };
 		72B492691DD3AE510063518A /* testGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testGui.cpp; sourceTree = "<group>"; };
+		72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectHandle.cpp; sourceTree = "<group>"; };
+		72B4926C1DD7B0CC0063518A /* GameObjectHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectHandle.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -2785,6 +2788,8 @@
 				72B4925A1DCE59D10063518A /* IGameObject.hpp */,
 				72B4925B1DCE59D10063518A /* IGameSystem.hpp */,
 				72B4925C1DCE59D10063518A /* Meta */,
+				72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */,
+				72B4926C1DD7B0CC0063518A /* GameObjectHandle.hpp */,
 			);
 			path = ComponentSystem;
 			sourceTree = "<group>";
@@ -3067,6 +3072,7 @@
 				729954821C99F76100DAAE5D /* btConvexPolyhedron.cpp in Sources */,
 				729954BA1C99F76100DAAE5D /* btSequentialImpulseConstraintSolver.cpp in Sources */,
 				729954631C99F76100DAAE5D /* btCollisionDispatcher.cpp in Sources */,
+				72B4926D1DD7B0CC0063518A /* GameObjectHandle.cpp in Sources */,
 				729953FE1C99F76100DAAE5D /* TouchSystem.cpp in Sources */,
 				729954C81C99F76100DAAE5D /* PosixThreadSupport.cpp in Sources */,
 				729954351C99F76100DAAE5D /* RectPacker.cpp in Sources */,
