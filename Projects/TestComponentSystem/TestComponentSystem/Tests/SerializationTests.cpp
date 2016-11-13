@@ -8,6 +8,7 @@
 
 #include "SerializationTests.hpp"
 #include "GameSystem.hpp"
+#include "GameObjectHandle.hpp"
 
 using namespace Pocket;
 
@@ -43,6 +44,13 @@ struct Mesh {
     TYPE_FIELDS_END
 };
 
+struct Cloner {
+    GameObjectHandle Source;
+    TYPE_FIELDS_BEGIN
+    TYPE_FIELD(Source)
+    TYPE_FIELDS_END
+};
+
 struct VelocitySystem : public GameSystem<Transform, Velocity> {
 
 };
@@ -51,9 +59,13 @@ struct RenderSystem : public GameSystem<Transform, Mesh, Renderable> {
 
 };
 
+struct ClonerSystem : public GameSystem<Cloner> {
+
+};
+
 void LogStream(const std::string& text, const std::stringstream& s) {
-    //std::cout << text << ":" <<std::endl;
-    //std::cout << s.str() << std::endl<<std::endl;
+    std::cout << text << ":" <<std::endl;
+    std::cout << s.str() << std::endl<<std::endl;
 }
 
 void SerializationTests::RunTests() {
@@ -188,6 +200,97 @@ void SerializationTests::RunTests() {
         Mesh* mesh1 = loadedRoot->Children()[0]->GetComponent<Mesh>();
         return mesh1->vertices.size() == 5;
     });
+    
+    
+    AddTest("GameObjectHandle", [] () {
+        
+        GameWorld world;
+    
+        GameObject* root = world.CreateRoot();
+        root->CreateSystem<ClonerSystem>();
+        root->CreateSystem<RenderSystem>();
+        
+        GameObject* cubePrefab = root->CreateChild();
+        cubePrefab->AddComponent<Transform>();
+        cubePrefab->AddComponent<Mesh>();
+        cubePrefab->AddComponent<Renderable>();
+        
+        std::stringstream savedCloner;
+    
+        GameObject* clonerPrefab = root->CreateChild();
+        clonerPrefab->AddComponent<Cloner>()->Source = cubePrefab;
+        clonerPrefab->ToJson(savedCloner);
+    
+        LogStream("Clone", savedCloner);
+        
+        GameObject* loadedCloner = root->CreateChildFromJson(savedCloner);
+        Cloner* cloner = loadedCloner->GetComponent<Cloner>();
+        cloner->Source.SetRoot(root);
+        return cloner->Source == cubePrefab;
+    });
+    
+    
+    AddTest("GameObjectHandle to saved root", [] () {
+        
+        std::stringstream savedPrefab;
+        std::stringstream savedCloner;
+        std::string prefabGuid;
+        
+        {
+            GameWorld world;
+        
+            GameObject* cubePrefab = world.CreateRoot();
+            cubePrefab->CreateSystem<ClonerSystem>();
+            cubePrefab->CreateSystem<RenderSystem>();
+            
+            prefabGuid = cubePrefab->RootGuid();
+            
+            cubePrefab->AddComponent<Transform>()->x = 123;
+            cubePrefab->GetComponent<Transform>()->y = 456;
+            
+            cubePrefab->AddComponent<Mesh>();
+            cubePrefab->AddComponent<Renderable>();
+            
+            cubePrefab->ToJson(savedPrefab);
+            
+            
+            GameObject* cloner = world.CreateRoot();
+            cloner->AddComponent<Cloner>()->Source = cubePrefab;
+            
+            cloner->ToJson(savedCloner);
+        }
+        
+        LogStream("Prefab", savedPrefab);
+        LogStream("Cloner", savedCloner);
+        
+        GameWorld world;
+        
+        world.GuidToRoot = [&] (const std::string& guid) -> GameObject* {
+            if (guid == prefabGuid) {
+                return world.CreateRootFromJson(savedPrefab, [] (GameObject* root) {
+                    root->CreateSystem<RenderSystem>();
+                    root->CreateSystem<ClonerSystem>();
+                });
+            }
+            return 0;
+        };
+        
+        GameObject* clone = world.CreateRootFromJson(savedCloner, [](GameObject* root) {
+            root->CreateSystem<ClonerSystem>();
+            root->CreateSystem<RenderSystem>();
+        });
+        
+        std::stringstream s;
+        clone->GetComponent<Cloner>()->Source.SetRoot(clone);
+        clone->GetComponent<Cloner>()->Source->ToJson(s);
+        LogStream("Cloner Source", s);
 
+        return clone->GetComponent<Cloner>()->Source->GetComponent<Transform>()->x == 123;
+    });
+
+    
+    
+    
+    
 }
 

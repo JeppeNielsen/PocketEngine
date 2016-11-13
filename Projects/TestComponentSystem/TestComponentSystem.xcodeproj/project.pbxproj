@@ -36,6 +36,7 @@
 		72B4922F1DCE54EA0063518A /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492251DCE54EA0063518A /* GameWorld.cpp */; };
 		72B492651DCF37C70063518A /* SerializationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492631DCF37C70063518A /* SerializationTests.cpp */; };
 		72B492681DCF40DA0063518A /* ScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492661DCF40DA0063518A /* ScriptTests.cpp */; };
+		72B492701DD7C29F0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926E1DD7C29F0063518A /* GameObjectHandle.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -119,6 +120,8 @@
 		72B492641DCF37C70063518A /* SerializationTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializationTests.hpp; sourceTree = "<group>"; };
 		72B492661DCF40DA0063518A /* ScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTests.cpp; sourceTree = "<group>"; };
 		72B492671DCF40DA0063518A /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
+		72B4926E1DD7C29F0063518A /* GameObjectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectHandle.cpp; sourceTree = "<group>"; };
+		72B4926F1DD7C29F0063518A /* GameObjectHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectHandle.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -299,6 +302,8 @@
 		72B4921B1DCE54EA0063518A /* ComponentSystem */ = {
 			isa = PBXGroup;
 			children = (
+				72B4926E1DD7C29F0063518A /* GameObjectHandle.cpp */,
+				72B4926F1DD7C29F0063518A /* GameObjectHandle.hpp */,
 				72B4921C1DCE54EA0063518A /* Container.hpp */,
 				72B4921D1DCE54EA0063518A /* GameIdHelper.cpp */,
 				72B4921E1DCE54EA0063518A /* GameIdHelper.hpp */,
@@ -401,6 +406,7 @@
 				72B491E11DBD14D10063518A /* ScriptParser.cpp in Sources */,
 				72772F651D0763FD005AC1D8 /* main.cpp in Sources */,
 				72AE75511DB533DF00CEB998 /* InputManager.cpp in Sources */,
+				72B492701DD7C29F0063518A /* GameObjectHandle.cpp in Sources */,
 				72B492651DCF37C70063518A /* SerializationTests.cpp in Sources */,
 				72AE75871DB5347000CEB998 /* MathHelper.cpp in Sources */,
 				72B491DE1DBD14D10063518A /* ClangUtil.cpp in Sources */,
