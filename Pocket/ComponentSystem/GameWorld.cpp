@@ -273,6 +273,12 @@ GameScene* GameWorld::TryGetScene(const std::string &guid) {
     for(auto s : activeScenes) {
         if (s->guid == guid) return s;
     }
+    if (GuidToRoot) {
+        GameObject* root = GuidToRoot(guid);
+        if (root && root->IsRoot()) {
+            return root->scene;
+        }
+    }
     return 0;
 }
 

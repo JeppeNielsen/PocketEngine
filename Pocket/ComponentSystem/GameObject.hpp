@@ -19,6 +19,7 @@ namespace Pocket {
     class GameScene;
     class GameObject;
     class IGameSystem;
+    class GameObjectHandle;
     
     using ObjectCollection = std::vector<GameObject*>;
     
@@ -32,6 +33,7 @@ namespace Pocket {
         friend class Container<GameObject>;
         friend class std::allocator<GameObject>;
         friend class ScriptWorld;
+        friend class GameObjectHandle;
         
         using ComponentIndicies = std::vector<int>;
         
@@ -120,7 +122,7 @@ namespace Pocket {
         GameObject* CreateChild();
         GameObject* CreateObject();
         GameObject* Root();
-        GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated);
+        GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated = 0);
         GameObject* CreateChildClone(GameObject* source);
         GameObject* CreateCopy();
         
@@ -133,6 +135,7 @@ namespace Pocket {
         Handle<GameObject> GetHandle() const;
         
         int RootId() const;
+        std::string& RootGuid() const;
         
         template<typename T>
         T* CreateSystem();

@@ -277,6 +277,10 @@ bool GameObject::IsRoot() const {
     return scene->root == this;
 }
 
+std::string& GameObject::RootGuid() const {
+    return scene->guid;
+}
+
 const ObjectCollection& GameObject::Children() {
     return children;
 }

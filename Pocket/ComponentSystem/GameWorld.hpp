@@ -21,6 +21,7 @@
 namespace Pocket {
 
     class ScriptWorld;
+    class GameObjectHandle;
     
     struct ComponentType {
         std::string name;
@@ -140,9 +141,12 @@ namespace Pocket {
         
         ComponentTypeCollection GetComponentTypes();
         
+        std::function<GameObject*(const std::string& guid)> GuidToRoot;
+        
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;
+        friend class GameObjectHandle;
     };
     
     template<typename T>

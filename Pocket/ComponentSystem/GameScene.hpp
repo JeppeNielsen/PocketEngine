@@ -15,12 +15,14 @@ namespace Pocket {
     class GameWorld;
     class IGameSystem;
     class ScriptWorld;
+    class GameObjectHandle;
     class GameScene {
     private:
         friend class GameWorld;
         friend class GameObject;
         friend class std::allocator<GameScene>;
         friend class ScriptWorld;
+        friend class GameObjectHandle;
         
         using Actions = std::deque<std::function<void()>>;
         Actions delayedActions;
