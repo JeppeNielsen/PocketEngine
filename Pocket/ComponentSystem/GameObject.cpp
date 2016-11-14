@@ -70,12 +70,16 @@ void GameObject::Reset() {
 }
 
 bool GameObject::HasComponent(ComponentId id) const {
-    assert(id<activeComponents.Size());
+    if (id>=activeComponents.Size()) {
+        return false;
+    }
     return activeComponents[id];
 }
 
 void* GameObject::GetComponent(ComponentId id) const {
-    assert(id<activeComponents.Size());
+    if (id>=activeComponents.Size()) {
+        return 0;
+    }
     if (!activeComponents[id]) return 0;
     return scene->world->components[id].container->Get(componentIndicies[id]);
 }

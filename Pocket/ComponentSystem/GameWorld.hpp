@@ -143,6 +143,8 @@ namespace Pocket {
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         
+        std::string ReadGuidFromJson(std::istream& jsonStream);
+        
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;

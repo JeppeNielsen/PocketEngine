@@ -9,6 +9,7 @@
 #pragma once
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
+#include "Event.hpp"
 
 namespace Pocket {
     class GameObjectHandle {
@@ -18,6 +19,7 @@ namespace Pocket {
         GameObject* operator -> ();
         void operator = (GameObject& v);
         void operator = (GameObject* v);
+        void operator = (const GameObjectHandle& handle);
         
         explicit operator bool() {
             return operator->();
@@ -34,6 +36,8 @@ namespace Pocket {
         }
         
         GameObjectHandle static Deserialize(const std::string& data);
+        
+        Event<> Changed;
     
     private:
     

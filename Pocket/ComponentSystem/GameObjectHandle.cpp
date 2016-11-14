@@ -26,10 +26,20 @@ GameObjectHandle::operator Pocket::GameObject * () {
 
 void GameObjectHandle::operator=(Pocket::GameObject &v) {
     Set(&v);
+    Changed();
 }
 
 void GameObjectHandle::operator=(Pocket::GameObject *v) {
     Set(v);
+    Changed();
+}
+
+void GameObjectHandle::operator=(const GameObjectHandle& handle) {
+    world = handle.world;
+    index = handle.index;
+    version = handle.version;
+    rootId = handle.rootId;
+    sceneGuid = handle.sceneGuid;
 }
 
 void GameObjectHandle::SetRoot(Pocket::GameObject* root) {

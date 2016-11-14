@@ -101,11 +101,13 @@ GameObject* GameWorld::CreateRoot() {
     scene->index=sceneIndex;
     scene->world = this;
     scene->guid = StringHelper::CreateGuid();
-    activeScenes.push_back(scene);
+    delayedActions.emplace_back([this, scene] () {
+        activeScenes.push_back(scene);
+        sortScenes = true;
+    });
     GameObject* root = CreateEmptyObject(0, scene, true);
     scene->root = root;
     roots.push_back(root);
-    sortScenes = true;
     root->Order.Changed.Bind([this] () { sortScenes = true; });
     return root;
 }
@@ -142,6 +144,7 @@ void GameWorld::Update(float dt) {
         });
     }
     
+    DoActions(delayedActions);
     for(auto scene : activeScenes) {
         scene->Update(dt);
     }
@@ -293,4 +296,29 @@ ComponentTypeCollection GameWorld::GetComponentTypes() {
         componentTypes.push_back({ c.name, c.getTypeInfo });
     }
     return componentTypes;
+}
+
+std::string GameWorld::ReadGuidFromJson(std::istream &jsonStream) {
+    std::string guid;
+    minijson::istream_context context(jsonStream);
+    
+    try {
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            if (v.type() == minijson::Object) {
+                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                    std::string name = n;
+                    if (name == "guid" && v.type() == minijson::String) {
+                        guid = std::string(v.as_string());
+                    } else {
+                        minijson::ignore(context);
+                    }
+                });
+            } else {
+                minijson::ignore(context);
+            }
+        });
+    } catch (std::exception e) {
+        std::cout << e.what() << std::endl;
+    }
+    return guid;
 }
