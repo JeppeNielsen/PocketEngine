@@ -662,4 +662,81 @@ void LogicTests::RunTests() {
                 copy->GetComponent<Transform>()->position == source->GetComponent<Transform>()->position &&
                 source->Parent()==copy->Parent();
         });
+    
+    AddTest("Clone deep hierarchy", [] () {
+        struct Transform {
+            int position;
+        };
+        
+        struct TransformSystem : public GameSystem<Transform> {};
+    
+        GameWorld world;
+        GameObject* sourceRoot = world.CreateRoot();
+        sourceRoot->CreateSystem<TransformSystem>();
+        
+        GameObject* source = sourceRoot->CreateChild();
+        source->AddComponent<Transform>()->position = 12345;
+        
+        GameObject* child = source->CreateChild();
+        child->AddComponent<Transform>()->position = 67890;
+        
+        
+        GameObject* destRoot = world.CreateRoot();
+        GameObject* clone = destRoot->CreateChildClone(source);
+        return true;
+    });
+    
+    AddTest("Test add component no systems", [] () {
+        struct Rotator {};
+        struct Effect {};
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        root->AddComponent<Rotator>();
+        root->AddComponent<Effect>();
+        return root->GetComponent<Rotator>() && root->GetComponent<Effect>();
+    });
+    
+    AddTest("Default order of systems, two roots", [] () {
+        
+        static std::vector<IGameSystem*> systems;
+        
+        struct Rotator { };
+        struct Effect { };
+        struct RotatorSystem : public GameSystem<Rotator> {
+            void Update(float dt) override {
+                systems.push_back(this);
+            }
+        };
+        struct EffectSystem : public GameSystem<Effect> {
+            void Update(float dt) override {
+                systems.push_back(this);
+            }
+        };
+        
+        GameWorld world;
+        GameObject* root1 = world.CreateRoot();
+        root1->CreateSystem<RotatorSystem>();
+        root1->CreateSystem<EffectSystem>();
+        
+        GameObject* root2 = world.CreateRoot();
+        root2->CreateSystem<EffectSystem>();
+        root2->CreateSystem<RotatorSystem>();
+        
+        GameObject* obj1 = root1->CreateChild();
+        obj1->AddComponent<Rotator>();
+        obj1->AddComponent<Effect>();
+        
+        GameObject* obj2 = root2->CreateChild();
+        obj2->AddComponent<Rotator>();
+        obj2->AddComponent<Effect>();
+        
+        world.Update(1);
+        
+        return systems.size() == 4 &&
+            systems[0] == root1->CreateSystem<RotatorSystem>() &&
+            systems[1] == root2->CreateSystem<RotatorSystem>() &&
+            systems[2] == root1->CreateSystem<EffectSystem>() &&
+            systems[3] == root2->CreateSystem<EffectSystem>();
+    });
+    
 }

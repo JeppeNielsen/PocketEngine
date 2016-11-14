@@ -37,6 +37,7 @@
 		72B492651DCF37C70063518A /* SerializationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492631DCF37C70063518A /* SerializationTests.cpp */; };
 		72B492681DCF40DA0063518A /* ScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492661DCF40DA0063518A /* ScriptTests.cpp */; };
 		72B492701DD7C29F0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926E1DD7C29F0063518A /* GameObjectHandle.cpp */; };
+		72B492731DD8A37E0063518A /* FileWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492711DD8A37E0063518A /* FileWorld.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -122,6 +123,8 @@
 		72B492671DCF40DA0063518A /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
 		72B4926E1DD7C29F0063518A /* GameObjectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectHandle.cpp; sourceTree = "<group>"; };
 		72B4926F1DD7C29F0063518A /* GameObjectHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectHandle.hpp; sourceTree = "<group>"; };
+		72B492711DD8A37E0063518A /* FileWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileWorld.cpp; sourceTree = "<group>"; };
+		72B492721DD8A37E0063518A /* FileWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileWorld.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -318,6 +321,8 @@
 				72B492271DCE54EA0063518A /* IGameObject.hpp */,
 				72B492281DCE54EA0063518A /* IGameSystem.hpp */,
 				72B492291DCE54EA0063518A /* Meta */,
+				72B492711DD8A37E0063518A /* FileWorld.cpp */,
+				72B492721DD8A37E0063518A /* FileWorld.hpp */,
 			);
 			path = ComponentSystem;
 			sourceTree = "<group>";
@@ -394,6 +399,7 @@
 				72B491DF1DBD14D10063518A /* ScriptClass.cpp in Sources */,
 				72AE75831DB5340900CEB998 /* Vector2.cpp in Sources */,
 				72AE75101DB5339000CEB998 /* TypeIndexList.cpp in Sources */,
+				72B492731DD8A37E0063518A /* FileWorld.cpp in Sources */,
 				72B4922F1DCE54EA0063518A /* GameWorld.cpp in Sources */,
 				724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */,
 				72B4922D1DCE54EA0063518A /* GameScene.cpp in Sources */,

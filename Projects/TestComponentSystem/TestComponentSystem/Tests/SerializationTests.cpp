@@ -289,7 +289,14 @@ void SerializationTests::RunTests() {
     });
 
     
-    
+    AddTest("Read Guid from json", [] () {
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        std::stringstream stream;
+        root->ToJson(stream);
+        std::string loadedGuid = world.ReadGuidFromJson(stream);
+        return loadedGuid == root->RootGuid();
+    });
     
     
 }
