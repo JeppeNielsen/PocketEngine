@@ -8,11 +8,11 @@
 
 #pragma once
 #include <vector>
+#include "Property.hpp"
 
 /*namespace Pocket {
 class GameObject;
 }*/
-
 
 namespace Pocket {
 class GameObject {
@@ -40,8 +40,9 @@ struct IGameSystem {
     virtual void Render() = 0;
     virtual int AddObject(GameObject* object) = 0;
     virtual void RemoveObject(GameObject* object) = 0;
-    virtual int Order() = 0;
     virtual int ObjectCount() = 0;
+    Property<int> Order;
+    int index;
 };
 
 template<typename... T>
@@ -68,8 +69,6 @@ protected:
 //        objects.pop_back();
 //        //return lastObject;
     }
-    
-    virtual int Order() override { return 0; }
     
     int ObjectCount() override { return objects.size(); }
     

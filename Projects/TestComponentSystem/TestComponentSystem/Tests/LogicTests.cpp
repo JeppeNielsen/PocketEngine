@@ -591,17 +591,18 @@ void LogicTests::RunTests() {
         
         struct System1 : public GameSystem<Component1> {
             void Update(float dt) { updatedSystems.push_back(this); }
-            int Order() { return 1; }
         };
         struct System2 : public GameSystem<Component2> {
             void Update(float dt) { updatedSystems.push_back(this); }
-            int Order() { return 0; }
         };
         
         GameWorld world;
         GameObject* root = world.CreateRoot();
         System1* s1 = root->CreateSystem<System1>();
         System2* s2 = root->CreateSystem<System2>();
+        
+        s1->Order = 2;
+        s2->Order = 1;
         
         root->AddComponent<Component1>();
         root->AddComponent<Component2>();
@@ -715,12 +716,12 @@ void LogicTests::RunTests() {
         
         GameWorld world;
         GameObject* root1 = world.CreateRoot();
-        root1->CreateSystem<RotatorSystem>();
-        root1->CreateSystem<EffectSystem>();
+        RotatorSystem* rotator1 = root1->CreateSystem<RotatorSystem>();
+        EffectSystem* effect1 = root1->CreateSystem<EffectSystem>();
         
         GameObject* root2 = world.CreateRoot();
-        root2->CreateSystem<EffectSystem>();
-        root2->CreateSystem<RotatorSystem>();
+        RotatorSystem* rotator2 = root2->CreateSystem<RotatorSystem>();
+        EffectSystem* effect2 = root2->CreateSystem<EffectSystem>();
         
         GameObject* obj1 = root1->CreateChild();
         obj1->AddComponent<Rotator>();
@@ -738,5 +739,73 @@ void LogicTests::RunTests() {
             systems[2] == root1->CreateSystem<EffectSystem>() &&
             systems[3] == root2->CreateSystem<EffectSystem>();
     });
+    
+    
+    
+    AddTest("ObjectAdded on CreateSystem", [] () {
+        static int added = 0;
+        
+        struct Movable {};
+        struct MoveSystem : public GameSystem<Movable> {
+            void ObjectAdded(GameObject* go) {
+                added++;
+            }
+        };
+    
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        root->AddComponent<Movable>();
+        world.Update(0);
+        bool wasZero = added == 0;
+        root->CreateSystem<MoveSystem>();
+        world.Update(0);
+        return wasZero && added == 1;
+    });
+    
+    AddTest("ObjectRemoved on RemoveSystem", [] () {
+        static int removed = 0;
+        
+        struct Movable {};
+        struct MoveSystem : public GameSystem<Movable> {
+            void ObjectRemoved(GameObject* go) {
+                removed++;
+            }
+        };
+    
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        root->AddComponent<Movable>();
+        world.Update(0);
+        bool wasZero = removed == 0;
+        root->CreateSystem<MoveSystem>();
+        world.Update(0);
+        root->RemoveSystem<MoveSystem>();
+        world.Update(0);
+        return wasZero && removed == 1;
+    });
+    
+    
+    AddTest("ObjectRemoved on object->Remove()", [] () {
+        static int removed = 0;
+        
+        struct Movable {};
+        struct MoveSystem : public GameSystem<Movable> {
+            void ObjectRemoved(GameObject* go) {
+                removed++;
+            }
+        };
+    
+        GameWorld world;
+        GameObject* root = world.CreateRoot();
+        root->CreateSystem<MoveSystem>();
+        GameObject* child = root->CreateChild();
+        child->AddComponent<Movable>();
+        world.Update(0);
+        bool wasZero = removed == 0;
+        child->Remove();
+        world.Update(0);
+        return wasZero && removed == 1;
+    });
+
     
 }
