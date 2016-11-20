@@ -22,7 +22,7 @@ void Gui::Initialize() {
     root->CreateSystem<LabelMeshSystem>();
     root->CreateSystem<SpriteMeshSystem>();
     root->CreateSystem<SpriteTextureSystem>();
-    root->CreateSystem<HierarchyOrder>();
+    root->CreateSystem<HierarchyOrder>()->Order = 1000;
     root->CreateSystem<DraggableSystem>();
     root->CreateSystem<LayoutSystem>();
     root->CreateSystem<TextBoxLabelSystem>();

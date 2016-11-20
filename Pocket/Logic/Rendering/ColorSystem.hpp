@@ -16,11 +16,11 @@
 namespace Pocket {
   class ColorSystem : public GameSystem<Mesh, Colorable> {
     public:
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         void ColorChanged(GameObject* object);
         void Update(float dt);
-        int Order();
     private:
         std::set<GameObject*> changedColorables;
     };
