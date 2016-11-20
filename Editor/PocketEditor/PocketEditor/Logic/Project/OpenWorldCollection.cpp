@@ -42,9 +42,13 @@ OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::st
     OpenWorld* openWorld;
     if (!TryFindOpenWorld(path, &openWorld)) {
         openWorld = new OpenWorld();
-        openWorld->Load(path, filename, world, scriptWorld);
-        worlds.push_back(openWorld);
-        WorldLoaded(openWorld);
+        if (!openWorld->Load(path, filename, world, scriptWorld)) {
+            delete openWorld;
+            return 0;
+        } else {
+            worlds.push_back(openWorld);
+            WorldLoaded(openWorld);
+        }
     }
     ActiveWorld = openWorld;
     return openWorld;

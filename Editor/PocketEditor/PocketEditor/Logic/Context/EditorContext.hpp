@@ -13,27 +13,35 @@
 #include "Gui.hpp"
 #include "ScriptWorld.hpp"
 #include "EngineContext.hpp"
+#include "FileWorld.hpp"
+#include <deque>
 
 using namespace Pocket;
 
 class EditorContext {
 private:
     GameWorld world;
+    FileWorld fileWorld;
     GameObject* contextRoot;
     GameObject* guiRoot;
     Gui* gui;
     EngineContext* engineContext;
     Project project;
-    
 public:
     GameWorld& World();
+    FileWorld& FileWorld();
     GameObject& ContextRoot();
     GameObject& GuiRoot();
     Gui& Gui();
     EngineContext& EngineContext();
     Project& Project();
+    using Action = std::function<void()>;
+    using Actions = std::deque<Action>;
+    Actions delayedActions;
     
     void Initialize(class EngineContext& engineContext);
     void Update(float dt);
     void Render();
+private:
+    void DoActions(Actions& actions);
 };

@@ -11,6 +11,7 @@
 #include <string>
 #include "OpenWorld.hpp"
 #include "Property.hpp"
+#include "FileWorld.hpp"
 
 using namespace Pocket;
 

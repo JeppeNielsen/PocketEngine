@@ -69,9 +69,11 @@ public:
         
         context.Project().Open("/Projects/PocketEngine/Editor/Pong/");
         
-        std::cout<< Guid::CreateNew() << std::endl;
-        std::cout<< Guid::CreateNew() << std::endl;
-        std::cout<< Guid::CreateNew() << std::endl;
+        Input.ButtonDown.Bind([this](std::string button) {
+            if (button == "p") {
+                context.World().DebugSystems();
+            }
+        });
     }
     
     void Update(float dt) {

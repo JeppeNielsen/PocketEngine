@@ -11,6 +11,7 @@
 #include "InputManager.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include "FileWorld.hpp"
 #include <sstream>
 
 using namespace Pocket;
@@ -56,6 +57,8 @@ private:
     
     void InitializeRoot();
     void UpdateTimeScale();
+    
+    void AddEditorObject(GameObject* object);
     
     std::stringstream storedWorld;
 };

@@ -30,6 +30,19 @@ void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
     } else {
          treeView->Root = 0;
     }
+    
+    if (old) {
+        old->IsPlaying.Changed.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
+    }
+    if (current) {
+        current->IsPlaying.Changed.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
+    }
+}
+
+void HierarchyWindow::OpenWorldIsPlayingChanged(OpenWorld *world) {
+    context->delayedActions.emplace_back([this, world] () {
+        treeView->Root = world->Root();
+    });
 }
 
 void HierarchyWindow::OnCreate() {
@@ -56,7 +69,7 @@ void HierarchyWindow::OnCreate() {
             return control;
         };
         
-        if (node!=treeView->Root()) {
+        //if (node!=treeView->Root()) {
             EditorObject* editorObject = node->GetComponent<EditorObject>();
             if (editorObject && editorObject->editorObject) {
                 GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
@@ -65,10 +78,13 @@ void HierarchyWindow::OnCreate() {
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
                 selectButton->GetComponent<Touchable>()->ClickThrough = true;
                 selectButton->AddComponent<EditorObject>(node);
+            } else {
+                int hej = 8;
+                hej++;
             }
-        } else {
-            rootItem = clone;
-        }
+        //} else {
+        //    rootItem = clone;
+        //}
         return clone;
     };
     

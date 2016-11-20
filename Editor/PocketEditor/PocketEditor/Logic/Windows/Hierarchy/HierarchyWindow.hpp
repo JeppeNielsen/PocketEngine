@@ -22,6 +22,7 @@ private:
     void Clicked(TouchData d, GameObject* object);
     void Dropped(DroppedData d, GameObject* object);
     bool IsParentValid(GameObject* object, GameObject* possibleParent);
+    void OpenWorldIsPlayingChanged(OpenWorld* world);
     
     VirtualTreeList* treeView;
     GameObject* rootItem;

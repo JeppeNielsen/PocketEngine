@@ -12,6 +12,7 @@
 void EditorObjectCreatorSystem::Initialize() {
     root->CreateSystem<ComponentSystem<Transform>>()->creatorSystem = this;
     root->CreateSystem<ComponentSystem<Mesh>>()->creatorSystem = this;
+    Order = -1000;
 }
 
 void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
@@ -31,3 +32,7 @@ void EditorObjectCreatorSystem::ObjectRemoved(Pocket::GameObject *object) {
     GameObject* editorObject = (GameObject*)GetMetaData(object);
     editorObject->Remove();
 }
+
+/*int EditorObjectCreatorSystem::Order() {
+    return -1000;
+}*/

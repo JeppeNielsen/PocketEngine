@@ -108,7 +108,10 @@ void ProjectWindow::OnCreate() {
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
     fileSystemListener->watcher.Changed.Bind([this] {
-        //Project().RefreshWorldDatabase();
+        context->FileWorld().FindRoots(fileSystemListener->Path, ".json");
+    });
+    fileSystemListener->Path.Changed.Bind([this] {
+        context->FileWorld().FindRoots(fileSystemListener->Path, ".json");
     });
 
     Gui& gui = context->Gui();
@@ -175,9 +178,11 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode = nodeInfo;
     if (d.Index == 0) {
         if (!selectedNode.filePath->isFolder) {
+            context->delayedActions.emplace_back([=]() {
             context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(),
                                                 selectedNode.filePath->filename,
                                                 context->World(), context->Project().ScriptWorld());
+            });
         }
     } else if (d.Index == 1) {
         popupMenu.ShowPopup(d.Input->GetTouchPosition(1));

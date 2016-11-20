@@ -7,8 +7,10 @@
 //
 
 #include "EditorContext.hpp"
+#include "Cloner.hpp"
 
 GameWorld& EditorContext::World() { return world; }
+FileWorld& EditorContext::FileWorld() { return fileWorld; }
 GameObject& EditorContext::ContextRoot() { return *contextRoot; }
 GameObject& EditorContext::GuiRoot() { return *guiRoot; }
 Gui& EditorContext::Gui() { return *gui; }
@@ -18,26 +20,47 @@ Project& EditorContext::Project() { return project; }
 void EditorContext::Initialize(class EngineContext& engineContext) {
     this->engineContext = &engineContext;
     
+    fileWorld.AddGameWorld(world);
+    fileWorld.OnRootCreated = [this] (GameObject* root) {
+    
+    };
+    fileWorld.OnChildCreated = [this] (GameObject* child) {
+    //    child->AddComponent<EditorObject>();
+    };
+    
+    
+    world.AddComponentType<Cloner>();
+    
     guiRoot = world.CreateRoot();
-    guiRoot->Order = 1000;
     
     gui = guiRoot->CreateSystem<class Gui>();
     guiRoot->CreateSystem<TouchSystem>()->TouchDepth = 10;
+    guiRoot->CreateSystem<TouchSystem>()->Order = -200;
     
     gui->Setup("images.png", "images.xml", engineContext.Viewport());
     gui->CreateFont("Font.fnt", "Font");
 
+    guiRoot->CreateSystem<RenderSystem>()->Order = 10;
+    
     contextRoot = world.CreateRoot();
-    contextRoot->Order = 100;
+    contextRoot->Order = -100;
     
     project.Initialize(world);
 }
 
 void EditorContext::Update(float dt) {
     engineContext->InputDevice().UpdateInputManager(&world.Input());
+    DoActions(delayedActions);
     world.Update(dt);
 }
 
 void EditorContext::Render() {
     world.Render();
+}
+
+void EditorContext::DoActions(Actions& actions) {
+    for (int i=0; i<actions.size(); ++i) {
+        actions[i]();
+    }
+    actions.clear();
 }

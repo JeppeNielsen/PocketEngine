@@ -102,19 +102,38 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
     
     if (path != "") {
         std::ifstream file;
+        
         file.open(path);
-        root = world->CreateRootFromJson(file, [this] (GameObject* root) {
-            OpenWorld::CreateDefaultSystems(*root);
-            scriptWorld->AddGameRoot(root);
-        },
-        [](GameObject* go) {
-            go->AddComponent<EditorObject>();
-        });
+        std::string guid = world->ReadGuidFromJson(file);
         file.close();
+            
+        root = world->TryFindRoot(guid);
+        if (!root) {
+            return false;
+        }
+        
+        /*
+        if (!root) {
+            root = world->CreateRootFromJson(file, [this] (GameObject* root) {
+                OpenWorld::CreateDefaultSystems(*root);
+                scriptWorld->AddGameRoot(root);
+                root->AddComponent<EditorObject>();
+            },
+            [](GameObject* go) {
+                go->AddComponent<EditorObject>();
+            });
+        }
+        file.close();
+        if (!root) {
+            return false;
+        }
+        */
     } else {
         root = world->CreateRoot();
-        CreateDefaultSystems(*root);
     }
+    
+    CreateDefaultSystems(*root);
+    AddEditorObject(root);
     
     editorRoot = world->CreateRoot();
     //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;
@@ -127,7 +146,7 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
     editorCamera->AddComponent<Transform>()->Position = { 0, 0, 10 };
     editorCamera->GetComponent<Camera>()->FieldOfView = 70;
     editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
-
+    
     InitializeRoot();
     return true;
 }
@@ -191,3 +210,11 @@ void OpenWorld::UpdateTimeScale() {
         root->TimeScale() = IsPlaying() ? 1.0f : 0.0f;
     }
 }
+
+void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
+    object->AddComponent<EditorObject>();
+    for (auto child : object->Children()) {
+        AddEditorObject(child);
+    }
+}
+

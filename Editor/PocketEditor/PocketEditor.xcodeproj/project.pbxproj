@@ -18,6 +18,7 @@
 		723689AA1D888BD6006480F0 /* OpenWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A81D888BD6006480F0 /* OpenWorld.cpp */; };
 		723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */; };
 		723689B11D89DE1B006480F0 /* FileMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AF1D89DE1B006480F0 /* FileMenu.cpp */; };
+		723E23111DE1B1F900AFBB79 /* CloneVariable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E230F1DE1B1F900AFBB79 /* CloneVariable.cpp */; };
 		726DFD161D24741000C862B7 /* Bitset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD141D24741000C862B7 /* Bitset.cpp */; };
 		726DFD251D24742A00C862B7 /* ClangUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD171D24742A00C862B7 /* ClangUtil.cpp */; };
 		726DFD261D24742A00C862B7 /* ScriptClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD191D24742A00C862B7 /* ScriptClass.cpp */; };
@@ -359,6 +360,7 @@
 		72B492621DCE59D10063518A /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492581DCE59D10063518A /* GameWorld.cpp */; };
 		72B4926A1DD3AE510063518A /* testGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492691DD3AE510063518A /* testGui.cpp */; };
 		72B4926D1DD7B0CC0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */; };
+		72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492741DD8ADCB0063518A /* FileWorld.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -418,6 +420,8 @@
 		723689AC1D888D9E006480F0 /* OpenWorldCollection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OpenWorldCollection.hpp; sourceTree = "<group>"; };
 		723689AF1D89DE1B006480F0 /* FileMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileMenu.cpp; sourceTree = "<group>"; };
 		723689B01D89DE1B006480F0 /* FileMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileMenu.hpp; sourceTree = "<group>"; };
+		723E230F1DE1B1F900AFBB79 /* CloneVariable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloneVariable.cpp; sourceTree = "<group>"; };
+		723E23101DE1B1F900AFBB79 /* CloneVariable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CloneVariable.hpp; sourceTree = "<group>"; };
 		726DFD141D24741000C862B7 /* Bitset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bitset.cpp; sourceTree = "<group>"; };
 		726DFD151D24741000C862B7 /* Bitset.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bitset.hpp; sourceTree = "<group>"; };
 		726DFD171D24742A00C862B7 /* ClangUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClangUtil.cpp; sourceTree = "<group>"; };
@@ -1239,6 +1243,8 @@
 		72B492691DD3AE510063518A /* testGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testGui.cpp; sourceTree = "<group>"; };
 		72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectHandle.cpp; sourceTree = "<group>"; };
 		72B4926C1DD7B0CC0063518A /* GameObjectHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectHandle.hpp; sourceTree = "<group>"; };
+		72B492741DD8ADCB0063518A /* FileWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileWorld.cpp; sourceTree = "<group>"; };
+		72B492751DD8ADCB0063518A /* FileWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileWorld.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -1309,6 +1315,8 @@
 				720B3D421D8DD2B9006195E8 /* Cloner.hpp */,
 				720B3D441D8DD424006195E8 /* ClonerSystem.cpp */,
 				720B3D451D8DD424006195E8 /* ClonerSystem.hpp */,
+				723E230F1DE1B1F900AFBB79 /* CloneVariable.cpp */,
+				723E23101DE1B1F900AFBB79 /* CloneVariable.hpp */,
 			);
 			path = Cloning;
 			sourceTree = "<group>";
@@ -2774,6 +2782,8 @@
 		72B4924E1DCE59D10063518A /* ComponentSystem */ = {
 			isa = PBXGroup;
 			children = (
+				72B492741DD8ADCB0063518A /* FileWorld.cpp */,
+				72B492751DD8ADCB0063518A /* FileWorld.hpp */,
 				72B4924F1DCE59D10063518A /* Container.hpp */,
 				72B492501DCE59D10063518A /* GameIdHelper.cpp */,
 				72B492511DCE59D10063518A /* GameIdHelper.hpp */,
@@ -3023,6 +3033,7 @@
 				7287F11B1C9B56E6005D05FA /* Rect.cpp in Sources */,
 				7299541D1C99F76100DAAE5D /* SelectedColorerSystem.cpp in Sources */,
 				729954421C99F76100DAAE5D /* b2Settings.cpp in Sources */,
+				72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */,
 				729954BF1C99F76100DAAE5D /* btDiscreteDynamicsWorld.cpp in Sources */,
 				729953E31C99F76100DAAE5D /* FieldEditor.cpp in Sources */,
 				729954881C99F76100DAAE5D /* btMinkowskiSumShape.cpp in Sources */,
@@ -3264,6 +3275,7 @@
 				7299543E1C99F76100DAAE5D /* b2PolygonShape.cpp in Sources */,
 				729954661C99F76100DAAE5D /* btCompoundCollisionAlgorithm.cpp in Sources */,
 				729954DC1C99F76100DAAE5D /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
+				723E23111DE1B1F900AFBB79 /* CloneVariable.cpp in Sources */,
 				729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */,
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,
