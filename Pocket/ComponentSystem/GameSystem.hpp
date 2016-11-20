@@ -25,7 +25,6 @@ namespace Pocket {
         virtual void ObjectRemoved(GameObject* object) override;
         virtual void Update(float dt) override;
         virtual void Render() override;
-        virtual int Order() override;
         int ObjectCount() override;
         
         int AddObject(GameObject* object) override;

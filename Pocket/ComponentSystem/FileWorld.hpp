@@ -20,6 +20,7 @@ namespace Pocket {
         void FindRoots(const std::string& path, const std::string& extension);
         
         std::function<void(GameObject* root)> OnRootCreated;
+        std::function<void(GameObject* child)> OnChildCreated;
         
     private:
         std::map<std::string, std::string> guidToPath;

@@ -55,18 +55,17 @@ GameObject::GameObject(const GameObject& other) {
     
     WorldEnabled.Method = [this](bool& value) {
         value = (Parent) ? Parent()->WorldEnabled && Enabled : Enabled;
-    };
-    
-    Enabled.Changed.Bind(this, &GameObject::SetWorldEnableDirty);
-    
+    }; 
 }
 
 void GameObject::Reset() {
+    Enabled.Changed.Clear();
     removed = false;
     Parent = 0;
     Enabled = true;
     children.clear();
     Order = 0;
+    Enabled.Changed.Bind(this, &GameObject::SetWorldEnableDirty);
 }
 
 bool GameObject::HasComponent(ComponentId id) const {
@@ -91,7 +90,7 @@ void GameObject::AddComponent(ComponentId id) {
 
     componentIndicies[id] = scene->world->components[id].container->Create(index);
     activeComponents.Set(id, true);
-    scene->delayedActions.emplace_back([this, id]() {
+    scene->world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
@@ -105,7 +104,7 @@ void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     componentIndicies[id] = referenceObject->componentIndicies[id];
     scene->world->components[id].container->Reference(referenceObject->componentIndicies[id]);
     activeComponents.Set(id, true);
-    scene->delayedActions.emplace_back([this, id]() {
+    scene->world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
@@ -114,7 +113,7 @@ void GameObject::RemoveComponent(ComponentId id) {
     assert(id<activeComponents.Size());
     if (removed) return;
     if (!activeComponents[id]) return;
-    scene->delayedActions.emplace_back([this, id]() {
+    scene->world->delayedActions.emplace_back([this, id]() {
         if (!activeComponents[id]) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
         }
@@ -131,14 +130,14 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     if (!object->activeComponents[id]) return;
     componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
-    scene->delayedActions.emplace_back([this, id]() {
+    scene->world->delayedActions.emplace_back([this, id]() {
         TrySetComponentEnabled(id, true);
     });
 }
 
 void GameObject::SetWorldEnableDirty() {
     WorldEnabled.MakeDirty();
-    scene->delayedActions.emplace_back([this](){
+    scene->world->delayedActions.emplace_back([this](){
         SetEnabled(WorldEnabled);
     });
 }
@@ -151,6 +150,38 @@ void GameObject::SetEnabled(bool enabled) {
     }
 }
 
+void GameObject::TryAddToSystem(int systemId) {
+    if (systemId>=scene->systemsIndexed.size()) return; // systemindex is beyond scene's systems list, thus nothing else to do
+    IGameSystem* system = scene->systemsIndexed[systemId];
+    if (!system) return; // system is not part of scene/root
+    GameWorld* world = scene->world;
+    auto& systemBitset = world->systems[systemId].bitset;
+    bool isInterest = systemBitset.Contains(enabledComponents);
+    if (isInterest) {
+        system->AddObject(this);
+        system->ObjectAdded(this);
+        if (system->ObjectCount() == 1) {
+            world->AddActiveSystem(system, scene);
+        }
+    }
+}
+
+void GameObject::TryRemoveFromSystem(int systemId) {
+    if (systemId>=scene->systemsIndexed.size()) return; // systemindex is beyond scene's systems list, thus nothing else to do
+    IGameSystem* system = scene->systemsIndexed[systemId];
+    if (!system) return; // system is not part of scene/root
+    GameWorld* world = scene->world;
+    auto& systemBitset = world->systems[systemId].bitset;
+    bool wasInterest = systemBitset.Contains(enabledComponents);
+    if (wasInterest) {
+        system->ObjectRemoved(this);
+        system->RemoveObject(this);
+        if (system->ObjectCount() == 0) {
+            world->RemoveActiveSystem(system);
+        }
+    }
+}
+
 void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
     
     enable = enable && WorldEnabled();
@@ -159,46 +190,17 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
     if (isEnabled==enable) {
         return; //cannot double enable/disable components
     }
-    
-    GameWorld* world = scene->world;
-    GameWorld::ComponentInfo& componentInfo = world->components[id];
+
+    GameWorld::ComponentInfo& componentInfo = scene->world->components[id];
     
     if (enable) {
         enabledComponents.Set(id, true);
-        for(auto systemIndex : componentInfo.systemsUsingComponent) {
-            if (systemIndex>=scene->systemsIndexed.size()) break; // systemindex is beyond scene's systems list, thus nothing else to do
-            auto& systemBitset = world->systems[systemIndex].bitset;
-            bool isInterest = systemBitset.Contains(enabledComponents);
-            if (isInterest) {
-                IGameSystem* system = scene->systemsIndexed[systemIndex];
-                if (!system) continue; // system is not part of scene/root
-                system->AddObject(this);
-                system->ObjectAdded(this);
-                if (system->ObjectCount() == 1) {
-                    scene->activeSystems.push_back(system);
-                    std::sort(scene->activeSystems.begin(),
-                        scene->activeSystems.end(),
-                        [](IGameSystem* a, IGameSystem* b) {
-                            return a->Order()<b->Order();
-                        });
-                }
-            }
+        for(auto systemId : componentInfo.systemsUsingComponent) {
+            TryAddToSystem(systemId);
         }
     } else {
-        for(auto systemIndex : componentInfo.systemsUsingComponent) {
-            if (systemIndex>=scene->systemsIndexed.size()) break; // systemindex is beyond scene's systems list, thus nothing else to do
-            auto& systemBitset = world->systems[systemIndex].bitset;
-            bool wasInterest = systemBitset.Contains(enabledComponents);
-            if (wasInterest) {
-                IGameSystem* system = scene->systemsIndexed[systemIndex];
-                if (!system) continue; // system is not part of scene/root
-
-                system->ObjectRemoved(this);
-                system->RemoveObject(this);
-                if (system->ObjectCount() == 0) {
-                    scene->activeSystems.erase(std::find(scene->activeSystems.begin(), scene->activeSystems.end(), system));
-                }
-            }
+        for(auto systemId : componentInfo.systemsUsingComponent) {
+            TryRemoveFromSystem(systemId);
         }
         enabledComponents.Set(id, false);
     }
@@ -207,7 +209,7 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
 void GameObject::Remove() {
     if (removed) return;
     int localIndex = index;
-    scene->delayedActions.emplace_back([this, localIndex]() {
+    scene->world->delayedActions.emplace_back([this, localIndex]() {
         forceSetNextParent = true;
         if (IsRoot()) {
             scene->world->RemoveRoot(this);
@@ -259,7 +261,14 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source) {
     
     for (int i=0; i<source->activeComponents.Size(); ++i) {
         if (source->activeComponents[i]) {
-            clone->CloneComponent(i, source);
+        
+            int ownerIndex = scene->world->components[i].container->GetOwner(source->componentIndicies[i]);
+            bool isReference = (ownerIndex != source->index) && ownerIndex>=0;
+            if (isReference) {
+                clone->AddComponent(i, source);
+            } else {
+                clone->CloneComponent(i, source);
+            }
         }
     }
     for(auto child : source->children) {

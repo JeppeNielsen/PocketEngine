@@ -24,6 +24,11 @@ const ObjectCollection& GameSystemBase::Objects() const { return objects; }
 
 int GameSystemBase::AddObject(Pocket::GameObject *object) {
     int count = (int)objects.size();
+    
+    if (std::find(objects.begin(), objects.end(), object)!=objects.end()) {
+        std::cout << "DOH"<< std::endl;
+    }
+    
     objects.push_back(object);
     return count;
 }
@@ -36,7 +41,6 @@ void GameSystemBase::RemoveObject(Pocket::GameObject *object) {
     }
 }
 
-int GameSystemBase::Order() { return 0; }
 int GameSystemBase::ObjectCount() { return (int)objects.size(); }
 
 void GameSystemBase::SetMetaData(Pocket::GameObject *object, void *data) {

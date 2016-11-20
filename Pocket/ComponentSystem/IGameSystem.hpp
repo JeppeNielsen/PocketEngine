@@ -7,11 +7,10 @@
 //
 
 #pragma once
+#include "Property.hpp"
 
 namespace Pocket {
     class GameObject;
-    
-    class SubSystemCreator;
     
     struct IGameSystem {
         virtual ~IGameSystem() = default;
@@ -23,7 +22,8 @@ namespace Pocket {
         virtual void Render() = 0;
         virtual int AddObject(GameObject* object) = 0;
         virtual void RemoveObject(GameObject* object) = 0;
-        virtual int Order() = 0;
         virtual int ObjectCount() = 0;
+        Property<int> Order;
+        int index;
     };
 }

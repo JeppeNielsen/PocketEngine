@@ -21,7 +21,7 @@ void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
         std::ifstream file;
         file.open(it->second);
         if (!file.is_open()) return 0;
-        return world->CreateRootFromJson(file, OnRootCreated);
+        return world->CreateRootFromJson(file, OnRootCreated, OnChildCreated);
     };
 }
 

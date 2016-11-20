@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <functional>
 #include "GameObject.hpp"
 #include "Property.hpp"
 
@@ -24,14 +25,10 @@ namespace Pocket {
         friend class ScriptWorld;
         friend class GameObjectHandle;
         
-        using Actions = std::deque<std::function<void()>>;
-        Actions delayedActions;
-        
         GameWorld* world;
         GameObject* root;
         int index;
         std::vector<IGameSystem*> systemsIndexed;
-        std::vector<IGameSystem*> activeSystems;
         int idCounter;
         std::string guid;
         Property<float> timeScale;
@@ -41,13 +38,15 @@ namespace Pocket {
         GameScene();
         ~GameScene();
         GameScene(const GameScene& other);
-        void DoActions(Actions &actions);
         void Update(float dt);
         void Render();
         void DestroySystems();
         GameObject* FindObject(int objectId);
         
         IGameSystem* CreateSystem(int systemId);
+        void RemoveSystem(int systemId);
+        
+        void IterateObjects(const std::function<void(GameObject*)>& callback);
         
         friend class Container<GameScene>;
     };

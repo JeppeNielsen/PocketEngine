@@ -67,7 +67,8 @@ namespace Pocket {
         void TrySetComponentEnabled(ComponentId id, bool enable);
         void SetWorldEnableDirty();
         void SetEnabled(bool enabled);
-        
+        void TryAddToSystem(int systemId);
+        void TryRemoveFromSystem(int systemId);
         void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
         void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
         void AddComponent(minijson::istream_context& context, std::string componentName);
@@ -139,6 +140,9 @@ namespace Pocket {
         
         template<typename T>
         T* CreateSystem();
+        
+        template<typename T>
+        void RemoveSystem();
     
         Property<bool>& UpdateEnabled();
         Property<float>& TimeScale();

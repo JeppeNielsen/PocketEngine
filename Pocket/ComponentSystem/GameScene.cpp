@@ -30,9 +30,7 @@ GameScene::~GameScene() {
 }
 
 GameScene::GameScene(const GameScene& other) {
-    activeSystems.clear();
     systemsIndexed.clear();
-    delayedActions.clear();
     updateEnabled = true;
     renderEnabled = true;
     timeScale = 1.0f;
@@ -46,27 +44,8 @@ void GameScene::DestroySystems() {
     }
 }
 
-void GameScene::DoActions(Actions &actions) {
-    for(int i=0; i<actions.size();++i) {
-        actions[i]();
-    }
-    actions.clear();
-}
-
-void GameScene::Update(float dt) {
-    DoActions(delayedActions);
-    if (!updateEnabled()) return;
-    dt = timeScale() * dt;
-    for(auto system : activeSystems) {
-        system->Update(dt);
-    }
-}
-
 void GameScene::Render() {
     if (!renderEnabled()) return;
-    for(auto system : activeSystems) {
-        system->Render();
-    }
 }
 
 GameObject* GameScene::FindObject(int objectId) {
@@ -83,14 +62,53 @@ GameObject* GameScene::FindObject(int objectId) {
     return 0;
 }
 
+void GameScene::IterateObjects(const std::function<void (GameObject *)> &callback) {
+    std::vector<GameObject*> nodesToVisit;
+    nodesToVisit.push_back(root);
+    
+    while (!nodesToVisit.empty()) {
+        GameObject* current = nodesToVisit.back();
+        callback(current);
+        nodesToVisit.pop_back();
+        nodesToVisit.insert(nodesToVisit.end(), current->Children().begin(), current->Children().end());
+    }
+}
+
 IGameSystem* GameScene::CreateSystem(int systemId) {
     if (systemId>=systemsIndexed.size()) {
         systemsIndexed.resize(systemId + 1, 0);
     }
 
     if (!systemsIndexed[systemId]) {
-        systemsIndexed[systemId] = world->systems[systemId].createFunction(root);
-        systemsIndexed[systemId]->Initialize();
+        IGameSystem* system = world->systems[systemId].createFunction(root);
+        systemsIndexed[systemId] = system;
+        system->index = systemId;
+        system->Initialize();
+        system->Order.Changed.Bind([this] () { world->delayedActions.emplace_back([this] () { world->SortActiveSystems(); }); });
+        
+        IterateObjects([systemId](GameObject* object) {
+            object->TryAddToSystem(systemId);
+        });
     }
     return systemsIndexed[systemId];
+}
+
+void GameScene::RemoveSystem(int systemId) {
+    if (systemId>=systemsIndexed.size()) {
+        return;
+    }
+    IGameSystem* system = systemsIndexed[systemId];
+    if (!system) return;
+    
+    IterateObjects([systemId](GameObject* object) {
+        object->TryRemoveFromSystem(systemId);
+    });
+    system->Destroy();
+    
+    if (world->systems[systemId].deleteFunction) {
+        world->systems[systemId].deleteFunction(system);
+    } else {
+        delete system;
+    }
+    systemsIndexed[systemId] = 0;
 }
