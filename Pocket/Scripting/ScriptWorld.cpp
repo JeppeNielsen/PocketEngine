@@ -768,7 +768,9 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
                 }
             }
             systemInfo.createFunction = [this, systemIndex] (GameObject* root) {
-                return createSystem(systemIndex);
+                IGameSystem* system = createSystem(systemIndex);
+                system->index = systemIndex;
+                return system;
             };
             systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
                 deleteSystem(system);
