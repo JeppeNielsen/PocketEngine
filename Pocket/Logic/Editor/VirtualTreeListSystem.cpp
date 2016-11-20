@@ -33,7 +33,13 @@ void VirtualTreeListSystem::Update(float dt) {
 void VirtualTreeListSystem::UpdateVirtualList(Pocket::GameObject *object) {
     VirtualTreeList* treeList = object->GetComponent<VirtualTreeList>();
     if (!treeList->Pivot()) return;
-    if (!treeList->Root()) return;
+    if (!treeList->Root()) {
+        for(auto& node : treeList->visibleNodes) {
+            treeList->NodeRemoved({ node.node, node.position, node.depth });
+        }
+        treeList->visibleNodes.clear();
+        return;
+    }
     
     Transform* pivotTransform = treeList->Pivot()->GetComponent<Transform>();
     if (!pivotTransform) return;
