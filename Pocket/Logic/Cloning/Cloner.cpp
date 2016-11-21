@@ -7,3 +7,5 @@
 //
 
 #include "Cloner.hpp"
+
+using namespace Pocket;

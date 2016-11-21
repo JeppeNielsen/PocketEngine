@@ -323,6 +323,20 @@ std::vector<int> GameObject::GetComponentIndicies() {
     return indicies;
 }
 
+GameWorld* GameObject::World() {
+    return scene->world;
+}
+
+TypeInfo GameObject::GetComponentTypeInfo(int index){
+    GameWorld* world = scene->world;
+    if (index>=world->components.size()) return TypeInfo();
+    if (!activeComponents[index]) TypeInfo(); // gameobject hasn't got component
+    if (!world->components[index].getTypeInfo) return TypeInfo(); // component has no type
+    TypeInfo info = world->components[index].getTypeInfo(this);
+    info.name = world->components[index].name;
+    return info;
+}
+
 Property<bool>& GameObject::UpdateEnabled() { return scene->updateEnabled; }
 Property<float>& GameObject::TimeScale() { return scene->timeScale; }
 Property<bool>& GameObject::RenderEnabled() { return scene->renderEnabled; }

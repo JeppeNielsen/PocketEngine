@@ -143,6 +143,10 @@ namespace Pocket {
         
         template<typename T>
         void RemoveSystem();
+        
+        GameWorld* World();
+        
+        TypeInfo GetComponentTypeInfo(int index);
     
         Property<bool>& UpdateEnabled();
         Property<float>& TimeScale();

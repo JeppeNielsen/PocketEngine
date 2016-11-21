@@ -96,6 +96,8 @@ struct FieldInfoEditorCreator<Property<T>> {
     }
 };
 
+class FieldInfoAny;
+
 class IFieldInfo {
 public:
     virtual ~IFieldInfo() { }
@@ -106,6 +108,7 @@ public:
     virtual IFieldInfoEditor* CreateEditor(void* context, void* parent) = 0;
     virtual bool HasEditor() = 0;
     virtual IFieldInfo* Clone() = 0;
+    virtual void SetFromAny(FieldInfoAny* any) { }
 };
 
 template<class T>
@@ -149,6 +152,8 @@ public:
         clone->field = this->field;
         return clone;
     }
+    
+    void SetFromAny(FieldInfoAny* any) override;
     
     static std::function<IFieldInfoEditor*()> Editor;
     
@@ -259,7 +264,7 @@ void TypeIndexList::TypeIndex<T>::AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pock
 template<typename T>
 struct TypeIndexList::TypeIndex<std::vector<T>> : public TypeIndexList::ITypeIndex {
     
-    void AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) {
+    void AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) override {
         FieldInfo<std::vector<T>>* derived = static_cast<FieldInfo<std::vector<T>>*>(fieldInfo);
         typeInfo->AddField<std::vector<T>>(*derived->field, fieldInfo->name);
     }
@@ -289,6 +294,79 @@ struct JsonSerializer<T, typename std::enable_if< Pocket::Meta::HasGetTypeFuncti
     static void Deserialize(minijson::value& value, T* object, minijson::istream_context& context) {
         auto type = object->GetType();
         type.Deserialize(context);
+    }
+};
+
+class FieldInfoAny : public IFieldInfo {
+public:
+    FieldInfoAny() { type = -1; }
+
+    void Serialize(minijson::object_writer& writer) override { }
+    void Deserialize(minijson::istream_context& context, minijson::value& value) override {
+        valueType = value.type();
+        string_value = value.as_string();
+        long_value = value.as_long();
+        double_value = value.as_double();
+    }
+    IFieldInfoEditor* CreateEditor(void* context, void* parent) override {
+        return 0;
+    }
+    bool HasEditor() override {
+        return false;
+    }
+    IFieldInfo* Clone() override {
+        FieldInfoAny* clone = new FieldInfoAny();
+        clone->valueType = valueType;
+        clone->string_value = string_value;
+        clone->long_value = long_value;
+        clone->double_value = double_value;
+        return clone;
+    }
+    
+    minijson::value_type valueType;
+    std::string string_value;
+    long long_value;
+    double double_value;
+};
+
+
+template<typename T>
+void FieldInfo<T>::SetFromAny(FieldInfoAny* any) {
+    std::stringstream s;
+    s<<any->string_value;
+    minijson::istream_context context(s);
+    minijson::value val(any->valueType, any->string_value.c_str(), any->long_value, any->double_value);
+    JsonSerializer<T>::Deserialize(val, field, context);
+    //(*field) = T::Deserialize(any->value);
+    //std::cout << any->value << std::endl;
+}
+
+
+template<>
+struct JsonSerializer<IFieldInfo*> {
+    static void Serialize(std::string& key, const IFieldInfo* value, minijson::object_writer& writer) {
+        //writer.write(key.c_str(), value);
+        
+        IFieldInfo* info = (IFieldInfo*)value;
+        info->Serialize(writer);
+    }
+    
+    static void Serialize(const IFieldInfo* value, minijson::array_writer& writer) {
+        
+        minijson::object_writer object = writer.nested_object();
+        IFieldInfo* info = (IFieldInfo*)value;
+        info->Serialize(object);
+        object.close();
+    }
+    
+    static void Deserialize(minijson::value& value, IFieldInfo** field, minijson::istream_context& context) {
+        //if (value.type() != minijson::Object) return;
+        //(*field) = (int)value.as_long();
+        
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            (*field) = new FieldInfoAny();
+            (*field)->Deserialize(context, v);
+        });
     }
 };
 

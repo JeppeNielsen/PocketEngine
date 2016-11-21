@@ -15,9 +15,14 @@
 namespace Pocket {
     class Cloner {
     public:
+        
         GameObjectHandle Source;
+        
+        std::vector<IFieldInfo*> variables;
+        
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Source)
-        TYPE_FIELDS_END
+        TYPE_FIELD(variables)
+        TYPE_FIELDS_END        
     };
 }
