@@ -13,6 +13,7 @@
 namespace Pocket {
     class ClonerSystem : public GameSystem<Cloner> {
     protected:
+        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:

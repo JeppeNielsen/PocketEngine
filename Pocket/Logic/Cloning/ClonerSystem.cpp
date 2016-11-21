@@ -14,6 +14,10 @@
 
 using namespace Pocket;
 
+void ClonerSystem::Initialize() {
+    root->World()->AddComponentType<CloneVariable>();
+}
+
 void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Cloner>()->Source.SetRoot(root);
     object->GetComponent<Cloner>()->Source.Changed.Bind(this, &ClonerSystem::CloneSourceChanged, object);
