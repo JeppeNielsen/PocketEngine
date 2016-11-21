@@ -27,6 +27,7 @@
 #include "InputMapperSystem.hpp"
 #include <fstream>
 #include "Project.hpp"
+#include "CloneVariable.hpp"
 
 struct Turner {
     Vector3 speed;
@@ -134,6 +135,8 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
     
     CreateDefaultSystems(*root);
     AddEditorObject(root);
+    //auto var = root->AddComponent<CloneVariable>();
+    //var->Variables.push_back({ GameIdHelper::GetClassName<Transform>(), "Rotation" });
     
     editorRoot = world->CreateRoot();
     //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;

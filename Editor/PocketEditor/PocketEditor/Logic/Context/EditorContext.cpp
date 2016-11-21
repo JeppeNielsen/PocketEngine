@@ -8,6 +8,7 @@
 
 #include "EditorContext.hpp"
 #include "Cloner.hpp"
+#include "CloneVariable.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
@@ -28,9 +29,6 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     //    child->AddComponent<EditorObject>();
     };
     
-    
-    world.AddComponentType<Cloner>();
-    
     guiRoot = world.CreateRoot();
     
     gui = guiRoot->CreateSystem<class Gui>();
@@ -44,6 +42,10 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     
     contextRoot = world.CreateRoot();
     contextRoot->Order = -100;
+    
+    world.AddComponentType<Cloner>();
+    world.AddComponentType<CloneVariable>();
+    
     
     project.Initialize(world);
 }
