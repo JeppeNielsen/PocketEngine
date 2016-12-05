@@ -7,10 +7,9 @@
 //
 
 #include "FieldEditorSystem.hpp"
-#include "SerializedFieldEditors.hpp"
 
 void FieldEditorSystem::Initialize() {
-    CreateDefaultSerializedEditors();
+
 }
 
 void FieldEditorSystem::ObjectAdded(GameObject* object) {
@@ -33,8 +32,9 @@ void FieldEditorSystem::ObjectRemoved(GameObject* object) {
 
 void FieldEditorSystem::Update(float dt) {
     for(auto object : Objects()) {
-        if (object->GetComponent<FieldEditor>()->editor) {
-            object->GetComponent<FieldEditor>()->editor->Update(dt);
+        FieldEditor* fieldEditor = object->GetComponent<FieldEditor>();
+        if (fieldEditor->editor) {
+            fieldEditor->editor->Update(dt);
         }
     }
 }
@@ -51,7 +51,8 @@ void FieldEditorSystem::FieldChanged(GameObject* object) {
     }
     IFieldInfo* field = editor->Type.GetField(editor->Field);
     if (field) {
-        editor->editor = field->CreateEditor(gui, object);
+        editor->editor = field->CreateEditor();
+        editor->editor->Create(gui, object);
     }
 }
 

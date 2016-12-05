@@ -1,0 +1,165 @@
+#pragma once
+#include "Property.hpp"
+#include <vector>
+
+namespace Pocket {
+
+struct IFieldEditor {
+    virtual ~IFieldEditor() { }
+    virtual void SetField(void* field) = 0;
+    virtual void Create(void* context, void* parent) = 0;
+    virtual void Destroy() = 0;
+    virtual void Update(float dt) = 0;
+};
+
+template<class T, typename S = void>
+struct FieldEditorCreator {
+    static IFieldEditor* Create() {
+        return 0;
+    }
+};
+
+template<typename T>
+struct PropertyEditor : public IFieldEditor {
+
+    Property<T>* field;
+    IFieldEditor* editor;
+    
+    PropertyEditor() : editor(0) {}
+    
+    ~PropertyEditor() {
+        if (editor) {
+            delete editor;
+        }
+    }
+    
+    void SetField(void* field) override {
+        this->field = static_cast<Property<T>*>(field);
+    }
+
+    void Create(void* context, void* parent) override {
+        editor = FieldEditorCreator<T>::Create();
+        if (editor) {
+            editor->SetField(&currentValue);
+            editor->Create(context, parent);
+        }
+    }
+    
+    void Update(float dt) override {
+        if (!editor) return;
+    
+        if (currentValue!=prevValue) {
+            prevValue = currentValue;
+            this->field->operator=(currentValue);
+        } else {
+            currentValue = this->field->operator()();
+            prevValue = currentValue;
+        }
+        editor->Update(dt);
+    }
+    
+    void Destroy() override {
+        if (editor) {
+            editor->Destroy();
+        }
+    }
+    
+    T currentValue;
+    T prevValue;
+};
+
+template<typename T>
+struct FieldEditorCreator<Property<T>> {
+    static IFieldEditor* Create() {
+        return new PropertyEditor<T>();
+    }
+};
+
+
+
+
+
+template<typename T>
+struct VectorEditor : public IFieldEditor {
+
+    std::vector<IFieldEditor*> entries;
+    
+    ~VectorEditor() {
+        for(auto entry : entries) {
+            delete entry;
+        }
+    }
+    
+    void SetField(void* field) override {
+        this->field = static_cast<std::vector<T>*>(field);
+    }
+
+    void Create(void* context, void* parent) override {
+        for(auto&& item : *this->field) {
+            auto editor = FieldEditorCreator<T>::Create();
+            if (!editor) continue;
+            editor->SetField(&item);
+            editor->Create(context, parent);
+            entries.push_back(editor);
+        }
+    }
+    
+    void Update(float dt) override {
+        for(auto entry : entries) {
+            if (!entry) continue;
+            entry->Update(dt);
+        }
+    }
+    
+    void Destroy() override {
+        for(auto entry : entries) {
+            if (!entry) continue;
+            entry->Destroy();
+        }
+    }
+    
+    std::vector<T>* field;
+};
+
+
+
+
+
+
+template<>
+struct FieldEditorCreator<std::vector<bool>> {
+    static IFieldEditor* Create() {
+        return 0;
+    }
+};
+
+template<typename T>
+struct FieldEditorCreator<std::vector<T>> {
+    static IFieldEditor* Create() {
+        return new VectorEditor<T>();
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}

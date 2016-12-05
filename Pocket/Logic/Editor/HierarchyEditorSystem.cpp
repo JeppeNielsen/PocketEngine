@@ -7,7 +7,6 @@
 //
 
 #include "HierarchyEditorSystem.hpp"
-#include "Layoutable.hpp"
 #include "Selectable.hpp"
 #include "SelectedColorer.hpp"
 #include "Colorable.hpp"
@@ -61,14 +60,14 @@ void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
         GameObject* childObject = object->CreateChild();
         childObject->AddComponent<Transform>();
         childObject->AddComponent<Sizeable>()->Size = {200,10};
-        childObject->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
-        childObject->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
+        //childObject->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
+        //childObject->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
         childObject->AddComponent<HierarchyEditor>()->Object = child;
     }
     
     GameObject* gameObjectName = gui->CreateTextBox(object, "Box", {20.0f * depth,0}, {200-depth*20.0f,20}, 0, s.str(), 14);
     gameObjectName->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
-    gameObjectName->AddComponent<Layoutable>();
+    //gameObjectName->AddComponent<Layoutable>();
     gameObjectName->AddComponent<Selectable>(editor->Object);
     gameObjectName->GetComponent<Colorable>()->Color = Colour::White(0.5f);
     gameObjectName->AddComponent<SelectedColorer>()->Selected = Colour(0.5f, 0.5f, 0.5f, 1.0f);

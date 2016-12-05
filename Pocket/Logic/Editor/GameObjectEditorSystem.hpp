@@ -33,6 +33,7 @@ namespace Pocket {
             void IgnoreComponent() {
                 ignoredComponents.push_back(GameIdHelper::GetComponentID<T>());
             }
+            void Update(float dt);
         private:
             void ObjectChanged(GameObject* object);
             typedef std::vector<int> IgnoredComponents;

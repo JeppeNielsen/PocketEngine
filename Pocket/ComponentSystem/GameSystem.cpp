@@ -24,11 +24,6 @@ const ObjectCollection& GameSystemBase::Objects() const { return objects; }
 
 int GameSystemBase::AddObject(Pocket::GameObject *object) {
     int count = (int)objects.size();
-    
-    if (std::find(objects.begin(), objects.end(), object)!=objects.end()) {
-        std::cout << "DOH"<< std::endl;
-    }
-    
     objects.push_back(object);
     return count;
 }

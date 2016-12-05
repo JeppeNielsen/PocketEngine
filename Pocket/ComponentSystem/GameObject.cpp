@@ -13,7 +13,7 @@ using namespace Pocket;
 
 static bool forceSetNextParent = false;
 
-GameObject::GameObject() { }
+GameObject::GameObject() { Parent = 0; }
 
 GameObject::~GameObject() { }
 
@@ -21,6 +21,8 @@ GameObject::GameObject(const GameObject& other) {
     activeComponents.Resize(other.activeComponents.Size());
     enabledComponents.Resize(other.activeComponents.Size());
     componentIndicies.resize(other.activeComponents.Size());
+    
+    Parent = 0;
     
     Parent.Changed.Bind([this]() {
         assert(!IsRoot()); // roots are not allowed to have a parent
@@ -61,7 +63,9 @@ GameObject::GameObject(const GameObject& other) {
 void GameObject::Reset() {
     Enabled.Changed.Clear();
     removed = false;
+        forceSetNextParent = true;
     Parent = 0;
+    forceSetNextParent = false;
     Enabled = true;
     children.clear();
     Order = 0;
@@ -311,6 +315,18 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int
         infos[infos.size()-1].name = world->components[i].name;
     }
     return infos;
+}
+
+std::vector<IFieldEditor*> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) {
+    std::vector<IFieldEditor*> editors;
+    GameWorld* world = scene->world;
+    for (int i=0; i<world->components.size(); ++i) {
+        if (!world->components[i].getFieldEditor) continue; // component has no type
+        if (!activeComponents[i]) continue; // gameobject hasn't got component
+        if (predicate && !predicate(i)) continue; // component type not allowed
+        editors.emplace_back(world->components[i].getFieldEditor(this));
+    }
+    return editors;
 }
 
 std::vector<int> GameObject::GetComponentIndicies() {

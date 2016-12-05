@@ -8,14 +8,14 @@
 
 #pragma once
 #include "GameSystem.hpp"
-#include "TypeInfo.hpp"
+#include "GuiFieldEditors.hpp"
 
 namespace Pocket {
     struct FieldEditor {
         public:
             FieldEditor();
             void operator=(const FieldEditor& other);
-            IFieldInfoEditor* editor;
+            IFieldEditor* editor;
             Property<std::string> Field;
             TypeInfo Type;
             void SetType(const TypeInfo& type);

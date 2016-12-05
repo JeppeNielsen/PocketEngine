@@ -1,51 +1,44 @@
 //
-//  LayoutSystem.h
-//  PocketEngine
+//  LayoutSystem.hpp
+//  PocketEditor
 //
-//  Created by Jeppe Nielsen on 10/19/13.
-//  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 04/12/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
 #include "GameSystem.hpp"
-#include "Layoutable.hpp"
-#include "Sizeable.hpp"
+#include "Layouter.hpp"
 #include "Transform.hpp"
+#include "Sizeable.hpp"
 #include <set>
 
 namespace Pocket {
-    class LayoutSystem : public GameSystem<Transform, Sizeable, Layoutable> {
-    public:
-        void Update(float dt);
+
+    class LayoutSystem : public GameSystem<Layouter, Transform, Sizeable> {
+
+    protected:
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
+        void Update(float dt);
+        
+    public:
+        void MinChanged(Layouter* layouter);
+        void MaxChanged(Layouter* layouter);
+        void DesiredChanged(Layouter* layouter);
+        void GlobalMinDirty(GameObject* object);
+        void GlobalMaxDirty(GameObject* object);
+        void GlobalDesiredDirty(GameObject* object);
+        void ParentChanged(GameObject* object);
+        void SizeChanged(GameObject* object);
+        static Vector2 DoLayout(Layouter* layouter, GameObject* object,
+            const std::function<Vector2(Layouter* layouter)>& localGetter,
+            const std::function<Vector2(Layouter* layouter)>& globalGetter
+        );
+        
+        void CalcLayout(GameObject* object);
     private:
+        std::set<GameObject*> dirtyObjects;
         
-        struct LayoutObject {
-            LayoutObject(GameObject* object, LayoutSystem* layoutSystem);
-            ~LayoutObject();
-            LayoutSystem* layoutSystem;
-            Sizeable* sizeable;
-            GameObject* object;
-            Layoutable* layoutable;
-            Transform* transform;
-            Vector2 deltaSize;
-            Vector2 oldSize;
-            Sizeable* parentSizeable;
-            LayoutObject* parentLayoutObject;
-            
-            void Update();
-            void UpdateChildren();
-            
-            void ParentChanged();
-            void ParentSizeChanged();
-            void SizeChanged();
-            
-            void IterateChildren(const ObjectCollection& children, std::function<void(Transform* transform, Sizeable* sizeable)> function);
-        };
-        
-        typedef std::set<LayoutObject*> DirtyObjects;
-        DirtyObjects dirtyObjects;
-        DirtyObjects dirtyChildLayoutables;
     };
 }

@@ -38,6 +38,7 @@ namespace Pocket {
             IContainer* container;
             std::string name;
             std::function<TypeInfo(const GameObject*)> getTypeInfo;
+            std::function<IFieldEditor*(GameObject*)> getFieldEditor;
             std::vector<int> systemsUsingComponent;
         };
     
@@ -131,6 +132,12 @@ namespace Pocket {
                     componentInfo.getTypeInfo = [](const GameObject* object) -> TypeInfo {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();
+                    };
+                    componentInfo.getFieldEditor = [](GameObject* object) -> IFieldEditor* {
+                        IFieldEditor* editor = FieldEditorCreator<SerializedComponentType>::Create();
+                        auto component = object->GetComponent<SerializedComponentType>();
+                        editor->SetField(component);
+                        return editor;
                     };
                 });
             });
