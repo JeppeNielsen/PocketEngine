@@ -19,6 +19,8 @@
 		723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */; };
 		723689B11D89DE1B006480F0 /* FileMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AF1D89DE1B006480F0 /* FileMenu.cpp */; };
 		723E23111DE1B1F900AFBB79 /* CloneVariable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723E230F1DE1B1F900AFBB79 /* CloneVariable.cpp */; };
+		7244C4951DECBBCB00ADF008 /* GuiFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7244C4941DECBBCB00ADF008 /* GuiFieldEditors.cpp */; };
+		7244C4A11DF428EA00ADF008 /* LayoutSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7244C49F1DF428EA00ADF008 /* LayoutSystem.cpp */; };
 		726DFD161D24741000C862B7 /* Bitset.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD141D24741000C862B7 /* Bitset.cpp */; };
 		726DFD251D24742A00C862B7 /* ClangUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD171D24742A00C862B7 /* ClangUtil.cpp */; };
 		726DFD261D24742A00C862B7 /* ScriptClass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 726DFD191D24742A00C862B7 /* ScriptClass.cpp */; };
@@ -70,7 +72,6 @@
 		729953E61C99F76100DAAE5D /* GameObjectEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299500E1C99F76000DAAE5D /* GameObjectEditorSystem.cpp */; };
 		729953E71C99F76100DAAE5D /* HierarchyEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950101C99F76000DAAE5D /* HierarchyEditor.cpp */; };
 		729953E81C99F76100DAAE5D /* HierarchyEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950121C99F76000DAAE5D /* HierarchyEditorSystem.cpp */; };
-		729953E91C99F76100DAAE5D /* SerializedFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950141C99F76000DAAE5D /* SerializedFieldEditors.cpp */; };
 		729953EA1C99F76100DAAE5D /* ParticleEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950171C99F76000DAAE5D /* ParticleEffect.cpp */; };
 		729953EB1C99F76100DAAE5D /* ParticleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950191C99F76000DAAE5D /* ParticleEmitter.cpp */; };
 		729953EC1C99F76100DAAE5D /* ParticleMeshUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299501B1C99F76000DAAE5D /* ParticleMeshUpdater.cpp */; };
@@ -79,8 +80,6 @@
 		729953EF1C99F76100DAAE5D /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950231C99F76000DAAE5D /* Font.cpp */; };
 		729953F01C99F76100DAAE5D /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950251C99F76000DAAE5D /* Gui.cpp */; };
 		729953F11C99F76100DAAE5D /* LabelMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950281C99F76000DAAE5D /* LabelMeshSystem.cpp */; };
-		729953F21C99F76100DAAE5D /* Layoutable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299502B1C99F76000DAAE5D /* Layoutable.cpp */; };
-		729953F31C99F76100DAAE5D /* LayoutSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7299502D1C99F76000DAAE5D /* LayoutSystem.cpp */; };
 		729953F41C99F76100DAAE5D /* Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950301C99F76000DAAE5D /* Menu.cpp */; };
 		729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950331C99F76000DAAE5D /* MenuButton.cpp */; };
 		729953F61C99F76100DAAE5D /* MenuButtonSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 729950351C99F76000DAAE5D /* MenuButtonSystem.cpp */; };
@@ -422,6 +421,11 @@
 		723689B01D89DE1B006480F0 /* FileMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileMenu.hpp; sourceTree = "<group>"; };
 		723E230F1DE1B1F900AFBB79 /* CloneVariable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CloneVariable.cpp; sourceTree = "<group>"; };
 		723E23101DE1B1F900AFBB79 /* CloneVariable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CloneVariable.hpp; sourceTree = "<group>"; };
+		7244C4941DECBBCB00ADF008 /* GuiFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiFieldEditors.cpp; sourceTree = "<group>"; };
+		7244C49A1DEE1CCE00ADF008 /* IFieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IFieldEditor.hpp; sourceTree = "<group>"; };
+		7244C49D1DF428AE00ADF008 /* Layouter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Layouter.hpp; sourceTree = "<group>"; };
+		7244C49F1DF428EA00ADF008 /* LayoutSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LayoutSystem.cpp; sourceTree = "<group>"; };
+		7244C4A01DF428EA00ADF008 /* LayoutSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LayoutSystem.hpp; sourceTree = "<group>"; };
 		726DFD141D24741000C862B7 /* Bitset.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Bitset.cpp; sourceTree = "<group>"; };
 		726DFD151D24741000C862B7 /* Bitset.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Bitset.hpp; sourceTree = "<group>"; };
 		726DFD171D24742A00C862B7 /* ClangUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClangUtil.cpp; sourceTree = "<group>"; };
@@ -532,8 +536,7 @@
 		729950111C99F76000DAAE5D /* HierarchyEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditor.hpp; sourceTree = "<group>"; };
 		729950121C99F76000DAAE5D /* HierarchyEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HierarchyEditorSystem.cpp; sourceTree = "<group>"; };
 		729950131C99F76000DAAE5D /* HierarchyEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HierarchyEditorSystem.hpp; sourceTree = "<group>"; };
-		729950141C99F76000DAAE5D /* SerializedFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializedFieldEditors.cpp; sourceTree = "<group>"; };
-		729950151C99F76000DAAE5D /* SerializedFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializedFieldEditors.hpp; sourceTree = "<group>"; };
+		729950151C99F76000DAAE5D /* GuiFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GuiFieldEditors.hpp; sourceTree = "<group>"; };
 		729950171C99F76000DAAE5D /* ParticleEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEffect.cpp; sourceTree = "<group>"; };
 		729950181C99F76000DAAE5D /* ParticleEffect.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ParticleEffect.hpp; sourceTree = "<group>"; };
 		729950191C99F76000DAAE5D /* ParticleEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ParticleEmitter.cpp; sourceTree = "<group>"; };
@@ -552,10 +555,6 @@
 		729950271C99F76000DAAE5D /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Label.hpp; sourceTree = "<group>"; };
 		729950281C99F76000DAAE5D /* LabelMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelMeshSystem.cpp; sourceTree = "<group>"; };
 		729950291C99F76000DAAE5D /* LabelMeshSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LabelMeshSystem.hpp; sourceTree = "<group>"; };
-		7299502B1C99F76000DAAE5D /* Layoutable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Layoutable.cpp; sourceTree = "<group>"; };
-		7299502C1C99F76000DAAE5D /* Layoutable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Layoutable.hpp; sourceTree = "<group>"; };
-		7299502D1C99F76000DAAE5D /* LayoutSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LayoutSystem.cpp; sourceTree = "<group>"; };
-		7299502E1C99F76000DAAE5D /* LayoutSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LayoutSystem.hpp; sourceTree = "<group>"; };
 		729950301C99F76000DAAE5D /* Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Menu.cpp; sourceTree = "<group>"; };
 		729950311C99F76000DAAE5D /* Menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Menu.hpp; sourceTree = "<group>"; };
 		729950321C99F76000DAAE5D /* MenuAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuAnimator.hpp; sourceTree = "<group>"; };
@@ -1623,20 +1622,20 @@
 				7299500D1C99F76000DAAE5D /* GameObjectEditor.hpp */,
 				7299500E1C99F76000DAAE5D /* GameObjectEditorSystem.cpp */,
 				7299500F1C99F76000DAAE5D /* GameObjectEditorSystem.hpp */,
+				7244C4941DECBBCB00ADF008 /* GuiFieldEditors.cpp */,
+				729950151C99F76000DAAE5D /* GuiFieldEditors.hpp */,
 				729950101C99F76000DAAE5D /* HierarchyEditor.cpp */,
 				729950111C99F76000DAAE5D /* HierarchyEditor.hpp */,
 				729950121C99F76000DAAE5D /* HierarchyEditorSystem.cpp */,
 				729950131C99F76000DAAE5D /* HierarchyEditorSystem.hpp */,
-				729950141C99F76000DAAE5D /* SerializedFieldEditors.cpp */,
-				729950151C99F76000DAAE5D /* SerializedFieldEditors.hpp */,
 				72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */,
 				72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */,
-				72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */,
-				72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */,
 				72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */,
 				72D719F31CAB20BF00868DDB /* VirtualTreeListSpawner.hpp */,
 				72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */,
 				72D719F61CAB211300868DDB /* VirtualTreeListSpawnerSystem.hpp */,
+				72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */,
+				72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";
@@ -1689,10 +1688,9 @@
 		7299502A1C99F76000DAAE5D /* Layout */ = {
 			isa = PBXGroup;
 			children = (
-				7299502B1C99F76000DAAE5D /* Layoutable.cpp */,
-				7299502C1C99F76000DAAE5D /* Layoutable.hpp */,
-				7299502D1C99F76000DAAE5D /* LayoutSystem.cpp */,
-				7299502E1C99F76000DAAE5D /* LayoutSystem.hpp */,
+				7244C49D1DF428AE00ADF008 /* Layouter.hpp */,
+				7244C49F1DF428EA00ADF008 /* LayoutSystem.cpp */,
+				7244C4A01DF428EA00ADF008 /* LayoutSystem.hpp */,
 			);
 			path = Layout;
 			sourceTree = "<group>";
@@ -2734,6 +2732,7 @@
 		7299539D1C99F76100DAAE5D /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
+				7244C49A1DEE1CCE00ADF008 /* IFieldEditor.hpp */,
 				726DFD2A1D247C8F00C862B7 /* TypeIndexList.cpp */,
 				726DFD2B1D247C8F00C862B7 /* TypeIndexList.hpp */,
 				7299539E1C99F76100DAAE5D /* JsonSerializer.hpp */,
@@ -3118,7 +3117,6 @@
 				729953C41C99F76100DAAE5D /* GameState.cpp in Sources */,
 				726DFD2C1D247C8F00C862B7 /* TypeIndexList.cpp in Sources */,
 				729954961C99F76100DAAE5D /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
-				729953E91C99F76100DAAE5D /* SerializedFieldEditors.cpp in Sources */,
 				729953E21C99F76100DAAE5D /* HierarchyOrder.cpp in Sources */,
 				72D719F71CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp in Sources */,
 				7299548F1C99F76100DAAE5D /* btSphereShape.cpp in Sources */,
@@ -3140,7 +3138,6 @@
 				7299549B1C99F76100DAAE5D /* btGenericPoolAllocator.cpp in Sources */,
 				729954E31C99F76100DAAE5D /* btGeometryUtil.cpp in Sources */,
 				729954DA1C99F76100DAAE5D /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
-				729953F21C99F76100DAAE5D /* Layoutable.cpp in Sources */,
 				729953D01C99F76100DAAE5D /* Triangulator.cpp in Sources */,
 				7299543A1C99F76100DAAE5D /* b2Distance.cpp in Sources */,
 				729953E41C99F76100DAAE5D /* FieldEditorSystem.cpp in Sources */,
@@ -3221,6 +3218,7 @@
 				729954011C99F76100DAAE5D /* DraggableSystem.cpp in Sources */,
 				729955541C99F76100DAAE5D /* tinystr.cpp in Sources */,
 				7299550D1C99F76100DAAE5D /* Texture.cpp in Sources */,
+				7244C4A11DF428EA00ADF008 /* LayoutSystem.cpp in Sources */,
 				729954CE1C99F76100DAAE5D /* SpuGatheringCollisionDispatcher.cpp in Sources */,
 				729954241C99F76100DAAE5D /* Interpolator.cpp in Sources */,
 				729954D81C99F76100DAAE5D /* btDefaultSoftBodySolver.cpp in Sources */,
@@ -3230,7 +3228,6 @@
 				729954AF1C99F76100DAAE5D /* btSubSimplexConvexCast.cpp in Sources */,
 				729955071C99F76100DAAE5D /* Profiler.cpp in Sources */,
 				729954531C99F76100DAAE5D /* b2PulleyJoint.cpp in Sources */,
-				729953F31C99F76100DAAE5D /* LayoutSystem.cpp in Sources */,
 				729954131C99F76100DAAE5D /* RenderSystem.cpp in Sources */,
 				729954B81C99F76100DAAE5D /* btHingeConstraint.cpp in Sources */,
 				729954D71C99F76100DAAE5D /* Win32ThreadSupport.cpp in Sources */,
@@ -3292,6 +3289,7 @@
 				729954801C99F76100DAAE5D /* btConvexInternalShape.cpp in Sources */,
 				729954B51C99F76100DAAE5D /* btGeneric6DofConstraint.cpp in Sources */,
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
+				7244C4951DECBBCB00ADF008 /* GuiFieldEditors.cpp in Sources */,
 				729954781C99F76100DAAE5D /* btBvhTriangleMeshShape.cpp in Sources */,
 				729954521C99F76100DAAE5D /* b2PrismaticJoint.cpp in Sources */,
 				7299547C1C99F76100DAAE5D /* btConcaveShape.cpp in Sources */,

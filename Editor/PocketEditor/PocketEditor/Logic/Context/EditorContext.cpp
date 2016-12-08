@@ -23,7 +23,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     
     fileWorld.AddGameWorld(world);
     fileWorld.OnRootCreated = [this] (GameObject* root) {
-    
+        
     };
     fileWorld.OnChildCreated = [this] (GameObject* child) {
     //    child->AddComponent<EditorObject>();

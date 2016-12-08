@@ -8,20 +8,22 @@
 
 #pragma once
 #include <vector>
+#include "Property.hpp"
 
 /*namespace Pocket {
 class GameObject;
 }*/
 
-
 namespace Pocket {
 class GameObject {
 private:
-    virtual void* GetComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID, GameObject* referenceObject) = 0;
-    virtual void RemoveComponent(int componentID) = 0;
-    virtual void CloneComponent(int componentID, GameObject* source) = 0;
+
+    virtual bool HasComponent(int id) const = 0;
+    virtual void* GetComponent(int id) const = 0;
+    virtual void AddComponent(int id) = 0;
+    virtual void AddComponent(int id, GameObject* referenceObject) = 0;
+    virtual void RemoveComponent(int id) = 0;
+    virtual void CloneComponent(int id, GameObject* object) = 0;
 public:
     template<typename T> T* GetComponent() { return (T*)0; }
     template<typename T> T* AddComponent() { }
@@ -41,7 +43,11 @@ struct IGameSystem {
     virtual void Render() = 0;
     virtual int AddObject(Pocket::GameObject* object) = 0;
     virtual void RemoveObject(Pocket::GameObject* object) = 0;
-    virtual int Order() = 0;
+    virtual int ObjectCount() = 0;
+    virtual int GetOrder() = 0;
+    virtual void SetOrder(int order) = 0;
+    virtual int GetIndex() = 0;
+    virtual void SetIndex(int index) = 0;
 };
 
 namespace Pocket {
@@ -71,12 +77,22 @@ protected:
 //        //return lastObject;
     }
     
-    virtual int Order() override { return 0; }
+    int ObjectCount() override {
+        return (int)objects.size();
+    }
+    
+    Pocket::Property<int> Order;
+    
+    int GetOrder() override { return Order(); }
+    void SetOrder(int order) override { Order = order; }
+    int GetIndex() override { return index; }
+    void SetIndex(int index) override { this->index = index; }
     
 private:
     using ObjectCollection = std::vector<GameObject*>;
     ObjectCollection objects;
     friend class GameObject;
+    int index;
 protected:
     const ObjectCollection& Objects() {
         return objects;

@@ -31,7 +31,8 @@ Project::Project() {
             "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Input/InputController.hpp"
+            "/Projects/PocketEngine/Pocket/Logic/Input/InputController.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Movement/Velocity.hpp",
         };
     
     /*
@@ -68,8 +69,6 @@ void Project::Open(const std::string& path) {
     this->path = path;
     Worlds.Clear();
     
-    GameWorld world;
-    scriptWorld.SetWorldType(world);
     //RefreshSourceFiles();
     //scriptWorld.LoadLib();
     Opened();
@@ -77,7 +76,9 @@ void Project::Open(const std::string& path) {
 
 bool Project::Compile() {
     RefreshSourceFiles();
+    scriptWorld.SetWorldType(*world);
     scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+    scriptWorld.AddGameWorld(*world);
     return true;
 }
 

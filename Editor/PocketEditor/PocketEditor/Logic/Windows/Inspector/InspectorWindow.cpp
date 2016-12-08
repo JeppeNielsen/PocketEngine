@@ -12,7 +12,6 @@
 #include "EditorObject.hpp"
 #include "FieldEditorSystem.hpp"
 #include "GameObjectEditorSystem.hpp"
-#include "SerializedFieldEditors.hpp"
 #include "Project.hpp"
 
 std::string InspectorWindow::Name() { return "Inspector"; }
@@ -28,8 +27,7 @@ void InspectorWindow::OnInitialize() {
     guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
     
     guiRoot.CreateSystem<LayoutSystem>();
-    
-    CreateDefaultSerializedEditors();
+
     selectables = 0;
     
     removeComponentMenu.InitializePopUp();

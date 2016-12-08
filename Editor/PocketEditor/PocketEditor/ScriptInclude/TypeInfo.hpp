@@ -17,7 +17,6 @@ template<class T>
 class FieldInfo;
 
 class TypeInfo;
-class IFieldInfoEditor;
 
 template<typename T>
 struct FieldInfoIndexer { static int Index() { return 0; } };
@@ -28,6 +27,23 @@ namespace minijson {
     class value;
 }
 
+struct IFieldEditor {
+    virtual ~IFieldEditor() { }
+    virtual void SetField(void* field) = 0;
+    virtual void Create(void* context, void* parent) = 0;
+    virtual void Destroy() = 0;
+    virtual void Update(float dt) = 0;
+};
+
+template<class T, typename S = void>
+struct FieldEditorCreator {
+    static IFieldEditor* Create() {
+        return 0;
+    }
+};
+
+struct FieldInfoAny;
+
 class IFieldInfo {
 public:
     virtual ~IFieldInfo() { }
@@ -35,8 +51,9 @@ public:
     int type;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
-    virtual IFieldInfoEditor* CreateEditor(void* context, void* parent) = 0;
-    virtual bool HasEditor() = 0;
+    virtual IFieldInfo* Clone() = 0;
+    virtual void SetFromAny(FieldInfoAny* any) { }
+    virtual IFieldEditor* CreateEditor() = 0;
 };
 
 template<class T>
@@ -45,28 +62,33 @@ public:
     ~FieldInfo() { }
     
     void Serialize(minijson::object_writer& writer) override {
+        
     }
     
     void Deserialize(minijson::istream_context& context, minijson::value& value) override {
         
     }
     
-    IFieldInfoEditor* CreateEditor(void* context, void* parent) override {
-       return 0;
+    IFieldInfo* Clone() override {
+        FieldInfo<T>* clone = new FieldInfo<T>();
+        clone->name = this->name;
+        clone->type = this->type;
+        clone->field = this->field;
+        return clone;
     }
     
-    bool HasEditor() override {
-        return false;
+    void SetFromAny(FieldInfoAny* any) override {
+    
     }
     
-    static std::function<IFieldInfoEditor*()> Editor;
+    IFieldEditor* CreateEditor() override {
+        return 0;
+    }
     
     friend class TypeInfo;
 public:
     T* field;
 };
-
-
 
 class TypeInfo {
 public:

@@ -38,6 +38,15 @@ public:
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
     
+    struct Tester {
+        
+        Vector3 pos;
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(pos)
+        TYPE_FIELDS_END
+    };
+    
     void Initialize() {
 
         windows.push_back(new WorldTab());
@@ -74,6 +83,14 @@ public:
                 context.World().DebugSystems();
             }
         });
+        
+        /*Tester tester;
+        auto type = tester.GetType();
+        
+        auto field = type.GetField("pos");
+        Gui gui;
+        field->CreateEditor(gui, 0);
+        */
     }
     
     void Update(float dt) {

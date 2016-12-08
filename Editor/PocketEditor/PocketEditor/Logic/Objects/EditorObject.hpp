@@ -12,6 +12,9 @@
 using namespace Pocket;
 
 struct EditorObject {
+
+    EditorObject() : gameObject(0), editorObject(0) {}
+
     GameObject* gameObject;
     GameObject* editorObject;
 };

@@ -28,19 +28,40 @@
 #include <fstream>
 #include "Project.hpp"
 #include "CloneVariable.hpp"
+#include "VelocitySystem.hpp"
 
 struct Turner {
-    Vector3 speed;
+    
+    Turner() {
+        speed.push_back({0,1,2});
+        speed.push_back({0,4,3});
+    }
+    
+    struct Movement {
+        int power;
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(power)
+        TYPE_FIELDS_END
+    };
+    
+    Movement movement;
+
+    std::vector<Vector3> speed;
     
     TYPE_FIELDS_BEGIN
     TYPE_FIELD(speed)
+    TYPE_FIELD(movement)
     TYPE_FIELDS_END
 };
 
 struct TurnerSystem : public GameSystem<Transform, Turner> {
     void Update(float dt) {
         for(auto o : Objects()) {
-            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Turner>()->speed * dt;
+            Turner* turner = o->GetComponent<Turner>();
+            for(auto& v : turner->speed) {
+                std::cout << v << std::endl;
+            }
+           // o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Turner>()->speed() * dt;
         }
     }
 };
@@ -59,6 +80,7 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<TurnerSystem>();
     world.CreateSystem<EditorObjectCreatorSystem>();
     world.CreateSystem<InputMapperSystem>();
+    world.CreateSystem<VelocitySystem>();
 }
 
 void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
@@ -133,6 +155,7 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
         root = world->CreateRoot();
     }
     
+    s.AddGameRoot(root);
     CreateDefaultSystems(*root);
     AddEditorObject(root);
     //auto var = root->AddComponent<CloneVariable>();
