@@ -82,9 +82,11 @@ IGameSystem* GameScene::CreateSystem(int systemId) {
     if (!systemsIndexed[systemId]) {
         IGameSystem* system = world->systems[systemId].createFunction(root);
         systemsIndexed[systemId] = system;
-        system->index = systemId;
+        system->SetIndex(systemId);
         system->Initialize();
-        system->Order.Changed.Bind([this] () { world->delayedActions.emplace_back([this] () { world->SortActiveSystems(); }); });
+        //system->Order.Changed.Bind([this] () {
+            world->delayedActions.emplace_back([this] () { world->SortActiveSystems(); });
+        //});
         
         IterateObjects([systemId](GameObject* object) {
             object->TryAddToSystem(systemId);

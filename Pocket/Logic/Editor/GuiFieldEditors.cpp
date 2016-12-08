@@ -100,6 +100,16 @@ struct FieldInfoEditorInt : public FieldInfoEditorTextboxes<int, 1> {
     }
 };
 
+struct FieldInfoEditorVector2 : public FieldInfoEditorTextboxes<Vector2, 2> {
+    void TextboxChanged(int index, std::string text) override {
+        float value = (float)atof(text.c_str());
+        (*field).Set(index, value);
+    }
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        stream<<(*field)[index];
+    }
+};
+
 struct FieldInfoEditorVector3 : public FieldInfoEditorTextboxes<Vector3, 3> {
     void TextboxChanged(int index, std::string text) override {
         float value = (float)atof(text.c_str());
@@ -107,6 +117,15 @@ struct FieldInfoEditorVector3 : public FieldInfoEditorTextboxes<Vector3, 3> {
     }
     void UpdateTextbox(int index, std::stringstream& stream) override {
         stream<<(*field)[index];
+    }
+};
+
+struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
+    void TextboxChanged(int index, std::string text) override {
+        (*field) = text;
+    }
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        stream<<(*field);
     }
 };
 
@@ -118,8 +137,16 @@ template<> IFieldEditor* FieldEditorCreator<float>::Create() {
     return new FieldInfoEditorFloat();
 }
 
+template<> IFieldEditor* FieldEditorCreator<Vector2>::Create() {
+    return new FieldInfoEditorVector2();
+}
+
 template<> IFieldEditor* FieldEditorCreator<Vector3>::Create() {
     return new FieldInfoEditorVector3();
+}
+
+template<> IFieldEditor* FieldEditorCreator<std::string>::Create() {
+    return new FieldInfoEditorString();
 }
 
 TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* parentPtr, const std::string& title) -> void* {

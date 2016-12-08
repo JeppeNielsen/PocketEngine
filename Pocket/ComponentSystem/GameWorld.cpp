@@ -70,22 +70,22 @@ void GameWorld::RemoveActiveSystem(Pocket::IGameSystem *system) {
 
 void GameWorld::SortActiveSystems() {
     std::sort(activeSystems.begin(), activeSystems.end(), [] (ActiveSystem& a, ActiveSystem& b) {
-        if (a.system->Order() == b.system->Order()) {
+        if (a.system->GetOrder() == b.system->GetOrder()) {
             if (a.scene == b.scene) {
-                return a.system->index<b.system->index;
+                return a.system->GetIndex()<b.system->GetIndex();
             } else {
                 if (a.scene->root->Order() == b.scene->root->Order()) {
-                    if (a.system->index == b.system->index) {
+                    if (a.system->GetIndex() == b.system->GetIndex()) {
                         return a.scene->index<b.scene->index;
                     } else {
-                        return a.system->index<b.system->index;
+                        return a.system->GetIndex()<b.system->GetIndex();
                     }
                 } else {
                     return a.scene->root->Order()<b.scene->root->Order();
                 }
             }
         } else {
-            return a.system->Order()<b.system->Order();
+            return a.system->GetOrder()<b.system->GetOrder();
         }
     });
 }
@@ -173,10 +173,10 @@ void GameWorld::Update(float dt) {
 }
 
 void GameWorld::DebugSystems() {
-    std::cout <<"-------------------------------------------"<<std::endl;
+    /*std::cout <<"-------------------------------------------"<<std::endl;
     for(auto&s : activeSystems) {
         std::cout << systems[s.system->index].name<<" Order: "<<s.system->Order()<< " index: " << s.system->index <<" scene: "<<s.scene->index<<"  root->order: "<<s.scene->root->Order() << " Num objects:"<< s.system->ObjectCount() << std::endl;
-    }
+    }*/
 }
 
 void GameWorld::Render() {

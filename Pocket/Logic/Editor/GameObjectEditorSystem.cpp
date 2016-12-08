@@ -28,8 +28,8 @@ void GameObjectEditorSystem::ObjectRemoved(GameObject *object) {
     object->GetComponent<GameObjectEditor>()->Object.Changed.Unbind(this, &GameObjectEditorSystem::ObjectChanged, object);
     GameObjectEditor *editor = object->GetComponent<GameObjectEditor>();
     for(auto e : editor->editors) {
-        e->Destroy();
-        delete e;
+        e.editor->Destroy();
+        delete e.editor;
     }
     editor->editors.clear();
 }
@@ -38,7 +38,7 @@ void GameObjectEditorSystem::Update(float dt) {
     for(auto o : Objects()) {
         GameObjectEditor* editor = o->GetComponent<GameObjectEditor>();
         for(auto editor : editor->editors) {
-            editor->Update(dt);
+            editor.editor->Update(dt);
         }
     }
 }
@@ -47,8 +47,8 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     GameObjectEditor *editor = object->GetComponent<GameObjectEditor>();
     
     for(auto e : editor->editors) {
-        e->Destroy();
-        delete e;
+        e.editor->Destroy();
+        delete e.editor;
     }
     editor->editors.clear();
     
@@ -68,10 +68,25 @@ void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
     
     editor->editors = editor->Object()->GetComponentEditors();
 
-    for(auto editor : editor->editors) {
-        editor->Create(gui, control);
+    std::vector<GameObject*> controls;
+
+    for(auto componentEditor : editor->editors) {
+        int countBefore = (int)control->Children().size();
+        componentEditor.editor->Create(gui, control);
+        if (control->Children().size()>countBefore) {
+            GameObject* editorControl = control->Children()[control->Children().size()-1];
+            controls.push_back(editorControl);
+            if (!editorControl->GetComponent<Touchable>()) {
+                editorControl->AddComponent<Touchable>();
+            }
+        }
     }
     
+    for (int i=0; i<controls.size(); ++i) {
+        if (controls[i]) {
+            editor->ComponentEditorCreated({ editor->editors[i].type, controls[i]});
+        }
+    }
     return;
     
     auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {

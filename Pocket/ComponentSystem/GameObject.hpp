@@ -113,7 +113,13 @@ namespace Pocket {
         }
         
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
-        std::vector<IFieldEditor*> GetComponentEditors(const std::function<bool(int componentID)>& predicate = 0);
+        
+        struct ComponentEditor {
+            TypeInfo type;
+            IFieldEditor* editor;
+        };
+        
+        std::vector<ComponentEditor> GetComponentEditors(const std::function<bool(int componentID)>& predicate = 0);
         std::vector<int> GetComponentIndicies();
         
         InputManager& Input();

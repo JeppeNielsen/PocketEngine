@@ -317,14 +317,18 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int
     return infos;
 }
 
-std::vector<IFieldEditor*> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) {
-    std::vector<IFieldEditor*> editors;
+std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) {
+    std::vector<GameObject::ComponentEditor> editors;
     GameWorld* world = scene->world;
     for (int i=0; i<world->components.size(); ++i) {
         if (!world->components[i].getFieldEditor) continue; // component has no type
         if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
-        editors.emplace_back(world->components[i].getFieldEditor(this));
+        IFieldEditor* editor = world->components[i].getFieldEditor(this);
+        if (!editor) continue;
+        TypeInfo info = world->components[i].getTypeInfo(this);
+        info.name = world->components[i].name;
+        editors.push_back({ info, editor });
     }
     return editors;
 }

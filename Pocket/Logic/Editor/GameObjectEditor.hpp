@@ -22,7 +22,7 @@ namespace Pocket {
             GameObject* editorPivot;
         };
         
-        std::vector<IFieldEditor*> editors;
+        std::vector<GameObject::ComponentEditor> editors;
         
         Event<ComponentCreatedData> ComponentEditorCreated;
     };

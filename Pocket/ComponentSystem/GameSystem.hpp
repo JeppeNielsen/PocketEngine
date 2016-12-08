@@ -33,13 +33,21 @@ namespace Pocket {
         void SetMetaData(GameObject* object, void* data);
         void* GetMetaData(GameObject* object);
         
+        int GetOrder() override { return Order(); }
+        void SetOrder(int order) override { Order = order; }
+        int GetIndex() override { return index; }
+        void SetIndex(int index) override { this->index = index; }
+        
     private:
         using MetaData = std::map<GameObject*, void*>;
         MetaData metaData;
+        
+        int index;
     
         ObjectCollection objects;
         friend class GameWorld;
     public:
+        Property<int> Order;
         const ObjectCollection& Objects() const;
     };
     

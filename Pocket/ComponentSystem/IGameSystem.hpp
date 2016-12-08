@@ -23,7 +23,10 @@ namespace Pocket {
         virtual int AddObject(GameObject* object) = 0;
         virtual void RemoveObject(GameObject* object) = 0;
         virtual int ObjectCount() = 0;
-        Property<int> Order;
-        int index;
+        virtual int GetOrder() = 0;
+        virtual void SetOrder(int order) = 0;
+        virtual int GetIndex() = 0;
+        virtual void SetIndex(int index) = 0;
+        
     };
 }

@@ -154,6 +154,10 @@ namespace Pocket {
             stream << v.x <<","<<v.y;
             return stream;
         }
+        
+        inline void Set(const int index, float value) {
+            (*(&x + index))=value;
+        }
     };
 }
 

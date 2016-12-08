@@ -371,6 +371,44 @@ struct TypeEditor : public IFieldEditor {
     TypeInfo type;
 };
 
+struct TypeInfoEditor : public IFieldEditor {
+    
+    std::vector<IFieldEditor*> fieldEditors;
+    
+    void SetField(void* field) override {
+        TypeInfo* typeInfo = static_cast<TypeInfo*>(field);
+        type = TypeInfo(*typeInfo);
+    }
+
+    void Create(void* context, void* parent) override {
+        for(auto field : type.fields) {
+            auto editor = field->CreateEditor();
+            if (!editor) continue;
+            editor->Create(context, parent);
+            fieldEditors.push_back(editor);
+        }
+        if (TypeEditorTitle::Title) {
+            TypeEditorTitle::Title(context, parent, type.name);
+        }
+    }
+    
+    void Update(float dt) override {
+       for(auto editor : fieldEditors) {
+            editor->Update(dt);
+       }
+    }
+    
+    void Destroy() override {
+       for(auto editor : fieldEditors) {
+            editor->Destroy();
+       }
+    }
+    
+    TypeInfo type;
+};
+
+
+
 template<typename T>
 struct FieldEditorCreator<T, typename std::enable_if< Pocket::Meta::HasGetTypeFunction::apply<T>::value >::type> {
     static IFieldEditor* Create() {

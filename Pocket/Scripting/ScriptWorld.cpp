@@ -332,7 +332,7 @@ void ScriptWorld::WriteMainCppFile(const std::string &path) {
 
 void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
 
-    file<<"namespace Pocket { class IGameSystem; }"<<std::endl;
+    //file<<"namespace Pocket { class IGameSystem; }"<<std::endl;
     
     auto& components = scriptClasses.children["Components"].children;
     auto& systems = scriptClasses.children["Systems"].children;
@@ -419,13 +419,18 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
     int index = baseComponentIndex;
     for (auto it : scriptComponents) {
         auto& component = it.second;
-        file<<"template<> " << component.name  << "* Pocket::GameObject::GetComponent<"<< component.name << ">() { return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
         
-        file<<"template<> " << component.name  << "* Pocket::GameObject::AddComponent<"<< component.name << ">() { AddComponent("<<index<<"); return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        std::string aliasComponentName = "Script_" + component.name;
         
-        file<<"template<> void Pocket::GameObject::RemoveComponent<"<< component.name << ">() { RemoveComponent("<<index<<"); }"<<std::endl;
+        file<<"using "<<aliasComponentName<<" = "<<component.name<<";"<<std::endl;
         
-        file<<"template<> " << component.name  << "* Pocket::GameObject::CloneComponent<"<< component.name << ">(GameObject* source) { CloneComponent("<<index<<", source); return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::GetComponent<"<< aliasComponentName << ">() { return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::AddComponent<"<< aliasComponentName << ">() { AddComponent("<<index<<"); return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> void Pocket::GameObject::RemoveComponent<"<< aliasComponentName << ">() { RemoveComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::CloneComponent<"<< aliasComponentName << ">(GameObject* source) { CloneComponent("<<index<<", source); return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
         
         index++;
     }
@@ -738,6 +743,12 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             componentInfo.getTypeInfo = [this, componentIndex](const GameObject* object) -> TypeInfo {
                 return GetTypeInfo(*object, componentIndex);
             };
+            componentInfo.getFieldEditor = [this, componentIndex](GameObject* object) -> IFieldEditor* {
+                IFieldEditor* editor = new TypeInfoEditor();
+                TypeInfo info = GetTypeInfo(*object, componentIndex);
+                editor->SetField(&info);
+                return editor;
+            };
             componentInfo.container = container;
             return container;
         });
@@ -769,7 +780,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             }
             systemInfo.createFunction = [this, systemIndex] (GameObject* root) {
                 IGameSystem* system = createSystem(systemIndex);
-                system->index = systemIndex;
+                system->SetIndex(systemIndex);
                 return system;
             };
             systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
