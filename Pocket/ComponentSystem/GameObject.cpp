@@ -361,6 +361,10 @@ Property<bool>& GameObject::UpdateEnabled() { return scene->updateEnabled; }
 Property<float>& GameObject::TimeScale() { return scene->timeScale; }
 Property<bool>& GameObject::RenderEnabled() { return scene->renderEnabled; }
 
+GameObject* GameObject::FindObject(int objectId) {
+    return scene->FindObject(objectId);
+}
+
 //SERIALIZATION
 
 void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) const {

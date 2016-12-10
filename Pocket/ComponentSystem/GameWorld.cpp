@@ -94,16 +94,20 @@ void GameWorld::RemoveSystemType(SystemId systemId) {
     SystemInfo& systemInfo = systems[systemId];
     if (!systemInfo.createFunction) return;
     scenes.Iterate([this, &systemInfo, systemId] (GameScene* scene) {
+        if (systemId>=scene->systemsIndexed.size()) return;
         IGameSystem* system = scene->systemsIndexed[systemId];
-        objects.Iterate([&systemInfo, system] (GameObject* object) {
-            if (systemInfo.bitset.Contains(object->enabledComponents)) {
-                system->ObjectRemoved(object);
-                system->RemoveObject(object);
-            }
-        });
+        if (!system) return;
+        if (system->ObjectCount()>0) {
+            objects.Iterate([&systemInfo, system] (GameObject* object) {
+                if (systemInfo.bitset.Contains(object->enabledComponents)) {
+                    system->ObjectRemoved(object);
+                    system->RemoveObject(object);
+                }
+            });
+            RemoveActiveSystem(system);
+        }
         systemInfo.deleteFunction(system);
         scene->systemsIndexed[systemId] = 0;
-        RemoveActiveSystem(system);
     });
 
     for(int i=0; i<systemInfo.bitset.Size(); ++i) {

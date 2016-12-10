@@ -158,5 +158,7 @@ namespace Pocket {
         Property<bool>& UpdateEnabled();
         Property<float>& TimeScale();
         Property<bool>& RenderEnabled();
+        
+        GameObject* FindObject(int objectId);
     };
 }

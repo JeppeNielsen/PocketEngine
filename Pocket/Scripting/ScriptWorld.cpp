@@ -702,6 +702,8 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
 }
 
 void ScriptWorld::SetWorldType(GameWorld& world) {
+    if (baseSystemIndex>=0) return;
+
     worldComponentNames.clear();
     for(int i=0; i<world.components.size(); ++i) {
         std::string& name = world.components[i].name;
@@ -717,8 +719,8 @@ void ScriptWorld::SetWorldType(GameWorld& world) {
         }
     }
     
-    baseComponentIndex = world.components.size();
-    baseSystemIndex = world.systems.size();
+    baseComponentIndex = (int)world.components.size();
+    baseSystemIndex = (int)world.systems.size();
 }
 
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
@@ -789,6 +791,13 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         });
         index++;
     }
+    
+    
+    int endComponentIndex = (int)world.components.size();
+    world.objects.Iterate([endComponentIndex](GameObject* o) {
+        o->activeComponents.Resize(endComponentIndex);
+        o->enabledComponents.Resize(endComponentIndex);
+    });
 
     return true;
 }
@@ -810,7 +819,7 @@ void ScriptWorld::RemoveGameWorld(GameWorld& world) {
     for(int i=baseSystemIndex; i<endSystemIndex; ++i){
         world.RemoveSystemType(i);
     }
-    world.systems.resize(endSystemIndex);
+    world.systems.resize(baseSystemIndex);
     int endComponentIndex = (int)world.components.size();
     for(int i=baseComponentIndex; i<endComponentIndex; ++i) {
         delete world.components[i].container;
@@ -822,7 +831,10 @@ void ScriptWorld::RemoveGameWorld(GameWorld& world) {
     });
     world.components.resize(baseComponentIndex);
     for(int i=0; i<baseComponentIndex; ++i) {
-        world.components[i].systemsUsingComponent.resize(baseComponentIndex);
+        auto& list = world.components[i].systemsUsingComponent;
+        std::remove_if(list.begin(), list.end(), [this, endSystemIndex] (int n) {
+            return n>=baseSystemIndex && n<=endSystemIndex;
+        });
     }
 }
 
