@@ -6,6 +6,8 @@ Collidable* component = object->GetComponent<Collidable>();
 TypeInfo typeInfo;
 	      typeInfo.name = "Collidable";
 	      typeInfo.AddField(component->collisions, "collisions");
+	      typeInfo.AddField(component->margin, "margin");
+	      typeInfo.AddField(component->name, "name");
 	      typeInfo.AddField(component->previousCollisions, "previousCollisions");
 	      typeInfo.AddField(component->radius, "radius");
 return typeInfo;

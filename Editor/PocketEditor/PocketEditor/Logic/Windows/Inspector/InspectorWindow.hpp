@@ -20,6 +20,7 @@ protected:
     void OnCreate() override;
     std::string Name() override;
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
+    void PostCompile() override;
 private:
     SelectableCollection<EditorObject>* selectables;
     GameObject* inspectorEditor;

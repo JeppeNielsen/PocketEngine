@@ -75,11 +75,17 @@ void Project::Open(const std::string& path) {
 }
 
 bool Project::Compile() {
+    PostCompile();
+    Worlds.PreCompile();
+    scriptWorld.RemoveGameWorld(*world);
     RefreshSourceFiles();
     scriptWorld.SetWorldType(*world);
-    scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
-    scriptWorld.AddGameWorld(*world);
-    return true;
+    bool succes = scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+    if (succes) {
+        scriptWorld.AddGameWorld(*world);
+        Worlds.PostCompile();
+    }
+    return succes;
 }
 
 void Project::RefreshSourceFiles() {

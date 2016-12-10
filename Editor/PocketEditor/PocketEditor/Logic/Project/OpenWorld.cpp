@@ -155,8 +155,8 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
         root = world->CreateRoot();
     }
     
-    s.AddGameRoot(root);
     CreateDefaultSystems(*root);
+    s.AddGameRoot(root);
     AddEditorObject(root);
     //auto var = root->AddComponent<CloneVariable>();
     //var->Variables.push_back({ GameIdHelper::GetClassName<Transform>(), "Rotation" });
@@ -243,4 +243,34 @@ void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
         AddEditorObject(child);
     }
 }
+
+void OpenWorld::PreCompile() {
+    for(auto go : selectables->Objects()) {
+        Selectable* selectable = go->GetComponent<Selectable>();
+        selectable->Selected = false;
+        selectedObjectsAtCompileTime.push_back(go->RootId());
+    }
+    root->ToJson(compilingWorld);
+}
+
+void OpenWorld::PostCompile() {
+    root->Remove();
+    std::cout << compilingWorld.str() << std::endl;
+    root = world->CreateRootFromJson(compilingWorld, [this] (GameObject* root) {
+        CreateDefaultSystems(*root);
+        scriptWorld->AddGameRoot(root);
+    });
+    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
+    InitializeRoot();
+    Compiled();
+    for (auto id : selectedObjectsAtCompileTime) {
+        GameObject* go = root->FindObject(id);
+        if (!go) continue;
+        Selectable* selectable = go->GetComponent<Selectable>();
+        selectable->Selected = true;
+    }
+}
+
+
+
 

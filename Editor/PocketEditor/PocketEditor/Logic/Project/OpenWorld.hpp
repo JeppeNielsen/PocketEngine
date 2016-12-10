@@ -47,6 +47,11 @@ public:
     void Enable();
     void Disable();
     
+    void PreCompile();
+    void PostCompile();
+    
+    Event<> Compiled;
+    
 private:
     GameWorld* world;
     ScriptWorld* scriptWorld;
@@ -61,5 +66,7 @@ private:
     void AddEditorObject(GameObject* object);
     
     std::stringstream storedWorld;
+    std::stringstream compilingWorld;
+    std::vector<int> selectedObjectsAtCompileTime;
 };
 

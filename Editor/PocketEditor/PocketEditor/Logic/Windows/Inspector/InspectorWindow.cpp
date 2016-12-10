@@ -158,3 +158,7 @@ void InspectorWindow::RefreshInspector() {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
 }
+
+void InspectorWindow::PostCompile() {
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
+}

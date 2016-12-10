@@ -46,6 +46,10 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     world.AddComponentType<Cloner>();
     world.AddComponentType<CloneVariable>();
     
+    GameObject* initRoot = world.CreateRoot();
+    OpenWorld::CreateDefaultSystems(*initRoot);
+    OpenWorld::CreateEditorSystems(*initRoot);
+    initRoot->Remove();
     
     project.Initialize(world);
 }

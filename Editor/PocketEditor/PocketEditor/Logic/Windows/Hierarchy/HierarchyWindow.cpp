@@ -33,9 +33,11 @@ void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
     
     if (old) {
         old->IsPlaying.Changed.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
+        old->Compiled.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
     }
     if (current) {
         current->IsPlaying.Changed.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
+        current->Compiled.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
     }
 }
 

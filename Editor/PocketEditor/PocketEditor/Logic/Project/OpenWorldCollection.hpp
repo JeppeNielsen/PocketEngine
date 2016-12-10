@@ -33,6 +33,9 @@ public:
     Event<OpenWorld*> WorldLoaded;
     Event<OpenWorld*> WorldClosed;
     
+    void PreCompile();
+    void PostCompile();
+    
 private:
     using Worlds = std::vector<OpenWorld*>;
     Worlds worlds;

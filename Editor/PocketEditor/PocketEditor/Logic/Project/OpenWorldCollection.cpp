@@ -64,3 +64,15 @@ void OpenWorldCollection::CloseWorld(OpenWorld *world) {
     world->Close();
     delete world;
 }
+
+void OpenWorldCollection::PreCompile() {
+    for(auto world : worlds) {
+        world->PreCompile();
+    }
+}
+
+void OpenWorldCollection::PostCompile() {
+    for(auto world : worlds) {
+        world->PostCompile();
+    }
+}

@@ -49,4 +49,5 @@ public:
     std::string& Path();
     
     Event<> Opened;
+    Event<> PostCompile;
 };
