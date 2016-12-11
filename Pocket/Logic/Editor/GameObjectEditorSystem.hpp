@@ -12,6 +12,7 @@
 #include "Transform.hpp"
 #include "Sizeable.hpp"
 #include "Gui.hpp"
+#include <set>
 #ifdef SCRIPTING_ENABLED
 #include "ScriptWorld.hpp"
 #endif
@@ -36,7 +37,11 @@ namespace Pocket {
             void Update(float dt);
         private:
             void ObjectChanged(GameObject* object);
+            void CreateEditors(GameObject* object);
             typedef std::vector<int> IgnoredComponents;
             IgnoredComponents ignoredComponents;
+        
+            using DirtyObjects = std::set<GameObject*>;
+            DirtyObjects dirtyObjects;
     };
 }

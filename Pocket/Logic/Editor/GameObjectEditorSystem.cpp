@@ -21,7 +21,7 @@ void GameObjectEditorSystem::Initialize() {
 
 void GameObjectEditorSystem::ObjectAdded(GameObject *object) {
     object->GetComponent<GameObjectEditor>()->Object.Changed.Bind(this, &GameObjectEditorSystem::ObjectChanged, object);
-    ObjectChanged(object);
+    dirtyObjects.insert(object);
 }
 
 void GameObjectEditorSystem::ObjectRemoved(GameObject *object) {
@@ -32,9 +32,18 @@ void GameObjectEditorSystem::ObjectRemoved(GameObject *object) {
         delete e.editor;
     }
     editor->editors.clear();
+    
+    auto it = dirtyObjects.find(object);
+    if (it!=dirtyObjects.end()) {
+        dirtyObjects.erase(object);
+    }
 }
 
 void GameObjectEditorSystem::Update(float dt) {
+    for(auto dirtyObject : dirtyObjects) {
+        CreateEditors(dirtyObject);
+    }
+    dirtyObjects.clear();
     for(auto o : Objects()) {
         GameObjectEditor* editor = o->GetComponent<GameObjectEditor>();
         for(auto editor : editor->editors) {
@@ -44,6 +53,10 @@ void GameObjectEditorSystem::Update(float dt) {
 }
 
 void GameObjectEditorSystem::ObjectChanged(GameObject* object) {
+    dirtyObjects.insert(object);
+}
+
+void GameObjectEditorSystem::CreateEditors(GameObject* object) {
     GameObjectEditor *editor = object->GetComponent<GameObjectEditor>();
     
     for(auto e : editor->editors) {
