@@ -245,11 +245,11 @@ void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
 }
 
 void OpenWorld::PreCompile() {
-    for(auto go : selectables->Objects()) {
-        Selectable* selectable = go->GetComponent<Selectable>();
-        selectable->Selected = false;
-        selectedObjectsAtCompileTime.push_back(go->RootId());
+    for(auto go : selectables->Selected()) {
+        EditorObject* editorObject = go->GetComponent<EditorObject>();
+        selectedObjectsAtCompileTime.push_back(editorObject->gameObject->RootId());
     }
+    selectables->ClearSelection();
     root->ToJson(compilingWorld);
 }
 
@@ -263,12 +263,15 @@ void OpenWorld::PostCompile() {
     root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
     InitializeRoot();
     Compiled();
+    world->Update(0);
     for (auto id : selectedObjectsAtCompileTime) {
         GameObject* go = root->FindObject(id);
         if (!go) continue;
-        Selectable* selectable = go->GetComponent<Selectable>();
+        EditorObject* editorObject = go->GetComponent<EditorObject>();
+        Selectable* selectable = editorObject->editorObject->GetComponent<Selectable>();
         selectable->Selected = true;
     }
+    selectedObjectsAtCompileTime.clear();
 }
 
 
