@@ -29,6 +29,7 @@
 #include "Project.hpp"
 #include "CloneVariable.hpp"
 #include "VelocitySystem.hpp"
+#include "EditorContext.hpp"
 
 struct Turner {
     
@@ -117,11 +118,13 @@ bool OpenWorld::Save() {
     return succes;
 }
 
-bool OpenWorld::Load(const std::string &path, const std::string &filename, GameWorld& w, ScriptWorld& s) {
+bool OpenWorld::Load(const std::string &path, const std::string &filename, EditorContext* context) {
     Path = path;
     Filename = filename;
-    world = &w;
-    scriptWorld = &s;
+    this->context = context;
+    
+    GameWorld* world = &context->World();
+    ScriptWorld* scriptWorld = &context->Project().ScriptWorld();
     
     if (path != "") {
         std::ifstream file;
@@ -156,7 +159,7 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, GameW
     }
     
     CreateDefaultSystems(*root);
-    s.AddGameRoot(root);
+    scriptWorld->AddGameRoot(root);
     AddEditorObject(root);
     //auto var = root->AddComponent<CloneVariable>();
     //var->Variables.push_back({ GameIdHelper::GetClassName<Transform>(), "Rotation" });
@@ -188,23 +191,13 @@ void OpenWorld::InitializeRoot() {
 
 void OpenWorld::Play() {
     if (IsPlaying) return;
-    storedWorld.clear();
-    root->ToJson(storedWorld);
+    StoreWorld();
     IsPlaying = true;
 }
 
 void OpenWorld::Stop() {
     if (!IsPlaying) return;
-    root->Remove();
-    
-    //std::cout << storedWorld.str() << std::endl;
-    root = world->CreateRootFromJson(storedWorld, [] (GameObject* root) {
-        CreateDefaultSystems(*root);
-    });
-    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
-    InitializeRoot();
-    //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;
-    
+    RestoreWorld();
     IsPlaying = false;
 }
 
@@ -245,35 +238,44 @@ void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
 }
 
 void OpenWorld::PreCompile() {
-    for(auto go : selectables->Selected()) {
-        EditorObject* editorObject = go->GetComponent<EditorObject>();
-        selectedObjectsAtCompileTime.push_back(editorObject->gameObject->RootId());
-    }
+    Stop();
+    StoreWorld();
     selectables->ClearSelection();
-    root->ToJson(compilingWorld);
 }
 
 void OpenWorld::PostCompile() {
-    root->Remove();
-    std::cout << compilingWorld.str() << std::endl;
-    root = world->CreateRootFromJson(compilingWorld, [this] (GameObject* root) {
-        CreateDefaultSystems(*root);
-        scriptWorld->AddGameRoot(root);
-    });
-    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
-    InitializeRoot();
+    RestoreWorld();
     Compiled();
-    world->Update(0);
-    for (auto id : selectedObjectsAtCompileTime) {
-        GameObject* go = root->FindObject(id);
-        if (!go) continue;
-        EditorObject* editorObject = go->GetComponent<EditorObject>();
-        Selectable* selectable = editorObject->editorObject->GetComponent<Selectable>();
-        selectable->Selected = true;
-    }
-    selectedObjectsAtCompileTime.clear();
 }
 
+void OpenWorld::StoreWorld() {
+    for(auto go : selectables->Selected()) {
+        EditorObject* editorObject = go->GetComponent<EditorObject>();
+        storedSelectedObjects.push_back(editorObject->gameObject->RootId());
+    }
+    root->ToJson(storedWorld);
+}
 
-
-
+void OpenWorld::RestoreWorld() {
+    root->Remove();
+    std::cout << storedWorld.str() << std::endl;
+    root = context->World().CreateRootFromJson(storedWorld, [this] (GameObject* root) {
+        CreateDefaultSystems(*root);
+        context->Project().ScriptWorld().AddGameRoot(root);
+    });
+    storedWorld.clear();
+    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
+    InitializeRoot();
+    std::vector<int> storedSelectedObjectsLocal = storedSelectedObjects;
+    context->postActions.emplace_back([this, storedSelectedObjectsLocal] () {
+        selectables->ClearSelection();
+        for (auto id : storedSelectedObjectsLocal) {
+            GameObject* go = root->FindObject(id);
+            if (!go) continue;
+            EditorObject* editorObject = go->GetComponent<EditorObject>();
+            Selectable* selectable = editorObject->editorObject->GetComponent<Selectable>();
+            selectable->Selected = true;
+        }
+    });
+    storedSelectedObjects.clear();
+}

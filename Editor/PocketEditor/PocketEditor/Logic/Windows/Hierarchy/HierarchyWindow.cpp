@@ -42,7 +42,7 @@ void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
 }
 
 void HierarchyWindow::OpenWorldIsPlayingChanged(OpenWorld *world) {
-    context->delayedActions.emplace_back([this, world] () {
+    context->preActions.emplace_back([this, world] () {
         treeView->Root = world->Root();
     });
 }

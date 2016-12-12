@@ -37,7 +37,8 @@ public:
     Project& Project();
     using Action = std::function<void()>;
     using Actions = std::deque<Action>;
-    Actions delayedActions;
+    Actions preActions;
+    Actions postActions;
     
     void Initialize(class EngineContext& engineContext);
     void Update(float dt);

@@ -17,6 +17,7 @@
 using namespace Pocket;
 
 class Project;
+class EditorContext;
 
 class OpenWorld {
 public:
@@ -29,7 +30,7 @@ public:
     SelectableCollection<EditorObject>* selectables;
     
     bool Save();
-    bool Load(const std::string& path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld);
+    bool Load(const std::string& path, const std::string& filename, EditorContext* context);
     
     static void CreateDefaultSystems(GameObject& root);
     static void CreateEditorSystems(GameObject& root);
@@ -53,8 +54,7 @@ public:
     Event<> Compiled;
     
 private:
-    GameWorld* world;
-    ScriptWorld* scriptWorld;
+    EditorContext* context;
     
     GameObject* root;
     GameObject* editorRoot;
@@ -65,8 +65,10 @@ private:
     
     void AddEditorObject(GameObject* object);
     
+    void StoreWorld();
+    void RestoreWorld();
+    
     std::stringstream storedWorld;
-    std::stringstream compilingWorld;
-    std::vector<int> selectedObjectsAtCompileTime;
+    std::vector<int> storedSelectedObjects;
 };
 

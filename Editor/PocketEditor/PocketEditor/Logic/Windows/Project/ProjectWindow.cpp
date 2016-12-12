@@ -178,10 +178,10 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode = nodeInfo;
     if (d.Index == 0) {
         if (!selectedNode.filePath->isFolder) {
-            context->delayedActions.emplace_back([=]() {
+            context->preActions.emplace_back([=]() {
             context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(),
                                                 selectedNode.filePath->filename,
-                                                context->World(), context->Project().ScriptWorld());
+                                                context);
             });
         }
     } else if (d.Index == 1) {

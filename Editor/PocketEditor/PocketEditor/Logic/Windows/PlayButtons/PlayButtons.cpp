@@ -63,12 +63,16 @@ void PlayButtons::UpdateButtons(OpenWorld *openWorld) {
 
 void PlayButtons::PlayClicked(Pocket::TouchData d) {
     if (!currentWorld) return;
-    currentWorld->Play();
-    UpdateButtons(currentWorld);
+    context->preActions.emplace_back([this] {
+        currentWorld->Play();
+        UpdateButtons(currentWorld);
+    });
 }
 
 void PlayButtons::StopClicked(Pocket::TouchData d) {
     if (!currentWorld) return;
-    currentWorld->Stop();
-    UpdateButtons(currentWorld);
+    context->preActions.emplace_back([this] {
+        currentWorld->Stop();
+        UpdateButtons(currentWorld);
+    });
 }

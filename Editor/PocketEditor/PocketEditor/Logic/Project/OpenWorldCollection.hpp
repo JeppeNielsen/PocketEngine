@@ -16,10 +16,12 @@
 using namespace Pocket;
 
 class Project;
+class EditorContext;
 
 class OpenWorldCollection {
 public:
-    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld);
+
+    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, EditorContext* context);
     void CloseWorld(OpenWorld* world);
     bool TryFindOpenWorld(const std::string& path, OpenWorld** world);
     

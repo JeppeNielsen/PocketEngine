@@ -9,6 +9,7 @@
 #include "OpenWorldCollection.hpp"
 #include "Project.hpp"
 #include <fstream>
+#include "EditorContext.hpp"
 
 OpenWorldCollection::OpenWorldCollection() {
     ActiveWorld = 0;
@@ -38,11 +39,11 @@ bool OpenWorldCollection::TryFindOpenWorld(const std::string &path, OpenWorld** 
     return false;
 }
 
-OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename, GameWorld& world, ScriptWorld& scriptWorld) {
+OpenWorld* OpenWorldCollection::LoadWorld(const std::string &path, const std::string& filename, EditorContext* context) {
     OpenWorld* openWorld;
     if (!TryFindOpenWorld(path, &openWorld)) {
         openWorld = new OpenWorld();
-        if (!openWorld->Load(path, filename, world, scriptWorld)) {
+        if (!openWorld->Load(path, filename, context)) {
             delete openWorld;
             return 0;
         } else {

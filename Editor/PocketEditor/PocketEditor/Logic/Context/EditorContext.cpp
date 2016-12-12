@@ -56,8 +56,9 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
 
 void EditorContext::Update(float dt) {
     engineContext->InputDevice().UpdateInputManager(&world.Input());
-    DoActions(delayedActions);
+    DoActions(preActions);
     world.Update(dt);
+    DoActions(postActions);
 }
 
 void EditorContext::Render() {
