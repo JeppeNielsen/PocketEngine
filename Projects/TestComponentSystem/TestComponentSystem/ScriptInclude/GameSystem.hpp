@@ -17,33 +17,40 @@ class GameObject;
 namespace Pocket {
 class GameObject {
 private:
-    virtual bool HasComponent(int componentID) = 0;
-    virtual void* GetComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID) = 0;
-    virtual void AddComponent(int componentID, GameObject* referenceObject) = 0;
-    virtual void RemoveComponent(int componentID) = 0;
-    virtual void CloneComponent(int componentID, GameObject* source) = 0;
+
+    virtual bool HasComponent(int id) const = 0;
+    virtual void* GetComponent(int id) const = 0;
+    virtual void AddComponent(int id) = 0;
+    virtual void AddComponent(int id, GameObject* referenceObject) = 0;
+    virtual void RemoveComponent(int id) = 0;
+    virtual void CloneComponent(int id, GameObject* object) = 0;
 public:
     template<typename T> T* GetComponent() { return (T*)0; }
     template<typename T> T* AddComponent() { }
     template<typename T> void RemoveComponent() { }
     template<typename T> T* CloneComponent(GameObject* source) { }
 };
+}
+
 
 struct IGameSystem {
     virtual ~IGameSystem() = default;
     virtual void Initialize() = 0;
     virtual void Destroy() = 0;
-    virtual void ObjectAdded(GameObject* object) = 0;
-    virtual void ObjectRemoved(GameObject* object) = 0;
+    virtual void ObjectAdded(Pocket::GameObject* object) = 0;
+    virtual void ObjectRemoved(Pocket::GameObject* object) = 0;
     virtual void Update(float dt) = 0;
     virtual void Render() = 0;
-    virtual int AddObject(GameObject* object) = 0;
-    virtual void RemoveObject(GameObject* object) = 0;
+    virtual int AddObject(Pocket::GameObject* object) = 0;
+    virtual void RemoveObject(Pocket::GameObject* object) = 0;
     virtual int ObjectCount() = 0;
-    Property<int> Order;
-    int index;
+    virtual int GetOrder() = 0;
+    virtual void SetOrder(int order) = 0;
+    virtual int GetIndex() = 0;
+    virtual void SetIndex(int index) = 0;
 };
+
+namespace Pocket {
 
 template<typename... T>
 class GameSystem : public IGameSystem {
@@ -70,12 +77,22 @@ protected:
 //        //return lastObject;
     }
     
-    int ObjectCount() override { return objects.size(); }
+    int ObjectCount() override {
+        return (int)objects.size();
+    }
+    
+    Pocket::Property<int> Order;
+    
+    int GetOrder() override { return Order(); }
+    void SetOrder(int order) override { Order = order; }
+    int GetIndex() override { return index; }
+    void SetIndex(int index) override { this->index = index; }
     
 private:
     using ObjectCollection = std::vector<GameObject*>;
     ObjectCollection objects;
     friend class GameObject;
+    int index;
 protected:
     const ObjectCollection& Objects() {
         return objects;

@@ -12,6 +12,11 @@
 
 using namespace Pocket;
 
+TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* parentPtr, const std::string& title) -> void* {
+    
+    return 0;
+};
+
 void ScriptTests::RunTests() {
 
     AddTest("Script compiling", [] () {

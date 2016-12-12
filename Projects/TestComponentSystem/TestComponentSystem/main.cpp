@@ -13,8 +13,8 @@
 
 int main(int argc, const char * argv[]) {
 
-    SerializationTests serializationTests;
-    serializationTests.Run();
+    //SerializationTests serializationTests;
+    //serializationTests.Run();
     
     LogicTests tests;
     tests.Run();

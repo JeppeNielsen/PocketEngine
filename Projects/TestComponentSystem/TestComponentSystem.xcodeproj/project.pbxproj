@@ -53,6 +53,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7244C4A21DF7578900ADF008 /* IFieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IFieldEditor.hpp; sourceTree = "<group>"; };
 		724E323E1D0DFB9F0007E8CA /* LogicTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogicTests.cpp; sourceTree = "<group>"; };
 		724E323F1D0DFB9F0007E8CA /* LogicTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogicTests.hpp; sourceTree = "<group>"; };
 		724E32441D0DFB9F0007E8CA /* LogicTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogicTest.cpp; sourceTree = "<group>"; };
@@ -210,6 +211,7 @@
 		72AE75091DB5339000CEB998 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
+				7244C4A21DF7578900ADF008 /* IFieldEditor.hpp */,
 				72AE750A1DB5339000CEB998 /* JsonSerializer.hpp */,
 				72AE750B1DB5339000CEB998 /* minijson_reader.hpp */,
 				72AE750C1DB5339000CEB998 /* minijson_writer.hpp */,
