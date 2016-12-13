@@ -19,7 +19,7 @@ class FieldInfo;
 class TypeInfo;
 
 template<typename T>
-struct FieldInfoIndexer { static int Index() { return 0; } };
+struct FieldInfoIndexer { static int Index() { return -1; } };
 
 namespace minijson {
     class object_writer;
