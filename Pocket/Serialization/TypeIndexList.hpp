@@ -33,7 +33,7 @@ class TypeInfo;
     void AddToTypeInfo(TypeInfo* info, int index, IFieldInfo* fieldInfo) {
         auto it = types.find(index);
         if (it!=types.end()) {
-            return it->second->AddToTypeInfo(info, fieldInfo);
+            it->second->AddToTypeInfo(info, fieldInfo);
         }
     }
     
