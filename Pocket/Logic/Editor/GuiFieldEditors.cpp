@@ -129,24 +129,34 @@ struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
     }
 };
 
-template<> IFieldEditor* FieldEditorCreator<int>::Create() {
-    return new FieldInfoEditorInt();
+template<> IFieldEditor* FieldEditorCreator<int>::Create(int* ptr) {
+    FieldInfoEditorInt* editor = new FieldInfoEditorInt();
+    editor->SetField(ptr);
+    return editor;
 }
 
-template<> IFieldEditor* FieldEditorCreator<float>::Create() {
-    return new FieldInfoEditorFloat();
+template<> IFieldEditor* FieldEditorCreator<float>::Create(float* ptr) {
+    FieldInfoEditorFloat* editor = new FieldInfoEditorFloat();
+    editor->SetField(ptr);
+    return editor;
 }
 
-template<> IFieldEditor* FieldEditorCreator<Vector2>::Create() {
-    return new FieldInfoEditorVector2();
+template<> IFieldEditor* FieldEditorCreator<Vector2>::Create(Vector2* ptr) {
+    FieldInfoEditorVector2* editor = new FieldInfoEditorVector2();
+    editor->SetField(ptr);
+    return editor;
 }
 
-template<> IFieldEditor* FieldEditorCreator<Vector3>::Create() {
-    return new FieldInfoEditorVector3();
+template<> IFieldEditor* FieldEditorCreator<Vector3>::Create(Vector3* ptr) {
+    FieldInfoEditorVector3* editor = new FieldInfoEditorVector3();
+    editor->SetField(ptr);
+    return editor;
 }
 
-template<> IFieldEditor* FieldEditorCreator<std::string>::Create() {
-    return new FieldInfoEditorString();
+template<> IFieldEditor* FieldEditorCreator<std::string>::Create(std::string* ptr) {
+    FieldInfoEditorString* editor = new FieldInfoEditorString();
+    editor->SetField(ptr);
+    return editor;
 }
 
 TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* parentPtr, const std::string& title) -> void* {

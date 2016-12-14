@@ -14,7 +14,7 @@ struct IFieldEditor {
 
 template<class T, typename S = void>
 struct FieldEditorCreator {
-    static IFieldEditor* Create() {
+    static IFieldEditor* Create(T* ptr) {
         return 0;
     }
 };
@@ -38,9 +38,8 @@ struct PropertyEditor : public IFieldEditor {
     }
 
     void Create(void* context, void* parent) override {
-        editor = FieldEditorCreator<T>::Create();
+        editor = FieldEditorCreator<T>::Create(&currentValue);
         if (editor) {
-            editor->SetField(&currentValue);
             editor->Create(context, parent);
         }
     }
@@ -70,14 +69,12 @@ struct PropertyEditor : public IFieldEditor {
 
 template<typename T>
 struct FieldEditorCreator<Property<T>> {
-    static IFieldEditor* Create() {
-        return new PropertyEditor<T>();
+    static IFieldEditor* Create(Property<T>* ptr) {
+        PropertyEditor<T>* editor = new PropertyEditor<T>();
+        editor->SetField(ptr);
+        return editor;
     }
 };
-
-
-
-
 
 template<typename T>
 struct VectorEditor : public IFieldEditor {
@@ -96,12 +93,21 @@ struct VectorEditor : public IFieldEditor {
 
     void Create(void* context, void* parent) override {
         for(auto&& item : *this->field) {
-            auto editor = FieldEditorCreator<T>::Create();
+            auto editor = FieldEditorCreator<T>::Create(&item);
             if (!editor) continue;
-            editor->SetField(&item);
             editor->Create(context, parent);
             entries.push_back(editor);
         }
+        /*
+    for(int i=0; i<this->field->size(); i++) {
+            T& item = this->field->operator[](i);
+            T* itemPtr = (T*)&item;
+            auto editor = FieldEditorCreator<T>::Create(itemPtr);
+            if (!editor) continue;
+            editor->Create(context, parent);
+            entries.push_back(editor);
+        }
+        */
     }
     
     void Update(float dt) override {
@@ -128,38 +134,18 @@ struct VectorEditor : public IFieldEditor {
 
 template<>
 struct FieldEditorCreator<std::vector<bool>> {
-    static IFieldEditor* Create() {
+    static IFieldEditor* Create(std::vector<bool>* ptr) {
         return 0;
     }
 };
 
 template<typename T>
 struct FieldEditorCreator<std::vector<T>> {
-    static IFieldEditor* Create() {
-        return new VectorEditor<T>();
+    static IFieldEditor* Create(std::vector<T>* ptr) {
+        VectorEditor<T>* editor = new VectorEditor<T>();
+        editor->SetField(ptr);
+        return editor;
     }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

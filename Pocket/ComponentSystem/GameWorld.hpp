@@ -134,9 +134,8 @@ namespace Pocket {
                         return component->GetType();
                     };
                     componentInfo.getFieldEditor = [](GameObject* object) -> IFieldEditor* {
-                        IFieldEditor* editor = FieldEditorCreator<SerializedComponentType>::Create();
                         auto component = object->GetComponent<SerializedComponentType>();
-                        editor->SetField(component);
+                        IFieldEditor* editor = FieldEditorCreator<SerializedComponentType>::Create(component);
                         return editor;
                     };
                 });

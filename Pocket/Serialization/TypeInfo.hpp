@@ -101,10 +101,7 @@ public:
     void SetFromAny(FieldInfoAny* any) override;
     
     IFieldEditor* CreateEditor() override {
-        IFieldEditor* editor = FieldEditorCreator<T>::Create();
-        if (editor) {
-            editor->SetField(field);
-        }
+        IFieldEditor* editor = FieldEditorCreator<T>::Create(field);
         return editor;
     }
     
@@ -411,12 +408,19 @@ struct TypeInfoEditor : public IFieldEditor {
 
 template<typename T>
 struct FieldEditorCreator<T, typename std::enable_if< Pocket::Meta::HasGetTypeFunction::apply<T>::value >::type> {
-    static IFieldEditor* Create() {
-        return new TypeEditor<T>();
+    static IFieldEditor* Create(T* ptr) {
+        TypeEditor<T>* editor = new TypeEditor<T>();
+        editor->SetField(ptr);
+        return editor;
     }
 };
 
-
+template<>
+struct FieldEditorCreator<IFieldInfo*> {
+    static IFieldEditor* Create(IFieldInfo** ptr) {
+        return (*ptr)->CreateEditor();
+    }
+};
 
 inline std::string className(const std::string& prettyFunction)
 {
