@@ -96,7 +96,7 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     string compilerPath = clangSdkPath + "bin/clang++";
     string compilerFlags = "-dynamiclib -std=c++11 "+pathToPocketEngineLib+" -stdlib=libc++ -g";
     if (enableOutput) {
-        compilerFlags += " -v ";
+        compilerFlags += " -v";
     }
     string outputFile = "-o " + dynamicLibPath;
     
@@ -106,6 +106,13 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     for(auto& header : headerPaths) {
         compilerArgs += header + " ";
     }
+    
+    for(auto& source : sourceFiles) {
+        compilerArgs += source + " ";
+    }
+    
+    compilerArgs += " ";
+    
     compilerArgs += mainCppFile + " ";
     compilerArgs += outputFile;
     
@@ -127,9 +134,9 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
             std::cout << s << std::endl;
         }
     }
+    
     return LoadLib();
 }
-
 
 bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
 
@@ -356,8 +363,14 @@ void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
         file<<"#include \""<<headerName<<"\""<<std::endl;
     }
     
+    
+    /*for(auto& sourceFile : sourceFiles) {
+        file << "#include \"" << sourceFile << "\""<< std::endl;
+    }
+    */
+    
     for(auto& include : uniqueIncludes) {
-        file << "#include \"" << include << "\""<< std::endl;
+        //file << "#include \"" << include << "\""<< std::endl;
     }
     file<<std::endl;
     
