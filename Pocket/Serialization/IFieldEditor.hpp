@@ -117,11 +117,6 @@ struct VectorEditor : public IFieldEditor {
     std::vector<T>* field;
 };
 
-
-
-
-
-
 template<>
 struct FieldEditorCreator<std::vector<bool>> {
     static IFieldEditor* Create(std::vector<bool>* ptr) {
