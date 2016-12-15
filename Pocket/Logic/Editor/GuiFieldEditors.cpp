@@ -120,6 +120,26 @@ struct FieldInfoEditorVector3 : public FieldInfoEditorTextboxes<Vector3, 3> {
     }
 };
 
+
+
+struct FieldInfoEditorQuaternion : public FieldInfoEditorTextboxes<Quaternion, 3> {
+    void TextboxChanged(int index, std::string text) override {
+        float value = (float)atof(text.c_str());
+    
+        Vector3 euler = (*field).ToEuler();
+        euler *= MathHelper::RadToDeg;
+        euler.Set(index, value);
+        euler *= MathHelper::DegToRad;
+        (*field) = Quaternion(euler);
+    }
+    
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        Vector3 euler = (*field).ToEuler();
+        euler *= MathHelper::RadToDeg;
+        stream<<euler[index];
+    }
+};
+
 struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
     void TextboxChanged(int index, std::string text) override {
         (*field) = text;
@@ -149,6 +169,12 @@ template<> IFieldEditor* FieldEditorCreator<Vector2>::Create(Vector2* ptr) {
 
 template<> IFieldEditor* FieldEditorCreator<Vector3>::Create(Vector3* ptr) {
     FieldInfoEditorVector3* editor = new FieldInfoEditorVector3();
+    editor->SetField(ptr);
+    return editor;
+}
+
+template<> IFieldEditor* FieldEditorCreator<Quaternion>::Create(Quaternion* ptr) {
+    FieldInfoEditorQuaternion* editor = new FieldInfoEditorQuaternion();
     editor->SetField(ptr);
     return editor;
 }
