@@ -98,16 +98,6 @@ struct VectorEditor : public IFieldEditor {
             editor->Create(context, parent);
             entries.push_back(editor);
         }
-        /*
-    for(int i=0; i<this->field->size(); i++) {
-            T& item = this->field->operator[](i);
-            T* itemPtr = (T*)&item;
-            auto editor = FieldEditorCreator<T>::Create(itemPtr);
-            if (!editor) continue;
-            editor->Create(context, parent);
-            entries.push_back(editor);
-        }
-        */
     }
     
     void Update(float dt) override {
