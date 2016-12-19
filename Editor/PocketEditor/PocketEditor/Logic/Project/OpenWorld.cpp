@@ -32,37 +32,17 @@
 #include "EditorContext.hpp"
 
 struct Turner {
-    
-    Turner() {
-        speed.push_back({0,1,2});
-        speed.push_back({0,4,3});
-    }
-    
-    struct Movement {
-        int power;
-        TYPE_FIELDS_BEGIN
-        TYPE_FIELD(power)
-        TYPE_FIELDS_END
-    };
-    
-    Movement movement;
-
-    std::vector<Vector3> speed;
+    Vector3 speed;
     
     TYPE_FIELDS_BEGIN
     TYPE_FIELD(speed)
-    TYPE_FIELD(movement)
     TYPE_FIELDS_END
 };
 
 struct TurnerSystem : public GameSystem<Transform, Turner> {
     void Update(float dt) {
         for(auto o : Objects()) {
-            Turner* turner = o->GetComponent<Turner>();
-            for(auto& v : turner->speed) {
-                std::cout << v << std::endl;
-            }
-           // o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Turner>()->speed() * dt;
+            o->GetComponent<Transform>()->EulerRotation += o->GetComponent<Turner>()->speed * dt;
         }
     }
 };
@@ -253,7 +233,11 @@ void OpenWorld::StoreWorld() {
         EditorObject* editorObject = go->GetComponent<EditorObject>();
         storedSelectedObjects.push_back(editorObject->gameObject->RootId());
     }
-    root->ToJson(storedWorld);
+    //root->ToJson(storedWorld);
+    root->ToJson(storedWorld, [] (const GameObject* go, int componentID) {
+        if (go->Parent() && go->Parent()->GetComponent<Cloner>()) return false;
+        return true;
+    });
 }
 
 void OpenWorld::RestoreWorld() {
