@@ -12,8 +12,11 @@
 #include "EditorObject.hpp"
 #include "FilePath.hpp"
 
-class FilePath;
-class FileSystemListener;
+using namespace Pocket;
+
+namespace Pocket {
+    class FileSystemListener;
+}
 
 class ProjectWindow : public BaseWindow {
 protected:
