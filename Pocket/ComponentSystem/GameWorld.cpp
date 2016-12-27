@@ -219,12 +219,13 @@ GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::ist
     minijson::istream_context context(jsonStream);
     GameObject* object = 0;
     try {
-        object = LoadObject(parent, context, objectCreated);
+        GameObject::AddReferenceComponentList addReferenceComponents;
+        object = LoadObject(addReferenceComponents, parent, context, objectCreated);
         
         GameObject* object;
         int componentID;
         GameObject* referenceObject;
-        while (GameObject::GetAddReferenceComponent(&object, componentID, &referenceObject)) {
+        while (GameObject::GetAddReferenceComponent(addReferenceComponents, &object, componentID, &referenceObject)) {
             if (referenceObject) {
                 object->AddComponent(componentID, referenceObject);
             }
@@ -236,7 +237,7 @@ GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::ist
     return object;
 }
 
-GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated) {
+GameObject* GameWorld::LoadObject(GameObject::AddReferenceComponentList& addReferenceComponents, GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated) {
     GameObject* object = 0;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
         if (v.type() == minijson::Object) {
@@ -254,13 +255,13 @@ GameObject* GameWorld::LoadObject(GameObject* parent, minijson::istream_context 
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {
                             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                                object->AddComponent(context, n);
+                                object->AddComponent(addReferenceComponents, context, n);
                             });
                         }
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
-                        LoadObject(object, context, objectCreated);
+                        LoadObject(addReferenceComponents, object, context, objectCreated);
                     });
                 } else if (!parent && name == "guid" && v.type() == minijson::String) {
                     object->scene->guid = std::string(v.as_string());
@@ -322,6 +323,11 @@ GameScene* GameWorld::TryGetScene(const std::string &guid) {
         }
     }
     return 0;
+}
+
+std::string GameWorld::TryFindScenePath(const std::string &guid) {
+    if (!GuidToPath) { return ""; }
+    return GuidToPath(guid);
 }
 
 GameObject* GameWorld::FindObject(const std::string &guid, int objectId) {

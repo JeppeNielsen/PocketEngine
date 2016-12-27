@@ -59,6 +59,14 @@ namespace Pocket {
         
     private:
     
+        struct AddReferenceComponent {
+            GameObject* object;
+            int componentID;
+            std::string referenceId;
+        };
+        
+        using AddReferenceComponentList = std::vector<AddReferenceComponent>;
+    
         GameObject();
         ~GameObject();
         GameObject(const GameObject& other);
@@ -71,9 +79,9 @@ namespace Pocket {
         void TryRemoveFromSystem(int systemId);
         void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
         void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
-        void AddComponent(minijson::istream_context& context, std::string componentName);
+        void AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName);
         
-        static bool GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
+        static bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
         static void EndGetAddReferenceComponent();
     public:
         
@@ -160,5 +168,10 @@ namespace Pocket {
         Property<bool>& RenderEnabled();
         
         GameObject* FindObject(int objectId);
+        
+        std::string TryGetRootPath();
+        
+        template<typename T>
+        GameObject* GetComponentOwner();
     };
 }

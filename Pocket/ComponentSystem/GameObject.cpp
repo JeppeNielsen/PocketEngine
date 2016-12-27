@@ -365,6 +365,10 @@ GameObject* GameObject::FindObject(int objectId) {
     return scene->FindObject(objectId);
 }
 
+std::string GameObject::TryGetRootPath() {
+    return World()->TryFindScenePath(scene->guid);
+}
+
 //SERIALIZATION
 
 void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) const {
@@ -461,15 +465,7 @@ void GameObject::SerializeComponent(int componentID, minijson::array_writer& wri
     componentWriter.close();
 }
 
-struct AddReferenceComponent {
-    GameObject* object;
-    int componentID;
-    std::string referenceId;
-};
-
-std::vector<AddReferenceComponent> addReferenceComponents;
-
-void GameObject::AddComponent(minijson::istream_context& context, std::string componentName) {
+void GameObject::AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName) {
     GameWorld* world = scene->world;
     int componentID;
     bool isReference;
@@ -501,7 +497,7 @@ void GameObject::AddComponent(minijson::istream_context& context, std::string co
 
 std::map<std::pair<std::string, GameScene*>, GameObject*> addReferenceComponentObjects;
 
-bool GameObject::GetAddReferenceComponent(Pocket::GameObject **object, int &componentID, GameObject** referenceObject) {
+bool GameObject::GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, GameObject** referenceObject) {
     if (addReferenceComponents.empty()) return false;
     auto& refObj = addReferenceComponents.back();
     *object = refObj.object;

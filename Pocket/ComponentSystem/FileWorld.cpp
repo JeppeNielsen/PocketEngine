@@ -23,6 +23,10 @@ void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
         if (!file.is_open()) return 0;
         return world->CreateRootFromJson(file, OnRootCreated, OnChildCreated);
     };
+    world->GuidToPath = [this] (const std::string& guid) {
+        auto it = guidToPath.find(guid);
+        return it == guidToPath.end() ? "" : it->second;
+    };
 }
 
 void FileWorld::FindRoots(const std::string &path, const std::string &extension) {

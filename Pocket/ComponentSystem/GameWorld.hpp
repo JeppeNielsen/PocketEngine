@@ -90,9 +90,10 @@ namespace Pocket {
         void RemoveRoot(GameObject* root);
         GameObject* CreateEmptyObject(GameObject* parent, GameScene* scene, bool assignId);
         GameObject* CreateObjectFromJson(GameObject* parent, std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated);
-        GameObject* LoadObject(GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated);
+        GameObject* LoadObject(GameObject::AddReferenceComponentList& addReferenceComponents, GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated);
         GameScene* TryGetScene(const std::string& guid);
         GameObject* FindObject(const std::string& guid, int objectId);
+        std::string TryFindScenePath(const std::string& guid);
         
         template<typename T>
         void AddSystemType() {
@@ -115,6 +116,8 @@ namespace Pocket {
         void AddActiveSystem(IGameSystem* system, GameScene* scene);
         void RemoveActiveSystem(IGameSystem* system);
         void SortActiveSystems();
+        
+       
         
     public:
     
@@ -167,6 +170,7 @@ namespace Pocket {
         ComponentTypeCollection GetComponentTypes();
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
+        std::function<std::string(const std::string& guid)> GuidToPath;
         
         std::string ReadGuidFromJson(std::istream& jsonStream);
         
@@ -201,6 +205,13 @@ namespace Pocket {
         ComponentId componentId = GameIdHelper::GetComponentID<T>();
         AddComponent(componentId, source);
         return static_cast<T*>(GetComponent(componentId));
+    }
+    
+    template<typename T>
+    GameObject* GameObject::GetComponentOwner() {
+        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
+        return &scene->world->objects.entries[ownerIndex];
     }
     
 }
