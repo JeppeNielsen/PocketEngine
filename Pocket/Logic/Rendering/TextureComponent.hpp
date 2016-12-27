@@ -16,7 +16,10 @@ namespace Pocket {
         ~TextureComponent();
         
         Pocket::Texture& Texture();
+        
+        void LoadAsset(const std::string& path);
     private:
         class Pocket::Texture texture;
+        std::string prevPath;
     };
 }

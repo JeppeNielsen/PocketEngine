@@ -14,3 +14,9 @@ Texture& TextureComponent::Texture() { return texture; }
 
 TextureComponent::TextureComponent() {}
 TextureComponent::~TextureComponent() { texture.Free(); }
+
+void TextureComponent::LoadAsset(const std::string &path) {
+    if (path == prevPath) return;
+    prevPath = path;
+    texture.LoadFromPng(path);
+}
