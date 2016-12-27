@@ -30,6 +30,7 @@
 #include "CloneVariable.hpp"
 #include "VelocitySystem.hpp"
 #include "EditorContext.hpp"
+#include "AssetManager.hpp"
 
 struct Turner {
     Vector3 speed;
@@ -62,6 +63,8 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<EditorObjectCreatorSystem>();
     world.CreateSystem<InputMapperSystem>();
     world.CreateSystem<VelocitySystem>();
+    world.CreateSystem<Gui>();
+    world.CreateSystem<AssetManager>();
 }
 
 void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
