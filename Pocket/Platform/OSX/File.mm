@@ -19,7 +19,9 @@ File::~File() { delete[] data; data = 0; size = 0; }
 bool File::Load(std::string filename) {
     NSString* file = [NSString stringWithUTF8String:filename.c_str()];
     NSString* path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
-    if (!path) return false;
+    if (!path) {
+        path = file;
+    }
     NSData *nsData = [NSData dataWithContentsOfFile:path];
     if (!nsData) return false;
     [nsData retain];
