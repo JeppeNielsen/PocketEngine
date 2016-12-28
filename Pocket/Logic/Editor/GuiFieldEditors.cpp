@@ -10,8 +10,6 @@
 
 using namespace Pocket;
 
-static Vector2 offset = {0,0};
-
 template<typename T, int Size>
 struct FieldInfoEditorTextboxes : public GuiFieldEditor {
 
