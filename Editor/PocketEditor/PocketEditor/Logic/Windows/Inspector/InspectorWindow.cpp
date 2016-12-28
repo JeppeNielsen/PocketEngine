@@ -25,6 +25,9 @@ void InspectorWindow::OnInitialize() {
     
     guiRoot.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
     guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
+        return componentId != GameIdHelper::GetComponentID<EditorObject>();
+    };
     
     guiRoot.CreateSystem<LayoutSystem>();
 
@@ -136,10 +139,12 @@ void InspectorWindow::ShowSelectionBox(EditorObject *editorObject) {
     auto componentTypes = context->World().GetComponentTypes();
     
     Vector2 pos;
+    pos.x = window->GetComponent<Sizeable>()->Size().x;
+    pos.y = window->GetComponent<Sizeable>()->Size().y;
     for(int i=0; i<componentTypes.size(); ++i) {
         auto& componentType = componentTypes[i];
-        if (!componentType.getTypeInfo) continue;
         if (editorObject->gameObject->GetComponent(i)) continue;
+        //if (!componentType.getTypeInfo) continue;
         
         GameObject* button = gui.CreateLabelControl(selectionBox, "Box", pos, {200,20}, 0, componentType.name, 20);
         button->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::SelectionClicked, i);

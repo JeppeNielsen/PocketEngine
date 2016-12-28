@@ -24,6 +24,8 @@
 #include "WorldTab.hpp"
 #include "PlayButtons.hpp"
 #include "Guid.hpp"
+#include "BaseModule.hpp"
+#include "AssetImporters.hpp"
 
 #include <vector>
 
@@ -37,15 +39,8 @@ public:
     Windows windows;
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
-    
-    struct Tester {
-        
-        Vector3 pos;
-        
-        TYPE_FIELDS_BEGIN
-        TYPE_FIELD(pos)
-        TYPE_FIELDS_END
-    };
+    using Modules = std::vector<BaseModule*>;
+    Modules modules;
     
     void Initialize() {
 
@@ -59,6 +54,8 @@ public:
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
         
+        modules.push_back(new AssetImporters());
+        
         context.Initialize(Context());
         
         for(auto window : windows) {
@@ -66,6 +63,9 @@ public:
         }
         for(auto menu : menus) {
             menu->Initialize(&Context(), &context);
+        }
+        for(auto module : modules) {
+            module->Initialize(&Context(), &context);
         }
         
         for(auto window : windows) {
@@ -76,6 +76,10 @@ public:
             menu->Create();
         }
         
+        for(auto module : modules) {
+            module->Create();
+        }
+        
         context.Project().Open("/Projects/PocketEngine/Editor/Pong/");
         
         Input.ButtonDown.Bind([this](std::string button) {
@@ -83,14 +87,6 @@ public:
                 context.World().DebugSystems();
             }
         });
-        
-        /*Tester tester;
-        auto type = tester.GetType();
-        
-        auto field = type.GetField("pos");
-        Gui gui;
-        field->CreateEditor(gui, 0);
-        */
     }
     
     void Update(float dt) {
@@ -98,9 +94,6 @@ public:
     }
     
     void Render() {
-        //glClearColor(1, 1, 0, 1);
-        //glClear(GL_COLOR_BUFFER_BIT);
-        
         context.Render();
     }
 };

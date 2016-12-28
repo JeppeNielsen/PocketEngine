@@ -27,6 +27,7 @@ protected:
     void SetProjectPath(const std::string& path);
 private:
     void ScreenSizeChanged();
+    void UpdateFileWorld();
     
     struct ClickedNodeInfo {
         GameObject* fileObject;

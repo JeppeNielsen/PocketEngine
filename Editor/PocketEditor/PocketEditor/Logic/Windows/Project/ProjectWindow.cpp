@@ -101,6 +101,10 @@ void ProjectWindow::OnInitialize() {
     }
 }
 
+void ProjectWindow::UpdateFileWorld() {
+    context->FileWorld().FindRoots(fileSystemListener->Path, { ".json", ".meta" });
+}
+
 void ProjectWindow::OnCreate() {
     GameObject& contextRoot = context->ContextRoot();
     
@@ -108,10 +112,10 @@ void ProjectWindow::OnCreate() {
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
     fileSystemListener->watcher.Changed.Bind([this] {
-        context->FileWorld().FindRoots(fileSystemListener->Path, ".json");
+        UpdateFileWorld();
     });
     fileSystemListener->Path.Changed.Bind([this] {
-        context->FileWorld().FindRoots(fileSystemListener->Path, ".json");
+        UpdateFileWorld();
     });
 
     Gui& gui = context->Gui();
