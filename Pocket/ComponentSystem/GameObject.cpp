@@ -321,9 +321,16 @@ std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const s
     std::vector<GameObject::ComponentEditor> editors;
     GameWorld* world = scene->world;
     for (int i=0; i<world->components.size(); ++i) {
-        if (!world->components[i].getFieldEditor) continue; // component has no type
         if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
+        if (!world->components[i].getFieldEditor) {
+            TypeInfo type;
+            type.name = world->components[i].name;
+            EmptyComponentEditor* emptyComponentEditor = new EmptyComponentEditor();
+            emptyComponentEditor->SetField(&type);
+            editors.push_back({ type, emptyComponentEditor });
+            continue;
+        } // component has no type
         IFieldEditor* editor = world->components[i].getFieldEditor(this);
         if (!editor) continue;
         TypeInfo info = world->components[i].getTypeInfo(this);
@@ -522,6 +529,8 @@ bool GameObject::GetAddReferenceComponent(AddReferenceComponentList& addReferenc
             referenceScene = scene->world->TryGetScene(sceneId);
             objectId = ::atoi(objectIdStr.c_str());
         }
+        
+        if (!referenceScene) return false;
         
         *referenceObject = referenceScene->FindObject(objectId);
         addReferenceComponentObjects.insert(std::make_pair(pair, *referenceObject));
