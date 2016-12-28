@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <vector>
 #include <dirent.h>
+#include <fstream>
 
 using namespace Pocket;
 using namespace std;
@@ -167,5 +168,19 @@ void FileReader::FindFilesAtPath(std::vector<std::string> &list, const std::stri
     closedir(dp);
 }
 
+bool FileReader::EndsWith(const std::string& str, const std::string& endsWith) {
+    if (str.length() >= endsWith.length()) {
+        return (0 == str.compare (str.length() - endsWith.length(), endsWith.length(), endsWith));
+    } else {
+        return false;
+    }
+}
 
+bool FileReader::FileExists(const std::string &path) {
+    std::ifstream f(path.c_str());
+    return f.good();
+}
 
+bool FileReader::DeleteFile(const std::string &path) {
+    return remove( path.c_str() ) == 0;
+}
