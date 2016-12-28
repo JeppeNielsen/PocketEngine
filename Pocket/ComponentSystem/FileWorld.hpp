@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include <functional>
+#include <vector>
 
 namespace Pocket {
     class GameWorld;
@@ -17,7 +18,7 @@ namespace Pocket {
     class FileWorld {
     public:
         void AddGameWorld(GameWorld& world);
-        void FindRoots(const std::string& path, const std::string& extension);
+        void FindRoots(const std::string& path, const std::vector<std::string>& extensions);
         
         std::function<void(GameObject* root)> OnRootCreated;
         std::function<void(GameObject* child)> OnChildCreated;

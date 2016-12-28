@@ -10,6 +10,7 @@
 #include "GameWorld.hpp"
 #include "FileReader.hpp"
 #include <fstream>
+#include <set>
 
 using namespace Pocket;
 
@@ -29,12 +30,17 @@ void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
     };
 }
 
-void FileWorld::FindRoots(const std::string &path, const std::string &extension) {
+void FileWorld::FindRoots(const std::string &path, const std::vector<std::string>& extensions) {
     std::vector<std::string> paths;
-    FileReader::FindFiles(paths, path, extension);
-    
-    guidToPath.clear();
+    for(auto& ext : extensions) {
+        FileReader::FindFiles(paths, path, ext);
+    }
+    std::set<std::string> uniquePaths;
     for(auto& path : paths) {
+        uniquePaths.insert(path);
+    }
+    guidToPath.clear();
+    for(auto& path : uniquePaths) {
         std::ifstream file;
         file.open(path);
         if (!file.is_open()) continue;
