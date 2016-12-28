@@ -14,7 +14,7 @@ GameObjectEditorSystem::GameObjectEditorSystem()
 #ifdef SCRIPTING_ENABLED
 : scriptWorld(0)
 #endif
-{}
+{ Predicate = 0; }
 
 void GameObjectEditorSystem::Initialize() {
 }
@@ -72,14 +72,11 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
     
     Vector2 size = { 200, 100 };
     
-    
     GameObject* control = gui->CreateControl(object, "Box", 0, size);
     auto layouter = control->AddComponent<Layouter>();
     layouter->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
     
-    
-    
-    editor->editors = editor->Object()->GetComponentEditors();
+    editor->editors = editor->Object()->GetComponentEditors(Predicate);
 
     std::vector<GameObject*> controls;
 
@@ -99,73 +96,5 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
         if (controls[i]) {
             editor->ComponentEditorCreated({ editor->editors[i].type, controls[i]});
         }
-    }
-    return;
-    
-    auto infos = editor->Object()->GetComponentTypes([this] (int componentID) {
-        return std::find(ignoredComponents.begin(), ignoredComponents.end(), componentID)==ignoredComponents.end();
-    });
-    /*
-    
-#ifdef SCRIPTING_ENABLED
-    if (scriptWorld) {
-        int numberOfScriptComponents = scriptWorld->ComponentCount();
-        
-        for(int i=0; i<numberOfScriptComponents; ++i) {
-            TypeInfo info = scriptWorld->GetTypeInfo(*editor->Object(), i);
-            if (!info.fields.empty()) {
-                infos.push_back(info);
-            }
-        }
-    }
-#endif
-    */
-    
-    
-    
-    int counter = 0;
-    for (auto info : infos) {
-        std::cout << "Field : " << info.name << std::endl;
-    
-        /*bool hasNoEditors = true;
-        for (auto field : info.fields) {
-            if (field->HasEditor()) {
-                hasNoEditors = false;
-                break;
-            }
-        }
-        if (hasNoEditors) {
-            //continue;
-        }
-        */
-        
-        GameObject* componentChild = gui->CreateControl(object, "Box", {0, counter*size.y}, size);
-        //componentChild->AddComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
-        //componentChild->GetComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
-        
-        GameObject* space = componentChild->CreateChild();
-        space->AddComponent<Transform>();
-        space->AddComponent<Sizeable>()->Size = {size.x, 10};
-        //space->AddComponent<Layoutable>();
-        for (auto field : info.fields) {
-            //if (!field->HasEditor()) continue;
-            
-            GameObject* editor = componentChild->CreateChild();
-            editor->AddComponent<Transform>();
-            editor->AddComponent<Sizeable>()->Size = {size.x, size.y/(info.fields.size()+1)};
-            //editor->AddComponent<Layoutable>();
-            FieldEditor* fieldEditor = editor->AddComponent<FieldEditor>();
-            fieldEditor->SetType(info);
-            fieldEditor->Field = field->name;
-        }
-        
-        GameObject* componentName = gui->CreateLabel(componentChild, 0, {size.x, 20}, 0, info.name, 14);
-        componentName->GetComponent<Label>()->HAlignment = Font::Center;
-        componentName->GetComponent<Label>()->VAlignment = Font::Middle;
-        componentName->GetComponent<Colorable>()->Color = Colour::Black();
-        //componentName->AddComponent<Layoutable>();
-        
-        editor->ComponentEditorCreated({ info, componentChild });
-        counter++;
     }
 }

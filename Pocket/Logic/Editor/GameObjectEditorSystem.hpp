@@ -35,6 +35,9 @@ namespace Pocket {
                 ignoredComponents.push_back(GameIdHelper::GetComponentID<T>());
             }
             void Update(float dt);
+        
+            std::function<bool(int componentID)> Predicate;
+        
         private:
             void ObjectChanged(GameObject* object);
             void CreateEditors(GameObject* object);
