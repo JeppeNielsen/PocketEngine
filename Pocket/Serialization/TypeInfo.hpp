@@ -422,6 +422,26 @@ struct FieldEditorCreator<IFieldInfo*> {
     }
 };
 
+struct EmptyComponentEditor : public IFieldEditor {
+    
+    void SetField(void* field) override {
+        TypeInfo* typeInfo = static_cast<TypeInfo*>(field);
+        name = typeInfo->name;
+    }
+
+    void Create(void* context, void* parent) override {
+        if (TypeEditorTitle::Title) {
+            TypeEditorTitle::Title(context, parent, name);
+        }
+    }
+    
+    void Update(float dt) override {}
+    void Destroy() override { }
+    
+    std::string name;
+};
+
+
 inline std::string className(const std::string& prettyFunction)
 {
     size_t colons = prettyFunction.find("::");
