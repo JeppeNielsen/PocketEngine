@@ -7,6 +7,8 @@
 //
 
 #include "GuiFieldEditors.hpp"
+#include <fstream>
+#include "FileReader.hpp"
 
 using namespace Pocket;
 
@@ -198,4 +200,140 @@ TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* paren
     
     return 0;
 };
+
+struct ReferenceComponentEditor : public GuiFieldEditor {
+
+    GameObject::ReferenceComponent component;
+
+    void SetField(void* field) override {
+        component = *static_cast<GameObject::ReferenceComponent*>(field);
+        menu = 0;
+    }
+
+    void Initialize(Gui* gui, GameObject* parent) override {
+        GameObject* control = gui->CreateControl(parent);
+        control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
+        
+        GameObject* textBox = gui->CreateControl(control, "TextBox");
+        textBox->AddComponent<Layouter>()->Min = {20, 20};
+        textBox->GetComponent<Layouter>()->Desired = {100, 20};
+        textBox->GetComponent<Layouter>()->Max = {5000, 20};
+        textBox->GetComponent<Touchable>()->Click.Bind([this] (TouchData d){
+            MenuClicked();
+        });
+        
+        GameObject* owner = component.object->GetComponentOwner(component.componentId);
+        std::string path = owner->TryGetRootPath();
+        std::string text = FileReader::GetFileNameFromPath(path);
+        
+        GameObject* label = gui->CreateLabel(textBox, 0, 10, 0, text, 20);
+        label->AddComponent<Layouter>(textBox);
+        label->AddComponent<Colorable>()->Color = Colour::Black();
+        
+        TypeEditorTitle::Title(gui, parent, component.name);
+        
+        this->gui = gui;
+    }
+    
+    void Destroy() override {
+
+    }
+    
+    void Update(float dt) override {
+        
+    }
+    
+    GameObject* menu;
+    Gui* gui;
+    
+    struct ClickedData {
+        std::string guid;
+        int objectId;
+    };
+    
+    void MenuClicked() {
+        if (!component.object->World()->GetPaths) {
+            return;
+        }
+        
+        if (menu) {
+            menu->Remove();
+        }
+        
+        GameWorld* world =component.object->World();
+        
+        std::vector<std::string> guids;
+        std::vector<std::string> paths;
+        world->GetPaths(guids, paths);
+        
+        
+    
+        menu = gui->CreateControl(0, "TextBox", 0, {200,200});
+        menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
+        
+        
+        for (int i=0; i<guids.size(); ++i) {
+        
+            std::ifstream file;
+            file.open(paths[i]);
+            
+            
+            //std::cout << "Start parse file: "<<p.second<<std::endl;
+            
+            
+            //context.World().TryParseJson(file, GameIdHelper::GetComponentID<Transform>(), [] (int parent, int object) {
+            //    std::cout << " parent: " << parent << "  object: " << object << std::endl;
+            //});
+
+        
+            world->TryParseJson(file, component.componentId, [&, this](int parentId, int id) {
+                GameObject* button = gui->CreateControl(menu, "Box");
+                button->AddComponent<Layouter>()->Desired = { 200, 30 };
+                button->GetComponent<Layouter>()->Min = {50,30};
+                button->GetComponent<Layouter>()->Max = {500,30};
+                
+                std::string text = FileReader::GetFileNameFromPath(paths[i]);
+                
+                GameObject* label = gui->CreateLabel(button, 0, 10, 0, text, 20);
+                label->AddComponent<Layouter>(button);
+                label->AddComponent<Colorable>()->Color = Colour::Black();
+                
+                button->GetComponent<Touchable>()->Click.Bind(this, &ReferenceComponentEditor::Clicked, { guids[i], id } );
+                
+            });
+            
+        
+            std::cout << "guid: " << guids[i] << "  path:" << paths[i] << std::endl;
+        }
+        
+        
+    
+    
+    }
+    
+    void Clicked(TouchData touch, ClickedData d) {
+        
+        menu->Remove();
+        menu = 0;
+        
+        std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
+        
+        GameObject* root = component.object->World()->TryFindRoot(d.guid);
+        if (!root) return;
+        GameObject* object = root->FindObject(d.objectId);
+        component.object->ReplaceComponent(component.componentId, object);
+    }
+    
+};
+
+template<> IFieldEditor* FieldEditorCreator<GameObject::ReferenceComponent>::Create(Pocket::GameObject::ReferenceComponent *ptr) {
+    ReferenceComponentEditor* editor = new ReferenceComponentEditor();
+    editor->SetField(ptr);
+    return editor;
+}
+
+
+
+
+
 

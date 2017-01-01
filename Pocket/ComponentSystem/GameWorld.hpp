@@ -171,9 +171,13 @@ namespace Pocket {
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         std::function<std::string(const std::string& guid)> GuidToPath;
+        std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
         
         std::string ReadGuidFromJson(std::istream& jsonStream);
-        
+        void TryParseJson(std::istream &jsonStream, int componentId, const std::function<void (int, int)>& callback);
+    private:
+        void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName, const std::function<void (int, int)>& callback);
+    public:
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;
@@ -210,8 +214,14 @@ namespace Pocket {
     template<typename T>
     GameObject* GameObject::GetComponentOwner() {
         ComponentId componentId = GameIdHelper::GetComponentID<T>();
-        int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
-        return &scene->world->objects.entries[ownerIndex];
+        return GetComponentOwner(componentId);
     }
     
+    template<typename T>
+    T* GameObject::ReplaceComponent(GameObject* source) {
+        scene->world->AddComponentType<T>();
+        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        ReplaceComponent(componentId, source);
+        return static_cast<T*>(source->GetComponent(componentId));
+    }
 }

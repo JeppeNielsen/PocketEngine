@@ -184,3 +184,12 @@ bool FileReader::FileExists(const std::string &path) {
 bool FileReader::DeleteFile(const std::string &path) {
     return remove( path.c_str() ) == 0;
 }
+
+std::string FileReader::GetFileNameFromPath(const std::string &path) {
+    auto pos = path.rfind("/");
+    if (pos == std::string::npos) {
+        return path;
+    } else {
+        return path.substr(pos+1, path.size()-pos-1);
+    }
+}

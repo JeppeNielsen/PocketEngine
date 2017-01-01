@@ -230,7 +230,7 @@ GameObject* GameWorld::CreateObjectFromJson(Pocket::GameObject *parent, std::ist
                 object->AddComponent(componentID, referenceObject);
             }
         }
-    } catch (std::exception e) {
+    } catch (minijson::parse_error e) {
         std::cout << e.what() << std::endl;
     }
     GameObject::EndGetAddReferenceComponent();
@@ -362,8 +362,61 @@ std::string GameWorld::ReadGuidFromJson(std::istream &jsonStream) {
                 minijson::ignore(context);
             }
         });
-    } catch (std::exception e) {
+    } catch (minijson::parse_error e) {
         std::cout << e.what() << std::endl;
     }
     return guid;
 }
+
+void GameWorld::TryParseJson(std::istream &jsonStream, int componentId, const std::function<void (int, int)>& callback) {
+    minijson::istream_context context(jsonStream);
+    try {
+        std::string componentName = components[componentId].name;
+        TryParseJsonObject(-1, context, componentName, callback);
+    } catch (minijson::parse_error e) {
+        std::cout << e.what() << std::endl;
+    }
+}
+
+void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName, const std::function<void (int, int)>& callback) {
+    
+     int objectId = -1;
+     minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+        if (v.type() == minijson::Object) {
+            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string name = n;
+                if (name == "id" && v.type() == minijson::Number) {
+                    objectId = (int)v.as_long();
+                } else if (name == "Components" && v.type() == minijson::Array && objectId!=-1 && componentName!="") {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        if (v.type() == minijson::Object) {
+                            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                std::string name = n;
+                                if (componentName == name) {
+                                    callback(parent, objectId);
+                                }
+                                minijson::ignore(context);
+                            });
+                        } else {
+                            minijson::ignore(context);
+                        }
+                    });
+                } else if (name == "Children" && v.type() == minijson::Array && objectId!=-1) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        TryParseJsonObject(objectId, context, componentName, callback);
+                    });
+                } else {
+                    minijson::ignore(context);
+                }
+                if (componentName=="") {
+                    callback(parent, objectId);
+                }
+            });
+        } else {
+            minijson::ignore(context);
+        }
+    });
+}
+
+
+

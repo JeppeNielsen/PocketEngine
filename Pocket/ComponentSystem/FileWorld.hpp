@@ -23,6 +23,8 @@ namespace Pocket {
         std::function<void(GameObject* root)> OnRootCreated;
         std::function<void(GameObject* child)> OnChildCreated;
         
+        const std::map<std::string, std::string>& Paths();
+        
     private:
         std::map<std::string, std::string> guidToPath;
         GameWorld* world;

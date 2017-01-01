@@ -57,6 +57,12 @@ namespace Pocket {
         DirtyProperty<bool> WorldEnabled;
         Property<int> Order;
         
+        struct ReferenceComponent {
+            GameObject* object;
+            int componentId;
+            std::string name;
+        };
+        
     private:
     
         struct AddReferenceComponent {
@@ -91,6 +97,8 @@ namespace Pocket {
         void AddComponent(ComponentId id, GameObject* referenceObject) override;
         void RemoveComponent(ComponentId id) override;
         void CloneComponent(ComponentId id, GameObject* object) override;
+        void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
+        GameObject* GetComponentOwner(ComponentId id);
         
         template<typename T>
         bool HasComponent() const {
@@ -119,6 +127,9 @@ namespace Pocket {
             CloneComponent(componentId, source);
             return static_cast<T*>(GetComponent(componentId));
         }
+        
+        template<typename T>
+        T* ReplaceComponent(GameObject* source);
         
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
         

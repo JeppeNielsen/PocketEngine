@@ -139,6 +139,21 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     });
 }
 
+void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
+    if (removed) return;
+    scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
+        RemoveComponent(id);
+        scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
+            AddComponent(id, referenceObject);
+        });
+    });
+}
+
+GameObject* GameObject::GetComponentOwner(ComponentId componentId) {
+    int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
+    return &scene->world->objects.entries[ownerIndex];
+}
+
 void GameObject::SetWorldEnableDirty() {
     WorldEnabled.MakeDirty();
     scene->world->delayedActions.emplace_back([this](){
@@ -323,6 +338,19 @@ std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const s
     for (int i=0; i<world->components.size(); ++i) {
         if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
+        bool isReference = index != world->components[i].container->GetOwner(componentIndicies[i]);
+        if (isReference) {
+            TypeInfo type;
+            type.name = world->components[i].name;
+            GameObject::ReferenceComponent referenceComponent;
+            referenceComponent.name = world->components[i].name;
+            referenceComponent.componentId = i;
+            referenceComponent.object = this;
+            IFieldEditor* editor = FieldEditorCreator<GameObject::ReferenceComponent>::Create(&referenceComponent);
+            editors.push_back({ type, editor });
+            continue;
+        }
+        
         if (!world->components[i].getFieldEditor) {
             TypeInfo type;
             type.name = world->components[i].name;

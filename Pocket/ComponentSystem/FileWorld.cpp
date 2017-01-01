@@ -28,6 +28,12 @@ void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
         auto it = guidToPath.find(guid);
         return it == guidToPath.end() ? "" : it->second;
     };
+    world->GetPaths = [this] (std::vector<std::string>& guids, std::vector<std::string>& paths) {
+        for(auto p : guidToPath) {
+            guids.push_back(p.first);
+            paths.push_back(p.second);
+        }
+    };
 }
 
 void FileWorld::FindRoots(const std::string &path, const std::vector<std::string>& extensions) {
@@ -51,4 +57,6 @@ void FileWorld::FindRoots(const std::string &path, const std::vector<std::string
     }
 }
 
-
+const std::map<std::string, std::string>& FileWorld::Paths() {
+    return guidToPath;
+}
