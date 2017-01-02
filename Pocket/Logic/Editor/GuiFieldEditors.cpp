@@ -204,6 +204,8 @@ TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* paren
 struct ReferenceComponentEditor : public GuiFieldEditor {
 
     GameObject::ReferenceComponent component;
+    GameObject* control;
+    GameObject* parent;
 
     void SetField(void* field) override {
         component = *static_cast<GameObject::ReferenceComponent*>(field);
@@ -211,7 +213,10 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     }
 
     void Initialize(Gui* gui, GameObject* parent) override {
-        GameObject* control = gui->CreateControl(parent);
+    
+        this->parent = parent;
+    
+        control = gui->CreateControl(parent);
         control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
         
         GameObject* textBox = gui->CreateControl(control, "TextBox");
@@ -233,10 +238,19 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         TypeEditorTitle::Title(gui, parent, component.name);
         
         this->gui = gui;
+        
+        this->parent->World()->Input().TouchDown.Bind(this, &ReferenceComponentEditor::TouchUp);
+    }
+    
+    void TouchUp(TouchEvent e) {
+        if (menu) {
+            menu->Remove();
+        }
+        menu = 0;
     }
     
     void Destroy() override {
-
+        this->parent->World()->Input().TouchDown.Unbind(this, &ReferenceComponentEditor::TouchUp);
     }
     
     void Update(float dt) override {
@@ -270,7 +284,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     
         menu = gui->CreateControl(0, "TextBox", 0, {200,200});
         menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
-        
+        menu->GetComponent<Transform>()->Position = control->GetComponent<Transform>()->World().TransformPosition(0);
         
         for (int i=0; i<guids.size(); ++i) {
         
@@ -298,7 +312,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
                 label->AddComponent<Layouter>(button);
                 label->AddComponent<Colorable>()->Color = Colour::Black();
                 
-                button->GetComponent<Touchable>()->Click.Bind(this, &ReferenceComponentEditor::Clicked, { guids[i], id } );
+                button->GetComponent<Touchable>()->Down.Bind(this, &ReferenceComponentEditor::Clicked, { guids[i], id } );
                 
             });
             
@@ -313,8 +327,10 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     
     void Clicked(TouchData touch, ClickedData d) {
         
-        menu->Remove();
-        menu = 0;
+        if (menu) {
+            menu->Remove();
+            menu = 0;
+        }
         
         std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
         
