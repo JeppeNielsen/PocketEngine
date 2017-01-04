@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "EditorObject.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
@@ -18,11 +18,12 @@ using namespace Pocket;
 
 class EditorObjectCreatorSystem : public GameSystem<EditorObject> {
 public:
-    void Initialize();
-    void ObjectAdded(GameObject* object);
-    void ObjectRemoved(GameObject* object);
-    GameWorld* editorWorld;
-    GameObject* gameRoot;
+    void Initialize() override;
+    void ObjectAdded(GameObject* object) override;
+    void ObjectRemoved(GameObject* object) override;
+    //int Order() override;
+    
+    GameObject* editorRoot;
     
 private:
     template<typename T>

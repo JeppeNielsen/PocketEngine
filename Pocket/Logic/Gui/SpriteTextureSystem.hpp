@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Mesh.hpp"
 #include "Sizeable.hpp"
 #include "Sprite.hpp"

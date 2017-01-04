@@ -14,26 +14,26 @@
 
 namespace Pocket {
     
-    using ComponentID = int;
+    using ComponentId = int;
     
-    using SystemID = int;
+    using SystemId = int;
     
-    class GameIDHelper {
+    class GameIdHelper {
     private:
-        static ComponentID componentIDCounter;
-        static SystemID systemIDCounter;
+        static ComponentId componentIDCounter;
+        static SystemId systemIDCounter;
         
     public:
     
         template<typename T>
-        static ComponentID GetComponentID() {
-            static ComponentID id = componentIDCounter++;
+        static ComponentId GetComponentID() {
+            static ComponentId id = componentIDCounter++;
             return id;
         }
         
         template<typename T>
-        static SystemID GetSystemID() {
-            static SystemID id = systemIDCounter++;
+        static SystemId GetSystemID() {
+            static SystemId id = systemIDCounter++;
             return id;
         }
         

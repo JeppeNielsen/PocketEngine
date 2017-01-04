@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
 
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Property.hpp"
 #include "InputManager.hpp"
 #include "Transform.hpp"

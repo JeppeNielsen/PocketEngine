@@ -96,7 +96,7 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     string compilerPath = clangSdkPath + "bin/clang++";
     string compilerFlags = "-dynamiclib -std=c++11 "+pathToPocketEngineLib+" -stdlib=libc++ -g";
     if (enableOutput) {
-        compilerFlags += " -v ";
+        compilerFlags += " -v";
     }
     string outputFile = "-o " + dynamicLibPath;
     
@@ -106,6 +106,13 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     for(auto& header : headerPaths) {
         compilerArgs += header + " ";
     }
+    
+    for(auto& source : sourceFiles) {
+        compilerArgs += source + " ";
+    }
+    
+    compilerArgs += " ";
+    
     compilerArgs += mainCppFile + " ";
     compilerArgs += outputFile;
     
@@ -127,9 +134,9 @@ bool ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
             std::cout << s << std::endl;
         }
     }
+    
     return LoadLib();
 }
-
 
 bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
 
@@ -332,7 +339,7 @@ void ScriptWorld::WriteMainCppFile(const std::string &path) {
 
 void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
 
-    file<<"class IGameSystem;"<<std::endl;
+    //file<<"namespace Pocket { class IGameSystem; }"<<std::endl;
     
     auto& components = scriptClasses.children["Components"].children;
     auto& systems = scriptClasses.children["Systems"].children;
@@ -356,8 +363,14 @@ void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
         file<<"#include \""<<headerName<<"\""<<std::endl;
     }
     
+    
+    /*for(auto& sourceFile : sourceFiles) {
+        file << "#include \"" << sourceFile << "\""<< std::endl;
+    }
+    */
+    
     for(auto& include : uniqueIncludes) {
-        file << "#include \"" << include << "\""<< std::endl;
+        //file << "#include \"" << include << "\""<< std::endl;
     }
     file<<std::endl;
     
@@ -419,13 +432,18 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
     int index = baseComponentIndex;
     for (auto it : scriptComponents) {
         auto& component = it.second;
-        file<<"template<> " << component.name  << "* Pocket::GameObject::GetComponent<"<< component.name << ">() { return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
         
-        file<<"template<> " << component.name  << "* Pocket::GameObject::AddComponent<"<< component.name << ">() { AddComponent("<<index<<"); return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        std::string aliasComponentName = "Script_" + component.name;
         
-        file<<"template<> void Pocket::GameObject::RemoveComponent<"<< component.name << ">() { RemoveComponent("<<index<<"); }"<<std::endl;
+        file<<"using "<<aliasComponentName<<" = "<<component.name<<";"<<std::endl;
         
-        file<<"template<> " << component.name  << "* Pocket::GameObject::CloneComponent<"<< component.name << ">(GameObject* source) { CloneComponent("<<index<<", source); return ("<< component.name <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::GetComponent<"<< aliasComponentName << ">() { return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::AddComponent<"<< aliasComponentName << ">() { AddComponent("<<index<<"); return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> void Pocket::GameObject::RemoveComponent<"<< aliasComponentName << ">() { RemoveComponent("<<index<<"); }"<<std::endl;
+        
+        file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::CloneComponent<"<< aliasComponentName << ">(GameObject* source) { CloneComponent("<<index<<", source); return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
         
         index++;
     }
@@ -697,9 +715,11 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
 }
 
 void ScriptWorld::SetWorldType(GameWorld& world) {
+    if (baseSystemIndex>=0) return;
+
     worldComponentNames.clear();
-    for(int i=0; i<world.componentInfos.size(); ++i) {
-        std::string& name = world.componentInfos[i].name;
+    for(int i=0; i<world.components.size(); ++i) {
+        std::string& name = world.components[i].name;
         size_t namespaceColons = name.find("::");
         std::string nameWithoutNamespace;
         if (namespaceColons!=std::string::npos) {
@@ -712,8 +732,8 @@ void ScriptWorld::SetWorldType(GameWorld& world) {
         }
     }
     
-    baseComponentIndex = world.components.size();
-    baseSystemIndex = world.systemsIndexed.size();
+    baseComponentIndex = (int)world.components.size();
+    baseSystemIndex = (int)world.systems.size();
 }
 
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
@@ -725,19 +745,26 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
     componentCount = numberOfComponents;
 
     assert(baseComponentIndex == (int)world.components.size());
-    assert(baseSystemIndex == (int)world.systemsIndexed.size());
+    assert(baseSystemIndex == (int)world.systems.size());
     
     
     for(int i=0; i<numberOfComponents; ++i) {
         int componentIndex = baseComponentIndex + i;
-        world.TryAddComponentContainer(componentIndex, [this, componentIndex](GameObject::ComponentInfo& componentInfo) {
+        world.AddComponentType(componentIndex, [this, componentIndex](GameWorld::ComponentInfo& componentInfo) {
             Container<ScriptComponent>* container = new Container<ScriptComponent>();
             container->defaultObject.world = this;
             container->defaultObject.componentID = componentIndex;
             container->defaultObject.data = createComponent(componentIndex);
-            componentInfo.getTypeInfo = [this, componentIndex](GameObject* object) -> TypeInfo {
+            componentInfo.getTypeInfo = [this, componentIndex](const GameObject* object) -> TypeInfo {
                 return GetTypeInfo(*object, componentIndex);
             };
+            componentInfo.getFieldEditor = [this, componentIndex](GameObject* object) -> IFieldEditor* {
+                IFieldEditor* editor = new TypeInfoEditor();
+                TypeInfo info = GetTypeInfo(*object, componentIndex);
+                editor->SetField(&info);
+                return editor;
+            };
+            componentInfo.container = container;
             return container;
         });
         
@@ -745,20 +772,19 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         int componentNameCounter = 0;
         for(auto c : components) {
             if (componentNameCounter == i) {
-                world.componentInfos[componentIndex].name = c.second.name;
+                world.components[componentIndex].name = c.second.name;
                 scriptComponents[c.second.name] = componentIndex;
             }
             componentNameCounter++;
         }
     }
-
     
     auto& scriptSystems = scriptClasses.children["Systems"].children;
     
     int index = 0;
     for (auto& scriptSystem : scriptSystems) {
         int systemIndex = baseSystemIndex + index;
-        world.TryAddSystem(systemIndex, [this, &scriptSystem, &systemIndex](std::vector<int>& components) {
+        world.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameWorld::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
             
             for (auto& component : scriptSystem.second.templateArguments) {
                 int componentIndex;
@@ -767,45 +793,65 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
                     components.push_back(staticComponent ? componentIndex : (baseComponentIndex + componentIndex));
                 }
             }
-            
-            return createSystem(systemIndex);
+            systemInfo.createFunction = [this, systemIndex] (GameObject* root) {
+                IGameSystem* system = createSystem(systemIndex);
+                system->SetIndex(systemIndex);
+                return system;
+            };
+            systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
+                deleteSystem(system);
+            };
         });
-        world.systemsIndexed[systemIndex].deleteFunction = [this, &world, systemIndex]() {
-            deleteSystem(world.systemsIndexed[systemIndex].system);
-        };
         index++;
     }
+    
+    
+    int endComponentIndex = (int)world.components.size();
+    world.objects.Iterate([endComponentIndex](GameObject* o) {
+        o->activeComponents.Resize(endComponentIndex);
+        o->enabledComponents.Resize(endComponentIndex);
+    });
 
     return true;
 }
 
-void ScriptWorld::RemoveGameWorld(GameWorld& world) {
-    if (baseSystemIndex == -1) return;
-    int endSystemIndex = (int)world.systemsIndexed.size();
-    for(int i=baseSystemIndex; i<endSystemIndex; ++i){
-        world.TryRemoveSystem(i);
-    }
-    world.systemsIndexed.resize(endSystemIndex);
-    int endComponentIndex = (int)world.components.size();
-    for(int i=baseComponentIndex; i<endComponentIndex; ++i) {
-        delete world.components[i];
-    }
-    world.components.resize(baseComponentIndex);
-    world.componentInfos.resize(baseComponentIndex);
-    world.numComponentTypes = baseComponentIndex;
+void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
     
-    world.IterateObjects([this](GameObject* o) {
-        o->data->activeComponents.Resize(baseComponentIndex);
-        o->data->enabledComponents.Resize(baseComponentIndex);
-    });
-    world.objectComponents.resize(baseComponentIndex);
-    for(int i=0; i<baseComponentIndex; ++i) {
-        world.objectComponents[i].resize(baseComponentIndex);
+    auto& scriptSystems = scriptClasses.children["Systems"].children;
+    GameScene* scene = root->scene;
+    
+    for (int i=0; i<scriptSystems.size(); ++i) {
+        int systemIndex = baseSystemIndex + i;
+        scene->CreateSystem(systemIndex);
     }
-    world.systemsPerComponent.resize(baseComponentIndex);
 }
 
-TypeInfo ScriptWorld::GetTypeInfo(GameObject& object, ComponentID id) {
+void ScriptWorld::RemoveGameWorld(GameWorld& world) {
+    if (baseSystemIndex == -1) return;
+    int endSystemIndex = (int)world.systems.size();
+    for(int i=baseSystemIndex; i<endSystemIndex; ++i){
+        world.RemoveSystemType(i);
+    }
+    world.systems.resize(baseSystemIndex);
+    int endComponentIndex = (int)world.components.size();
+    for(int i=baseComponentIndex; i<endComponentIndex; ++i) {
+        delete world.components[i].container;
+    }
+    world.components.resize(baseComponentIndex);
+    world.objects.Iterate([this](GameObject* o) {
+        o->activeComponents.Resize(baseComponentIndex);
+        o->enabledComponents.Resize(baseComponentIndex);
+    });
+    world.components.resize(baseComponentIndex);
+    for(int i=0; i<baseComponentIndex; ++i) {
+        auto& list = world.components[i].systemsUsingComponent;
+        std::remove_if(list.begin(), list.end(), [this, endSystemIndex] (int n) {
+            return n>=baseSystemIndex && n<=endSystemIndex;
+        });
+    }
+}
+
+TypeInfo ScriptWorld::GetTypeInfo(const GameObject& object, ComponentId id) {
     void* component = object.GetComponent(id);
     if (!component) {
         return TypeInfo();

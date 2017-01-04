@@ -37,6 +37,6 @@ void Bitset::Reset() {
     }
 }
 
-int Bitset::Size() {
+int Bitset::Size() const {
     return (int)bits.size();
 }

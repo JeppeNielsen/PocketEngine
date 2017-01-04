@@ -24,6 +24,8 @@
 #include "WorldTab.hpp"
 #include "PlayButtons.hpp"
 #include "Guid.hpp"
+#include "BaseModule.hpp"
+#include "AssetImporters.hpp"
 
 #include <vector>
 
@@ -37,6 +39,8 @@ public:
     Windows windows;
     using Menus = std::vector<BaseMenu*>;
     Menus menus;
+    using Modules = std::vector<BaseModule*>;
+    Modules modules;
     
     void Initialize() {
 
@@ -50,6 +54,8 @@ public:
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
         
+        modules.push_back(new AssetImporters());
+        
         context.Initialize(Context());
         
         for(auto window : windows) {
@@ -57,6 +63,9 @@ public:
         }
         for(auto menu : menus) {
             menu->Initialize(&Context(), &context);
+        }
+        for(auto module : modules) {
+            module->Initialize(&Context(), &context);
         }
         
         for(auto window : windows) {
@@ -67,24 +76,25 @@ public:
             menu->Create();
         }
         
+        for(auto module : modules) {
+            module->Create();
+        }
+        
         context.Project().Open("/Projects/PocketEngine/Editor/Pong/");
         
-        std::cout<< Guid::CreateNew() << std::endl;
-        std::cout<< Guid::CreateNew() << std::endl;
-        std::cout<< Guid::CreateNew() << std::endl;
+        Input.ButtonDown.Bind([this](std::string button) {
+            if (button == "p") {
+                context.World().DebugSystems();
+            }
+        });
     }
     
     void Update(float dt) {
-        context.ContextWorld().Update(dt);
-        context.Project().Update(dt);
-        context.GuiWorld().Update(dt);
+        context.Update(dt);
     }
     
     void Render() {
-        //glClearColor(1, 1, 0, 1);
-        //glClear(GL_COLOR_BUFFER_BIT);
-        context.Project().Render();
-        context.GuiWorld().Render();
+        context.Render();
     }
 };
 

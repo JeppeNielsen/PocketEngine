@@ -7,7 +7,7 @@
 //
 
 #include "SelectionVisualizer.hpp"
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Material.hpp"
 
 using namespace Pocket;
@@ -33,7 +33,7 @@ void SelectionVisualizer::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 GameObject* SelectionVisualizer::CreateSelection(GameObject* object) {
-    GameObject* go = world->CreateObject();
+    GameObject* go = object->CreateObject();
     
     go->AddComponent<Transform>(object);
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(object->GetComponent<Mesh>()->LocalBoundingBox().center, object->GetComponent<Mesh>()->LocalBoundingBox().extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));

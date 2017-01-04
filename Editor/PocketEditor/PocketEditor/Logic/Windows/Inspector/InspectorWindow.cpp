@@ -12,7 +12,6 @@
 #include "EditorObject.hpp"
 #include "FieldEditorSystem.hpp"
 #include "GameObjectEditorSystem.hpp"
-#include "SerializedFieldEditors.hpp"
 #include "Project.hpp"
 
 std::string InspectorWindow::Name() { return "Inspector"; }
@@ -22,21 +21,23 @@ void InspectorWindow::OnInitialize() {
     //selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
     //selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     
-    GameWorld& guiWorld = context->GuiWorld();
+    GameObject& guiRoot = context->GuiRoot();
     
-    guiWorld.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
-    guiWorld.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
+        return componentId != GameIdHelper::GetComponentID<EditorObject>();
+    };
     
-    guiWorld.CreateSystem<LayoutSystem>();
-    
-    CreateDefaultSerializedEditors();
+    guiRoot.CreateSystem<LayoutSystem>();
+
     selectables = 0;
     
     removeComponentMenu.InitializePopUp();
     removeComponentMenu.AddChild("Remove").Clicked.Bind([this] () {
         if (!currentWorld) return;
         int componentIndex;
-        if (!currentWorld->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
+        if (!context->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
             return;
         }
         for(auto o : selectables->Selected()) {
@@ -79,7 +80,7 @@ void InspectorWindow::OnCreate() {
 
 */
 
-    GameWorld& guiWorld = context->GuiWorld();
+    GameObject& guiWorld = context->GuiRoot();
     Gui& gui = context->Gui();
     
     guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
@@ -89,7 +90,7 @@ void InspectorWindow::OnCreate() {
     
     addComponentButton = gui.CreateLabelControl(window, "Box", {0,400-40}, 40, 0, "+", 10);
     addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);
-    addComponentButton->Enabled() = false;
+    addComponentButton->Enabled = false;
     
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-80}, &pivot);
@@ -118,7 +119,7 @@ void InspectorWindow::ComponentClicked(Pocket::TouchData d, GameObjectEditor::Co
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
-    addComponentButton->Enabled() = !selectables->Selected().empty();
+    addComponentButton->Enabled = !selectables->Selected().empty();
 }
 
 void InspectorWindow::AddComponentClicked(Pocket::TouchData d) {
@@ -135,13 +136,15 @@ void InspectorWindow::ShowSelectionBox(EditorObject *editorObject) {
 
     selectionBox = gui.CreateControl(window);
     
-    auto& componentTypes = context->Project().World().ComponentTypes();
+    auto componentTypes = context->World().GetComponentTypes();
     
     Vector2 pos;
+    pos.x = window->GetComponent<Sizeable>()->Size().x;
+    pos.y = window->GetComponent<Sizeable>()->Size().y;
     for(int i=0; i<componentTypes.size(); ++i) {
         auto& componentType = componentTypes[i];
-        if (!componentType.getTypeInfo) continue;
         if (editorObject->gameObject->GetComponent(i)) continue;
+        //if (!componentType.getTypeInfo) continue;
         
         GameObject* button = gui.CreateLabelControl(selectionBox, "Box", pos, {200,20}, 0, componentType.name, 20);
         button->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::SelectionClicked, i);
@@ -159,4 +162,8 @@ void InspectorWindow::SelectionClicked(TouchData d, int index) {
 void InspectorWindow::RefreshInspector() {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
+}
+
+void InspectorWindow::PostCompile() {
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
 }

@@ -13,6 +13,7 @@
 #include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
 #include "TypeIndexList.hpp"
+#include "IFieldEditor.hpp"
 
 namespace Pocket {
 
@@ -21,33 +22,12 @@ class FieldInfo;
 
 class TypeInfo;
 
-struct IFieldInfoEditor {
-    virtual ~IFieldInfoEditor() { }
-    virtual void Create(void* field, void* context, void* parent) { }
-    virtual void Destroy() { }
-    virtual void Update(float dt) { }
-};
-
-template<typename Field, typename Context, typename Parent>
-struct FieldInfoEditor : public IFieldInfoEditor {
-    void Create(void* field, void* context, void* parent) {
-        this->field = (Field*)field;
-        Initialize((Context*)context, (Parent*)parent);
-    }
-    virtual void Initialize(Context* context, Parent* parent) { }
-    virtual void Update(float dt) { }
-    Field* field;
-};
-
-template<typename Field>
-struct FieldInfoEditorCreator {
-    static IFieldInfoEditor* Create() { return 0; }
-};
 
 
+/*
 template<typename T>
 struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
-    IFieldInfoEditor* editor;
+    IFieldEditor* editor;
     
     FieldEditorProperty() : editor(0) {}
     ~FieldEditorProperty() { delete editor; }
@@ -81,20 +61,9 @@ struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
     T currentValue;
     T prevValue;
 };
+*/
 
-
-template<typename T>
-struct FieldInfoEditorCreator<Property<T>> {
-    static IFieldInfoEditor* Create() {
-        IFieldInfoEditor* editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
-        if (!editor) {
-            return 0;
-        } else {
-            delete editor;
-        }
-        return new FieldEditorProperty<T>();
-    }
-};
+class FieldInfoAny;
 
 class IFieldInfo {
 public:
@@ -103,9 +72,9 @@ public:
     int type;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
-    virtual IFieldInfoEditor* CreateEditor(void* context, void* parent) = 0;
-    virtual bool HasEditor() = 0;
     virtual IFieldInfo* Clone() = 0;
+    virtual void SetFromAny(FieldInfoAny* any) { }
+    virtual IFieldEditor* CreateEditor() = 0;
 };
 
 template<class T>
@@ -121,27 +90,6 @@ public:
         JsonSerializer<T>::Deserialize(value, field, context);
     }
     
-    IFieldInfoEditor* CreateEditor(void* context, void* parent) override {
-        IFieldInfoEditor* editor = Editor ? Editor() : 0;
-        if (!editor) {
-            editor = FieldInfoEditorCreator<T>::Create();
-        }
-        if (!editor) return 0;
-        editor->Create(field, context, parent);
-        return editor;
-    }
-    
-    bool HasEditor() override {
-        if (Editor) return true;
-        auto editor = FieldInfoEditorCreator<T>::Create();
-        if (editor) {
-            delete editor;
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
     IFieldInfo* Clone() override {
         FieldInfo<T>* clone = new FieldInfo<T>();
         clone->name = this->name;
@@ -150,21 +98,20 @@ public:
         return clone;
     }
     
-    static std::function<IFieldInfoEditor*()> Editor;
+    void SetFromAny(FieldInfoAny* any) override;
+    
+    IFieldEditor* CreateEditor() override {
+        IFieldEditor* editor = FieldEditorCreator<T>::Create(field);
+        return editor;
+    }
     
     friend class TypeInfo;
 public:
     T* field;
 };
 
-
-
-template<class T>
-std::function<IFieldInfoEditor*()> FieldInfo<T>::Editor = 0;
-
 class TypeInfo {
 public:
-
     
     TypeInfo() { }
     
@@ -259,7 +206,7 @@ void TypeIndexList::TypeIndex<T>::AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pock
 template<typename T>
 struct TypeIndexList::TypeIndex<std::vector<T>> : public TypeIndexList::ITypeIndex {
     
-    void AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) {
+    void AddToTypeInfo(Pocket::TypeInfo *typeInfo, Pocket::IFieldInfo* fieldInfo) override {
         FieldInfo<std::vector<T>>* derived = static_cast<FieldInfo<std::vector<T>>*>(fieldInfo);
         typeInfo->AddField<std::vector<T>>(*derived->field, fieldInfo->name);
     }
@@ -291,6 +238,209 @@ struct JsonSerializer<T, typename std::enable_if< Pocket::Meta::HasGetTypeFuncti
         type.Deserialize(context);
     }
 };
+
+class FieldInfoAny : public IFieldInfo {
+public:
+    FieldInfoAny() { type = -1; }
+
+    void Serialize(minijson::object_writer& writer) override { }
+    void Deserialize(minijson::istream_context& context, minijson::value& value) override {
+        valueType = value.type();
+        string_value = value.as_string();
+        long_value = value.as_long();
+        double_value = value.as_double();
+    }
+    
+    IFieldInfo* Clone() override {
+        FieldInfoAny* clone = new FieldInfoAny();
+        clone->valueType = valueType;
+        clone->string_value = string_value;
+        clone->long_value = long_value;
+        clone->double_value = double_value;
+        return clone;
+    }
+    
+    IFieldEditor* CreateEditor() override {
+        return 0;
+    }
+    
+    minijson::value_type valueType;
+    std::string string_value;
+    long long_value;
+    double double_value;
+};
+
+
+template<typename T>
+void FieldInfo<T>::SetFromAny(FieldInfoAny* any) {
+    std::stringstream s;
+    s<<any->string_value;
+    minijson::istream_context context(s);
+    minijson::value val(any->valueType, any->string_value.c_str(), any->long_value, any->double_value);
+    JsonSerializer<T>::Deserialize(val, field, context);
+    //(*field) = T::Deserialize(any->value);
+    //std::cout << any->value << std::endl;
+}
+
+
+template<>
+struct JsonSerializer<IFieldInfo*> {
+    static void Serialize(std::string& key, const IFieldInfo* value, minijson::object_writer& writer) {
+        //writer.write(key.c_str(), value);
+        
+        IFieldInfo* info = (IFieldInfo*)value;
+        info->Serialize(writer);
+    }
+    
+    static void Serialize(const IFieldInfo* value, minijson::array_writer& writer) {
+        
+        minijson::object_writer object = writer.nested_object();
+        IFieldInfo* info = (IFieldInfo*)value;
+        info->Serialize(object);
+        object.close();
+    }
+    
+    static void Deserialize(minijson::value& value, IFieldInfo** field, minijson::istream_context& context) {
+        //if (value.type() != minijson::Object) return;
+        //(*field) = (int)value.as_long();
+        
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            (*field) = new FieldInfoAny();
+            (*field)->Deserialize(context, v);
+        });
+    }
+};
+
+struct TypeEditorTitle {
+    using Callback = std::function<void*(void* context, void* parent, const std::string& title)>;
+    static Callback Title;
+    
+    template<typename Class>
+    static std::string GetClassName() {
+#ifdef WIN32
+        std::string functionName = __FUNCTION__;
+#else
+        std::string functionName = __PRETTY_FUNCTION__;
+#endif
+        const std::string token = "Class = ";
+        size_t equal = functionName.find(token) + token.size();
+        return functionName.substr(equal, functionName.size() - equal - 1);
+    }
+};
+
+//TypeEditorTitle::Callback TypeEditorTitle::Title = 0;
+
+template<typename T>
+struct TypeEditor : public IFieldEditor {
+    
+    std::vector<IFieldEditor*> fieldEditors;
+    
+    void SetField(void* field) override {
+        this->field = static_cast<T*>(field);
+        type = this->field->GetType();
+    }
+
+    void Create(void* context, void* parent) override {
+        for(auto field : type.fields) {
+            auto editor = field->CreateEditor();
+            if (!editor) continue;
+            editor->Create(context, parent);
+            fieldEditors.push_back(editor);
+        }
+        if (TypeEditorTitle::Title) {
+            TypeEditorTitle::Title(context, parent, TypeEditorTitle::GetClassName<T>());
+        }
+    }
+    
+    void Update(float dt) override {
+       for(auto editor : fieldEditors) {
+            editor->Update(dt);
+       }
+    }
+    
+    void Destroy() override {
+       for(auto editor : fieldEditors) {
+            editor->Destroy();
+       }
+    }
+    
+    T* field;
+    TypeInfo type;
+};
+
+struct TypeInfoEditor : public IFieldEditor {
+    
+    std::vector<IFieldEditor*> fieldEditors;
+    
+    void SetField(void* field) override {
+        TypeInfo* typeInfo = static_cast<TypeInfo*>(field);
+        type = TypeInfo(*typeInfo);
+    }
+
+    void Create(void* context, void* parent) override {
+        for(auto field : type.fields) {
+            auto editor = field->CreateEditor();
+            if (!editor) continue;
+            editor->Create(context, parent);
+            fieldEditors.push_back(editor);
+        }
+        if (TypeEditorTitle::Title) {
+            TypeEditorTitle::Title(context, parent, type.name);
+        }
+    }
+    
+    void Update(float dt) override {
+       for(auto editor : fieldEditors) {
+            editor->Update(dt);
+       }
+    }
+    
+    void Destroy() override {
+       for(auto editor : fieldEditors) {
+            editor->Destroy();
+       }
+    }
+    
+    TypeInfo type;
+};
+
+
+
+template<typename T>
+struct FieldEditorCreator<T, typename std::enable_if< Pocket::Meta::HasGetTypeFunction::apply<T>::value >::type> {
+    static IFieldEditor* Create(T* ptr) {
+        TypeEditor<T>* editor = new TypeEditor<T>();
+        editor->SetField(ptr);
+        return editor;
+    }
+};
+
+template<>
+struct FieldEditorCreator<IFieldInfo*> {
+    static IFieldEditor* Create(IFieldInfo** ptr) {
+        return (*ptr)->CreateEditor();
+    }
+};
+
+struct EmptyComponentEditor : public IFieldEditor {
+    
+    void SetField(void* field) override {
+        TypeInfo* typeInfo = static_cast<TypeInfo*>(field);
+        name = typeInfo->name;
+    }
+
+    void Create(void* context, void* parent) override {
+        if (TypeEditorTitle::Title) {
+            TypeEditorTitle::Title(context, parent, name);
+        }
+    }
+    
+    void Update(float dt) override {}
+    void Destroy() override { }
+    
+    std::string name;
+};
+
 
 inline std::string className(const std::string& prettyFunction)
 {

@@ -8,7 +8,7 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
     
     transform->World.Method = [object, transform] (Matrix4x4& world) {
         if (object->Parent()) {
-            Transform* parentTransform = object->Parent()()->GetComponent<Transform>();
+            Transform* parentTransform = object->Parent()->GetComponent<Transform>();
             if (!parentTransform) {
                 world = transform->Local();
             } else {
@@ -20,16 +20,16 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
     };
     
     transform->World.MakeDirty();
-    object->Parent().Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
+    object->Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
     HookParent(transform, object->Parent());
 }
 
 void TransformHierarchy::ObjectRemoved(GameObject* object) {
     Transform* transform = object->GetComponent<Transform>();
     transform->ResetWorldCalculation();
-    object->Parent().Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
+    object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
     if (object->Parent()) {
-        Transform* parentTransform = object->Parent()()->GetComponent<Transform>();
+        Transform* parentTransform = object->Parent()->GetComponent<Transform>();
         if (parentTransform) {
             transform->UnHookOther(parentTransform);
         }
@@ -51,8 +51,8 @@ void TransformHierarchy::ParentChanged(GameObject* object) {
     transform->World.MakeDirty();
     transform->WorldInverse.MakeDirty();
     
-    Transform* oldParentTransform = object->Parent().PreviousValue() ?
-    object->Parent().PreviousValue()->GetComponent<Transform>()
+    Transform* oldParentTransform = object->Parent.PreviousValue() ?
+    object->Parent.PreviousValue()->GetComponent<Transform>()
     :
     0;
 
@@ -61,7 +61,7 @@ void TransformHierarchy::ParentChanged(GameObject* object) {
     }
     
     Transform* newParentTransform = object->Parent() ?
-    object->Parent()()->GetComponent<Transform>()
+    object->Parent()->GetComponent<Transform>()
     :
     0;
     

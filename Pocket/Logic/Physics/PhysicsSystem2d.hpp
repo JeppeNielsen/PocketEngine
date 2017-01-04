@@ -9,7 +9,7 @@
 #pragma once
 
 
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Transform.hpp"
 #include "RigidBody2d.hpp"
 #include "Joint2d.hpp"

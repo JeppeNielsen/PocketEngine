@@ -38,8 +38,9 @@ public:
     void UnloadLib();
     
     bool AddGameWorld(GameWorld& world);
+    void AddGameRoot(GameObject* root);
     void RemoveGameWorld(GameWorld& world);
-    TypeInfo GetTypeInfo(GameObject& object, ComponentID id);
+    TypeInfo GetTypeInfo(const GameObject& object, ComponentId id);
     
     int ComponentCount();
     

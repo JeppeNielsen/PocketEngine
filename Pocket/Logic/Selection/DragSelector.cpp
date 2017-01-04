@@ -15,18 +15,18 @@ using namespace Pocket;
 void DragSelector::Initialize() {
     draggingIndex = -1;
     
-    cameraSystem = world->CreateSystem<CameraSystem>();
-    selectables = world->CreateSystem<SelectableCollection<Transform>>();
+    cameraSystem = root->CreateSystem<CameraSystem>();
+    selectables = root->CreateSystem<SelectableCollection<Transform>>();
     
-    world->Input().TouchDown.Bind(this, &DragSelector::Down);
-    world->Input().TouchUp.Bind(this, &DragSelector::Up);
+    root->Input().TouchDown.Bind(this, &DragSelector::Down);
+    root->Input().TouchUp.Bind(this, &DragSelector::Up);
     
     TouchDepth = 0;
 }
 
 void DragSelector::Destroy() {
-    world->Input().TouchDown.Unbind(this, &DragSelector::Down);
-    world->Input().TouchUp.Unbind(this, &DragSelector::Up);
+    root->Input().TouchDown.Unbind(this, &DragSelector::Down);
+    root->Input().TouchUp.Unbind(this, &DragSelector::Up);
 }
 
 void DragSelector::Setup(const Pocket::Rect &viewport) {
@@ -34,11 +34,12 @@ void DragSelector::Setup(const Pocket::Rect &viewport) {
     BoundingBox bounds(0, Vector3(viewport.width * 2.0f, viewport.height * 2.0f, 3000.0f));
     
     renderWorld.Clear();
-    renderer = renderWorld.CreateSystem<RenderSystem>();
+    GameObject* root = renderWorld.CreateRoot();
+    renderer = root->CreateSystem<RenderSystem>();
+    
     renderer->Octree().SetWorldBounds(bounds);
     
-    
-    GameObject* cameraObject = renderWorld.CreateObject();
+    GameObject* cameraObject = root->CreateObject();
     cameraObject->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = cameraObject->AddComponent<Camera>();
     
@@ -46,7 +47,7 @@ void DragSelector::Setup(const Pocket::Rect &viewport) {
     cam->Near = 1.0f;
     cam->Far = 2.0f;
 
-    dragRectangle = renderWorld.CreateObject();
+    dragRectangle = root->CreateObject();
     dragRectangle->AddComponent<Transform>();
     dragRectangle->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(1.0f, 1.0f, 1.0f, 0.15f));
     dragRectangle->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
@@ -57,26 +58,26 @@ void DragSelector::Down(Pocket::TouchEvent e) {
     if (e.Index != 0) return;
     draggingIndex = e.Index;
     dragStart = e.Position;
-    world->Input().SwallowTouch(e.Index, TouchDepth);
+    root->Input().SwallowTouch(e.Index, TouchDepth);
 }
 
 void DragSelector::Up(Pocket::TouchEvent e) {
     if (draggingIndex==-1) return;
-    bool wasSwallowed = world->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
+    bool wasSwallowed = root->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
     draggingIndex = -1;
     if (wasSwallowed) return;
     SelectObjects(dragStart, e.Position);
 }
 
 bool DragSelector::IsDragging() {
-    return draggingIndex!=-1 && !world->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
+    return draggingIndex!=-1 && !root->Input().IsTouchSwallowed(draggingIndex, TouchDepth);
 }
 
 void DragSelector::Update(float dt) {
     
     if (IsDragging()) {
         
-        Vector2 dragNow = world->Input().GetTouchPosition(draggingIndex);
+        Vector2 dragNow = root->Input().GetTouchPosition(draggingIndex);
         
         dragRectangle->GetComponent<Transform>()->Position = (dragStart + dragNow) * 0.5f;
         

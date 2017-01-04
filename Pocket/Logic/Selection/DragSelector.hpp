@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Selectable.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
@@ -18,6 +18,7 @@
 namespace Pocket {
     class DragSelector : public GameSystem<Transform, Mesh, Selectable> {
     public:
+        
         void Initialize() override;
         void Destroy() override;
         

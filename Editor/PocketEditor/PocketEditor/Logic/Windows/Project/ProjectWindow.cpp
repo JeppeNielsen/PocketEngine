@@ -21,14 +21,14 @@ std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
 
-    GameWorld& contextWorld = context->ContextWorld();
-    contextWorld.CreateSystem<FileSystemListenerSystem>();
+    GameObject& contextRoot = context->ContextRoot();
+    contextRoot.CreateSystem<FileSystemListenerSystem>();
     
-    GameWorld& guiWorld = context->GuiWorld();
-    guiWorld.CreateSystem<VirtualTreeListSystem>();
-    guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
-    guiWorld.CreateSystem<SelectedColorerSystem>();
-    guiWorld.CreateSystem<ClickSelectorSystem>();
+    GameObject& guiRoot = context->GuiRoot();
+    guiRoot.CreateSystem<VirtualTreeListSystem>();
+    guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
+    guiRoot.CreateSystem<SelectedColorerSystem>();
+    guiRoot.CreateSystem<ClickSelectorSystem>();
     
     context->EngineContext().ScreenSize.Changed.Bind(this, &ProjectWindow::ScreenSizeChanged);
     
@@ -101,14 +101,21 @@ void ProjectWindow::OnInitialize() {
     }
 }
 
+void ProjectWindow::UpdateFileWorld() {
+    context->FileWorld().FindRoots(fileSystemListener->Path, { ".json", ".meta" });
+}
+
 void ProjectWindow::OnCreate() {
-    GameWorld& contextWorld = context->ContextWorld();
+    GameObject& contextRoot = context->ContextRoot();
     
-    GameObject* fileRoot = contextWorld.CreateObject();
+    GameObject* fileRoot = contextRoot.CreateObject();
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
     fileSystemListener->watcher.Changed.Bind([this] {
-        Project().RefreshWorldDatabase();
+        UpdateFileWorld();
+    });
+    fileSystemListener->Path.Changed.Bind([this] {
+        UpdateFileWorld();
     });
 
     Gui& gui = context->Gui();
@@ -175,7 +182,11 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode = nodeInfo;
     if (d.Index == 0) {
         if (!selectedNode.filePath->isFolder) {
-            context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(), selectedNode.filePath->filename, context->Project().ScriptWorld());
+            context->preActions.emplace_back([=]() {
+            context->Project().Worlds.LoadWorld(selectedNode.filePath->GetFilePath(),
+                                                selectedNode.filePath->filename,
+                                                context);
+            });
         }
     } else if (d.Index == 1) {
         popupMenu.ShowPopup(d.Input->GetTouchPosition(1));

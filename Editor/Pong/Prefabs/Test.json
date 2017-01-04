@@ -1,14 +1,17 @@
 {
-    "World": {
-        "id": "E8wZAjWwR9iMHz5KilFRKw==",
+    "GameObject": {
+        "id": 1,
+        "guid": "dnGRmVN6Q7Cvgip8UFUPaQ==",
+        "counter": 188,
+        "Components": [],
         "Children": [
             {
                 "GameObject": {
-                    "id": "2",
+                    "id": 0,
                     "Components": [
                         {
                             "Pocket::Transform": {
-                                "Position": "0,0,0",
+                                "Position": "1.83945,0,-2",
                                 "Rotation": "1,0,0,0",
                                 "Scale": "1,1,1",
                                 "Anchor": "0,0,0",
@@ -16,82 +19,73 @@
                             }
                         },
                         {
-                            "Pocket::Mesh": {
-                                "VertexMesh": {
-                                    "vertices": [
-                                        "-1,1,1",
-                                        "1,1,1",
-                                        "1,-1,1",
-                                        "-1,-1,1",
-                                        "1,1,-1",
-                                        "-1,1,-1",
-                                        "-1,-1,-1",
-                                        "1,-1,-1",
-                                        "-1,1,-1",
-                                        "1,1,-1",
-                                        "1,1,1",
-                                        "-1,1,1",
-                                        "-1,-1,1",
-                                        "1,-1,1",
-                                        "1,-1,-1",
-                                        "-1,-1,-1",
-                                        "1,1,1",
-                                        "1,1,-1",
-                                        "1,-1,-1",
-                                        "1,-1,1",
-                                        "-1,1,-1",
-                                        "-1,1,1",
-                                        "-1,-1,1",
-                                        "-1,-1,-1"
-                                    ],
-                                    "triangles": [
-                                        0,
-                                        2,
-                                        1,
-                                        0,
-                                        3,
-                                        2,
-                                        4,
-                                        6,
-                                        5,
-                                        4,
-                                        7,
-                                        6,
-                                        8,
-                                        10,
-                                        9,
-                                        8,
-                                        11,
-                                        10,
-                                        12,
-                                        14,
-                                        13,
-                                        12,
-                                        15,
-                                        14,
-                                        16,
-                                        18,
-                                        17,
-                                        16,
-                                        19,
-                                        18,
-                                        20,
-                                        22,
-                                        21,
-                                        20,
-                                        23,
-                                        22
-                                    ]
-                                }
+                            "Pocket::Cloner": {
+                                "Source": "qF/IgAc/RyuJmWIGFWyPdw==:1",
+                                "variables": []
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 22,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "8.09484,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
                             }
                         },
                         {
-                            "Pocket::Material": {
-                                "BlendMode": 0,
-                                "Mask": 0
+                            "Pocket::Cloner": {
+                                "Source": "VUVN3MYwSXSnNPPbyqqm3A==:1",
+                                "variables": [
+                                    {
+                                        "Scale": "1,1,1"
+                                    },
+                                    {
+                                        "speed": "0,1,0"
+                                    }
+                                ]
                             }
                         }
-                    ]
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 140,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "14,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "VUVN3MYwSXSnNPPbyqqm3A==:1",
+                                "variables": [
+                                    {
+                                        "Scale": "1,1,1"
+                                    },
+                                    {
+                                        "speed": "0,1,0"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Children": []
                 }
             }
         ]

@@ -11,7 +11,7 @@
 using namespace Pocket;
 
 void ClickSelectorSystem::Initialize() {
-    selectables = world->CreateSystem<SelectableCollection<Transform>>();
+    selectables = root->CreateSystem<SelectableCollection<Transform>>();
 }
 
 void ClickSelectorSystem::ObjectAdded(GameObject *object) {

@@ -9,16 +9,20 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Property.hpp"
+#include "GameObjectHandle.hpp"
 #include "TypeInfo.hpp"
 
 namespace Pocket {
     class Cloner {
     public:
-        Property<std::string> SourceID;
-        std::vector<int> storedComponents;
+        
+        GameObjectHandle Source;
+        
+        std::vector<IFieldInfo*> variables;
+        
         TYPE_FIELDS_BEGIN
-        TYPE_FIELD(SourceID)
-        TYPE_FIELDS_END
+        TYPE_FIELD(Source)
+        TYPE_FIELD(variables)
+        TYPE_FIELDS_END        
     };
 }

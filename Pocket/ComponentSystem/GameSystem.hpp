@@ -9,56 +9,45 @@
 #pragma once
 #include <vector>
 #include <map>
-#include "GameIDHelper.hpp"
-#include "GameObject.hpp"
+#include "GameWorld.hpp"
 
 namespace Pocket {
     
-    class GameWorld;
-    
-    struct IGameSystem {
-        virtual ~IGameSystem() = default;
-        virtual void Initialize() = 0;
-        virtual void Destroy() = 0;
-        virtual void ObjectAdded(GameObject* object) = 0;
-        virtual void ObjectRemoved(GameObject* object) = 0;
-        virtual void Update(float dt) = 0;
-        virtual void Render() = 0;
-        virtual int AddObject(GameObject* object) = 0;
-        virtual void RemoveObject(GameObject* object) = 0;
-        virtual int Order() = 0;
-    };
-    
     class GameSystemBase : public IGameSystem {
     protected:
-        GameWorld* const world;
+        GameObject* const root;
         friend class GameWorld;
         GameSystemBase();
         virtual ~GameSystemBase();
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
+        virtual void Initialize() override;
+        virtual void Destroy() override;
+        virtual void ObjectAdded(GameObject* object) override;
+        virtual void ObjectRemoved(GameObject* object) override;
+        virtual void Update(float dt) override;
+        virtual void Render() override;
+        int ObjectCount() override;
         
-        virtual void Initialize();
-        virtual void Destroy();
-        virtual void ObjectAdded(GameObject* object);
-        virtual void ObjectRemoved(GameObject* object);
-        virtual void Update(float dt);
-        virtual void Render();
-        virtual int Order();
-        
-        int AddObject(GameObject* object);
-        void RemoveObject(GameObject* object);
+        int AddObject(GameObject* object) override;
+        void RemoveObject(GameObject* object) override;
         
         void SetMetaData(GameObject* object, void* data);
         void* GetMetaData(GameObject* object);
         
+        int GetOrder() override { return Order(); }
+        void SetOrder(int order) override { Order = order; }
+        int GetIndex() override { return index; }
+        void SetIndex(int index) override { this->index = index; }
+        
     private:
         using MetaData = std::map<GameObject*, void*>;
         MetaData metaData;
+        
+        int index;
     
         ObjectCollection objects;
-        Bitset componentMask;
-        friend class GameObject;
+        friend class GameWorld;
     public:
+        Property<int> Order;
         const ObjectCollection& Objects() const;
     };
     
@@ -66,33 +55,20 @@ namespace Pocket {
     class GameSystem : public GameSystemBase {
     private:
         template<typename Last>
-        void ExtractComponents(std::vector<int>& components) {
-            ComponentID id = GameIDHelper::GetComponentID<Last>();
-            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
-                componentInfo.name = GameIDHelper::GetClassName<Last>();
-                componentInfo.getTypeInfo = 0;
-                Last* ptr = 0;
-                Meta::static_if<Meta::HasGetTypeFunction::apply<Last>::value, Last*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
-                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
-                        auto component = object->GetComponent<SerializedComponentType>();
-                        return component->GetType();
-                    };
-                });
-                
-                return new Container<Last>();
-            });
+        static void ExtractComponents(GameWorld& world, std::vector<ComponentId>& components) {
+            world.AddComponentType<Last>();
+            ComponentId id = GameIdHelper::GetComponentID<Last>();
             components.push_back(id);
         }
         
         template<typename First, typename Second, typename ...Rest>
-        void ExtractComponents(std::vector<int>& components) {
-            ExtractComponents<First>(components);
-            ExtractComponents<Second, Rest...>(components);
+        static void ExtractComponents(GameWorld& world, std::vector<int>& components) {
+            ExtractComponents<First>(world, components);
+            ExtractComponents<Second, Rest...>(world, components);
         }
     
-        void ExtractAllComponents(std::vector<int>& components) {
-            ExtractComponents<T...>(components);
+        static void ExtractAllComponents(GameWorld& world, std::vector<ComponentId>& components) {
+            ExtractComponents<T...>(world, components);
         }
         
         friend class GameWorld;
@@ -100,7 +76,7 @@ namespace Pocket {
     
     class GameConcept : public GameSystemBase {
     private:
-        void ExtractAllComponents(std::vector<int>& components) {
+        static void ExtractAllComponents(GameWorld& world, std::vector<int>& components) {
         }
         friend class GameWorld;
     };

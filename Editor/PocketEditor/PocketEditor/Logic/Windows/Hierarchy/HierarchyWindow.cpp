@@ -16,20 +16,35 @@
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
 void HierarchyWindow::OnInitialize() {
-    GameWorld& guiWorld = context->GuiWorld();
-    guiWorld.CreateSystem<VirtualTreeListSystem>();
-    guiWorld.CreateSystem<VirtualTreeListSpawnerSystem>();
-    guiWorld.CreateSystem<SelectedColorerSystem>();
-    guiWorld.CreateSystem<DraggableSystem>();
+    GameObject& guiRoot = context->GuiRoot();
+    guiRoot.CreateSystem<VirtualTreeListSystem>();
+    guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
+    guiRoot.CreateSystem<SelectedColorerSystem>();
+    guiRoot.CreateSystem<DraggableSystem>();
 }
 
 void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
     rootItem = 0;
     if (current) {
-         treeView->Root = (GameObject*)current->World().Root();
+         treeView->Root = (GameObject*)current->Root();
     } else {
          treeView->Root = 0;
     }
+    
+    if (old) {
+        old->IsPlaying.Changed.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
+        old->Compiled.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
+    }
+    if (current) {
+        current->IsPlaying.Changed.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
+        current->Compiled.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
+    }
+}
+
+void HierarchyWindow::OpenWorldIsPlayingChanged(OpenWorld *world) {
+    context->preActions.emplace_back([this, world] () {
+        treeView->Root = world->Root();
+    });
 }
 
 void HierarchyWindow::OnCreate() {
@@ -56,7 +71,7 @@ void HierarchyWindow::OnCreate() {
             return control;
         };
         
-        if (node!=treeView->Root()) {
+        //if (node!=treeView->Root()) {
             EditorObject* editorObject = node->GetComponent<EditorObject>();
             if (editorObject && editorObject->editorObject) {
                 GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
@@ -65,10 +80,13 @@ void HierarchyWindow::OnCreate() {
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
                 selectButton->GetComponent<Touchable>()->ClickThrough = true;
                 selectButton->AddComponent<EditorObject>(node);
+            } else {
+                int hej = 8;
+                hej++;
             }
-        } else {
-            rootItem = clone;
-        }
+        //} else {
+        //    rootItem = clone;
+        //}
         return clone;
     };
     
@@ -100,11 +118,11 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
         EditorObject* destination = t.object->GetComponent<EditorObject>();
         if (destination) {
             if (source!=destination && IsParentValid(source->gameObject, destination->gameObject)) {
-                source->gameObject->Parent() = destination->gameObject;
+                source->gameObject->Parent = destination->gameObject;
                 return;
             }
         } else if (t.object == rootItem) {
-            source->gameObject->Parent() = 0;
+            source->gameObject->Parent = source->gameObject->Root();
         }
     }
 }

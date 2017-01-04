@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "SelectedColorer.hpp"
 #include "Colorable.hpp"
 #include "Selectable.hpp"

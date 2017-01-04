@@ -14,20 +14,12 @@ using namespace Pocket;
 RenderSystem::ObjectRenderers RenderSystem::objectRenderers;
 int RenderSystem::objectRenderersRefCounter = 0;
 
-RenderSystem::~RenderSystem() {
-    objectRenderersRefCounter--;
-    if (objectRenderersRefCounter == 0) {
-        for (auto renderer : objectRenderers) {
-            delete renderer;
-        }
-        objectRenderers.clear();
-    }
-}
-
 void RenderSystem::Initialize() {
-    cameras = world->CreateSystem<CameraSystem>();
-    meshOctreeSystem = world->CreateSystem<OctreeSystem>();
-    world->CreateSystem<TextureSystem>();
+    
+    cameras = root->CreateSystem<CameraSystem>();
+    meshOctreeSystem = root->CreateSystem<OctreeSystem>();
+    root->CreateSystem<TextureSystem>();
+
     Shaders.Initialize();
     DefaultShader = &Shaders.Colored;
     DefaultTexturedShader = &Shaders.Textured;
@@ -38,6 +30,16 @@ void RenderSystem::Initialize() {
         }
     }
     objectRenderersRefCounter++;
+}
+
+void RenderSystem::Destroy() {
+    objectRenderersRefCounter--;
+    if (objectRenderersRefCounter == 0) {
+        for (auto renderer : objectRenderers) {
+            delete renderer;
+        }
+        objectRenderers.clear();
+    }
 }
 
 void RenderSystem::ObjectAdded(GameObject *object) {

@@ -32,12 +32,13 @@ namespace Pocket {
     
         TouchSystem();
         ~TouchSystem();
-        void Initialize();
-        void Destroy();
+        
+        void Initialize() override;
+        void Destroy() override;
         OctreeSystem& Octree();
-        void ObjectAdded(GameObject* object);
-        void ObjectRemoved(GameObject* object);
-        void Update(float dt);
+        void ObjectAdded(GameObject* object) override;
+        void ObjectRemoved(GameObject* object) override;
+        void Update(float dt) override;
         
         void EnqueueDown(GameObject* touchObject, TouchData touchData);
         

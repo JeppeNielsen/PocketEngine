@@ -29,12 +29,13 @@
 #include "LimitableSystem.hpp"
 #include "DroppableSystem.hpp"
 #include "SelectedColorerSystem.hpp"
+#include "LayoutSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameConcept {
     public:
         
-        void Initialize() ;
+        void Initialize();
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport);
         void Setup(GameObject *atlas, const Rect &viewport);
         GameObject* GetCamera();
@@ -44,6 +45,7 @@ namespace Pocket {
         GameObject* CreatePivot(GameObject* parent);
         GameObject* CreatePivot(GameObject* parent, const Vector2& position);
         GameObject* CreateControl(GameObject* parent);
+        GameObject* CreateControl(GameObject* parent, const std::string& spriteName);
         GameObject* CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size);
         GameObject* CreateControl(GameObject *parent, const std::string &spriteName, const Vector2& size);
         GameObject* CreateClipper(GameObject *parent, bool push);

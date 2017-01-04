@@ -7,11 +7,12 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "GameObjectEditor.hpp"
 #include "Transform.hpp"
 #include "Sizeable.hpp"
 #include "Gui.hpp"
+#include <set>
 #ifdef SCRIPTING_ENABLED
 #include "ScriptWorld.hpp"
 #endif
@@ -31,11 +32,19 @@ namespace Pocket {
         
             template<class T>
             void IgnoreComponent() {
-                ignoredComponents.push_back(GameIDHelper::GetComponentID<T>());
+                ignoredComponents.push_back(GameIdHelper::GetComponentID<T>());
             }
+            void Update(float dt);
+        
+            std::function<bool(int componentID)> Predicate;
+        
         private:
             void ObjectChanged(GameObject* object);
+            void CreateEditors(GameObject* object);
             typedef std::vector<int> IgnoredComponents;
             IgnoredComponents ignoredComponents;
+        
+            using DirtyObjects = std::set<GameObject*>;
+            DirtyObjects dirtyObjects;
     };
 }

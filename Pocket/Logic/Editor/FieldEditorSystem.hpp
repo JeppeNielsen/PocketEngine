@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "FieldEditor.hpp"
 #include "Sizeable.hpp"
 #include "Transform.hpp"

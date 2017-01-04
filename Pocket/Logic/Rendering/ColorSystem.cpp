@@ -12,6 +12,10 @@
 
 using namespace Pocket;
 
+void ColorSystem::Initialize() {
+    Order = 1000;
+}
+
 void ColorSystem::ObjectAdded(Pocket::GameObject *object) {
     Colorable* colorable = object->GetComponent<Colorable>();
     colorable->Color.Changed.Bind(this, &ColorSystem::ColorChanged, object);
@@ -46,8 +50,4 @@ void ColorSystem::Update(float dt) {
         }
         changedColorables.clear();
     }
-}
-
-int ColorSystem::Order() {
-    return 1000;
 }

@@ -11,12 +11,8 @@
 
 using namespace Pocket;
 
-GameSystemBase::GameSystemBase() : world(0) {}
+GameSystemBase::GameSystemBase() : root(0) {}
 GameSystemBase::~GameSystemBase() {}
-
-void GameSystemBase::TryAddComponentContainer(ComponentID id, std::function<IContainer *(GameObject::ComponentInfo&)>&& constructor) {
-    world->TryAddComponentContainer(id, std::move(constructor));
-}
 
 void GameSystemBase::Initialize() {}
 void GameSystemBase::Destroy() {}
@@ -40,7 +36,7 @@ void GameSystemBase::RemoveObject(Pocket::GameObject *object) {
     }
 }
 
-int GameSystemBase::Order() { return 0; }
+int GameSystemBase::ObjectCount() { return (int)objects.size(); }
 
 void GameSystemBase::SetMetaData(Pocket::GameObject *object, void *data) {
     metaData[object] = data;

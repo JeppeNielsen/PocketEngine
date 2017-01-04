@@ -17,7 +17,7 @@ namespace Pocket {
         bool Contains(const Bitset& bitset) const;
         void Resize(int index);
         void Reset();
-        int Size();
+        int Size() const;
   private:
       using Bits = std::vector<bool>;
       Bits bits;

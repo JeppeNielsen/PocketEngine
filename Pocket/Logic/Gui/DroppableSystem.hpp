@@ -15,13 +15,13 @@
 namespace Pocket {
     class DroppableSystem : public GameSystem<Droppable, Touchable> {
     public:
+        
         void Initialize();
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void Update(float dt);
     private:
     
-        
         void TouchDown(TouchData d, GameObject* object);
         void DropStarted(TouchData d, GameObject* object);
         void TouchUp(TouchData d, GameObject* object);

@@ -11,16 +11,17 @@
 #include <string>
 #include "OpenWorld.hpp"
 #include "Property.hpp"
+#include "FileWorld.hpp"
 
 using namespace Pocket;
 
-namespace Pocket {
-class GameWorldDatabase;
-}
+class Project;
+class EditorContext;
 
 class OpenWorldCollection {
 public:
-    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld);
+
+    OpenWorld* LoadWorld(const std::string& path, const std::string& filename, EditorContext* context);
     void CloseWorld(OpenWorld* world);
     bool TryFindOpenWorld(const std::string& path, OpenWorld** world);
     
@@ -34,7 +35,8 @@ public:
     Event<OpenWorld*> WorldLoaded;
     Event<OpenWorld*> WorldClosed;
     
-    Pocket::GameWorldDatabase* worldDatabase;
+    void PreCompile();
+    void PostCompile();
     
 private:
     using Worlds = std::vector<OpenWorld*>;

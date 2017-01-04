@@ -1,0 +1,64 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "YrwikG7bSo6l2SwHhFKztA==",
+        "counter": 10,
+        "Components": [],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 4,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "-3.5,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "Mcb1pPR6Q12yVVUQG6cyYA==:2",
+                                "variables": [
+                                    {
+                                        "Size": "7,3"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 6,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "-3.5,-4,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "Mcb1pPR6Q12yVVUQG6cyYA==:2",
+                                "variables": [
+                                    {
+                                        "Size": "7,3"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            }
+        ]
+    }
+}

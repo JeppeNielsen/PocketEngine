@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include "Draggable.hpp"
 #include "Touchable.hpp"
 #include "Transform.hpp"

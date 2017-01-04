@@ -1,451 +1,317 @@
 //
 //  LayoutSystem.cpp
-//  PocketEngine
+//  PocketEditor
 //
-//  Created by Jeppe Nielsen on 10/19/13.
-//  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
+//  Created by Jeppe Nielsen on 04/12/16.
+//  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #include "LayoutSystem.hpp"
-#include "Transform.hpp"
 
 using namespace Pocket;
 
-void LayoutSystem::ObjectAdded(Pocket::GameObject *object) {
-    SetMetaData(object, new LayoutObject(object, this));
-}
-
-void LayoutSystem::ObjectRemoved(Pocket::GameObject *object) {
-    LayoutObject* layoutObject = (LayoutObject*)GetMetaData(object);
-    for (auto o : Objects()) {
-        LayoutObject* l = (LayoutObject*)GetMetaData(o);
-        if (l && l->parentLayoutObject == layoutObject) {
-            l->parentLayoutObject = 0;
-        }
-    }
-    delete layoutObject;
-    SetMetaData(object, 0);
-}
-
-LayoutSystem::LayoutObject::LayoutObject(GameObject* object, LayoutSystem* layoutSystem) {
-    this->layoutSystem = layoutSystem;
-    this->object = object;
-    sizeable = object->GetComponent<Sizeable>();
-    sizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::SizeChanged);
-    layoutable = object->GetComponent<Layoutable>();
-    transform = object->GetComponent<Transform>();
-    parentSizeable = 0;
-    parentLayoutObject = 0;
-    object->Parent().Changed.Bind(this, &LayoutSystem::LayoutObject::ParentChanged);
-    ParentChanged();
-    if (layoutable->ChildLayouting()!=Layoutable::ChildLayouting::None) {
-        layoutSystem->dirtyChildLayoutables.insert(this);
-    }
-}
-
-LayoutSystem::LayoutObject::~LayoutObject() {
-    object->Parent().Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentChanged);
+void LayoutSystem::ObjectAdded(GameObject* object) {
+    Layouter* layouter = object->GetComponent<Layouter>();
     
-    if (parentSizeable) {
-        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
-        parentSizeable = 0;
-        parentLayoutObject = 0;
-    }
+    layouter->GlobalMin.Method = [layouter, object] (Vector2& value) {
+        value = DoLayout(layouter, object,
+        [] (Layouter* l) {
+            return l->Min();
+        }, [] (Layouter* l) {
+            return l->GlobalMin();
+        });
+    };
     
-    auto it = layoutSystem->dirtyObjects.find(this);
-    if (it!=layoutSystem->dirtyObjects.end()) {
-        layoutSystem->dirtyObjects.erase(it);
-    }
-    auto it2 = layoutSystem->dirtyChildLayoutables.find(this);
-    if (it2!=layoutSystem->dirtyChildLayoutables.end()) {
-        layoutSystem->dirtyChildLayoutables.erase(it2);
-    }
-    sizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::SizeChanged);
-}
-
-void LayoutSystem::LayoutObject::SizeChanged() {
-    if (!parentLayoutObject) return;
-    if (parentLayoutObject->layoutable->ChildLayouting()!=Layoutable::ChildLayouting::None) {
-        layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
-    }
-}
-
-void LayoutSystem::LayoutObject::ParentChanged() {
-    if (parentSizeable) {
-        parentSizeable->Size.Changed.Unbind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
-        parentSizeable = 0;
-        if (parentLayoutObject) {
-            layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
-        }
-        parentLayoutObject = 0;
-    }
+    layouter->GlobalMax.Method = [layouter, object] (Vector2& value) {
+        value = DoLayout(layouter, object, [] (Layouter* l) { return l->Max(); }, [] (Layouter* l) { return l->GlobalMax(); });
+    };
     
-    if (object->Parent()) {
-        parentSizeable = object->Parent()()->GetComponent<Sizeable>();
-        if (parentSizeable) {
-            parentSizeable->Size.Changed.Bind(this, &LayoutSystem::LayoutObject::ParentSizeChanged);
-            
-            if (object->Parent()()->GetComponent<Layoutable>()) {
-                parentLayoutObject = (LayoutObject*)layoutSystem->GetMetaData(object->Parent());
-                if (parentLayoutObject) {
-                    if (parentLayoutObject->layoutable->ChildLayouting()==Layoutable::ChildLayouting::None) {
-                        parentLayoutObject = 0;
-                    } else {
-                        layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
-                    }
-                }
-            } else {
-                parentLayoutObject = 0;
-            }
-        }
-    }
-}
+    layouter->GlobalDesired.Method = [layouter, object] (Vector2& value) {
+        value = DoLayout(layouter, object, [] (Layouter* l) { return l->Desired(); }, [] (Layouter* l) { return l->GlobalDesired(); });
+    };
 
-void LayoutSystem::LayoutObject::ParentSizeChanged(){
-    oldSize = parentSizeable->Size.PreviousValue();
-    deltaSize = parentSizeable->Size - oldSize;
-    layoutSystem->dirtyObjects.insert(this);
-    if (parentLayoutObject) {
-        layoutSystem->dirtyChildLayoutables.insert(parentLayoutObject);
-    }
-}
-
-void LayoutSystem::LayoutObject::Update() {
-    Vector2 size = sizeable->Size;
-    Vector3 position = transform->Position;
+    layouter->Min.Changed.Bind(this, &LayoutSystem::MinChanged, layouter);
+    layouter->Max.Changed.Bind(this, &LayoutSystem::MaxChanged, layouter);
+    layouter->Desired.Changed.Bind(this, &LayoutSystem::DesiredChanged, layouter);
     
-    switch (layoutable->HorizontalAlignment()) {
-        case Layoutable::HAlignment::None:
-        case Layoutable::HAlignment::Left: {
-            break;
-        }
-        case Layoutable::HAlignment::Center: {
-            position.x += deltaSize.x * 0.5f;
-            break;
-        }
-        case Layoutable::HAlignment::Right: {
-            position.x += deltaSize.x;
-            break;
-        }
-        case Layoutable::HAlignment::Relative: {
-            position.x += deltaSize.x * (position.x / oldSize.x);
-            size.x += deltaSize.x * (size.x / oldSize.x);
-            break;
-        }
+    layouter->GlobalMin.MakeDirty();
+    layouter->GlobalMax.MakeDirty();
+    layouter->GlobalDesired.MakeDirty();
+    
+    layouter->GlobalMin.HasBecomeDirty.Bind(this, &LayoutSystem::GlobalMinDirty, object);
+    layouter->GlobalMax.HasBecomeDirty.Bind(this, &LayoutSystem::GlobalMaxDirty, object);
+    layouter->GlobalDesired.HasBecomeDirty.Bind(this, &LayoutSystem::GlobalDesiredDirty, object);
+    
+    object->Parent.Changed.Bind(this, &LayoutSystem::ParentChanged, object);
+    
+    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &LayoutSystem::SizeChanged, object);
+    
+    dirtyObjects.insert(object);
+    
+    GameObject* current = object->Parent;
+    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
+    if (currentLayouter) {
+        dirtyObjects.insert(current);
+    }
+}
+
+void LayoutSystem::ObjectRemoved(GameObject* object) {
+    Layouter* layouter = object->GetComponent<Layouter>();
+    layouter->GlobalMin.Method = nullptr;
+    layouter->GlobalMax.Method = nullptr;
+    layouter->GlobalDesired.Method = nullptr;
+    
+    layouter->Min.Changed.Unbind(this, &LayoutSystem::MinChanged, layouter);
+    layouter->Max.Changed.Unbind(this, &LayoutSystem::MaxChanged, layouter);
+    layouter->Desired.Changed.Unbind(this, &LayoutSystem::DesiredChanged, layouter);
+    
+    layouter->GlobalMin.HasBecomeDirty.Unbind(this, &LayoutSystem::GlobalMinDirty, object);
+    layouter->GlobalMax.HasBecomeDirty.Unbind(this, &LayoutSystem::GlobalMaxDirty, object);
+    layouter->GlobalDesired.HasBecomeDirty.Unbind(this, &LayoutSystem::GlobalDesiredDirty, object);
+    
+    object->Parent.Changed.Unbind(this, &LayoutSystem::ParentChanged, object);
+    
+    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LayoutSystem::SizeChanged, object);
+    
+    GameObject* current = object->Parent;
+    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
+    if (currentLayouter) {
+        dirtyObjects.insert(current);
     }
     
-    switch (layoutable->VerticalAlignment()) {
-        case Layoutable::VAlignment::None:
-        case Layoutable::VAlignment::Bottom: {
-            break;
-        }
-        case Layoutable::VAlignment::Center: {
-            position.y += deltaSize.y * 0.5f;
-            break;
-        }
-        case Layoutable::VAlignment::Top: {
-            position.y += deltaSize.y;
-            break;
-        }
-        case Layoutable::VAlignment::Relative: {
-            position.y += deltaSize.y * (position.y / oldSize.y);
-            size.y += deltaSize.y * (size.y / oldSize.y);
-            break;
-        }
+    auto it = dirtyObjects.find(object);
+    if (it!=dirtyObjects.end()) {
+        dirtyObjects.erase(it);
     }
+}
+
+
+void LayoutSystem::MinChanged(Layouter* layouter) {
+    layouter->GlobalMin.MakeDirty();
+}
+
+void LayoutSystem::MaxChanged(Layouter* layouter) {
+    layouter->GlobalMax.MakeDirty();
+}
+
+void LayoutSystem::DesiredChanged(Layouter* layouter) {
+    layouter->GlobalDesired.MakeDirty();
+}
+
+void LayoutSystem::GlobalMinDirty(GameObject* object) {
+    GameObject* parent = object->Parent;
+    if (!object) return;
+    Layouter* parentLayouter = parent->GetComponent<Layouter>();
+    if (parentLayouter) {
+        parentLayouter->GlobalMin.MakeDirty();
+    }
+    dirtyObjects.insert(object);
+}
+
+void LayoutSystem::GlobalMaxDirty(GameObject* object) {
+    GameObject* parent = object->Parent;
+    if (!object) return;
+    Layouter* parentLayouter = parent->GetComponent<Layouter>();
+    if (parentLayouter) {
+        parentLayouter->GlobalMax.MakeDirty();
+    }
+    dirtyObjects.insert(object);
+}
+
+void LayoutSystem::GlobalDesiredDirty(GameObject* object) {
+    GameObject* parent = object->Parent;
+    if (!object) return;
+    Layouter* parentLayouter = parent->GetComponent<Layouter>();
+    if (parentLayouter) {
+        parentLayouter->GlobalDesired.MakeDirty();
+    }
+    dirtyObjects.insert(object);
+}
+
+void LayoutSystem::ParentChanged(GameObject* object) {
+    GameObject* old = object->Parent.PreviousValue();
+    GameObject* current = object->Parent;
     
-    sizeable->Size = size;
-    transform->Position = position;
-}
-
-void LayoutSystem::LayoutObject::UpdateChildren() {
-    ObjectCollection children = object->Children();
-    std::sort(children.begin(), children.end(), [] (GameObject* a, GameObject* b) {
-        return a->Order()<b->Order();
-    });
-    switch (layoutable->ChildLayouting()) {
-        case Layoutable::ChildLayouting::HorizontalStackedLeft:
-        case Layoutable::ChildLayouting::HorizontalStackedCenter:
-        case Layoutable::ChildLayouting::HorizontalStackedRight:
-        case Layoutable::ChildLayouting::HorizontalStackedFit: {
-            Vector2 position(0,0);
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                t->Position = position;
-                position.x += s->Size().x;
-            });
-            if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::HorizontalStackedCenter) {
-                float offset = sizeable->Size().x * 0.5f - position.x * 0.5f;
-                IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                    Vector3 position = t->Position;
-                    position.x+=offset;
-                    t->Position = position;
-                });
-            } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::HorizontalStackedRight) {
-                float offset = sizeable->Size().x - position.x;
-                IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                    Vector3 position = t->Position;
-                    position.x+=offset;
-                    t->Position = position;
-                });
-            } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::HorizontalStackedFit) {
-                Vector2 size = sizeable->Size;
-                size.x = position.x;
-                sizeable->Size = size;
-            }
-            
-            break;
-        }
-        case Layoutable::ChildLayouting::HorizontalEvenlySized: {
-            Vector2 position(0,0);
-            int count = 0;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                count++;
-            });
-            if (count == 0) return;
-            float width = sizeable->Size().x / count;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                t->Position = position;
-                s->Size = Vector2(width, s->Size().y);
-                position.x += width;
-            });
-            break;
-        }
-        case Layoutable::ChildLayouting::HorizontalCentered: {
-            float offset = 0;;
-            std::map<Transform*, float> offsets;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                offsets[t] = offset + s->Size().x * 0.5f;
-                offset+=s->Size().x;
-            });
-            if (offsets.empty()) return;
-            float ratio = sizeable->Size().x / offset;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                Vector3 p = t->Position;
-                p.x = offsets[t] * ratio - s->Size().x * 0.5f;
-                t->Position = p;
-            });
-            break;
-        }
-        case Layoutable::ChildLayouting::VerticalStackedTop:
-        case Layoutable::ChildLayouting::VerticalStackedCenter:
-        case Layoutable::ChildLayouting::VerticalStackedBottom:
-        case Layoutable::ChildLayouting::VerticalStackedFit: {
-            Vector2 position(0,0);
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                Vector3 p = t->Position;
-                p.y = position.y;
-                t->Position = p;
-                position.y += s->Size().y;
-            });
-            if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::VerticalStackedCenter) {
-                float offset = sizeable->Size().y * 0.5f - position.y * 0.5f;
-                IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                    Vector3 position = t->Position;
-                    position.y+=offset;
-                    t->Position = position;
-                });
-            } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::VerticalStackedTop) {
-                float offset = sizeable->Size().y - position.y;
-                IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                    Vector3 position = t->Position;
-                    position.y+=offset;
-                    t->Position = position;
-                });
-            } else if (layoutable->ChildLayouting() == Layoutable::ChildLayouting::VerticalStackedFit) {
-                Vector2 size = sizeable->Size;
-                size.y = position.y;
-                sizeable->Size = size;
-            }
-            break;
-        }
-        case Layoutable::ChildLayouting::VerticalEvenlySized: {
-            Vector2 position(0,0);
-            int count = 0;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                count++;
-            });
-            if (count == 0) return;
-            float height = sizeable->Size().y / count;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                t->Position = position;
-                s->Size = Vector2(s->Size().x,height);
-                position.y += height;
-            });
-            break;
-        }
-        case Layoutable::ChildLayouting::VerticalCentered: {
-            float offset = 0;
-            std::map<Transform*, float> offsets;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                offsets[t] = offset + s->Size().y * 0.5f;
-                offset+=s->Size().y;
-            });
-            if (offsets.empty()) return;
-            float ratio = sizeable->Size().y / offset;
-            IterateChildren(children, [&](Transform* t, Sizeable* s) {
-                Vector3 p = t->Position;
-                p.y = offsets[t] * ratio - s->Size().y * 0.5f;
-                t->Position = p;
-            });
-            break;
-        }
-    default:
-        break;
+    Layouter* oldLayouter = old ? old->GetComponent<Layouter>() : nullptr;
+    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
+    
+    if (oldLayouter) {
+        dirtyObjects.insert(old);
+    }
+    if (currentLayouter) {
+        dirtyObjects.insert(current);
     }
 }
 
-void LayoutSystem::LayoutObject::IterateChildren(const ObjectCollection& children, std::function<void (Transform *, Sizeable *)> function) {
-    for(auto child : children) {
-        Layoutable* childLayoutable = child->GetComponent<Layoutable>();
-        if (!childLayoutable) continue;
-        Transform* transform = child->GetComponent<Transform>();
-        if (!transform) continue;
-        Sizeable* sizeable = child->GetComponent<Sizeable>();
-        if (!sizeable) continue;
-        
-        function(transform, sizeable);
+void LayoutSystem::SizeChanged(GameObject* object) {
+    dirtyObjects.insert(object);
+}
+
+Vector2 LayoutSystem::DoLayout(Layouter* layouter, GameObject* object,
+    const std::function<Vector2(Layouter* layouter)>& localGetter,
+    const std::function<Vector2(Layouter* layouter)>& globalGetter
+) {
+    int count = 0;
+    for(auto child : object->Children()) {
+        Layouter* childLayouter = child->GetComponent<Layouter>();
+        if (!childLayouter) continue;
+        count++;
+    }
+    if (count == 0) {
+        return localGetter(layouter);
+    }
+
+    if (layouter->ChildrenLayoutMode == Layouter::LayoutMode::Horizontal) {
+        Vector2 size { 0, localGetter(layouter).y };
+        for(auto child : object->Children()) {
+            Layouter* childLayouter = child->GetComponent<Layouter>();
+            if (!childLayouter) continue;
+            Vector2 childSize = globalGetter(childLayouter);
+            size.x += childSize.x;
+            size.y = std::max(size.y, childSize.y);
+        }
+        //size.x = std::max(layoutSize.x, size.x);
+        return size;
+    } else {
+        Vector2 size { localGetter(layouter).x, 0 };
+        for(auto child : object->Children()) {
+            Layouter* childLayouter = child->GetComponent<Layouter>();
+            if (!childLayouter) continue;
+            Vector2 childSize = globalGetter(childLayouter);
+            size.x = std::max(size.x, childSize.x);
+            size.y += childSize.y;
+        }
+        //size.y = std::max(layoutSize.y, size.y);
+        return size;
     }
 }
 
 void LayoutSystem::Update(float dt) {
-    while (true) {
-        while (!dirtyObjects.empty()) {
-            DirtyObjects temp = dirtyObjects;
-            dirtyObjects.clear();
-            for (DirtyObjects::iterator it = temp.begin(); it!=temp.end(); ++it) {
-                (*it)->Update();
+    while (!dirtyObjects.empty()) {
+        std::set<GameObject*> temp = dirtyObjects;
+        dirtyObjects.clear();
+        for(auto o : temp) {
+            CalcLayout(o);
+        }
+    }
+}
+
+void LayoutSystem::CalcLayout(GameObject* object) {
+    Vector2 size = object->GetComponent<Sizeable>()->Size;
+    Layouter* layouter = object->GetComponent<Layouter>();
+    
+    if (layouter->ChildrenLayoutMode == Layouter::LayoutMode::Horizontal) {
+        if (layouter->GlobalMin().x>=size.x) {
+            float x = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                Vector2 childSize = { childLayouter->GlobalMin().x, size.y };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {x,0};
+                x+=childSize.x;
+            }
+        } else if (layouter->GlobalDesired().x>=size.x) {
+            float desiredMargin = layouter->GlobalDesired().x - layouter->GlobalMin().x;
+            float fraction = (size.x - layouter->GlobalMin().x) / desiredMargin;
+            float x = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                float minWidth = childLayouter->GlobalMin().x;
+                float desWidth = childLayouter->GlobalDesired().x;
+                
+                Vector2 childSize = { minWidth + (desWidth - minWidth) * fraction, size.y };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {x,0};
+                x+=childSize.x;
+            }
+        } else {
+            float maxMargin = layouter->GlobalMax().x - layouter->GlobalDesired().x;
+            float fraction = maxMargin > -0.00001f && maxMargin < 0.00001f ? 1 : (size.x - layouter->GlobalDesired().x) / maxMargin;
+            if (fraction>1) fraction = 1;
+            
+            float x = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                float desWidth = childLayouter->GlobalDesired().x;
+                float maxWidth = childLayouter->GlobalMax().x;
+                
+                Vector2 childSize = { desWidth + (maxWidth - desWidth) * fraction, size.y };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {x, 0};
+                x+=childSize.x;
             }
         }
+    } else {
+    
+        if (layouter->GlobalMin().y>=size.y) {
+            float y = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                Vector2 childSize = { size.x, childLayouter->GlobalMin().y };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {0,y};
+                y+=childSize.y;
+            }
+        } else if (layouter->GlobalDesired().y>=size.y) {
+            float desiredMargin = layouter->GlobalDesired().y - layouter->GlobalMin().y;
+            float fraction = (size.y - layouter->GlobalMin().y) / desiredMargin;
+            float y = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                float minWidth = childLayouter->GlobalMin().y;
+                float desWidth = childLayouter->GlobalDesired().y;
+                
+                Vector2 childSize = { size.x, minWidth + (desWidth - minWidth) * fraction };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {0,y};
+                y+=childSize.y;
+            }
+        } else {
+            float maxMargin = layouter->GlobalMax().y - layouter->GlobalDesired().y;
+            float fraction = maxMargin > -0.00001f && maxMargin < 0.00001f ? 1 : (size.y - layouter->GlobalDesired().y) / maxMargin;
+            if (fraction>1) fraction = 1;
         
-        while (!dirtyChildLayoutables.empty()) {
-            DirtyObjects temp = dirtyChildLayoutables;
-            dirtyChildLayoutables.clear();
-            for(auto layoutObject : temp) {
-                layoutObject->UpdateChildren();
+            float y = 0;
+            for(auto child : object->Children()) {
+                Layouter* childLayouter = child->GetComponent<Layouter>();
+                Sizeable* childSizable = child->GetComponent<Sizeable>();
+                Transform* childTransform = child->GetComponent<Transform>();
+                if (!childLayouter || !childSizable || !childTransform) continue;
+                
+                float desWidth = childLayouter->GlobalDesired().y;
+                float maxWidth = childLayouter->GlobalMax().y;
+                
+                Vector2 childSize = { size.x, desWidth + (maxWidth - desWidth) * fraction };
+                
+                childSizable->Size = childSize;
+                childTransform->Position = {0, y};
+                y+=childSize.y;
             }
         }
-        if (dirtyObjects.empty()) break;
     }
 }
-
-
-/*
-void LayoutSystem::LayoutablesSystem::Initialize() {
-    AddComponent<Layoutable>();
-    AddComponent<Sizeable>();
-    AddComponent<Transform>();
-}
-
-void LayoutSystem::LayouterChanged(Pocket::Layouter *layouter) {
-    dirtyLayouters.insert(layouter);
-}
-
-void LayoutSystem::SizeChanged(Pocket::Sizeable *sizable) {
-    LayouterChanged(sizable->Owner()->GetComponent<Layouter>());
-}
-
-void LayoutSystem::HierarchyChanged(Pocket::Hierarchy *hierarchy) {
-    LayouterChanged(hierarchy->Owner()->GetComponent<Layouter>());
-}
-
-void LayoutSystem::Update(float dt) {
-    while (!dirtyLayouters.empty()) {
-        DirtyLayouters tempList = dirtyLayouters;
-        dirtyLayouters.clear();
-        
-        for (DirtyLayouters::iterator it = tempList.begin(); it!=tempList.end(); ++it) {
-            UpdateLayout(*it);
-        }
-    }
-}
-
-void LayoutSystem::GetLayoutables(Pocket::Layouter *layouter, Layoutables &layoutables) {
-    Hierarchy* hierarchy = layouter->Owner()->GetComponent<Hierarchy>();
-    const Hierarchy::ChildrenCollection& children = hierarchy->Children();
-    
-    for (Hierarchy::ChildrenCollection::const_iterator it = children.begin(); it!=children.end(); ++it) {
-        Hierarchy* child = *it;
-        Layoutable* layoutable = child->Owner()->GetComponent<Layoutable>();
-        if (!layoutable) continue;
-        Sizeable* sizable = child->Owner()->GetComponent<Sizeable>();
-        if (!sizable) continue;
-        Transform* transform = child->Owner()->GetComponent<Transform>();
-        if (!transform) continue;
-        layoutables.push_back(layoutable);
-    }
-}
-
-void LayoutSystem::UpdateLayout(Pocket::Layouter *layouter) {
-
-    Sizeable* sizable = layouter->Owner()->GetComponent<Sizeable>();
-    
-    int cells = layouter->Cells;
-    const Vector2& margin = layouter->Margin.GetValue();
-
-    Layoutables layoutables;
-    GetLayoutables(layouter, layoutables);
-    if (layoutables.empty()) return;
-    int count = (int)layoutables.size();
-    
-    typedef std::vector<Vector2> Sizes;
-    Sizes sizes(count);
-    
-    
-    int cell = 0;
-    float rowWidth = 0;
-    float rowHeight = 0;
-    float totalHeight = 0;
-    
-    for (int i=0; i<count; ++i) {
-        Layoutable* layoutable = layoutables[i];
-        cell++;
-        rowWidth+=layoutable->Fill().x;
-        if (layoutable->Fill().y>rowHeight) {
-            rowHeight = layoutable->Fill().y;
-        }
-        if (cell>=cells || i>=count - 1) {
-            for (int o=i-(cell-1); o<=i; ++o) {
-                sizes[o].x = layoutables[o]->Fill().x / rowWidth;
-                sizes[o].y = rowHeight;
-            }
-            totalHeight += rowHeight;
-            rowWidth = rowHeight = 0;
-            cell = 0;
-        }
-    }
-    
-    for (int i=0; i<count; ++i) {
-        sizes[i].y /= totalHeight;
-    }
-    
-    cell = 0;
-    
-    Vector2 layoutSize = sizable->Size() - margin * 2.0f;
-    
-    for (int i=0; i<count; ++i) {
-        sizes[i] *= layoutSize;
-    }
-    
-    Vector2 position = margin;
-    
-    for (int i=0; i<count; ++i) {
-        Layoutable* layoutable = layoutables[i];
-        
-        Transform* transform = layoutable->Owner()->GetComponent<Transform>();
-        Sizeable* s = layoutable->Owner()->GetComponent<Sizeable>();
-        s->Size = sizes[i];
-        transform->Position = position;
-        
-        cell++;
-        position.x += sizes[i].x;
-        
-        if (cell>=cells) {
-            cell = 0;
-            position.x = margin.x;
-            position.y += sizes[i].y;
-        }
-    }
-}
-
-*/
-

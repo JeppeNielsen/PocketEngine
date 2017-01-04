@@ -28,7 +28,7 @@ PhysicsSystem2d::~PhysicsSystem2d() {
 }
 
 void PhysicsSystem2d::Initialize() {
-    jointSystem = world->CreateSystem<JointSystem>();
+    jointSystem = root->CreateSystem<JointSystem>();
     jointSystem->physicsSystem = this;
 }
 

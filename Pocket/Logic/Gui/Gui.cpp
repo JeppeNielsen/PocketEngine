@@ -14,36 +14,37 @@ using namespace Pocket;
 GameObject* Gui::GetAtlas() { return atlas; }
 
 void Gui::Initialize() {
-    renderer = world->CreateSystem<RenderSystem>();
-    textboxSystem = world->CreateSystem<TextBoxSystem>();
-    touchSystem = world->CreateSystem<TouchSystem>();
+    renderer = root->CreateSystem<RenderSystem>();
+    textboxSystem = root->CreateSystem<TextBoxSystem>();
+    touchSystem = root->CreateSystem<TouchSystem>();
     
-    world->CreateSystem<TransformHierarchy>();
-    world->CreateSystem<LabelMeshSystem>();
-    world->CreateSystem<SpriteMeshSystem>();
-    world->CreateSystem<SpriteTextureSystem>();
-    world->CreateSystem<HierarchyOrder>();
-    world->CreateSystem<DraggableSystem>();
-    world->CreateSystem<LayoutSystem>();
-    world->CreateSystem<TextBoxLabelSystem>();
-    //world->CreateSystem<MenuSystem>();
-    world->CreateSystem<MenuButtonSystem>();
-    world->CreateSystem<ColorSystem>();
-    world->CreateSystem<DraggableMotionSystem>();
-    world->CreateSystem<VelocitySystem>();
-    world->CreateSystem<LimitableSystem>();
-    world->CreateSystem<SelectedColorerSystem>();
-    world->CreateSystem<DroppableSystem>();
-    world->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<TransformHierarchy>();
+    root->CreateSystem<LabelMeshSystem>();
+    root->CreateSystem<SpriteMeshSystem>();
+    root->CreateSystem<SpriteTextureSystem>();
+    root->CreateSystem<HierarchyOrder>()->Order = 1000;
+    root->CreateSystem<DraggableSystem>();
+    root->CreateSystem<LayoutSystem>();
+    root->CreateSystem<TextBoxLabelSystem>();
+    //root->CreateSystem<MenuSystem>();
+    root->CreateSystem<MenuButtonSystem>();
+    root->CreateSystem<ColorSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<VelocitySystem>();
+    root->CreateSystem<LimitableSystem>();
+    root->CreateSystem<SelectedColorerSystem>();
+    root->CreateSystem<DroppableSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<LayoutSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
 
-    atlas = world->CreateObject();
+    atlas = root->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromPng(atlasTexture);
     atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
-    atlas->SetID("Gui.Atlas");
+    //atlas->SetID("Gui.Atlas");
     
     Setup(atlas, viewport);
 }
@@ -56,7 +57,7 @@ void Gui::Setup(GameObject *atlas, const Rect &viewport) {
     renderer->Octree().SetWorldBounds(bounds);
     touchSystem->Octree().SetWorldBounds(bounds);
     
-    camera = world->CreateObject();
+    camera = root->CreateObject();
     camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
     Camera* cam = camera->AddComponent<Camera>();
     
@@ -70,16 +71,16 @@ GameObject* Gui::GetCamera() {
 }
 
 GameObject* Gui::CreatePivot() {
-    return CreatePivot(0, {0,0});
+    return CreatePivot(root, {0,0});
 }
 
 GameObject* Gui::CreatePivot(GameObject *parent) {
-    return CreatePivot(parent,{0,0});
+    return CreatePivot(parent ? parent : root,{0,0});
 }
 
 GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
-    GameObject* pivot = world->CreateObject();
-    pivot->Parent() = parent;
+    if (!parent) parent = root;
+    GameObject* pivot = parent->CreateChild();
     pivot->AddComponent<Transform>()->Position = position;
     pivot->AddComponent<Orderable>();
     return pivot;
@@ -98,12 +99,19 @@ GameObject* Gui::CreateControl(GameObject* parent) {
     return control;
 }
 
-GameObject* Gui::CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size) {
+GameObject* Gui::CreateControl(GameObject *parent, const std::string& spriteName) {
     
     GameObject* control = CreateControl(parent);
+    control->GetComponent<Sprite>()->SpriteName = spriteName;
+    
+    return control;
+}
+
+GameObject* Gui::CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size) {
+    
+    GameObject* control = CreateControl(parent, spriteName);
     
     control->GetComponent<Sizeable>()->Size = size;
-    control->GetComponent<Sprite>()->SpriteName = spriteName;
     control->GetComponent<Transform>()->Position = position;
     
     return control;
@@ -113,7 +121,6 @@ GameObject* Gui::CreateControl(GameObject *parent, const std::string &spriteName
     GameObject* control = CreateControl(parent);
     control->GetComponent<Sprite>()->SpriteName = spriteName;
     control->GetComponent<Sizeable>()->Size = size;
-    //control->AddComponent<Layoutable>();
     return control;
 }
 
@@ -129,10 +136,10 @@ GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
 }
 
 GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& fontAtlasName) {
-    GameObject* font = world->CreateObject();
+    GameObject* font = root->CreateObject();
     font->AddComponent<Font>()->Load(fontFile);
     font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
-    font->SetID(fontFile);
+    //font->SetID(fontFile);
     fonts.push_back(font);
     return font;
 }
@@ -167,7 +174,23 @@ GameObject* Gui::CreateLabelControl(GameObject *parent, const std::string &sprit
 
 GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize) {
     GameObject* control = CreateControl(parent, spriteName, position, size);
-    GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
+    //GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
+    
+    if (!font && !fonts.empty()) {
+        font = fonts[0];
+    }
+
+    GameObject* labelGO = CreatePivot(control);
+    labelGO->AddComponent<Font>(font);
+    labelGO->AddComponent<Mesh>();
+    labelGO->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    labelGO->AddComponent<Colorable>();
+    labelGO->AddComponent<Sizeable>(control);
+    labelGO->AddComponent<class Atlas>(atlas);
+    labelGO->AddComponent<TextureComponent>(atlas);
+    labelGO->AddComponent<Label>()->FontSize = fontSize;
+    labelGO->GetComponent<Label>()->Text = text;
+
     Label* label = labelGO->GetComponent<Label>();
     label->HAlignment = Font::Center;
     label->VAlignment = Font::Middle;
@@ -198,13 +221,11 @@ void Gui::AddMenuAnimator(GameObject *control, GameObject *menu, std::string act
 
 GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
-    listbox->AddComponent<Layoutable>();
+    listbox->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
     listbox->GetComponent<Touchable>()->ClickThrough = false;
     CreateClipper(listbox, true);
     GameObject* p = CreatePivot(listbox);
     p->AddComponent<Sizeable>();
-    p->AddComponent<Layoutable>()->ChildLayouting = Layoutable::ChildLayouting::VerticalStackedFit;
-    p->GetComponent<Layoutable>()->HorizontalAlignment = Layoutable::HAlignment::Relative;
     p->AddComponent<Touchable>(listbox);
     p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
     //p->AddComponent<DraggableMotion>();

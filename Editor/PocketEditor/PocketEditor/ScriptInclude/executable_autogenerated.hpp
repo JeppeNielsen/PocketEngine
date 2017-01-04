@@ -19,13 +19,6 @@ TypeInfo typeInfo;
 	      typeInfo.AddField(component->upKey, "upKey");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<Velocity>()] = [](GameObject* object) -> TypeInfo {
-Velocity* component = object->GetComponent<Velocity>();
-TypeInfo typeInfo;
-	      typeInfo.name = "Velocity";
-	      typeInfo.AddField(component->velocity, "velocity");
-return typeInfo;
-};
    }
 info.getTypeInfo = componentToFunction[componentID];
 };

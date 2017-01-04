@@ -27,8 +27,8 @@ void PlayButtons::OnCreate() {
     playButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     
-    playButton->Enabled() = false;
-    stopButton->Enabled() = false;
+    playButton->Enabled = false;
+    stopButton->Enabled = false;
     
     playButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::PlayClicked);
     stopButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::StopClicked);
@@ -51,24 +51,28 @@ void PlayButtons::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (current) {
         UpdateButtons(current);
     } else {
-        playButton->Enabled() = false;
-        stopButton->Enabled() = false;
+        playButton->Enabled = false;
+        stopButton->Enabled = false;
     }
 }
 
 void PlayButtons::UpdateButtons(OpenWorld *openWorld) {
-    playButton->Enabled() = !openWorld->IsPlaying();
-    stopButton->Enabled() = !playButton->Enabled();
+    playButton->Enabled = !openWorld->IsPlaying();
+    stopButton->Enabled = !playButton->Enabled();
 }
 
 void PlayButtons::PlayClicked(Pocket::TouchData d) {
     if (!currentWorld) return;
-    currentWorld->Play();
-    UpdateButtons(currentWorld);
+    context->preActions.emplace_back([this] {
+        currentWorld->Play();
+        UpdateButtons(currentWorld);
+    });
 }
 
 void PlayButtons::StopClicked(Pocket::TouchData d) {
     if (!currentWorld) return;
-    currentWorld->Stop();
-    UpdateButtons(currentWorld);
+    context->preActions.emplace_back([this] {
+        currentWorld->Stop();
+        UpdateButtons(currentWorld);
+    });
 }

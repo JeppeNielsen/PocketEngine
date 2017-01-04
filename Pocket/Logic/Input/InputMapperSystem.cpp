@@ -7,14 +7,14 @@
 //
 
 #include "InputMapperSystem.hpp"
-#include "GameWorld.hpp"
+#include "GameSystem.hpp"
 #include <set>
 
 using namespace Pocket;
 
 void InputMapperSystem::Initialize() {
-    world->Input().ButtonDown.Bind(this, &InputMapperSystem::ButtonDown);
-    world->Input().ButtonUp.Bind(this, &InputMapperSystem::ButtonUp);
+    root->Input().ButtonDown.Bind(this, &InputMapperSystem::ButtonDown);
+    root->Input().ButtonUp.Bind(this, &InputMapperSystem::ButtonUp);
 }
 
 void InputMapperSystem::Update(float dt) {

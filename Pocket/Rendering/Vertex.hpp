@@ -14,6 +14,7 @@
 #include "OpenGl.hpp"
 #include <vector>
 #include <map>
+#include "StringHelper.hpp"
 
 namespace Pocket {
 
@@ -116,12 +117,32 @@ struct Vertex {
     
     friend std::ostream& operator<<(std::ostream& stream, const Vertex& v) {
         stream << v.Position;
+        stream << ":";
+        stream << v.TextureCoords;
+        stream << ":";
+        stream << v.Color;
+        stream << ":";
+        stream << v.Normal;
         return stream;
     }
     
     Vertex static Deserialize(const std::string& data, const char delim = ',') {
+    
+        auto splitted = StringHelper::split(data, ':');
+        
         Vertex v;
-        v.Position = Vector3::Deserialize(data);
+        if (splitted.size()>0) {
+            v.Position = Vector3::Deserialize(splitted[0]);
+        }
+        if (splitted.size()>1) {
+            v.TextureCoords = Vector2::Deserialize(splitted[1]);
+        }
+        if (splitted.size()>2) {
+            v.Color = Colour::Deserialize(splitted[2]);
+        }
+        if (splitted.size()>3) {
+            v.Normal = Vector3::Deserialize(splitted[3]);
+        }
         return v;
     }
 };

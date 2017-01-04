@@ -144,7 +144,11 @@ namespace Pocket {
         
         inline float operator [](const int index) {
             return *(&x + index);//(index == 0) ? x : ((index==1) ? y : z);
-        }    
+        }
+        
+        inline void Set(const int index, float value) {
+            (*(&x + index))=value;
+        }
         
         inline Vector3 Cross( const Vector3& v ) const {
             return Vector3(y * v.z - z * v.y, z * v.x - x * v.z, x * v.y - y * v.x);

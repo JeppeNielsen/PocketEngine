@@ -1,175 +1,188 @@
 //
 //  GameObject.hpp
-//  EntitySystem
+//  TestComponentSystem
 //
-//  Created by Jeppe Nielsen on 06/06/16.
+//  Created by Jeppe Nielsen on 17/10/16.
 //  Copyright © 2016 Jeppe Nielsen. All rights reserved.
 //
 
 #pragma once
-#include "GameIDHelper.hpp"
+#include <vector>
 #include "Property.hpp"
 #include "DirtyProperty.hpp"
+#include "IGameObject.hpp"
+#include "InputManager.hpp"
 #include "TypeInfo.hpp"
 
 namespace Pocket {
-    
-    class ScriptWorld;
-    
-    template<typename T>
-    class Container;
-    
+    class GameWorld;
+    class GameScene;
     class GameObject;
+    class IGameSystem;
+    class GameObjectHandle;
     
     using ObjectCollection = std::vector<GameObject*>;
     
-    class GameWorld;
-    
-    struct IGameObject {
-        virtual void* GetComponent(ComponentID id) = 0;
-        virtual void AddComponent(ComponentID id) = 0;
-        virtual void AddComponent(ComponentID id, GameObject* referenceObject) = 0;
-        virtual void RemoveComponent(ComponentID id) = 0;
-        virtual void CloneComponent(ComponentID id, GameObject* object) = 0;
-    };
+    using SerializePredicate = std::function<bool(const GameObject*, int)>;
     
     class GameObject : public IGameObject {
+    private:
+        friend class GameWorld;
+        friend class GameScene;
+        friend class Handle<GameObject>;
+        friend class Container<GameObject>;
+        friend class std::allocator<GameObject>;
+        friend class ScriptWorld;
+        friend class GameObjectHandle;
+        
+        using ComponentIndicies = std::vector<int>;
+        
+        GameScene* scene;
+        ComponentIndicies componentIndicies;
+        
+        Bitset activeComponents;
+        Bitset enabledComponents;
     public:
-    
-        struct ComponentInfo {
+        Property<GameObject*> Parent;
+        
+    private:
+        ObjectCollection children;
+        
+        bool removed;
+        int index;
+        int rootId;
+        
+    public:
+        Property<bool> Enabled;
+        DirtyProperty<bool> WorldEnabled;
+        Property<int> Order;
+        
+        struct ReferenceComponent {
+            GameObject* object;
+            int componentId;
             std::string name;
-            std::function<TypeInfo(GameObject*)> getTypeInfo;
         };
+        
+    private:
     
+        struct AddReferenceComponent {
+            GameObject* object;
+            int componentID;
+            std::string referenceId;
+        };
+        
+        using AddReferenceComponentList = std::vector<AddReferenceComponent>;
+    
+        GameObject();
+        ~GameObject();
+        GameObject(const GameObject& other);
+    
+        void Reset();
+        void TrySetComponentEnabled(ComponentId id, bool enable);
+        void SetWorldEnableDirty();
+        void SetEnabled(bool enabled);
+        void TryAddToSystem(int systemId);
+        void TryRemoveFromSystem(int systemId);
+        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
+        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
+        void AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName);
+        
+        static bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
+        static void EndGetAddReferenceComponent();
+    public:
+        
+        bool HasComponent(ComponentId id) const override;
+        void* GetComponent(ComponentId id) const override;
+        void AddComponent(ComponentId id) override;
+        void AddComponent(ComponentId id, GameObject* referenceObject) override;
+        void RemoveComponent(ComponentId id) override;
+        void CloneComponent(ComponentId id, GameObject* object) override;
+        void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
+        GameObject* GetComponentOwner(ComponentId id);
+        
         template<typename T>
         bool HasComponent() const {
-            return HasComponent(GameIDHelper::GetComponentID<T>());
-        }
-    
-        template<typename T>
-        T* GetComponent();
-        
-        template<typename T>
-        T* AddComponent() {
-            ComponentID id = GameIDHelper::GetComponentID<T>();
-            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
-                componentInfo.name = GameIDHelper::GetClassName<T>();
-                
-                componentInfo.getTypeInfo = 0;
-                T* ptr = 0;
-                Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
-                    
-                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
-                        auto component = object->GetComponent<SerializedComponentType>();
-                        return component->GetType();
-                    };
-                });
-                return new Container<T>();
-            });
-            AddComponent(id);
-            return GetComponent<T>();
+            return HasComponent(GameIdHelper::GetComponentID<T>());
         }
         
         template<typename T>
-        T* AddComponent(GameObject* source) {
-            ComponentID id = GameIDHelper::GetComponentID<T>();
-            TryAddComponentContainer(id, [id](GameObject::ComponentInfo& componentInfo){
-                componentInfo.name = GameIDHelper::GetClassName<T>();
-                
-                componentInfo.getTypeInfo = 0;
-                T* ptr = 0;
-                Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo, id](auto p) {
-                    using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
-                    componentInfo.getTypeInfo = [](GameObject* object) -> TypeInfo {
-                        auto component = object->GetComponent<SerializedComponentType>();
-                        return component->GetType();
-                    };
-                });
-                
-                return new Container<T>();
-            });
-            AddComponent(id, source);
-            return GetComponent<T>();
+        T* GetComponent() const {
+            return static_cast<T*>(GetComponent(GameIdHelper::GetComponentID<T>()));
+        }
+        
+        template<typename T>
+        T* AddComponent();
+        
+        template<typename T>
+        T* AddComponent(GameObject* source);
+        
+        template<typename T>
+        void RemoveComponent() {
+            RemoveComponent(GameIdHelper::GetComponentID<T>());
         }
         
         template<typename T>
         T* CloneComponent(GameObject* source) {
-            CloneComponent(GameIDHelper::GetComponentID<T>(), source);
-            return GetComponent<T>();
+            ComponentId componentId = GameIdHelper::GetComponentID<T>();
+            CloneComponent(componentId, source);
+            return static_cast<T*>(GetComponent(componentId));
         }
         
         template<typename T>
-        void RemoveComponent() {
-            RemoveComponent(GameIDHelper::GetComponentID<T>());
+        T* ReplaceComponent(GameObject* source);
+        
+        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
+        
+        struct ComponentEditor {
+            TypeInfo type;
+            IFieldEditor* editor;
         };
         
-        void Remove();
-        bool IsRemoved();
-        
-        const ObjectCollection& Children() const;
-        Property<GameObject*>& Parent();
-        Property<bool>& Enabled();
-        DirtyProperty<bool>& WorldEnabled();
-        Property<int>& Order();
-        
-        std::vector<TypeInfo> GetComponentTypes(std::function<bool(int componentID)> predicate);
+        std::vector<ComponentEditor> GetComponentEditors(const std::function<bool(int componentID)>& predicate = 0);
         std::vector<int> GetComponentIndicies();
         
-        using SerializePredicate = std::function<bool(GameObject*, int)>;
-        void ToJson(std::ostream& stream, SerializePredicate predicate = 0);
+        InputManager& Input();
         
-        void SetID(std::string id);
-        std::string GetID();
+        void Remove();
+        bool IsRemoved() const;
         
-        GameObject* Clone(GameObject* parent = 0, GameWorld* world = 0, std::function<bool(GameObject*)> predicate = 0);
+        GameObject* CreateChild();
+        GameObject* CreateObject();
+        GameObject* Root();
+        GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated = 0);
+        GameObject* CreateChildClone(GameObject* source);
+        GameObject* CreateCopy();
         
-    private:
+        void ToJson(std::ostream& stream, SerializePredicate predicate = 0) const;
+        
+        bool IsRoot() const;
+        
+        const ObjectCollection& Children();
+        
+        Handle<GameObject> GetHandle() const;
+        
+        int RootId() const;
+        std::string& RootGuid() const;
+        
+        template<typename T>
+        T* CreateSystem();
+        
+        template<typename T>
+        void RemoveSystem();
+        
+        GameWorld* World();
+        
+        TypeInfo GetComponentTypeInfo(int index);
     
-        GameObject();
-        virtual ~GameObject();
+        Property<bool>& UpdateEnabled();
+        Property<float>& TimeScale();
+        Property<bool>& RenderEnabled();
         
-        GameObject(GameObject&& o) = delete;
-        GameObject(const GameObject& o) = delete;
-        GameObject& operator=(const GameObject& o) = delete;
+        GameObject* FindObject(int objectId);
         
-        bool HasComponent(ComponentID id) const;
+        std::string TryGetRootPath();
         
-    public:
-        void* GetComponent(ComponentID id) override;
-        void AddComponent(ComponentID id) override;
-        void AddComponent(ComponentID id, GameObject* source) override;
-        void CloneComponent(ComponentID id, GameObject* source) override;
-        void RemoveComponent(ComponentID id) override;
-    private:
-        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate);
-        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, GameObject* referenceObject);
-        void AddComponent(minijson::istream_context& context, std::string componentName);
-        void TryAddComponentContainer(ComponentID id, std::function<IContainer*(GameObject::ComponentInfo&)>&& constructor);
-        void SetWorldEnableDirty();
-        void SetEnabled(bool enabled);
-        void TrySetComponentEnabled(ComponentID id, bool enable);
-        static bool GetAddReferenceComponent(GameObject** object, int& componentID, std::string& referenceID);
-        GameObject* CloneInternal(GameObject* parent, GameWorld* world, std::function<bool(GameObject*)> predicate);
-        
-        struct Data {
-            bool removed;
-            Bitset activeComponents;
-            Bitset enabledComponents;
-            Property<GameObject*> Parent;
-            Property<bool> Enabled;
-            DirtyProperty<bool> WorldEnabled;
-            ObjectCollection children;
-            Property<int> Order;
-            void Reset();
-        };
-        
-        int index;
-        GameWorld* world;
-        Data* data;
-        
-        friend class Container<GameObject>;
-        friend class GameWorld;
-        friend class ScriptWorld;
+        template<typename T>
+        GameObject* GetComponentOwner();
     };
 }

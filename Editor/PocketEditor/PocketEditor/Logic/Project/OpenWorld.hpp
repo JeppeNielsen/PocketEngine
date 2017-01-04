@@ -11,41 +11,64 @@
 #include "InputManager.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include "FileWorld.hpp"
 #include <sstream>
 
 using namespace Pocket;
 
-namespace Pocket {
-    class GameWorldDatabase;
-}
+class Project;
+class EditorContext;
 
 class OpenWorld {
 public:
-    GameWorld& World();
-    GameWorld& EditorWorld();
+
+    OpenWorld();
     
     std::string Path;
     std::string Filename;
     
-    void CreateDefault();
-    
     SelectableCollection<EditorObject>* selectables;
     
     bool Save();
-    bool Load(const std::string& path, const std::string& filename, ScriptWorld& scriptWorld, Pocket::GameWorldDatabase* database);
+    bool Load(const std::string& path, const std::string& filename, EditorContext* context);
     
-    static void CreateDefaultSystems(GameWorld& world);
+    static void CreateDefaultSystems(GameObject& root);
+    static void CreateEditorSystems(GameObject& root);
     
     void Play();
     void Stop();
     
     Property<bool> IsPlaying;
     
-    void Update(float dt);
+    void Close();
+    
+    GameObject* Root();
+    GameObject* EditorRoot();
+    
+    void Enable();
+    void Disable();
+    
+    void PreCompile();
+    void PostCompile();
+    
+    Event<> Compiled;
     
 private:
-    GameWorld editorWorld;
-    GameWorld world;
+    EditorContext* context;
+    
+    GameObject* root;
+    GameObject* editorRoot;
+    GameObject* editorCamera;
+    
+    void InitializeRoot();
+    void UpdateTimeScale();
+    
+    void AddEditorObject(GameObject* object);
+    
+    void StoreWorld();
+    void RestoreWorld();
+    
     std::stringstream storedWorld;
+    std::vector<int> storedSelectedObjects;
 };
 
