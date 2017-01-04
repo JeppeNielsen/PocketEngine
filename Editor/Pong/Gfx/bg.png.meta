@@ -1,0 +1,12 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "B2Nw9xPzSLeZrJlf9sEBzw==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::TextureComponent": {}
+            }
+        ]
+    }
+}

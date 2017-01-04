@@ -1,42 +1,30 @@
-#include "GameSystem.hpp"
-#include <string>
-#include "Transform.hpp"
-#include "InputController.hpp"
-#include <iostream>
+#include "Controller.hpp"
 
 using namespace Pocket;
 
-struct Controller {
-    std::string upKey;
-    std::string downKey;
-    float speed;
-};
+void ControllerSystem::ObjectAdded(GameObject* object) {
+    std::cout << "Added"<<std::endl;
+}
 
-struct ControllerSystem : public GameSystem<Controller, Transform, InputController> {
-    void ObjectAdded(GameObject* object) override {
-        std::cout << "Added"<<std::endl;
-    }
+void ControllerSystem::ObjectRemoved(GameObject* object) {
+    std::cout << "Removed"<<std::endl;
+}
 
-    void ObjectRemoved(GameObject* object) override {
-        std::cout << "Removed"<<std::endl;
-    }
+void ControllerSystem::Update(float dt) {
+    for(auto o : Objects()) {
+        auto input = o->GetComponent<InputController>();
+        auto controller = o->GetComponent<Controller>();
 
-    void Update(float dt) override {
-        for(auto o : Objects()) {
-            auto input = o->GetComponent<InputController>();
-            auto controller = o->GetComponent<Controller>();
+        Vector3 velocity = 0;
 
-            Vector3 velocity = 0;
-
-            if (input->IsButtonDown(controller->upKey)) {
-                velocity.y += controller->speed;
-            }
-
-            if (input->IsButtonDown(controller->downKey)) {
-                velocity.y -= controller->speed;
-            }
-
-            o->GetComponent<Transform>()->Position += velocity * dt;
+        if (input->IsButtonDown(controller->upKey)) {
+            velocity.y += controller->speed;
         }
+
+        if (input->IsButtonDown(controller->downKey)) {
+            velocity.y -= controller->speed;
+        }
+
+        o->GetComponent<Transform>()->Position += velocity * dt;
     }
-};
+}

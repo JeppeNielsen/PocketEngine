@@ -1,27 +1,20 @@
-#include "GameSystem.hpp"
-#include "Transform.hpp"
-#include "Velocity.cpp"
-#include "Collidable.cpp"
-#include <iostream>
+#include "VelocityCollider.hpp"
 
 using namespace Pocket;
 
-struct VelocityCollider : public GameSystem<Velocity, Collidable> {
+void VelocityCollider::ObjectAdded(GameObject* object) {
+    object->GetComponent<Collidable>()->Enter.Bind(this, &VelocityCollider::OnCollision, object);
+}
 
-    void ObjectAdded(GameObject* object) {
-        object->GetComponent<Collidable>()->Enter.Bind(this, &VelocityCollider::OnCollision, object);
-    }
+void VelocityCollider::ObjectRemoved(GameObject* object) {
+    object->GetComponent<Collidable>()->Enter.Unbind(this, &VelocityCollider::OnCollision, object);
+}
 
-    void ObjectRemoved(GameObject* object) {
-        object->GetComponent<Collidable>()->Enter.Unbind(this, &VelocityCollider::OnCollision, object);
-    }
+void VelocityCollider::OnCollision(GameObject* collisionObject, GameObject* object) {
+    std::cout << "COLLISION"<<std::endl;
+    Transform* otherTransform = collisionObject->GetComponent<Transform>();
+    if (!otherTransform) return;
 
-    void OnCollision(GameObject* collisionObject, GameObject* object) {
-        std::cout << "COLLISION"<<std::endl;
-        Transform* otherTransform = collisionObject->GetComponent<Transform>();
-        if (!otherTransform) return;
-
-        Velocity* vel = object->GetComponent<Velocity>();
-        vel->velocity = -vel->velocity;
-    }
-};
+    Velocity* vel = object->GetComponent<Velocity>();
+    vel->velocity = -vel->velocity;
+}
