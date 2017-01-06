@@ -74,7 +74,7 @@ void InspectorWindow::OnCreate() {
  
     go->AddComponent<Transform>();
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {2,1,1});
-    go->AddComponent<Material>();
+    go->AddComponent<Renderable>();
     go->AddComponent<EditorObject>();
     go->AddComponent<Rotator>();
 

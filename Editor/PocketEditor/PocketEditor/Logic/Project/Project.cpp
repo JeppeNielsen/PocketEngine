@@ -130,7 +130,7 @@ void Project::CreateNewWorld(const std::string &worldPath) {
     GameObject* cube = root->CreateObject();
     cube->AddComponent<Transform>();
     cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-    cube->AddComponent<Material>();
+    cube->AddComponent<Renderable>();
     
     std::ofstream file;
     file.open(worldPath);

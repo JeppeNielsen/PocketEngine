@@ -33,7 +33,7 @@ void PlayButtons::OnCreate() {
     playButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::PlayClicked);
     stopButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::StopClicked);
     
-    window->RemoveComponent<Material>();
+    window->RemoveComponent<Renderable>();
     ScreenSizeChanged();
 }
 

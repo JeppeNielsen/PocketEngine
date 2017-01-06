@@ -47,7 +47,7 @@ public:
         cube->AddComponent<Transform>()->Position = pos;
         cube->AddComponent<Rotator>()->speed = { 2,1,0 };
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-        cube->AddComponent<Material>();
+        cube->AddComponent<Renderable>();
         
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         

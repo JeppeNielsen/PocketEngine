@@ -10,7 +10,6 @@
 #include "GameSystem.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
-#include "Material.hpp"
 #include "Selectable.hpp"
 #include <map>
 

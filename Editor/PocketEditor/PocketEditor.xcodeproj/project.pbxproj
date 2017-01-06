@@ -366,6 +366,7 @@
 		72B4926A1DD3AE510063518A /* testGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492691DD3AE510063518A /* testGui.cpp */; };
 		72B4926D1DD7B0CC0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */; };
 		72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492741DD8ADCB0063518A /* FileWorld.cpp */; };
+		72BA19611E2039FD00122007 /* ShaderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19601E2039FD00122007 /* ShaderComponent.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -640,7 +641,7 @@
 		729950741C99F76000DAAE5D /* ColorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColorSystem.hpp; sourceTree = "<group>"; };
 		729950781C99F76000DAAE5D /* Light.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Light.cpp; sourceTree = "<group>"; };
 		729950791C99F76000DAAE5D /* Light.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Light.hpp; sourceTree = "<group>"; };
-		7299507A1C99F76000DAAE5D /* Material.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Material.hpp; sourceTree = "<group>"; };
+		7299507A1C99F76000DAAE5D /* Renderable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Renderable.hpp; sourceTree = "<group>"; };
 		7299507B1C99F76000DAAE5D /* Mesh.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Mesh.hpp; sourceTree = "<group>"; };
 		7299507C1C99F76000DAAE5D /* RenderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderSystem.cpp; sourceTree = "<group>"; };
 		7299507D1C99F76000DAAE5D /* RenderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RenderSystem.hpp; sourceTree = "<group>"; };
@@ -1262,6 +1263,8 @@
 		72B4926C1DD7B0CC0063518A /* GameObjectHandle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectHandle.hpp; sourceTree = "<group>"; };
 		72B492741DD8ADCB0063518A /* FileWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileWorld.cpp; sourceTree = "<group>"; };
 		72B492751DD8ADCB0063518A /* FileWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileWorld.hpp; sourceTree = "<group>"; };
+		72BA195E1E1D8F9900122007 /* ShaderComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderComponent.hpp; sourceTree = "<group>"; };
+		72BA19601E2039FD00122007 /* ShaderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderComponent.cpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -1854,10 +1857,12 @@
 				729950731C99F76000DAAE5D /* ColorSystem.cpp */,
 				729950741C99F76000DAAE5D /* ColorSystem.hpp */,
 				729950771C99F76000DAAE5D /* Lights */,
-				7299507A1C99F76000DAAE5D /* Material.hpp */,
 				7299507B1C99F76000DAAE5D /* Mesh.hpp */,
+				7299507A1C99F76000DAAE5D /* Renderable.hpp */,
 				7299507C1C99F76000DAAE5D /* RenderSystem.cpp */,
 				7299507D1C99F76000DAAE5D /* RenderSystem.hpp */,
+				72BA19601E2039FD00122007 /* ShaderComponent.cpp */,
+				72BA195E1E1D8F9900122007 /* ShaderComponent.hpp */,
 				729950821C99F76000DAAE5D /* TextureComponent.cpp */,
 				729950831C99F76000DAAE5D /* TextureComponent.hpp */,
 			);
@@ -3385,6 +3390,7 @@
 				729953F71C99F76100DAAE5D /* MenuSystem.cpp in Sources */,
 				7299548C1C99F76100DAAE5D /* btPolyhedralConvexShape.cpp in Sources */,
 				729955571C99F76100DAAE5D /* tinyxmlparser.cpp in Sources */,
+				72BA19611E2039FD00122007 /* ShaderComponent.cpp in Sources */,
 				729953D21C99F76100DAAE5D /* UnitTest.cpp in Sources */,
 				729953ED1C99F76100DAAE5D /* ParticleUpdaterSystem.cpp in Sources */,
 				7299546F1C99F76100DAAE5D /* btManifoldResult.cpp in Sources */,

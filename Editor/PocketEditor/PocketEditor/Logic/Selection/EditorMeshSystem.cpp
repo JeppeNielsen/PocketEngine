@@ -7,6 +7,7 @@
 //
 
 #include "EditorMeshSystem.hpp"
+#include "Renderable.hpp"
 
 void EditorMeshSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &EditorMeshSystem::SelectionChanged, object);
@@ -23,7 +24,7 @@ void EditorMeshSystem::SelectionChanged(Pocket::GameObject *object) {
         selectionObject->AddComponent<Transform>(object);
         selectionObject->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1.05f);
         selectionObject->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f, 0.5f));
-        selectionObject->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+        selectionObject->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
         transformObjects[object] = selectionObject;
     } else {
        TryRemoveTransformObject(object);

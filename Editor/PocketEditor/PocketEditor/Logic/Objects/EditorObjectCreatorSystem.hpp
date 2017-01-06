@@ -11,7 +11,7 @@
 #include "EditorObject.hpp"
 #include "Transform.hpp"
 #include "Mesh.hpp"
-#include "Material.hpp"
+#include "Renderable.hpp"
 #include "Selectable.hpp"
 
 using namespace Pocket;

@@ -18,6 +18,7 @@
 #include "Selectable.hpp"
 #include "Touchable.hpp"
 #include "Draggable.hpp"
+#include "Renderable.hpp"
 
 void EditorTransformSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &EditorTransformSystem::SelectionChanged, object);
@@ -38,7 +39,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             xaxis->AddComponent<Transform>(object);
             xaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({1,0,0}, {1,0.05f,0.05f});
             xaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(1.0f,0,0.0f, 0.5f));
-            xaxis->AddComponent<Material>();
+            xaxis->AddComponent<Renderable>();
             xaxis->AddComponent<Touchable>();
             xaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XAxis;
             xaxis->AddComponent<Selectable>(object);
@@ -49,7 +50,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             yaxis->AddComponent<Transform>(object);
             yaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,1,0}, {0.05f,1.0f,0.05f});
             yaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,1.0f,0.0f, 0.5f));
-            yaxis->AddComponent<Material>();
+            yaxis->AddComponent<Renderable>();
             yaxis->AddComponent<Touchable>();
             yaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
             yaxis->AddComponent<Selectable>(object);
@@ -60,7 +61,7 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
             zaxis->AddComponent<Transform>(object);
             zaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0,1}, {0.05f,0.05f,1.0f});
             zaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,0.0f,1.0f, 0.5f));
-            zaxis->AddComponent<Material>();
+            zaxis->AddComponent<Renderable>();
             zaxis->AddComponent<Touchable>();
             zaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::ZAxis;
             zaxis->AddComponent<Selectable>(object);
