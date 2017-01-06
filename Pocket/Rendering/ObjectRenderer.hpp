@@ -9,7 +9,7 @@
 #pragma once
 #include "GameObject.hpp"
 #include "Transform.hpp"
-#include "Material.hpp"
+#include "Renderable.hpp"
 #include "Shader.hpp"
 #include "Mesh.hpp"
 #include "TextureComponent.hpp"
@@ -20,7 +20,7 @@ namespace Pocket {
 
 struct VisibleObject {
     Transform* transform;
-    Material* material;
+    Renderable* material;
     IShader* shader;
     Mesh* mesh;
     int vertexType;

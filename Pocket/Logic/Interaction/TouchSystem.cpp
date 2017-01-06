@@ -8,7 +8,7 @@
 
 #include "TouchSystem.hpp"
 #include <stack>
-#include "Material.hpp"
+#include "Renderable.hpp"
 
 using namespace Pocket;
 
@@ -154,14 +154,13 @@ void TouchSystem::TouchUp(Pocket::TouchEvent e) {
     touchList.clear();
 }
 
-
 TouchSystem::TouchableObject::TouchableObject(GameObject* object) {
     transform = object->GetComponent<Transform>();
     mesh = object->GetComponent<Mesh>();
     touchable = object->GetComponent<Touchable>();
     orderable = object->GetComponent<Orderable>();
-    Material* material = object->GetComponent<Material>();
-    clip = material ? material->Clip : 0;
+    Renderable* renderable = object->GetComponent<Renderable>();
+    clip = renderable ? renderable->Clip : 0;
 }
 
 bool TouchSystem::SortClippers(const TouchableObject *a, const TouchableObject *b) {

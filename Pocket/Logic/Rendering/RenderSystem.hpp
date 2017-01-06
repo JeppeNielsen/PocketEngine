@@ -15,9 +15,9 @@
 
 namespace Pocket {
 
-class RenderSystem : public GameSystem<Transform, Mesh, Material> {
+class RenderSystem : public GameSystem<Transform, Mesh, Renderable> {
 public:
-    using OctreeSystem = OctreeSystem<Material>;
+    using OctreeSystem = OctreeSystem<Renderable>;
     
     struct CameraSystem : GameSystem<Transform, Camera> { };
     

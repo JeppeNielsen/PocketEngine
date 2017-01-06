@@ -89,7 +89,7 @@ GameObject* Gui::CreatePivot(GameObject* parent, const Vector2& position) {
 GameObject* Gui::CreateControl(GameObject* parent) {
     GameObject* control = CreatePivot(parent, 0);
     control->AddComponent<Mesh>();
-    control->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    control->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     control->AddComponent<Touchable>();
     control->AddComponent<Colorable>();
     control->AddComponent<Sizeable>();
@@ -127,8 +127,8 @@ GameObject* Gui::CreateControl(GameObject *parent, const std::string &spriteName
 GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
     GameObject* clipper = CreatePivot(parent, 0);
     clipper->AddComponent<Mesh>(parent);
-    clipper->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
-    clipper->GetComponent<Material>()->Clip = push ? 1 : 2;
+    clipper->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
+    clipper->GetComponent<Renderable>()->Clip = push ? 1 : 2;
     clipper->AddComponent<Sizeable>(parent);
     clipper->AddComponent<Sprite>(parent);
     clipper->AddComponent<Touchable>();
@@ -151,7 +151,7 @@ GameObject* Gui::CreateLabel(GameObject *parent, const Vector2 &position, const 
     GameObject* label = CreatePivot(parent, position);
     label->AddComponent<Font>(font);
     label->AddComponent<Mesh>();
-    label->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    label->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     label->AddComponent<Colorable>();
     label->AddComponent<Sizeable>()->Size = size;
     label->AddComponent<class Atlas>(atlas);
@@ -183,7 +183,7 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     GameObject* labelGO = CreatePivot(control);
     labelGO->AddComponent<Font>(font);
     labelGO->AddComponent<Mesh>();
-    labelGO->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    labelGO->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     labelGO->AddComponent<Colorable>();
     labelGO->AddComponent<Sizeable>(control);
     labelGO->AddComponent<class Atlas>(atlas);

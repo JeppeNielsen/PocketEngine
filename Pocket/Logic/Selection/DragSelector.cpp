@@ -50,7 +50,7 @@ void DragSelector::Setup(const Pocket::Rect &viewport) {
     dragRectangle = root->CreateObject();
     dragRectangle->AddComponent<Transform>();
     dragRectangle->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 1, Colour(1.0f, 1.0f, 1.0f, 0.15f));
-    dragRectangle->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    dragRectangle->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
 }
 
 void DragSelector::Down(Pocket::TouchEvent e) {

@@ -8,6 +8,7 @@
 
 #include "RenderSystem.hpp"
 #include "Engine.hpp"
+#include "ShaderComponent.hpp"
 
 using namespace Pocket;
 
@@ -43,10 +44,7 @@ void RenderSystem::Destroy() {
 }
 
 void RenderSystem::ObjectAdded(GameObject *object) {
-    Material* material = object->GetComponent<Material>();
-    if (!material->Shader()) {
-        material->Shader = object->GetComponent<TextureComponent>() ? DefaultTexturedShader : DefaultShader;
-    }
+
 }
 
 RenderSystem::OctreeSystem& RenderSystem::Octree() {
@@ -80,9 +78,8 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     Vector3 distanceToCameraPosition;
     for(auto object : objectsInFrustum) {
         
-        Material* material = object->GetComponent<Material>();
-        if (!material->Shader()) continue; // must have shader
-        RenderMask mask = material->Mask;
+        Renderable* renderable = object->GetComponent<Renderable>();
+        RenderMask mask = renderable->Mask;
         if (!((cameraMask & mask) == mask)) { // must be matching camera mask
             continue;
         }
@@ -99,15 +96,25 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         float fInvW = 1.0f / ( viewProjection[3][0] * distanceToCameraPosition.x + viewProjection[3][1] * distanceToCameraPosition.y + viewProjection[3][2] * distanceToCameraPosition.z + viewProjection[3][3] );
         float distanceToCamera = ( viewProjection[2][0] * distanceToCameraPosition.x + viewProjection[2][1] * distanceToCameraPosition.y + viewProjection[2][2] * distanceToCameraPosition.z + viewProjection[2][3] ) * fInvW;
         
-        VisibleObjects& visibleObjects = material->BlendMode() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
+        VisibleObjects& visibleObjects = renderable->BlendMode() == BlendModeType::Opaque ? opaqueObjects : transparentObjects;
+        
+        IShader* shader = 0;
+        ShaderComponent* shaderComponent = object->GetComponent<ShaderComponent>();
+        TextureComponent* textureComponent = object->GetComponent<TextureComponent>();
+        if (shaderComponent) {
+            shader = shaderComponent->GetBaseShader();
+        }
+        if (!shader) {
+            shader = textureComponent ? &Shaders.Textured : &Shaders.Colored;
+        }
         
         visibleObjects.push_back({
             transform,
-            material,
-            material->Shader(),
+            renderable,
+            shader,
             mesh,
             mesh->VertexType(),
-            object->GetComponent<TextureComponent>(),
+            textureComponent,
             object->GetComponent<Orderable>(),
             distanceToCamera
         });

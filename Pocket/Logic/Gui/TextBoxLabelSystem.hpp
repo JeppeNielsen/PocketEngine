@@ -12,7 +12,7 @@
 #include "TextBox.hpp"
 #include "Label.hpp"
 #include "Mesh.hpp"
-#include "Material.hpp"
+#include "Renderable.hpp"
 #include "Sizeable.hpp"
 
 namespace Pocket {

@@ -8,7 +8,7 @@
 
 #include "SelectionVisualizer.hpp"
 #include "GameSystem.hpp"
-#include "Material.hpp"
+#include "Renderable.hpp"
 
 using namespace Pocket;
 
@@ -37,7 +37,7 @@ GameObject* SelectionVisualizer::CreateSelection(GameObject* object) {
     
     go->AddComponent<Transform>(object);
     go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(object->GetComponent<Mesh>()->LocalBoundingBox().center, object->GetComponent<Mesh>()->LocalBoundingBox().extends * 0.5f + Vector3(0.01f,0.01f,0.01f), Colour(0.0f, 0.0f, 1.0f, 0.5f));
-    go->AddComponent<Material>()->BlendMode = BlendModeType::Alpha;
+    go->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     
     return go;
 }

@@ -13,7 +13,7 @@ using namespace Pocket;
 void ShaderCollection::Initialize() {
 
     {
-        Colored.Create(
+        Colored.Load(
             "attribute vec4 Position;                   "
             "attribute vec4 Color;                      "
             "uniform mat4 ViewProjection;               "
@@ -31,7 +31,7 @@ void ShaderCollection::Initialize() {
     }
 
     {
-        Textured.Create(
+        Textured.Load(
             "attribute vec4 Position;                   "
             "attribute vec2 TexCoords;                  "
             "attribute vec4 Color;                      "
@@ -54,7 +54,7 @@ void ShaderCollection::Initialize() {
     }
     
     {
-        LitColored.Create(
+        LitColored.Load(
             "attribute vec4 Position;                   "
             "attribute vec4 Color;                      "
             "attribute vec3 Normal;                     "
@@ -82,7 +82,7 @@ void ShaderCollection::Initialize() {
     }
 
     {
-        LitTextured.Create(
+        LitTextured.Load(
             "attribute vec4 Position;                   "
             "attribute vec2 TexCoords;                  "
             "attribute vec4 Color;                      "

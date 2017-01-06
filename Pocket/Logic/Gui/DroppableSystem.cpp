@@ -8,7 +8,6 @@
 
 #include "DroppableSystem.hpp"
 #include "Draggable.hpp"
-#include "Material.hpp"
 #include "Mesh.hpp"
 
 using namespace Pocket;

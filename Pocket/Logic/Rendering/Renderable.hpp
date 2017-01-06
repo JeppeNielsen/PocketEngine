@@ -1,5 +1,5 @@
 //
-//  Material.h
+//  Renderable.hpp
 //  Shaders
 //
 //  Created by Jeppe Nielsen on 25/06/15.
@@ -19,10 +19,9 @@ namespace Pocket {
         Add
     };
 
-    struct Material {
+    struct Renderable {
     public:
-        Material() { Shader = 0; BlendMode = BlendModeType::Opaque; Mask = 0; Clip = 0; }
-        Property<IShader*> Shader;
+        Renderable() { BlendMode = BlendModeType::Opaque; Mask = 0; Clip = 0; }
         Property<BlendModeType> BlendMode;
         Property<RenderMask> Mask;
         int Clip;

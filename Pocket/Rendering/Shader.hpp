@@ -24,6 +24,7 @@ static const std::string ViewProjectionUniformName = "ViewProjection";
 class IShader {
 public:
     virtual ~IShader() { }
+    virtual bool Load(std::string vertexShader, std::string fragmentShader) = 0;
 };
 
 template<class V>
@@ -41,7 +42,7 @@ public:
         attributes.clear();
     }
 
-    bool Create(std::string vertexShader, std::string fragmentShader) {
+    bool Load(std::string vertexShader, std::string fragmentShader) override {
         Clear();
         
 #ifdef IPHONE

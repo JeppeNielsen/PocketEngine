@@ -68,7 +68,7 @@ void TextBoxLabelSystem::TextBoxActiveChanged(GameObject *object) {
         cursor->AddComponent<Transform>();
         cursor->Parent = object;
         cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
-        cursor->AddComponent<Material>();
+        cursor->AddComponent<Renderable>();
         cursor->AddComponent<Orderable>();
         MoveCursor(textBox, object);
         

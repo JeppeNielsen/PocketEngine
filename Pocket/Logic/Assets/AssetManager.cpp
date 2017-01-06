@@ -9,9 +9,11 @@
 #include "AssetManager.hpp"
 #include "AssetLoaderSystem.hpp"
 #include "TextureComponent.hpp"
+#include "ShaderComponent.hpp"
 
 using namespace Pocket;
 
 void AssetManager::Initialize() {
     root->CreateSystem<AssetLoaderSystem<TextureComponent>>();
+    root->CreateSystem<AssetLoaderSystem<ShaderComponent>>();
 }
