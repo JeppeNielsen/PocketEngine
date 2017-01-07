@@ -269,7 +269,7 @@ private:
         if (linkSuccess == GL_FALSE) {
             GLchar messages[256];
             glGetProgramInfoLog(shaderProgram, sizeof(messages), 0, &messages[0]);
-            //std::cout<<messages<<std::endl;
+            std::cout<<messages<<std::endl;
             return false;
         }
         
@@ -291,7 +291,7 @@ private:
         if (compileSuccess == GL_FALSE) {
             GLchar messages[256];
             glGetShaderInfoLog(shader, sizeof(messages), 0, &messages[0]);
-            //std::cout<<messages<<std::endl;
+            std::cout<<messages<<std::endl;
             return 0;
         }
         

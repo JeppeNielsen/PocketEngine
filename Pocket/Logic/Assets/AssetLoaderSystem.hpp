@@ -8,13 +8,40 @@
 
 #pragma once
 #include "GameSystem.hpp"
+#include "AssetLoader.hpp"
+#include "FileSystemWatcher.hpp"
 #include <iostream>
 
 namespace Pocket {
     template<typename T>
-    class AssetLoaderSystem : public GameSystem<T> {
+    class AssetLoaderSystem : public GameSystem<AssetLoader, T> {
+    public:
+        void SetFileWatcher(FileSystemWatcher* watcher) {
+            this->watcher = watcher;
+            watcher->FileModified.Bind(this, &AssetLoaderSystem<T>::FileModified);
+        }
+    private:
+        FileSystemWatcher* watcher;
     protected:
-        void ObjectAdded(GameObject* object) {
+    
+        void FileModified(std::string path) {
+            for(auto o : this->Objects()) {
+                if (o->template GetComponent<AssetLoader>()->pathLoaded == path) {
+                    LoadAsset(o);
+                }
+            }
+        }
+        
+        void Destroy() override {
+            watcher->FileModified.Unbind(this, &AssetLoaderSystem<T>::FileModified);
+        }
+    
+        void ObjectAdded(GameObject* object) override {
+            LoadAsset(object);
+        }
+        
+        void LoadAsset(GameObject* object) {
+            AssetLoader* assetLoader = object->GetComponent<AssetLoader>();
             GameObject* ownerObject = object->GetComponentOwner<T>();
             std::string rootFilename = ownerObject->TryGetRootPath();
             auto pos = rootFilename.rfind(".");
@@ -24,12 +51,8 @@ namespace Pocket {
                 
                 T* asset = object->GetComponent<T>();
                 asset->LoadAsset(fileNameWithoutExtension);
+                assetLoader->pathLoaded = fileNameWithoutExtension;
             }
-        //    std::cout << "Filename : "<<rootFilename << "pos : " << pos << std::endl;
-        }
-        
-        void ObjectRemoved(GameObject* object) {
-            
         }
     };
 }

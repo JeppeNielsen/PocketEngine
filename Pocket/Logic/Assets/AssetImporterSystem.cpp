@@ -15,10 +15,21 @@ using namespace Pocket;
 
 const std::string extension = ".json";
 
-AssetImporterSystem::AssetImporterSystem() : isDirty(false) {
-    watcher.Changed.Bind([this] () {
-        isDirty = true;
-    });
+AssetImporterSystem::AssetImporterSystem() : isDirty(false), watcher(0) {}
+
+void AssetImporterSystem::Initialize() {
+}
+
+void AssetImporterSystem::Destroy() {
+    if (watcher) {
+        this->watcher->Changed.Unbind(this, &AssetImporterSystem::FilesChanged);
+    }
+}
+
+void AssetImporterSystem::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
+    this->watcher = watcher;
+    this->watcher->Changed.Bind(this, &AssetImporterSystem::FilesChanged);
+    isDirty = true;
 }
 
 void AssetImporterSystem::Update(float dt) {
@@ -26,7 +37,7 @@ void AssetImporterSystem::Update(float dt) {
     isDirty = false;
     
     currentFiles.clear();
-    FileReader::FindFiles(currentFiles, pathToWatch, "");
+    FileReader::FindFiles(currentFiles, watcher->Path(), "");
     
     for(auto& currentFile : currentFiles) {
         auto prev = std::find(prevFiles.begin(), prevFiles.end(), currentFile);
@@ -43,6 +54,10 @@ void AssetImporterSystem::Update(float dt) {
     }
     
     prevFiles = currentFiles;
+}
+
+void AssetImporterSystem::FilesChanged() {
+    isDirty = true;
 }
 
 void AssetImporterSystem::FileCreated(const std::string &path) {
@@ -98,10 +113,4 @@ void AssetImporterSystem::AssetCreated(Pocket::AssetImporter *assetImporter, con
 
 std::string AssetImporterSystem::GetMetaPathFromPath(const std::string &path) {
     return path + ".meta";
-}
-
-void AssetImporterSystem::SetPath(const std::string &path) {
-    watcher.Start(path);
-    pathToWatch = path;
-    isDirty = true;
 }

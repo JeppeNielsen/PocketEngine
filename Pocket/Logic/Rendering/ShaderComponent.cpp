@@ -70,7 +70,7 @@ bool ShaderComponent::TryParseShader(const std::string &shader, int startOffset,
                 return true;
             }
         }
-        std::cout << shader[i];
+        //std::cout << shader[i];
     }
     return false;
 }

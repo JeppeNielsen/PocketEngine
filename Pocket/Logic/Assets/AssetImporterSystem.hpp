@@ -10,27 +10,29 @@
 #include "GameSystem.hpp"
 #include "AssetImporter.hpp"
 #include "FileSystemWatcher.hpp"
+#include "AssetLoader.hpp"
 #include <vector>
 
 namespace Pocket {
     class AssetImporterSystem : public GameSystem<AssetImporter> {
     protected:
+        void Initialize();
+        void Destroy();
         void Update(float dt);
     
     public:
         AssetImporterSystem();
         
-        void SetPath(const std::string& path);
+        void SetFileWatcher(FileSystemWatcher* watcher);
         
     private:
-    
+        void FilesChanged();
         void FileCreated(const std::string& path);
         void FileRemoved(const std::string& path);
         
         void AssetCreated(AssetImporter* assetImporter, const std::string& path);
         std::string GetMetaPathFromPath(const std::string& path);
         
-        FileSystemWatcher watcher;
         bool isDirty;
         std::string pathToWatch;
         
@@ -38,5 +40,7 @@ namespace Pocket {
         
         FileList currentFiles;
         FileList prevFiles;
+        
+        FileSystemWatcher* watcher;
     };
 }

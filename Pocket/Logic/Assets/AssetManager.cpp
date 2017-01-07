@@ -17,3 +17,8 @@ void AssetManager::Initialize() {
     root->CreateSystem<AssetLoaderSystem<TextureComponent>>();
     root->CreateSystem<AssetLoaderSystem<ShaderComponent>>();
 }
+
+void AssetManager::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
+    root->CreateSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
+    root->CreateSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
+}
