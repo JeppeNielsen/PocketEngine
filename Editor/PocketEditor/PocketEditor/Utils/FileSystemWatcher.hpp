@@ -10,13 +10,18 @@
 #include "Event.hpp"
 #include <string>
 
-class FileSystemWatcher {
+namespace Pocket {
+    class FileSystemWatcher {
 
-public:
-    void Start(const std::string& pathToWatch);
-    void Stop();
+    public:
+        void Start(const std::string& pathToWatch);
+        void Stop();
 
-    Pocket::Event<> Changed;
-private:
-    void* streamPtr;
-};
+        Event<> Changed;
+        Event<std::string> FileModified;
+        const std::string& Path();
+    private:
+        std::string path;
+        void* streamPtr;
+    };
+}

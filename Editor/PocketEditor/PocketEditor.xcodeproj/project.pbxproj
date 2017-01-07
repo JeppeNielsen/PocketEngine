@@ -367,6 +367,7 @@
 		72B4926D1DD7B0CC0063518A /* GameObjectHandle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B4926B1DD7B0CC0063518A /* GameObjectHandle.cpp */; };
 		72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492741DD8ADCB0063518A /* FileWorld.cpp */; };
 		72BA19611E2039FD00122007 /* ShaderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19601E2039FD00122007 /* ShaderComponent.cpp */; };
+		72BA19641E20F75800122007 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19621E20F75800122007 /* AssetLoader.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1265,6 +1266,8 @@
 		72B492751DD8ADCB0063518A /* FileWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileWorld.hpp; sourceTree = "<group>"; };
 		72BA195E1E1D8F9900122007 /* ShaderComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ShaderComponent.hpp; sourceTree = "<group>"; };
 		72BA19601E2039FD00122007 /* ShaderComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderComponent.cpp; sourceTree = "<group>"; };
+		72BA19621E20F75800122007 /* AssetLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoader.cpp; sourceTree = "<group>"; };
+		72BA19631E20F75800122007 /* AssetLoader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoader.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -1362,14 +1365,16 @@
 		72308CF31E127A7A00B92B8D /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				72308D111E13D55F00B92B8D /* AssetImporter.cpp */,
+				72308D121E13D55F00B92B8D /* AssetImporter.hpp */,
+				72308D0E1E127F7F00B92B8D /* AssetImporterSystem.cpp */,
+				72308D0F1E127F7F00B92B8D /* AssetImporterSystem.hpp */,
+				72BA19621E20F75800122007 /* AssetLoader.cpp */,
+				72BA19631E20F75800122007 /* AssetLoader.hpp */,
 				72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */,
 				72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */,
 				72308CF81E127A7A00B92B8D /* AssetManager.cpp */,
 				72308CF91E127A7A00B92B8D /* AssetManager.hpp */,
-				72308D0E1E127F7F00B92B8D /* AssetImporterSystem.cpp */,
-				72308D0F1E127F7F00B92B8D /* AssetImporterSystem.hpp */,
-				72308D111E13D55F00B92B8D /* AssetImporter.cpp */,
-				72308D121E13D55F00B92B8D /* AssetImporter.hpp */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -3379,6 +3384,7 @@
 				729954861C99F76100DAAE5D /* btEmptyShape.cpp in Sources */,
 				729954711C99F76100DAAE5D /* btSphereBoxCollisionAlgorithm.cpp in Sources */,
 				729954091C99F76100DAAE5D /* PhysicsSystem.cpp in Sources */,
+				72BA19641E20F75800122007 /* AssetLoader.cpp in Sources */,
 				7299548B1C99F76100DAAE5D /* btOptimizedBvh.cpp in Sources */,
 				729954B41C99F76100DAAE5D /* btGearConstraint.cpp in Sources */,
 				729953CC1C99F76100DAAE5D /* Octree.cpp in Sources */,

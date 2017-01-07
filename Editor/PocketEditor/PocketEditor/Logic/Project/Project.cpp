@@ -71,6 +71,7 @@ void Project::Open(const std::string& path) {
     
     //RefreshSourceFiles();
     //scriptWorld.LoadLib();
+    fileSystemWatcher.Start(path);
     Opened();
 }
 
@@ -149,3 +150,5 @@ void Project::SaveWorld() {
 }
 
 std::string& Project::Path() { return path; }
+
+FileSystemWatcher* Project::FileSystemWatcher() { return &fileSystemWatcher; }

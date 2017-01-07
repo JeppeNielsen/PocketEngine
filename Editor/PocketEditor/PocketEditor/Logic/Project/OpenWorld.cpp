@@ -64,7 +64,6 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<InputMapperSystem>();
     world.CreateSystem<VelocitySystem>();
     world.CreateSystem<Gui>();
-    world.CreateSystem<AssetManager>();
 }
 
 void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {

@@ -15,6 +15,7 @@
 #include "OpenWorldCollection.hpp"
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
+#include "FileSystemWatcher.hpp"
 
 using namespace Pocket;
 
@@ -25,6 +26,7 @@ private:
     ScriptWorld scriptWorld;
     std::string path;
     std::vector<std::string> defaultIncludes;
+    FileSystemWatcher fileSystemWatcher;
     
     void RefreshSourceFiles();
     
@@ -47,6 +49,8 @@ public:
     SelectableCollection<EditorObject>* GetSelectables();
     
     std::string& Path();
+    
+    FileSystemWatcher* FileSystemWatcher();
     
     Event<> Opened;
     Event<> PostCompile;

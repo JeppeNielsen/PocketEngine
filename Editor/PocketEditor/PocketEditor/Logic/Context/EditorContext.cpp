@@ -9,6 +9,7 @@
 #include "EditorContext.hpp"
 #include "Cloner.hpp"
 #include "CloneVariable.hpp"
+#include "AssetManager.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
@@ -23,7 +24,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     
     fileWorld.AddGameWorld(world);
     fileWorld.OnRootCreated = [this] (GameObject* root) {
-        
+        root->CreateSystem<AssetManager>()->SetFileWatcher(Project().FileSystemWatcher());
     };
     fileWorld.OnChildCreated = [this] (GameObject* child) {
     //    child->AddComponent<EditorObject>();
