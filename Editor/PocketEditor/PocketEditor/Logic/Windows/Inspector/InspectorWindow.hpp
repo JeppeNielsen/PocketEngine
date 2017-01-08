@@ -38,4 +38,5 @@ private:
     
     void ComponentClicked(TouchData d, GameObjectEditor::ComponentCreatedData data);
     void RefreshInspector();
+    GameObject* TryGetFirstObjectWithComponent(int componentId);
 };

@@ -34,6 +34,21 @@ void InspectorWindow::OnInitialize() {
     selectables = 0;
     
     removeComponentMenu.InitializePopUp();
+    removeComponentMenu.AddChild("Add Reference").Clicked.Bind([this] () {
+        if (!currentWorld) return;
+        int componentIndex;
+        if (!context->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
+            return;
+        }
+        
+        GameObject* referenceObject = TryGetFirstObjectWithComponent(componentIndex);
+        if (referenceObject) {
+            for(auto o : selectables->Selected()) {
+                o->GetComponent<EditorObject>()->gameObject->ReplaceComponent(componentIndex, referenceObject);
+            }
+        }
+        RefreshInspector();
+    });
     removeComponentMenu.AddChild("Remove").Clicked.Bind([this] () {
         if (!currentWorld) return;
         int componentIndex;
@@ -166,4 +181,43 @@ void InspectorWindow::RefreshInspector() {
 
 void InspectorWindow::PostCompile() {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
+}
+
+GameObject* InspectorWindow::TryGetFirstObjectWithComponent(int componentId) {
+    
+    std::vector<std::string> guids;
+    std::vector<std::string> paths;
+    context->World().GetPaths(guids, paths);
+    for (int i=0; i<paths.size(); ++i) {
+        
+        std::ifstream file;
+        file.open(paths[i]);
+            
+        
+        //std::cout << "Start parse file: "<<p.second<<std::endl;
+        
+        
+        //context.World().TryParseJson(file, GameIdHelper::GetComponentID<Transform>(), [] (int parent, int object) {
+        //    std::cout << " parent: " << parent << "  object: " << object << std::endl;
+        //});
+
+        bool objectFound = false;
+        int objectId = 0;
+        context->World().TryParseJson(file, componentId, [&](int parentId, int id) {
+            objectFound = true;
+            objectId = id;
+        });
+        
+        if (objectFound) {
+            GameObject* root = context->World().TryFindRoot(guids[i]);
+            if (root) {
+                GameObject* object = root->FindObject(objectId);
+                if (object) {
+                    return object;
+                }
+            }
+        }
+    }
+    
+    return 0;
 }
