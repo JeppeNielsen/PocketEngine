@@ -16,6 +16,8 @@ namespace Pocket {
     template<typename T>
     class AssetLoaderSystem : public GameSystem<AssetLoader, T> {
     public:
+        AssetLoaderSystem() : watcher(0) { }
+    
         void SetFileWatcher(FileSystemWatcher* watcher) {
             this->watcher = watcher;
             watcher->FileModified.Bind(this, &AssetLoaderSystem<T>::FileModified);
@@ -33,7 +35,9 @@ namespace Pocket {
         }
         
         void Destroy() override {
-            watcher->FileModified.Unbind(this, &AssetLoaderSystem<T>::FileModified);
+            if (watcher) {
+                watcher->FileModified.Unbind(this, &AssetLoaderSystem<T>::FileModified);
+            }
         }
     
         void ObjectAdded(GameObject* object) override {

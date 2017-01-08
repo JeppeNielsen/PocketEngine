@@ -79,6 +79,8 @@ void Texture::CreateFromJpegData(void *data, int size) {
 
 void Texture::CreateFromBuffer(unsigned char *buffer, int width, int height, GLenum pixelFormat) {
     
+    Free();
+    
     this->width = width;
     this->height = height;
     
