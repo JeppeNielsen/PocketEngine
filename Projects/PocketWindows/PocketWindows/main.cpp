@@ -45,30 +45,34 @@ class Game : public GameState<Game> {
 		Shader<Vertex>& LitColored = cube->AddComponent<ShaderComponent>()->GetShader<Vertex>();
 
 		LitColored.Load(
-			"attribute vec4 Position;                   "
-			"attribute vec4 Color;                      "
-			"attribute vec3 Normal;                     "
-			"uniform mat4 ViewProjection;               "
-			"varying vec4 vColor;                       "
-			"varying vec3 vNormal;                      "
-			"void main() {                              "
-			"   vColor = Color;                         "
-			"   vNormal = Normal;                       "
-			"	gl_Position = Position * ViewProjection;"
-			"}                                          "
+			SHADER_SOURCE(
+				attribute vec4 Position;                   
+				attribute vec4 Color;                      
+				attribute vec3 Normal;                     
+				uniform mat4 ViewProjection;               
+				varying vec4 vColor;                       
+				varying vec3 vNormal;                      
+				void main() {                              
+				   vColor = Color;                         
+				   vNormal = Normal;                       
+					gl_Position = Position * ViewProjection;
+				}                                          
+			)
 			,
-			"varying vec4 vColor;                       "
-			"varying vec3 vNormal;                      "
-			"uniform vec3 LightDirection;               "
-			"uniform vec4 AmbientLight;                 "
-			"void main() {                              "
-			"   float n = clamp(dot(LightDirection, vNormal),0.0,1.0);              "
-			"   vec4 color = (AmbientLight + vColor * n);"
-			"	gl_FragColor = vec4(color.r, color.g, color.b, vColor.a);"
-			"}"
+			SHADER_SOURCE(
+				varying vec4 vColor;                       
+				varying vec3 vNormal;                      
+				uniform vec3 LightDirection;               
+				uniform vec4 AmbientLight;                 
+				void main() {                              
+				   float n = clamp(dot(LightDirection, vNormal),0.0,1.0);              
+				   vec4 color = (AmbientLight + vColor * n);
+					gl_FragColor = vec4(color.r, color.g, color.b, vColor.a);
+				}
+			)
 		);
 		LitColored.SetValue("LightDirection", Vector3(1, 1, 1).Normalized());
-		LitColored.SetValue("AmbientLight", Colour(0.2f));
+		LitColored.SetValue("AmbientLight", Colour(0.0f));
 
 
 		cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
