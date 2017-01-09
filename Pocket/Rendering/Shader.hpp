@@ -16,8 +16,9 @@
 #include "Matrix4x4.hpp"
 #include <algorithm>
 
-
 namespace Pocket {
+
+#define SHADER_SOURCE(...) #__VA_ARGS__
 
 static const std::string ViewProjectionUniformName = "ViewProjection";
 
