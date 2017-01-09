@@ -28,7 +28,7 @@ void Shader<Pocket::Vertex>::RenderObject(Pocket::VertexRenderer<Pocket::Vertex>
         dest.TextureCoords.y = source.TextureCoords.y;
     }
     for (size_t v = 0; v<trianglesSize; v++) {
-        renderer.triangles[renderer.triangleIndex++] = (index + triangles[v]);
+        renderer.triangles[renderer.triangleIndex++] = (GLshort)(index + triangles[v]);
     }
 }
 }

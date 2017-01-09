@@ -147,8 +147,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\FileWorld.cpp" />
     <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameIDHelper.cpp" />
     <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameObject.cpp" />
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameObjectHandle.cpp" />
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameScene.cpp" />
     <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameSystem.cpp" />
     <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameWorld.cpp" />
     <ClCompile Include="..\..\..\Pocket\Core\Engine.cpp" />
@@ -179,9 +182,9 @@
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\FieldEditorSystem.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\GameObjectEditor.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\GameObjectEditorSystem.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\GuiFieldEditors.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\HierarchyEditor.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.cpp" />
-    <ClCompile Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawner.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawnerSystem.cpp" />
@@ -194,7 +197,6 @@
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Font.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Gui.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.cpp" />
-    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\Menu.cpp" />
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Menu\MenuButton.cpp" />
@@ -288,6 +290,7 @@
     <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PrismaticJoint.cpp" />
     <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
     <ClCompile Include="..\..\..\Pocket\Physics\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\AppMenu.cpp" />
     <ClCompile Include="..\..\..\Pocket\Platform\Windows\File.cpp" />
     <ClCompile Include="..\..\..\Pocket\Platform\Windows\FileReader.cpp" />
     <ClCompile Include="..\..\..\Pocket\Platform\Windows\GamePadManager.cpp" />
@@ -312,10 +315,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\Container.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\FileWorld.hpp" />
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameIDHelper.hpp" />
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameObject.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameObjectHandle.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameScene.hpp" />
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameWorld.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\IGameObject.hpp" />
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\IGameSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\Meta\MetaLibrary.hpp" />
     <ClInclude Include="..\..\..\Pocket\Core\Engine.hpp" />
     <ClInclude Include="..\..\..\Pocket\Core\EngineContext.hpp" />
@@ -361,9 +369,9 @@
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\FieldEditorSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\GameObjectEditor.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\GameObjectEditorSystem.hpp" />
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\GuiFieldEditors.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\HierarchyEditor.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.hpp" />
-    <ClInclude Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawner.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeListSpawnerSystem.hpp" />
@@ -378,7 +386,6 @@
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Gui.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Label.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.hpp" />
-    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\Menu.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Menu\MenuAnimator.hpp" />
@@ -415,7 +422,6 @@
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Colorable.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\ColorSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Lights\Light.hpp" />
-    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Material.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Mesh.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\RenderSystem.hpp" />
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\TextureComponent.hpp" />

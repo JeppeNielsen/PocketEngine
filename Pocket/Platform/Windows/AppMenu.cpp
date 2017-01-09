@@ -12,10 +12,25 @@ using namespace Pocket;
 
 AppMenu::AppMenu() { }
 AppMenu::~AppMenu() { }
-AppMenu::AppMenu(const std::string& text) : text(text) {}
 
-AppMenu& AppMenu::AddChild(const std::string &text) {
-    children.push_back( AppMenu(text) );
-    return children.back();
+AppMenu& AppMenu::AddChild(const std::string &text, const std::string& shortcut) {
+    children.push_back( new AppMenu() );
+    return *children.back();
 }
 
+void AppMenu::ShowPopup(const Vector2& location) {
+
+}
+
+void AppMenu::InitializeMainMenu() {
+
+}
+
+void AppMenu::InitializePopUp() {
+
+}
+
+void AppMenu::CreateAppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut) {
+
+
+}

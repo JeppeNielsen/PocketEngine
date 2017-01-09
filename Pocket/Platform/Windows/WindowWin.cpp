@@ -4,6 +4,7 @@
 #include <map>
 #include "Vector2.hpp"
 #include <egl/eglext.h>
+#include "Engine.hpp"
 
 using namespace std;
 using namespace Pocket;
@@ -142,9 +143,9 @@ void WindowWin::InitKeyMap() {
 
 void WindowWin::Create(int width, int height, bool fullScreen) {
 
-	context->ScreenSize = Vector2(width, height);
-
-	inputDevice.Initialize(3);
+	context->ScreenSize = Vector2((float)width, (float)height);
+	
+	inputDevice().Initialize(3);
 
 	InitKeyMap();
 
@@ -269,7 +270,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
 		case WM_KEYDOWN:
 			{
 				std::string* key = window->GetKey((int)wparam);
-				if (key) window->inputDevice.SetButton(*key, true);
+				if (key) window->inputDevice().SetButton(*key, true);
 			}
 			
 			break;
@@ -277,7 +278,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
 		case WM_KEYUP:
 			{
 				std::string* key = window->GetKey((int)wparam);
-				if (key) window->inputDevice.SetButton(*key, false);
+				if (key) window->inputDevice().SetButton(*key, false);
 			}
 			break;
 
@@ -286,7 +287,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
 				window->active = !(wparam == 0);
 
 				if (!window->active) {
-					window->inputDevice.ReleaseAllButtons();
+					window->inputDevice().ReleaseAllButtons();
 				}
 			}
 			//cout << "Activated : " << wparam << "" << endl;
@@ -297,7 +298,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
 			return 0;
 			break;
 		case WM_SIZE:
-			window->context->ScreenSize = Vector2((int)LOWORD(lparam), (int)HIWORD(lparam));
+			window->context->ScreenSize = Vector2((float)((int)LOWORD(lparam)), (float)((int)HIWORD(lparam)));
 			return 0;
 			/*
 		case WM_CREATE:
@@ -373,7 +374,7 @@ LRESULT CALLBACK WndProc( HWND hwnd, UINT message, WPARAM wparam, LPARAM lparam 
     return DefWindowProc( hwnd, message, wparam, lparam );
 }
 
-bool WindowWin::Update(IInputManagerIterator* inputManagers) {
+bool WindowWin::Update() {
 	
 	Vector2 mousePosition;
 	POINT p;
@@ -387,13 +388,13 @@ bool WindowWin::Update(IInputManagerIterator* inputManagers) {
 		mousePosition.y = context->ScreenSize().y-(float)p.y;
 	}
 	
-	inputDevice.SetTouchPosition(0, mousePosition);
-	inputDevice.SetTouchPosition(1, mousePosition);
-	inputDevice.SetTouchPosition(2, mousePosition);
+	inputDevice().SetTouchPosition(0, mousePosition);
+	inputDevice().SetTouchPosition(1, mousePosition);
+	inputDevice().SetTouchPosition(2, mousePosition);
 
-	inputDevice.SetTouch(0, active && ((GetKeyState(VK_LBUTTON) & 0x80) != 0), mousePosition);
-	inputDevice.SetTouch(1, active && ((GetKeyState(VK_RBUTTON) & 0x80) != 0), mousePosition);
-	inputDevice.SetTouch(2, active && ((GetKeyState(VK_MBUTTON) & 0x80) != 0), mousePosition);
+	inputDevice().SetTouch(0, active && ((GetKeyState(VK_LBUTTON) & 0x80) != 0), mousePosition);
+	inputDevice().SetTouch(1, active && ((GetKeyState(VK_RBUTTON) & 0x80) != 0), mousePosition);
+	inputDevice().SetTouch(2, active && ((GetKeyState(VK_MBUTTON) & 0x80) != 0), mousePosition);
 	
 	MSG msg;
     if (PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE) == TRUE)
@@ -402,8 +403,6 @@ bool WindowWin::Update(IInputManagerIterator* inputManagers) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
-	inputDevice.Update(inputManagers);
 	return !closed;
 }
 
@@ -542,11 +541,15 @@ void WindowWin::DisableOpenGL()
 
 void WindowWin::PreRender() {
 	const Vector2 screenSize = context->ScreenSize;
-	glViewport(0, 0, screenSize.x, screenSize.y);
+	glViewport(0, 0, (GLsizei)screenSize.x, (GLsizei)screenSize.y);
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void WindowWin::PostRender() {
 	eglSwapBuffers(mDisplay, mSurface);
+}
+
+InputDevice& WindowWin::inputDevice() {
+	return Engine::Context().InputDevice();
 }

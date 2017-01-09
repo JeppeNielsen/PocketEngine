@@ -120,9 +120,6 @@
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -157,9 +154,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.cpp">
@@ -504,6 +498,21 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\FileWorld.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameObjectHandle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Pocket\ComponentSystem\GameScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Pocket\Logic\Editor\GuiFieldEditors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Pocket\Platform\Windows\AppMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\Pocket\ComponentSystem\Container.hpp">
@@ -662,9 +671,6 @@
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\HierarchyEditorSystem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Pocket\Logic\Editor\SerializedFieldEditors.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Logic\Editor\VirtualTreeList.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -705,9 +711,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\LabelMeshSystem.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\Layoutable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Logic\Gui\Layout\LayoutSystem.hpp">
@@ -816,9 +819,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Lights\Light.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Logic\Rendering\Mesh.hpp">
@@ -1104,6 +1104,24 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Pocket\Math\TransitionHelper.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\FileWorld.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameObjectHandle.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\GameScene.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\IGameObject.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\ComponentSystem\IGameSystem.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Pocket\Logic\Editor\GuiFieldEditors.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

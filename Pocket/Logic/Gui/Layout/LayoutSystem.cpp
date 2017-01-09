@@ -160,8 +160,8 @@ Vector2 LayoutSystem::DoLayout(Layouter* layouter, GameObject* object,
     if (count == 0) {
         return localGetter(layouter);
     }
-
-    if (layouter->ChildrenLayoutMode == Layouter::LayoutMode::Horizontal) {
+	
+    if (layouter->ChildrenLayoutMode() == Layouter::LayoutMode::Horizontal) {
         Vector2 size { 0, localGetter(layouter).y };
         for(auto child : object->Children()) {
             Layouter* childLayouter = child->GetComponent<Layouter>();
@@ -200,7 +200,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
     Vector2 size = object->GetComponent<Sizeable>()->Size;
     Layouter* layouter = object->GetComponent<Layouter>();
     
-    if (layouter->ChildrenLayoutMode == Layouter::LayoutMode::Horizontal) {
+    if (layouter->ChildrenLayoutMode() == Layouter::LayoutMode::Horizontal) {
         if (layouter->GlobalMin().x>=size.x) {
             float x = 0;
             for(auto child : object->Children()) {

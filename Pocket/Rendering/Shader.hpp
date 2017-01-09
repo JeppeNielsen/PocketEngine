@@ -116,7 +116,7 @@ public:
         }
        // //std::cout<<"Using shader : " << name<<"  shader program " << shaderProgram<<" attributes:  " << attributes.size()<< std::endl;
        
-        for (int i=0; i<textureUniforms.size(); ++i) {
+        for (size_t i=0; i<textureUniforms.size(); ++i) {
             glUniform1i(textureUniforms[i].location, i);
         }
     }

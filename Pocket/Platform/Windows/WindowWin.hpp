@@ -16,15 +16,16 @@ namespace Pocket {
 			
 			void Create(int width, int height, bool fullScreen);
 			void Destroy();
-			bool Update(IInputManagerIterator* inputManagers);
+			bool Update();
 			void PreRender();
 			void PostRender();
 			bool closed;
-			InputDevice inputDevice;
 
 			std::string* GetKey(int code);
 
 			bool active;
+
+			InputDevice& inputDevice();
 
 		private:
 			HWND window;
@@ -55,6 +56,7 @@ namespace Pocket {
 
 			bool EnableOpenGL();
 			void DisableOpenGL();
+			
 			
 	};
 }

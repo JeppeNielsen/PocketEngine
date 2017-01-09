@@ -152,7 +152,7 @@ template<typename I>
 struct JsonSerializer<std::vector<I>> {
     static void Serialize(std::string& key, const std::vector<I>& value, minijson::object_writer& writer) {
         minijson::array_writer array = writer.nested_array(key.c_str());
-        for (int i=0; i<value.size(); ++i) {
+        for (size_t i=0; i<value.size(); ++i) {
             JsonSerializer<I>::Serialize(value[i], array);
         }
         array.close();
@@ -181,7 +181,7 @@ template<>
 struct JsonSerializer<std::vector<bool>> {
     static void Serialize(std::string& key, const std::vector<bool>& value, minijson::object_writer& writer) {
         minijson::array_writer array = writer.nested_array(key.c_str());
-        for (int i=0; i<value.size(); ++i) {
+        for (size_t i=0; i<value.size(); ++i) {
             JsonSerializer<bool>::Serialize(value[i], array);
         }
         array.close();
@@ -189,7 +189,7 @@ struct JsonSerializer<std::vector<bool>> {
     
     static void Serialize(const std::vector<bool>& value, minijson::array_writer& writer) {
         minijson::array_writer array = writer.nested_array();
-        for (int i=0; i<value.size(); ++i) {
+        for (size_t i=0; i<value.size(); ++i) {
             JsonSerializer<bool>::Serialize(value[i], array);
         }
         array.close();

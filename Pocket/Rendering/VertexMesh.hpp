@@ -112,7 +112,7 @@ public:
         Vector3 min = vertices[0].Position;
         Vector3 max = min;
 
-        for (int i=1; i<size; i++) {
+        for (size_t i=1; i<size; i++) {
             const Vector3& position = vertices[i].Position;
             if (position.x<min.x) min.x = position.x;
             if (position.y<min.y) min.y = position.y;
@@ -167,7 +167,7 @@ public:
     {
         Vector2 sizeHalf = size * 0.5f;
 
-        GLshort index = vertices.size();
+        GLshort index = (GLshort)vertices.size();
         Vector3 normal = Vector3(0,0,1);
 
         vertices.push_back({center-sizeHalf,Vector2(0,0), color, normal});
