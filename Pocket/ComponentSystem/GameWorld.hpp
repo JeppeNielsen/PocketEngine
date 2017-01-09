@@ -129,7 +129,7 @@ namespace Pocket {
             AddComponentType(GameIdHelper::GetComponentID<T>(), [] (ComponentInfo& componentInfo) {
                 componentInfo.container = new Container<T>();
                 componentInfo.name = GameIdHelper::GetClassName<T>();
-                T* ptr;
+                T* ptr = 0;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo](auto p) {
                     using SerializedComponentType = typename std::remove_pointer<decltype(p)>::type;
                     componentInfo.getTypeInfo = [](const GameObject* object) -> TypeInfo {
