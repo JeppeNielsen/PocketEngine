@@ -38,6 +38,7 @@ struct PropertyEditor : public IFieldEditor {
     }
 
     void Create(void* context, void* parent) override {
+        currentValue = this->field->operator()();
         editor = FieldEditorCreator<T>::Create(&currentValue);
         if (editor) {
             editor->Create(context, parent);
@@ -130,6 +131,63 @@ struct FieldEditorCreator<std::vector<T>> {
         VectorEditor<T>* editor = new VectorEditor<T>();
         editor->SetField(ptr);
         return editor;
+    }
+};
+
+
+template<typename T>
+struct EnumEditor : public IFieldEditor {
+
+    IFieldEditor* editor;
+    
+    ~EnumEditor() {
+        delete editor;
+    }
+    
+    void SetField(void* field) override {
+        this->field = static_cast<T*>(field);
+    }
+
+    void Create(void* context, void* parent) override {
+        currentValue = (int)*field;
+        editor = FieldEditorCreator<int>::Create(&currentValue);
+        editor->Create(context, parent);
+    }
+    
+    void Update(float dt) override {
+        if (editor) {
+            if (currentValue!=prevValue) {
+                prevValue = currentValue;
+                *field = (T)currentValue;
+            } else {
+                currentValue = (int)*field;
+                prevValue = currentValue;
+            }
+            editor->Update(dt);
+        }
+    }
+    
+    void Destroy() override {
+        if (editor) {
+            editor->Destroy();
+        }
+    }
+    
+    T* field;
+    int currentValue;
+    int prevValue;
+};
+
+
+
+template<typename T>
+struct FieldEditorCreator<T, typename std::enable_if< std::is_enum<T>::value >::type> {
+    static IFieldEditor* Create(T* ptr) {
+        IFieldEditor* editor = new EnumEditor<T>();
+        editor->SetField(ptr);
+        return editor;
+        //std::cout << "Enum editor "<< std::endl;
+        //return 0;
     }
 };
 
