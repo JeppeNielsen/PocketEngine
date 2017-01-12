@@ -130,10 +130,4 @@ void ShaderCollection::Initialize() {
         LitTextured.SetValue("LightDirection", Vector3(1,1,1).Normalized());
         LitTextured.SetValue("AmbientLight", Colour(0.2f));
     }
-
-
-
 }
-
-
-
