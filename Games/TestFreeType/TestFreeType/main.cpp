@@ -27,6 +27,7 @@ public:
     GameWorld world;
     GameObject* camera;
     GameObject* cube;
+    GameObject* root;
     
     struct Rotator { Vector3 speed; };
     struct RotatorSystem : public GameSystem<Transform, Rotator> {
@@ -54,16 +55,18 @@ public:
     
     void Initialize() {
         
-        world.CreateSystem<RenderSystem>();
-        world.CreateSystem<FirstPersonMoverSystem>();
+        root = world.CreateRoot();
         
-        camera = world.CreateObject();
+        root->CreateSystem<RenderSystem>();
+        root->CreateSystem<FirstPersonMoverSystem>();
+        
+        camera = root->CreateObject();
         camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         camera->AddComponent<FirstPersonMover>();
         
-        mesh = world.CreateObject();
+        mesh = root->CreateObject();
         mesh->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f);
         auto& verts = mesh->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         for (int i=0; i<verts.size(); i++) {
@@ -112,7 +115,7 @@ public:
             /* load glyph image into the slot (erase previous one) */
             error = FT_Load_Char( face, text[n], FT_LOAD_RENDER );
             if ( error )
-            continue;                 /* ignore errors */
+                continue;                 /* ignore errors */
 
             /* now, draw to our target surface (convert position) */
             drawCubes(&slot->bitmap, {(float)(slot->bitmap_left), (float)(slot->bitmap_top),0});
@@ -124,17 +127,17 @@ public:
     }
     
     void CreateCube(Vector3 position) {
-        GameObject* go = world.CreateObject();
+        GameObject* go = root->CreateObject();
         go->AddComponent<Transform>()->Position = position;
         go->AddComponent<Mesh>(mesh);
-        go->AddComponent<Material>();
+        go->AddComponent<Renderable>();
     }
     
     void CreateColorCube(Vector3 position, Colour color) {
-        GameObject* go = world.CreateObject();
+        GameObject* go = root->CreateObject();
         go->AddComponent<Transform>()->Position = position;
         go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 0.5f, color);
-        go->AddComponent<Material>();
+        go->AddComponent<Renderable>();
     }
     
     void drawCubes( FT_Bitmap*  bitmap, Vector3 position)
@@ -153,6 +156,7 @@ public:
     }
     
     void Update(float dt) {
+        Context().InputDevice().UpdateInputManager(&world.Input());
         world.Update(dt);
     }
     
@@ -161,7 +165,7 @@ public:
     }
 };
 
-int main() {
+int main_truetypetest() {
     Engine e;
     e.Start<Game>();
 	return 0;
