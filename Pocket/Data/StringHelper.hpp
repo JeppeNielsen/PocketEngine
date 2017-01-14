@@ -5,6 +5,7 @@
 //  Created by Jeppe Nielsen on 4/13/13.
 //  Copyright (c) 2013 Jeppe Nielsen. All rights reserved.
 //
+#pragma once
 #include <vector>
 #include <string>
 #include <sstream>
