@@ -13,7 +13,11 @@
 
 using namespace std;
 
-Font::Font() : CharacterSetEverySize(12), buffer(0), bufferWidth(0), bufferHeight(0), library(0) { }
+Font::Font() :
+CharacterSetEverySize(12),
+buffer(0), bufferWidth(0), bufferHeight(0), library(0),
+maxTextureWidth(512), maxTextureHeight(512)
+{ }
 
 Font::~Font() {
     if (library) {
@@ -31,7 +35,7 @@ bool Font::LoadTTF(const std::string &path) {
     if (error) return false;
     
     //error = FT_Set_Char_Size( face, 40 * 64, 0, 50, 0 );
-    error = FT_Set_Pixel_Sizes(face, 128,0);
+    error = FT_Set_Pixel_Sizes(face, 8,0);
     if (error) return false;
     
     return true;
@@ -51,6 +55,7 @@ void Font::RequestText(const std::string &text, float fontSize) {
 
 Font::CharacterSet& Font::RequestCharacterSet(float fontSize) {
     int index = floorf(fontSize / CharacterSetEverySize);
+    if (index<0) index = 0;
     if (index>=characterSets.size()) {
         characterSets.resize(index + 1);
     }
@@ -214,8 +219,8 @@ bool Font::UpdateBuffer() {
     if (!isDirty) return false;
     isDirty = false;
     
-    int maxWidth = 512;
-    int maxHeight = 512;
+    int maxWidth = maxTextureWidth;
+    int maxHeight = maxTextureHeight;
     
     AllocateBuffer(maxWidth, maxHeight);
     for(int i=0; i<bufferSize; ++i) {
@@ -227,6 +232,10 @@ bool Font::UpdateBuffer() {
     for (int s = 0; s<characterSets.size(); ++s) {
         CharacterSet& set = characterSets[s];
         if (!set.enabled) continue;
+        int faceSize = CharacterSetEverySize + CharacterSetEverySize * s;
+        FT_Error error = FT_Set_Pixel_Sizes(face, faceSize ,0);
+        if (error) continue;
+        
         set.lineHeight = 0;
         for(int c = 0; c<set.characters.size(); ++c) {
             Character& character = set.characters[c];
@@ -238,10 +247,10 @@ bool Font::UpdateBuffer() {
             FT_GlyphSlot g = face->glyph;
             
             RectPacker::TRect rect;
-            rect.w = g->bitmap.width;
-            rect.h = g->bitmap.rows;
+            rect.w = g->bitmap.width+2;
+            rect.h = g->bitmap.rows+2;
             
-            const float scale = 0.01f;
+            const float scale = 1.0f/faceSize;
             
             if (packer.AddAtEmptySpotAutoGrow(&rect, maxWidth, maxHeight)) {
                 character.width = g->bitmap.width * scale;
@@ -250,15 +259,15 @@ bool Font::UpdateBuffer() {
                 character.yoffset = (-g->bitmap_top) * scale;
                 character.xadvance = g->advance.x * scale / 64.0f;
                 
-                character.textureX = (float)rect.x / maxWidth;
-                character.textureY = (float)rect.y / maxHeight;
+                character.textureX = (float)(rect.x+1) / maxWidth;
+                character.textureY = (float)(rect.y+1) / maxHeight;
                 character.textureWidth = (float)g->bitmap.width / maxWidth;
                 character.textureHeight = (float)g->bitmap.rows / maxHeight;
                 
-                //if (g->advance.y * scale>set.lineHeight) {
-                //    set.lineHeight = g->advance.y * scale;
-                //}
-                WriteCharacter(g->bitmap, rect.x, rect.y);
+                if (character.height>set.lineHeight) {
+                    set.lineHeight = character.height;
+                }
+                WriteCharacter(g->bitmap, rect.x+1, rect.y+1);
             }
         }
     }

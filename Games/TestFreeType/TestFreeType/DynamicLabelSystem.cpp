@@ -18,6 +18,7 @@ void DynamicLabelSystem::ObjectAdded(GameObject *object) {
     label->HAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->VAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->WordWrap.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
+    object->GetComponent<Font>()->BufferUpdated.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
     
     TextChanged(object);
 }
@@ -30,6 +31,7 @@ void DynamicLabelSystem::ObjectRemoved(GameObject *object) {
     label->HAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->VAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->WordWrap.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
+    object->GetComponent<Font>()->BufferUpdated.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
 }
 
 void DynamicLabelSystem::SomethingChanged(GameObject* object) {
@@ -68,9 +70,6 @@ void DynamicLabelSystem::UpdateDirtyObject(Pocket::GameObject *object) {
      
      vertices.resize(vertices.size() + letters.size() * 4);
      
-     Vector2 of = -0.5f / 1024.0f;
-     
-     
      for (int i=0; i<letters.size(); i++) {
      
          
@@ -87,25 +86,22 @@ void DynamicLabelSystem::UpdateDirtyObject(Pocket::GameObject *object) {
          Vertex& v2 = vertices[verticesIndex + 2];
          Vertex& v3 = vertices[verticesIndex + 3];
          
-         
          v0.Position = Vector2(letters[i].x, letters[i].y);
          v1.Position = Vector2(letters[i].x+letters[i].width, letters[i].y);
          v2.Position = Vector2(letters[i].x+letters[i].width, letters[i].y+letters[i].height);
          v3.Position = Vector2(letters[i].x, letters[i].y+letters[i].height);
          
-         
-         v0.TextureCoords.x = letters[i].u1 +of.x;
+         v0.TextureCoords.x = letters[i].u1;
          v0.TextureCoords.y = letters[i].v2;
          
          v1.TextureCoords.x = letters[i].u2;
          v1.TextureCoords.y = letters[i].v2;
          
          v2.TextureCoords.x = letters[i].u2;
-         v2.TextureCoords.y = letters[i].v1+ of.x;
+         v2.TextureCoords.y = letters[i].v1;
          
-         v3.TextureCoords.x = letters[i].u1+ of.x;
-         v3.TextureCoords.y = letters[i].v1+ of.x;
-         
+         v3.TextureCoords.x = letters[i].u1;
+         v3.TextureCoords.y = letters[i].v1;
          
          v0.Color = color;
          v1.Color = color;

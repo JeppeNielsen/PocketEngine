@@ -23,6 +23,8 @@ public:
     bool LoadTTF(const std::string& path);
     
     float CharacterSetEverySize;
+    int maxTextureWidth;
+    int maxTextureHeight;
     
     struct Character {
         Character() : enabled(false) {}
