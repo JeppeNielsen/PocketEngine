@@ -85,6 +85,10 @@ struct DynamicFont : public GameState<DynamicFont> {
         }
         counter = 0;
         timer = 2.0f;
+    
+        Input.ButtonDown.Bind([font] (std::string button) {
+            font->GetComponent<Font>()->Clear();
+        });
     }
 
     int counter;

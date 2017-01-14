@@ -16,7 +16,7 @@ using namespace std;
 
 Font::Font() :
 CharacterSetEverySize(12),
-buffer(0), bufferWidth(0), bufferHeight(0), library(0),
+library(0),
 maxTextureWidth(512), maxTextureHeight(512)
 { }
 
@@ -25,7 +25,6 @@ Font::~Font() {
         FT_Done_Face    ( face );
         FT_Done_FreeType( library );
     }
-    DestroyBuffer();
 }
 
 bool Font::LoadTTF(const std::string &path) {
@@ -40,6 +39,12 @@ bool Font::LoadTTF(const std::string &path) {
     if (error) return false;
     
     return true;
+}
+
+void Font::Clear() {
+    characterSets.clear();
+    isDirty = true;
+    Cleared();
 }
 
 const Font::CharacterSet& Font::GetCharacterSet(float fontSize) const {
@@ -217,14 +222,13 @@ void Font::CreateText(std::vector<Letter>& sentence, std::string text, Vector2 s
     
 }
 
-bool Font::UpdateBuffer(Pocket::Texture& texture) {
-    if (!isDirty) return false;
+bool Font::IsDirty() { return isDirty; }
+
+void Font::UpdateBuffer(Pocket::Texture& texture) {
     isDirty = false;
     
     int maxWidth = maxTextureWidth;
     int maxHeight = maxTextureHeight;
-    
-    
     
     RectPacker packer;
     
@@ -281,10 +285,6 @@ bool Font::UpdateBuffer(Pocket::Texture& texture) {
     int actualHeight = packer.GetH();
     
     texture.CreateFromBuffer(0, actualWidth, actualHeight, GL_LUMINANCE);
-    //AllocateBuffer(actualWidth, actualHeight);
-    //for(int i=0; i<bufferSize; ++i) {
-    //    buffer[i]=0;
-    //}
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
@@ -301,17 +301,10 @@ bool Font::UpdateBuffer(Pocket::Texture& texture) {
             
             FT_Error error = FT_Load_Char( face, (unsigned long)c, FT_LOAD_RENDER );
             if (error) continue;
-            
-            ///glTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid*pixels);
-            
+
             FT_GlyphSlot g = face->glyph;
             
             ASSERT_GL(glTexSubImage2D(GL_TEXTURE_2D, 0,character.textureX, character.textureY, character.textureWidth, character.textureHeight, GL_LUMINANCE, GL_UNSIGNED_BYTE, g->bitmap.buffer));
-	
-            
-            //glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels)
-            
-            //WriteCharacter(g->bitmap, character.textureX, character.textureY);
         
             character.textureX /= actualWidth;
             character.textureY /= actualHeight;
@@ -321,40 +314,4 @@ bool Font::UpdateBuffer(Pocket::Texture& texture) {
     }
    
     BufferUpdated();
-    return true;
 }
-
-void Font::WriteCharacter(FT_Bitmap& bitmap, int px, int py) {
-    for (int x = 0; x<bitmap.width; ++x) {
-        for (int y=0; y<bitmap.rows; ++y) {
-            unsigned char pixel = bitmap.buffer[y * bitmap.width + x];
-            
-            buffer[(px+x) + (y+py) * bufferWidth]=pixel;
-            //WritePixel(x, y, pixel);
-            
-            //buffer[x + y * bufferWidth] = pixel;
-        }
-    }
-}
-
-void Font::WritePixel(int x, int y, unsigned char brightness) {
-    int offset = x + y * bufferWidth * 3;
-    buffer[offset] = brightness;
-    buffer[offset+1] = brightness;
-    buffer[offset+2] = brightness;
-}
-
-void Font::AllocateBuffer(int width, int height) {
-    if (width == bufferWidth && height == bufferHeight && !buffer) return;
-    DestroyBuffer();
-    bufferWidth = width;
-    bufferHeight = height;
-    bufferSize = bufferWidth * bufferHeight;
-    buffer = new unsigned char[bufferSize];
-}
-
-void Font::DestroyBuffer() {
-    delete [] buffer;
-    buffer = 0;
-}
-

@@ -47,9 +47,12 @@ public:
 
     void CreateText(std::vector<Letter>& sentence, std::string text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const;
 
-    bool UpdateBuffer(Pocket::Texture& texture);
+    bool IsDirty();
+
+    void UpdateBuffer(Pocket::Texture& texture);
     
     Event<> BufferUpdated;
+    Event<> Cleared;
     
 private:
     struct Character {
@@ -86,16 +89,6 @@ private:
     const CharacterSet& GetCharacterSet(float fontSize) const;
     
     bool isDirty;
-    
-    unsigned char* buffer;
-    int bufferWidth;
-    int bufferHeight;
-    int bufferSize;
-    
-    void AllocateBuffer(int width, int height);
-    void DestroyBuffer();
-    void WritePixel(int x, int y, unsigned char brightness);
-    void WriteCharacter(FT_Bitmap& bitmap, int x, int y);
     
     FT_Library    library;
     FT_Face       face;

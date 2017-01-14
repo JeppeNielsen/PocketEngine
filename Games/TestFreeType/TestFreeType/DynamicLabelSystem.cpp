@@ -18,7 +18,9 @@ void DynamicLabelSystem::ObjectAdded(GameObject *object) {
     label->HAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->VAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->WordWrap.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
-    object->GetComponent<Font>()->BufferUpdated.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
+    Font* font = object->GetComponent<Font>();
+    font->BufferUpdated.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
+    font->Cleared.Bind(this, &DynamicLabelSystem::TextChanged, object);
     
     TextChanged(object);
 }
@@ -31,7 +33,9 @@ void DynamicLabelSystem::ObjectRemoved(GameObject *object) {
     label->HAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->VAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
     label->WordWrap.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
-    object->GetComponent<Font>()->BufferUpdated.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
+    Font* font = object->GetComponent<Font>();
+    font->BufferUpdated.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
+    font->Cleared.Unbind(this, &DynamicLabelSystem::TextChanged, object);
 }
 
 void DynamicLabelSystem::SomethingChanged(GameObject* object) {

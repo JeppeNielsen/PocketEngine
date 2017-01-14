@@ -12,9 +12,9 @@
 void FontTextureSystem::Update(float dt) {
     for(auto o : Objects()) {
         Font* font = o->GetComponent<Font>();
-        TextureComponent* texture = o->GetComponent<TextureComponent>();
-        if (font->UpdateBuffer(texture->Texture())) {
-            //texture->Texture().CreateFromBuffer(font->buffer, font->bufferWidth, font->bufferHeight, GL_LUMINANCE);
+        if (font->IsDirty()) {
+            TextureComponent* texture = o->GetComponent<TextureComponent>();
+            font->UpdateBuffer(texture->Texture());
         }
     }
 }
