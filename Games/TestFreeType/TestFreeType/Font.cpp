@@ -10,6 +10,7 @@
 #include <cmath>
 #include "StringHelper.hpp"
 #include "RectPacker.hpp"
+#include "OpenGL.hpp"
 
 using namespace std;
 
@@ -42,6 +43,7 @@ bool Font::LoadTTF(const std::string &path) {
 }
 
 const Font::CharacterSet& Font::GetCharacterSet(float fontSize) const {
+    if (fontSize<0) fontSize = -fontSize;
     int index = floorf(fontSize / CharacterSetEverySize);
     return characterSets[index];
 }
@@ -54,8 +56,8 @@ void Font::RequestText(const std::string &text, float fontSize) {
 }
 
 Font::CharacterSet& Font::RequestCharacterSet(float fontSize) {
+    if (fontSize<0) fontSize = -fontSize;
     int index = floorf(fontSize / CharacterSetEverySize);
-    if (index<0) index = 0;
     if (index>=characterSets.size()) {
         characterSets.resize(index + 1);
     }
@@ -215,17 +217,14 @@ void Font::CreateText(std::vector<Letter>& sentence, std::string text, Vector2 s
     
 }
 
-bool Font::UpdateBuffer() {
+bool Font::UpdateBuffer(Pocket::Texture& texture) {
     if (!isDirty) return false;
     isDirty = false;
     
     int maxWidth = maxTextureWidth;
     int maxHeight = maxTextureHeight;
     
-    AllocateBuffer(maxWidth, maxHeight);
-    for(int i=0; i<bufferSize; ++i) {
-        buffer[i]=0;
-    }
+    
     
     RectPacker packer;
     
@@ -241,38 +240,85 @@ bool Font::UpdateBuffer() {
             Character& character = set.characters[c];
             if (!character.enabled) continue;
             
-            FT_Error error = FT_Load_Char( face, (unsigned long)c, FT_LOAD_RENDER );
+            FT_Error error = FT_Load_Char( face, (unsigned long)c, FT_LOAD_NO_BITMAP );
             if (error) continue;
             
             FT_GlyphSlot g = face->glyph;
             
+            int width = (int)g->metrics.width / 64;
+            int height = (int)g->metrics.height / 64;
+            int offsetX = (int)g->metrics.horiBearingX / 64;
+            int offsetY = (int)g->metrics.horiBearingY / 64;
+            int advanceX = (int)g->metrics.horiAdvance / 64;
+            
             RectPacker::TRect rect;
-            rect.w = g->bitmap.width+2;
-            rect.h = g->bitmap.rows+2;
+            rect.w = width+2;
+            rect.h = height+2;
             
             const float scale = 1.0f/faceSize;
             
             if (packer.AddAtEmptySpotAutoGrow(&rect, maxWidth, maxHeight)) {
-                character.width = g->bitmap.width * scale;
-                character.height = g->bitmap.rows * scale;
-                character.xoffset = g->bitmap_left * scale;
-                character.yoffset = (-g->bitmap_top) * scale;
-                character.xadvance = g->advance.x * scale / 64.0f;
+                character.width = width * scale;
+                character.height = height * scale;
+                character.xoffset = offsetX * scale;
+                character.yoffset = (-offsetY) * scale;
+                character.xadvance = advanceX * scale;
                 
-                character.textureX = (float)(rect.x+1) / maxWidth;
-                character.textureY = (float)(rect.y+1) / maxHeight;
-                character.textureWidth = (float)g->bitmap.width / maxWidth;
-                character.textureHeight = (float)g->bitmap.rows / maxHeight;
+                character.textureX = (rect.x+1);
+                character.textureY = (rect.y+1);
+                character.textureWidth = width;
+                character.textureHeight = height;
                 
                 if (character.height>set.lineHeight) {
                     set.lineHeight = character.height;
                 }
-                WriteCharacter(g->bitmap, rect.x+1, rect.y+1);
+                //WriteCharacter(g->bitmap, rect.x+1, rect.y+1);
             }
         }
     }
     
+    int actualWidth = packer.GetW();
+    int actualHeight = packer.GetH();
     
+    texture.CreateFromBuffer(0, actualWidth, actualHeight, GL_LUMINANCE);
+    //AllocateBuffer(actualWidth, actualHeight);
+    //for(int i=0; i<bufferSize; ++i) {
+    //    buffer[i]=0;
+    //}
+    
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
+    for (int s = 0; s<characterSets.size(); ++s) {
+        CharacterSet& set = characterSets[s];
+        if (!set.enabled) continue;
+        int faceSize = CharacterSetEverySize + CharacterSetEverySize * s;
+        FT_Error error = FT_Set_Pixel_Sizes(face, faceSize ,0);
+        if (error) continue;
+
+        for(int c = 0; c<set.characters.size(); ++c) {
+            Character& character = set.characters[c];
+            if (!character.enabled) continue;
+            
+            FT_Error error = FT_Load_Char( face, (unsigned long)c, FT_LOAD_RENDER );
+            if (error) continue;
+            
+            ///glTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid*pixels);
+            
+            FT_GlyphSlot g = face->glyph;
+            
+            ASSERT_GL(glTexSubImage2D(GL_TEXTURE_2D, 0,character.textureX, character.textureY, character.textureWidth, character.textureHeight, GL_LUMINANCE, GL_UNSIGNED_BYTE, g->bitmap.buffer));
+	
+            
+            //glTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels)
+            
+            //WriteCharacter(g->bitmap, character.textureX, character.textureY);
+        
+            character.textureX /= actualWidth;
+            character.textureY /= actualHeight;
+            character.textureWidth /= actualWidth;
+            character.textureHeight /= actualHeight;
+        }
+    }
    
     BufferUpdated();
     return true;
@@ -300,6 +346,7 @@ void Font::WritePixel(int x, int y, unsigned char brightness) {
 
 void Font::AllocateBuffer(int width, int height) {
     if (width == bufferWidth && height == bufferHeight && !buffer) return;
+    DestroyBuffer();
     bufferWidth = width;
     bufferHeight = height;
     bufferSize = bufferWidth * bufferHeight;

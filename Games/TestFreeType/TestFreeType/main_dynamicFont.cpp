@@ -44,7 +44,7 @@ struct DynamicFont : public GameState<DynamicFont> {
         font->AddComponent<TextureComponent>();
         font->AddComponent<Renderable>();
         font->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 40, Colour::White());
-        //font->AddComponent<Transform>()->Position = {0,0,1};
+        font->AddComponent<Transform>()->Position = {0,0,1};
         
         {
             label = root->CreateObject();
