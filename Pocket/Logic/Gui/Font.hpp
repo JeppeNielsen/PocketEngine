@@ -22,6 +22,7 @@ namespace Pocket {
         
         bool LoadTTF(const std::string& path);
         void Clear();
+        void LoadAsset(const std::string& path);
         
         float CharacterSetEverySize;
         int maxTextureWidth;

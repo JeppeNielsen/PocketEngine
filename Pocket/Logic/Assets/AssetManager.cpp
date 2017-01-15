@@ -10,15 +10,18 @@
 #include "AssetLoaderSystem.hpp"
 #include "TextureComponent.hpp"
 #include "ShaderComponent.hpp"
+#include "Font.hpp"
 
 using namespace Pocket;
 
 void AssetManager::Initialize() {
     root->CreateSystem<AssetLoaderSystem<TextureComponent>>();
     root->CreateSystem<AssetLoaderSystem<ShaderComponent>>();
+    root->CreateSystem<AssetLoaderSystem<Font>>();
 }
 
 void AssetManager::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
     root->CreateSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
     root->CreateSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
+    root->CreateSystem<AssetLoaderSystem<Font>>()->SetFileWatcher(watcher);
 }

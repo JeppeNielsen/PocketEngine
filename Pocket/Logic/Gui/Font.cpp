@@ -48,6 +48,10 @@ void Font::Clear() {
     Cleared();
 }
 
+void Font::LoadAsset(const std::string &path) {
+    LoadTTF(path);
+}
+
 const Font::CharacterSet& Font::GetCharacterSet(float fontSize) const {
     if (fontSize<0) fontSize = -fontSize;
     int index = floorf(fontSize / CharacterSetEverySize);
