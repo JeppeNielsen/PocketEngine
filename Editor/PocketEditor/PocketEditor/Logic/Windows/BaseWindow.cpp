@@ -55,8 +55,8 @@ GameObject* BaseWindow::CreateButton(GameObject* parent, const Vector2& position
     
     GameObject* button = gui.CreateControl(parent, "Box", position, size);
     GameObject* label = gui.CreateLabel(button, 0, size, 0, text, 20);
-    label->GetComponent<Label>()->HAlignment = Font::Center;
-    label->GetComponent<Label>()->VAlignment = Font::Middle;
+    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     label->GetComponent<Colorable>()->Color = Colour::Black();
 
     return button;

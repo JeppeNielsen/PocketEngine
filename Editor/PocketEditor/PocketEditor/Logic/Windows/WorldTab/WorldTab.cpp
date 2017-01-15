@@ -52,8 +52,8 @@ void WorldTab::WorldLoaded(OpenWorld *world) {
     Gui& gui = context->Gui();
     GameObject* button = gui.CreateControl(window, "Box", 0, {200,30});
     GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, world->Filename, 12);
-    label->GetComponent<Label>()->HAlignment = Font::Center;
-    label->GetComponent<Label>()->VAlignment = Font::Middle;
+    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     
     label->GetComponent<Colorable>()->Color = Colour::Black();
     
@@ -66,8 +66,8 @@ void WorldTab::WorldLoaded(OpenWorld *world) {
         });
         
         GameObject* label = gui.CreateLabel(closeButton, 0, {20,20}, 0, "X", 12);
-        label->GetComponent<Label>()->HAlignment = Font::Center;
-        label->GetComponent<Label>()->VAlignment = Font::Middle;
+        label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         label->GetComponent<Colorable>()->Color = Colour::Black();
     }
     

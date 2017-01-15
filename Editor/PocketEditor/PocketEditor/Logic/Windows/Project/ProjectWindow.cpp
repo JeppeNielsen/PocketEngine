@@ -78,8 +78,8 @@ void ProjectWindow::OnInitialize() {
             GameObject* textBox = gui.CreateTextBox(selectedNode.guiNodeObject, "TextBox", 0, selectedNode.guiNodeObject->GetComponent<Sizeable>()->Size, 0, selectedNode.filePath->filename, 12);
             GameObject* textBoxLabel = textBox->Children()[0];
             
-            textBoxLabel->GetComponent<Label>()->HAlignment = Font::Left;
-            textBoxLabel->GetComponent<Label>()->VAlignment = Font::Middle;
+            textBoxLabel->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
+            textBoxLabel->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
             
             textBoxLabel->GetComponent<TextBox>()->Active = true;
             textBoxLabel->GetComponent<TextBox>()->Active.Changed.Bind([textBox, textBoxLabel, this] () {
@@ -151,8 +151,8 @@ void ProjectWindow::OnCreate() {
         
         auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, node!=fileRoot ? filePath->filename : "Project", 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
-        l->GetComponent<Label>()->HAlignment = Font::Left;
-        l->GetComponent<Label>()->VAlignment = Font::Middle;
+        l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
+        l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     
         selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { node, node!=fileRoot ? selectButton : 0, filePath ? filePath : &projectFilePath });
         

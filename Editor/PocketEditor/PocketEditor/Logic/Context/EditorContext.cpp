@@ -37,7 +37,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     guiRoot->CreateSystem<TouchSystem>()->Order = -200;
     
     gui->Setup("images.png", "images.xml", engineContext.Viewport());
-    gui->CreateFont("Font.fnt", "Font");
+    gui->CreateFont("/Library/Fonts/Times New Roman.ttf");//, "Font");
 
     guiRoot->CreateSystem<RenderSystem>()->Order = 10;
     
