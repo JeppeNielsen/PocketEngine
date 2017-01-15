@@ -1,5 +1,5 @@
 #include "Texture.hpp"
-#include "../PngLib/lodepng.h"
+#include "lodepng.h"
 #include "FileReader.hpp"
 #include "jpeg_decoder.h"
 #include <iostream>

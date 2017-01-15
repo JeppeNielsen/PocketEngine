@@ -230,8 +230,11 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         std::string path = owner->TryGetRootPath();
         std::string text = FileReader::GetFileNameFromPath(path);
         
-        GameObject* label = gui->CreateLabel(textBox, 0, 10, 0, text, 20);
-        label->AddComponent<Layouter>(textBox);
+        //gui->CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize)
+        GameObject* label = gui->CreateLabel(textBox, 0, 20, 0, text, 20);
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+        
+        //label->AddComponent<Layouter>(textBox);
         label->AddComponent<Colorable>()->Color = Colour::Black();
         
         TypeEditorTitle::Title(gui, parent, component.name);
@@ -306,9 +309,8 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
                 button->GetComponent<Layouter>()->Max = {500,30};
                 
                 std::string text = FileReader::GetFileNameFromPath(paths[i]);
-                
                 GameObject* label = gui->CreateLabel(button, 0, 10, 0, text, 20);
-                label->AddComponent<Layouter>(button);
+                //label->AddComponent<Layouter>(button);
                 label->AddComponent<Colorable>()->Color = Colour::Black();
                 
                 button->GetComponent<Touchable>()->Down.Bind(this, &ReferenceComponentEditor::Clicked, { guids[i], id } );

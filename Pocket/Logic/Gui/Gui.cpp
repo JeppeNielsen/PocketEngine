@@ -7,6 +7,7 @@
 //
 
 #include "Gui.hpp"
+#include "FontTextureSystem.hpp"
 
 using namespace Pocket;
 
@@ -36,6 +37,7 @@ void Gui::Initialize() {
     root->CreateSystem<DroppableSystem>();
     root->CreateSystem<DraggableMotionSystem>();
     root->CreateSystem<LayoutSystem>();
+    root->CreateSystem<FontTextureSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
@@ -138,6 +140,11 @@ GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
 GameObject* Gui::CreateFont(const std::string& fontFile) {
     GameObject* font = root->CreateObject();
     font->AddComponent<Font>()->LoadTTF(fontFile);
+    font->GetComponent<Font>()->CharacterSetEverySize = 6;
+    font->GetComponent<Font>()->maxTextureWidth = 1024;
+    font->GetComponent<Font>()->maxTextureHeight = 1024;
+    
+    font->AddComponent<TextureComponent>();
     //font->SetID(fontFile);
     fonts.push_back(font);
     return font;
@@ -153,8 +160,7 @@ GameObject* Gui::CreateLabel(GameObject *parent, const Vector2 &position, const 
     label->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     label->AddComponent<Colorable>();
     label->AddComponent<Sizeable>()->Size = size;
-    label->AddComponent<class Atlas>(atlas);
-    label->AddComponent<TextureComponent>(atlas);
+    label->AddComponent<TextureComponent>(font);
     label->AddComponent<Label>()->FontSize = fontSize;
     label->GetComponent<Label>()->Text = text;
     return label;
@@ -185,8 +191,7 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     labelGO->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     labelGO->AddComponent<Colorable>();
     labelGO->AddComponent<Sizeable>(control);
-    labelGO->AddComponent<class Atlas>(atlas);
-    labelGO->AddComponent<TextureComponent>(atlas);
+    labelGO->AddComponent<TextureComponent>(font);
     labelGO->AddComponent<Label>()->FontSize = fontSize;
     labelGO->GetComponent<Label>()->Text = text;
 

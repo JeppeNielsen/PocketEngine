@@ -36,6 +36,11 @@ void LabelMeshSystem::ObjectRemoved(GameObject *object) {
     Font* font = object->GetComponent<Font>();
     font->BufferUpdated.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
     font->Cleared.Unbind(this, &LabelMeshSystem::TextChanged, object);
+    
+    auto it = dirtyObjects.find(object);
+    if (it != dirtyObjects.end()) {
+        dirtyObjects.erase(it);
+    }
 }
 
 void LabelMeshSystem::SomethingChanged(GameObject* object) {
