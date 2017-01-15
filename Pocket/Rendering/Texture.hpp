@@ -30,6 +30,8 @@ namespace Pocket {
 		virtual void Free();
         
         void DisableMipmapping();
+        
+        void SaveToPng(const std::string& path, GLenum pixelFormat);
 
 	protected:
 		GLuint texture;
