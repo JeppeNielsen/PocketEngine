@@ -194,10 +194,10 @@
 		7262BFEE1E2956DC003D7CCB /* GameSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFE11E2956DC003D7CCB /* GameSystem.cpp */; };
 		7262BFEF1E2956DC003D7CCB /* GameWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFE31E2956DC003D7CCB /* GameWorld.cpp */; };
 		7262BFF31E295747003D7CCB /* GuiFieldEditors.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFF11E295747003D7CCB /* GuiFieldEditors.cpp */; };
-		7262BFF61E295C95003D7CCB /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFF41E295C95003D7CCB /* Font.cpp */; };
-		7262BFF91E297363003D7CCB /* FontTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFF71E297363003D7CCB /* FontTextureSystem.cpp */; };
 		7262BFFB1E2975A9003D7CCB /* main_dynamicFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFFA1E2975A9003D7CCB /* main_dynamicFont.cpp */; };
-		7262C0011E298929003D7CCB /* LabelMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7262BFFF1E298929003D7CCB /* LabelMeshSystem.cpp */; };
+		727B366E1E2B8A7B00531B62 /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B36671E2B8A7B00531B62 /* Font.cpp */; };
+		727B366F1E2B8A7B00531B62 /* FontTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B36691E2B8A7B00531B62 /* FontTextureSystem.cpp */; };
+		727B36701E2B8A7B00531B62 /* LabelMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B366C1E2B8A7B00531B62 /* LabelMeshSystem.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -689,14 +689,14 @@
 		7262BFF01E29570B003D7CCB /* Layouter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Layouter.hpp; sourceTree = "<group>"; };
 		7262BFF11E295747003D7CCB /* GuiFieldEditors.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GuiFieldEditors.cpp; sourceTree = "<group>"; };
 		7262BFF21E295747003D7CCB /* GuiFieldEditors.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GuiFieldEditors.hpp; sourceTree = "<group>"; };
-		7262BFF41E295C95003D7CCB /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Font.cpp; sourceTree = "<group>"; };
-		7262BFF51E295C95003D7CCB /* Font.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Font.hpp; sourceTree = "<group>"; };
-		7262BFF71E297363003D7CCB /* FontTextureSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontTextureSystem.cpp; sourceTree = "<group>"; };
-		7262BFF81E297363003D7CCB /* FontTextureSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FontTextureSystem.hpp; sourceTree = "<group>"; };
 		7262BFFA1E2975A9003D7CCB /* main_dynamicFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_dynamicFont.cpp; sourceTree = "<group>"; };
-		7262BFFD1E2988D5003D7CCB /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Label.hpp; sourceTree = "<group>"; };
-		7262BFFF1E298929003D7CCB /* LabelMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelMeshSystem.cpp; sourceTree = "<group>"; };
-		7262C0001E298929003D7CCB /* LabelMeshSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LabelMeshSystem.hpp; sourceTree = "<group>"; };
+		727B36671E2B8A7B00531B62 /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Font.cpp; sourceTree = "<group>"; };
+		727B36681E2B8A7B00531B62 /* Font.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Font.hpp; sourceTree = "<group>"; };
+		727B36691E2B8A7B00531B62 /* FontTextureSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontTextureSystem.cpp; sourceTree = "<group>"; };
+		727B366A1E2B8A7B00531B62 /* FontTextureSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FontTextureSystem.hpp; sourceTree = "<group>"; };
+		727B366B1E2B8A7B00531B62 /* Label.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Label.hpp; sourceTree = "<group>"; };
+		727B366C1E2B8A7B00531B62 /* LabelMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LabelMeshSystem.cpp; sourceTree = "<group>"; };
+		727B366D1E2B8A7B00531B62 /* LabelMeshSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LabelMeshSystem.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -749,14 +749,7 @@
 				720B4F011D99B8F8006195E8 /* FreeType */,
 				720B3D5C1D999B59006195E8 /* main_console.cpp */,
 				720B54861D9AE36B006195E8 /* main.cpp */,
-				7262BFF41E295C95003D7CCB /* Font.cpp */,
-				7262BFF51E295C95003D7CCB /* Font.hpp */,
-				7262BFF71E297363003D7CCB /* FontTextureSystem.cpp */,
-				7262BFF81E297363003D7CCB /* FontTextureSystem.hpp */,
 				7262BFFA1E2975A9003D7CCB /* main_dynamicFont.cpp */,
-				7262BFFD1E2988D5003D7CCB /* Label.hpp */,
-				7262BFFF1E298929003D7CCB /* LabelMeshSystem.cpp */,
-				7262C0001E298929003D7CCB /* LabelMeshSystem.hpp */,
 			);
 			path = TestFreeType;
 			sourceTree = "<group>";
@@ -1003,6 +996,13 @@
 		720B3DF21D999B6E006195E8 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				727B36671E2B8A7B00531B62 /* Font.cpp */,
+				727B36681E2B8A7B00531B62 /* Font.hpp */,
+				727B36691E2B8A7B00531B62 /* FontTextureSystem.cpp */,
+				727B366A1E2B8A7B00531B62 /* FontTextureSystem.hpp */,
+				727B366B1E2B8A7B00531B62 /* Label.hpp */,
+				727B366C1E2B8A7B00531B62 /* LabelMeshSystem.cpp */,
+				727B366D1E2B8A7B00531B62 /* LabelMeshSystem.hpp */,
 				720B3DF31D999B6E006195E8 /* Droppable.hpp */,
 				720B3DF41D999B6E006195E8 /* DroppableSystem.cpp */,
 				720B3DF51D999B6E006195E8 /* DroppableSystem.hpp */,
@@ -1780,7 +1780,6 @@
 				720B41881D999B70006195E8 /* BoundingBox.cpp in Sources */,
 				720B413D1D999B70006195E8 /* TransformAnimator.cpp in Sources */,
 				720B545A1D9ADD49006195E8 /* pshinter.c in Sources */,
-				7262BFF91E297363003D7CCB /* FontTextureSystem.cpp in Sources */,
 				720B41771D999B70006195E8 /* ColorSystem.cpp in Sources */,
 				720B415E1D999B70006195E8 /* MenuSystem.cpp in Sources */,
 				720B41671D999B70006195E8 /* DraggableMotionSystem.cpp in Sources */,
@@ -1798,7 +1797,6 @@
 				720B41AE1D999B70006195E8 /* b2Island.cpp in Sources */,
 				720B426A1D999B70006195E8 /* GamePadManager.mm in Sources */,
 				720B41851D999B70006195E8 /* SelectionVisualizer.cpp in Sources */,
-				7262BFF61E295C95003D7CCB /* Font.cpp in Sources */,
 				720B418B1D999B70006195E8 /* Interpolator.cpp in Sources */,
 				720B41861D999B70006195E8 /* Transform.cpp in Sources */,
 				720B42841D999B70006195E8 /* TypeIndexList.cpp in Sources */,
@@ -1826,6 +1824,7 @@
 				7262BFEB1E2956DC003D7CCB /* GameObject.cpp in Sources */,
 				720B41921D999B70006195E8 /* Quaternion.cpp in Sources */,
 				720B41A61D999B70006195E8 /* b2PolygonShape.cpp in Sources */,
+				727B36701E2B8A7B00531B62 /* LabelMeshSystem.cpp in Sources */,
 				720B41941D999B70006195E8 /* Rect.cpp in Sources */,
 				720B41AF1D999B70006195E8 /* b2World.cpp in Sources */,
 				720B42651D999B70006195E8 /* AppDelegate.mm in Sources */,
@@ -1853,7 +1852,6 @@
 				720B42661D999B70006195E8 /* AppMenu.mm in Sources */,
 				720B42691D999B70006195E8 /* FileReader.mm in Sources */,
 				720B41461D999B70006195E8 /* FieldEditor.cpp in Sources */,
-				7262C0011E298929003D7CCB /* LabelMeshSystem.cpp in Sources */,
 				720B412C1D999B70006195E8 /* ICellItem.cpp in Sources */,
 				720B41411D999B70006195E8 /* SoundListener.cpp in Sources */,
 				720B41B21D999B70006195E8 /* b2Contact.cpp in Sources */,
@@ -1895,6 +1893,7 @@
 				720B41491D999B70006195E8 /* GameObjectEditorSystem.cpp in Sources */,
 				720B41511D999B70006195E8 /* ParticleEffect.cpp in Sources */,
 				7262BFFB1E2975A9003D7CCB /* main_dynamicFont.cpp in Sources */,
+				727B366E1E2B8A7B00531B62 /* Font.cpp in Sources */,
 				720B41601D999B70006195E8 /* SpriteTextureSystem.cpp in Sources */,
 				720B54781D9ADD49006195E8 /* smooth.c in Sources */,
 				720B41961D999B70006195E8 /* Vector2.cpp in Sources */,
@@ -1910,6 +1909,7 @@
 				720B41501D999B70006195E8 /* VirtualTreeListSystem.cpp in Sources */,
 				720B41A21D999B70006195E8 /* b2Distance.cpp in Sources */,
 				720B416D1D999B70006195E8 /* VelocitySystem.cpp in Sources */,
+				727B366F1E2B8A7B00531B62 /* FontTextureSystem.cpp in Sources */,
 				720B41421D999B70006195E8 /* SoundSystem.cpp in Sources */,
 				720B419E1D999B70006195E8 /* b2BroadPhase.cpp in Sources */,
 				720B41531D999B70006195E8 /* ParticleMeshUpdater.cpp in Sources */,
