@@ -20,13 +20,12 @@ void Gui::Initialize() {
     touchSystem = root->CreateSystem<TouchSystem>();
     
     root->CreateSystem<TransformHierarchy>();
-    root->CreateSystem<LabelMeshSystem>();
+    
     root->CreateSystem<SpriteMeshSystem>();
     root->CreateSystem<SpriteTextureSystem>();
     root->CreateSystem<HierarchyOrder>()->Order = 1000;
     root->CreateSystem<DraggableSystem>();
     root->CreateSystem<LayoutSystem>();
-    root->CreateSystem<TextBoxLabelSystem>();
     //root->CreateSystem<MenuSystem>();
     root->CreateSystem<MenuButtonSystem>();
     root->CreateSystem<ColorSystem>();
@@ -37,7 +36,9 @@ void Gui::Initialize() {
     root->CreateSystem<DroppableSystem>();
     root->CreateSystem<DraggableMotionSystem>();
     root->CreateSystem<LayoutSystem>();
-    root->CreateSystem<FontTextureSystem>();
+    root->CreateSystem<FontTextureSystem>()->Order = -1;
+    root->CreateSystem<LabelMeshSystem>();
+    root->CreateSystem<TextBoxLabelSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {

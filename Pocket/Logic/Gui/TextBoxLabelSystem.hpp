@@ -26,13 +26,14 @@ namespace Pocket {
         void ObjectRemoved(GameObject *object);
         void TextBoxChanged(GameObject* object);
         void TextBoxActiveChanged(GameObject *object);
-        void MoveCursor(Pocket::TextBox *textBox, GameObject *object);
+        void MoveCursor(GameObject *object);
         void Update(float dt);
 
     private:
         GameObject* cursor;
         TextBox* activeTextbox;
         TextBox* activeTextboxAdded;
+        GameObject* activeTextureObject;
         GameObject* activeTextboxAddedGO;
         float timer;
     };
