@@ -195,9 +195,8 @@ TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* paren
     labelGo->AddComponent<Layouter>()->Max = {5000,20};
     Label* label = labelGo->GetComponent<Label>();
     labelGo->GetComponent<Colorable>()->Color = Colour::Black();
-    label->HAlignment = Font::Center;
-    label->VAlignment = Font::Middle;
-    
+    label->HAlignment = Font::HAlignment::Center;
+    label->VAlignment = Font::VAlignment::Middle;
     return 0;
 };
 

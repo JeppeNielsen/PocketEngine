@@ -135,10 +135,9 @@ GameObject* Gui::CreateClipper(GameObject *parent, bool push) {
     return clipper;
 }
 
-GameObject* Gui::CreateFont(const std::string& fontFile, const std::string& fontAtlasName) {
+GameObject* Gui::CreateFont(const std::string& fontFile) {
     GameObject* font = root->CreateObject();
-    font->AddComponent<Font>()->Load(fontFile);
-    font->GetComponent<Font>()->FontAtlasNode = fontAtlasName;
+    font->AddComponent<Font>()->LoadTTF(fontFile);
     //font->SetID(fontFile);
     fonts.push_back(font);
     return font;
@@ -166,8 +165,8 @@ GameObject* Gui::CreateLabelControl(GameObject *parent, const std::string &sprit
     control->GetComponent<Transform>()->Anchor = size * 0.5f;
     GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
     Label* label = labelGO->GetComponent<Label>();
-    label->HAlignment = Font::Center;
-    label->VAlignment = Font::Middle;
+    label->HAlignment = Font::HAlignment::Center;
+    label->VAlignment = Font::VAlignment::Middle;
     
     return control;
 }
@@ -192,8 +191,8 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     labelGO->GetComponent<Label>()->Text = text;
 
     Label* label = labelGO->GetComponent<Label>();
-    label->HAlignment = Font::Center;
-    label->VAlignment = Font::Middle;
+    label->HAlignment = Font::HAlignment::Center;
+    label->VAlignment = Font::VAlignment::Middle;
     labelGO->AddComponent<TextBox>()->Text = text;
     labelGO->AddComponent<Touchable>(control);
     labelGO->GetComponent<Colorable>()->Color = Colour::Black();

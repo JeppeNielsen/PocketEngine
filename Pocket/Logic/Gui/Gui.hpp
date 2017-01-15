@@ -49,7 +49,7 @@ namespace Pocket {
         GameObject* CreateControl(GameObject *parent, const std::string& spriteName, const Vector2 &position, const Vector2 &size);
         GameObject* CreateControl(GameObject *parent, const std::string &spriteName, const Vector2& size);
         GameObject* CreateClipper(GameObject *parent, bool push);
-        GameObject* CreateFont(const std::string& fontFile, const std::string& fontAtlasName);
+        GameObject* CreateFont(const std::string& fontFile);
         GameObject* CreateLabel(GameObject *parent, const Vector2 &position, const Vector2 &size, GameObject *font, const std::string &text, float fontSize);
         GameObject* CreateLabelControl(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
         GameObject* CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
