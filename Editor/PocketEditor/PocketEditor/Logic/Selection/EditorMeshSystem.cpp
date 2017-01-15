@@ -22,7 +22,12 @@ void EditorMeshSystem::SelectionChanged(Pocket::GameObject *object) {
     if (object->GetComponent<Selectable>()->Selected) {
         GameObject* selectionObject = root->CreateObject();
         selectionObject->AddComponent<Transform>(object);
-        selectionObject->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1.05f);
+        
+        Mesh* mesh = object->GetComponent<Mesh>();
+        
+        auto& boundingBox = mesh->LocalBoundingBox();
+        
+        selectionObject->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(boundingBox.center, boundingBox.extends*0.5f+0.05f);
         selectionObject->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0,0,1.0f, 0.5f));
         selectionObject->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
         transformObjects[object] = selectionObject;
