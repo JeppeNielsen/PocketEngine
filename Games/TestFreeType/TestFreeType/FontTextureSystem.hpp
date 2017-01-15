@@ -11,9 +11,9 @@
 #include "TextureComponent.hpp"
 #include "Font.hpp"
 
-using namespace Pocket;
-
-struct FontTextureSystem : public GameSystem<Font, TextureComponent> {
-protected:
-    void Update(float dt);
-};
+namespace Pocket {
+    struct FontTextureSystem : public GameSystem<Font, TextureComponent> {
+    protected:
+        void Update(float dt);
+    };
+}

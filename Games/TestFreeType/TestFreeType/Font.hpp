@@ -14,82 +14,80 @@
 #include FT_FREETYPE_H
 #include "Texture.hpp"
 
-using namespace Pocket;
+namespace Pocket {
+    class Font {
+    public:
+        Font();
+        ~Font();
+        
+        bool LoadTTF(const std::string& path);
+        void Clear();
+        
+        float CharacterSetEverySize;
+        int maxTextureWidth;
+        int maxTextureHeight;
+        
+        struct Letter {
+            float x;
+            float y;
+            float width;
+            float height;
 
-class Font {
-public:
-    Font();
-    ~Font();
-    
-    bool LoadTTF(const std::string& path);
-    void Clear();
-    
-    float CharacterSetEverySize;
-    int maxTextureWidth;
-    int maxTextureHeight;
-    
-    struct Letter {
-        float x;
-        float y;
-        float width;
-        float height;
+            float u1;
+            float v1;
+            float u2;
+            float v2;
+        };
 
-        float u1;
-        float v1;
-        float u2;
-        float v2;
+        enum class HAlignment { Left, Center, Right };
+        enum class VAlignment { Top, Middle, Bottom };
+        
+        void RequestText(const std::string& text, float fontSize);
+
+        void CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const;
+
+        bool IsDirty();
+
+        void UpdateBuffer(Pocket::Texture& texture);
+        
+        Event<> BufferUpdated;
+        Event<> Cleared;
+        
+    private:
+        struct Character {
+            Character() : enabled(false) {}
+            float textureX;
+            float textureY;
+            float textureWidth;
+            float textureHeight;
+            float width;
+            float height;
+            float xoffset;
+            float yoffset;
+            float xadvance;
+            bool enabled;
+        };
+        
+        using Characters = std::vector<Character>;
+        
+        struct CharacterSet {
+            CharacterSet() : enabled(false) { }
+            Characters characters;
+            float lineHeight;
+            bool enabled;
+        };
+        
+        using CharacterSets = std::vector<CharacterSet>;
+        CharacterSets characterSets;
+
+         void RequestCharacter(CharacterSet& set, unsigned short c);
+        CharacterSet& RequestCharacterSet(float fontSize);
+        
+        const CharacterSet& GetCharacterSet(float fontSize) const;
+        
+        bool isDirty;
+        
+        FT_Library    library;
+        FT_Face       face;
     };
-
-    enum class HAlignment { Left, Center, Right };
-    enum class VAlignment { Top, Middle, Bottom };
-    
-    void RequestText(const std::string& text, float fontSize);
-
-    void CreateText(std::vector<Letter>& sentence, std::string text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const;
-
-    bool IsDirty();
-
-    void UpdateBuffer(Pocket::Texture& texture);
-    
-    Event<> BufferUpdated;
-    Event<> Cleared;
-    
-private:
-    struct Character {
-        Character() : enabled(false) {}
-        float textureX;
-        float textureY;
-        float textureWidth;
-        float textureHeight;
-        float width;
-        float height;
-        float xoffset;
-        float yoffset;
-        float xadvance;
-        bool enabled;
-    };
-    
-    using Characters = std::vector<Character>;
-    
-    struct CharacterSet {
-        CharacterSet() : enabled(false) { }
-        Characters characters;
-        float spacing;
-        float lineHeight;
-        bool enabled;
-        const Character& GetCharacter(char c);
-    };
-    
-    using CharacterSets = std::vector<CharacterSet>;
-    CharacterSets characterSets;
-
-     void RequestCharacter(CharacterSet& set, char c);
-    CharacterSet& RequestCharacterSet(float fontSize);
-    
-    const CharacterSet& GetCharacterSet(float fontSize) const;
-    
-    bool isDirty;
-    
-    FT_Library    library;
-    FT_Face       face;
-};
+}

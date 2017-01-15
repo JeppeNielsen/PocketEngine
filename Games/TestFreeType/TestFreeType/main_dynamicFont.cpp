@@ -11,8 +11,9 @@
 #include "RenderSystem.hpp"
 #include "FontTextureSystem.hpp"
 #include "FirstPersonMoverSystem.hpp"
-#include "DynamicLabelSystem.hpp"
+#include "LabelMeshSystem.hpp"
 #include "StringHelper.hpp"
+#include "ColorSystem.hpp"
 
 using namespace Pocket;
 
@@ -29,7 +30,8 @@ struct DynamicFont : public GameState<DynamicFont> {
         root->CreateSystem<RenderSystem>();
         root->CreateSystem<FontTextureSystem>();
         root->CreateSystem<FirstPersonMoverSystem>();
-        root->CreateSystem<DynamicLabelSystem>();
+        root->CreateSystem<LabelMeshSystem>();
+        root->CreateSystem<ColorSystem>();
         
         GameObject* camera = root->CreateObject();
         camera->AddComponent<Camera>();
@@ -37,39 +39,44 @@ struct DynamicFont : public GameState<DynamicFont> {
         camera->AddComponent<FirstPersonMover>();
         
         GameObject* font = root->CreateObject();
-        bool succes = font->AddComponent<Font>()->LoadTTF("/Users/Jeppe/Library/Fonts/NuevaStd-Bold_ttf.ttf");
+        bool succes = font->AddComponent<Font>()->LoadTTF("/Library/Fonts/Times New Roman.ttf");//"/Users/Jeppe/Library/Fonts/NuevaStd-Bold_ttf.ttf");
         if (!succes) {
             std::cout << "Font could not be loaded"<<std::endl;
         }
+        //font->GetComponent<Font>()->CharacterSetEverySize = 2;
         font->AddComponent<TextureComponent>();
-        font->AddComponent<Renderable>();
+        font->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
         font->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, 40, Colour::White());
-        font->AddComponent<Transform>()->Position = {0,0,1};
+        //font->AddComponent<Transform>()->Position = {0,0,1};
         
         {
             label = root->CreateObject();
             label->AddComponent<Transform>();
-            label->AddComponent<Sizeable>()->Size = {0,0};
-            label->AddComponent<Renderable>();
+            label->AddComponent<Sizeable>()->Size = {12,64};
+            label->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
             label->AddComponent<TextureComponent>(font);
             label->AddComponent<Mesh>();
             label->AddComponent<Font>(font);
-            label->AddComponent<DynamicLabel>()->Text = "ABCDEFG";
-            label->GetComponent<DynamicLabel>()->FontSize = 12;
+            label->AddComponent<Label>()->Text = "Testing word wrapping and a lot of small words";
+            label->GetComponent<Label>()->FontSize = 12;
+            label->GetComponent<Label>()->WordWrap = true;
+            
+            label->AddComponent<Colorable>()->Color = Colour::Black();
         }
         
         {
             label2 = root->CreateObject();
             label2->AddComponent<Transform>()->Position = {0,12};
-            label2->AddComponent<Sizeable>()->Size = {0,0};
-            label2->AddComponent<Renderable>();
+            label2->AddComponent<Sizeable>()->Size = {120,64};
+            label2->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
             label2->AddComponent<TextureComponent>(font);
-            label2->AddComponent<Mesh>();
+            //label2->AddComponent<Mesh>();
             label2->AddComponent<Font>(font);
-            label2->AddComponent<DynamicLabel>()->Text = "ABCDEFG";
-            label2->GetComponent<DynamicLabel>()->FontSize = 64;
+            //label2->AddComponent<Label>()->Text = "Cubism, is a new puzzle game from Jeppe Nielsen";
+            //label2->GetComponent<Label>()->FontSize = 64;
+            //label2->GetComponent<Label>()->WordWrap = true;
+            
         }
-
         
         {
         GameObject* cube = root->CreateObject();
@@ -88,6 +95,8 @@ struct DynamicFont : public GameState<DynamicFont> {
     
         Input.ButtonDown.Bind([font] (std::string button) {
             font->GetComponent<Font>()->Clear();
+            //std::string path = "/Projects/PocketEngine/Games/TestFreeType/test.png";
+            //font->GetComponent<TextureComponent>()->Texture().SaveToPng(path, GL_RGBA);
         });
     }
 
@@ -105,8 +114,8 @@ float timer;
             timer -= dt;
         }
         
-        label->GetComponent<DynamicLabel>()->FontSize = Input.GetTouchPosition(0).x * 0.1f;
-        
+        label->GetComponent<Label>()->FontSize = Input.GetTouchPosition(0).x * 0.2f;
+        //label->GetComponent<Sizeable>()->Size = { Input.GetTouchPosition(0).x * 0.1f, 100};
         
         Context().InputDevice().UpdateInputManager(&world.Input());
         world.Update(dt);
@@ -114,6 +123,8 @@ float timer;
 
 
     void Render() {
+        glClearColor(1, 1, 1, 1);
+        glClear(GL_COLOR_BUFFER_BIT);
         world.Render();
     }
 };

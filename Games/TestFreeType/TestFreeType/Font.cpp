@@ -13,6 +13,7 @@
 #include "OpenGL.hpp"
 
 using namespace std;
+using namespace Pocket;
 
 Font::Font() :
 CharacterSetEverySize(12),
@@ -55,8 +56,9 @@ const Font::CharacterSet& Font::GetCharacterSet(float fontSize) const {
 
 void Font::RequestText(const std::string &text, float fontSize) {
     auto& characterSet = RequestCharacterSet(fontSize);
-    for(auto& c : text) {
-        RequestCharacter(characterSet, c);
+    auto utf = StringHelper::GetUTF(text);
+    for(auto s : utf) {
+        RequestCharacter(characterSet, s);
     }
 }
 
@@ -74,7 +76,7 @@ Font::CharacterSet& Font::RequestCharacterSet(float fontSize) {
     return characterSet;
 }
 
-void Font::RequestCharacter(Font::CharacterSet &set, char c) {
+void Font::RequestCharacter(Font::CharacterSet &set, unsigned short c) {
     if (c>=set.characters.size()) {
         set.characters.resize(c + 1);
     }
@@ -85,7 +87,7 @@ void Font::RequestCharacter(Font::CharacterSet &set, char c) {
     }
 }
 
-void Font::CreateText(std::vector<Letter>& sentence, std::string text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const {
+void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const {
 
     const CharacterSet& set = GetCharacterSet(fontSize);
     const Characters characters = set.characters;
@@ -159,7 +161,7 @@ void Font::CreateText(std::vector<Letter>& sentence, std::string text, Vector2 s
             
 			for (size_t i=startIndex; i<sentence.size(); i++) {
 				sentence.at(i).x -= (wordStartX);
-				sentence.at(i).y += lineHeight * fontSize;
+				sentence.at(i).y += lineHeight;
 			}
             
 			p.x = p.x - wordStartX + space;
@@ -268,23 +270,25 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
                 character.yoffset = (-offsetY) * scale;
                 character.xadvance = advanceX * scale;
                 
-                character.textureX = (rect.x+1);
-                character.textureY = (rect.y+1);
-                character.textureWidth = width;
-                character.textureHeight = height;
+                character.textureX = rect.x;
+                character.textureY = rect.y;
+                character.textureWidth = rect.w;
+                character.textureHeight = rect.h;
                 
                 if (character.height>set.lineHeight) {
                     set.lineHeight = character.height;
                 }
                 //WriteCharacter(g->bitmap, rect.x+1, rect.y+1);
+            } else {
+                character.enabled = false;
             }
         }
     }
     
     int actualWidth = packer.GetW();
     int actualHeight = packer.GetH();
-    
-    texture.CreateFromBuffer(0, actualWidth, actualHeight, GL_LUMINANCE);
+  
+    texture.CreateFromBuffer(0, actualWidth, actualHeight, GL_RGBA);
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
@@ -304,14 +308,80 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
 
             FT_GlyphSlot g = face->glyph;
             
-            ASSERT_GL(glTexSubImage2D(GL_TEXTURE_2D, 0,character.textureX, character.textureY, character.textureWidth, character.textureHeight, GL_LUMINANCE, GL_UNSIGNED_BYTE, g->bitmap.buffer));
+            int bitmapWidth = g->bitmap.width;
+            
+            int bitmapSize = g->bitmap.width * g->bitmap.rows;
+            int bufferWidth = g->bitmap.width + 2;
+            int bufferHeight = g->bitmap.rows + 2;
+            unsigned char* buffer = new unsigned char[bufferWidth*bufferHeight * 4];
+            
+            int px = 0;
+            int py = 0;
+            
+            for(int i=0; i<bufferWidth; ++i) {
+                buffer[px] = 255;
+                buffer[px+1] = 255;
+                buffer[px+2] = 255;
+                buffer[px+3] = 0;
+                px+=4;
+            }
+            px = bufferWidth * (bufferHeight - 1) * 4;
+            for(int i=0; i<bufferWidth; ++i) {
+                buffer[px] = 255;
+                buffer[px+1] = 255;
+                buffer[px+2] = 255;
+                buffer[px+3] = 0;
+                px+=4;
+            }
+            
+            px = 0;
+            py = bufferWidth*4;
+            for(int i=0; i<bufferHeight; ++i) {
+                buffer[px] = 255;
+                buffer[px+1] = 255;
+                buffer[px+2] = 255;
+                buffer[px+3] = 0;
+                px+=py;
+            }
+            
+            px = (bufferWidth - 1)*4;
+            py = bufferWidth*4;
+            for(int i=0; i<bufferHeight; ++i) {
+                buffer[px] = 255;
+                buffer[px+1] = 255;
+                buffer[px+2] = 255;
+                buffer[px+3] = 0;
+                px+=py;
+            }
+            
+            int baseIndex = (bufferWidth + 1) * 4;
+            px = 0;
+            py = 0;
+            
+            for(int i=0; i<bitmapSize; ++i) {
+                int index = baseIndex + px * 4 + py * bufferWidth * 4;
+                buffer[index] = 255;
+                buffer[index+1] = 255;
+                buffer[index+2] = 255;
+                buffer[index+3] = g->bitmap.buffer[i];
+                
+                px++;
+                if (px==bitmapWidth) {
+                    px = 0;
+                    py++;
+                }
+             }
+            
+            ASSERT_GL(glTexSubImage2D(GL_TEXTURE_2D, 0,character.textureX, character.textureY, character.textureWidth, character.textureHeight, GL_RGBA, GL_UNSIGNED_BYTE, buffer));
+            delete[] buffer;
         
-            character.textureX /= actualWidth;
-            character.textureY /= actualHeight;
-            character.textureWidth /= actualWidth;
-            character.textureHeight /= actualHeight;
+            character.textureX = (character.textureX + 1) / actualWidth;
+            character.textureY = (character.textureY + 1) / actualHeight;
+            character.textureWidth = (character.textureWidth - 2 ) / actualWidth;
+            character.textureHeight = (character.textureHeight - 2) / actualHeight;
         }
     }
+    
    
     BufferUpdated();
 }

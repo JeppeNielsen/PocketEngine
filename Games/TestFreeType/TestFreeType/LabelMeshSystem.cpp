@@ -1,65 +1,65 @@
 //
-//  DynamicLabelSystem.cpp
+//  LabelMeshSystem.cpp
 //  TestFreeType
 //
 //  Created by Jeppe Nielsen on 13/01/2017.
 //  Copyright © 2017 Jeppe Nielsen. All rights reserved.
 //
 
-#include "DynamicLabelSystem.hpp"
+#include "LabelMeshSystem.hpp"
 
 using namespace Pocket;
 
-void DynamicLabelSystem::ObjectAdded(GameObject *object) {
-    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
-    DynamicLabel* label = object->GetComponent<DynamicLabel>();
-    label->FontSize.Changed.Bind(this, &DynamicLabelSystem::TextChanged, object);
-    label->Text.Changed.Bind(this, &DynamicLabelSystem::TextChanged, object);
-    label->HAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
-    label->VAlignment.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
-    label->WordWrap.Changed.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
+void LabelMeshSystem::ObjectAdded(GameObject *object) {
+    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+    Label* label = object->GetComponent<Label>();
+    label->FontSize.Changed.Bind(this, &LabelMeshSystem::TextChanged, object);
+    label->Text.Changed.Bind(this, &LabelMeshSystem::TextChanged, object);
+    label->HAlignment.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+    label->VAlignment.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+    label->WordWrap.Changed.Bind(this, &LabelMeshSystem::SomethingChanged, object);
     Font* font = object->GetComponent<Font>();
-    font->BufferUpdated.Bind(this, &DynamicLabelSystem::SomethingChanged, object);
-    font->Cleared.Bind(this, &DynamicLabelSystem::TextChanged, object);
+    font->BufferUpdated.Bind(this, &LabelMeshSystem::SomethingChanged, object);
+    font->Cleared.Bind(this, &LabelMeshSystem::TextChanged, object);
     
     TextChanged(object);
 }
 
-void DynamicLabelSystem::ObjectRemoved(GameObject *object) {
-    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
-    DynamicLabel* label = object->GetComponent<DynamicLabel>();
-    label->FontSize.Changed.Unbind(this, &DynamicLabelSystem::TextChanged, object);
-    label->Text.Changed.Unbind(this, &DynamicLabelSystem::TextChanged, object);
-    label->HAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
-    label->VAlignment.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
-    label->WordWrap.Changed.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
+void LabelMeshSystem::ObjectRemoved(GameObject *object) {
+    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+    Label* label = object->GetComponent<Label>();
+    label->FontSize.Changed.Unbind(this, &LabelMeshSystem::TextChanged, object);
+    label->Text.Changed.Unbind(this, &LabelMeshSystem::TextChanged, object);
+    label->HAlignment.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+    label->VAlignment.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+    label->WordWrap.Changed.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
     Font* font = object->GetComponent<Font>();
-    font->BufferUpdated.Unbind(this, &DynamicLabelSystem::SomethingChanged, object);
-    font->Cleared.Unbind(this, &DynamicLabelSystem::TextChanged, object);
+    font->BufferUpdated.Unbind(this, &LabelMeshSystem::SomethingChanged, object);
+    font->Cleared.Unbind(this, &LabelMeshSystem::TextChanged, object);
 }
 
-void DynamicLabelSystem::SomethingChanged(GameObject* object) {
+void LabelMeshSystem::SomethingChanged(GameObject* object) {
     dirtyObjects.insert(object);
 }
 
-void DynamicLabelSystem::TextChanged(Pocket::GameObject *object) {
-    DynamicLabel* label = object->GetComponent<DynamicLabel>();
+void LabelMeshSystem::TextChanged(Pocket::GameObject *object) {
+    Label* label = object->GetComponent<Label>();
     object->GetComponent<Font>()->RequestText(label->Text, label->FontSize);
     dirtyObjects.insert(object);
 }
 
-void DynamicLabelSystem::UpdateDirtyObject(Pocket::GameObject *object) {
+void LabelMeshSystem::UpdateDirtyObject(Pocket::GameObject *object) {
     Sizeable* sizeable = object->GetComponent<Sizeable>();
     Mesh* mesh = object->GetComponent<Mesh>();
     Font* font = object->GetComponent<Font>();
-    DynamicLabel* label = object->GetComponent<DynamicLabel>();
+    Label* label = object->GetComponent<Label>();
     const Vector2& size = sizeable->Size;
     mesh->Clear();
     Colour color = Colour::White();// object->GetComponent<Colorable>()!=0 ? object->GetComponent<Colorable>()->Color() : Colour::White();
     AddText(*mesh, *font, label->Text, size, label->FontSize, label->HAlignment, label->VAlignment, label->WordWrap, color);
 }
 
- void DynamicLabelSystem::AddText(Mesh& mesh, const Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Colour& color) {
+ void LabelMeshSystem::AddText(Mesh& mesh, const Font &font, std::string text, const Pocket::Vector2& size, float fontSize, Font::HAlignment hAlign, Font::VAlignment vAlign, bool wordWrap, const Colour& color) {
  
      std::vector<Font::Letter> letters;
      font.CreateText(letters, text, size, fontSize, hAlign, vAlign, wordWrap, true);
@@ -116,7 +116,7 @@ void DynamicLabelSystem::UpdateDirtyObject(Pocket::GameObject *object) {
      }
 }
 
-void DynamicLabelSystem::Update(float dt) {
+void LabelMeshSystem::Update(float dt) {
     for(auto o : dirtyObjects) {
         UpdateDirtyObject(o);
     }

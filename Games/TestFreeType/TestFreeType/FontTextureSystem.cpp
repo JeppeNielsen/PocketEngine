@@ -9,6 +9,8 @@
 #include "FontTextureSystem.hpp"
 #include "OpenGL.hpp"
 
+using namespace Pocket;
+
 void FontTextureSystem::Update(float dt) {
     for(auto o : Objects()) {
         Font* font = o->GetComponent<Font>();
