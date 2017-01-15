@@ -34,4 +34,13 @@ void AssetImporters::OnCreate() {
             object->AddComponent<ShaderComponent>();
         };
     }
+    {
+        GameObject* trueTypeImporter = context->ContextRoot().CreateObject();
+        trueTypeImporter->AddComponent<AssetImporter>()->extension = "ttf";
+        trueTypeImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
+            object->AddComponent<AssetLoader>();
+            object->AddComponent<Font>();
+            object->AddComponent<TextureComponent>();
+        };
+    }
 }
