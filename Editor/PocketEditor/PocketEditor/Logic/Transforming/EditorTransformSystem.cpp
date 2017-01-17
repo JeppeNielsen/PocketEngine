@@ -32,7 +32,6 @@ void EditorTransformSystem::ObjectRemoved(Pocket::GameObject *object) {
 void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
     if (object->GetComponent<Selectable>()->Selected) {
         GameObject* transformerObject = root->CreateObject();
-        transformerObject->AddComponent<Transform>(object);
         
         {
             GameObject* xaxis = transformerObject->CreateChild();
@@ -78,4 +77,10 @@ void EditorTransformSystem::TryRemoveTransformObject(Pocket::GameObject *object)
         it->second->Remove();
         transformObjects.erase(it);
     }
+}
+
+void EditorTransformSystem::Update(float dt) {
+    //for(auto it : transformObjects) {
+        //it.first->GetComponent<Transform>()->Position = it.second->GetComponent<Transform>()->Position;
+    //}
 }

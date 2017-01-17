@@ -8,15 +8,13 @@
 
 #pragma once
 #include "GameSystem.hpp"
-#include "Transform.hpp"
-#include "Mesh.hpp"
+#include "Sizeable.hpp"
 #include "Selectable.hpp"
 #include <map>
-#include <set>
 
 using namespace Pocket;
 
-class EditorMeshSystem : public GameSystem<Transform, Mesh, Selectable> {
+class EditorSizeableSystem : public GameSystem<Sizeable, Selectable> {
 public:
     void ObjectAdded(GameObject* object);
     void ObjectRemoved(GameObject* object);
@@ -25,10 +23,11 @@ private:
     void SelectionChanged(GameObject* object);
     void TryRemoveTransformObject(GameObject* object);
     using TransformObjects = std::map<GameObject*, GameObject*>;
+    struct DraggerEvent { GameObject* dragger; GameObject* object;
+        inline bool operator !=(const DraggerEvent& other) const{
+            return dragger != other.dragger || object != other.object;
+        }
+    };
+    void DraggerPositionChanged(DraggerEvent e);
     TransformObjects transformObjects;
-    
-    void BoundingBoxDirty(GameObject* object);
-    void CreateMesh(GameObject* object);
-    
-    std::set<GameObject*> dirtyObjects;
 };

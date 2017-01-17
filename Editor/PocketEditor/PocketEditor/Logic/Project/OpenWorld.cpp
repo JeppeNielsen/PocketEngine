@@ -17,6 +17,7 @@
 #include "DraggableSystem.hpp"
 #include "EditorTransformSystem.hpp"
 #include "EditorMeshSystem.hpp"
+#include "EditorSizeableSystem.hpp"
 #include "ClickSelectorSystem.hpp"
 #include "DragSelector.hpp"
 #include "SelectableDragSystem.hpp"
@@ -49,6 +50,7 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
 };
 
 OpenWorld::OpenWorld() : root(0) {
+    IsPlaying = false;
     IsPlaying.Changed.Bind([this] () {
         UpdateTimeScale();
     });
@@ -72,6 +74,10 @@ void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<DraggableSystem>();
     editorWorld.CreateSystem<EditorTransformSystem>();
     editorWorld.CreateSystem<EditorMeshSystem>();
+    editorWorld.CreateSystem<EditorSizeableSystem>();
+    
+    editorWorld.CreateSystem<TransformHierarchy>();
+    
     editorWorld.CreateSystem<ClickSelectorSystem>();
     editorWorld.CreateSystem<DragSelector>()->Setup({2000,2000});
     editorWorld.CreateSystem<SelectableDragSystem>();

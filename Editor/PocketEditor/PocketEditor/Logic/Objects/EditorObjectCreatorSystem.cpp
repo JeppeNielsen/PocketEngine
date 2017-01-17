@@ -8,10 +8,12 @@
 
 #include "EditorObjectCreatorSystem.hpp"
 #include "Touchable.hpp"
+#include "Sizeable.hpp"
 
 void EditorObjectCreatorSystem::Initialize() {
     root->CreateSystem<ComponentSystem<Transform>>()->creatorSystem = this;
     root->CreateSystem<ComponentSystem<Mesh>>()->creatorSystem = this;
+    root->CreateSystem<ComponentSystem<Sizeable>>()->creatorSystem = this;
     Order = -1000;
 }
 

@@ -364,6 +364,7 @@
 		72A4AF781E2BB6E000A856F5 /* autofit.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF771E2BB6E000A856F5 /* autofit.c */; };
 		72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF791E2BB71C00A856F5 /* smooth.c */; };
 		72A4AF7D1E2BB93000A856F5 /* FontTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */; };
+		72A4AF801E2C1EEA00A856F5 /* EditorSizeableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -1342,6 +1343,8 @@
 		72A4AF791E2BB71C00A856F5 /* smooth.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = smooth.c; sourceTree = "<group>"; };
 		72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontTextureSystem.cpp; sourceTree = "<group>"; };
 		72A4AF7C1E2BB93000A856F5 /* FontTextureSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FontTextureSystem.hpp; sourceTree = "<group>"; };
+		72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSizeableSystem.cpp; sourceTree = "<group>"; };
+		72A4AF7F1E2C1EEA00A856F5 /* EditorSizeableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSizeableSystem.hpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -3285,6 +3288,8 @@
 		72CE8EF31CB59AB4001F08E4 /* Selection */ = {
 			isa = PBXGroup;
 			children = (
+				72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */,
+				72A4AF7F1E2C1EEA00A856F5 /* EditorSizeableSystem.hpp */,
 				72CE8EFA1CB5A18E001F08E4 /* EditorMeshSystem.cpp */,
 				72CE8EFB1CB5A18E001F08E4 /* EditorMeshSystem.hpp */,
 			);
@@ -3629,6 +3634,7 @@
 				72308D091E127A9100B92B8D /* FileSystemListenerSystem.cpp in Sources */,
 				729954241C99F76100DAAE5D /* Interpolator.cpp in Sources */,
 				729954D81C99F76100DAAE5D /* btDefaultSoftBodySolver.cpp in Sources */,
+				72A4AF801E2C1EEA00A856F5 /* EditorSizeableSystem.cpp in Sources */,
 				7299547F1C99F76100DAAE5D /* btConvexHullShape.cpp in Sources */,
 				726DFD291D24742A00C862B7 /* ScriptWorld.cpp in Sources */,
 				729953C21C99F76100DAAE5D /* Engine.cpp in Sources */,
