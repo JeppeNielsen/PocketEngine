@@ -78,9 +78,3 @@ void EditorTransformSystem::TryRemoveTransformObject(Pocket::GameObject *object)
         transformObjects.erase(it);
     }
 }
-
-void EditorTransformSystem::Update(float dt) {
-    //for(auto it : transformObjects) {
-        //it.first->GetComponent<Transform>()->Position = it.second->GetComponent<Transform>()->Position;
-    //}
-}
