@@ -93,6 +93,8 @@ void Font::RequestCharacter(Font::CharacterSet &set, unsigned short c) {
 
 void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const {
 
+    if (text == "") return;
+
     const CharacterSet& set = GetCharacterSet(fontSize);
     const Characters characters = set.characters;
     
