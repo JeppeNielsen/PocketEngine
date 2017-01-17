@@ -4,6 +4,10 @@
 using namespace Pocket;
 
 void TransformHierarchy::ObjectAdded(GameObject* object) {
+
+    GameObject* ownerObject = object->GetComponentOwner<Transform>();
+    if (ownerObject != object) return;
+    
     Transform* transform = object->GetComponent<Transform>();
     
     transform->World.Method = [object, transform] (Matrix4x4& world) {
@@ -25,6 +29,10 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
 }
 
 void TransformHierarchy::ObjectRemoved(GameObject* object) {
+
+    GameObject* ownerObject = object->GetComponentOwner<Transform>();
+    if (ownerObject != object) return;
+
     Transform* transform = object->GetComponent<Transform>();
     transform->ResetWorldCalculation();
     object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
