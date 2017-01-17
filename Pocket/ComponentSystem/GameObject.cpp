@@ -151,7 +151,7 @@ void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
 
 GameObject* GameObject::GetComponentOwner(ComponentId componentId) {
     int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
-    return &scene->world->objects.entries[ownerIndex];
+    return ownerIndex != -1 ? &scene->world->objects.entries[ownerIndex] : nullptr;
 }
 
 void GameObject::SetWorldEnableDirty() {
