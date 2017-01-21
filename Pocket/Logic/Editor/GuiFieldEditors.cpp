@@ -149,6 +149,56 @@ struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
     }
 };
 
+struct FieldInfoEditorBool : public GuiFieldEditor {
+
+    void SetField(void* field) override {
+        this->field = static_cast<bool*>(field);
+    }
+
+    void Initialize(Gui* gui, GameObject* parent) override {
+        control = gui->CreateControl(parent, "TextBox");
+        control->AddComponent<Layouter>()->Min = {20, 20};
+        control->GetComponent<Layouter>()->Desired = {100, 20};
+        control->GetComponent<Layouter>()->Max = {5000, 20};
+        control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
+        control->GetComponent<Touchable>()->Click.Bind(this, &FieldInfoEditorBool::Clicked);
+
+        checkBox = gui->CreateControl(control, "TextBox");
+
+        checkBox->AddComponent<Layouter>()->Min = {20, 20};
+        checkBox->GetComponent<Layouter>()->Desired = {100, 20};
+        checkBox->GetComponent<Layouter>()->Max = {5000, 20};
+
+        checkBox->RemoveComponent<Touchable>();
+        checkBox->GetComponent<Colorable>()->Color = Colour::Black();
+        
+        UpdateVisuals();
+    }
+    
+    void Destroy() override {
+        control->GetComponent<Touchable>()->Click.Unbind(this, &FieldInfoEditorBool::Clicked);
+        control->Remove();
+    }
+    
+    void Clicked(TouchData d) {
+        *field = !(*field);
+        UpdateVisuals();
+    }
+    
+    void UpdateVisuals() {
+        checkBox->Enabled = *field;
+    }
+    
+    void Update(float dt) override {
+    
+    }
+    
+    bool* field;
+    GameObject* control;
+    GameObject* checkBox;
+};
+
+
 template<> IFieldEditor* FieldEditorCreator<int>::Create(int* ptr) {
     FieldInfoEditorInt* editor = new FieldInfoEditorInt();
     editor->SetField(ptr);
@@ -181,6 +231,12 @@ template<> IFieldEditor* FieldEditorCreator<Quaternion>::Create(Quaternion* ptr)
 
 template<> IFieldEditor* FieldEditorCreator<std::string>::Create(std::string* ptr) {
     FieldInfoEditorString* editor = new FieldInfoEditorString();
+    editor->SetField(ptr);
+    return editor;
+}
+
+template<> IFieldEditor* FieldEditorCreator<bool>::Create(bool* ptr) {
+    FieldInfoEditorBool* editor = new FieldInfoEditorBool();
     editor->SetField(ptr);
     return editor;
 }
