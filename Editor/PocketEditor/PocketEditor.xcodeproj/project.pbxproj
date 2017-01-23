@@ -365,6 +365,11 @@
 		72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF791E2BB71C00A856F5 /* smooth.c */; };
 		72A4AF7D1E2BB93000A856F5 /* FontTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */; };
 		72A4AF801E2C1EEA00A856F5 /* EditorSizeableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */; };
+		72A4AF841E33783100A856F5 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF821E33783100A856F5 /* Switch.cpp */; };
+		72A4AF871E3384FB00A856F5 /* SwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */; };
+		72A4AF8D1E340D7300A856F5 /* TouchSwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */; };
+		72A4AF901E35345500A856F5 /* SwitchEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */; };
+		72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -1345,6 +1350,16 @@
 		72A4AF7C1E2BB93000A856F5 /* FontTextureSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FontTextureSystem.hpp; sourceTree = "<group>"; };
 		72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSizeableSystem.cpp; sourceTree = "<group>"; };
 		72A4AF7F1E2C1EEA00A856F5 /* EditorSizeableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSizeableSystem.hpp; sourceTree = "<group>"; };
+		72A4AF821E33783100A856F5 /* Switch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Switch.cpp; sourceTree = "<group>"; };
+		72A4AF831E33783100A856F5 /* Switch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Switch.hpp; sourceTree = "<group>"; };
+		72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchSystem.cpp; sourceTree = "<group>"; };
+		72A4AF861E3384FB00A856F5 /* SwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchSystem.hpp; sourceTree = "<group>"; };
+		72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchSwitchSystem.cpp; sourceTree = "<group>"; };
+		72A4AF8C1E340D7300A856F5 /* TouchSwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchSwitchSystem.hpp; sourceTree = "<group>"; };
+		72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnabler.cpp; sourceTree = "<group>"; };
+		72A4AF8F1E35345500A856F5 /* SwitchEnabler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnabler.hpp; sourceTree = "<group>"; };
+		72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnablerSystem.cpp; sourceTree = "<group>"; };
+		72A4AF921E35348D00A856F5 /* SwitchEnablerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnablerSystem.hpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -1979,6 +1994,7 @@
 		72994FE01C99F76000DAAE5D /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72A4AF811E33782100A856F5 /* Switching */,
 				72994FE11C99F76000DAAE5D /* Animation */,
 				72308CF31E127A7A00B92B8D /* Assets */,
 				72994FFA1C99F76000DAAE5D /* Audio */,
@@ -3168,6 +3184,24 @@
 			path = Serialization;
 			sourceTree = "<group>";
 		};
+		72A4AF811E33782100A856F5 /* Switching */ = {
+			isa = PBXGroup;
+			children = (
+				72A4AF821E33783100A856F5 /* Switch.cpp */,
+				72A4AF831E33783100A856F5 /* Switch.hpp */,
+				72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */,
+				72A4AF861E3384FB00A856F5 /* SwitchSystem.hpp */,
+				72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */,
+				72A4AF8C1E340D7300A856F5 /* TouchSwitchSystem.hpp */,
+				72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */,
+				72A4AF8F1E35345500A856F5 /* SwitchEnabler.hpp */,
+				72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */,
+				72A4AF921E35348D00A856F5 /* SwitchEnablerSystem.hpp */,
+			);
+			name = Switching;
+			path = ../Switching;
+			sourceTree = "<group>";
+		};
 		72AE74CB1DAAA1B800CEB998 /* PlayButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -3544,6 +3578,7 @@
 				729953C91C99F76100DAAE5D /* BezierCurve1.cpp in Sources */,
 				7299549B1C99F76100DAAE5D /* btGenericPoolAllocator.cpp in Sources */,
 				729954E31C99F76100DAAE5D /* btGeometryUtil.cpp in Sources */,
+				72A4AF871E3384FB00A856F5 /* SwitchSystem.cpp in Sources */,
 				729954DA1C99F76100DAAE5D /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
 				727B38D91E2B9C5300531B62 /* tinyxml.cpp in Sources */,
 				729953D01C99F76100DAAE5D /* Triangulator.cpp in Sources */,
@@ -3556,6 +3591,7 @@
 				72B4925E1DCE59D10063518A /* GameIdHelper.cpp in Sources */,
 				72A4AF781E2BB6E000A856F5 /* autofit.c in Sources */,
 				729954541C99F76100DAAE5D /* b2RevoluteJoint.cpp in Sources */,
+				72A4AF901E35345500A856F5 /* SwitchEnabler.cpp in Sources */,
 				729954FD1C99F76100DAAE5D /* FileReader.mm in Sources */,
 				729954571C99F76100DAAE5D /* btCollisionAlgorithm.cpp in Sources */,
 				7299545B1C99F76100DAAE5D /* btMultiSapBroadphase.cpp in Sources */,
@@ -3598,6 +3634,7 @@
 				729954FC1C99F76100DAAE5D /* File.mm in Sources */,
 				729954D11C99F76100DAAE5D /* SpuCollisionShapes.cpp in Sources */,
 				7299542F1C99F76100DAAE5D /* Vector3.cpp in Sources */,
+				72A4AF841E33783100A856F5 /* Switch.cpp in Sources */,
 				729954C21C99F76100DAAE5D /* Bullet-C-API.cpp in Sources */,
 				729954201C99F76100DAAE5D /* TransformHierarchy.cpp in Sources */,
 				729954221C99F76100DAAE5D /* BoundingFrustum.cpp in Sources */,
@@ -3710,6 +3747,7 @@
 				729954521C99F76100DAAE5D /* b2PrismaticJoint.cpp in Sources */,
 				7299547C1C99F76100DAAE5D /* btConcaveShape.cpp in Sources */,
 				729954291C99F76100DAAE5D /* Point.cpp in Sources */,
+				72A4AF8D1E340D7300A856F5 /* TouchSwitchSystem.cpp in Sources */,
 				729954231C99F76100DAAE5D /* Box.cpp in Sources */,
 				729954331C99F76100DAAE5D /* clipper.cpp in Sources */,
 				729954501C99F76100DAAE5D /* b2Joint.cpp in Sources */,
@@ -3718,6 +3756,7 @@
 				729954651C99F76100DAAE5D /* btCollisionWorld.cpp in Sources */,
 				7299544D1C99F76100DAAE5D /* b2PolyContact.cpp in Sources */,
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
+				72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */,
 				729954E11C99F76100DAAE5D /* btConvexHull.cpp in Sources */,
 				72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */,
 				7299541F1C99F76100DAAE5D /* Transform.cpp in Sources */,
