@@ -49,7 +49,7 @@ namespace Pocket {
         void TouchDown(Pocket::TouchEvent e);
         void TouchUp(Pocket::TouchEvent e);
         
-        CameraSystem* cameraSystem;
+        CameraSystem* cameras;
         OctreeSystem* octree;
         
         ObjectCollection touchableList;
@@ -97,6 +97,8 @@ namespace Pocket {
         
     public:
         void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
+        void SetCameras(CameraSystem* cameraSystem);
+        CameraSystem* GetCameras();
     private:
         
         void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);

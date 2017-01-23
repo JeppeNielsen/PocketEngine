@@ -18,7 +18,7 @@ TouchSystem::~TouchSystem() { }
 
 void TouchSystem::Initialize() {
     octree = root->CreateSystem<OctreeSystem>();
-    cameraSystem = root->CreateSystem<TouchSystem::CameraSystem>();
+    cameras = root->CreateSystem<TouchSystem::CameraSystem>();
     root->CreateSystem<OrderableSystem>();
 
     root->Input().TouchDown.Bind(this, &TouchSystem::TouchDown);
@@ -190,7 +190,7 @@ TouchSystem::TouchableObject* TouchSystem::FindClipper(TouchableObject *fromThis
 }
 
 void TouchSystem::FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough) {
-    const auto& cameras = cameraSystem->Objects();
+    const auto& cameras = this->cameras->Objects();
     for (auto it = cameras.begin(); it!=cameras.end(); ++it) {
         FindTouchedObjectsFromCamera(*it, list, e, forceClickThrough);
     }
@@ -395,4 +395,12 @@ void TouchSystem::EnqueueDown(Pocket::GameObject *touchObject, Pocket::TouchData
     touchData.Touchable = touchObject->GetComponent<Touchable>();
     equeuedDowns.push_back(touchData);
     touches[touchData.Index].push_back(touchData);
+}
+
+void TouchSystem::SetCameras(Pocket::TouchSystem::CameraSystem *cameraSystem) {
+    cameras = cameraSystem;
+}
+
+Pocket::TouchSystem::CameraSystem * TouchSystem::GetCameras() {
+    return cameras;
 }
