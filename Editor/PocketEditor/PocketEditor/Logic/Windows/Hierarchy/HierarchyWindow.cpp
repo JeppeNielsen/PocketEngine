@@ -80,6 +80,20 @@ void HierarchyWindow::OnCreate() {
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
                 selectButton->GetComponent<Touchable>()->ClickThrough = true;
                 selectButton->AddComponent<EditorObject>(node);
+                
+                
+                {
+                    std::stringstream str;
+                    str<<editorObject->gameObject->RootId();
+                    
+                    GameObject* label = gui.CreateLabel(clone, {0,0}, {60,25}, 0, str.str(), 12);
+                    
+                    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+                    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+                    label->AddComponent<Colorable>()->Color = Colour::Black();
+                }
+
+                
             } else {
                 int hej = 8;
                 hej++;
@@ -102,6 +116,7 @@ void HierarchyWindow::OnCreate() {
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {
     auto selectables = context->Project().GetSelectables();
     selectables->ClearSelection();
+    if (!object->GetComponent<Selectable>()) return;
     object->GetComponent<Selectable>()->Selected = true;
     //factory->GetSelectable(object)->Selected = true;
     //object->GetComponent<Selectable>()->Selected = true;
