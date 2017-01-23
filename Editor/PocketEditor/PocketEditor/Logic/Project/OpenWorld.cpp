@@ -32,6 +32,9 @@
 #include "VelocitySystem.hpp"
 #include "EditorContext.hpp"
 #include "AssetManager.hpp"
+#include "SwitchSystem.hpp"
+#include "TouchSwitchSystem.hpp"
+#include "SwitchEnablerSystem.hpp"
 
 struct Turner {
     Vector3 speed;
@@ -66,6 +69,9 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<InputMapperSystem>();
     world.CreateSystem<VelocitySystem>();
     world.CreateSystem<Gui>();
+    world.CreateSystem<SwitchSystem>();
+    world.CreateSystem<SwitchEnablerSystem>();
+    world.CreateSystem<TouchSwitchSystem>();
 }
 
 void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
@@ -173,6 +179,10 @@ void OpenWorld::InitializeRoot() {
     RenderSystem* worldRenderSystem = root->CreateSystem<RenderSystem>();
     RenderSystem* editorRenderSystem = editorRoot->CreateSystem<RenderSystem>();
     worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
+    
+    TouchSystem* worldTouchSystem = root->CreateSystem<TouchSystem>();
+    TouchSystem* editorTouchSystem = editorRoot->CreateSystem<TouchSystem>();
+    worldTouchSystem->SetCameras(editorTouchSystem->GetCameras());
     
     UpdateTimeScale();
 }
