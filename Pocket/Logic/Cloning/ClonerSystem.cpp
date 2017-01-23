@@ -23,14 +23,15 @@ void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Cloner>()->Source.Changed.Bind(this, &ClonerSystem::CloneSourceChanged, object);
     if (object->Children().empty()) {
         CloneSourceChanged(object);
+    } else {
+        std::vector<IFieldInfo*> variables;
+        FindVariables(variables, object->Children()[0]);
+        object->GetComponent<Cloner>()->variables = variables;
     }
 }
 
 void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<Cloner>()->Source.Changed.Unbind(this, &ClonerSystem::CloneSourceChanged, object);
-    for(auto child : object->Children()) {
-        child->Remove();
-    }
 }
 
 void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
@@ -45,7 +46,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     FindVariables(variables, child);
     if (variables.size() == cloner->variables.size()) {
         for (int i=0; i<variables.size(); ++i) {
-            if (cloner->variables[i]->type == -1) {
+            if (cloner->variables[i] && cloner->variables[i]->type == -1) {
                 variables[i]->SetFromAny(static_cast<FieldInfoAny*>(cloner->variables[i]));
                 delete cloner->variables[i];
             }
