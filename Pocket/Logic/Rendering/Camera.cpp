@@ -14,9 +14,9 @@ Camera::Camera() {
     Mask = 0;
     Viewport = {0,0,1,1};
     Aspect = 0;
-    OrthographicRectangle = {0,0,0,0};
 	
 	Projection.Method = [this] (Matrix4x4& mat) {
+        float fieldOfView = FieldOfView;
         if (!Orthographic) {
             float aspect;
             if (MathHelper::FloatEqual(Aspect, 0, 0.001f)) {
@@ -27,16 +27,23 @@ Camera::Camera() {
             } else {
                 aspect = Aspect;
             }
-            mat.InitPerspective(FieldOfView, aspect, Near, Far);
+            mat.InitPerspective(fieldOfView, aspect, Near, Far);
         } else {
-            const Rect& r = OrthographicRectangle;
-            if (r.width<=0.001f && r.height<=0.001f) {
+            if (fieldOfView<=0.0001f) {
                 const Rect& viewport = Viewport;
                 const Vector2& screenSize = Engine::Context().ScreenSize;
                 Rect screenRect = viewport * screenSize;
                 mat.InitOrthographic(0, screenRect.height, screenRect.width, 0, Near, Far);
             } else {
-                mat.InitOrthographic(r.x, r.y + r.height, r.x + r.width, r.y, Near, Far);
+                const Rect& viewport = Viewport;
+                const Vector2& screenSize = Engine::Context().ScreenSize;
+                Rect screenRect = viewport * screenSize;
+                float aspect = screenRect.Aspect();
+                
+                float top = fieldOfView * 0.5f;
+                float right = top * aspect;
+                //(float left, float top, float right, float bottom, float nearValue, float farValue)
+                mat.InitOrthographic(-right, top, right, -top, Near, Far);
             }
         }
     };

@@ -22,7 +22,6 @@ namespace Pocket {
 		Property<Rect> Viewport;
         Property<float> Aspect;
         Property<bool> Orthographic;
-        Property<Rect> OrthographicRectangle;
         
         Property<RenderMask> Mask;
     
