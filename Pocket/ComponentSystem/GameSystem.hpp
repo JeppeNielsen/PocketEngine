@@ -25,7 +25,6 @@ namespace Pocket {
         virtual void ObjectRemoved(GameObject* object) override;
         virtual void Update(float dt) override;
         virtual void Render() override;
-        int ObjectCount() override;
         
         int AddObject(GameObject* object) override;
         void RemoveObject(GameObject* object) override;
@@ -37,6 +36,9 @@ namespace Pocket {
         void SetOrder(int order) override { Order = order; }
         int GetIndex() override { return index; }
         void SetIndex(int index) override { this->index = index; }
+    
+    public:
+        int ObjectCount() override;
         
     private:
         using MetaData = std::map<GameObject*, void*>;
