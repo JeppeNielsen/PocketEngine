@@ -22,16 +22,16 @@ void PlayButtons::OnCreate() {
     Gui& gui = context->Gui();
     
     playButton = gui.CreateLabelControl(window, "TextBox", 0, {100,30},0, "Play", 20);
-    stopButton = gui.CreateLabelControl(window, "TextBox", 0, {100,30}, 0, "Stop", 20);
+    stopButton = gui.CreateLabelControl(window, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
     
     playButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     
-    playButton->Enabled = false;
-    stopButton->Enabled = false;
-    
     playButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::PlayClicked);
     stopButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::StopClicked);
+    
+    playButton->Enabled = false;
+    stopButton->Enabled = false;
     
     window->RemoveComponent<Renderable>();
     ScreenSizeChanged();
