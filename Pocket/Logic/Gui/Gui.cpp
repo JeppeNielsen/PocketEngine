@@ -67,6 +67,7 @@ void Gui::Setup(GameObject *atlas, const Rect &viewport) {
     cam->Orthographic = true;
     cam->Near = 1.0f;
     cam->Far = 2.0f;
+    cam->FieldOfView = 0.0f;
 }
 
 GameObject* Gui::GetCamera() {
