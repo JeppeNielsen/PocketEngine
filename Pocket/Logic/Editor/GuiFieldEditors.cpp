@@ -149,6 +149,33 @@ struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
     }
 };
 
+struct FieldInfoEditorRect : public FieldInfoEditorTextboxes<Rect, 4> {
+    void TextboxChanged(int index, std::string text) override {
+        float value = (float)atof(text.c_str());
+        
+        if (index == 0) {
+            (*field).x = value;
+        } else if (index == 1) {
+            (*field).y = value;
+        } else if (index == 2) {
+            (*field).width = value;
+        } else {
+            (*field).height = value;
+        }
+    }
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        if (index == 0) {
+            stream<<(*field).x;
+        } else if (index == 1) {
+            stream<<(*field).y;
+        } else if (index == 2) {
+            stream<<(*field).width;
+        } else {
+            stream<<(*field).height;
+        }
+    }
+};
+
 struct FieldInfoEditorBool : public GuiFieldEditor {
 
     void SetField(void* field) override {
@@ -231,6 +258,12 @@ template<> IFieldEditor* FieldEditorCreator<Quaternion>::Create(Quaternion* ptr)
 
 template<> IFieldEditor* FieldEditorCreator<std::string>::Create(std::string* ptr) {
     FieldInfoEditorString* editor = new FieldInfoEditorString();
+    editor->SetField(ptr);
+    return editor;
+}
+
+template<> IFieldEditor* FieldEditorCreator<Rect>::Create(Rect* ptr) {
+    FieldInfoEditorRect* editor = new FieldInfoEditorRect();
     editor->SetField(ptr);
     return editor;
 }
