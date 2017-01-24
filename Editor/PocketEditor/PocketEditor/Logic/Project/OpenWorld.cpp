@@ -55,7 +55,7 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
 OpenWorld::OpenWorld() : root(0) {
     IsPlaying = false;
     IsPlaying.Changed.Bind([this] () {
-        UpdateTimeScale();
+        UpdatePlayMode();
     });
 }
 
@@ -176,15 +176,8 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
 
 void OpenWorld::InitializeRoot() {
     root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
-    RenderSystem* worldRenderSystem = root->CreateSystem<RenderSystem>();
-    RenderSystem* editorRenderSystem = editorRoot->CreateSystem<RenderSystem>();
-    worldRenderSystem->SetCameras(editorRenderSystem->GetCameras());
     
-    TouchSystem* worldTouchSystem = root->CreateSystem<TouchSystem>();
-    TouchSystem* editorTouchSystem = editorRoot->CreateSystem<TouchSystem>();
-    worldTouchSystem->SetCameras(editorTouchSystem->GetCameras());
-    
-    UpdateTimeScale();
+    UpdatePlayMode();
 }
 
 void OpenWorld::Play() {
@@ -222,9 +215,35 @@ void OpenWorld::Disable() {
     editorRoot->RenderEnabled() = false;
 }
 
-void OpenWorld::UpdateTimeScale() {
+void OpenWorld::UpdatePlayMode() {
     if (root) {
-        root->TimeScale() = IsPlaying() ? 1.0f : 0.0f;
+        
+        RenderSystem* worldRenderSystem = root->CreateSystem<RenderSystem>();
+        RenderSystem* editorRenderSystem = editorRoot->CreateSystem<RenderSystem>();
+        
+        TouchSystem* worldTouchSystem = root->CreateSystem<TouchSystem>();
+        TouchSystem* editorTouchSystem = editorRoot->CreateSystem<TouchSystem>();
+        
+        if (!IsPlaying || worldRenderSystem->GetOriginalCameras()->ObjectCount() == 0) {
+            editorTouchSystem->SetCameras(editorTouchSystem->GetOriginalCameras());
+            editorRenderSystem->SetCameras(editorRenderSystem->GetOriginalCameras());
+            
+            worldTouchSystem->SetCameras(editorTouchSystem->GetOriginalCameras());
+            worldRenderSystem->SetCameras(editorRenderSystem->GetOriginalCameras());
+            
+            editorRoot->RenderEnabled() = true;
+        } else {
+        
+            editorTouchSystem->SetCameras(worldTouchSystem->GetOriginalCameras());
+            editorRenderSystem->SetCameras(worldRenderSystem->GetOriginalCameras());
+            
+            worldTouchSystem->SetCameras(worldTouchSystem->GetOriginalCameras());
+            worldRenderSystem->SetCameras(worldRenderSystem->GetOriginalCameras());
+            
+            editorRoot->RenderEnabled() = false;
+        }
+
+        root->TimeScale() = IsPlaying ? 1.0f : 0.0f;
     }
 }
 
@@ -260,7 +279,7 @@ void OpenWorld::StoreWorld() {
 
 void OpenWorld::RestoreWorld() {
     root->Remove();
-    std::cout << storedWorld.str() << std::endl;
+    //std::cout << storedWorld.str() << std::endl;
     root = context->World().CreateRootFromJson(storedWorld, [this] (GameObject* root) {
         CreateDefaultSystems(*root);
         context->Project().ScriptWorld().AddGameRoot(root);

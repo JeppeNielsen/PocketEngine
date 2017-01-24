@@ -61,7 +61,7 @@ private:
     GameObject* editorCamera;
     
     void InitializeRoot();
-    void UpdateTimeScale();
+    void UpdatePlayMode();
     
     void AddEditorObject(GameObject* object);
     
