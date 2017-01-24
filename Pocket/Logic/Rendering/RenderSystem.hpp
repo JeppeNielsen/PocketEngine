@@ -43,6 +43,7 @@ public:
     
     void SetCameras(CameraSystem* cameraSystem);
     CameraSystem* GetCameras();
+    CameraSystem* GetOriginalCameras();
     
 private:
     

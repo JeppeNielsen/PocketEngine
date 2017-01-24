@@ -404,3 +404,7 @@ void TouchSystem::SetCameras(Pocket::TouchSystem::CameraSystem *cameraSystem) {
 Pocket::TouchSystem::CameraSystem * TouchSystem::GetCameras() {
     return cameras;
 }
+
+Pocket::TouchSystem::CameraSystem* TouchSystem::GetOriginalCameras() {
+    return root->CreateSystem<CameraSystem>();
+}

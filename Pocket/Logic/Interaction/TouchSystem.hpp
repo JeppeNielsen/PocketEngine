@@ -99,6 +99,7 @@ namespace Pocket {
         void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
         void SetCameras(CameraSystem* cameraSystem);
         CameraSystem* GetCameras();
+        CameraSystem* GetOriginalCameras();
     private:
         
         void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);

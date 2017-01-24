@@ -55,12 +55,13 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     Transform* cameraTransform = cameraObject->GetComponent<Transform>();
     Camera* camera = cameraObject->GetComponent<Camera>();
     RenderMask cameraMask = camera->Mask;
-    if (!camera->Orthographic()) {
+    //if (!camera->Orthographic()) {
         const Rect& viewport = camera->Viewport;
         const Vector2& screenSize = Engine::Context().ScreenSize;
         Rect screenRect = viewport * screenSize;
         glViewport(screenRect.x, screenRect.y, screenRect.width, screenRect.height);
-    }
+    //}
+    
     const Matrix4x4 viewProjection = camera->Projection().Multiply(cameraTransform->WorldInverse);
     
     BoundingFrustum frustum;
@@ -234,4 +235,8 @@ void RenderSystem::SetCameras(Pocket::RenderSystem::CameraSystem *cameraSystem) 
 
 Pocket::RenderSystem::CameraSystem * RenderSystem::GetCameras() {
     return cameras;
+}
+
+Pocket::RenderSystem::CameraSystem* RenderSystem::GetOriginalCameras() {
+    return root->CreateSystem<CameraSystem>();
 }
