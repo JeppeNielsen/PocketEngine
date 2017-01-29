@@ -174,9 +174,13 @@ namespace Pocket {
         std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
         
         std::string ReadGuidFromJson(std::istream& jsonStream);
-        void TryParseJson(std::istream &jsonStream, int componentId, const std::function<void (int, int)>& callback);
+        void TryParseJson(std::istream &jsonStream, int componentId,
+                          const std::function<void (int, int)>& callback,
+                          const std::function<bool (const std::string& componentName)>& componentCallback = 0);
     private:
-        void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName, const std::function<void (int, int)>& callback);
+        void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
+                                const std::function<void (int, int)>& callback,
+                                const std::function<bool (const std::string& componentName)>& componentCallback);
     public:
         friend class GameScene;
         friend class GameObject;

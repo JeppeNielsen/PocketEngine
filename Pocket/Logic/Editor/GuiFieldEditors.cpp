@@ -9,6 +9,9 @@
 #include "GuiFieldEditors.hpp"
 #include <fstream>
 #include "FileReader.hpp"
+#include "GameObjectHandle.hpp"
+#include "Cloner.hpp"
+#include "EditorDropTarget.hpp" // <- TODO: not part of engine
 
 using namespace Pocket;
 
@@ -294,6 +297,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     GameObject::ReferenceComponent component;
     GameObject* control;
     GameObject* parent;
+    GameObject* label;
 
     void SetField(void* field) override {
         component = *static_cast<GameObject::ReferenceComponent*>(field);
@@ -314,17 +318,14 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         textBox->GetComponent<Touchable>()->Click.Bind([this] (TouchData d){
             MenuClicked();
         });
-        
-        GameObject* owner = component.object->GetComponentOwner(component.componentId);
-        std::string path = owner->TryGetRootPath();
-        std::string text = FileReader::GetFileNameFromPath(path);
-        
-        std::stringstream ss;
-        ss<<owner->RootId();
-        text += " : " + ss.str();
+        textBox->AddComponent<EditorDropTarget>()->OnDropped = [this] (EditorObject* editorObject) {
+            if (!editorObject->gameObject->HasComponent(component.componentId)) return;
+            component.object->ReplaceComponent(component.componentId, editorObject->gameObject);
+            UpdateLabel();
+        };
         
         //gui->CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize)
-        GameObject* label = gui->CreateLabel(textBox, 0, 20, 0, text, 20);
+        label = gui->CreateLabel(textBox, 0, 20, 0, "", 20);
         label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         
         //label->AddComponent<Layouter>(textBox);
@@ -335,6 +336,8 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         this->gui = gui;
         
         this->parent->World()->Input().TouchDown.Bind(this, &ReferenceComponentEditor::TouchUp);
+        
+        UpdateLabel();
     }
     
     void TouchUp(TouchEvent e) {
@@ -350,6 +353,22 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     
     void Update(float dt) override {
         
+    }
+    
+    void UpdateLabel() {
+        GameObject* owner = component.object->GetComponentOwner(component.componentId);
+        std::string text;
+        if (owner) {
+            std::string path = owner->TryGetRootPath();
+            text = FileReader::GetFileNameFromPath(path);
+            
+            std::stringstream ss;
+            ss<<owner->RootId();
+            text += " : " + ss.str();
+        } else {
+            text = "Removed";
+        }
+        label->GetComponent<Label>()->Text = text;
     }
     
     GameObject* menu;
@@ -375,8 +394,6 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         std::vector<std::string> paths;
         world->GetPaths(guids, paths);
         
-        
-    
         menu = gui->CreateControl(0, "TextBox", 0, {200,200});
         menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
         menu->GetComponent<Transform>()->Position = control->GetComponent<Transform>()->World().TransformPosition(0);
@@ -412,16 +429,10 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
                 label->AddComponent<Colorable>()->Color = Colour::Black();
                 
                 button->GetComponent<Touchable>()->Down.Bind(this, &ReferenceComponentEditor::Clicked, { guids[i], id } );
-                
+
             });
-            
-        
             std::cout << "guid: " << guids[i] << "  path:" << paths[i] << std::endl;
         }
-        
-        
-    
-    
     }
     
     void Clicked(TouchData touch, ClickedData d) {
@@ -437,6 +448,8 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         if (!root) return;
         GameObject* object = root->FindObject(d.objectId);
         component.object->ReplaceComponent(component.componentId, object);
+        
+        UpdateLabel();
     }
     
 };
@@ -448,7 +461,170 @@ template<> IFieldEditor* FieldEditorCreator<GameObject::ReferenceComponent>::Cre
 }
 
 
+struct GameObjectHandleEditor : public GuiFieldEditor {
 
+    GameObjectHandle* handle;
+    GameObject* control;
+    GameObject* parent;
+    GameObject* label;
 
+    void SetField(void* field) override {
+        handle = static_cast<GameObjectHandle*>(field);
+        menu = 0;
+    }
 
+    void Initialize(Gui* gui, GameObject* parent) override {
+    
+        this->parent = parent;
+    
+        control = gui->CreateControl(parent);
+        control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
+        
+        GameObject* textBox = gui->CreateControl(control, "TextBox");
+        textBox->AddComponent<Layouter>()->Min = {20, 20};
+        textBox->GetComponent<Layouter>()->Desired = {100, 20};
+        textBox->GetComponent<Layouter>()->Max = {5000, 20};
+        textBox->GetComponent<Touchable>()->Click.Bind([this] (TouchData d){
+            MenuClicked();
+        });
+        
+        
+        //gui->CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize)
+        label = gui->CreateLabel(textBox, 0, 20, 0, "", 20);
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+        
+        //label->AddComponent<Layouter>(textBox);
+        label->AddComponent<Colorable>()->Color = Colour::Black();
+        
+        this->gui = gui;
+        this->parent->World()->Input().TouchDown.Bind(this, &GameObjectHandleEditor::TouchUp);
+        
+        UpdateLabel();
+    }
+    
+    void UpdateLabel() {
+        GameObject* target = handle->operator->();
+        std::string path = !target ? "" : target->TryGetRootPath();
+        std::string text = FileReader::GetFileNameFromPath(path);
+        
+        if (target) {
+            std::stringstream ss;
+            ss<<target->RootId();
+            text += " : " + ss.str();
+        } else {
+            text += "none";
+        }
+        label->GetComponent<Label>()->Text = text;
+    }
+    
+    void TouchUp(TouchEvent e) {
+        if (menu) {
+            menu->Remove();
+        }
+        menu = 0;
+    }
+    
+    void Destroy() override {
+        this->parent->World()->Input().TouchDown.Unbind(this, &GameObjectHandleEditor::TouchUp);
+    }
+    
+    void Update(float dt) override {
+        
+    }
+    
+    GameObject* menu;
+    Gui* gui;
+    
+    struct ClickedData {
+        std::string guid;
+        int objectId;
+    };
+    
+    void MenuClicked() {
+        if (!parent->World()->GetPaths) {
+            return;
+        }
+        
+        if (menu) {
+            menu->Remove();
+        }
+        
+        GameWorld* world = parent->World();
+        
+        std::vector<std::string> guids;
+        std::vector<std::string> paths;
+        world->GetPaths(guids, paths);
+        
+        
+    
+        menu = gui->CreateControl(0, "TextBox", 0, {200,200});
+        menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
+        menu->GetComponent<Transform>()->Position = control->GetComponent<Transform>()->World().TransformPosition(0);
+        
+        for (int i=0; i<guids.size(); ++i) {
+        
+            std::ifstream file;
+            file.open(paths[i]);
+            
+            //std::cout << "Start parse file: "<<p.second<<std::endl;
+            //context.World().TryParseJson(file, GameIdHelper::GetComponentID<Transform>(), [] (int parent, int object) {
+            //    std::cout << " parent: " << parent << "  object: " << object << std::endl;
+            //});
+            
+            bool hasCreatedItem = false;
+            
+            world->TryParseJson(file, -1, [&, this](int parentId, int id) {
+            
+                if (hasCreatedItem) return;
+                GameObject* button = gui->CreateControl(menu, "Box");
+                button->AddComponent<Layouter>()->Desired = { 200, 30 };
+                button->GetComponent<Layouter>()->Min = {50,30};
+                button->GetComponent<Layouter>()->Max = {500,30};
+                
+                std::string text = FileReader::GetFileNameFromPath(paths[i]);
+                
+                std::stringstream ss;
+                ss<<id;
+                text += " : " + ss.str();
+                
+                GameObject* label = gui->CreateLabel(button, 0, 10, 0, text, 20);
+                //label->AddComponent<Layouter>(button);
+                label->AddComponent<Colorable>()->Color = Colour::Black();
+                
+                button->GetComponent<Touchable>()->Down.Bind(this, &GameObjectHandleEditor::Clicked, { guids[i], id } );
+                
+                hasCreatedItem = true;
+                
+            }, [&, this](const std::string& componentName) -> bool {
+                return hasCreatedItem || componentName != GameIdHelper::GetClassName<Cloner>();
+            });
+           
+            std::cout << "guid: " << guids[i] << "  path:" << paths[i] << std::endl;
+        }
+    }
+    
+    void Clicked(TouchData touch, ClickedData d) {
+        if (menu) {
+            menu->Remove();
+            menu = 0;
+        }
+        
+        std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
+        
+        GameObject* root = parent->World()->TryFindRoot(d.guid);
+        if (!root) return;
+        GameObject* object = root->FindObject(d.objectId);
+        
+        handle->SetRoot(root);
+        handle->operator=(object);
+        
+        UpdateLabel();
+    }
+    
+};
 
+template<> IFieldEditor* FieldEditorCreator<GameObjectHandle>::Create(GameObjectHandle *ptr) {
+    GameObjectHandleEditor* editor = new GameObjectHandleEditor();
+    editor->SetField(ptr);
+    return editor;
+}

@@ -368,18 +368,22 @@ std::string GameWorld::ReadGuidFromJson(std::istream &jsonStream) {
     return guid;
 }
 
-void GameWorld::TryParseJson(std::istream &jsonStream, int componentId, const std::function<void (int, int)>& callback) {
+void GameWorld::TryParseJson(std::istream &jsonStream, int componentId,
+    const std::function<void (int, int)>& callback,
+    const std::function<bool (const std::string& componentName)>& componentCallback) {
     minijson::istream_context context(jsonStream);
     try {
-        std::string componentName = components[componentId].name;
-        TryParseJsonObject(-1, context, componentName, callback);
+        std::string componentName = componentId<0 ? "" : components[componentId].name;
+        TryParseJsonObject(-1, context, componentName, callback, componentCallback);
     } catch (minijson::parse_error e) {
         std::cout << e.what() << std::endl;
     }
 }
 
-void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName, const std::function<void (int, int)>& callback) {
-    
+void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
+                                   const std::function<void (int, int)>& callback,
+                                   const std::function<bool (const std::string& componentName)>& componentCallback) {
+     bool recurseChildren = true;
      int objectId = -1;
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
         if (v.type() == minijson::Object) {
@@ -387,13 +391,16 @@ void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &contex
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::Number) {
                     objectId = (int)v.as_long();
-                } else if (name == "Components" && v.type() == minijson::Array && objectId!=-1 && componentName!="") {
+                } else if (name == "Components" && v.type() == minijson::Array && objectId!=-1) {
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {
                             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                                 std::string name = n;
-                                if (componentName == name) {
+                                if (componentName == name && componentName!="") {
                                     callback(parent, objectId);
+                                }
+                                if (componentCallback && !componentCallback(name)) {
+                                    recurseChildren = false;
                                 }
                                 minijson::ignore(context);
                             });
@@ -402,9 +409,11 @@ void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &contex
                         }
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && objectId!=-1) {
-                    minijson::parse_array(context, [&] (minijson::value v) {
-                        TryParseJsonObject(objectId, context, componentName, callback);
-                    });
+                    if (recurseChildren) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            TryParseJsonObject(objectId, context, componentName, callback, componentCallback);
+                        });
+                    }
                 } else {
                     minijson::ignore(context);
                 }
