@@ -19,7 +19,7 @@ namespace Pocket {
     private:
         void CloneSourceChanged(GameObject* object);
         
-        void FindVariables(std::vector<IFieldInfo*>& variables, GameObject* objectWithVariable);
+        void FindVariables(std::vector<IFieldInfo*>& variables, GameObject* cloner, GameObject* objectWithVariable);
         
     };
 }

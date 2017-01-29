@@ -19,6 +19,7 @@ namespace Pocket {
         GameObjectHandle Source;
         
         std::vector<IFieldInfo*> variables;
+        std::vector<ComponentId> components;
         
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Source)

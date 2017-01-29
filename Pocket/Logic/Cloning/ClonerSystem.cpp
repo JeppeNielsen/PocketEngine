@@ -24,9 +24,11 @@ void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
     if (object->Children().empty()) {
         CloneSourceChanged(object);
     } else {
+        Cloner* cloner = object->GetComponent<Cloner>();
         std::vector<IFieldInfo*> variables;
-        FindVariables(variables, object->Children()[0]);
-        object->GetComponent<Cloner>()->variables = variables;
+        cloner->components.clear();
+        FindVariables(variables, object, object->Children()[0]);
+        cloner->variables = variables;
     }
 }
 
@@ -36,6 +38,11 @@ void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     Cloner* cloner = object->GetComponent<Cloner>();
+    
+    for(auto componentId : cloner->components) {
+        object->RemoveComponent(componentId);
+    }
+    cloner->components.clear();
     for(auto child : object->Children()) {
         child->Remove();
     }
@@ -43,7 +50,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     if (!source) return;
     GameObject* child = object->CreateChildClone(source);
     std::vector<IFieldInfo*> variables;
-    FindVariables(variables, child);
+    FindVariables(variables, object, child);
     if (variables.size() == cloner->variables.size()) {
         for (int i=0; i<variables.size(); ++i) {
             if (cloner->variables[i] && cloner->variables[i]->type == -1) {
@@ -55,7 +62,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     cloner->variables = variables;
 }
 
-void ClonerSystem::FindVariables(std::vector<IFieldInfo*>& variables, Pocket::GameObject *objectWithVariable) {
+void ClonerSystem::FindVariables(std::vector<IFieldInfo*>& variables, GameObject* cloner, Pocket::GameObject *objectWithVariable) {
     CloneVariable* vars = objectWithVariable->GetComponent<CloneVariable>();
     
     if (vars) {
@@ -67,13 +74,18 @@ void ClonerSystem::FindVariables(std::vector<IFieldInfo*>& variables, Pocket::Ga
                     auto fieldInfo = typeInfo.GetField(var.fieldName);
                     if (fieldInfo) {
                         variables.push_back(fieldInfo->Clone());
+                    } else {
+                        if (!cloner->HasComponent(index)) {
+                            cloner->GetComponent<Cloner>()->components.push_back(index);
+                            cloner->AddComponent(index, objectWithVariable);
+                        }
                     }
                 }
             }
         }
     }
     for(auto child : objectWithVariable->Children()) {
-        FindVariables(variables, child);
+        FindVariables(variables, cloner, child);
     }
 }
 
