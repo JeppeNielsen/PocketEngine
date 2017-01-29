@@ -41,8 +41,11 @@ void VirtualTreeListSpawnerSystem::NodeCreated(VirtualTreeList::Node e, Pocket::
     VirtualTreeList* treeList = object->GetComponent<VirtualTreeList>();
     
     clone->Children()[0]->GetComponent<Touchable>()->Click.Bind(this, &VirtualTreeListSpawnerSystem::FoldOutClicked, {e.node, treeList });
-    clone->Children()[0]->GetComponent<Colorable>()->Color = e.node->Children().empty() ? Colour::White() : Colour::Red();
-    
+    if (!spawner->HasChildren) {
+        clone->Children()[0]->GetComponent<Colorable>()->Color = e.node->Children().empty() ? Colour::White() : Colour::Red();
+    } else {
+        clone->Children()[0]->GetComponent<Colorable>()->Color = !spawner->HasChildren(e.node) ? Colour::White() : Colour::Red();
+    }
     //std::cout << "Created object : " << e.node->ID<<" index : "<<e.position<< "depth : " << e.depth << std::endl;
 }
 

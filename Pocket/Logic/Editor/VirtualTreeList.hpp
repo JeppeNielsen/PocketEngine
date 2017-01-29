@@ -22,6 +22,7 @@ namespace Pocket {
         Property<GameObject*> Root;
         
         std::function<std::string(GameObject*)> ExpandedHashFunction;
+        std::function<bool(GameObject* object)> PredicateFunction;
         
         struct ExpandedNode {
             DirtyProperty<int> Height;
@@ -68,6 +69,8 @@ namespace Pocket {
         void GetNodes(int lower, int upper, Nodes& nodesFound);
         
         void GetNodesRecursive(GameObject* object, int lower, int upper, int& index, int depth, Nodes& nodesFound);
+        
+        
         
     };
 }

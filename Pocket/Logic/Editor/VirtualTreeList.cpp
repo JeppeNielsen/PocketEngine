@@ -16,6 +16,7 @@ VirtualTreeList::VirtualTreeList() {
     ExpandedHashFunction = [this] (GameObject* go) {
         return DefaultExpandedHashFunction(go);
     };
+    PredicateFunction = 0;
 }
 
 void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
@@ -63,6 +64,7 @@ void VirtualTreeList::GetNodes(int lower, int upper, Nodes &nodesFound) {
 
 void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, int upper, int &index, int depth, Nodes &nodesFound) {
     if (index>upper) return;
+    if (PredicateFunction && !PredicateFunction(object)) return;
 
     if (index>=lower && index<=upper) {
         nodesFound.push_back({object, index, depth });

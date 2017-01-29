@@ -7,3 +7,11 @@
 //
 
 #include "VirtualTreeListSpawner.hpp"
+
+using namespace Pocket;
+
+VirtualTreeListSpawner::VirtualTreeListSpawner() {
+    OnCreate = 0;
+    OnRemove = 0;
+    HasChildren = 0;
+}
