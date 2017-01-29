@@ -47,7 +47,10 @@ void InspectorWindow::OnInitialize() {
                 o->GetComponent<EditorObject>()->gameObject->ReplaceComponent(componentIndex, referenceObject);
             }
         }
-        RefreshInspector();
+        
+        context->postActions.emplace_back([this] () {
+            RefreshInspector();
+        });
     });
     removeComponentMenu.AddChild("Remove").Clicked.Bind([this] () {
         if (!currentWorld) return;
@@ -59,7 +62,9 @@ void InspectorWindow::OnInitialize() {
             o->GetComponent<EditorObject>()->gameObject->RemoveComponent(componentIndex);
         }
         
-        RefreshInspector();
+        context->postActions.emplace_back([this] () {
+            RefreshInspector();
+        });
     });
 }
 

@@ -21,7 +21,7 @@ void EditorObjectCreatorSystem::ObjectAdded(Pocket::GameObject *object) {
     
     GameObject* editorObject = editorRoot->CreateObject();
     editorObject->AddComponent<Selectable>();
-    editorObject->AddComponent<Touchable>();
+    //editorObject->AddComponent<Touchable>()->ClickThrough = true;
     
     object->GetComponent<EditorObject>()->gameObject = object;
     object->GetComponent<EditorObject>()->editorObject = editorObject;
@@ -34,7 +34,3 @@ void EditorObjectCreatorSystem::ObjectRemoved(Pocket::GameObject *object) {
     GameObject* editorObject = (GameObject*)GetMetaData(object);
     editorObject->Remove();
 }
-
-/*int EditorObjectCreatorSystem::Order() {
-    return -1000;
-}*/

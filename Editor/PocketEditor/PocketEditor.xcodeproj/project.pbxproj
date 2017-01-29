@@ -370,6 +370,7 @@
 		72A4AF8D1E340D7300A856F5 /* TouchSwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */; };
 		72A4AF901E35345500A856F5 /* SwitchEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */; };
 		72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */; };
+		72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -1360,6 +1361,8 @@
 		72A4AF8F1E35345500A856F5 /* SwitchEnabler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnabler.hpp; sourceTree = "<group>"; };
 		72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnablerSystem.cpp; sourceTree = "<group>"; };
 		72A4AF921E35348D00A856F5 /* SwitchEnablerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnablerSystem.hpp; sourceTree = "<group>"; };
+		72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorDropTarget.cpp; sourceTree = "<group>"; };
+		72A4AF951E3A9B8D00A856F5 /* EditorDropTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorDropTarget.hpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -3346,6 +3349,8 @@
 				72CE8F151CC02DDB001F08E4 /* EditorObject.hpp */,
 				72CE8F171CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp */,
 				72CE8F181CC02F0E001F08E4 /* EditorObjectCreatorSystem.hpp */,
+				72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */,
+				72A4AF951E3A9B8D00A856F5 /* EditorDropTarget.hpp */,
 			);
 			path = Objects;
 			sourceTree = "<group>";
@@ -3534,6 +3539,7 @@
 				729953FA1C99F76100DAAE5D /* TextBoxLabelSystem.cpp in Sources */,
 				72CE8F191CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp in Sources */,
 				727B38D71E2B9C5300531B62 /* lodepng.cpp in Sources */,
+				72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */,
 				729954721C99F76100DAAE5D /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				7299549E1C99F76100DAAE5D /* btGImpactQuantizedBvh.cpp in Sources */,
 				729954E91C99F76100DAAE5D /* MiniCLTask.cpp in Sources */,

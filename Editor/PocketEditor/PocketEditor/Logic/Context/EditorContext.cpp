@@ -10,6 +10,7 @@
 #include "Cloner.hpp"
 #include "CloneVariable.hpp"
 #include "AssetManager.hpp"
+#include "EditorDropTarget.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
@@ -37,7 +38,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     guiRoot->CreateSystem<TouchSystem>()->Order = -200;
     
     gui->Setup("images.png", "images.xml", engineContext.Viewport());
-    gui->CreateFont("/Library/Fonts/Times New Roman.ttf");//, "Font");
+    gui->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
 
     guiRoot->CreateSystem<RenderSystem>()->Order = 10;
     
@@ -46,6 +47,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     
     world.AddComponentType<Cloner>();
     world.AddComponentType<CloneVariable>();
+    world.AddComponentType<EditorDropTarget>();
     
     GameObject* initRoot = world.CreateRoot();
     OpenWorld::CreateDefaultSystems(*initRoot);

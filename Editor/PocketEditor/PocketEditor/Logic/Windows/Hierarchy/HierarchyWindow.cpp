@@ -12,6 +12,8 @@
 #include "SelectedColorer.hpp"
 #include "Selectable.hpp"
 #include "DroppableSystem.hpp"
+#include "EditorDropTarget.hpp"
+#include "Cloner.hpp"
 
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
@@ -58,9 +60,20 @@ void HierarchyWindow::OnCreate() {
     treeView->Root = 0;
     //treeView->SetNodeExpanded(root, true);
     treeView->Pivot = listBox;
+    treeView->PredicateFunction = [] (GameObject* object) {
+        if (object->Parent() && object->Parent()->GetComponent<Cloner>()) return false;
+        return true;
+    };
+    
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
+    spawner->HasChildren = [] (GameObject* object) {
+        if (object->GetComponent<Cloner>()) return false;
+        return !object->Children().empty();
+    };
+    
     spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
+        
         GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
         clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, node);
         gui.CreateControl(clone, "TextBox", 0, {25,25});
@@ -72,7 +85,9 @@ void HierarchyWindow::OnCreate() {
         };
         
         //if (node!=treeView->Root()) {
-            EditorObject* editorObject = node->GetComponent<EditorObject>();
+        
+             EditorObject* editorObject = node->GetComponent<EditorObject>();
+        
             if (editorObject && editorObject->editorObject) {
                 GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
                 selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
@@ -138,6 +153,11 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
             }
         } else if (t.object == rootItem) {
             source->gameObject->Parent = source->gameObject->Root();
+        } else {
+            EditorDropTarget* target = t.object->GetComponent<EditorDropTarget>();
+            if (target && target->OnDropped) {
+                target->OnDropped(source);
+            }
         }
     }
 }

@@ -21,7 +21,6 @@ public:
     void Initialize() override;
     void ObjectAdded(GameObject* object) override;
     void ObjectRemoved(GameObject* object) override;
-    //int Order() override;
     
     GameObject* editorRoot;
     

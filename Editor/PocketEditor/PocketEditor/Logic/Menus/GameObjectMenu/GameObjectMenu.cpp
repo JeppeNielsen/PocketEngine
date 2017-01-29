@@ -24,8 +24,6 @@ void GameObjectMenu::OnCreate() {
     menu->AddChild("New", "N").Clicked.Bind([this] {
         auto object = context->Project().Worlds.ActiveWorld()->Root()->CreateObject();
         object->AddComponent<Transform>()->Position = {0,0,0};
-        object->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-        object->AddComponent<Renderable>();
         object->AddComponent<EditorObject>();
     });
     menu->AddChild("Delete", "D").Clicked.Bind([this] {
@@ -46,5 +44,12 @@ void GameObjectMenu::OnCreate() {
                 return true;
             });
          }
+    });
+    menu->AddChild("New Cube", "U").Clicked.Bind([this] {
+        auto object = context->Project().Worlds.ActiveWorld()->Root()->CreateObject();
+        object->AddComponent<Transform>()->Position = {0,0,0};
+        object->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+        object->AddComponent<Renderable>();
+        object->AddComponent<EditorObject>();
     });
 }
