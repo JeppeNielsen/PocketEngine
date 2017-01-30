@@ -45,7 +45,7 @@ void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, co
 
     atlas = root->CreateObject();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
-    texture.LoadFromPng(atlasTexture);
+    texture.LoadFromFile(atlasTexture);
     atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
     //atlas->SetID("Gui.Atlas");
     
