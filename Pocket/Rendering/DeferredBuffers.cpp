@@ -10,7 +10,6 @@
 #include "FileReader.hpp"
 
 #include "Window.hpp"
-#include "LodePNG.h"
 
 using namespace Pocket;
 
@@ -152,13 +151,13 @@ void DeferredBuffers::SaveBuffer(std::string filename) {
     //ASSERT_GL(glBindTexture(GL_TEXTURE_2D, gbuffer[0]));
     ASSERT_GL(glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE, &pixels[0]));
 
-    LodePNG::Encoder encoder;
-    std::vector<unsigned char> image;
-    encoder.encode(image, pixels, width, height);
-    
-    std::string output = FileReader::GetWritablePath() +"/"+ filename;
-    std::cout<<"Writing file : "<<output<<std::endl;
-    LodePNG::saveFile(image, output);
+//    LodePNG::Encoder encoder;
+//    std::vector<unsigned char> image;
+//    encoder.encode(image, pixels, width, height);
+//    
+//    std::string output = FileReader::GetWritablePath() +"/"+ filename;
+//    std::cout<<"Writing file : "<<output<<std::endl;
+//    LodePNG::saveFile(image, output);
 }
 
 

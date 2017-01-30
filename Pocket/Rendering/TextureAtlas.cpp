@@ -19,7 +19,7 @@ void TextureAtlas::Free(){
 }
 
 void TextureAtlas::Load(std::string pngFile, std::string textureFile) {
-	LoadFromPng(pngFile);
+	LoadFromFile(pngFile);
 
 	Vector2 textureSize(GetWidth(), GetHeight());
 

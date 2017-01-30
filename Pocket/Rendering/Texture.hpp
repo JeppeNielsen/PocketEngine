@@ -10,11 +10,8 @@ namespace Pocket {
 		Texture();
 		~Texture();
 
-        void LoadFromPng(std::string filename);
-        
-        void LoadFromJpeg(std::string filename);
-        
-        void CreateFromJpegData(void* data, int size);
+        void LoadFromFile(const std::string& filename);
+        void LoadFromMemory(unsigned char* data, int size);
         
         void GenerateMipmaps();
 
@@ -22,8 +19,6 @@ namespace Pocket {
         
 		int GetWidth();
 		int GetHeight();
-        
-        
         
 		GLuint GetHandle();
 

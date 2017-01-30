@@ -1,10 +1,6 @@
 #include "Texture.hpp"
-#include "lodepng.h"
-#include "FileReader.hpp"
-#include "jpeg_decoder.h"
-#include <iostream>
-#include "File.hpp"
 #include "OpenGL.hpp"
+#include "ImageLoader.hpp"
 
 using namespace Pocket;
 
@@ -30,52 +26,17 @@ GLuint Texture::GetHandle() {
 	return texture;
 }
 
-
-
-void Texture::LoadFromPng(std::string filename) {
-    File file;
-    if (!file.Load(filename)) {
-        return;
-    }
-    LodePNG::Decoder decoder;
-	std::vector<unsigned char> image;
-	decoder.decode(image, (const unsigned char*)file.Data(), file.Size());
-	CreateFromBuffer(&image[0], (int)decoder.getWidth(), (int)decoder.getHeight(), GL_RGBA);
+void Texture::LoadFromMemory(unsigned char *data, int size) {
+    ImageLoader::TryLoadImageFromData(data, size, [this] (unsigned char* pixels, int width, int height) {
+        CreateFromBuffer(pixels, width, height, GL_RGBA);
+    });
 }
 
-
-void Texture::LoadFromJpeg(std::string filename) {
-    File file;
-    if (!file.Load(filename)) {
-        return;
-    }
-    jpgd::jpeg_decoder_mem_stream memoryStream;
-    memoryStream.open(file.Data(), (unsigned int)file.Size());
-    int actualComps;
-    unsigned char* pixels = jpgd::decompress_jpeg_image_from_stream(&memoryStream, &width, &height, &actualComps, 3);
-    std::cout<< " trying to load jpeg image w: " << width << " h: " << height << std::endl;
-    std::cout<< " pixels: " << pixels << std::endl;
-    CreateFromBuffer(pixels, width, height, GL_RGB);
+void Texture::LoadFromFile(const std::string& filename) {
+    ImageLoader::TryLoadImage(filename, [this] (unsigned char* pixels, int width, int height) {
+        CreateFromBuffer(pixels, width, height, GL_RGBA);
+    });
 }
-
-void Texture::CreateFromJpegData(void *data, int size) {
-    
-    //unsigned char* temp = new unsigned char[size];
-    //memcpy(temp, data, size);
-    
-    jpgd::jpeg_decoder_mem_stream memoryStream;
-    memoryStream.open((unsigned char*)data, (unsigned int)size);
-    
-    int actualComps;
-    
-    unsigned char* pixels = jpgd::decompress_jpeg_image_from_stream(&memoryStream, &width, &height, &actualComps, 3);
-    
-    std::cout<< " trying to load jpeg image w: " << width << " h: " << height << std::endl;
-    //std::cout<< " pixels: " << pixels << std::endl;
-    
-    CreateFromBuffer(pixels, width, height, GL_RGB);
-}
-
 
 void Texture::CreateFromBuffer(unsigned char *buffer, int width, int height, GLenum pixelFormat) {
     
@@ -127,9 +88,11 @@ void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
     ASSERT_GL(glBindTexture(GL_TEXTURE_2D, texture));
     unsigned char* pixels = new unsigned char[width * height * 4];
     ASSERT_GL(glGetTexImage(GL_TEXTURE_2D, 0, pixelFormat, GL_UNSIGNED_BYTE, pixels));
-    std::vector<unsigned char> out;
+    
+    /*std::vector<unsigned char> out;
     LodePNG::Encoder encoder;
 	encoder.encode(out, (const unsigned char*)pixels, width, height);
     delete[] pixels;
 	LodePNG::saveFile(out, path);
+    */
 }
