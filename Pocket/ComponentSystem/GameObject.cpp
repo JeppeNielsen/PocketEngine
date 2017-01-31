@@ -95,6 +95,9 @@ void GameObject::AddComponent(ComponentId id) {
     componentIndicies[id] = scene->world->components[id].container->Create(index);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
         TrySetComponentEnabled(id, true);
     });
 }
@@ -109,6 +112,9 @@ void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     scene->world->components[id].container->Reference(referenceObject->componentIndicies[id]);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
         TrySetComponentEnabled(id, true);
     });
 }
@@ -120,6 +126,9 @@ void GameObject::RemoveComponent(ComponentId id) {
     scene->world->delayedActions.emplace_back([this, id]() {
         if (!activeComponents[id]) {
            return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
+        }
+        if (scene->ComponentRemoved) {
+            scene->ComponentRemoved(this, id);
         }
         TrySetComponentEnabled(id, false);
         scene->world->components[id].container->Delete(componentIndicies[id], index);
@@ -135,6 +144,9 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
         TrySetComponentEnabled(id, true);
     });
 }
@@ -244,6 +256,9 @@ void GameObject::Remove() {
             }
         }
         scene->world->objects.Delete(index, 0);
+        if (scene->ObjectRemoved) {
+            scene->ObjectRemoved(this);
+        }
     });
     removed = true;
     for(auto child : children) {
@@ -404,6 +419,13 @@ GameObject* GameObject::FindObject(int objectId) {
 
 std::string GameObject::TryGetRootPath() {
     return World()->TryFindScenePath(scene->guid);
+}
+
+void GameObject::SetCallbacks(const std::function<void (GameObject *)> &ObjectCreated, const std::function<void (GameObject *)> &ObjectRemoved, const std::function<void (GameObject *, ComponentId)> &ComponentCreated, const std::function<void (GameObject *, ComponentId)> &ComponentRemoved) {
+    scene->ObjectCreated = ObjectCreated;
+    scene->ObjectRemoved = ObjectRemoved;
+    scene->ComponentCreated = ComponentCreated;
+    scene->ComponentRemoved = ComponentRemoved;
 }
 
 //SERIALIZATION

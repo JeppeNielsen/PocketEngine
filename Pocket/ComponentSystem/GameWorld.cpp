@@ -212,6 +212,9 @@ GameObject* GameWorld::CreateEmptyObject(GameObject *parent, GameScene* scene, b
     }
     object->Reset();
     object->Parent = parent;
+    if (scene->ObjectCreated) {
+        scene->ObjectCreated(object);
+    }
     return object;
 }
 

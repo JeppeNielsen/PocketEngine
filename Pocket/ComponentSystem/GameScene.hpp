@@ -48,6 +48,12 @@ namespace Pocket {
         
         void IterateObjects(const std::function<void(GameObject*)>& callback);
         
+        std::function<void(GameObject* object)> ObjectCreated;
+        std::function<void(GameObject* object)> ObjectRemoved;
+        
+        std::function<void(GameObject* object, ComponentId componentId)> ComponentCreated;
+        std::function<void(GameObject* object, ComponentId componentId)> ComponentRemoved;
+        
         friend class Container<GameScene>;
     };
 }

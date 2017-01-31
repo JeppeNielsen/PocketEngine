@@ -12,7 +12,8 @@
 
 using namespace Pocket;
 
-GameScene::GameScene() : idCounter(0) {
+GameScene::GameScene() : idCounter(0),
+	ObjectCreated(0), ObjectRemoved(0), ComponentCreated(0), ComponentRemoved(0) {
     updateEnabled = true;
     renderEnabled = true;
     timeScale = 1.0f;

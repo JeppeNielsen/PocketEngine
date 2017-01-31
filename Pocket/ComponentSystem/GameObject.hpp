@@ -184,5 +184,13 @@ namespace Pocket {
         
         template<typename T>
         GameObject* GetComponentOwner();
+        
+        void SetCallbacks(
+       		const std::function<void(GameObject* object)>& ObjectCreated,
+        	const std::function<void(GameObject* object)>& ObjectRemoved,
+        	const std::function<void(GameObject* object, ComponentId componentId)>& ComponentCreated,
+        	const std::function<void(GameObject* object, ComponentId componentId)>& ComponentRemoved
+        );
+        
     };
 }
