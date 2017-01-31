@@ -27,16 +27,16 @@ public:
 private:
     template<typename T>
     struct ComponentSystem : public GameSystem<EditorObject, T> {
-        void ObjectAdded(GameObject* object) {
+        void ObjectAdded(GameObject* object) override {
             GameObject* editorObject = (GameObject*)creatorSystem->GetMetaData(object);
             editorObject->AddComponent<T>(object);
         }
 
-        void ObjectRemoved(Pocket::GameObject *object) {
+        void ObjectRemoved(Pocket::GameObject *object) override {
             GameObject* editorObject = (GameObject*)creatorSystem->GetMetaData(object);
             editorObject->RemoveComponent<T>();
         }
-
         EditorObjectCreatorSystem* creatorSystem;
     };
+    
 };

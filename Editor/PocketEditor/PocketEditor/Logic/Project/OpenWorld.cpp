@@ -9,7 +9,6 @@
 #include "OpenWorld.hpp"
 #include "RenderSystem.hpp"
 #include "TouchSystem.hpp"
-#include "EditorObjectCreatorSystem.hpp"
 #include "TransformHierarchy.hpp"
 #include "FileHelper.hpp"
 #include "InputManager.hpp"
@@ -57,6 +56,12 @@ OpenWorld::OpenWorld() : root(0) {
     IsPlaying.Changed.Bind([this] () {
         UpdatePlayMode();
     });
+    
+    editorObjectsComponents = {
+        GameIdHelper::GetComponentID<Transform>(),
+        GameIdHelper::GetComponentID<Mesh>(),
+        GameIdHelper::GetComponentID<Sizeable>()
+    };
 }
 
 void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
@@ -65,7 +70,6 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
     world.CreateSystem<ClonerSystem>();
     world.CreateSystem<TurnerSystem>();
-    world.CreateSystem<EditorObjectCreatorSystem>();
     world.CreateSystem<InputMapperSystem>();
     world.CreateSystem<VelocitySystem>();
     world.CreateSystem<Gui>();
@@ -91,6 +95,41 @@ void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<SelectedColorerSystem>();
     editorWorld.CreateSystem<FirstPersonMoverSystem>();
     editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
+}
+
+void OpenWorld::BindToRoot(Pocket::GameObject *root) {
+    
+    root->SetCallbacks(
+        [this] (GameObject* object) {
+            AddObjectToEditor(object);
+        }
+        ,
+        [this] (GameObject* object) {
+            GameObject* editorGameObject = rootToEditorMap[object];
+            editorGameObject->Remove();
+            rootToEditorMap.erase(rootToEditorMap.find(object));
+        }
+        ,
+        [this] (GameObject* object, ComponentId componentId) {
+            GameObject* editorGameObject = rootToEditorMap[object];
+            for(auto id : editorObjectsComponents) {
+                if (id == componentId) {
+                    editorGameObject->AddComponent(id, object);
+                    break;
+                }
+            }
+        }
+        ,
+        [this] (GameObject* object, ComponentId componentId) {
+            GameObject* editorGameObject = rootToEditorMap[object];
+            for(auto id : editorObjectsComponents) {
+                if (id == componentId) {
+                    editorGameObject->RemoveComponent(id);
+                    break;
+                }
+            }
+        }
+    );
 }
 
 bool OpenWorld::Save() {
@@ -126,40 +165,20 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
         file.open(path);
         std::string guid = world->ReadGuidFromJson(file);
         file.close();
-            
+        
         root = world->TryFindRoot(guid);
         if (!root) {
             return false;
         }
-        
-        /*
-        if (!root) {
-            root = world->CreateRootFromJson(file, [this] (GameObject* root) {
-                OpenWorld::CreateDefaultSystems(*root);
-                scriptWorld->AddGameRoot(root);
-                root->AddComponent<EditorObject>();
-            },
-            [](GameObject* go) {
-                go->AddComponent<EditorObject>();
-            });
-        }
-        file.close();
-        if (!root) {
-            return false;
-        }
-        */
     } else {
-        root = world->CreateRoot();
+        return false;
     }
     
+    editorRoot = world->CreateRoot();
+
     CreateDefaultSystems(*root);
     scriptWorld->AddGameRoot(root);
-    AddEditorObject(root);
-    //auto var = root->AddComponent<CloneVariable>();
-    //var->Variables.push_back({ GameIdHelper::GetClassName<Transform>(), "Rotation" });
     
-    editorRoot = world->CreateRoot();
-    //std::cout << "EditorRoot::scene " << editorRoot->scene<<std::endl;
     editorRoot->Order = 1;
     CreateEditorSystems(*editorRoot);
     selectables = editorRoot->CreateSystem<SelectableCollection<EditorObject>>();
@@ -175,8 +194,8 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
 }
 
 void OpenWorld::InitializeRoot() {
-    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
-    
+    AddEditorObject(root);
+    BindToRoot(root);
     UpdatePlayMode();
 }
 
@@ -196,9 +215,14 @@ GameObject* OpenWorld::Root() {
     return root;
 }
 
+GameObject* OpenWorld::EditorRoot() {
+    return editorRoot;
+}
+
 void OpenWorld::Close() {
     root->Remove();
     editorRoot->Remove();
+    root->SetCallbacks(0, 0, 0, 0);
 }
 
 void OpenWorld::Enable() {
@@ -248,10 +272,31 @@ void OpenWorld::UpdatePlayMode() {
 }
 
 void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
-    object->AddComponent<EditorObject>();
+    
+    auto editorGameObject = AddObjectToEditor(object);
+    
+    for(auto id : editorObjectsComponents) {
+        if (object->HasComponent(id)) {
+            editorGameObject->AddComponent(id, object);
+        }
+    }
     for (auto child : object->Children()) {
         AddEditorObject(child);
     }
+}
+
+GameObject* OpenWorld::AddObjectToEditor(GameObject* object) {
+    GameObject* editorGameObject = editorRoot->CreateObject();
+    auto editorObject = object->AddComponent<EditorObject>();
+    editorObject->editorObject = editorGameObject;
+    editorObject->gameObject = object;
+    
+    editorGameObject->AddComponent<EditorObject>(object);
+    editorGameObject->AddComponent<Selectable>();
+    
+    rootToEditorMap[object] = editorGameObject;
+    
+    return editorGameObject;
 }
 
 void OpenWorld::PreCompile() {
@@ -285,7 +330,6 @@ void OpenWorld::RestoreWorld() {
         context->Project().ScriptWorld().AddGameRoot(root);
     });
     storedWorld.clear();
-    root->CreateSystem<EditorObjectCreatorSystem>()->editorRoot = editorRoot;
     InitializeRoot();
     std::vector<int> storedSelectedObjectsLocal = storedSelectedObjects;
     context->postActions.emplace_back([this, storedSelectedObjectsLocal] () {

@@ -9,7 +9,6 @@
 #include "Project.hpp"
 #include "RenderSystem.hpp"
 #include "TouchSystem.hpp"
-#include "EditorObjectCreatorSystem.hpp"
 #include "TransformHierarchy.hpp"
 #include "FileHelper.hpp"
 #include <fstream>

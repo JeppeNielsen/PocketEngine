@@ -53,6 +53,7 @@ public:
     
     Event<> Compiled;
     
+    void BindToRoot(GameObject* root);
 private:
     EditorContext* context;
     
@@ -68,7 +69,11 @@ private:
     void StoreWorld();
     void RestoreWorld();
     
+    GameObject* AddObjectToEditor(GameObject* rootObject);
+    
     std::stringstream storedWorld;
     std::vector<int> storedSelectedObjects;
+    std::map<GameObject*, GameObject*> rootToEditorMap;
+    std::vector<ComponentId> editorObjectsComponents;
 };
 
