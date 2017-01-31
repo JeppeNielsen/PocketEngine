@@ -393,7 +393,6 @@
 		72CE8EFC1CB5A18E001F08E4 /* EditorMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EFA1CB5A18E001F08E4 /* EditorMeshSystem.cpp */; };
 		72CE8F061CBA4FC3001F08E4 /* EditorTransformSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F041CBA4FC3001F08E4 /* EditorTransformSystem.cpp */; };
 		72CE8F161CC02DDB001F08E4 /* EditorObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F141CC02DDB001F08E4 /* EditorObject.cpp */; };
-		72CE8F191CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8F171CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp */; };
 		72D719EE1CA9AFA700868DDB /* VirtualTreeList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */; };
 		72D719F11CA9B95000868DDB /* VirtualTreeListSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */; };
 		72D719F41CAB20BF00868DDB /* VirtualTreeListSpawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */; };
@@ -1408,8 +1407,6 @@
 		72CE8F051CBA4FC3001F08E4 /* EditorTransformSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorTransformSystem.hpp; sourceTree = "<group>"; };
 		72CE8F141CC02DDB001F08E4 /* EditorObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorObject.cpp; sourceTree = "<group>"; };
 		72CE8F151CC02DDB001F08E4 /* EditorObject.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorObject.hpp; sourceTree = "<group>"; };
-		72CE8F171CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorObjectCreatorSystem.cpp; sourceTree = "<group>"; };
-		72CE8F181CC02F0E001F08E4 /* EditorObjectCreatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorObjectCreatorSystem.hpp; sourceTree = "<group>"; };
 		72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeList.cpp; sourceTree = "<group>"; };
 		72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = VirtualTreeList.hpp; sourceTree = "<group>"; };
 		72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VirtualTreeListSystem.cpp; sourceTree = "<group>"; };
@@ -3339,8 +3336,6 @@
 			children = (
 				72CE8F141CC02DDB001F08E4 /* EditorObject.cpp */,
 				72CE8F151CC02DDB001F08E4 /* EditorObject.hpp */,
-				72CE8F171CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp */,
-				72CE8F181CC02F0E001F08E4 /* EditorObjectCreatorSystem.hpp */,
 				72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */,
 				72A4AF951E3A9B8D00A856F5 /* EditorDropTarget.hpp */,
 			);
@@ -3530,7 +3525,6 @@
 				729954D61C99F76100DAAE5D /* SpuSampleTaskProcess.cpp in Sources */,
 				729954BD1C99F76100DAAE5D /* btTypedConstraint.cpp in Sources */,
 				729953FA1C99F76100DAAE5D /* TextBoxLabelSystem.cpp in Sources */,
-				72CE8F191CC02F0E001F08E4 /* EditorObjectCreatorSystem.cpp in Sources */,
 				72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */,
 				729954721C99F76100DAAE5D /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				7299549E1C99F76100DAAE5D /* btGImpactQuantizedBvh.cpp in Sources */,
