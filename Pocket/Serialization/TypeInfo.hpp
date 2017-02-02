@@ -73,7 +73,7 @@ public:
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
     virtual IFieldInfo* Clone() = 0;
-    virtual void SetFromAny(FieldInfoAny* any) { }
+    virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
 };
 
@@ -263,6 +263,8 @@ public:
     IFieldEditor* CreateEditor() override {
         return 0;
     }
+    
+    void SetFromAny(FieldInfoAny* any) override {}
     
     minijson::value_type valueType;
     std::string string_value;
