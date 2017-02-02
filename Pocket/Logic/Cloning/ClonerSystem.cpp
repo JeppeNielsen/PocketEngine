@@ -37,6 +37,7 @@ void ClonerSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
+    //std::cout << "Cloner changed : " << object->RootGuid() << "  :  " << object->RootId() << std::endl;
     Cloner* cloner = object->GetComponent<Cloner>();
     
     for(auto componentId : cloner->components) {
@@ -53,9 +54,13 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     FindVariables(variables, object, child);
     if (variables.size() == cloner->variables.size()) {
         for (int i=0; i<variables.size(); ++i) {
+            //std::cout << "Cloner Want to remove variable:  " << &variables[i] << "  " << object->RootId() << std::endl;
+            //std::cout << cloner->variables[i]->ToString() << "  " << std::endl;
             if (cloner->variables[i] && cloner->variables[i]->type == -1) {
                 variables[i]->SetFromAny(static_cast<FieldInfoAny*>(cloner->variables[i]));
+                //std::cout << "Cloner  Remove variable:  " << cloner->variables[i] << "  " << object->RootId() << std::endl;
                 delete cloner->variables[i];
+                cloner->variables[i] = 0;
             }
         }
     }
