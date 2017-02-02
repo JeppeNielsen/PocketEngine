@@ -144,8 +144,18 @@ SelectableCollection<EditorObject>* Project::GetSelectables() {
 }
 
 void Project::SaveWorld() {
-    if (!Worlds.ActiveWorld) return;
-    Worlds.ActiveWorld()->Save();
+    /*
+    std::cout << " ------------ scenes --------------" << std::endl;
+    world->Scenes().Iterate([this] (GameScene* s) {
+        std::cout << s->guid << "  -  " << s->root->RootId()<< " -  " << world->GuidToPath(s->guid)  << std::endl;
+    });
+    std::cout << " ----------------------------------" << std::endl;
+	*/
+
+    OpenWorld* activeWorld = Worlds.ActiveWorld;
+    if (!activeWorld) return;
+    activeWorld->Save();
+    world->InvokeChangeToHandles(activeWorld->Root());
 }
 
 std::string& Project::Path() { return path; }
