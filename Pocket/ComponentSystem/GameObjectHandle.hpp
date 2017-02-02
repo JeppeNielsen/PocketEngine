@@ -43,12 +43,14 @@ namespace Pocket {
     
         void Set(GameObject* ptr);
         GameObject* Get();
+        void SetWorld(GameWorld* world);
         
         GameWorld* world;
         int index;
         int version;
         int rootId;
         std::string sceneGuid;
-    
+        
+        friend class GameWorld;
     };
 }

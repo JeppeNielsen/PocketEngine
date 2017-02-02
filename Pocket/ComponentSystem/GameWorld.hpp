@@ -79,6 +79,9 @@ namespace Pocket {
         
         InputManager input;
         
+        using Handles = std::vector<GameObjectHandle*>;
+        Handles handles;
+        
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
     
@@ -177,6 +180,11 @@ namespace Pocket {
         void TryParseJson(std::istream &jsonStream, int componentId,
                           const std::function<void (int, int)>& callback,
                           const std::function<bool (const std::string& componentName)>& componentCallback = 0);
+        
+        void InvokeChangeToHandles(GameObject* object);
+        
+        Container<GameScene>& Scenes();
+        
     private:
         void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
                                 const std::function<void (int, int)>& callback,

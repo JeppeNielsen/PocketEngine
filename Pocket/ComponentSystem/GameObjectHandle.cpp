@@ -35,7 +35,7 @@ void GameObjectHandle::operator=(Pocket::GameObject *v) {
 }
 
 void GameObjectHandle::operator=(const GameObjectHandle& handle) {
-    world = handle.world;
+    SetWorld(handle.world);
     index = handle.index;
     version = handle.version;
     rootId = handle.rootId;
@@ -43,7 +43,7 @@ void GameObjectHandle::operator=(const GameObjectHandle& handle) {
 }
 
 void GameObjectHandle::SetRoot(Pocket::GameObject* root) {
-    world = root->scene->world;
+    SetWorld(root->scene->world);
 }
 
 void GameObjectHandle::Set(Pocket::GameObject *ptr) {
@@ -81,4 +81,14 @@ GameObjectHandle GameObjectHandle::Deserialize(const std::string &data) {
         handle.rootId = ::atoi(objectIdStr.c_str());
     }
     return handle;
+}
+
+void GameObjectHandle::SetWorld(Pocket::GameWorld *world) {
+    if (this->world) {
+        this->world->handles.erase(std::find(this->world->handles.begin(), this->world->handles.end(), this));
+    }
+    this->world = world;
+    if (this->world) {
+        this->world->handles.push_back(this);
+    }
 }

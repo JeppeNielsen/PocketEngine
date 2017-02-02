@@ -8,6 +8,7 @@
 
 #include "GameWorld.hpp"
 #include "StringHelper.hpp"
+#include "GameObjectHandle.hpp"
 
 using namespace Pocket;
 
@@ -136,9 +137,7 @@ GameObject* GameWorld::CreateRoot() {
     scene->index=sceneIndex;
     scene->world = this;
     scene->guid = StringHelper::CreateGuid();
-    delayedActions.emplace_back([this, scene] () {
-        activeScenes.push_back(scene);
-    });
+    activeScenes.push_back(scene);
     GameObject* root = CreateEmptyObject(0, scene, true);
     scene->root = root;
     roots.push_back(root);
@@ -430,5 +429,24 @@ void GameWorld::TryParseJsonObject(int parent, minijson::istream_context &contex
     });
 }
 
+void GameWorld::InvokeChangeToHandles(Pocket::GameObject *object) {
 
+    std::vector<GameObjectHandle*> handlesToChange;
+    
+    const std::string& id = object->RootGuid();
+    
+    for(GameObjectHandle* h : handles) {
+        if (h->sceneGuid == id && h->rootId == object->rootId) {
+            //std::cout << "GameObjectHandle invoked : guid : " << h->sceneGuid << " index " << h->index << " rootId "<<h->rootId << std::endl;
+            handlesToChange.push_back(h);
+            //h->Changed();
+        }
+    }
+    
+    for(auto h : handlesToChange) {
+        h->Changed();
+    }
+    
+}
 
+Container<GameScene>& GameWorld::Scenes() { return scenes; }
