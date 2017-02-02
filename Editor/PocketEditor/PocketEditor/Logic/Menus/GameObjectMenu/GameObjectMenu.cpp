@@ -29,6 +29,9 @@ void GameObjectMenu::OnCreate() {
     menu->AddChild("Delete", "D").Clicked.Bind([this] {
         selectables = context->Project().GetSelectables();
         for(auto o : selectables->Selected()) {
+            if (o->GetComponent<EditorObject>()->gameObject == context->Project().Worlds.ActiveWorld()->Root()) {
+                continue;
+            }
             o->GetComponent<EditorObject>()->gameObject->Remove();
         }
     });
