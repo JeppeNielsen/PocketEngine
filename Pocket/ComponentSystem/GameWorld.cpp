@@ -436,7 +436,7 @@ void GameWorld::InvokeChangeToHandles(Pocket::GameObject *object) {
     const std::string& id = object->RootGuid();
     
     for(GameObjectHandle* h : handles) {
-        if (h->sceneGuid == id && h->rootId == object->rootId) {
+        if (h->sceneGuid == id) {
             //std::cout << "GameObjectHandle invoked : guid : " << h->sceneGuid << " index " << h->index << " rootId "<<h->rootId << std::endl;
             handlesToChange.push_back(h);
             //h->Changed();
