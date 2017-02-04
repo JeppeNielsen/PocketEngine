@@ -18,7 +18,7 @@ using namespace Pocket;
 Font::Font() :
 CharacterSetEverySize(12),
 library(0),
-maxTextureWidth(512), maxTextureHeight(512)
+maxTextureWidth(512), maxTextureHeight(512), fontSizeToPixelFactor(1), face(0)
 { }
 
 Font::~Font() {
@@ -233,6 +233,7 @@ void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Ve
 bool Font::IsDirty() { return isDirty; }
 
 void Font::UpdateBuffer(Pocket::Texture& texture) {
+    if (!face) return;
     isDirty = false;
     
     int maxWidth = maxTextureWidth;
@@ -243,7 +244,7 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
     for (int s = 0; s<characterSets.size(); ++s) {
         CharacterSet& set = characterSets[s];
         if (!set.enabled) continue;
-        int faceSize = CharacterSetEverySize + CharacterSetEverySize * s;
+        int faceSize = (CharacterSetEverySize + CharacterSetEverySize * s) * fontSizeToPixelFactor;
         FT_Error error = FT_Set_Pixel_Sizes(face, faceSize ,0);
         if (error) continue;
         
@@ -301,7 +302,7 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
     for (int s = 0; s<characterSets.size(); ++s) {
         CharacterSet& set = characterSets[s];
         if (!set.enabled) continue;
-        int faceSize = CharacterSetEverySize + CharacterSetEverySize * s;
+        int faceSize = (CharacterSetEverySize + CharacterSetEverySize * s) * fontSizeToPixelFactor;
         FT_Error error = FT_Set_Pixel_Sizes(face, faceSize ,0);
         if (error) continue;
 

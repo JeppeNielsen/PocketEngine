@@ -13,6 +13,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "Texture.hpp"
+#include "TypeInfo.hpp"
 
 namespace Pocket {
     class Font {
@@ -25,6 +26,7 @@ namespace Pocket {
         void LoadAsset(const std::string& path);
         
         float CharacterSetEverySize;
+        float fontSizeToPixelFactor;
         int maxTextureWidth;
         int maxTextureHeight;
         
@@ -90,5 +92,13 @@ namespace Pocket {
         
         FT_Library    library;
         FT_Face       face;
+        
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(CharacterSetEverySize)
+        TYPE_FIELD(fontSizeToPixelFactor)
+        TYPE_FIELD(maxTextureWidth)
+        TYPE_FIELD(maxTextureHeight)
+        TYPE_FIELDS_END
     };
 }
