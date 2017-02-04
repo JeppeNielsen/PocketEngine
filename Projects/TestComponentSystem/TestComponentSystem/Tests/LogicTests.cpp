@@ -806,6 +806,84 @@ void LogicTests::RunTests() {
         world.Update(0);
         return wasZero && removed == 1;
     });
+    
+    AddTest("HasAncestor", [] () {
+        
+        GameWorld world;
+        
+        GameObject* root = world.CreateRoot();
+        GameObject* child1 = root->CreateChild();
+        GameObject* child2 = root->CreateChild();
+        
+        GameObject* grandChild1 = child1->CreateChild();
+        GameObject* grandChild2 = child2->CreateChild();
+        
+        GameObject* greatGrandChild1 = grandChild1->CreateChild();
+        GameObject* greatGrandChild2 = grandChild2->CreateChild();
+        
+        return child1->HasAncestor(root) &&
+               child2->HasAncestor(root) &&
+               !child1->HasAncestor(child2) &&
+               !root->HasAncestor(child1) &&
+               grandChild1->HasAncestor(root) &&
+               grandChild1->HasAncestor(child1) &&
+               greatGrandChild1->HasAncestor(grandChild1) &&
+               greatGrandChild2->HasAncestor(child2) &&
+               greatGrandChild2->HasAncestor(root) &&
+               !greatGrandChild1->HasAncestor(greatGrandChild2);
+    });
+
+
+    AddTest("Clone object with self reference components", [] () {
+        
+        struct Component1 {
+            Component1() { val = 0; }
+            int val;
+        };
+        
+        GameWorld world;
+        
+        GameObject* prefab = world.CreateRoot();
+        prefab->AddComponent<Component1>()->val = 123;
+        GameObject* child = prefab->CreateChild();
+        child->AddComponent<Component1>(prefab);
+        
+        
+        
+        GameObject* worldRoot = world.CreateRoot();
+        GameObject* clone = worldRoot->CreateChildClone(prefab);
+        
+        Component1* comp = clone->GetComponent<Component1>();
+        Component1* compChild = clone->Children()[0]->GetComponent<Component1>();
+        
+        return comp == compChild;
+    });
+    
+    
+    AddTest("Clone object with parent referencing child component", [] () {
+        
+        struct Component1 {
+            Component1() { val = 0; }
+            int val;
+        };
+        
+        GameWorld world;
+        
+        GameObject* prefab = world.CreateRoot();
+        GameObject* child = prefab->CreateChild();
+        child->AddComponent<Component1>()->val = 433;
+        prefab->AddComponent<Component1>(child);
+        
+        GameObject* worldRoot = world.CreateRoot();
+        GameObject* clone = worldRoot->CreateChildClone(prefab);
+        
+        Component1* comp = clone->GetComponent<Component1>();
+        Component1* compChild = clone->Children()[0]->GetComponent<Component1>();
+        
+        return comp == compChild;
+    });
 
     
+
+
 }
