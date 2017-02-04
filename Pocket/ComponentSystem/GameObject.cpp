@@ -290,7 +290,7 @@ GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, const std:
     return scene->world->CreateObjectFromJson(this, jsonStream, objectCreated);
 }
 
-GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
+GameObject* GameObject::CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate) {
     if (predicate && !predicate(source)) return 0;
     
     GameObject* clone = CreateChild();
@@ -299,18 +299,60 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
         if (source->activeComponents[i]) {
         
             int ownerIndex = scene->world->components[i].container->GetOwner(source->componentIndicies[i]);
-            bool isReference = (ownerIndex != source->index) && ownerIndex>=0;
+            bool isReference = (ownerIndex != source->index);// && ownerIndex>=0;
             if (isReference) {
-                clone->AddComponent(i, source);
+                referenceComponents.push_back({clone, i, ownerIndex});
             } else {
                 clone->CloneComponent(i, source);
             }
         }
     }
     for(auto child : source->children) {
-        clone->CreateChildClone(child);
+        clone->CreateChildCloneInternal(referenceComponents, child, predicate);
     }
     return clone;
+}
+
+GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
+    std::vector<CloneReferenceComponent> referenceComponents;
+    GameObject* clone = CreateChildCloneInternal(referenceComponents, source, predicate);
+    
+    for(auto& referenceComponent : referenceComponents) {
+        GameObject* referenceObject = (GameObject*)World()->objects.Get(referenceComponent.referenceObjectId);
+        if (referenceObject->HasAncestor(source)) {
+            int referenceIndex = 0;
+            source->Recurse([&referenceIndex, &referenceObject] (GameObject* o) {
+                if (o == referenceObject) {
+                    return true;
+                } else {
+                    referenceIndex++;
+                    return false;
+                }
+            });
+        
+            int indexCounter = 0;
+            clone->Recurse([&referenceIndex, &indexCounter, &referenceObject] (GameObject* o) {
+                if (indexCounter == referenceIndex) {
+                    referenceObject = o;
+                    return true;
+                } else {
+                    indexCounter++;
+                    return false;
+                }
+            });
+        }
+        referenceComponent.object->AddComponent(referenceComponent.componentId, referenceObject);
+    }
+    
+    return clone;
+}
+
+bool GameObject::Recurse(const std::function<bool(GameObject* object)>& function) {
+    if (function(this)) return true;
+    for(auto child : children) {
+        if (child->Recurse(function)) return true;
+    }
+    return false;
 }
 
 GameObject* GameObject::CreateCopy(const std::function<bool(GameObject*)>& predicate) {
@@ -426,6 +468,15 @@ void GameObject::SetCallbacks(const std::function<void (GameObject *)> &ObjectCr
     scene->ObjectRemoved = ObjectRemoved;
     scene->ComponentCreated = ComponentCreated;
     scene->ComponentRemoved = ComponentRemoved;
+}
+
+bool GameObject::HasAncestor(Pocket::GameObject *ancestor) {
+    GameObject* object = this;
+    while (true) {
+        if (object == ancestor) return true;
+        object = object->Parent();
+        if (!object) return false;
+    }
 }
 
 //SERIALIZATION

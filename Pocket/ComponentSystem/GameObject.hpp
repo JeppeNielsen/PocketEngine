@@ -72,6 +72,12 @@ namespace Pocket {
         };
         
         using AddReferenceComponentList = std::vector<AddReferenceComponent>;
+        
+        struct CloneReferenceComponent {
+            GameObject* object;
+            int componentId;
+            int referenceObjectId;
+        };
     
         GameObject();
         ~GameObject();
@@ -89,6 +95,8 @@ namespace Pocket {
         
         static bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
         static void EndGetAddReferenceComponent();
+        GameObject* CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
+        bool Recurse(const std::function<bool(GameObject* object)>& function);
     public:
         
         bool HasComponent(ComponentId id) const override;
@@ -192,5 +200,6 @@ namespace Pocket {
         	const std::function<void(GameObject* object, ComponentId componentId)>& ComponentRemoved
         );
         
+        bool HasAncestor(GameObject* ancestor);
     };
 }
