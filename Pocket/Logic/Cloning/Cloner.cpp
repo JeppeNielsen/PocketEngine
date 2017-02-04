@@ -47,4 +47,28 @@ void Cloner::operator=(const Pocket::Cloner& other) {
     }
     Source = other.Source;
     components = other.components;
+
+}
+
+void Cloner::TryStoreVariables() {
+    if (variables.empty()) return;
+    if (variables[0]->type == -1) return;
+    
+    std::stringstream stream;
+
+    auto type = GetType();
+    IFieldInfo* fieldInfo = type.GetField("variables");
+    
+    minijson::writer_configuration config;
+    //config = config.pretty_printing(true);
+    minijson::object_writer writer(stream, config);
+    fieldInfo->Serialize(writer);
+    writer.close();
+
+    for (int i=0; i<variables.size(); ++i) {
+        delete variables[i];
+    }
+    variables.clear();
+    minijson::istream_context context(stream);
+    type.Deserialize(context);
 }

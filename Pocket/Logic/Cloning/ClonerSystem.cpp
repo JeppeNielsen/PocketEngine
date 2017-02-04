@@ -40,6 +40,8 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     //std::cout << "Cloner changed : " << object->RootGuid() << "  :  " << object->RootId() << std::endl;
     Cloner* cloner = object->GetComponent<Cloner>();
     
+    cloner->TryStoreVariables();
+    
     for(auto componentId : cloner->components) {
         object->RemoveComponent(componentId);
     }

@@ -25,6 +25,8 @@ namespace Pocket {
         std::vector<IFieldInfo*> variables;
         std::vector<ComponentId> components;
         
+        void TryStoreVariables();
+        
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Source)
         TYPE_FIELD(variables)
