@@ -369,6 +369,8 @@
 		72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */; };
 		72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */; };
 		72A4AFA81E3FED4900A856F5 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */; };
+		72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFAE1E451B4500A856F5 /* SlicedQuadMeshSystem.cpp */; };
+		72A4AFB31E452B1D00A856F5 /* SlicedTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFB11E452B1D00A856F5 /* SlicedTexture.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -1357,6 +1359,11 @@
 		72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
 		72A4AFA71E3FED4900A856F5 /* ImageLoader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ImageLoader.hpp; sourceTree = "<group>"; };
 		72A4AFAA1E3FF19400A856F5 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		72A4AFAC1E4519E300A856F5 /* SlicedQuad.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedQuad.hpp; sourceTree = "<group>"; };
+		72A4AFAE1E451B4500A856F5 /* SlicedQuadMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlicedQuadMeshSystem.cpp; sourceTree = "<group>"; };
+		72A4AFAF1E451B4500A856F5 /* SlicedQuadMeshSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedQuadMeshSystem.hpp; sourceTree = "<group>"; };
+		72A4AFB11E452B1D00A856F5 /* SlicedTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlicedTexture.cpp; sourceTree = "<group>"; };
+		72A4AFB21E452B1D00A856F5 /* SlicedTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedTexture.hpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -2089,13 +2096,13 @@
 		7299501F1C99F76000DAAE5D /* Gui */ = {
 			isa = PBXGroup;
 			children = (
-				72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */,
-				72A4AF7C1E2BB93000A856F5 /* FontTextureSystem.hpp */,
 				729950201C99F76000DAAE5D /* Droppable.hpp */,
 				729950211C99F76000DAAE5D /* DroppableSystem.cpp */,
 				729950221C99F76000DAAE5D /* DroppableSystem.hpp */,
 				729950231C99F76000DAAE5D /* Font.cpp */,
 				729950241C99F76000DAAE5D /* Font.hpp */,
+				72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */,
+				72A4AF7C1E2BB93000A856F5 /* FontTextureSystem.hpp */,
 				729950251C99F76000DAAE5D /* Gui.cpp */,
 				729950261C99F76000DAAE5D /* Gui.hpp */,
 				729950271C99F76000DAAE5D /* Label.hpp */,
@@ -2103,6 +2110,9 @@
 				729950291C99F76000DAAE5D /* LabelMeshSystem.hpp */,
 				7299502A1C99F76000DAAE5D /* Layout */,
 				7299502F1C99F76000DAAE5D /* Menu */,
+				72A4AFAC1E4519E300A856F5 /* SlicedQuad.hpp */,
+				72A4AFAE1E451B4500A856F5 /* SlicedQuadMeshSystem.cpp */,
+				72A4AFAF1E451B4500A856F5 /* SlicedQuadMeshSystem.hpp */,
 				729950391C99F76000DAAE5D /* Sizeable.hpp */,
 				7299503A1C99F76000DAAE5D /* Sprite.hpp */,
 				7299503B1C99F76000DAAE5D /* SpriteMeshSystem.cpp */,
@@ -2222,6 +2232,8 @@
 				72BA195E1E1D8F9900122007 /* ShaderComponent.hpp */,
 				729950821C99F76000DAAE5D /* TextureComponent.cpp */,
 				729950831C99F76000DAAE5D /* TextureComponent.hpp */,
+				72A4AFB11E452B1D00A856F5 /* SlicedTexture.cpp */,
+				72A4AFB21E452B1D00A856F5 /* SlicedTexture.hpp */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -3652,6 +3664,7 @@
 				729954311C99F76100DAAE5D /* ChromecastReceiver.cpp in Sources */,
 				7299549F1C99F76100DAAE5D /* btGImpactShape.cpp in Sources */,
 				729954761C99F76100DAAE5D /* btBox2dShape.cpp in Sources */,
+				72A4AFB31E452B1D00A856F5 /* SlicedTexture.cpp in Sources */,
 				72B492621DCE59D10063518A /* GameWorld.cpp in Sources */,
 				729954E41C99F76100DAAE5D /* btPolarDecomposition.cpp in Sources */,
 				729954011C99F76100DAAE5D /* DraggableSystem.cpp in Sources */,
@@ -3676,6 +3689,7 @@
 				729955081C99F76100DAAE5D /* Clipper.cpp in Sources */,
 				727B38CE1E2B9C5300531B62 /* truetype.c in Sources */,
 				7299547D1C99F76100DAAE5D /* btConeShape.cpp in Sources */,
+				72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */,
 				72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */,
 				729954551C99F76100DAAE5D /* btAxisSweep3.cpp in Sources */,
 				7299541E1C99F76100DAAE5D /* SelectionVisualizer.cpp in Sources */,
