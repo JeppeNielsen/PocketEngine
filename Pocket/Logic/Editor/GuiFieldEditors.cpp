@@ -228,6 +228,32 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
     GameObject* checkBox;
 };
 
+struct FieldInfoEditorBox : public FieldInfoEditorTextboxes<Box, 4> {
+    void TextboxChanged(int index, std::string text) override {
+        float value = (float)atof(text.c_str());
+        
+        if (index == 0) {
+            (*field).left = value;
+        } else if (index == 1) {
+            (*field).top = value;
+        } else if (index == 2) {
+            (*field).right = value;
+        } else {
+            (*field).bottom = value;
+        }
+    }
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        if (index == 0) {
+            stream<<(*field).left;
+        } else if (index == 1) {
+            stream<<(*field).top;
+        } else if (index == 2) {
+            stream<<(*field).right;
+        } else {
+            stream<<(*field).bottom;
+        }
+    }
+};
 
 template<> IFieldEditor* FieldEditorCreator<int>::Create(int* ptr) {
     FieldInfoEditorInt* editor = new FieldInfoEditorInt();
@@ -276,6 +302,13 @@ template<> IFieldEditor* FieldEditorCreator<bool>::Create(bool* ptr) {
     editor->SetField(ptr);
     return editor;
 }
+
+template<> IFieldEditor* FieldEditorCreator<Box>::Create(Box* ptr) {
+    FieldInfoEditorBox* editor = new FieldInfoEditorBox();
+    editor->SetField(ptr);
+    return editor;
+}
+
 
 TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* parentPtr, const std::string& title) -> void* {
     Gui* gui = static_cast<Gui*>(guiPtr);
