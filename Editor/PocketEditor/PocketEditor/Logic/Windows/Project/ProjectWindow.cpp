@@ -90,13 +90,15 @@ void ProjectWindow::OnInitialize() {
                 
                 int result = rename(oldPath.c_str(), newPath.c_str());
                 if (result == 0) {
-                    textBox->Remove();
+                    context->postActions.emplace_back([=] () {
+                        textBoxLabel->GetComponent<TextBox>()->Active.Changed.Clear();
+                        textBox->Remove();
+                    });
                     fileSystemListener->watcher.Changed();
                 } else {
                     textBoxLabel->GetComponent<TextBox>()->Text = selectedNode.filePath->filename;
                 }
             });
-            
         });
     }
 }
