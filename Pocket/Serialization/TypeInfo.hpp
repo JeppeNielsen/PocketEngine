@@ -243,7 +243,30 @@ class FieldInfoAny : public IFieldInfo {
 public:
     FieldInfoAny() { type = -1; }
 
-    void Serialize(minijson::object_writer& writer) override { }
+    void Serialize(minijson::object_writer& writer) override {
+        switch (valueType) {
+            case minijson::String: {
+                JsonSerializer<std::string>::Serialize(name, string_value, writer);
+                break;
+            }
+            case minijson::Number: {
+                JsonSerializer<double>::Serialize(name, double_value, writer);
+                break;
+            }
+            case minijson::Boolean: {
+                JsonSerializer<bool>::Serialize(name, long_value == 0 ? false : true, writer);
+                break;
+            }
+            case minijson::Object:
+            case minijson::Array: {
+                break;
+            }
+            case minijson::Null: {
+                break;
+            }
+        }
+    }
+    
     void Deserialize(minijson::istream_context& context, minijson::value& value) override {
         valueType = value.type();
         string_value = value.as_string();
@@ -253,6 +276,7 @@ public:
     
     IFieldInfo* Clone() override {
         FieldInfoAny* clone = new FieldInfoAny();
+        clone->name = name;
         clone->valueType = valueType;
         clone->string_value = string_value;
         clone->long_value = long_value;
@@ -308,6 +332,7 @@ struct JsonSerializer<IFieldInfo*> {
         
         minijson::parse_object(context, [&] (const char* n, minijson::value v) {
             (*field) = new FieldInfoAny();
+            (*field)->name = std::string(n);
             (*field)->Deserialize(context, v);
         });
     }
