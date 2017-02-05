@@ -83,39 +83,35 @@ void HierarchyWindow::OnCreate() {
             GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
             return control;
         };
-        
-        //if (node!=treeView->Root()) {
-        
-             EditorObject* editorObject = node->GetComponent<EditorObject>();
-        
-            if (editorObject && editorObject->editorObject) {
-                GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-                selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
-                selectButton->AddComponent<Selectable>(editorObject->editorObject);
-                selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
-                selectButton->GetComponent<Touchable>()->ClickThrough = true;
-                selectButton->AddComponent<EditorObject>(node);
+        EditorObject* editorObject = node->GetComponent<EditorObject>();
+    
+        if (editorObject && editorObject->editorObject) {
+            GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
+            selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
+            selectButton->AddComponent<Selectable>(editorObject->editorObject);
+            selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
+            selectButton->GetComponent<Touchable>()->ClickThrough = true;
+            selectButton->AddComponent<EditorObject>(node);
+            
+            {
+                std::stringstream str;
+                str<<editorObject->gameObject->RootId();
                 
+                GameObject* label = gui.CreateLabel(clone, {0,0}, {60,25}, 0, str.str(), 12);
                 
-                {
-                    std::stringstream str;
-                    str<<editorObject->gameObject->RootId();
-                    
-                    GameObject* label = gui.CreateLabel(clone, {0,0}, {60,25}, 0, str.str(), 12);
-                    
-                    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
-                    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
-                    label->AddComponent<Colorable>()->Color = Colour::Black();
-                }
-
-                
-            } else {
-                int hej = 8;
-                hej++;
+                label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+                label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+                label->AddComponent<Colorable>()->Color = Colour::Black();
             }
-        //} else {
-        //    rootItem = clone;
-        //}
+            
+            GameObject* enableButton = gui.CreateControl(clone, "TextBox", {25, 0}, {25,25});
+            enableButton->GetComponent<Touchable>()->Click.Bind([editorObject] (TouchData d) {
+                editorObject->gameObject->Enabled = !editorObject->gameObject->Enabled;
+            });
+            editorObject->gameObject->Enabled.Changed.Bind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
+            SetNodeEnabled(enableButton, editorObject->gameObject->Enabled);
+            objectToEnableButton[editorObject->gameObject] = enableButton;
+        }
         return clone;
     };
     
@@ -123,9 +119,25 @@ void HierarchyWindow::OnCreate() {
         if (control == rootItem) {
             rootItem = 0;
         }
+        EditorObject* editorObject = node->GetComponent<EditorObject>();
+        if (editorObject) {
+            editorObject->gameObject->Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
+            auto it = objectToEnableButton.find(editorObject->gameObject);
+            if (it!=objectToEnableButton.end()) {
+                objectToEnableButton.erase(it);
+            }
+        }
     };
     
     window->GetComponent<Transform>()->Position += {300,200};
+}
+
+void HierarchyWindow::EnabledChanged(Pocket::GameObject *object) {
+    SetNodeEnabled(objectToEnableButton[object], object->Enabled);
+}
+
+void HierarchyWindow::SetNodeEnabled(Pocket::GameObject *node, bool enabled) {
+    node->GetComponent<Colorable>()->Color = enabled ? Colour(0.5f, 0.5f, 0.5f, 0.5f) : Colour(0.5f, 0.5f, 0.5f, 0.15f);
 }
 
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {

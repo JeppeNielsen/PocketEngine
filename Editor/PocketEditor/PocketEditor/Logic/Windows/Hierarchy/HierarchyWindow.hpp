@@ -23,7 +23,10 @@ private:
     void Dropped(DroppedData d, GameObject* object);
     bool IsParentValid(GameObject* object, GameObject* possibleParent);
     void OpenWorldIsPlayingChanged(OpenWorld* world);
+    void EnabledChanged(GameObject* object);
+    void SetNodeEnabled(GameObject* node, bool enabled);
     
     VirtualTreeList* treeView;
     GameObject* rootItem;
+    std::map<GameObject*, GameObject*> objectToEnableButton;
 };
