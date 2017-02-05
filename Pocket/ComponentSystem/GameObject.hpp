@@ -96,9 +96,8 @@ namespace Pocket {
         static bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
         static void EndGetAddReferenceComponent();
         GameObject* CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
-        bool Recurse(const std::function<bool(GameObject* object)>& function);
     public:
-        
+        bool Recurse(const std::function<bool(GameObject* object)>& function);
         bool HasComponent(ComponentId id) const override;
         void* GetComponent(ComponentId id) const override;
         void AddComponent(ComponentId id) override;
