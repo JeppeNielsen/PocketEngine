@@ -477,7 +477,7 @@ public:
     }
 };
 
-int main_gui() {
+int main_gui_nonon() {
     Engine e;
     e.Start<Game>();
 	return 0;

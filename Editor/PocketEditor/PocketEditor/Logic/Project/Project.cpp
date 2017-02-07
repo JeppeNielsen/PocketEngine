@@ -90,10 +90,14 @@ bool Project::Compile() {
 
 void Project::RefreshSourceFiles() {
     std::vector<std::string> foundIncludeFiles = defaultIncludes;
-    FileHelper::FindFiles(foundIncludeFiles, path, ".hpp");
+    FileHelper::RecurseFolder(path, [&] (const std::string& path) {
+        foundIncludeFiles.push_back(path);
+    }, ".hpp");
     
     std::vector<std::string> foundSourceFiles;
-    FileHelper::FindFiles(foundSourceFiles, path, ".cpp");
+    FileHelper::RecurseFolder(path, [&] (const std::string& path) {
+        foundSourceFiles.push_back(path);
+    }, ".cpp");
     
     for(auto s : foundIncludeFiles) {
         std::cout << "Includes : "<< s <<std::endl;
@@ -113,13 +117,8 @@ void Project::RefreshSourceFiles() {
 }
 
 void Project::Build() {
-    /*
     scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
-    std::ofstream file;
-    file.open ("world.json");
-    world.ToJson(file);
-    file.close();
-    */
+    
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {

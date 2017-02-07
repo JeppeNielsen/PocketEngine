@@ -14,7 +14,6 @@
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
 		72308D091E127A9100B92B8D /* FileSystemListenerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D041E127A9100B92B8D /* FileSystemListenerSystem.cpp */; };
-		72308D0D1E127AC400B92B8D /* FileHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D0B1E127AC400B92B8D /* FileHelper.cpp */; };
 		72308D101E127F7F00B92B8D /* AssetImporterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D0E1E127F7F00B92B8D /* AssetImporterSystem.cpp */; };
 		72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D111E13D55F00B92B8D /* AssetImporter.cpp */; };
 		72308D171E1449BC00B92B8D /* BaseModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D151E1449BC00B92B8D /* BaseModule.cpp */; };
@@ -371,6 +370,10 @@
 		72A4AFA81E3FED4900A856F5 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */; };
 		72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFAE1E451B4500A856F5 /* SlicedQuadMeshSystem.cpp */; };
 		72A4AFB31E452B1D00A856F5 /* SlicedTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFB11E452B1D00A856F5 /* SlicedTexture.cpp */; };
+		72A4AFB51E47D5C400A856F5 /* testResources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFB41E47D5C400A856F5 /* testResources.cpp */; };
+		72A4AFB91E47D63900A856F5 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFB71E47D63900A856F5 /* miniz.c */; };
+		72A4AFBC1E4916D800A856F5 /* FileArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFBA1E4916D800A856F5 /* FileArchive.cpp */; };
+		72A4AFBF1E491A7E00A856F5 /* FileHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -437,8 +440,6 @@
 		72308D031E127A9100B92B8D /* FileSystemListener.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileSystemListener.hpp; sourceTree = "<group>"; };
 		72308D041E127A9100B92B8D /* FileSystemListenerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemListenerSystem.cpp; sourceTree = "<group>"; };
 		72308D051E127A9100B92B8D /* FileSystemListenerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileSystemListenerSystem.hpp; sourceTree = "<group>"; };
-		72308D0B1E127AC400B92B8D /* FileHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileHelper.cpp; sourceTree = "<group>"; };
-		72308D0C1E127AC400B92B8D /* FileHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileHelper.hpp; sourceTree = "<group>"; };
 		72308D0E1E127F7F00B92B8D /* AssetImporterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetImporterSystem.cpp; sourceTree = "<group>"; };
 		72308D0F1E127F7F00B92B8D /* AssetImporterSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetImporterSystem.hpp; sourceTree = "<group>"; };
 		72308D111E13D55F00B92B8D /* AssetImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetImporter.cpp; sourceTree = "<group>"; };
@@ -1364,6 +1365,13 @@
 		72A4AFAF1E451B4500A856F5 /* SlicedQuadMeshSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedQuadMeshSystem.hpp; sourceTree = "<group>"; };
 		72A4AFB11E452B1D00A856F5 /* SlicedTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlicedTexture.cpp; sourceTree = "<group>"; };
 		72A4AFB21E452B1D00A856F5 /* SlicedTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedTexture.hpp; sourceTree = "<group>"; };
+		72A4AFB41E47D5C400A856F5 /* testResources.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testResources.cpp; sourceTree = "<group>"; };
+		72A4AFB71E47D63900A856F5 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
+		72A4AFB81E47D63900A856F5 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
+		72A4AFBA1E4916D800A856F5 /* FileArchive.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileArchive.cpp; sourceTree = "<group>"; };
+		72A4AFBB1E4916D800A856F5 /* FileArchive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileArchive.hpp; sourceTree = "<group>"; };
+		72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileHelper.cpp; sourceTree = "<group>"; };
+		72A4AFBE1E491A7E00A856F5 /* FileHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileHelper.hpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -1520,15 +1528,6 @@
 			path = Files;
 			sourceTree = "<group>";
 		};
-		72308D0A1E127AC400B92B8D /* Files */ = {
-			isa = PBXGroup;
-			children = (
-				72308D0B1E127AC400B92B8D /* FileHelper.cpp */,
-				72308D0C1E127AC400B92B8D /* FileHelper.hpp */,
-			);
-			path = Files;
-			sourceTree = "<group>";
-		};
 		72308D141E1449AF00B92B8D /* Modules */ = {
 			isa = PBXGroup;
 			children = (
@@ -1578,6 +1577,7 @@
 		727B37A81E2B9C5300531B62 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				72A4AFB61E47D63900A856F5 /* Zip */,
 				72A4AFA91E3FF19400A856F5 /* STBImage */,
 				727B37A91E2B9C5300531B62 /* FreeType */,
 				727B38881E2B9C5300531B62 /* TinyXml */,
@@ -1878,6 +1878,7 @@
 				72994F981C99F74F00DAAE5D /* main.cpp */,
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
 				72B492691DD3AE510063518A /* testGui.cpp */,
+				72A4AFB41E47D5C400A856F5 /* testResources.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -1944,6 +1945,8 @@
 				72994FC41C99F76000DAAE5D /* DirtyProperty.hpp */,
 				72994FC51C99F76000DAAE5D /* Event.hpp */,
 				72994FC61C99F76000DAAE5D /* File.hpp */,
+				72A4AFBA1E4916D800A856F5 /* FileArchive.cpp */,
+				72A4AFBB1E4916D800A856F5 /* FileArchive.hpp */,
 				72994FC71C99F76000DAAE5D /* FileReader.hpp */,
 				72BA19651E228FC800122007 /* FileSystemWatcher.hpp */,
 				72AE74ED1DB2D5E400CEB998 /* Guid.cpp */,
@@ -1966,6 +1969,8 @@
 				72994FD71C99F76000DAAE5D /* Timeline.hpp */,
 				72994FD81C99F76000DAAE5D /* Triangulator.cpp */,
 				72994FD91C99F76000DAAE5D /* Triangulator.hpp */,
+				72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */,
+				72A4AFBE1E491A7E00A856F5 /* FileHelper.hpp */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -3206,6 +3211,15 @@
 			path = STBImage;
 			sourceTree = "<group>";
 		};
+		72A4AFB61E47D63900A856F5 /* Zip */ = {
+			isa = PBXGroup;
+			children = (
+				72A4AFB71E47D63900A856F5 /* miniz.c */,
+				72A4AFB81E47D63900A856F5 /* miniz.h */,
+			);
+			path = Zip;
+			sourceTree = "<group>";
+		};
 		72AE74CB1DAAA1B800CEB998 /* PlayButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -3265,7 +3279,6 @@
 			isa = PBXGroup;
 			children = (
 				72308D141E1449AF00B92B8D /* Modules */,
-				72308D0A1E127AC400B92B8D /* Files */,
 				72D7364F1D7B5DB0001E2047 /* Menus */,
 				72EC13811D2D957B00B69802 /* Building */,
 				72CE8F071CBAF34E001F08E4 /* Objects */,
@@ -3471,6 +3484,7 @@
 				7287F11B1C9B56E6005D05FA /* Rect.cpp in Sources */,
 				7299541D1C99F76100DAAE5D /* SelectedColorerSystem.cpp in Sources */,
 				729954421C99F76100DAAE5D /* b2Settings.cpp in Sources */,
+				72A4AFBF1E491A7E00A856F5 /* FileHelper.cpp in Sources */,
 				72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */,
 				729954BF1C99F76100DAAE5D /* btDiscreteDynamicsWorld.cpp in Sources */,
 				729953E31C99F76100DAAE5D /* FieldEditor.cpp in Sources */,
@@ -3547,6 +3561,7 @@
 				729954391C99F76100DAAE5D /* b2Collision.cpp in Sources */,
 				727B38B31E2B9C5300531B62 /* pshinter.c in Sources */,
 				7299546B1C99F76100DAAE5D /* btDefaultCollisionConfiguration.cpp in Sources */,
+				72A4AFB51E47D5C400A856F5 /* testResources.cpp in Sources */,
 				7299542A1C99F76100DAAE5D /* Point3.cpp in Sources */,
 				729953DD1C99F76100DAAE5D /* TransformAnimatorSystem.cpp in Sources */,
 				729954E51C99F76100DAAE5D /* btQuickprof.cpp in Sources */,
@@ -3660,7 +3675,6 @@
 				729953E71C99F76100DAAE5D /* HierarchyEditor.cpp in Sources */,
 				729954731C99F76100DAAE5D /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				729954481C99F76100DAAE5D /* b2WorldCallbacks.cpp in Sources */,
-				72308D0D1E127AC400B92B8D /* FileHelper.cpp in Sources */,
 				729954311C99F76100DAAE5D /* ChromecastReceiver.cpp in Sources */,
 				7299549F1C99F76100DAAE5D /* btGImpactShape.cpp in Sources */,
 				729954761C99F76100DAAE5D /* btBox2dShape.cpp in Sources */,
@@ -3730,6 +3744,7 @@
 				729954DC1C99F76100DAAE5D /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
 				727B38BF1E2B9C5300531B62 /* sfnt.c in Sources */,
 				723E23111DE1B1F900AFBB79 /* CloneVariable.cpp in Sources */,
+				72A4AFB91E47D63900A856F5 /* miniz.c in Sources */,
 				729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */,
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,
@@ -3848,6 +3863,7 @@
 				72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */,
 				729953F91C99F76100DAAE5D /* SpriteTextureSystem.cpp in Sources */,
 				729954901C99F76100DAAE5D /* btStaticPlaneShape.cpp in Sources */,
+				72A4AFBC1E4916D800A856F5 /* FileArchive.cpp in Sources */,
 				729954771C99F76100DAAE5D /* btBoxShape.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
