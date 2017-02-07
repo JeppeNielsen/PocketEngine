@@ -1,0 +1,354 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "NDGyhUcqSkWLeRYFTKAdqA==",
+        "counter": 262,
+        "Components": [],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 12,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,10",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Camera": {
+                                "FieldOfView": 20,
+                                "Near": 0.1,
+                                "Far": 512,
+                                "Viewport": "0,0,1,1",
+                                "Aspect": 0,
+                                "Orthographic": true,
+                                "Mask": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 45,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Switch": {
+                                "On": true,
+                                "Group": 0
+                            }
+                        },
+                        {
+                            "Pocket::SwitchEnabler": {}
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "GameObject": {
+                                "id": 2,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-8.85102,-6.37561,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 255
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "5,3"
+                                                },
+                                                {
+                                                    "Text": "Exit"
+                                                },
+                                                {
+                                                    "FontSize": 1
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Switch:ref": {
+                                            "id": 82
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        },
+                        {
+                            "GameObject": {
+                                "id": 7,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-4,0,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 258
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "8,4"
+                                                },
+                                                {
+                                                    "Text": "Start"
+                                                },
+                                                {
+                                                    "FontSize": 2
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        },
+                        {
+                            "GameObject": {
+                                "id": 228,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-4,-4,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 261
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "8,4"
+                                                },
+                                                {
+                                                    "Text": "Options"
+                                                },
+                                                {
+                                                    "FontSize": 2
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Switch:ref": {
+                                            "id": 82
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 82,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Switch": {
+                                "On": false,
+                                "Group": 0
+                            }
+                        },
+                        {
+                            "Pocket::SwitchEnabler": {}
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "GameObject": {
+                                "id": 83,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-3,-1.5,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "6,3"
+                                                },
+                                                {
+                                                    "Text": "Back"
+                                                },
+                                                {
+                                                    "FontSize": 1
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Switch:ref": {
+                                            "id": 45
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 241,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,-5.37006,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Mesh": {
+                                "VertexMesh": {
+                                    "vertices": [
+                                        "-1,1,1:0,0:255,255,255,255:0,0,1",
+                                        "1,1,1:1,0:255,255,255,255:0,0,1",
+                                        "1,-1,1:1,1:255,255,255,255:0,0,1",
+                                        "-1,-1,1:0,1:255,255,255,255:0,0,1",
+                                        "1,1,-1:0,0:255,255,255,255:0,0,-1",
+                                        "-1,1,-1:1,0:255,255,255,255:0,0,-1",
+                                        "-1,-1,-1:1,1:255,255,255,255:0,0,-1",
+                                        "1,-1,-1:0,1:255,255,255,255:0,0,-1",
+                                        "-1,1,-1:0,0:255,255,255,255:0,1,0",
+                                        "1,1,-1:1,0:255,255,255,255:0,1,0",
+                                        "1,1,1:1,1:255,255,255,255:0,1,0",
+                                        "-1,1,1:0,1:255,255,255,255:0,1,0",
+                                        "-1,-1,1:0,0:255,255,255,255:0,-1,0",
+                                        "1,-1,1:1,0:255,255,255,255:0,-1,0",
+                                        "1,-1,-1:1,1:255,255,255,255:0,-1,0",
+                                        "-1,-1,-1:0,1:255,255,255,255:0,-1,0",
+                                        "1,1,1:0,0:255,255,255,255:1,0,0",
+                                        "1,1,-1:1,0:255,255,255,255:1,0,0",
+                                        "1,-1,-1:1,1:255,255,255,255:1,0,0",
+                                        "1,-1,1:0,1:255,255,255,255:1,0,0",
+                                        "-1,1,-1:0,0:255,255,255,255:-1,0,0",
+                                        "-1,1,1:1,0:255,255,255,255:-1,0,0",
+                                        "-1,-1,1:1,1:255,255,255,255:-1,0,0",
+                                        "-1,-1,-1:0,1:255,255,255,255:-1,0,0"
+                                    ],
+                                    "triangles": [
+                                        0,
+                                        2,
+                                        1,
+                                        0,
+                                        3,
+                                        2,
+                                        4,
+                                        6,
+                                        5,
+                                        4,
+                                        7,
+                                        6,
+                                        8,
+                                        10,
+                                        9,
+                                        8,
+                                        11,
+                                        10,
+                                        12,
+                                        14,
+                                        13,
+                                        12,
+                                        15,
+                                        14,
+                                        16,
+                                        18,
+                                        17,
+                                        16,
+                                        19,
+                                        18,
+                                        20,
+                                        22,
+                                        21,
+                                        20,
+                                        23,
+                                        22
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "Pocket::Renderable": {
+                                "BlendMode": 0,
+                                "Mask": 0
+                            }
+                        },
+                        {
+                            "Turner": {
+                                "speed": "2,1,2"
+                            }
+                        },
+                        {
+                            "Pocket::ShaderComponent:ref": {
+                                "id": "wxxn37PyTViIkIAz1nSh6Q==:1"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
