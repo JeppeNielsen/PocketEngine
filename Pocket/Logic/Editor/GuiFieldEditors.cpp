@@ -8,7 +8,7 @@
 
 #include "GuiFieldEditors.hpp"
 #include <fstream>
-#include "FileReader.hpp"
+#include "FileHelper.hpp"
 #include "GameObjectHandle.hpp"
 #include "Cloner.hpp"
 #include "EditorDropTarget.hpp" // <- TODO: not part of engine
@@ -393,7 +393,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         std::string text;
         if (owner) {
             std::string path = owner->TryGetRootPath();
-            text = FileReader::GetFileNameFromPath(path);
+            text = FileHelper::GetFileNameFromPath(path);
             
             std::stringstream ss;
             ss<<owner->RootId();
@@ -451,7 +451,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
                 button->GetComponent<Layouter>()->Min = {50,30};
                 button->GetComponent<Layouter>()->Max = {500,30};
                 
-                std::string text = FileReader::GetFileNameFromPath(paths[i]);
+                std::string text = FileHelper::GetFileNameFromPath(paths[i]);
                 
                 std::stringstream ss;
                 ss<<id;
@@ -538,7 +538,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
     void UpdateLabel() {
         GameObject* target = handle->operator->();
         std::string path = !target ? "" : target->TryGetRootPath();
-        std::string text = FileReader::GetFileNameFromPath(path);
+        std::string text = FileHelper::GetFileNameFromPath(path);
         
         if (target) {
             std::stringstream ss;
@@ -614,7 +614,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
                 button->GetComponent<Layouter>()->Min = {50,30};
                 button->GetComponent<Layouter>()->Max = {500,30};
                 
-                std::string text = FileReader::GetFileNameFromPath(paths[i]);
+                std::string text = FileHelper::GetFileNameFromPath(paths[i]);
                 
                 std::stringstream ss;
                 ss<<id;

@@ -9,6 +9,7 @@
 #include "File.hpp"
 #import <Foundation/Foundation.h>
 #include <stdlib.h>
+#include "FileArchive.hpp"
 
 using namespace Pocket;
 
@@ -17,6 +18,14 @@ File::File(std::string path) { Load(path); }
 File::~File() { delete[] data; data = 0; size = 0; }
 
 bool File::Load(std::string filename) {
+    
+    if (fileArchive) {
+        return fileArchive->TryLoadData(filename, [this] (void* d, size_t s) {
+            this->data = (unsigned char*)d;
+            this->size = s;
+        });
+    }
+
     NSString* file = [NSString stringWithUTF8String:filename.c_str()];
     NSString* path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
     if (!path) {
@@ -35,4 +44,14 @@ std::string File::GetFullPath(std::string filename) {
     NSString* file = [NSString stringWithUTF8String:filename.c_str()];
     NSString* path = [[NSBundle mainBundle] pathForResource:file ofType:nil];
     return [path UTF8String];
+}
+
+FileArchive* File::fileArchive = 0;
+
+void File::SetArchive(Pocket::FileArchive &archive) {
+    fileArchive = &archive;
+}
+
+void File::RemoveArchive() {
+    fileArchive = 0;
 }

@@ -10,6 +10,7 @@
 #include <string>
 
 namespace Pocket {
+    class FileArchive;
     class File {
     public:
         File();
@@ -24,9 +25,12 @@ namespace Pocket {
             return text;
         }
         static std::string GetFullPath(std::string filename);
+        static void SetArchive(FileArchive& archive);
+        static void RemoveArchive();
     private:
         size_t size;
         unsigned char* data;
         void* userData;
+        static FileArchive* fileArchive;
     };
 }

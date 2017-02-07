@@ -533,3 +533,10 @@ std::string StringHelper::CreateGuid() {
 }
 
 
+bool StringHelper::EndsWith(const std::string& str, const std::string& endsWith) {
+    if (str.length() >= endsWith.length()) {
+        return (0 == str.compare (str.length() - endsWith.length(), endsWith.length(), endsWith));
+    } else {
+        return false;
+    }
+}

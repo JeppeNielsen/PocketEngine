@@ -8,8 +8,9 @@
 
 #include "AssetImporterSystem.hpp"
 #include <iostream>
-#include "FileReader.hpp"
+#include "FileHelper.hpp"
 #include <fstream>
+#include "StringHelper.hpp"
 
 using namespace Pocket;
 
@@ -37,7 +38,9 @@ void AssetImporterSystem::Update(float dt) {
     isDirty = false;
     
     currentFiles.clear();
-    FileReader::FindFiles(currentFiles, watcher->Path(), "");
+    FileHelper::RecurseFolder(watcher->Path(), [&] (const std::string& p) {
+        currentFiles.push_back(p);
+    });
     
     for(auto& currentFile : currentFiles) {
         auto prev = std::find(prevFiles.begin(), prevFiles.end(), currentFile);
@@ -68,7 +71,7 @@ void AssetImporterSystem::FileCreated(const std::string &path) {
     
     for(GameObject* object : Objects()) {
         AssetImporter* assetImporter = object->GetComponent<AssetImporter>();
-        if (FileReader::EndsWith(lowerCasePath, assetImporter->extension)) {
+        if (StringHelper::EndsWith(lowerCasePath, assetImporter->extension)) {
             AssetCreated(assetImporter, path);
         }
     }
@@ -84,9 +87,9 @@ void AssetImporterSystem::FileRemoved(const std::string &path) {
     
     for(GameObject* object : Objects()) {
         AssetImporter* assetImporter = object->GetComponent<AssetImporter>();
-        if (FileReader::EndsWith(lowerCasePath, assetImporter->extension) &&
-            FileReader::FileExists(metaPath)) {
-            FileReader::DeleteFile(metaPath);
+        if (StringHelper::EndsWith(lowerCasePath, assetImporter->extension) &&
+            FileHelper::FileExists(metaPath)) {
+            FileHelper::DeleteFile(metaPath);
         }
     }
 }
@@ -94,7 +97,7 @@ void AssetImporterSystem::FileRemoved(const std::string &path) {
 void AssetImporterSystem::AssetCreated(Pocket::AssetImporter *assetImporter, const std::string &path) {
     std::string metaPath = GetMetaPathFromPath(path);
     
-    bool doesMetaExists = FileReader::FileExists(metaPath);
+    bool doesMetaExists = FileHelper::FileExists(metaPath);
     
     GameWorld world;
     

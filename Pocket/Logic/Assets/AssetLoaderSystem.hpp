@@ -48,14 +48,20 @@ namespace Pocket {
             AssetLoader* assetLoader = object->GetComponent<AssetLoader>();
             GameObject* ownerObject = object->GetComponentOwner<T>();
             std::string rootFilename = ownerObject->TryGetRootPath();
-            auto pos = rootFilename.rfind(".");
-            if (pos != std::string::npos) {
-                std::string fileNameWithoutExtension = rootFilename.substr(0, pos);
-                std::cout << "fileNameWithoutExtension : " << fileNameWithoutExtension << std::endl;
-                
+            if (rootFilename == ownerObject->RootGuid()) {
+                assetLoader->pathLoaded = rootFilename + "-asset";
                 T* asset = object->GetComponent<T>();
-                asset->LoadAsset(fileNameWithoutExtension);
-                assetLoader->pathLoaded = fileNameWithoutExtension;
+                asset->LoadAsset(assetLoader->pathLoaded);
+            } else {
+                auto pos = rootFilename.rfind(".");
+                if (pos != std::string::npos) {
+                    std::string fileNameWithoutExtension = rootFilename.substr(0, pos);
+                    std::cout << "fileNameWithoutExtension : " << fileNameWithoutExtension << std::endl;
+                    
+                    T* asset = object->GetComponent<T>();
+                    asset->LoadAsset(fileNameWithoutExtension);
+                    assetLoader->pathLoaded = fileNameWithoutExtension;
+                }
             }
         }
     };

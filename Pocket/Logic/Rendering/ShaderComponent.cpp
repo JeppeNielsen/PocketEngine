@@ -7,16 +7,15 @@
 //
 
 #include "ShaderComponent.hpp"
-#include <fstream>
-#include <iostream>
-
+#include "File.hpp"
 using namespace Pocket;
 
 void ShaderComponent::LoadAsset(const std::string &path) {
     
-    std::ifstream t(path);
-    std::string file((std::istreambuf_iterator<char>(t)),
-                 std::istreambuf_iterator<char>());
+    File file;
+    file.Load(path);
+    
+    std::string textAsset = file.GetDataAsText();
     
     std::string vertexShader;
     
@@ -24,11 +23,11 @@ void ShaderComponent::LoadAsset(const std::string &path) {
     {
         int startIndex = 0;
         int endIndex = 0;
-        if (!TryParseShader(file, 0, startIndex, endIndex)) {
+        if (!TryParseShader(textAsset, 0, startIndex, endIndex)) {
             std::cout << "Could not parse shader file"<< std::endl;
             return;
         }
-        vertexShader = file.substr(startIndex+1, (endIndex - startIndex)-2);
+        vertexShader = textAsset.substr(startIndex+1, (endIndex - startIndex)-2);
         fragmentOffset = endIndex + 1;
     }
     
@@ -36,11 +35,11 @@ void ShaderComponent::LoadAsset(const std::string &path) {
     {
         int startIndex = 0;
         int endIndex = 0;
-        if (!TryParseShader(file, fragmentOffset, startIndex, endIndex)) {
+        if (!TryParseShader(textAsset, fragmentOffset, startIndex, endIndex)) {
             std::cout << "Could not parse shader file"<< std::endl;
             return;
         }
-        fragmentShader = file.substr(startIndex+1, (endIndex - startIndex)-2);
+        fragmentShader = textAsset.substr(startIndex+1, (endIndex - startIndex)-2);
     }
 
     /*

@@ -8,7 +8,7 @@
 
 #include "FileWorld.hpp"
 #include "GameWorld.hpp"
-#include "FileReader.hpp"
+#include "FileHelper.hpp"
 #include <fstream>
 #include <set>
 
@@ -37,13 +37,11 @@ void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
 }
 
 void FileWorld::FindRoots(const std::string &path, const std::vector<std::string>& extensions) {
-    std::vector<std::string> paths;
-    for(auto& ext : extensions) {
-        FileReader::FindFiles(paths, path, ext);
-    }
     std::set<std::string> uniquePaths;
-    for(auto& path : paths) {
-        uniquePaths.insert(path);
+    for(auto& ext : extensions) {
+        FileHelper::RecurseFolder(path, [&] (const std::string& path) {
+            uniquePaths.insert(path);
+        }, ext);
     }
     guidToPath.clear();
     for(auto& path : uniquePaths) {

@@ -11,6 +11,7 @@
 #include "StringHelper.hpp"
 #include "RectPacker.hpp"
 #include "OpenGL.hpp"
+#include "File.hpp"
 
 using namespace std;
 using namespace Pocket;
@@ -32,8 +33,24 @@ bool Font::LoadTTF(const std::string &path) {
     FT_Error error = FT_Init_FreeType( &library );
     if (error) return false;
     
-    error = FT_New_Face( library, path.c_str(), 0, &face );
+    //error = FT_New_Face( library, path.c_str(), 0, &face );
+    //if (error) return false;
+    
+     /* FT_New_Memory_Face( FT_Library      library,
+                      const FT_Byte*  file_base,
+                      FT_Long         file_size,
+                      FT_Long         face_index,
+                      FT_Face        *aface )
+                      */
+    
+    
+    if (!file.Load(path)) {
+        return false;
+    }
+    
+    error = FT_New_Memory_Face(library, (const FT_Byte*)file.Data(), (FT_Long)file.Size(), 0, &face);
     if (error) return false;
+    
     
     //error = FT_Set_Char_Size( face, 40 * 64, 0, 50, 0 );
     error = FT_Set_Pixel_Sizes(face, 8,0);

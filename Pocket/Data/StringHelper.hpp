@@ -25,5 +25,7 @@ namespace Pocket {
         static std::string base64_decode(const std::string& encoded_string);
         
         static std::string CreateGuid();
+        
+        static bool EndsWith(const std::string& str, const std::string& endsWith);
     };
 }

@@ -14,6 +14,7 @@
 #include FT_FREETYPE_H
 #include "Texture.hpp"
 #include "TypeInfo.hpp"
+#include "File.hpp"
 
 namespace Pocket {
     class Font {
@@ -92,6 +93,8 @@ namespace Pocket {
         
         FT_Library    library;
         FT_Face       face;
+        
+        File file;
         
         
         TYPE_FIELDS_BEGIN

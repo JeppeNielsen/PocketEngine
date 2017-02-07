@@ -176,7 +176,7 @@ namespace Pocket {
         std::function<std::string(const std::string& guid)> GuidToPath;
         std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
         
-        std::string ReadGuidFromJson(std::istream& jsonStream);
+        static std::string ReadGuidFromJson(std::istream& jsonStream);
         void TryParseJson(std::istream &jsonStream, int componentId,
                           const std::function<void (int, int)>& callback,
                           const std::function<bool (const std::string& componentName)>& componentCallback = 0);
