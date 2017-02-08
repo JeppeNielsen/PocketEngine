@@ -185,6 +185,9 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
     compilerFlags += POCKET_PATH + "Logic/Editor";
     compilerFlags += POCKET_PATH + "Logic/Effects";
     compilerFlags += POCKET_PATH + "Logic/Gui";
+    compilerFlags += POCKET_PATH + "Logic/Gui/Layout";
+    compilerFlags += POCKET_PATH + "Logic/Gui/Menu";
+    
     compilerFlags += POCKET_PATH + "Logic/Interaction";
     
     compilerFlags += POCKET_PATH + "Logic/Movement";
@@ -192,7 +195,17 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
     compilerFlags += POCKET_PATH + "Logic/Rendering";
     compilerFlags += POCKET_PATH + "Logic/Selection";
     compilerFlags += POCKET_PATH + "Logic/Spatial";
+    compilerFlags += POCKET_PATH + "Logic/Cloning";
+    compilerFlags += POCKET_PATH + "Logic/Switching";
+    compilerFlags += POCKET_PATH + "Logic/Assets";
+    compilerFlags += POCKET_PATH + "Logic/Input";
+    compilerFlags += POCKET_PATH + "Logic/Switching";
+    
     compilerFlags += POCKET_PATH + "Rendering/";
+    compilerFlags += POCKET_PATH + "Libs/Zip";
+    compilerFlags += POCKET_PATH + "Libs/STBImage";
+    compilerFlags += POCKET_PATH + "Libs/FreeType/Include";
+    compilerFlags += POCKET_PATH + "Libs/TinyXml";
     
     
     
@@ -580,6 +593,8 @@ void ScriptWorld::WriteTypes(std::ofstream &file) {
     file<<""<<std::endl;
 }
 
+#define FILE_SOURCE(...) #__VA_ARGS__
+
 void ScriptWorld::WriteExecutableMain(const std::string &path) {
     
     auto& systems = scriptClasses.children["Systems"].children;
@@ -587,6 +602,90 @@ void ScriptWorld::WriteExecutableMain(const std::string &path) {
     ofstream file;
     file.open(path);
     
+    file<<"#include \"Engine.hpp\""<<std::endl;
+    file<<"#include \"File.hpp\""<<std::endl;
+    file<<"#include \"FileArchive.hpp\""<<std::endl;
+    file<<"#include \"RenderSystem.hpp\""<<std::endl;
+    file<<"#include \"TransformHierarchy.hpp\""<<std::endl;
+    file<<"#include \"TouchSystem.hpp\""<<std::endl;
+    file<<"#include \"ClonerSystem.hpp\""<<std::endl;
+    file<<"#include \"InputMapperSystem.hpp\""<<std::endl;
+    file<<"#include \"VelocitySystem.hpp\""<<std::endl;
+    file<<"#include \"Gui.hpp\""<<std::endl;
+    file<<"#include \"SwitchSystem.hpp\""<<std::endl;
+    file<<"#include \"SwitchEnablerSystem.hpp\""<<std::endl;
+    file<<"#include \"TouchSwitchSystem.hpp\""<<std::endl;
+    file<<"#include \"SlicedQuadMeshSystem.hpp\""<<std::endl;
+    file<<"#include \"AssetManager.hpp\""<<std::endl;
+    
+    std::string source = FILE_SOURCE(
+    
+using namespace Pocket;
+
+void CreateDefaultSystems(Pocket::GameObject &world) {
+    world.CreateSystem<RenderSystem>();
+    world.CreateSystem<TransformHierarchy>();
+    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
+    world.CreateSystem<ClonerSystem>();
+    world.CreateSystem<InputMapperSystem>();
+    world.CreateSystem<VelocitySystem>();
+    world.CreateSystem<Gui>();
+    world.CreateSystem<SwitchSystem>();
+    world.CreateSystem<SwitchEnablerSystem>();
+    world.CreateSystem<TouchSwitchSystem>();
+    world.CreateSystem<SlicedQuadMeshSystem>();
+    world.CreateSystem<AssetManager>();
+}
+
+class GameCode : public GameState<GameCode> {
+public:
+    GameWorld world;
+    FileArchive fileArchive;
+    
+    void Initialize() {
+    
+        std::string zipFile = "resources";
+    
+        fileArchive.Initialize(zipFile);
+        File::SetArchive(fileArchive);
+        
+        world.GuidToRoot = [this] (const std::string& guid) {
+            GameObject* root = 0;
+            if (!fileArchive.TryLoadData(guid, [&root, this] (void* data, size_t size) {
+                std::stringstream ss;
+                ss.write((const char*)data, size);
+                root = world.CreateRootFromJson(ss, [](GameObject* root) {
+                    CreateDefaultSystems(*root);
+                    
+                });
+            })) {
+                std::cout << "unable to load: "<<guid <<std::endl;
+            }
+            return root;
+        };
+        world.GuidToPath = [] (const std::string& guid) { return guid; };
+        world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
+    }
+    
+    void Update(float dt) {
+        Context().InputDevice().UpdateInputManager(&world.Input());
+        world.Update(dt);
+    }
+    
+    void Render() {
+        world.Render();
+    }
+};
+
+int main() {
+    Engine e;
+    e.Start<GameCode>();
+	return 0;
+}
+    );
+    
+    file << source << std::endl;
+    /*
     file<<"#include \"OpenGL.hpp\""<<std::endl;
     file<<"#include \"Engine.hpp\""<<std::endl;
     file<<"#include \"GameWorld.hpp\""<<std::endl;
@@ -635,6 +734,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path) {
     file<<"    e.Start<Game>();"<<std::endl;
     file<<"    return 0;"<<std::endl;
     file<<"}"<<std::endl;
+    */
     
     file.close();
 
