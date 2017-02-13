@@ -62,3 +62,12 @@ std::string FileHelper::GetFileNameFromPath(const std::string &path) {
         return path.substr(pos+1, path.size()-pos-1);
     }
 }
+
+std::string FileHelper::GetFolderPath(const std::string &path) {
+    auto pos = path.rfind("/");
+    if (pos == std::string::npos) {
+        return path;
+    } else {
+        return path.substr(0, pos);
+    }
+}

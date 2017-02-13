@@ -85,10 +85,11 @@ void Texture::Free() {
 }
 
 void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
+#ifndef EMSCRIPTEN
     ASSERT_GL(glBindTexture(GL_TEXTURE_2D, texture));
     unsigned char* pixels = new unsigned char[width * height * 4];
     ASSERT_GL(glGetTexImage(GL_TEXTURE_2D, 0, pixelFormat, GL_UNSIGNED_BYTE, pixels));
-    
+#endif
     /*std::vector<unsigned char> out;
     LodePNG::Encoder encoder;
 	encoder.encode(out, (const unsigned char*)pixels, width, height);

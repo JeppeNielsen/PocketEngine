@@ -16,6 +16,7 @@ namespace Pocket {
         static bool FileExists(const std::string& path);
         static bool DeleteFile(const std::string& path);
         static std::string GetFileNameFromPath(const std::string& path);
+        static std::string GetFolderPath(const std::string& path);
         static void RecurseFolder(const std::string& path, const std::function<void(const std::string&)>& onFile, const std::string& extension = "");
     private:
         static void RecurseFolderInternal(const std::string& path, const std::function<void(const std::string&)>& onFile, const std::string& extension);

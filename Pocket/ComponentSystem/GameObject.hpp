@@ -14,6 +14,10 @@
 #include "InputManager.hpp"
 #include "TypeInfo.hpp"
 
+namespace minijson {
+  class array_writer;
+}
+
 namespace Pocket {
     class GameWorld;
     class GameScene;

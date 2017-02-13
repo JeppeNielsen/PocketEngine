@@ -22,7 +22,7 @@ using namespace Pocket;
 static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp);
 #endif
 
-HttpRequest::HttpRequest() : Progress(this), Status(this) {
+HttpRequest::HttpRequest() {
     Progress = 0.0f;
     Status = RequestStatus::Pending;
     id = idCounter++;

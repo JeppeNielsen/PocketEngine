@@ -42,8 +42,8 @@ public:
     Event<Request*> Success;
     Event<Request*> Failed;
     
-    Property<HttpRequest*, float> Progress;
-    Property<HttpRequest*, RequestStatus> Status;
+    Property<float> Progress;
+    Property<RequestStatus> Status;
     
 private:
     std::string postParameters;

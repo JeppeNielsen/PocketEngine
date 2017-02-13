@@ -8,6 +8,7 @@
 
 #include "WindowWeb.hpp"
 #include <emscripten.h>
+#include <iostream>
 
 using namespace Pocket;
 using namespace std;
@@ -30,9 +31,8 @@ void WindowWeb::Create(int width, int height, bool fullScreen) {
 			previousTime = 0;
 			active = true;
 			paused = false;
-            screenSize = Vector2(width, height);
-            inputDevice.Initialize(3);
-			
+            context->ScreenSize = Vector2(width, height);
+            inputDevice().Initialize(3);
 		} else {
 			cerr << "Could not set video mode: " << SDL_GetError () << endl;
 		}
@@ -45,16 +45,17 @@ void WindowWeb::Destroy() {
     SDL_Quit ();
 }
 
-bool WindowWeb::Update(IInputManagerIterator* inputManagers) {
+bool WindowWeb::Update() {
     SDL_Event event;
     while (SDL_PollEvent (&event)) {
         handleEvent (event);
     }
-    inputDevice.Update(inputManagers);
+    //inputDevice.Update(inputManagers);
     return true;
 }
 
 void WindowWeb::PreRender() {
+    const Vector2& screenSize = context->ScreenSize;
     glViewport(0, 0, screenSize.x, screenSize.y);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -75,7 +76,7 @@ void WindowWeb::Loop() {
 }
 
 Vector2 WindowWeb::ConvertMousePosition(int x, int y) {
-    return Vector2(x, screenSize.y - y);
+    return Vector2(x, context->ScreenSize().y - y);
 }
 
 int WindowWeb::GetMouseButtonIndex(int index) {
@@ -87,33 +88,37 @@ void WindowWeb::handleEvent (SDL_Event &event) {
     switch (event.type)
     {
         case SDL_MOUSEBUTTONDOWN: {
-            inputDevice.SetTouch(GetMouseButtonIndex(event.button.button), true, ConvertMousePosition(event.button.x,event.button.y));
+            inputDevice().SetTouch(GetMouseButtonIndex(event.button.button), true, ConvertMousePosition(event.button.x,event.button.y));
             break;
         }
         case SDL_MOUSEBUTTONUP: {
-            inputDevice.SetTouch(GetMouseButtonIndex(event.button.button), false, ConvertMousePosition(event.button.x,event.button.y));
+            inputDevice().SetTouch(GetMouseButtonIndex(event.button.button), false, ConvertMousePosition(event.button.x,event.button.y));
             break;
         }
         case SDL_MOUSEMOTION: {
             Vector2 position = ConvertMousePosition(event.motion.x,event.motion.y);
             for (int i=0; i<4; i++) {
-                inputDevice.SetTouchPosition(i, position);
+                inputDevice().SetTouchPosition(i, position);
             }
             break;
         }
         case SDL_KEYDOWN: {
             std::string s;
             s.assign(1, event.key.keysym.sym);
-            inputDevice.SetButton(s, true);
+            inputDevice().SetButton(s, true);
             break;
         }
         case SDL_KEYUP: {
             std::string s;
             s.assign(1, event.key.keysym.sym);
-            inputDevice.SetButton(s, false);
+            inputDevice().SetButton(s, false);
             break;
         }
     }
     
     event.type = -1;
+}
+
+InputDevice& WindowWeb::inputDevice() {
+    return context->InputDevice();
 }

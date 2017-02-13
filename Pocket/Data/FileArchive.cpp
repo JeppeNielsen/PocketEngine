@@ -82,7 +82,7 @@ bool FileArchive::Initialize(const std::string &path) {
             return false;
         }
         std::string id(stats.m_filename);
-        files[id] = { i, id, stats.m_comp_size, stats.m_uncomp_size };
+        files[id] = { i, id, static_cast<size_t>(stats.m_comp_size), static_cast<size_t>(stats.m_uncomp_size) };
     }
     return true;
 }

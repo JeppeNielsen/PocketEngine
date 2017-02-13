@@ -11,6 +11,7 @@
 #include "File.hpp"
 #include <stdlib.h>
 #include "FileReader.hpp"
+#include "FileArchive.hpp"
 
 using namespace Pocket;
 
@@ -19,6 +20,14 @@ File::File(std::string path) { Load(path); }
 File::~File() { delete[] data; data = 0; size = 0; }
 
 bool File::Load(std::string filename) {
+
+	if (fileArchive) {
+        return fileArchive->TryLoadData(filename, [this] (void* d, size_t s) {
+            this->data = (unsigned char*)d;
+            this->size = s;
+        });
+    }
+
     FILE *f;
     
     f = fopen(FileReader::GetFile(filename).c_str(), "rb");
@@ -38,4 +47,14 @@ bool File::Load(std::string filename) {
 
 std::string File::GetFullPath(std::string filename) {
     return FileReader::GetFile(filename);
+}
+
+FileArchive* File::fileArchive = 0;
+
+void File::SetArchive(Pocket::FileArchive &archive) {
+    fileArchive = &archive;
+}
+
+void File::RemoveArchive() {
+    fileArchive = 0;
 }

@@ -7,7 +7,7 @@
 //
 
 #include "FacebookUser.hpp"
-#include "minijson.h"
+#include "minijson_reader.hpp"
 
 FacebookUser::FacebookUser() {}
 FacebookUser::~FacebookUser() {}
@@ -16,6 +16,7 @@ void FacebookUser::UpdateFromJson(std::string json) {
     
     const char* jsonC = json.c_str();
     
+    /*
     minijson::value v;
     
     minijson::error e = minijson::parse(jsonC, v);
@@ -33,4 +34,5 @@ void FacebookUser::UpdateFromJson(std::string json) {
         //std::cout<<"Full name: " <<list["id"].get<std::string>()<<endl;
         
     }
+    */
 }

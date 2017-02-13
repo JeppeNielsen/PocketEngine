@@ -48,7 +48,7 @@ extern "C" {
 
 #endif
 
-FacebookClient::FacebookClient() : CurrentStatus(this) { instance = this; userRequester.Success += event_handler(this, &FacebookClient::InvokeUserUpdated); }
+FacebookClient::FacebookClient() { instance = this; userRequester.Success.Bind(this, &FacebookClient::InvokeUserUpdated); }
 FacebookClient::~FacebookClient() {}
 
 //appid : 262227457314085

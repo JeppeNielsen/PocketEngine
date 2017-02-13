@@ -24,7 +24,7 @@ public:
     
     void LogIn(std::string appID);
     
-    Property<FacebookClient*, Status> CurrentStatus;
+    Property<Status> CurrentStatus;
     Event<FacebookClient*> UserUpdated;
     
     void SetAccessToken(std::string token);

@@ -19,7 +19,7 @@ namespace Pocket {
     public:
         void Create(int width, int height, bool fullScreen);
         void Destroy();
-        bool Update(IInputManagerIterator* inputManagers);
+        bool Update();
         void PreRender();
         void PostRender();
         void Begin();
@@ -31,7 +31,7 @@ namespace Pocket {
         bool active;
         bool paused;
 		int previousTime;
-        InputDevice inputDevice;
+        InputDevice& inputDevice();
         int GetMouseButtonIndex(int index);
         Vector2 ConvertMousePosition(int x, int y);
         void handleEvent (SDL_Event &event);
