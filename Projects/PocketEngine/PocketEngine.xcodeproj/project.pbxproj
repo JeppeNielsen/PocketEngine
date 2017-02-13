@@ -1597,12 +1597,12 @@
 		72EC0C781D2D912B00B69802 /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
-				72A4B1B71E4BB00500A856F5 /* Logic */,
-				72A4AFC01E4BACFD00A856F5 /* Libs */,
 				72B492301DCE56600063518A /* ComponentSystem */,
 				72EC0C851D2D912B00B69802 /* Core */,
 				72EC0C951D2D912B00B69802 /* Data */,
 				72EC0CB41D2D912B00B69802 /* Debugging */,
+				72A4AFC01E4BACFD00A856F5 /* Libs */,
+				72A4B1B71E4BB00500A856F5 /* Logic */,
 				72EC0D7D1D2D912B00B69802 /* Math */,
 				72EC0D9E1D2D912B00B69802 /* OpenGL */,
 				72EC0DAE1D2D912B00B69802 /* Packing */,
@@ -2455,8 +2455,10 @@
 					"FT2_BUILD_LIBRARY=1",
 					DARWIN_NO_CARBON,
 					FT_CONFIG_OPTION_OLD_INTERNALS,
+					ENABLE_BITCODE,
 				);
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Pocket/Libs/FreeType/include\"";
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -2469,6 +2471,7 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../../Pocket/Libs/FreeType/include\"";
+				MACH_O_TYPE = staticlib;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
