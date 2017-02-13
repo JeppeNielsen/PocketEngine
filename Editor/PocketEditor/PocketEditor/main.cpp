@@ -1,21 +1,40 @@
 #include "Engine.hpp"
-#include "GameWorld.hpp"
-#include "RenderSystem.hpp"
-#include "FirstPersonMoverSystem.hpp"
 #include "File.hpp"
 #include "FileArchive.hpp"
-#include "OpenWorld.hpp"
+
+#include "RenderSystem.hpp"
+#include "TransformHierarchy.hpp"
+#include "TouchSystem.hpp"
+#include "ClonerSystem.hpp"
+#include "InputMapperSystem.hpp"
+#include "VelocitySystem.hpp"
+#include "Gui.hpp"
+#include "SwitchSystem.hpp"
+#include "SwitchEnablerSystem.hpp"
+#include "TouchSwitchSystem.hpp"
+#include "SlicedQuadMeshSystem.hpp"
 #include "AssetManager.hpp"
-#include "FontTextureSystem.hpp"
 
 using namespace Pocket;
 
-class RotatingCube : public GameState<RotatingCube> {
+void CreateDefaultSystems(Pocket::GameObject &world) {
+    world.CreateSystem<RenderSystem>();
+    world.CreateSystem<TransformHierarchy>();
+    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
+    world.CreateSystem<ClonerSystem>();
+    world.CreateSystem<InputMapperSystem>();
+    world.CreateSystem<VelocitySystem>();
+    world.CreateSystem<Gui>();
+    world.CreateSystem<SwitchSystem>();
+    world.CreateSystem<SwitchEnablerSystem>();
+    world.CreateSystem<TouchSwitchSystem>();
+    world.CreateSystem<SlicedQuadMeshSystem>();
+    world.CreateSystem<AssetManager>();
+}
+
+class GameCode : public GameState<GameCode> {
 public:
     GameWorld world;
-    GameObject* camera;
-    GameObject* cube;
-    GameObject* root;
     FileArchive fileArchive;
     
     void Initialize() {
@@ -31,9 +50,8 @@ public:
                 std::stringstream ss;
                 ss.write((const char*)data, size);
                 root = world.CreateRootFromJson(ss, [](GameObject* root) {
-                    OpenWorld::CreateDefaultSystems(*root);
-                    root->CreateSystem<AssetManager>();
-                    root->CreateSystem<FontTextureSystem>();
+                    CreateDefaultSystems(*root);
+                    
                 });
             })) {
                 std::cout << "unable to load: "<<guid <<std::endl;
@@ -41,7 +59,7 @@ public:
             return root;
         };
         world.GuidToPath = [] (const std::string& guid) { return guid; };
-        root = world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
+        world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
     }
     
     void Update(float dt) {
@@ -50,14 +68,12 @@ public:
     }
     
     void Render() {
-        glClearColor(0, 0, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
         world.Render();
     }
 };
 
-int main_vector() {
+int main_testScene() {
     Engine e;
-    e.Start<RotatingCube>();
+    e.Start<GameCode>();
 	return 0;
 }

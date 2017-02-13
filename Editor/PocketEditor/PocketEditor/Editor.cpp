@@ -26,7 +26,6 @@
 #include "Guid.hpp"
 #include "BaseModule.hpp"
 #include "AssetImporters.hpp"
-
 #include <vector>
 
 using namespace Pocket;

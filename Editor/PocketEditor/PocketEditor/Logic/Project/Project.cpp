@@ -12,6 +12,7 @@
 #include "TransformHierarchy.hpp"
 #include "FileHelper.hpp"
 #include <fstream>
+#include "FileArchive.hpp"
 
 Project::Project() {
     scriptWorld.Types.Add<Vector3>();
@@ -117,8 +118,31 @@ void Project::RefreshSourceFiles() {
 }
 
 void Project::Build() {
-    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+
     
+    bool wasCreated = FileArchive::TryCreateArchiveFile("/Projects/PocketEngine/Editor/Pong", "resources", [] (const std::string& path) -> std::string {
+        std::string metaPath = path + ".meta";
+        
+        if (FileHelper::FileExists(metaPath)) {
+            std::ifstream file;
+            file.open(metaPath);
+            std::string guid = GameWorld::ReadGuidFromJson(file);
+            if (guid == "") return "";
+            return guid + "-asset";
+        } else {
+            
+            std::ifstream file;
+            file.open(path);
+            return GameWorld::ReadGuidFromJson(file);
+        }
+    });
+    
+    if (!wasCreated) {
+        std::cout << "Failed creating reources file"<<std::endl;
+        return;
+    }
+
+    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {

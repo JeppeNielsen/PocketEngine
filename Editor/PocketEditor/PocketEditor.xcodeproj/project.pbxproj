@@ -361,11 +361,6 @@
 		72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF791E2BB71C00A856F5 /* smooth.c */; };
 		72A4AF7D1E2BB93000A856F5 /* FontTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7B1E2BB93000A856F5 /* FontTextureSystem.cpp */; };
 		72A4AF801E2C1EEA00A856F5 /* EditorSizeableSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */; };
-		72A4AF841E33783100A856F5 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF821E33783100A856F5 /* Switch.cpp */; };
-		72A4AF871E3384FB00A856F5 /* SwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */; };
-		72A4AF8D1E340D7300A856F5 /* TouchSwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */; };
-		72A4AF901E35345500A856F5 /* SwitchEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */; };
-		72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */; };
 		72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */; };
 		72A4AFA81E3FED4900A856F5 /* ImageLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */; };
 		72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFAE1E451B4500A856F5 /* SlicedQuadMeshSystem.cpp */; };
@@ -374,6 +369,12 @@
 		72A4AFB91E47D63900A856F5 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFB71E47D63900A856F5 /* miniz.c */; };
 		72A4AFBC1E4916D800A856F5 /* FileArchive.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFBA1E4916D800A856F5 /* FileArchive.cpp */; };
 		72A4AFBF1E491A7E00A856F5 /* FileHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */; };
+		72A4B3971E4BB5B200A856F5 /* Switch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B38D1E4BB5B200A856F5 /* Switch.cpp */; };
+		72A4B3981E4BB5B200A856F5 /* SwitchEnabler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B38F1E4BB5B200A856F5 /* SwitchEnabler.cpp */; };
+		72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B3911E4BB5B200A856F5 /* SwitchEnablerSystem.cpp */; };
+		72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B3931E4BB5B200A856F5 /* SwitchSystem.cpp */; };
+		72A4B39B1E4BB5B200A856F5 /* TouchSwitchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B3951E4BB5B200A856F5 /* TouchSwitchSystem.cpp */; };
+		72A4B3B61E4BC16F00A856F5 /* extractCppFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72A4B3B51E4BC16F00A856F5 /* extractCppFiles.cpp */; };
 		72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */; };
 		72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D01DAC16C600CEB998 /* InputController.cpp */; };
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
@@ -1345,16 +1346,6 @@
 		72A4AF7C1E2BB93000A856F5 /* FontTextureSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FontTextureSystem.hpp; sourceTree = "<group>"; };
 		72A4AF7E1E2C1EEA00A856F5 /* EditorSizeableSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSizeableSystem.cpp; sourceTree = "<group>"; };
 		72A4AF7F1E2C1EEA00A856F5 /* EditorSizeableSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSizeableSystem.hpp; sourceTree = "<group>"; };
-		72A4AF821E33783100A856F5 /* Switch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Switch.cpp; sourceTree = "<group>"; };
-		72A4AF831E33783100A856F5 /* Switch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Switch.hpp; sourceTree = "<group>"; };
-		72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchSystem.cpp; sourceTree = "<group>"; };
-		72A4AF861E3384FB00A856F5 /* SwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchSystem.hpp; sourceTree = "<group>"; };
-		72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchSwitchSystem.cpp; sourceTree = "<group>"; };
-		72A4AF8C1E340D7300A856F5 /* TouchSwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchSwitchSystem.hpp; sourceTree = "<group>"; };
-		72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnabler.cpp; sourceTree = "<group>"; };
-		72A4AF8F1E35345500A856F5 /* SwitchEnabler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnabler.hpp; sourceTree = "<group>"; };
-		72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnablerSystem.cpp; sourceTree = "<group>"; };
-		72A4AF921E35348D00A856F5 /* SwitchEnablerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnablerSystem.hpp; sourceTree = "<group>"; };
 		72A4AF941E3A9B8D00A856F5 /* EditorDropTarget.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorDropTarget.cpp; sourceTree = "<group>"; };
 		72A4AF951E3A9B8D00A856F5 /* EditorDropTarget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorDropTarget.hpp; sourceTree = "<group>"; };
 		72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ImageLoader.cpp; sourceTree = "<group>"; };
@@ -1372,6 +1363,17 @@
 		72A4AFBB1E4916D800A856F5 /* FileArchive.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileArchive.hpp; sourceTree = "<group>"; };
 		72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileHelper.cpp; sourceTree = "<group>"; };
 		72A4AFBE1E491A7E00A856F5 /* FileHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileHelper.hpp; sourceTree = "<group>"; };
+		72A4B38D1E4BB5B200A856F5 /* Switch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Switch.cpp; sourceTree = "<group>"; };
+		72A4B38E1E4BB5B200A856F5 /* Switch.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Switch.hpp; sourceTree = "<group>"; };
+		72A4B38F1E4BB5B200A856F5 /* SwitchEnabler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnabler.cpp; sourceTree = "<group>"; };
+		72A4B3901E4BB5B200A856F5 /* SwitchEnabler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnabler.hpp; sourceTree = "<group>"; };
+		72A4B3911E4BB5B200A856F5 /* SwitchEnablerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchEnablerSystem.cpp; sourceTree = "<group>"; };
+		72A4B3921E4BB5B200A856F5 /* SwitchEnablerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchEnablerSystem.hpp; sourceTree = "<group>"; };
+		72A4B3931E4BB5B200A856F5 /* SwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SwitchSystem.cpp; sourceTree = "<group>"; };
+		72A4B3941E4BB5B200A856F5 /* SwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SwitchSystem.hpp; sourceTree = "<group>"; };
+		72A4B3951E4BB5B200A856F5 /* TouchSwitchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchSwitchSystem.cpp; sourceTree = "<group>"; };
+		72A4B3961E4BB5B200A856F5 /* TouchSwitchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchSwitchSystem.hpp; sourceTree = "<group>"; };
+		72A4B3B51E4BC16F00A856F5 /* extractCppFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = extractCppFiles.cpp; sourceTree = "<group>"; };
 		72AE74CC1DAAA1B800CEB998 /* PlayButtons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayButtons.cpp; sourceTree = "<group>"; };
 		72AE74CD1DAAA1B800CEB998 /* PlayButtons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlayButtons.hpp; sourceTree = "<group>"; };
 		72AE74D01DAC16C600CEB998 /* InputController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
@@ -1879,6 +1881,7 @@
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
 				72B492691DD3AE510063518A /* testGui.cpp */,
 				72A4AFB41E47D5C400A856F5 /* testResources.cpp */,
+				72A4B3B51E4BC16F00A856F5 /* extractCppFiles.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -1990,7 +1993,6 @@
 		72994FE01C99F76000DAAE5D /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72A4AF811E33782100A856F5 /* Switching */,
 				72994FE11C99F76000DAAE5D /* Animation */,
 				72308CF31E127A7A00B92B8D /* Assets */,
 				72994FFA1C99F76000DAAE5D /* Audio */,
@@ -2007,6 +2009,7 @@
 				7299506C1C99F76000DAAE5D /* Rendering */,
 				729950841C99F76000DAAE5D /* Selection */,
 				729950951C99F76000DAAE5D /* Spatial */,
+				72A4B38C1E4BB5B200A856F5 /* Switching */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -3185,24 +3188,6 @@
 			path = Serialization;
 			sourceTree = "<group>";
 		};
-		72A4AF811E33782100A856F5 /* Switching */ = {
-			isa = PBXGroup;
-			children = (
-				72A4AF821E33783100A856F5 /* Switch.cpp */,
-				72A4AF831E33783100A856F5 /* Switch.hpp */,
-				72A4AF851E3384FB00A856F5 /* SwitchSystem.cpp */,
-				72A4AF861E3384FB00A856F5 /* SwitchSystem.hpp */,
-				72A4AF8B1E340D7300A856F5 /* TouchSwitchSystem.cpp */,
-				72A4AF8C1E340D7300A856F5 /* TouchSwitchSystem.hpp */,
-				72A4AF8E1E35345500A856F5 /* SwitchEnabler.cpp */,
-				72A4AF8F1E35345500A856F5 /* SwitchEnabler.hpp */,
-				72A4AF911E35348D00A856F5 /* SwitchEnablerSystem.cpp */,
-				72A4AF921E35348D00A856F5 /* SwitchEnablerSystem.hpp */,
-			);
-			name = Switching;
-			path = ../Switching;
-			sourceTree = "<group>";
-		};
 		72A4AFA91E3FF19400A856F5 /* STBImage */ = {
 			isa = PBXGroup;
 			children = (
@@ -3218,6 +3203,23 @@
 				72A4AFB81E47D63900A856F5 /* miniz.h */,
 			);
 			path = Zip;
+			sourceTree = "<group>";
+		};
+		72A4B38C1E4BB5B200A856F5 /* Switching */ = {
+			isa = PBXGroup;
+			children = (
+				72A4B38D1E4BB5B200A856F5 /* Switch.cpp */,
+				72A4B38E1E4BB5B200A856F5 /* Switch.hpp */,
+				72A4B38F1E4BB5B200A856F5 /* SwitchEnabler.cpp */,
+				72A4B3901E4BB5B200A856F5 /* SwitchEnabler.hpp */,
+				72A4B3911E4BB5B200A856F5 /* SwitchEnablerSystem.cpp */,
+				72A4B3921E4BB5B200A856F5 /* SwitchEnablerSystem.hpp */,
+				72A4B3931E4BB5B200A856F5 /* SwitchSystem.cpp */,
+				72A4B3941E4BB5B200A856F5 /* SwitchSystem.hpp */,
+				72A4B3951E4BB5B200A856F5 /* TouchSwitchSystem.cpp */,
+				72A4B3961E4BB5B200A856F5 /* TouchSwitchSystem.hpp */,
+			);
+			path = Switching;
 			sourceTree = "<group>";
 		};
 		72AE74CB1DAAA1B800CEB998 /* PlayButtons */ = {
@@ -3597,7 +3599,6 @@
 				729953C91C99F76100DAAE5D /* BezierCurve1.cpp in Sources */,
 				7299549B1C99F76100DAAE5D /* btGenericPoolAllocator.cpp in Sources */,
 				729954E31C99F76100DAAE5D /* btGeometryUtil.cpp in Sources */,
-				72A4AF871E3384FB00A856F5 /* SwitchSystem.cpp in Sources */,
 				729954DA1C99F76100DAAE5D /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
 				727B38D91E2B9C5300531B62 /* tinyxml.cpp in Sources */,
 				729953D01C99F76100DAAE5D /* Triangulator.cpp in Sources */,
@@ -3610,7 +3611,6 @@
 				72B4925E1DCE59D10063518A /* GameIdHelper.cpp in Sources */,
 				72A4AF781E2BB6E000A856F5 /* autofit.c in Sources */,
 				729954541C99F76100DAAE5D /* b2RevoluteJoint.cpp in Sources */,
-				72A4AF901E35345500A856F5 /* SwitchEnabler.cpp in Sources */,
 				729954FD1C99F76100DAAE5D /* FileReader.mm in Sources */,
 				729954571C99F76100DAAE5D /* btCollisionAlgorithm.cpp in Sources */,
 				7299545B1C99F76100DAAE5D /* btMultiSapBroadphase.cpp in Sources */,
@@ -3652,7 +3652,6 @@
 				729954FC1C99F76100DAAE5D /* File.mm in Sources */,
 				729954D11C99F76100DAAE5D /* SpuCollisionShapes.cpp in Sources */,
 				7299542F1C99F76100DAAE5D /* Vector3.cpp in Sources */,
-				72A4AF841E33783100A856F5 /* Switch.cpp in Sources */,
 				729954C21C99F76100DAAE5D /* Bullet-C-API.cpp in Sources */,
 				729954201C99F76100DAAE5D /* TransformHierarchy.cpp in Sources */,
 				729954221C99F76100DAAE5D /* BoundingFrustum.cpp in Sources */,
@@ -3663,6 +3662,7 @@
 				729953E51C99F76100DAAE5D /* GameObjectEditor.cpp in Sources */,
 				72CE8F161CC02DDB001F08E4 /* EditorObject.cpp in Sources */,
 				729954561C99F76100DAAE5D /* btBroadphaseProxy.cpp in Sources */,
+				72A4B3B61E4BC16F00A856F5 /* extractCppFiles.cpp in Sources */,
 				72B492601DCE59D10063518A /* GameScene.cpp in Sources */,
 				72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */,
 				7299550A1C99F76100DAAE5D /* DeferredBuffers.cpp in Sources */,
@@ -3766,16 +3766,16 @@
 				729954521C99F76100DAAE5D /* b2PrismaticJoint.cpp in Sources */,
 				7299547C1C99F76100DAAE5D /* btConcaveShape.cpp in Sources */,
 				729954291C99F76100DAAE5D /* Point.cpp in Sources */,
-				72A4AF8D1E340D7300A856F5 /* TouchSwitchSystem.cpp in Sources */,
 				729954231C99F76100DAAE5D /* Box.cpp in Sources */,
 				729954331C99F76100DAAE5D /* clipper.cpp in Sources */,
+				72A4B39B1E4BB5B200A856F5 /* TouchSwitchSystem.cpp in Sources */,
 				729954501C99F76100DAAE5D /* b2Joint.cpp in Sources */,
 				729954BB1C99F76100DAAE5D /* btSliderConstraint.cpp in Sources */,
 				7299541C1C99F76100DAAE5D /* SelectedColorer.cpp in Sources */,
 				729954651C99F76100DAAE5D /* btCollisionWorld.cpp in Sources */,
 				7299544D1C99F76100DAAE5D /* b2PolyContact.cpp in Sources */,
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
-				72A4AF931E35348D00A856F5 /* SwitchEnablerSystem.cpp in Sources */,
+				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,
 				729954E11C99F76100DAAE5D /* btConvexHull.cpp in Sources */,
 				72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */,
 				7299541F1C99F76100DAAE5D /* Transform.cpp in Sources */,
@@ -3812,6 +3812,7 @@
 				729954071C99F76100DAAE5D /* Collidable.cpp in Sources */,
 				729954DD1C99F76100DAAE5D /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				7299540C1C99F76100DAAE5D /* RigidBody2d.cpp in Sources */,
+				72A4B3981E4BB5B200A856F5 /* SwitchEnabler.cpp in Sources */,
 				720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */,
 				729954971C99F76100DAAE5D /* btTriangleMesh.cpp in Sources */,
 				72D736521D7B5DBB001E2047 /* BaseMenu.cpp in Sources */,
@@ -3837,6 +3838,7 @@
 				72994F991C99F74F00DAAE5D /* main.cpp in Sources */,
 				729954C71C99F76100DAAE5D /* btThreadSupportInterface.cpp in Sources */,
 				729954051C99F76100DAAE5D /* LimitableSystem.cpp in Sources */,
+				72A4B3971E4BB5B200A856F5 /* Switch.cpp in Sources */,
 				727B38D81E2B9C5300531B62 /* tinystr.cpp in Sources */,
 				729955091C99F76100DAAE5D /* Colour.cpp in Sources */,
 				729953DF1C99F76100DAAE5D /* SoundEmitter.cpp in Sources */,
@@ -3858,6 +3860,7 @@
 				7299543F1C99F76100DAAE5D /* b2Shape.cpp in Sources */,
 				729954831C99F76100DAAE5D /* btConvexShape.cpp in Sources */,
 				729954D91C99F76100DAAE5D /* btSoftBody.cpp in Sources */,
+				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,
 				7299543B1C99F76100DAAE5D /* b2PairManager.cpp in Sources */,
 				72D736561D7B64A2001E2047 /* GameMenu.cpp in Sources */,
 				72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */,
