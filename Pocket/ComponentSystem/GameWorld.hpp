@@ -185,6 +185,15 @@ namespace Pocket {
         
         Container<GameScene>& Scenes();
         
+        template<typename T>
+        void AddComponentTypeWithGetType(const std::function<TypeInfo(const GameObject*)>& getTypeFunction) {
+            AddComponentType(GameIdHelper::GetComponentID<T>(), [=] (ComponentInfo& componentInfo) {
+                componentInfo.container = new Container<T>();
+                componentInfo.name = GameIdHelper::GetClassName<T>();
+                componentInfo.getTypeInfo = getTypeFunction;
+            });
+        }
+        
     private:
         void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
                                 const std::function<void (int, int)>& callback,
