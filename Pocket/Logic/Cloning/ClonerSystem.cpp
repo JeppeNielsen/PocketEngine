@@ -82,10 +82,8 @@ void ClonerSystem::FindVariables(std::vector<IFieldInfo*>& variables, GameObject
                     if (fieldInfo) {
                         variables.push_back(fieldInfo->Clone());
                     } else {
-                        if (!cloner->HasComponent(index)) {
-                            cloner->GetComponent<Cloner>()->components.push_back(index);
-                            cloner->AddComponent(index, objectWithVariable);
-                        }
+                        cloner->GetComponent<Cloner>()->components.push_back(index);
+                        cloner->ReplaceComponent(index, objectWithVariable);
                     }
                 }
             }
