@@ -207,8 +207,9 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib) {
     compilerFlags += POCKET_PATH + "Libs/FreeType/Include";
     compilerFlags += POCKET_PATH + "Libs/TinyXml";
     
-    
-    
+    for(auto& header : headerPaths) {
+        compilerFlags += " " + header;
+    }
     
     for(auto& sourceFile : sourceFiles) {
         compilerFlags += " " + sourceFile;
@@ -618,29 +619,71 @@ void ScriptWorld::WriteExecutableMain(const std::string &path) {
     file<<"#include \"SlicedQuadMeshSystem.hpp\""<<std::endl;
     file<<"#include \"AssetManager.hpp\""<<std::endl;
     
-    std::string source = FILE_SOURCE(
+    for(auto& header : headerNames) {
+        file << "#include \""<<header<<"\""<<std::endl;
+    }
     
-using namespace Pocket;
+    file << FILE_SOURCE(
+    
+    void CreateDefaultSystems(Pocket::GameObject &world) {
+        world.CreateSystem<Pocket::RenderSystem>();
+        world.CreateSystem<Pocket::TransformHierarchy>();
+        world.CreateSystem<Pocket::TouchSystem>()->TouchDepth = 0;
+        world.CreateSystem<Pocket::ClonerSystem>();
+        world.CreateSystem<Pocket::InputMapperSystem>();
+        world.CreateSystem<Pocket::VelocitySystem>();
+        world.CreateSystem<Pocket::Gui>();
+        world.CreateSystem<Pocket::SwitchSystem>();
+        world.CreateSystem<Pocket::SwitchEnablerSystem>();
+        world.CreateSystem<Pocket::TouchSwitchSystem>();
+        world.CreateSystem<Pocket::SlicedQuadMeshSystem>();
+        world.CreateSystem<Pocket::AssetManager>();
+    
+    ) << std::endl;
 
-void CreateDefaultSystems(Pocket::GameObject &world) {
-    world.CreateSystem<RenderSystem>();
-    world.CreateSystem<TransformHierarchy>();
-    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
-    world.CreateSystem<ClonerSystem>();
-    world.CreateSystem<InputMapperSystem>();
-    world.CreateSystem<VelocitySystem>();
-    world.CreateSystem<Gui>();
-    world.CreateSystem<SwitchSystem>();
-    world.CreateSystem<SwitchEnablerSystem>();
-    world.CreateSystem<TouchSwitchSystem>();
-    world.CreateSystem<SlicedQuadMeshSystem>();
-    world.CreateSystem<AssetManager>();
-}
+    file << "}"<<std::endl;
+    
+    
+    file << "void CreateScriptSystems(Pocket::GameObject &world) {"<<std::endl;
+    
+    auto& components = scriptClasses.children["Components"].children;
+    
+    for(auto& componentIt : components) {
+        auto& component = componentIt.second;
+    
+        file<<"world.World()->AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
+        file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
+        file<< "      Pocket::TypeInfo typeInfo;"<<std::endl;
+        file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
+        std::set<std::string> uniqueFields;
+        for(auto& f : component.fields) {
+            if (!IsFieldValid(f)) continue;
+            uniqueFields.insert(f.name);
+        }
+        
+        for(auto& field : uniqueFields) {
+            file<<"	      typeInfo.AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
+        }
 
-class GameCode : public GameState<GameCode> {
+        file<< "return typeInfo;"<<std::endl;
+        file<< "});"<<std::endl;
+    }
+    
+    for(auto& system : systems) {
+        file << "world.CreateSystem<"<<system.first << ">();"<<std::endl;
+    }
+    
+    file<< "}"<<std::endl;
+
+    
+    
+        
+    std::string source = FILE_SOURCE(
+
+class GameCode : public Pocket::GameState<GameCode> {
 public:
-    GameWorld world;
-    FileArchive fileArchive;
+    Pocket::GameWorld world;
+    Pocket::FileArchive fileArchive;
     
     void Initialize() {
     
@@ -656,7 +699,7 @@ public:
                 ss.write((const char*)data, size);
                 root = world.CreateRootFromJson(ss, [](GameObject* root) {
                     CreateDefaultSystems(*root);
-                    
+                    CreateScriptSystems(*root);
                 });
             })) {
                 std::cout << "unable to load: "<<guid <<std::endl;
@@ -678,66 +721,14 @@ public:
 };
 
 int main() {
-    Engine e;
+    Pocket::Engine e;
     e.Start<GameCode>();
 	return 0;
 }
     );
     
     file << source << std::endl;
-    /*
-    file<<"#include \"OpenGL.hpp\""<<std::endl;
-    file<<"#include \"Engine.hpp\""<<std::endl;
-    file<<"#include \"GameWorld.hpp\""<<std::endl;
-    file<<"#include \"RenderSystem.hpp\""<<std::endl;
-    file<<"#include \"TouchSystem.hpp\""<<std::endl;
-    file<<"#include \"TouchSystem.hpp\""<<std::endl;
-    file<<"#include <iostream>"<<std::endl;
-    file<<"#include <fstream>"<<std::endl;
-    
-    for(auto& source : sourceFiles) {
-        file<<"#include \""<<source<<"\""<<std::endl;
-    }
-    file<<"using namespace Pocket;"<<std::endl;
-
-    file<<"struct Game : public GameState<Game> {"<<std::endl;
-    file<<"    GameWorld world;"<<std::endl;
-    file<<"    void Initialize() { "<<std::endl;
-    
-    file<<"         #include \""<< (scriptingIncludeDir + "/executable_autogenerated.hpp") <<"\""<<std::endl;
-    
-    file<<"         world.CreateSystem<RenderSystem>(); "<<std::endl;
-    file<<"         world.CreateSystem<TouchSystem>()->Input = &Input; "<<std::endl;
-    
-    for(auto& system : systems) {
-        file<<"         world.CreateSystem<"<<system.first<<">();"<<std::endl;
-    }
-    file<<"     "<<std::endl;
-    file<<" std::ifstream file;"<<std::endl;
-    file<<" file.open(\"world.json\");  "<<std::endl;
-    file<<" world.CreateObject(file);"<<std::endl;
-    file<<" file.close();"<<std::endl;
-    
-    file<<"     "<<std::endl;
-    file<<"    } "<<std::endl;
-    
-    file<<"    void Update(float dt) { world.Update(dt); }"<<std::endl;
-    file<<"    void Render() {"<<std::endl;
-    file<<"        glClearColor(1,0,0,0);"<<std::endl;
-    file<<"        glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);"<<std::endl;
-    file<<"        world.Render(); "<<std::endl;
-    file<<"    }"<<std::endl;
-    file<<"};"<<std::endl;
-
-    file<<"int main(int argc, const char * argv[]) {"<<std::endl;
-    file<<"    Engine e;"<<std::endl;
-    file<<"    e.Start<Game>();"<<std::endl;
-    file<<"    return 0;"<<std::endl;
-    file<<"}"<<std::endl;
-    */
-    
     file.close();
-
 }
 
 
