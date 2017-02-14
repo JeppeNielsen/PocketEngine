@@ -52,6 +52,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     GameObject* initRoot = world.CreateRoot();
     OpenWorld::CreateDefaultSystems(*initRoot);
     OpenWorld::CreateEditorSystems(*initRoot);
+    initRoot->CreateSystem<AssetManager>();
     initRoot->Remove();
     
     project.Initialize(world);
