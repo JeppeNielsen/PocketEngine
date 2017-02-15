@@ -99,21 +99,34 @@ void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
 }
 
+bool IsClonerInAncestry(GameObject* object) {
+    while(true) {
+        object = object->Parent;
+        if (!object) return false;
+        if (object->HasComponent<Cloner>()) return true;
+    }
+}
+
 void OpenWorld::BindToRoot(Pocket::GameObject *root) {
     
     root->SetCallbacks(
         [this] (GameObject* object) {
+            if (IsClonerInAncestry(object)) return;
             AddObjectToEditor(object);
         }
         ,
         [this] (GameObject* object) {
-            GameObject* editorGameObject = rootToEditorMap[object];
+            auto it = rootToEditorMap.find(object);
+            if (it == rootToEditorMap.end()) return;
+            GameObject* editorGameObject = it->second;
             editorGameObject->Remove();
             rootToEditorMap.erase(rootToEditorMap.find(object));
         }
         ,
         [this] (GameObject* object, ComponentId componentId) {
-            GameObject* editorGameObject = rootToEditorMap[object];
+             auto it = rootToEditorMap.find(object);
+            if (it == rootToEditorMap.end()) return;
+            GameObject* editorGameObject = it->second;
             for(auto id : editorObjectsComponents) {
                 if (id == componentId) {
                     editorGameObject->AddComponent(id, object);
@@ -123,7 +136,9 @@ void OpenWorld::BindToRoot(Pocket::GameObject *root) {
         }
         ,
         [this] (GameObject* object, ComponentId componentId) {
-            GameObject* editorGameObject = rootToEditorMap[object];
+            auto it = rootToEditorMap.find(object);
+            if (it == rootToEditorMap.end()) return;
+            GameObject* editorGameObject = it->second;
             for(auto id : editorObjectsComponents) {
                 if (id == componentId) {
                     editorGameObject->RemoveComponent(id);
@@ -288,6 +303,9 @@ void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
 }
 
 GameObject* OpenWorld::AddObjectToEditor(GameObject* object) {
+
+    
+
     GameObject* editorGameObject = editorRoot->CreateObject();
     auto editorObject = object->AddComponent<EditorObject>();
     editorObject->editorObject = editorGameObject;
