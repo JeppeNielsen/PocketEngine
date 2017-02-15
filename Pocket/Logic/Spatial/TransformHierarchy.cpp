@@ -24,6 +24,7 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
     };
     
     transform->World.MakeDirty();
+    transform->WorldInverse.MakeDirty();
     object->Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
     HookParent(transform, object->Parent());
 }
