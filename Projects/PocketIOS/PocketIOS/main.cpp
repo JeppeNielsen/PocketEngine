@@ -7,24 +7,26 @@ using namespace Pocket;
 class Game : public GameState<Game> {
 public:
     GameWorld world;
-    RenderSystem* renderer;
+    GameObject* root;
     GameObject* camera;
     GameObject* cube;
     float rotation;
     
     void Initialize() {
+    
+        root = world.CreateRoot();
         
-        renderer = world.CreateSystem<RenderSystem>();
+        root->CreateSystem<RenderSystem>();
         
-        camera = world.CreateObject();
-        camera->AddComponent<Camera>()->Viewport = Manager().Viewport();
+        camera = root->CreateObject();
+        camera->AddComponent<Camera>();
         camera->AddComponent<Transform>()->Position = { 0, 0, 10 };
         camera->GetComponent<Camera>()->FieldOfView = 40;
         
-        cube = world.CreateObject();
+        cube = root->CreateObject();
         cube->AddComponent<Transform>();
         cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
-        cube->AddComponent<Material>();
+        cube->AddComponent<Renderable>();
         
         auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
         
@@ -42,11 +44,11 @@ public:
     }
     
     void Render() {
-        renderer->Render();
+        world.Render();
     }
 };
 
-int main() {
+int main_nono() {
     Engine e;
     e.Start<Game>();
 	return 0;
