@@ -17,7 +17,7 @@ namespace Pocket {
         GameObjectHandle();
         
         GameObject* operator -> ();
-        void operator = (GameObject& v);
+        void operator = (const GameObject& v);
         void operator = (GameObject* v);
         void operator = (const GameObjectHandle& handle);
         
@@ -28,7 +28,7 @@ namespace Pocket {
         GameObject* operator() ();
         operator GameObject* ();
     
-        void SetRoot(GameObject* root);
+        void SetRoot(const GameObject* root);
         
         inline friend std::ostream& operator<<(std::ostream& stream, const GameObjectHandle& handle) {
             stream<<handle.sceneGuid<<":"<<handle.rootId;
@@ -41,7 +41,7 @@ namespace Pocket {
     
     private:
     
-        void Set(GameObject* ptr);
+        void Set(const GameObject* ptr);
         GameObject* Get();
         void SetWorld(GameWorld* world);
         

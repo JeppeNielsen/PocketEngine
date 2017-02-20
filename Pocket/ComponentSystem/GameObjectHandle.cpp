@@ -24,7 +24,7 @@ GameObjectHandle::operator Pocket::GameObject * () {
     return Get();
 }
 
-void GameObjectHandle::operator=(Pocket::GameObject &v) {
+void GameObjectHandle::operator=(const Pocket::GameObject &v) {
     Set(&v);
     Changed();
 }
@@ -42,11 +42,11 @@ void GameObjectHandle::operator=(const GameObjectHandle& handle) {
     sceneGuid = handle.sceneGuid;
 }
 
-void GameObjectHandle::SetRoot(Pocket::GameObject* root) {
+void GameObjectHandle::SetRoot(const Pocket::GameObject* root) {
     SetWorld(root->scene->world);
 }
 
-void GameObjectHandle::Set(Pocket::GameObject *ptr) {
+void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
     SetRoot(ptr);
     index = ptr->index;
     rootId = ptr->rootId;
