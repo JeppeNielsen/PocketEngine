@@ -10,7 +10,7 @@
 using namespace Pocket;
 
 std::string FileReader::GetFile(std::string localFile) {
-    return "Assets/" + localFile;
+    return localFile;
 }
 
 std::string FileReader::GetWritablePath() {
