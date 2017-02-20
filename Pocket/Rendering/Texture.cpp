@@ -85,7 +85,9 @@ void Texture::Free() {
 }
 
 void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
-#ifndef EMSCRIPTEN
+#ifdef EMSCRIPTEN
+#elif IPHONE
+#else
     ASSERT_GL(glBindTexture(GL_TEXTURE_2D, texture));
     unsigned char* pixels = new unsigned char[width * height * 4];
     ASSERT_GL(glGetTexImage(GL_TEXTURE_2D, 0, pixelFormat, GL_UNSIGNED_BYTE, pixels));
