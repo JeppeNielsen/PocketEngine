@@ -43,7 +43,7 @@ std::string FileReader::GetFile(std::string localFile) {
     
     NSString* path = [[NSBundle mainBundle] pathForResource:file
                                                      ofType:nil];
-    if (!path) return "";
+    if (!path) return localFile;
     return [path UTF8String];
 }
 
