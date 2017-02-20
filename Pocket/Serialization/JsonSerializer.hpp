@@ -289,4 +289,22 @@ struct JsonSerializer<T, typename std::enable_if< std::is_enum<T>::value >::type
     }
 };
 
+template<typename T>
+struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::type> {
+    static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
+        JsonSerializer<typename std::remove_pointer<T>::type>::Serialize(key, *value, writer);
+    }
+    
+    static void Serialize(const T& value, minijson::array_writer& writer) {
+        JsonSerializer<typename std::remove_pointer<T>::type>::Serialize(*value, writer);
+    }
+    
+    static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
+        if (value.type() != minijson::String) return;
+        using typeName = typename std::remove_pointer<T>::type;
+        (*field) = typeName::Deserialize(value.as_string());
+    }
+};
+
+
 }
