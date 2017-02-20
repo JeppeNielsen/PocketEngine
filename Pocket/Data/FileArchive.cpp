@@ -8,6 +8,7 @@
 
 #include "FileArchive.hpp"
 #include "FileHelper.hpp"
+#include "FileReader.hpp"
 #include "miniz.h"
 
 using namespace Pocket;
@@ -64,11 +65,11 @@ FileArchive::~FileArchive() {
 }
 
 bool FileArchive::Initialize(const std::string &path) {
-    this->path = path;
+    this->path = FileReader::GetFile(path);
     
     mz_zip_archive* zipArchive = (mz_zip_archive*)archive;
     
-    bool succes = mz_zip_reader_init_file(zipArchive, path.c_str(), 0);
+    bool succes = mz_zip_reader_init_file(zipArchive, this->path.c_str(), 0);
     if (!succes) {
         return false;
     }
