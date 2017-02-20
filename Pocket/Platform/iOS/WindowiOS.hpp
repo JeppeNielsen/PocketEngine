@@ -20,7 +20,7 @@ namespace Pocket {
     public:
         void Create(int width, int height, bool landscape);
         void Destroy();
-        bool Update(IInputManagerIterator* inputManagers);
+        bool Update();
         void PreRender();
         void PostRender();
         void Begin();
@@ -44,7 +44,7 @@ namespace Pocket {
         GLuint viewRenderbuffer;
         GLuint viewFramebuffer;
         
-        void* context;
+        void* renderContext;
         void* window;
         
         

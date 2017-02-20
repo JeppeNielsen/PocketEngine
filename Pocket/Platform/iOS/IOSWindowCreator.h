@@ -23,14 +23,14 @@ namespace Pocket {
         Event<void*> OnInitialize;
         Event<bool> OnUpdate;
         
-        InputDevice inputDevice;
-        
         void Down(int hash, int x, int y);
         void Up(int hash, int x, int y);
         void Move(int hash, int x, int y);
         
         bool isLandscape;
-                
+        
+        InputDevice* inputDevice;
+        
     private:
         static IOSWindowCreator* instance;
         
@@ -43,6 +43,7 @@ namespace Pocket {
         
         int CreateIndex();
         bool IndexExists(int index);
+        
     
     };
 }

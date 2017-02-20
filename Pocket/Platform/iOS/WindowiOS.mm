@@ -28,10 +28,13 @@ void WindowiOS::Create(int width, int height, bool landscape) {
 }
 
 void WindowiOS::Begin() {
+
+    context->InputDevice().Initialize(12);
     
-    IOSWindowCreator::Instance()->OnInitialize += event_handler(this, &WindowiOS::iosWindowCreated);
-    IOSWindowCreator::Instance()->OnUpdate += event_handler(this, &WindowiOS::Loop);
-    IOSWindowCreator::Instance()->inputDevice.KeyboardChanged += event_handler(this, &WindowiOS::KeyboardChanged);
+    IOSWindowCreator::Instance()->inputDevice = &context->InputDevice();
+    IOSWindowCreator::Instance()->OnInitialize.Bind(this, &WindowiOS::iosWindowCreated);
+    IOSWindowCreator::Instance()->OnUpdate.Bind(this, &WindowiOS::Loop);
+    IOSWindowCreator::Instance()->inputDevice->KeyboardChanged.Bind(this, &WindowiOS::KeyboardChanged);
     IOSWindowCreator::Instance()->Create();
 }
 
@@ -71,18 +74,18 @@ void WindowiOS::iosWindowCreated(void* win) {
      
      */
     
-    context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+    renderContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
     
     UIWindow* window = (UIWindow*)win;
     
-    [EAGLContext setCurrentContext:((EAGLContext*)context)];
+    [EAGLContext setCurrentContext:((EAGLContext*)renderContext)];
     
     ASSERT_GL(glGenFramebuffers(1, &viewFramebuffer));
 	ASSERT_GL(glGenRenderbuffers(1, &viewRenderbuffer));
 	
 	ASSERT_GL(glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer));
 	ASSERT_GL(glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer));
-	[((EAGLContext*)context) renderbufferStorage:GL_RENDERBUFFER fromDrawable:(id<EAGLDrawable>)window.layer];
+	[((EAGLContext*)renderContext) renderbufferStorage:GL_RENDERBUFFER fromDrawable:(id<EAGLDrawable>)window.layer];
 	ASSERT_GL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, viewRenderbuffer));
 	
     
@@ -101,7 +104,7 @@ void WindowiOS::iosWindowCreated(void* win) {
     
     Window::Framebuffer = viewFramebuffer;
      
-    screenSize = Vector2(window.bounds.size.width, window.bounds.size.height);  
+    context->ScreenSize = Vector2(window.bounds.size.width, window.bounds.size.height);
 }
 
 void WindowiOS::Loop(bool ee) {
@@ -114,7 +117,7 @@ void WindowiOS::Destroy() {
 	
 }
 
-bool WindowiOS::Update(IInputManagerIterator* inputManagers) {
+bool WindowiOS::Update() {
 	
     
 	//inputDevice.SetTouchPosition(0, mousePosition);
@@ -125,19 +128,20 @@ bool WindowiOS::Update(IInputManagerIterator* inputManagers) {
 	//inputDevice.SetTouch(1, active && ((GetKeyState(VK_RBUTTON) & 0x80) != 0), mousePosition);
 	//inputDevice.SetTouch(2, active && ((GetKeyState(VK_MBUTTON) & 0x80) != 0), mousePosition);
     
-    IOSWindowCreator::Instance()->inputDevice.Update(inputManagers);
+    //IOSWindowCreator::Instance()->inputDevice.Update(inputManagers);
 	return true;
 }
 
 void WindowiOS::PreRender() {
-    [EAGLContext setCurrentContext:((EAGLContext*)context)];
+    const Vector2& screenSize = context->ScreenSize;
+    [EAGLContext setCurrentContext:((EAGLContext*)renderContext)];
 	ASSERT_GL(glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer));
     ASSERT_GL(glViewport(0, 0, screenSize.x, screenSize.y));
 }
 
 void WindowiOS::PostRender() {
     ASSERT_GL(glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer));
-	[((EAGLContext*)context) presentRenderbuffer:GL_RENDERBUFFER];
+	[((EAGLContext*)renderContext) presentRenderbuffer:GL_RENDERBUFFER];
 }
 
 void WindowiOS::KeyboardChanged(InputDevice::KeyboardEventData keyboardData) {

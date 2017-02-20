@@ -24,6 +24,10 @@
 
 -(id) init {
     
+    [self setRootViewController:[[IOSViewController alloc]init]];
+    
+    
+    
     bool isLandscape = Pocket::IOSWindowCreator::Instance()->isLandscape;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
@@ -51,7 +55,7 @@
     
     if (shouldShow) {
         [self createKeyBoard];
-        Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([text UTF8String]);
+        Pocket::IOSWindowCreator::Instance()->inputDevice->KeyboardText = std::string([text UTF8String]);
         keyboard.text = text;
         [keyboard becomeFirstResponder];
     } else {
@@ -62,7 +66,7 @@
         }
     }
     
-    Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardActive = shouldShow;
+    Pocket::IOSWindowCreator::Instance()->inputDevice->KeyboardActive = shouldShow;
 }
 
 -(void)createKeyBoard {
@@ -78,7 +82,7 @@
 
 - (void)textViewDidChange:(UITextView *)textView
 {
-    Pocket::IOSWindowCreator::Instance()->inputDevice.KeyboardText = std::string([textView.text UTF8String]);
+    Pocket::IOSWindowCreator::Instance()->inputDevice->KeyboardText = std::string([textView.text UTF8String]);
 }
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {

@@ -13,7 +13,7 @@ using namespace Pocket;
 
 IOSWindowCreator::IOSWindowCreator() {
     
-    inputDevice.Initialize(12);
+    
     isLandscape = false;
     
 }
@@ -38,19 +38,19 @@ Pocket::IOSWindowCreator* IOSWindowCreator::Instance() {
 void IOSWindowCreator::Down(int hash, int x, int y) {
     int index = CreateIndex();
     hashToID[hash] = index;
-    inputDevice.SetTouch(index, true, Vector2(x,y));
+    inputDevice->SetTouch(index, true, Vector2(x,y));
 }
 
 void IOSWindowCreator::Move(int hash, int x, int y) {
     HashToID::iterator it = hashToID.find(hash);
     if (it==hashToID.end()) return;
-    inputDevice.SetTouchPosition(it->second, Vector2(x,y));
+    inputDevice->SetTouchPosition(it->second, Vector2(x,y));
 }
 
 void IOSWindowCreator::Up(int hash, int x, int y) {
     HashToID::iterator it = hashToID.find(hash);
     if (it==hashToID.end()) return;
-    inputDevice.SetTouch(it->second, false, Vector2(x,y));
+    inputDevice->SetTouch(it->second, false, Vector2(x,y));
     hashToID.erase(it);
 }
 
@@ -70,5 +70,3 @@ bool IOSWindowCreator::IndexExists(int index) {
     }
     return false;
 }
-
-
