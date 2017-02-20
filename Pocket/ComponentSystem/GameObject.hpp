@@ -204,5 +204,12 @@ namespace Pocket {
         );
         
         bool HasAncestor(GameObject* ancestor);
+        
+        inline friend std::ostream& operator<<(std::ostream& stream, const GameObject& object) {
+            stream<<object.RootGuid()<<":"<<object.rootId;
+            return stream;
+        }
+        
+        static GameObject* Deserialize(const std::string& data);
     };
 }

@@ -8,6 +8,7 @@
 
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
+#include "GameObjectHandle.hpp"
 
 using namespace Pocket;
 
@@ -477,6 +478,11 @@ bool GameObject::HasAncestor(Pocket::GameObject *ancestor) {
         object = object->Parent();
         if (!object) return false;
     }
+}
+
+GameObject* GameObject::Deserialize(const std::string &data) {
+    GameObjectHandle handle = GameObjectHandle::Deserialize(data);
+    return handle.operator->();
 }
 
 //SERIALIZATION
