@@ -45,6 +45,7 @@ class GameCode : public GameState<GameCode> {
 public:
     GameWorld world;
     FileArchive fileArchive;
+    GameObject* root;
     
     void Initialize() {
       
@@ -69,7 +70,10 @@ public:
         };
 
         world.GuidToPath = [] (const std::string& guid) { return guid; };
-        world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
+        root = world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
+        
+        GameObject* camObject = root->FindObject(12);
+        camObject->GetComponent<Camera>()->FieldOfView = 50;
     }
     
     void Update(float dt) {
