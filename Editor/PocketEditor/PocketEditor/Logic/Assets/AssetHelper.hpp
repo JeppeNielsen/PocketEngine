@@ -17,6 +17,7 @@ struct AssetHelper {
     static bool CreateHeader(const std::string& path);
     static bool CreateSource(const std::string& path);
     static bool CreateComponent(const std::string& path);
+    static bool CreateShader(const std::string& path);
     static bool TryCreateAsset(const std::string& path, const std::string& message, const std::string& defaultName, const std::string& extension, std::function<void(const std::string& path)> onCreate);
     static bool CreateTextFile(const std::string& path, const std::string& content);
 };

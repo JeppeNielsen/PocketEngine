@@ -82,7 +82,14 @@ void ProjectWindow::OnInitialize() {
                 }
             });
         });
-        
+        createMenu.AddChild("Shader").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create Shader", "Shader", ".shader", [this] (const std::string& path) {
+                if (AssetHelper::CreateShader(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
+        });
+
     }
     {
         popupMenu.AddChild("Reveal in Finder").Clicked.Bind([this] () {
