@@ -23,5 +23,7 @@ namespace Pocket {
         static std::string ShowSaveFileRequester(const std::string& path);
         
         static void OpenPathInFileExplorer(const std::string& path);
+        static void ShowMessageBox(const std::string& message);
+        static std::string ShowMessageTextBox(const std::string& message, const std::string& text);
     };
 }

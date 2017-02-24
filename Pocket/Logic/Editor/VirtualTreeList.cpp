@@ -91,4 +91,12 @@ std::string VirtualTreeList::DefaultExpandedHashFunction(Pocket::GameObject *go)
     return s.str();
 }
 
+void VirtualTreeList::Clear() {
+    for(auto& node : visibleNodes) {
+        NodeRemoved({ node.node, node.position, node.depth });
+    }
+    visibleNodes.clear();
+    expandedNodes.clear();
+}
+
 

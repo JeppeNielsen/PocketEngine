@@ -132,6 +132,42 @@ std::string FileReader::ShowSaveFileRequester(const std::string &path) {
     return "";
 }
 
+void FileReader::ShowMessageBox(const std::string &message) {
+
+    NSString* nsMessage = [[NSString alloc]initWithUTF8String:message.c_str()];
+
+    NSAlert *alert = [[[NSAlert alloc] init] autorelease];
+    [alert setMessageText:nsMessage];
+    [alert runModal];
+}
+
 void FileReader::OpenPathInFileExplorer(const std::string &path) {
     RunCommmand("open " + path);
+}
+
+std::string FileReader::ShowMessageTextBox(const std::string &message, const std::string &text) {
+
+    NSString* nsMessage = [[NSString alloc]initWithUTF8String:message.c_str()];
+    NSString* nsText = [[NSString alloc]initWithUTF8String:text.c_str()];
+
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert setMessageText:nsMessage];
+    [alert addButtonWithTitle:@"Create"];
+    [alert addButtonWithTitle:@"Cancel"];
+
+    NSTextField *input = [[NSTextField alloc] initWithFrame:NSMakeRect(0, 0, 200, 24)];
+    [input setStringValue:nsText];
+    [alert setAccessoryView:input];
+    
+    [input setSelectable:true];
+    [input becomeFirstResponder];
+    
+    NSInteger button = [alert runModal];
+    if (button == NSAlertFirstButtonReturn) {
+        //password = [input stringValue];
+        return std::string([[input stringValue] UTF8String]);
+    } else if (button == NSAlertSecondButtonReturn) {
+        return "";
+    }
+    return "";
 }

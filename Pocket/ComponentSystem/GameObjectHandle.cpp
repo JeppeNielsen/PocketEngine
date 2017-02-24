@@ -92,3 +92,7 @@ void GameObjectHandle::SetWorld(Pocket::GameWorld *world) {
         this->world->handles.push_back(this);
     }
 }
+
+const std::string& GameObjectHandle::SceneGuid() { return sceneGuid; }
+
+bool GameObjectHandle::HasRoot() { return world !=nullptr; }

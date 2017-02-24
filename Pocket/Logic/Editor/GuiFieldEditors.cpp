@@ -538,7 +538,12 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
     }
     
     void UpdateLabel() {
+        if (!handle->HasRoot()) {
+            handle->SetRoot(parent->Root());
+        }
         GameObject* target = handle->operator->();
+        
+        
         std::string path = !target ? "" : target->TryGetRootPath();
         std::string text = FileHelper::GetFileNameFromPath(path);
         

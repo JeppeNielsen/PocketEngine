@@ -70,7 +70,7 @@ namespace Pocket {
         
         void GetNodesRecursive(GameObject* object, int lower, int upper, int& index, int depth, Nodes& nodesFound);
         
-        
+        void Clear();
         
     };
 }

@@ -38,6 +38,10 @@ namespace Pocket {
         GameObjectHandle static Deserialize(const std::string& data);
         
         Event<> Changed;
+        
+        const std::string& SceneGuid();
+        
+        bool HasRoot();
     
     private:
     
