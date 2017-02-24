@@ -16,6 +16,7 @@
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
 #include "FileSystemWatcher.hpp"
+#include "ProjectSettings.hpp"
 
 using namespace Pocket;
 
@@ -41,7 +42,7 @@ public:
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
     bool Compile();
-    void Build();
+    void BuildExecutable(const std::string& outputPath);
     void CreateNewWorld(const std::string& worldPath);
     
     void SaveWorld();
@@ -51,6 +52,12 @@ public:
     std::string& Path();
     
     FileSystemWatcher* FileSystemWatcher();
+    
+    void CreateSettings(const std::string& path, const std::string& name);
+    
+    ProjectSettings* GetProjectSettings();
+    
+    std::string GetFolderName();
     
     Event<> Opened;
     Event<> PostCompile;

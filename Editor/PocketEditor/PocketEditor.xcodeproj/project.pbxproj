@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */; };
+		720585031E60B911009FFACF /* AssetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585011E60B911009FFACF /* AssetHelper.cpp */; };
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
@@ -422,6 +424,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectSettings.cpp; sourceTree = "<group>"; };
+		720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectSettings.hpp; sourceTree = "<group>"; };
+		720585011E60B911009FFACF /* AssetHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetHelper.cpp; sourceTree = "<group>"; };
+		720585021E60B911009FFACF /* AssetHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetHelper.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -1459,6 +1465,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		720585001E60B907009FFACF /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				720585011E60B911009FFACF /* AssetHelper.cpp */,
+				720585021E60B911009FFACF /* AssetHelper.hpp */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		720B3D3C1D8B2424006195E8 /* WorldTab */ = {
 			isa = PBXGroup;
 			children = (
@@ -1579,10 +1594,10 @@
 		727B37A81E2B9C5300531B62 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
-				72A4AFB61E47D63900A856F5 /* Zip */,
-				72A4AFA91E3FF19400A856F5 /* STBImage */,
 				727B37A91E2B9C5300531B62 /* FreeType */,
+				72A4AFA91E3FF19400A856F5 /* STBImage */,
 				727B38881E2B9C5300531B62 /* TinyXml */,
+				72A4AFB61E47D63900A856F5 /* Zip */,
 			);
 			path = Libs;
 			sourceTree = "<group>";
@@ -3280,14 +3295,15 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72308D141E1449AF00B92B8D /* Modules */,
-				72D7364F1D7B5DB0001E2047 /* Menus */,
+				720585001E60B907009FFACF /* Assets */,
 				72EC13811D2D957B00B69802 /* Building */,
-				72CE8F071CBAF34E001F08E4 /* Objects */,
-				72CE8EFD1CBA468D001F08E4 /* Transforming */,
-				72CE8EF31CB59AB4001F08E4 /* Selection */,
-				72CE8EEB1CB437DF001F08E4 /* Project */,
 				72CE8EE01CB2FD92001F08E4 /* Context */,
+				72D7364F1D7B5DB0001E2047 /* Menus */,
+				72308D141E1449AF00B92B8D /* Modules */,
+				72CE8F071CBAF34E001F08E4 /* Objects */,
+				72CE8EEB1CB437DF001F08E4 /* Project */,
+				72CE8EF31CB59AB4001F08E4 /* Selection */,
+				72CE8EFD1CBA468D001F08E4 /* Transforming */,
 				72CE8EDF1CB2E580001F08E4 /* Windows */,
 			);
 			path = Logic;
@@ -3334,6 +3350,8 @@
 				723689A91D888BD6006480F0 /* OpenWorld.hpp */,
 				723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */,
 				723689AC1D888D9E006480F0 /* OpenWorldCollection.hpp */,
+				720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */,
+				720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -3721,6 +3739,7 @@
 				723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */,
 				729954021C99F76100DAAE5D /* FirstPersonMover.cpp in Sources */,
 				729953C71C99F76100DAAE5D /* Timer.cpp in Sources */,
+				720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */,
 				729955021C99F76100DAAE5D /* WindowOSX.mm in Sources */,
 				729954101C99F76100DAAE5D /* ColorSystem.cpp in Sources */,
 				729954B11C99F76100DAAE5D /* btKinematicCharacterController.cpp in Sources */,
@@ -3759,6 +3778,7 @@
 				729954301C99F76100DAAE5D /* ChromecastMessage.cpp in Sources */,
 				7299549D1C99F76100DAAE5D /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				729954801C99F76100DAAE5D /* btConvexInternalShape.cpp in Sources */,
+				720585031E60B911009FFACF /* AssetHelper.cpp in Sources */,
 				729954B51C99F76100DAAE5D /* btGeneric6DofConstraint.cpp in Sources */,
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
 				7244C4951DECBBCB00ADF008 /* GuiFieldEditors.cpp in Sources */,

@@ -117,10 +117,15 @@ void Project::RefreshSourceFiles() {
     scriptWorld.ExtractScriptClasses();
 }
 
-void Project::Build() {
+void Project::BuildExecutable(const std::string& outputPath) {
 
+    ProjectSettings* projectSettings = GetProjectSettings();
+    if (!projectSettings) {
+        std::cout << "Failed to find Project Settings"<<std::endl;
+        return;
+    }
     
-    bool wasCreated = FileArchive::TryCreateArchiveFile("/Projects/PocketEngine/Editor/Pong", "resources", [] (const std::string& path) -> std::string {
+    bool wasCreated = FileArchive::TryCreateArchiveFile(path, outputPath + "/resources", [] (const std::string& path) -> std::string {
         std::string metaPath = path + ".meta";
         
         if (FileHelper::FileExists(metaPath)) {
@@ -141,8 +146,14 @@ void Project::Build() {
         std::cout << "Failed creating reources file"<<std::endl;
         return;
     }
-
-    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+    
+    RefreshSourceFiles();
+    
+    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", outputPath + "/" + projectSettings->name , [&] (std::string& source) {
+        source += "world.TryFindRoot(\"";
+        source += projectSettings->startupScene.SceneGuid();
+        source += "\");";
+    });
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {
@@ -184,3 +195,46 @@ void Project::SaveWorld() {
 std::string& Project::Path() { return path; }
 
 FileSystemWatcher* Project::FileSystemWatcher() { return &fileSystemWatcher; }
+
+void Project::CreateSettings(const std::string &path, const std::string& name) {
+    GameWorld world;
+    
+    GameObject* root = world.CreateRoot();
+    root->AddComponent<ProjectSettings>()->name = name;
+    
+    std::ofstream file;
+    file.open(path);
+    root->ToJson(file);
+    file.close();
+}
+
+std::string Project::GetFolderName() {
+    return FileHelper::GetFileNameFromPath(path);
+}
+
+ProjectSettings* Project::GetProjectSettings() {
+    std::vector<std::string> guids;
+    std::vector<std::string> paths;
+    world->GetPaths(guids, paths);
+    for (int i=0; i<guids.size(); ++i) {
+    
+        std::ifstream file;
+        file.open(paths[i]);
+        int foundId = -1;
+        world->TryParseJson(file, GameIdHelper::GetComponentID<ProjectSettings>(), [&, this](int parentId, int id) {
+            if (foundId != -1) return;
+            foundId = id;
+        }, [&, this](const std::string& componentName) -> bool {
+            return foundId == -1;
+        });
+       
+        std::cout << "guid: " << guids[i] << "  path:" << paths[i] << std::endl;
+        
+        if (foundId!=-1) {
+            GameObject* object = world->TryFindRoot(guids[i])->FindObject(foundId);
+            return object->GetComponent<ProjectSettings>();
+        }
+    }
+
+    return 0;
+}

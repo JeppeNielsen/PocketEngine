@@ -304,8 +304,6 @@ void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
 
 GameObject* OpenWorld::AddObjectToEditor(GameObject* object) {
 
-    
-
     GameObject* editorGameObject = editorRoot->CreateObject();
     auto editorObject = object->AddComponent<EditorObject>();
     editorObject->editorObject = editorGameObject;

@@ -13,8 +13,8 @@
 #include "FileReader.hpp"
 #include "ClickSelectorSystem.hpp"
 #include "FileHelper.hpp"
+#include "AssetHelper.hpp"
 
-#include <sys/stat.h>
 #include <stdio.h>
 
 std::string ProjectWindow::Name() { return "Project"; }
@@ -36,30 +36,51 @@ void ProjectWindow::OnInitialize() {
     {
         AppMenu& createMenu = popupMenu.AddChild("Create");
         createMenu.AddChild("Folder").Clicked.Bind([this]() {
-            
-            std::string folderPath = selectedNode.filePath->GetFolderPath() + "/New Folder";
-            
-            std::cout <<" Folder path: "<< folderPath<<std::endl;
-            
-            mkdir(folderPath.c_str(), 0777);
-            fileSystemListener->watcher.Changed();
-            
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create Folder", "New Folder", "", [this] (const std::string& path) {
+                if (AssetHelper::CreateFolder(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
         });
         
-        createMenu.AddChild("World").Clicked.Bind([this]() {
-            std::string newWorldPath = selectedNode.filePath->GetFolderPath() + "/NewWorld.json";
-            std::cout <<" Folder path: "<< newWorldPath<<std::endl;
-            context->Project().CreateNewWorld(newWorldPath);
-            
-            fileSystemListener->watcher.Changed();
+        createMenu.AddChild("Prefab").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create Prefab", "Source", ".json", [this] (const std::string& path) {
+                if (AssetHelper::CreateEmptyPrefab(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
         });
         
-        createMenu.AddChild("Header File").Clicked.Bind([this]() {
-        
+        createMenu.AddChild("Scene").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create Scene", "Scene", ".json", [this] (const std::string& path) {
+                if (AssetHelper::CreateScene(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
         });
         
-        createMenu.AddChild("C++ File").Clicked.Bind([this] () {
+        createMenu.AddChild("Component").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create Component Source File", "Component", "", [this] (const std::string& path) {
+                if (AssetHelper::CreateComponent(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
+        });
+
+        createMenu.AddChild("C++ Header File").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create C++ Header", "Header", ".hpp", [this] (const std::string& path) {
+                if (AssetHelper::CreateHeader(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
+        });
         
+        createMenu.AddChild("C++ Source File").Clicked.Bind([this]() {
+            AssetHelper::TryCreateAsset(selectedNode.filePath->GetFolderPath(), "Create C++ Source", "Source", ".cpp", [this] (const std::string& path) {
+                if (AssetHelper::CreateSource(path)) {
+                    fileSystemListener->watcher.Changed();
+                }
+            });
         });
         
     }
@@ -110,7 +131,7 @@ void ProjectWindow::UpdateFileWorld() {
 void ProjectWindow::OnCreate() {
     GameObject& contextRoot = context->ContextRoot();
     
-    GameObject* fileRoot = contextRoot.CreateObject();
+    fileRoot = contextRoot.CreateObject();
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
     fileSystemListener->watcher.Changed.Bind([this] {
@@ -128,11 +149,11 @@ void ProjectWindow::OnCreate() {
     
     pivot->GetComponent<Transform>()->Position = {0,400};
     
-    auto treeView = pivot->AddComponent<VirtualTreeList>();
+    treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->Root = fileRoot;
     treeView->SetNodeExpanded(fileRoot, true);
     treeView->Pivot = listBox;
-    treeView->ExpandedHashFunction = [treeView] (GameObject* go) {
+    treeView->ExpandedHashFunction = [this] (GameObject* go) {
         FilePath* filePath = go->GetComponent<FilePath>();
         if (filePath)  {
             return filePath->GetFilePath();
@@ -143,7 +164,7 @@ void ProjectWindow::OnCreate() {
     
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
-    spawner->OnCreate = [&, fileRoot, this](GameObject* node, GameObject* parent) -> GameObject* {
+    spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
         FilePath* filePath = node->GetComponent<FilePath>();
         GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
         clone->RemoveComponent<Touchable>();
@@ -151,7 +172,7 @@ void ProjectWindow::OnCreate() {
         
         GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
         
-        auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, node!=fileRoot ? filePath->filename : "Project", 12);
+        auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
         l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
         l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
@@ -205,5 +226,7 @@ void ProjectWindow::ScreenSizeChanged() {
 void ProjectWindow::SetProjectPath(const std::string &path) {
     projectFilePath.path = path;
     projectFilePath.isFolder = true;
+    treeView->Clear();
     fileSystemListener->Path = path;
+    fileSystemListener->watcher.Changed();
 }

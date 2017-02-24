@@ -16,6 +16,7 @@ using namespace Pocket;
 
 namespace Pocket {
     class FileSystemListener;
+    class VirtualTreeList;
 }
 
 class ProjectWindow : public BaseWindow {
@@ -41,6 +42,7 @@ private:
     AppMenu popupMenu;
     ClickedNodeInfo selectedNode;
     FileSystemListener* fileSystemListener;
+    VirtualTreeList* treeView;
     
     FilePath projectFilePath;
 };
