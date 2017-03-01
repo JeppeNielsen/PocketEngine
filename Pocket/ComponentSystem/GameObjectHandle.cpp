@@ -12,6 +12,14 @@ using namespace Pocket;
 
 GameObjectHandle::GameObjectHandle() : world(0), index(-1) {}
 
+GameObjectHandle::GameObjectHandle(const GameObjectHandle& other) : world(0), index(-1) { operator=(other); }
+
+GameObjectHandle::GameObjectHandle(GameObject* object) : world(0), index(-1) { operator=(object); }
+
+GameObjectHandle::~GameObjectHandle() {
+    SetWorld(0);
+}
+
 GameObject* GameObjectHandle::operator->() {
     return Get();
 }

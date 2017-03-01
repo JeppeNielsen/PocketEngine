@@ -15,6 +15,9 @@ namespace Pocket {
     class GameObjectHandle {
     public:
         GameObjectHandle();
+        GameObjectHandle(const GameObjectHandle& other);
+        GameObjectHandle(GameObject* object);
+        ~GameObjectHandle();
         
         GameObject* operator -> ();
         void operator = (const GameObject& v);
@@ -23,6 +26,14 @@ namespace Pocket {
         
         explicit operator bool() {
             return operator->();
+        }
+        
+        inline bool operator ==(const GameObjectHandle &other) const{
+            return !(index!=other.index || version!=other.version || rootId!=other.version || sceneGuid!=other.sceneGuid);
+        }
+        
+        inline  bool operator !=(const GameObjectHandle &other) const{
+            return (index!=other.index || version!=other.version || rootId!=other.version || sceneGuid!=other.sceneGuid);
         }
         
         GameObject* operator() ();
