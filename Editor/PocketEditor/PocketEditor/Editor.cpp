@@ -79,7 +79,7 @@ public:
             module->Create();
         }
         
-        context.Project().Open("/Projects/PocketEngine/Editor/Pong");
+        context.Project().Open("/Projects/PocketEngine/EditorProjects/Pong");
         
         Input.ButtonDown.Bind([this](std::string button) {
             if (button == "p") {

@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */; };
 		720585031E60B911009FFACF /* AssetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585011E60B911009FFACF /* AssetHelper.cpp */; };
+		720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585051E61EDB6009FFACF /* SceneManager.cpp */; };
+		7205850A1E621813009FFACF /* SceneManagerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585081E621813009FFACF /* SceneManagerSystem.cpp */; };
+		7205850E1E6221F4009FFACF /* Trigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7205850C1E6221F4009FFACF /* Trigger.cpp */; };
+		720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7205850F1E6222BC009FFACF /* TriggerSystem.cpp */; };
+		720585141E6232FC009FFACF /* TriggerTouchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585121E6232FC009FFACF /* TriggerTouchSystem.cpp */; };
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
@@ -428,6 +433,16 @@
 		720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectSettings.hpp; sourceTree = "<group>"; };
 		720585011E60B911009FFACF /* AssetHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetHelper.cpp; sourceTree = "<group>"; };
 		720585021E60B911009FFACF /* AssetHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetHelper.hpp; sourceTree = "<group>"; };
+		720585051E61EDB6009FFACF /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
+		720585061E61EDB6009FFACF /* SceneManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneManager.hpp; sourceTree = "<group>"; };
+		720585081E621813009FFACF /* SceneManagerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManagerSystem.cpp; sourceTree = "<group>"; };
+		720585091E621813009FFACF /* SceneManagerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneManagerSystem.hpp; sourceTree = "<group>"; };
+		7205850C1E6221F4009FFACF /* Trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Trigger.cpp; sourceTree = "<group>"; };
+		7205850D1E6221F4009FFACF /* Trigger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Trigger.hpp; sourceTree = "<group>"; };
+		7205850F1E6222BC009FFACF /* TriggerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerSystem.cpp; sourceTree = "<group>"; };
+		720585101E6222BD009FFACF /* TriggerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerSystem.hpp; sourceTree = "<group>"; };
+		720585121E6232FC009FFACF /* TriggerTouchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerTouchSystem.cpp; sourceTree = "<group>"; };
+		720585131E6232FC009FFACF /* TriggerTouchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerTouchSystem.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -1474,6 +1489,30 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
+		720585041E61ED9F009FFACF /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				720585051E61EDB6009FFACF /* SceneManager.cpp */,
+				720585061E61EDB6009FFACF /* SceneManager.hpp */,
+				720585081E621813009FFACF /* SceneManagerSystem.cpp */,
+				720585091E621813009FFACF /* SceneManagerSystem.hpp */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		7205850B1E6221E7009FFACF /* Triggering */ = {
+			isa = PBXGroup;
+			children = (
+				7205850C1E6221F4009FFACF /* Trigger.cpp */,
+				7205850D1E6221F4009FFACF /* Trigger.hpp */,
+				7205850F1E6222BC009FFACF /* TriggerSystem.cpp */,
+				720585101E6222BD009FFACF /* TriggerSystem.hpp */,
+				720585121E6232FC009FFACF /* TriggerTouchSystem.cpp */,
+				720585131E6232FC009FFACF /* TriggerTouchSystem.hpp */,
+			);
+			path = Triggering;
+			sourceTree = "<group>";
+		};
 		720B3D3C1D8B2424006195E8 /* WorldTab */ = {
 			isa = PBXGroup;
 			children = (
@@ -2008,6 +2047,8 @@
 		72994FE01C99F76000DAAE5D /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7205850B1E6221E7009FFACF /* Triggering */,
+				720585041E61ED9F009FFACF /* Scenes */,
 				72994FE11C99F76000DAAE5D /* Animation */,
 				72308CF31E127A7A00B92B8D /* Assets */,
 				72994FFA1C99F76000DAAE5D /* Audio */,
@@ -3703,6 +3744,7 @@
 				7299550D1C99F76100DAAE5D /* Texture.cpp in Sources */,
 				7244C4A11DF428EA00ADF008 /* LayoutSystem.cpp in Sources */,
 				729954CE1C99F76100DAAE5D /* SpuGatheringCollisionDispatcher.cpp in Sources */,
+				7205850E1E6221F4009FFACF /* Trigger.cpp in Sources */,
 				72308D091E127A9100B92B8D /* FileSystemListenerSystem.cpp in Sources */,
 				729954241C99F76100DAAE5D /* Interpolator.cpp in Sources */,
 				729954D81C99F76100DAAE5D /* btDefaultSoftBodySolver.cpp in Sources */,
@@ -3721,6 +3763,7 @@
 				729955081C99F76100DAAE5D /* Clipper.cpp in Sources */,
 				727B38CE1E2B9C5300531B62 /* truetype.c in Sources */,
 				7299547D1C99F76100DAAE5D /* btConeShape.cpp in Sources */,
+				720585141E6232FC009FFACF /* TriggerTouchSystem.cpp in Sources */,
 				72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */,
 				72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */,
 				729954551C99F76100DAAE5D /* btAxisSweep3.cpp in Sources */,
@@ -3796,6 +3839,7 @@
 				7299544D1C99F76100DAAE5D /* b2PolyContact.cpp in Sources */,
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
 				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,
+				720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */,
 				729954E11C99F76100DAAE5D /* btConvexHull.cpp in Sources */,
 				72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */,
 				7299541F1C99F76100DAAE5D /* Transform.cpp in Sources */,
@@ -3873,12 +3917,14 @@
 				723689A71D873A4E006480F0 /* ProjectWindow.cpp in Sources */,
 				729954A51C99F76100DAAE5D /* btContinuousConvexCollision.cpp in Sources */,
 				729954D21C99F76100DAAE5D /* SpuContactResult.cpp in Sources */,
+				7205850A1E621813009FFACF /* SceneManagerSystem.cpp in Sources */,
 				729954621C99F76100DAAE5D /* btBoxBoxDetector.cpp in Sources */,
 				729954161C99F76100DAAE5D /* TextureComponent.cpp in Sources */,
 				729954AB1C99F76100DAAE5D /* btMinkowskiPenetrationDepthSolver.cpp in Sources */,
 				7299544E1C99F76100DAAE5D /* b2DistanceJoint.cpp in Sources */,
 				7299543F1C99F76100DAAE5D /* b2Shape.cpp in Sources */,
 				729954831C99F76100DAAE5D /* btConvexShape.cpp in Sources */,
+				720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */,
 				729954D91C99F76100DAAE5D /* btSoftBody.cpp in Sources */,
 				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,
 				7299543B1C99F76100DAAE5D /* b2PairManager.cpp in Sources */,
