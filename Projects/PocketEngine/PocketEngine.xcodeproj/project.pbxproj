@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7220F61D1E64FFCA0063EAD5 /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6191E64FFCA0063EAD5 /* SceneManager.cpp */; };
+		7220F61E1E64FFCA0063EAD5 /* SceneManager.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F61A1E64FFCA0063EAD5 /* SceneManager.hpp */; };
+		7220F61F1E64FFCA0063EAD5 /* SceneManagerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F61B1E64FFCA0063EAD5 /* SceneManagerSystem.cpp */; };
+		7220F6201E64FFCA0063EAD5 /* SceneManagerSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F61C1E64FFCA0063EAD5 /* SceneManagerSystem.hpp */; };
+		7220F6281E64FFD70063EAD5 /* Trigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6221E64FFD70063EAD5 /* Trigger.cpp */; };
+		7220F6291E64FFD70063EAD5 /* Trigger.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F6231E64FFD70063EAD5 /* Trigger.hpp */; };
+		7220F62A1E64FFD70063EAD5 /* TriggerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6241E64FFD70063EAD5 /* TriggerSystem.cpp */; };
+		7220F62B1E64FFD70063EAD5 /* TriggerSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F6251E64FFD70063EAD5 /* TriggerSystem.hpp */; };
+		7220F62C1E64FFD70063EAD5 /* TriggerTouchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6261E64FFD70063EAD5 /* TriggerTouchSystem.cpp */; };
+		7220F62D1E64FFD70063EAD5 /* TriggerTouchSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F6271E64FFD70063EAD5 /* TriggerTouchSystem.hpp */; };
 		72A4B0C71E4BACFE00A856F5 /* ftconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC51E4BACFD00A856F5 /* ftconfig.h */; };
 		72A4B0C81E4BACFE00A856F5 /* ftheader.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC61E4BACFD00A856F5 /* ftheader.h */; };
 		72A4B0C91E4BACFE00A856F5 /* ftmodule.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC71E4BACFD00A856F5 /* ftmodule.h */; };
@@ -463,6 +473,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7220F6191E64FFCA0063EAD5 /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
+		7220F61A1E64FFCA0063EAD5 /* SceneManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneManager.hpp; sourceTree = "<group>"; };
+		7220F61B1E64FFCA0063EAD5 /* SceneManagerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManagerSystem.cpp; sourceTree = "<group>"; };
+		7220F61C1E64FFCA0063EAD5 /* SceneManagerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneManagerSystem.hpp; sourceTree = "<group>"; };
+		7220F6221E64FFD70063EAD5 /* Trigger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Trigger.cpp; sourceTree = "<group>"; };
+		7220F6231E64FFD70063EAD5 /* Trigger.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Trigger.hpp; sourceTree = "<group>"; };
+		7220F6241E64FFD70063EAD5 /* TriggerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerSystem.cpp; sourceTree = "<group>"; };
+		7220F6251E64FFD70063EAD5 /* TriggerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerSystem.hpp; sourceTree = "<group>"; };
+		7220F6261E64FFD70063EAD5 /* TriggerTouchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerTouchSystem.cpp; sourceTree = "<group>"; };
+		7220F6271E64FFD70063EAD5 /* TriggerTouchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerTouchSystem.hpp; sourceTree = "<group>"; };
 		72A4AFC51E4BACFD00A856F5 /* ftconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftconfig.h; sourceTree = "<group>"; };
 		72A4AFC61E4BACFD00A856F5 /* ftheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftheader.h; sourceTree = "<group>"; };
 		72A4AFC71E4BACFD00A856F5 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftmodule.h; sourceTree = "<group>"; };
@@ -930,6 +950,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7220F6181E64FFCA0063EAD5 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				7220F6191E64FFCA0063EAD5 /* SceneManager.cpp */,
+				7220F61A1E64FFCA0063EAD5 /* SceneManager.hpp */,
+				7220F61B1E64FFCA0063EAD5 /* SceneManagerSystem.cpp */,
+				7220F61C1E64FFCA0063EAD5 /* SceneManagerSystem.hpp */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		7220F6211E64FFD70063EAD5 /* Triggering */ = {
+			isa = PBXGroup;
+			children = (
+				7220F6221E64FFD70063EAD5 /* Trigger.cpp */,
+				7220F6231E64FFD70063EAD5 /* Trigger.hpp */,
+				7220F6241E64FFD70063EAD5 /* TriggerSystem.cpp */,
+				7220F6251E64FFD70063EAD5 /* TriggerSystem.hpp */,
+				7220F6261E64FFD70063EAD5 /* TriggerTouchSystem.cpp */,
+				7220F6271E64FFD70063EAD5 /* TriggerTouchSystem.hpp */,
+			);
+			path = Triggering;
+			sourceTree = "<group>";
+		};
 		72A4AFC01E4BACFD00A856F5 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
@@ -1209,9 +1253,11 @@
 				72A4B2461E4BB00500A856F5 /* Interaction */,
 				72A4B24E1E4BB00500A856F5 /* Movement */,
 				72A4B26E1E4BB00500A856F5 /* Rendering */,
+				7220F6181E64FFCA0063EAD5 /* Scenes */,
 				72A4B28A1E4BB00500A856F5 /* Selection */,
 				72A4B29B1E4BB00500A856F5 /* Spatial */,
 				72A4B39C1E4BB5D300A856F5 /* Switching */,
+				7220F6211E64FFD70063EAD5 /* Triggering */,
 			);
 			path = Logic;
 			sourceTree = "<group>";
@@ -1982,6 +2028,7 @@
 				72A4B3731E4BB00600A856F5 /* Transform.hpp in Headers */,
 				72A4B2E61E4BB00500A856F5 /* VirtualTreeListSpawnerSystem.hpp in Headers */,
 				72EC13371D2D912C00B69802 /* WindowOSX.hpp in Headers */,
+				7220F62D1E64FFD70063EAD5 /* TriggerTouchSystem.hpp in Headers */,
 				72A4B0F21E4BACFE00A856F5 /* ftdebug.h in Headers */,
 				72A4B1051E4BACFE00A856F5 /* svkern.h in Headers */,
 				72A4B31B1E4BB00500A856F5 /* TextBoxSystem.hpp in Headers */,
@@ -2005,6 +2052,7 @@
 				72A4B3061E4BB00500A856F5 /* Menu.hpp in Headers */,
 				72A4B34A1E4BB00500A856F5 /* Camera.hpp in Headers */,
 				72A4B3711E4BB00600A856F5 /* OctreeSystem.hpp in Headers */,
+				7220F62B1E64FFD70063EAD5 /* TriggerSystem.hpp in Headers */,
 				72A4B3291E4BB00500A856F5 /* Draggable.hpp in Headers */,
 				72A4B3281E4BB00500A856F5 /* TouchSystem.hpp in Headers */,
 				72A4B0E91E4BACFE00A856F5 /* ftstroke.h in Headers */,
@@ -2041,6 +2089,7 @@
 				72A4B1161E4BACFE00A856F5 /* ttnameid.h in Headers */,
 				72A4B36E1E4BB00600A856F5 /* SelectedColorerSystem.hpp in Headers */,
 				72A4B3041E4BB00500A856F5 /* LayoutSystem.hpp in Headers */,
+				7220F6291E64FFD70063EAD5 /* Trigger.hpp in Headers */,
 				72EC103C1D2D912C00B69802 /* InputManager.hpp in Headers */,
 				72A4B3241E4BB00500A856F5 /* TouchableCanceller.hpp in Headers */,
 				72A4B3121E4BB00500A856F5 /* Sprite.hpp in Headers */,
@@ -2049,6 +2098,7 @@
 				72A4B2DE1E4BB00500A856F5 /* HierarchyEditor.hpp in Headers */,
 				72EC10581D2D912C00B69802 /* QuadTree.hpp in Headers */,
 				72EC13501D2D912C00B69802 /* TextureAtlas.hpp in Headers */,
+				7220F6201E64FFCA0063EAD5 /* SceneManagerSystem.hpp in Headers */,
 				72EC10481D2D912C00B69802 /* Collection.hpp in Headers */,
 				72A4B2CF1E4BB00500A856F5 /* CloneVariable.hpp in Headers */,
 				72A4B2AD1E4BB00500A856F5 /* TouchAnimator.hpp in Headers */,
@@ -2105,6 +2155,7 @@
 				72EC104C1D2D912C00B69802 /* FileReader.hpp in Headers */,
 				72A4B10B1E4BACFE00A856F5 /* svpsinfo.h in Headers */,
 				72EC112F1D2D912C00B69802 /* Rect.hpp in Headers */,
+				7220F61E1E64FFCA0063EAD5 /* SceneManager.hpp in Headers */,
 				72EC13351D2D912C00B69802 /* OSXWindowCreator.h in Headers */,
 				72A4B1151E4BACFE00A856F5 /* t1tables.h in Headers */,
 				72A4B2F21E4BB00500A856F5 /* FilePath.hpp in Headers */,
@@ -2235,6 +2286,7 @@
 				72A4B2FD1E4BB00500A856F5 /* Gui.cpp in Sources */,
 				72A4B2E11E4BB00500A856F5 /* VirtualTreeList.cpp in Sources */,
 				72EC11241D2D912C00B69802 /* Plane.cpp in Sources */,
+				7220F62A1E64FFD70063EAD5 /* TriggerSystem.cpp in Sources */,
 				72A4B3741E4BB00600A856F5 /* TransformHierarchy.cpp in Sources */,
 				72A4B17A1E4BACFE00A856F5 /* raster.c in Sources */,
 				72EC13491D2D912C00B69802 /* Shader.cpp in Sources */,
@@ -2268,6 +2320,7 @@
 				72A4B2ED1E4BB00500A856F5 /* ParticleMeshUpdater.cpp in Sources */,
 				72EC112E1D2D912C00B69802 /* Rect.cpp in Sources */,
 				72A4B3201E4BB00500A856F5 /* InputMapperSystem.cpp in Sources */,
+				7220F6281E64FFD70063EAD5 /* Trigger.cpp in Sources */,
 				72EC10531D2D912C00B69802 /* Pointer.cpp in Sources */,
 				72EC11261D2D912C00B69802 /* Point.cpp in Sources */,
 				72A4B2B01E4BB00500A856F5 /* TransformAnimation.cpp in Sources */,
@@ -2301,6 +2354,8 @@
 				72A4B1501E4BACFE00A856F5 /* cff.c in Sources */,
 				72EC10431D2D912C00B69802 /* BezierCurve3.cpp in Sources */,
 				72B492431DCE56600063518A /* GameObject.cpp in Sources */,
+				7220F61F1E64FFCA0063EAD5 /* SceneManagerSystem.cpp in Sources */,
+				7220F61D1E64FFCA0063EAD5 /* SceneManager.cpp in Sources */,
 				72EC10341D2D912C00B69802 /* EngineContext.cpp in Sources */,
 				72A4B3181E4BB00500A856F5 /* TextBoxLabelSystem.cpp in Sources */,
 				72A4B3AB1E4BB5D300A856F5 /* SwitchEnablerSystem.cpp in Sources */,
@@ -2353,6 +2408,7 @@
 				72A4B2C61E4BB00500A856F5 /* SoundListener.cpp in Sources */,
 				72A4B2F11E4BB00500A856F5 /* FilePath.cpp in Sources */,
 				72EC134B1D2D912C00B69802 /* ShaderCollection.cpp in Sources */,
+				7220F62C1E64FFD70063EAD5 /* TriggerTouchSystem.cpp in Sources */,
 				72A4B2D31E4BB00500A856F5 /* FieldEditor.cpp in Sources */,
 				72EC112C1D2D912C00B69802 /* Ray.cpp in Sources */,
 				72EC10321D2D912C00B69802 /* Engine.cpp in Sources */,
