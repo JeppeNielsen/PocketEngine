@@ -36,6 +36,10 @@
 #include "SwitchEnablerSystem.hpp"
 #include "SlicedQuadMeshSystem.hpp"
 
+#include "TriggerSystem.hpp"
+#include "TriggerTouchSystem.hpp"
+#include "SceneManagerSystem.hpp"
+
 struct Turner {
     Vector3 speed;
     
@@ -78,6 +82,9 @@ void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
     world.CreateSystem<SwitchEnablerSystem>();
     world.CreateSystem<TouchSwitchSystem>();
     world.CreateSystem<SlicedQuadMeshSystem>();
+    world.CreateSystem<TriggerSystem>();
+    world.CreateSystem<TriggerTouchSystem>();
+    world.CreateSystem<SceneManagerSystem>();
 }
 
 void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
