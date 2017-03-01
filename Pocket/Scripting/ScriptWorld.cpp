@@ -200,6 +200,9 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib, cons
     compilerFlags += POCKET_PATH + "Logic/Assets";
     compilerFlags += POCKET_PATH + "Logic/Input";
     compilerFlags += POCKET_PATH + "Logic/Switching";
+    compilerFlags += POCKET_PATH + "Logic/Triggering";
+    compilerFlags += POCKET_PATH + "Logic/Scenes";
+    
     
     compilerFlags += POCKET_PATH + "Rendering/";
     compilerFlags += POCKET_PATH + "Libs/Zip";
@@ -618,6 +621,9 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"TouchSwitchSystem.hpp\""<<std::endl;
     file<<"#include \"SlicedQuadMeshSystem.hpp\""<<std::endl;
     file<<"#include \"AssetManager.hpp\""<<std::endl;
+    file<<"#include \"TriggerSystem.hpp\""<<std::endl;
+    file<<"#include \"TriggerTouchSystem.hpp\""<<std::endl;
+    file<<"#include \"SceneManagerSystem.hpp\""<<std::endl;
     
     for(auto& header : headerNames) {
         file << "#include \""<<header<<"\""<<std::endl;
@@ -638,6 +644,10 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
         world.CreateSystem<Pocket::TouchSwitchSystem>();
         world.CreateSystem<Pocket::SlicedQuadMeshSystem>();
         world.CreateSystem<Pocket::AssetManager>();
+        world.CreateSystem<Pocket::TriggerSystem>();
+        world.CreateSystem<Pocket::TriggerTouchSystem>();
+        world.CreateSystem<Pocket::SceneManagerSystem>();
+        
     
     ) << std::endl;
 
