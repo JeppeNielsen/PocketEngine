@@ -114,39 +114,36 @@ bool AssetHelper::CreateComponent(const std::string& path) {
 }
 
 bool AssetHelper::CreateShader(const std::string &path) {
+    std::string content = "";
+    content += "{\n";
+    content += "    attribute vec4 Position;\n";
+    content += "    attribute vec4 Color;\n";
+    content += "    attribute vec3 Normal;\n";
+    content += "    attribute vec2 TexCoords;\n";
+    content += "    uniform mat4 ViewProjection;\n";
+    content += "    varying vec4 vColor;\n";
+    content += "    varying vec3 vNormal;\n";
+    content += "    varying vec2 vTexCoords;\n";
+    content += "    void main() {\n";
+    content += "        vColor = Color;\n";
+    content += "        vNormal = Normal;\n";
+    content += "        vTexCoords = TexCoords;\n";
+    content += "        gl_Position = Position * ViewProjection;\n";
+    content += "    }\n";
+    content += "}\n";
+    content += "{\n";
+    content += "    varying vec4 vColor;\n";
+    content += "    varying vec3 vNormal;\n";
+    content += "    varying vec2 vTexCoords;\n";
+    content += "    uniform sampler2D Texture;\n";
+    content += "    void main() {\n";
+    content += "        vec4 textureColor = texture2D(Texture, vTexCoords);\n";
+    content += "        float spec = 0.2 + clamp(dot(vNormal, vec3(0.0,1.0,0.0)),0.0,1.0) * 0.8;\n";
+    content += "        gl_FragColor = vec4(textureColor.r * spec, textureColor.g * spec, textureColor.b * spec,textureColor.a);\n";
+    content += "    }\n";
+    content += "}\n";
     
-    CreateTextFile(path, FILE_SOURCE(
-        {
-    attribute vec4 Position;                   
-    attribute vec4 Color;      
-    attribute vec3 Normal;
-    attribute vec2 TexCoords;                      
-    uniform mat4 ViewProjection;               
-    varying vec4 vColor;
-    varying vec3 vNormal;
-    varying vec2 vTexCoords;                      
-    void main() {     
-        vColor = Color;
-        vNormal = Normal;
-        vTexCoords = TexCoords;                                         
-        gl_Position = Position * ViewProjection;
-    }
-}                                          
-
-{
-    varying vec4 vColor;   
-    varying vec3 vNormal;
-    varying vec2 vTexCoords;
-    uniform sampler2D Texture;
-    void main() {
-        vec4 textureColor = texture2D(Texture, vTexCoords);
-        float spec = 0.2 + clamp(dot(vNormal, vec3(0.0,1.0,0.0)),0.0,1.0) * 0.8;             
-        gl_FragColor = vec4(textureColor.r * spec, textureColor.g * spec, textureColor.b * spec,textureColor.a);
-    }
-}
-    ));
-    
-    return true;
+    return CreateTextFile(path, content);
 }
 
 bool AssetHelper::TryCreateAsset(const std::string &path, const std::string &message, const std::string &defaultName, const std::string& extension, std::function<void (const std::string &)> onCreate) {
