@@ -75,6 +75,7 @@ public:
     virtual IFieldInfo* Clone() = 0;
     virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
+    virtual void SetFromOther(IFieldInfo* other) = 0;
 };
 
 template<class T>
@@ -103,6 +104,11 @@ public:
     IFieldEditor* CreateEditor() override {
         IFieldEditor* editor = FieldEditorCreator<T>::Create(field);
         return editor;
+    }
+    
+    void SetFromOther(IFieldInfo* other) override {
+        FieldInfo<T>* otherTyped = static_cast<FieldInfo<T>*>(other);
+        (*field) = (*otherTyped->field);
     }
     
     friend class TypeInfo;
@@ -242,23 +248,55 @@ struct JsonSerializer<T, typename std::enable_if< Pocket::Meta::HasGetTypeFuncti
 class FieldInfoAny : public IFieldInfo {
 public:
     FieldInfoAny() { type = -1; }
+    
+    struct Object {
+        
+        void Set(const minijson::value& value) {
+            valueType = value.type();
+            string_value = value.as_string();
+            long_value = value.as_long();
+            double_value = value.as_double();
+        }
+        
+        minijson::value_type valueType;
+        std::string string_value;
+        long long_value;
+        double double_value;
+            
+        std::vector<Object> children;
+    };
+    
+    Object root;
 
     void Serialize(minijson::object_writer& writer) override {
-        switch (valueType) {
+        SerializeInternal(writer, root);
+    }
+    
+    void Serialize(minijson::array_writer& writer) {
+        SerializeInternal(writer, root, false);
+    }
+    
+    void SerializeInternal(minijson::object_writer& writer, Object& root) {
+        switch (root.valueType) {
             case minijson::String: {
-                JsonSerializer<std::string>::Serialize(name, string_value, writer);
+                JsonSerializer<std::string>::Serialize(name, root.string_value, writer);
                 break;
             }
             case minijson::Number: {
-                JsonSerializer<double>::Serialize(name, double_value, writer);
+                JsonSerializer<double>::Serialize(name, root.double_value, writer);
                 break;
             }
             case minijson::Boolean: {
-                JsonSerializer<bool>::Serialize(name, long_value == 0 ? false : true, writer);
+                JsonSerializer<bool>::Serialize(name, root.long_value == 0 ? false : true, writer);
                 break;
             }
             case minijson::Object:
             case minijson::Array: {
+                minijson::array_writer array = writer.nested_array(root.string_value.c_str());
+                for(auto& child : root.children) {
+                    SerializeInternal(array, child, true);
+                }
+                array.close();
                 break;
             }
             case minijson::Null: {
@@ -266,21 +304,61 @@ public:
             }
         }
     }
+
+    void SerializeInternal(minijson::array_writer& writer, Object& root, bool createArrayObject) {
+        switch (root.valueType) {
+            case minijson::String: {
+                JsonSerializer<std::string>::Serialize(root.string_value, writer);
+                break;
+            }
+            case minijson::Number: {
+                JsonSerializer<double>::Serialize(root.double_value, writer);
+                break;
+            }
+            case minijson::Boolean: {
+                JsonSerializer<bool>::Serialize(root.long_value == 0 ? false : true, writer);
+                break;
+            }
+            case minijson::Object:
+            case minijson::Array: {
+                if (createArrayObject) {
+                    minijson::array_writer array = writer.nested_array();
+                    for(auto& child : root.children) {
+                        SerializeInternal(array, child, true);
+                    }
+                    array.close();
+                } else {
+                    for(auto& child : root.children) {
+                        SerializeInternal(writer, child, true);
+                    }
+                }
+                break;
+            }
+            case minijson::Null: {
+                break;
+            }
+        }
+    }
+
     
     void Deserialize(minijson::istream_context& context, minijson::value& value) override {
-        valueType = value.type();
-        string_value = value.as_string();
-        long_value = value.as_long();
-        double_value = value.as_double();
+        DeserializeInternal(context, value, root);
+    }
+    
+    void DeserializeInternal(minijson::istream_context& context, minijson::value& value, Object& parent) {
+        parent.Set(value);
+        if (value.type()==minijson::Array) {
+            minijson::parse_array(context, [&] (minijson::value v) {
+                parent.children.resize(parent.children.size() + 1);
+                DeserializeInternal(context, v, parent.children.back());
+            });
+        }
     }
     
     IFieldInfo* Clone() override {
         FieldInfoAny* clone = new FieldInfoAny();
         clone->name = name;
-        clone->valueType = valueType;
-        clone->string_value = string_value;
-        clone->long_value = long_value;
-        clone->double_value = double_value;
+        clone->root = root;
         return clone;
     }
     
@@ -289,21 +367,34 @@ public:
     }
     
     void SetFromAny(FieldInfoAny* any) override {}
+    void SetFromOther(IFieldInfo* other) override {}
     
-    minijson::value_type valueType;
-    std::string string_value;
-    long long_value;
-    double double_value;
+    
 };
 
 
 template<typename T>
 void FieldInfo<T>::SetFromAny(FieldInfoAny* any) {
     std::stringstream s;
-    s<<any->string_value;
+    minijson::writer_configuration config;
+    if (any->root.valueType == minijson::Array) {
+        minijson::array_writer writer(s, config);
+        any->Serialize(writer);
+        writer.close();
+    } else {
+        minijson::object_writer writer(s, config);
+        any->Serialize(writer);
+        writer.close();
+    }
+   
+    
+    std::cout << s.str() << std::endl;
     minijson::istream_context context(s);
-    minijson::value val(any->valueType, any->string_value.c_str(), any->long_value, any->double_value);
+    
+    minijson::value val(any->root.valueType, any->root.string_value.c_str(), any->root.long_value, any->root.double_value);
+    
     JsonSerializer<T>::Deserialize(val, field, context);
+    
     //(*field) = T::Deserialize(any->value);
     //std::cout << any->value << std::endl;
 }
