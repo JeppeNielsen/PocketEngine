@@ -13,6 +13,7 @@
 #include "EditorObject.hpp"
 #include "FileWorld.hpp"
 #include <sstream>
+#include "RunningWorld.hpp"
 
 using namespace Pocket;
 
@@ -54,6 +55,10 @@ public:
     Event<> Compiled;
     
     void BindToRoot(GameObject* root);
+    
+    void Update(InputDevice& input, float dt);
+    void Render();
+    
 private:
     EditorContext* context;
     
@@ -66,10 +71,9 @@ private:
     
     void AddEditorObject(GameObject* object);
     
-    void StoreWorld();
-    void RestoreWorld();
-    
     GameObject* AddObjectToEditor(GameObject* rootObject);
+    
+    RunningWorld* runningWorld;
     
     std::stringstream storedWorld;
     std::vector<int> storedSelectedObjects;

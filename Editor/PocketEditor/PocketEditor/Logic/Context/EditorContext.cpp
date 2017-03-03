@@ -64,9 +64,15 @@ void EditorContext::Update(float dt) {
     DoActions(preActions);
     world.Update(dt);
     DoActions(postActions);
+    if (Project().Worlds.ActiveWorld()) {
+        Project().Worlds.ActiveWorld()->Update(engineContext->InputDevice(), dt);
+    }
 }
 
 void EditorContext::Render() {
+    if (Project().Worlds.ActiveWorld()) {
+        Project().Worlds.ActiveWorld()->Render();
+    }
     world.Render();
 }
 

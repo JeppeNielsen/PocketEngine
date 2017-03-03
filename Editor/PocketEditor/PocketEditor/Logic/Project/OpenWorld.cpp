@@ -56,11 +56,12 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
     }
 };
 
-OpenWorld::OpenWorld() : root(0) {
+OpenWorld::OpenWorld() : root(0), runningWorld(0) {
     IsPlaying = false;
-    IsPlaying.Changed.Bind([this] () {
+    /*IsPlaying.Changed.Bind([this] () {
         UpdatePlayMode();
     });
+    */
     
     editorObjectsComponents = {
         GameIdHelper::GetComponentID<Transform>(),
@@ -223,17 +224,7 @@ void OpenWorld::InitializeRoot() {
     UpdatePlayMode();
 }
 
-void OpenWorld::Play() {
-    if (IsPlaying) return;
-    StoreWorld();
-    IsPlaying = true;
-}
 
-void OpenWorld::Stop() {
-    if (!IsPlaying) return;
-    RestoreWorld();
-    IsPlaying = false;
-}
 
 GameObject* OpenWorld::Root() {
     return root;
@@ -244,16 +235,17 @@ GameObject* OpenWorld::EditorRoot() {
 }
 
 void OpenWorld::Close() {
+    Stop();
     root->Remove();
     editorRoot->Remove();
     root->SetCallbacks(0, 0, 0, 0);
 }
 
 void OpenWorld::Enable() {
-    root->UpdateEnabled() = true;
-    root->RenderEnabled() = true;
-    editorRoot->UpdateEnabled() = true;
-    editorRoot->RenderEnabled() = true;
+    root->UpdateEnabled() = !IsPlaying();
+    root->RenderEnabled() = !IsPlaying();;
+    editorRoot->UpdateEnabled() = !IsPlaying();;
+    editorRoot->RenderEnabled() = !IsPlaying();;
 }
 
 void OpenWorld::Disable() {
@@ -326,46 +318,37 @@ GameObject* OpenWorld::AddObjectToEditor(GameObject* object) {
 
 void OpenWorld::PreCompile() {
     Stop();
-    StoreWorld();
     selectables->ClearSelection();
 }
 
 void OpenWorld::PostCompile() {
-    RestoreWorld();
     Compiled();
 }
 
-void OpenWorld::StoreWorld() {
-    for(auto go : selectables->Selected()) {
-        EditorObject* editorObject = go->GetComponent<EditorObject>();
-        storedSelectedObjects.push_back(editorObject->gameObject->RootId());
-    }
-    //root->ToJson(storedWorld);
-    root->ToJson(storedWorld, [] (const GameObject* go, int componentID) {
-        if (go->Parent() && go->Parent()->GetComponent<Cloner>()) return false;
-        return true;
-    });
+void OpenWorld::Play() {
+    if (IsPlaying) return;
+    IsPlaying = true;
+    
+    runningWorld = new RunningWorld();
+    runningWorld->Initialize(context->Project().Path(), { root->RootGuid() }, context->Project().ScriptWorld());
+    Disable();
 }
 
-void OpenWorld::RestoreWorld() {
-    root->Remove();
-    //std::cout << storedWorld.str() << std::endl;
-    root = context->World().CreateRootFromJson(storedWorld, [this] (GameObject* root) {
-        CreateDefaultSystems(*root);
-        context->Project().ScriptWorld().AddGameRoot(root);
-    });
-    storedWorld.clear();
-    InitializeRoot();
-    std::vector<int> storedSelectedObjectsLocal = storedSelectedObjects;
-    context->postActions.emplace_back([this, storedSelectedObjectsLocal] () {
-        selectables->ClearSelection();
-        for (auto id : storedSelectedObjectsLocal) {
-            GameObject* go = root->FindObject(id);
-            if (!go) continue;
-            EditorObject* editorObject = go->GetComponent<EditorObject>();
-            Selectable* selectable = editorObject->editorObject->GetComponent<Selectable>();
-            selectable->Selected = true;
-        }
-    });
-    storedSelectedObjects.clear();
+void OpenWorld::Stop() {
+    if (!IsPlaying) return;
+    IsPlaying = false;
+    delete runningWorld;
+    runningWorld = 0;
+    Enable();
+}
+
+void OpenWorld::Update(InputDevice& input, float dt) {
+    if (!runningWorld) return;
+    input.UpdateInputManager(&runningWorld->World().Input());
+    runningWorld->World().Update(dt);
+}
+
+void OpenWorld::Render() {
+    if (!runningWorld) return;
+    runningWorld->World().Render();
 }

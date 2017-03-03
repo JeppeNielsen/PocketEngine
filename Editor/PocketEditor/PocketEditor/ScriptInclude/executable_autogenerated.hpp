@@ -1,11 +1,19 @@
 GameWorld::OnGetTypeInfo = [] (int componentID, GameObject::ComponentInfo& info) {
  static std::map<int, std::function<TypeInfo(GameObject*)>> componentToFunction; 
  if (!componentToFunction.empty()) {
-componentToFunction[GameIDHelper::GetComponentID<RotatorScript>()] = [](GameObject* object) -> TypeInfo {
-RotatorScript* component = object->GetComponent<RotatorScript>();
+componentToFunction[GameIDHelper::GetComponentID<RectCollider>()] = [](GameObject* object) -> TypeInfo {
+RectCollider* component = object->GetComponent<RectCollider>();
 TypeInfo typeInfo;
-	      typeInfo.name = "RotatorScript";
-	      typeInfo.AddField(component->angularSpeed, "angularSpeed");
+	      typeInfo.name = "RectCollider";
+	      typeInfo.AddField(component->collisions, "collisions");
+	      typeInfo.AddField(component->previousCollisions, "previousCollisions");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<Rotator>()] = [](GameObject* object) -> TypeInfo {
+Rotator* component = object->GetComponent<Rotator>();
+TypeInfo typeInfo;
+	      typeInfo.name = "Rotator";
+	      typeInfo.AddField(component->speed, "speed");
 return typeInfo;
 };
    }
