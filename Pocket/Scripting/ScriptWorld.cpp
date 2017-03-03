@@ -850,8 +850,8 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
     int numberOfComponents = countComponents();
     componentCount = numberOfComponents;
 
-    assert(baseComponentIndex == (int)world.components.size());
-    assert(baseSystemIndex == (int)world.systems.size());
+    //assert(baseComponentIndex == (int)world.components.size());
+    //assert(baseSystemIndex == (int)world.systems.size());
     
     
     for(int i=0; i<numberOfComponents; ++i) {

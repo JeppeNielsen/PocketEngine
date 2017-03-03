@@ -446,7 +446,22 @@ void GameWorld::InvokeChangeToHandles(Pocket::GameObject *object) {
     for(auto h : handlesToChange) {
         h->Changed();
     }
-    
 }
 
 Container<GameScene>& GameWorld::Scenes() { return scenes; }
+
+void GameWorld::SetLayerScene(int layerNo, Pocket::GameObject *scene) {
+    auto it = sceneLayers.find(layerNo);
+    if (it!=sceneLayers.end()) {
+        it->second->Remove();
+        if (!scene) {
+            sceneLayers.erase(it);
+        }
+    }
+    if (scene) {
+        sceneLayers[layerNo] = scene;
+    }
+    LayersChanged();
+}
+
+const GameWorld::SceneLayers& GameWorld::GetSceneLayers() { return sceneLayers; }

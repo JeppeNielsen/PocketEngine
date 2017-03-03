@@ -81,6 +81,10 @@ namespace Pocket {
         
         using Handles = std::vector<GameObjectHandle*>;
         Handles handles;
+    public:
+        using SceneLayers = std::map<int, GameObject*>;
+    private:
+        SceneLayers sceneLayers;
         
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
@@ -193,6 +197,12 @@ namespace Pocket {
                 componentInfo.getTypeInfo = getTypeFunction;
             });
         }
+        
+        void SetLayerScene(int layerNo, GameObject* scene);
+        
+        const SceneLayers& GetSceneLayers();
+        
+        Event<> LayersChanged;
         
     private:
         void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,

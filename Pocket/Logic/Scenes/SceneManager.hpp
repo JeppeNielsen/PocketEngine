@@ -14,13 +14,10 @@
 namespace Pocket {
     class SceneManager {
     public:
-
         Property<std::map<int, GameObjectHandle>> ActiveScenes;
-
-        std::map<int, GameObject*> sceneRoots;
-
+        Property<std::map<int, GameObjectHandle>> SetScenes;
         TYPE_FIELDS_BEGIN
-        TYPE_FIELD(ActiveScenes)
+        TYPE_FIELD(SetScenes)
         TYPE_FIELDS_END
     };
 }

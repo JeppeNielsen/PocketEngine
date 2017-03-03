@@ -13,9 +13,14 @@
 namespace Pocket {
     class SceneManagerSystem : public GameSystem<SceneManager> {
     public:
+        void Initialize();
+        void Destroy();
+    
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
     private:
-        void ActiveScenesChanged(GameObject* object);
+        void ScenesSet(GameObject* object);
+        void LayersChanged();
+        bool layersAreChanging;
     };
 }
