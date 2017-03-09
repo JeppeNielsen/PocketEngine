@@ -204,6 +204,8 @@ namespace Pocket {
         
         Event<> LayersChanged;
         
+        Event<GameObject*> RootRemoved;
+        
     private:
         void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
                                 const std::function<void (int, int)>& callback,

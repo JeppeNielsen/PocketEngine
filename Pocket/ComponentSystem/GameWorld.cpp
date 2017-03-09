@@ -164,6 +164,7 @@ void GameWorld::RemoveRoot(Pocket::GameObject *root) {
         scene->DestroySystems();
         scenes.Delete(scene->index, 0);
         activeScenes.erase(std::find(activeScenes.begin(), activeScenes.end(), scene));
+        RootRemoved(root);
     });
 }
 
