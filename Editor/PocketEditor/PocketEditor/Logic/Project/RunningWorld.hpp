@@ -10,16 +10,26 @@
 
 #include "GameWorld.hpp"
 #include "FileWorld.hpp"
+#include "EditorScene.hpp"
 
 using namespace Pocket;
 
 class RunningWorld {
 public:
+
+    RunningWorld();
+
     void Initialize(const std::string& path, const std::vector<std::string>& startScenes, ScriptWorld& scriptWorld);
+    void Destroy();
     
     GameWorld& World();
+    
+    Property<GameObject*> ActiveScene;
+    GameObject* EditorRoot();
 
 private:
     GameWorld world;
     FileWorld fileWorld;
+    
+    EditorScene editorScene;
 };

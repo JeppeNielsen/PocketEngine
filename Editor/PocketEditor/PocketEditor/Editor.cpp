@@ -26,6 +26,7 @@
 #include "Guid.hpp"
 #include "BaseModule.hpp"
 #include "AssetImporters.hpp"
+#include "SceneTab.hpp"
 #include <vector>
 
 using namespace Pocket;
@@ -44,6 +45,7 @@ public:
     void Initialize() {
 
         windows.push_back(new WorldTab());
+        windows.push_back(new SceneTab());
         windows.push_back(new PlayButtons());
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());

@@ -19,14 +19,19 @@ protected:
     std::string Name() override;
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
 private:
+    void GameSceneChanged(OpenWorld* world);
     void Clicked(TouchData d, GameObject* object);
     void Dropped(DroppedData d, GameObject* object);
     bool IsParentValid(GameObject* object, GameObject* possibleParent);
-    void OpenWorldIsPlayingChanged(OpenWorld* world);
+    
+    void SelectedChanged(GameObject* object);
+    void SetNodeSelected(GameObject* node, bool selected);
+    
     void EnabledChanged(GameObject* object);
     void SetNodeEnabled(GameObject* node, bool enabled);
     
     VirtualTreeList* treeView;
     GameObject* rootItem;
+    std::map<GameObject*, GameObject*> objectToSelectButton;
     std::map<GameObject*, GameObject*> objectToEnableButton;
 };

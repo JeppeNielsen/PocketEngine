@@ -15,10 +15,27 @@
 #include "EditorDropTarget.hpp"
 #include "ProjectSettings.hpp"
 
+RunningWorld::RunningWorld() {
+    ActiveScene = 0;
+    ActiveScene.Changed.Bind([this] () {
+        editorScene.Destroy();
+        if (ActiveScene) {
+            editorScene.Initialize(ActiveScene);
+        }
+    });
+}
+
 void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, ScriptWorld& scriptWorld) {
+
+    world.RootRemoved.Bind([this] (GameObject* root) {
+        if (ActiveScene == root) {
+            editorScene.Destroy();
+        }
+    });
+
     fileWorld.AddGameWorld(world);
     fileWorld.FindRoots(path, {".json", ".meta" });
-    fileWorld.OnRootCreated = [&scriptWorld] (GameObject* root) {
+    fileWorld.OnRootCreated = [this, &scriptWorld] (GameObject* root) {
         OpenWorld::CreateDefaultSystems(*root);
         root->CreateSystem<AssetManager>();
         scriptWorld.AddGameRoot(root);
@@ -44,4 +61,12 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
 
 GameWorld& RunningWorld::World() {
     return world;
+}
+
+void RunningWorld::Destroy() {
+    editorScene.Destroy();
+}
+
+GameObject* RunningWorld::EditorRoot() {
+    return editorScene.EditorRoot();
 }

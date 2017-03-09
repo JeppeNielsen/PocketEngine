@@ -68,20 +68,30 @@ void InspectorWindow::OnInitialize() {
     });
 }
 
-void InspectorWindow::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
-   
+void InspectorWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
     if (old) {
-        old->selectables->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+        old->EditorRoot.Changed.Unbind(this, &InspectorWindow::EditorRootChanged, old);
     }
-    
     if (current) {
-        current->selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
-        selectables = current->selectables;
+        current->EditorRoot.Changed.Bind(this, &InspectorWindow::EditorRootChanged, current);
+    }
+    ChangeEditorRoot(old ? old->EditorRoot : 0, current ? current->EditorRoot : 0);
+}
+
+void InspectorWindow::EditorRootChanged(OpenWorld *world) {
+    ChangeEditorRoot(world->EditorRoot.PreviousValue(), world->EditorRoot);
+}
+
+void InspectorWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObject *current) {
+    if (old) {
+        old->CreateSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+    }
+    if (current) {
+        selectables = current->CreateSystem<SelectableCollection<EditorObject>>();
+        selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     } else {
         selectables = 0;
     }
-    
-    
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
 }
 
@@ -126,7 +136,6 @@ void InspectorWindow::OnCreate() {
     });
     
     selectionBox = 0;
-    
     
     window->GetComponent<Transform>()->Position += {600,200};
 }

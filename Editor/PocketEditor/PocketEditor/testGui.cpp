@@ -411,8 +411,14 @@ public:
     GameObject* box;
     GameObject* dragger;
     
-    void Initialize() {
+    struct Component {
     
+        Property<int> Value;
+    };
+    
+    void Initialize() {
+        
+        /*
         GameObject* root = world.CreateRoot();
         Gui* gui = root->CreateSystem<Gui>();
         root->CreateSystem<LayoutSystem>();
@@ -452,8 +458,49 @@ public:
         //gui->CreateClipper(box, false);
         
         
+        */
         
         
+        GameObject* root = world.CreateRoot();
+        
+        Selectable* sel1 = 0;
+        {
+            GameObject* object = root->CreateChild();
+            sel1 = object->AddComponent<Selectable>();
+            sel1->Selected.Changed.Bind(this, &Game::SelectedChanged, object);
+            std::cout << "1. empty = " << (sel1->Selected.Changed.Empty() ? "true" : "false") << std::endl;
+            object->Remove();
+        }
+        world.Update(0);
+        Selectable* sel2 = 0;
+        {
+            GameObject* object = root->CreateChild();
+            sel2 = object->AddComponent<Selectable>();
+            //sel2->Selected.Changed.Bind(this, &Game::SelectedChanged, object);
+            std::cout << "2. empty = " << (sel2->Selected.Changed.Empty() ? "true" : "false") << std::endl;
+            object->Remove();
+        }
+        if (sel1 == sel2) {
+            std::cout << "Same" << std::endl;
+        }
+        
+        Component cDefault = Component();
+        //cDefault.Value = 123;
+        
+        Component comp1 = cDefault;
+        comp1.Value.Changed.Bind(this, &Game::SelectedChanged, (GameObject*)0);
+        
+        comp1.Value = cDefault.Value;
+        
+        comp1 = cDefault;
+        {
+        
+        }
+        
+    }
+    
+    void SelectedChanged(GameObject* object) {
+        std::cout << "Changed"<< std::endl;
     }
     
     void AddTextBox(GameObject* parent, Gui* gui, Vector2 desired, Vector2 max) {
@@ -464,10 +511,11 @@ public:
     }
     
     void Update(float dt) {
-        Context().InputDevice().UpdateInputManager(&world.Input());
+       /* Context().InputDevice().UpdateInputManager(&world.Input());
         Vector3 pos = dragger->GetComponent<Transform>()->Position;
         box->GetComponent<Sizeable>()->Size = { pos.x, pos.y };
         world.Update(dt);
+        */
     }
     
     void Render() {
@@ -477,7 +525,7 @@ public:
     }
 };
 
-int main_gui_nonon() {
+int main_tests() {
     Engine e;
     e.Start<Game>();
 	return 0;

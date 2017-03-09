@@ -14,6 +14,7 @@
 #include "FileWorld.hpp"
 #include <sstream>
 #include "RunningWorld.hpp"
+#include "EditorScene.hpp"
 
 using namespace Pocket;
 
@@ -27,8 +28,6 @@ public:
     
     std::string Path;
     std::string Filename;
-    
-    SelectableCollection<EditorObject>* selectables;
     
     bool Save();
     bool Load(const std::string& path, const std::string& filename, EditorContext* context);
@@ -44,7 +43,6 @@ public:
     void Close();
     
     GameObject* Root();
-    GameObject* EditorRoot();
     
     void Enable();
     void Disable();
@@ -53,31 +51,21 @@ public:
     void PostCompile();
     
     Event<> Compiled;
-    
-    void BindToRoot(GameObject* root);
-    
+
     void Update(InputDevice& input, float dt);
     void Render();
+
+    Property<GameObject*> GameRoot;
+    Property<GameObject*> EditorRoot;
+    
+    RunningWorld* GetRunningWorld();
     
 private:
     EditorContext* context;
     
     GameObject* root;
-    GameObject* editorRoot;
-    GameObject* editorCamera;
-    
-    void InitializeRoot();
-    void UpdatePlayMode();
-    
-    void AddEditorObject(GameObject* object);
-    
-    GameObject* AddObjectToEditor(GameObject* rootObject);
-    
     RunningWorld* runningWorld;
     
-    std::stringstream storedWorld;
-    std::vector<int> storedSelectedObjects;
-    std::map<GameObject*, GameObject*> rootToEditorMap;
-    std::vector<ComponentId> editorObjectsComponents;
+    EditorScene editorScene;
 };
 

@@ -27,25 +27,21 @@ void HierarchyWindow::OnInitialize() {
 
 void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
     rootItem = 0;
-    if (current) {
-         treeView->Root = (GameObject*)current->Root();
-    } else {
-         treeView->Root = 0;
-    }
     
     if (old) {
-        old->IsPlaying.Changed.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
-        old->Compiled.Unbind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, old);
+        old->GameRoot.Changed.Unbind(this, &HierarchyWindow::GameSceneChanged, old);
     }
+    
     if (current) {
-        current->IsPlaying.Changed.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
-        current->Compiled.Bind(this, &HierarchyWindow::OpenWorldIsPlayingChanged, current);
+        current->GameRoot.Changed.Bind(this, &HierarchyWindow::GameSceneChanged, current);
     }
+    GameSceneChanged(current);
 }
 
-void HierarchyWindow::OpenWorldIsPlayingChanged(OpenWorld *world) {
-    context->preActions.emplace_back([this, world] () {
-        treeView->Root = world->Root();
+void HierarchyWindow::GameSceneChanged(OpenWorld *world) {
+    GameObject* root =  world ? world->GameRoot : 0;
+    context->preActions.emplace_back([this, root] () {
+        treeView->Root = root;
     });
 }
 
@@ -86,12 +82,16 @@ void HierarchyWindow::OnCreate() {
         EditorObject* editorObject = node->GetComponent<EditorObject>();
     
         if (editorObject && editorObject->editorObject) {
+        
             GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
             selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
-            selectButton->AddComponent<Selectable>(editorObject->editorObject);
-            selectButton->AddComponent<SelectedColorer>()->Selected = Colour::Blue();
+            selectButton->AddComponent<Colorable>()->Color = Colour::White();
             selectButton->GetComponent<Touchable>()->ClickThrough = true;
-            selectButton->AddComponent<EditorObject>(node);
+            
+            
+            objectToSelectButton[editorObject->editorObject] = selectButton;
+            editorObject->editorObject->GetComponent<Selectable>()->Selected.Changed.Bind(this, &::HierarchyWindow::SelectedChanged, editorObject->editorObject);
+            SetNodeSelected(selectButton, editorObject->editorObject->GetComponent<Selectable>()->Selected);
             
             {
                 std::stringstream str;
@@ -121,15 +121,34 @@ void HierarchyWindow::OnCreate() {
         }
         EditorObject* editorObject = node->GetComponent<EditorObject>();
         if (editorObject) {
-            editorObject->gameObject->Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
-            auto it = objectToEnableButton.find(editorObject->gameObject);
-            if (it!=objectToEnableButton.end()) {
-                objectToEnableButton.erase(it);
+        
+            {
+                editorObject->editorObject->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &::HierarchyWindow::SelectedChanged, editorObject->editorObject);
+                auto it = objectToSelectButton.find(editorObject->editorObject);
+                if (it!=objectToSelectButton.end()) {
+                    objectToSelectButton.erase(it);
+                }
+            }
+            
+            {
+                editorObject->gameObject->Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
+                auto it = objectToEnableButton.find(editorObject->gameObject);
+                if (it!=objectToEnableButton.end()) {
+                    objectToEnableButton.erase(it);
+                }
             }
         }
     };
     
     window->GetComponent<Transform>()->Position += {300,200};
+}
+
+void HierarchyWindow::SelectedChanged(Pocket::GameObject *object) {
+    SetNodeSelected(objectToSelectButton[object], object->GetComponent<Selectable>()->Selected);
+}
+
+void HierarchyWindow::SetNodeSelected(Pocket::GameObject *node, bool enabled) {
+    node->GetComponent<Colorable>()->Color = enabled ? Colour(0.0f, 0.0f, 1.0f, 1.0f) : Colour(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void HierarchyWindow::EnabledChanged(Pocket::GameObject *object) {

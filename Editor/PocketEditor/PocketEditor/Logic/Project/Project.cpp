@@ -174,7 +174,8 @@ void Project::CreateNewWorld(const std::string &worldPath) {
 
 SelectableCollection<EditorObject>* Project::GetSelectables() {
     if (!Worlds.ActiveWorld()) return 0;
-    return Worlds.ActiveWorld()->selectables;
+    auto world = Worlds.ActiveWorld();
+    return world->EditorRoot() ? world->EditorRoot()->CreateSystem<SelectableCollection<EditorObject>>() : 0;
 }
 
 void Project::SaveWorld() {

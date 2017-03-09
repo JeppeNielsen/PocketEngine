@@ -58,16 +58,7 @@ struct TurnerSystem : public GameSystem<Transform, Turner> {
 
 OpenWorld::OpenWorld() : root(0), runningWorld(0) {
     IsPlaying = false;
-    /*IsPlaying.Changed.Bind([this] () {
-        UpdatePlayMode();
-    });
-    */
-    
-    editorObjectsComponents = {
-        GameIdHelper::GetComponentID<Transform>(),
-        GameIdHelper::GetComponentID<Mesh>(),
-        GameIdHelper::GetComponentID<Sizeable>()
-    };
+    EditorRoot = 0;
 }
 
 void OpenWorld::CreateDefaultSystems(Pocket::GameObject &world) {
@@ -115,48 +106,6 @@ bool IsClonerInAncestry(GameObject* object) {
     }
 }
 
-void OpenWorld::BindToRoot(Pocket::GameObject *root) {
-    
-    root->SetCallbacks(
-        [this] (GameObject* object) {
-            if (IsClonerInAncestry(object)) return;
-            AddObjectToEditor(object);
-        }
-        ,
-        [this] (GameObject* object) {
-            auto it = rootToEditorMap.find(object);
-            if (it == rootToEditorMap.end()) return;
-            GameObject* editorGameObject = it->second;
-            editorGameObject->Remove();
-            rootToEditorMap.erase(rootToEditorMap.find(object));
-        }
-        ,
-        [this] (GameObject* object, ComponentId componentId) {
-             auto it = rootToEditorMap.find(object);
-            if (it == rootToEditorMap.end()) return;
-            GameObject* editorGameObject = it->second;
-            for(auto id : editorObjectsComponents) {
-                if (id == componentId) {
-                    editorGameObject->AddComponent(id, object);
-                    break;
-                }
-            }
-        }
-        ,
-        [this] (GameObject* object, ComponentId componentId) {
-            auto it = rootToEditorMap.find(object);
-            if (it == rootToEditorMap.end()) return;
-            GameObject* editorGameObject = it->second;
-            for(auto id : editorObjectsComponents) {
-                if (id == componentId) {
-                    editorGameObject->RemoveComponent(id);
-                    break;
-                }
-            }
-        }
-    );
-}
-
 bool OpenWorld::Save() {
     Stop();
     bool succes = false;
@@ -199,62 +148,43 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
         return false;
     }
     
-    editorRoot = world->CreateRoot();
+    root->TimeScale() = 0;
 
     CreateDefaultSystems(*root);
     scriptWorld->AddGameRoot(root);
     
-    editorRoot->Order = 1;
-    CreateEditorSystems(*editorRoot);
-    selectables = editorRoot->CreateSystem<SelectableCollection<EditorObject>>();
+    editorScene.Initialize(root);
     
-    editorCamera = editorRoot->CreateObject();
-    editorCamera->AddComponent<Camera>();
-    editorCamera->AddComponent<Transform>()->Position = { 0, 0, 10 };
-    editorCamera->GetComponent<Camera>()->FieldOfView = 70;
-    editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
-    
-    InitializeRoot();
+    GameRoot = root;
+    EditorRoot = editorScene.EditorRoot();
     return true;
 }
-
-void OpenWorld::InitializeRoot() {
-    AddEditorObject(root);
-    BindToRoot(root);
-    UpdatePlayMode();
-}
-
-
 
 GameObject* OpenWorld::Root() {
     return root;
 }
 
-GameObject* OpenWorld::EditorRoot() {
-    return editorRoot;
-}
-
 void OpenWorld::Close() {
     Stop();
     root->Remove();
-    editorRoot->Remove();
-    root->SetCallbacks(0, 0, 0, 0);
+    editorScene.Destroy();
 }
 
 void OpenWorld::Enable() {
     root->UpdateEnabled() = !IsPlaying();
-    root->RenderEnabled() = !IsPlaying();;
-    editorRoot->UpdateEnabled() = !IsPlaying();;
-    editorRoot->RenderEnabled() = !IsPlaying();;
+    root->RenderEnabled() = !IsPlaying();
+    editorScene.EditorRoot()->UpdateEnabled() = !IsPlaying();
+    editorScene.EditorRoot()->RenderEnabled() = !IsPlaying();
 }
 
 void OpenWorld::Disable() {
     root->UpdateEnabled() = false;
     root->RenderEnabled() = false;
-    editorRoot->UpdateEnabled() = false;
-    editorRoot->RenderEnabled() = false;
+    editorScene.EditorRoot()->UpdateEnabled() = false;
+    editorScene.EditorRoot()->RenderEnabled() = false;
 }
 
+/*
 void OpenWorld::UpdatePlayMode() {
     if (root) {
         
@@ -286,39 +216,10 @@ void OpenWorld::UpdatePlayMode() {
         root->TimeScale() = IsPlaying ? 1.0f : 0.0f;
     }
 }
-
-void OpenWorld::AddEditorObject(Pocket::GameObject *object) {
-    
-    auto editorGameObject = AddObjectToEditor(object);
-    
-    for(auto id : editorObjectsComponents) {
-        if (object->HasComponent(id)) {
-            editorGameObject->AddComponent(id, object);
-        }
-    }
-    for (auto child : object->Children()) {
-        AddEditorObject(child);
-    }
-}
-
-GameObject* OpenWorld::AddObjectToEditor(GameObject* object) {
-
-    GameObject* editorGameObject = editorRoot->CreateObject();
-    auto editorObject = object->AddComponent<EditorObject>();
-    editorObject->editorObject = editorGameObject;
-    editorObject->gameObject = object;
-    
-    editorGameObject->AddComponent<EditorObject>(object);
-    editorGameObject->AddComponent<Selectable>();
-    
-    rootToEditorMap[object] = editorGameObject;
-    
-    return editorGameObject;
-}
+*/
 
 void OpenWorld::PreCompile() {
     Stop();
-    selectables->ClearSelection();
 }
 
 void OpenWorld::PostCompile() {
@@ -327,17 +228,31 @@ void OpenWorld::PostCompile() {
 
 void OpenWorld::Play() {
     if (IsPlaying) return;
-    IsPlaying = true;
     
+    this->GameRoot = 0;
+    this->EditorRoot = 0;
+        
     runningWorld = new RunningWorld();
     runningWorld->Initialize(context->Project().Path(), { root->RootGuid() }, context->Project().ScriptWorld());
+    runningWorld->ActiveScene.Changed.Bind([this] () {
+        this->GameRoot = runningWorld->ActiveScene();
+        this->EditorRoot = runningWorld->EditorRoot();
+    });
     Disable();
+    
+    IsPlaying = true;
 }
 
 void OpenWorld::Stop() {
     if (!IsPlaying) return;
     IsPlaying = false;
-    delete runningWorld;
+    GameRoot = root;
+    EditorRoot = editorScene.EditorRoot();
+    runningWorld->Destroy();
+    RunningWorld* delayedWorld = runningWorld;
+    context->postActions.emplace_back([delayedWorld] () {
+        delete delayedWorld;
+    });
     runningWorld = 0;
     Enable();
 }
@@ -352,3 +267,5 @@ void OpenWorld::Render() {
     if (!runningWorld) return;
     runningWorld->World().Render();
 }
+
+RunningWorld* OpenWorld::GetRunningWorld() { return runningWorld; }

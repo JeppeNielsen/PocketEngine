@@ -24,6 +24,8 @@ protected:
 private:
     SelectableCollection<EditorObject>* selectables;
     GameObject* inspectorEditor;
+    void EditorRootChanged(OpenWorld* world);
+    void ChangeEditorRoot(GameObject* old, GameObject* current);
     void SelectionChanged(SelectableCollection<EditorObject>* selectables);
     void AddComponentClicked(TouchData d);
     GameObject* listBox;

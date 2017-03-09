@@ -18,6 +18,8 @@
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
 		7220F6301E6762370063EAD5 /* RunningWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F62E1E6762370063EAD5 /* RunningWorld.cpp */; };
+		7220F6331E6A03040063EAD5 /* EditorScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6311E6A03040063EAD5 /* EditorScene.cpp */; };
+		7220F6371E6DFF090063EAD5 /* SceneTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6351E6DFF090063EAD5 /* SceneTab.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -456,6 +458,10 @@
 		721EA9AA1C9DFEB60027D223 /* ScriptExample.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScriptExample.hpp; sourceTree = "<group>"; };
 		7220F62E1E6762370063EAD5 /* RunningWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RunningWorld.cpp; sourceTree = "<group>"; };
 		7220F62F1E6762370063EAD5 /* RunningWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RunningWorld.hpp; sourceTree = "<group>"; };
+		7220F6311E6A03040063EAD5 /* EditorScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorScene.cpp; sourceTree = "<group>"; };
+		7220F6321E6A03040063EAD5 /* EditorScene.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorScene.hpp; sourceTree = "<group>"; };
+		7220F6351E6DFF090063EAD5 /* SceneTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneTab.cpp; sourceTree = "<group>"; };
+		7220F6361E6DFF090063EAD5 /* SceneTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SceneTab.hpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -1556,6 +1562,15 @@
 				721EA9AA1C9DFEB60027D223 /* ScriptExample.hpp */,
 			);
 			path = ScriptCode;
+			sourceTree = "<group>";
+		};
+		7220F6341E6DFF090063EAD5 /* SceneTab */ = {
+			isa = PBXGroup;
+			children = (
+				7220F6351E6DFF090063EAD5 /* SceneTab.cpp */,
+				7220F6361E6DFF090063EAD5 /* SceneTab.hpp */,
+			);
+			path = SceneTab;
 			sourceTree = "<group>";
 		};
 		72308CF31E127A7A00B92B8D /* Assets */ = {
@@ -3362,6 +3377,7 @@
 				727729F61CD4FF2F005AC1D8 /* Inspector */,
 				72AE74CB1DAAA1B800CEB998 /* PlayButtons */,
 				723689A41D873A4E006480F0 /* Project */,
+				7220F6341E6DFF090063EAD5 /* SceneTab */,
 				720B3D3C1D8B2424006195E8 /* WorldTab */,
 			);
 			path = Windows;
@@ -3398,6 +3414,8 @@
 				720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */,
 				7220F62E1E6762370063EAD5 /* RunningWorld.cpp */,
 				7220F62F1E6762370063EAD5 /* RunningWorld.hpp */,
+				7220F6311E6A03040063EAD5 /* EditorScene.cpp */,
+				7220F6321E6A03040063EAD5 /* EditorScene.hpp */,
 			);
 			path = Project;
 			sourceTree = "<group>";
@@ -3807,6 +3825,7 @@
 				729953C51C99F76100DAAE5D /* InputDevice.cpp in Sources */,
 				72308D071E127A9100B92B8D /* FilePath.cpp in Sources */,
 				729954DB1C99F76100DAAE5D /* btSoftBodyHelpers.cpp in Sources */,
+				7220F6371E6DFF090063EAD5 /* SceneTab.cpp in Sources */,
 				7299543E1C99F76100DAAE5D /* b2PolygonShape.cpp in Sources */,
 				729954661C99F76100DAAE5D /* btCompoundCollisionAlgorithm.cpp in Sources */,
 				729954DC1C99F76100DAAE5D /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
@@ -3828,6 +3847,7 @@
 				7299549D1C99F76100DAAE5D /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				729954801C99F76100DAAE5D /* btConvexInternalShape.cpp in Sources */,
 				720585031E60B911009FFACF /* AssetHelper.cpp in Sources */,
+				7220F6331E6A03040063EAD5 /* EditorScene.cpp in Sources */,
 				729954B51C99F76100DAAE5D /* btGeneric6DofConstraint.cpp in Sources */,
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
 				7244C4951DECBBCB00ADF008 /* GuiFieldEditors.cpp in Sources */,
