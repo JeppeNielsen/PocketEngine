@@ -17,11 +17,11 @@ void VirtualTreeListSystem::Initialize() {
 }
 
 void VirtualTreeListSystem::ObjectAdded(Pocket::GameObject *object) {
-
+    object->GetComponent<VirtualTreeList>()->Root.Changed.Bind(this, &VirtualTreeListSystem::UpdateVirtualList, object);
 }
 
 void VirtualTreeListSystem::ObjectRemoved(Pocket::GameObject *object) {
-
+    object->GetComponent<VirtualTreeList>()->Root.Changed.Unbind(this, &VirtualTreeListSystem::UpdateVirtualList, object);
 }
 
 void VirtualTreeListSystem::Update(float dt) {
