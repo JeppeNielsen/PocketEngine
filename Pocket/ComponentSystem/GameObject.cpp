@@ -105,6 +105,7 @@ void GameObject::AddComponent(ComponentId id) {
 
 void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     assert(id<activeComponents.Size());
+    assert(scene->world == referenceObject->scene->world);
     if (removed) return;
     if (activeComponents[id]) return;
     if (!referenceObject->activeComponents[id]) return;
