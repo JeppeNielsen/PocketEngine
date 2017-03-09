@@ -34,7 +34,8 @@ public:
     operator const Value& () const { return value; }
     
     void operator = (const Value& v) { Set(v); }
-    void operator = (const Property<Value>& v) { Set(v.value); }
+    void operator = (const Property<Value>& v) { Changed.ClearNonDefaults(); Set(v.value); }
+    void operator = (Property<Value>& v) { Set(v.value); }
     Value operator - () const { return -value; }
     
     Value operator + (const Value& v) const { return value + v; }
