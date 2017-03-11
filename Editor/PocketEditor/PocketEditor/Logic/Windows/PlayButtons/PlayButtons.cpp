@@ -21,17 +21,41 @@ void PlayButtons::OnCreate() {
     
     Gui& gui = context->Gui();
     
-    playButton = gui.CreateLabelControl(window, "TextBox", 0, {100,30},0, "Play", 20);
-    stopButton = gui.CreateLabelControl(window, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
+    editModePivot = gui.CreatePivot(window);
+    {
+        GameObject* testButton = gui.CreateLabelControl(editModePivot, "TextBox", 0, {100,30},0, "Test", 20);
+        testButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        testButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
+            if (!currentWorld) return;
+            context->preActions.emplace_back([this] {
+                currentWorld->Play();
+                UpdateStates(currentWorld);
+            });
+        });
+    }
+
+    gameModePivot = gui.CreatePivot(window);
+    {
+        GameObject* stopButton = gui.CreateLabelControl(gameModePivot, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
+        stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        stopButton->GetComponent<Touchable>()->Click.Bind([this] (TouchData d) {
+            if (!currentWorld) return;
+            context->preActions.emplace_back([this] {
+                currentWorld->Stop();
+                UpdateStates(currentWorld);
+            });
+        });
     
-    playButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
-    stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        GameObject* pauseButton = gui.CreateLabelControl(gameModePivot, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
+        pauseButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        pauseButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
+            if (!currentWorld) return;
+            currentWorld->IsPaused = !currentWorld->IsPaused();
+        });
+    }
     
-    playButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::PlayClicked);
-    stopButton->GetComponent<Touchable>()->Click.Bind(this, &PlayButtons::StopClicked);
-    
-    playButton->Enabled = false;
-    stopButton->Enabled = false;
+    editModePivot->Enabled = false;
+    gameModePivot->Enabled = false;
     
     window->RemoveComponent<Renderable>();
     ScreenSizeChanged();
@@ -49,30 +73,14 @@ void PlayButtons::ScreenSizeChanged() {
 
 void PlayButtons::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (current) {
-        UpdateButtons(current);
+        UpdateStates(current);
     } else {
-        playButton->Enabled = false;
-        stopButton->Enabled = false;
+        editModePivot->Enabled = false;
+        gameModePivot->Enabled = false;
     }
 }
 
-void PlayButtons::UpdateButtons(OpenWorld *openWorld) {
-    playButton->Enabled = !openWorld->IsPlaying();
-    stopButton->Enabled = !playButton->Enabled();
-}
-
-void PlayButtons::PlayClicked(Pocket::TouchData d) {
-    if (!currentWorld) return;
-    context->preActions.emplace_back([this] {
-        currentWorld->Play();
-        UpdateButtons(currentWorld);
-    });
-}
-
-void PlayButtons::StopClicked(Pocket::TouchData d) {
-    if (!currentWorld) return;
-    context->preActions.emplace_back([this] {
-        currentWorld->Stop();
-        UpdateButtons(currentWorld);
-    });
+void PlayButtons::UpdateStates(OpenWorld *openWorld) {
+    editModePivot->Enabled = !openWorld->IsPlaying();
+    gameModePivot->Enabled = openWorld->IsPlaying();
 }

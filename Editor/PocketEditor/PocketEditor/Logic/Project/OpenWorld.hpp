@@ -39,6 +39,7 @@ public:
     void Stop();
     
     Property<bool> IsPlaying;
+    Property<bool> IsPaused;
     
     void Close();
     

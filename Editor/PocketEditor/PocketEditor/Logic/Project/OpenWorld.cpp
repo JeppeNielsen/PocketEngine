@@ -254,13 +254,20 @@ void OpenWorld::Stop() {
         delete delayedWorld;
     });
     runningWorld = 0;
+    IsPaused = false;
     Enable();
 }
 
 void OpenWorld::Update(InputDevice& input, float dt) {
     if (!runningWorld) return;
     input.UpdateInputManager(&runningWorld->World().Input());
-    runningWorld->World().Update(dt);
+    if (IsPaused) {
+        if (runningWorld->EditorRoot()) {
+            runningWorld->World().UpdateRoot(dt, runningWorld->EditorRoot());
+        }
+    } else {
+        runningWorld->World().Update(dt);
+    }
 }
 
 void OpenWorld::Render() {

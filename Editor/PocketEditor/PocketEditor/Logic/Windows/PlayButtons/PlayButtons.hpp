@@ -23,12 +23,8 @@ private:
     void ScreenSizeChanged();
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
     
-    GameObject* playButton;
-    GameObject* stopButton;
+    GameObject* editModePivot;
+    GameObject* gameModePivot;
     
-    void UpdateButtons(OpenWorld* openWorld);
-    
-    void PlayClicked(TouchData d);
-    void StopClicked(TouchData d);
-    
+    void UpdateStates(OpenWorld* openWorld);
 };
