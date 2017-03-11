@@ -161,6 +161,7 @@ namespace Pocket {
         const ObjectCollection& Roots();
         
         void Update(float dt);
+        void UpdateRoot(float dt, GameObject* root);
         void Render();
         
         void DebugSystems();

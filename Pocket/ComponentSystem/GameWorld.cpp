@@ -176,6 +176,15 @@ void GameWorld::Update(float dt) {
     }
 }
 
+void GameWorld::UpdateRoot(float dt, GameObject* root) {
+    DoActions(delayedActions);
+    for(auto& s : activeSystems) {
+        if (s.scene==root->scene) {
+            s.system->Update(s.scene->timeScale() * dt);
+        }
+    }
+}
+
 void GameWorld::DebugSystems() {
     /*std::cout <<"-------------------------------------------"<<std::endl;
     for(auto&s : activeSystems) {
@@ -192,10 +201,13 @@ void GameWorld::Render() {
 }
 
 void GameWorld::Clear() {
-   for(auto root : roots) {
+    GuidToRoot = 0;
+    GuidToPath = 0;
+    GetPaths = 0;
+    for(auto root : roots) {
         root->Remove();
-   }
-   DoActions(delayedActions);
+    }
+    DoActions(delayedActions);
 }
 
 int GameWorld::ObjectCount() { return objects.count; }
