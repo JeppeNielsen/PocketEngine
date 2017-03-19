@@ -820,11 +820,13 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
     return false;
 }
 
-void ScriptWorld::SetWorldType(GameWorld& world) {
+void ScriptWorld::SetWorldType(GameWorld& world, const std::function<bool(int)>& componentTypePredicate) {
     if (baseSystemIndex>=0) return;
 
     worldComponentNames.clear();
     for(int i=0; i<world.components.size(); ++i) {
+        if (componentTypePredicate && !componentTypePredicate(i)) continue;
+    
         std::string& name = world.components[i].name;
         size_t namespaceColons = name.find("::");
         std::string nameWithoutNamespace;

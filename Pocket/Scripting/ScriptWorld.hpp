@@ -32,7 +32,7 @@ public:
                   const std::vector<std::string>& sourceFiles,
                   const std::vector<std::string>& headerFiles);
     
-    void SetWorldType(GameWorld& world);
+    void SetWorldType(GameWorld& world, const std::function<bool(int)>& componentTypePredicate = 0);
     bool Build(bool enableOutput, const std::string &pathToPocketEngineLib);
     bool LoadLib();
     void UnloadLib();
