@@ -9,6 +9,7 @@
 #include "LineRendererSystem.hpp"
 #include "RenderSystem.hpp"
 #include "Engine.hpp"
+#include "Colorable.hpp"
 
 using namespace Pocket;
 
@@ -141,18 +142,26 @@ void LineRendererSystem::Update(float dt) {
 //    Colour Color;
 //    Vector3 Normal;
 
+                Colorable* colorable = o->GetComponent<Colorable>();
+
+                const Colour& color = colorable ? colorable->Color : Colour(1.0f, 1.0f, 1.0f, 1.0f);
+                Colour alphaColor = color;
+                alphaColor.A(0);
+
                 short index = (short)v.size();
                 float edgeWidth = width + 1.0f;
                 
-                v.push_back({ Vector3( v1 + normal * edgeWidth), Vector2(0,0), Colour(1.0f,1.0f,1.0f,0.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v1 + normal * width), Vector2(0,0), Colour(1.0f,1.0f,1.0f,1.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v1 - normal * width), Vector2(0,0), Colour(1.0f,1.0f,1.0f,1.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v1 - normal * edgeWidth), Vector2(0,0), Colour(1.0f,1.0f,1.0f,0.0f), Vector3(0,0,1)});
                 
-                v.push_back({ Vector3( v2 + normal * edgeWidth), Vector2(0,0), Colour(1.0f,1.0f,1.0f,0.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v2 + normal * width), Vector2(0,0), Colour(1.0f,1.0f,1.0f,1.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v2 - normal * width), Vector2(0,0), Colour(1.0f,1.0f,1.0f,1.0f), Vector3(0,0,1)});
-                v.push_back({ Vector3( v2 - normal * edgeWidth), Vector2(0,0), Colour(1.0f,1.0f,1.0f,0.0f), Vector3(0,0,1)});
+                
+                v.push_back({ Vector3( v1 + normal * edgeWidth), Vector2(0,0), alphaColor, Vector3(0,0,1)});
+                v.push_back({ Vector3( v1 + normal * width), Vector2(0,0), color, Vector3(0,0,1)});
+                v.push_back({ Vector3( v1 - normal * width), Vector2(0,0), color, Vector3(0,0,1)});
+                v.push_back({ Vector3( v1 - normal * edgeWidth), Vector2(0,0), alphaColor, Vector3(0,0,1)});
+                
+                v.push_back({ Vector3( v2 + normal * edgeWidth), Vector2(0,0), alphaColor, Vector3(0,0,1)});
+                v.push_back({ Vector3( v2 + normal * width), Vector2(0,0), color, Vector3(0,0,1)});
+                v.push_back({ Vector3( v2 - normal * width), Vector2(0,0), color, Vector3(0,0,1)});
+                v.push_back({ Vector3( v2 - normal * edgeWidth), Vector2(0,0), alphaColor, Vector3(0,0,1)});
                 
                 for (int p=0; p<3; p++) {
     
