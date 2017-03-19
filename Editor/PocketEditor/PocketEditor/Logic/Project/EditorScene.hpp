@@ -36,7 +36,6 @@ private:
     std::map<ComponentId, Proxy> proxyComponents;
     
     bool IsClonerInAncestry(GameObject* object);
-    void CreateEditorSystems(Pocket::GameObject &editorWorld);
     void BindToRoot(GameObject* root);
     void AddEditorObject(GameObject* object);
     GameObject* AddObjectToEditor(GameObject* rootObject);

@@ -14,6 +14,7 @@
 #include "CloneVariable.hpp"
 #include "EditorDropTarget.hpp"
 #include "ProjectSettings.hpp"
+#include "SystemHelper.hpp"
 
 RunningWorld::RunningWorld() {
     ActiveScene = 0;
@@ -36,7 +37,7 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
     fileWorld.AddGameWorld(world);
     fileWorld.FindRoots(path, {".json", ".meta" });
     fileWorld.OnRootCreated = [this, &scriptWorld] (GameObject* root) {
-        OpenWorld::CreateDefaultSystems(*root);
+        SystemHelper::AddGameSystems(*root);
         root->CreateSystem<AssetManager>();
         scriptWorld.AddGameRoot(root);
     };
@@ -46,7 +47,7 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
     //world.AddComponentType<ProjectSettings>();
     
     GameObject* initRoot = world.CreateRoot();
-    OpenWorld::CreateDefaultSystems(*initRoot);
+    SystemHelper::AddGameSystems(*initRoot);
     //OpenWorld::CreateEditorSystems(*initRoot);
     initRoot->CreateSystem<AssetManager>();
     initRoot->Remove();

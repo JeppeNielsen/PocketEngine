@@ -32,9 +32,6 @@ public:
     bool Save();
     bool Load(const std::string& path, const std::string& filename, EditorContext* context);
     
-    static void CreateDefaultSystems(GameObject& root);
-    static void CreateEditorSystems(GameObject& root);
-    
     void Play();
     void Stop();
     

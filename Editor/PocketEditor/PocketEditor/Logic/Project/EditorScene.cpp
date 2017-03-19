@@ -7,63 +7,15 @@
 //
 
 #include "EditorScene.hpp"
-
-
 #include "RenderSystem.hpp"
-#include "TouchSystem.hpp"
-#include "TransformHierarchy.hpp"
-
-#include "DraggableSystem.hpp"
-#include "EditorTransformSystem.hpp"
-#include "EditorMeshSystem.hpp"
-#include "EditorSizeableSystem.hpp"
-#include "ClickSelectorSystem.hpp"
-#include "DragSelector.hpp"
-#include "SelectableDragSystem.hpp"
-#include "SelectedColorerSystem.hpp"
-#include "ClonerSystem.hpp"
-#include "FirstPersonMoverSystem.hpp"
-#include "ScriptWorld.hpp"
-#include "InputMapperSystem.hpp"
-#include "CloneVariable.hpp"
-#include "VelocitySystem.hpp"
-#include "EditorContext.hpp"
-#include "AssetManager.hpp"
-#include "SwitchSystem.hpp"
-#include "TouchSwitchSystem.hpp"
-#include "SwitchEnablerSystem.hpp"
-#include "SlicedQuadMeshSystem.hpp"
-
-#include "TriggerSystem.hpp"
-#include "TriggerTouchSystem.hpp"
-#include "SceneManagerSystem.hpp"
-
-#include "LineRendererSystem.hpp"
-#include "EditorCameraSelection.hpp"
-
-
-void EditorScene::CreateEditorSystems(Pocket::GameObject &editorWorld) {
-    editorWorld.CreateSystem<RenderSystem>();
-    editorWorld.CreateSystem<TouchSystem>();
-    editorWorld.CreateSystem<DraggableSystem>();
-    editorWorld.CreateSystem<EditorTransformSystem>();
-    editorWorld.CreateSystem<EditorMeshSystem>();
-    editorWorld.CreateSystem<EditorSizeableSystem>();
-    
-    editorWorld.CreateSystem<TransformHierarchy>();
-    
-    editorWorld.CreateSystem<ClickSelectorSystem>();
-    editorWorld.CreateSystem<DragSelector>()->Setup({2000,2000});
-    editorWorld.CreateSystem<SelectableDragSystem>();
-    editorWorld.CreateSystem<TouchSystem>()->TouchDepth = 5;
-    editorWorld.CreateSystem<SelectedColorerSystem>();
-    editorWorld.CreateSystem<FirstPersonMoverSystem>();
-    editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
-    
-    editorWorld.CreateSystem<LineRendererSystem>();
-    
-    editorWorld.CreateSystem<EditorCameraSelection>();
-}
+#include "SystemHelper.hpp"
+#include "EditorObject.hpp"
+#include "Cloner.hpp"
+#include "Selectable.hpp"
+#include "Mesh.hpp"
+#include "FirstPersonMover.hpp"
+#include "EditorProxyComponent.hpp"
+#include "Sizeable.hpp"
 
 bool EditorScene::IsClonerInAncestry(GameObject* object) {
     while(true) {
@@ -189,7 +141,7 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     };
     
     editorRoot = sceneRoot->World()->CreateRoot();
-    CreateEditorSystems(*editorRoot);
+    SystemHelper::AddEditorSystems(*editorRoot);
     
     AddEditorObject(sceneRoot);
     

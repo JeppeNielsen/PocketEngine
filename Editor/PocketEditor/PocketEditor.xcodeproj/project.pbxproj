@@ -23,6 +23,9 @@
 		7220F63D1E74A21D0063EAD5 /* LineRendererSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F63B1E74A21D0063EAD5 /* LineRendererSystem.cpp */; };
 		7220F63F1E75AB670063EAD5 /* LineRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F63E1E75AB670063EAD5 /* LineRenderer.cpp */; };
 		7220F64C1E75E3F10063EAD5 /* EditorCameraSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F64A1E75E3F10063EAD5 /* EditorCameraSelection.cpp */; };
+		7220F6521E7ECDCC0063EAD5 /* DistanceScaler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6501E7ECDCC0063EAD5 /* DistanceScaler.cpp */; };
+		7220F6551E7ECE280063EAD5 /* DistanceScalerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6531E7ECE280063EAD5 /* DistanceScalerSystem.cpp */; };
+		7220F6591E7F2B4C0063EAD5 /* SystemHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6571E7F2B4C0063EAD5 /* SystemHelper.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -473,6 +476,12 @@
 		7220F64A1E75E3F10063EAD5 /* EditorCameraSelection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorCameraSelection.cpp; sourceTree = "<group>"; };
 		7220F64B1E75E3F10063EAD5 /* EditorCameraSelection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorCameraSelection.hpp; sourceTree = "<group>"; };
 		7220F64E1E772B410063EAD5 /* EditorProxyComponent.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorProxyComponent.hpp; sourceTree = "<group>"; };
+		7220F6501E7ECDCC0063EAD5 /* DistanceScaler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DistanceScaler.cpp; sourceTree = "<group>"; };
+		7220F6511E7ECDCC0063EAD5 /* DistanceScaler.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DistanceScaler.hpp; sourceTree = "<group>"; };
+		7220F6531E7ECE280063EAD5 /* DistanceScalerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DistanceScalerSystem.cpp; sourceTree = "<group>"; };
+		7220F6541E7ECE280063EAD5 /* DistanceScalerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DistanceScalerSystem.hpp; sourceTree = "<group>"; };
+		7220F6571E7F2B4C0063EAD5 /* SystemHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SystemHelper.cpp; sourceTree = "<group>"; };
+		7220F6581E7F2B4C0063EAD5 /* SystemHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SystemHelper.hpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -1595,6 +1604,15 @@
 			path = EditorSystems;
 			sourceTree = "<group>";
 		};
+		7220F6561E7F2B420063EAD5 /* Systems */ = {
+			isa = PBXGroup;
+			children = (
+				7220F6571E7F2B4C0063EAD5 /* SystemHelper.cpp */,
+				7220F6581E7F2B4C0063EAD5 /* SystemHelper.hpp */,
+			);
+			path = Systems;
+			sourceTree = "<group>";
+		};
 		72308CF31E127A7A00B92B8D /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -2342,6 +2360,10 @@
 				72A4AFB21E452B1D00A856F5 /* SlicedTexture.hpp */,
 				729950821C99F76000DAAE5D /* TextureComponent.cpp */,
 				729950831C99F76000DAAE5D /* TextureComponent.hpp */,
+				7220F6501E7ECDCC0063EAD5 /* DistanceScaler.cpp */,
+				7220F6511E7ECDCC0063EAD5 /* DistanceScaler.hpp */,
+				7220F6531E7ECE280063EAD5 /* DistanceScalerSystem.cpp */,
+				7220F6541E7ECE280063EAD5 /* DistanceScalerSystem.hpp */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -3380,6 +3402,7 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7220F6561E7F2B420063EAD5 /* Systems */,
 				7220F6431E75B0770063EAD5 /* EditorSystems */,
 				720585001E60B907009FFACF /* Assets */,
 				72EC13811D2D957B00B69802 /* Building */,
@@ -3795,6 +3818,7 @@
 				72B492621DCE59D10063518A /* GameWorld.cpp in Sources */,
 				729954E41C99F76100DAAE5D /* btPolarDecomposition.cpp in Sources */,
 				729954011C99F76100DAAE5D /* DraggableSystem.cpp in Sources */,
+				7220F6551E7ECE280063EAD5 /* DistanceScalerSystem.cpp in Sources */,
 				7299550D1C99F76100DAAE5D /* Texture.cpp in Sources */,
 				7244C4A11DF428EA00ADF008 /* LayoutSystem.cpp in Sources */,
 				729954CE1C99F76100DAAE5D /* SpuGatheringCollisionDispatcher.cpp in Sources */,
@@ -3815,6 +3839,7 @@
 				729953E81C99F76100DAAE5D /* HierarchyEditorSystem.cpp in Sources */,
 				7299542E1C99F76100DAAE5D /* Vector2.cpp in Sources */,
 				729955081C99F76100DAAE5D /* Clipper.cpp in Sources */,
+				7220F6591E7F2B4C0063EAD5 /* SystemHelper.cpp in Sources */,
 				727B38CE1E2B9C5300531B62 /* truetype.c in Sources */,
 				7299547D1C99F76100DAAE5D /* btConeShape.cpp in Sources */,
 				720585141E6232FC009FFACF /* TriggerTouchSystem.cpp in Sources */,
@@ -3942,6 +3967,7 @@
 				7299548A1C99F76100DAAE5D /* btMultiSphereShape.cpp in Sources */,
 				729953E11C99F76100DAAE5D /* SoundSystem.cpp in Sources */,
 				72AE74D21DAC16C600CEB998 /* InputController.cpp in Sources */,
+				7220F6521E7ECDCC0063EAD5 /* DistanceScaler.cpp in Sources */,
 				729954D31C99F76100DAAE5D /* SpuGatheringCollisionTask.cpp in Sources */,
 				72B4925F1DCE59D10063518A /* GameObject.cpp in Sources */,
 				729954CD1C99F76100DAAE5D /* SpuFakeDma.cpp in Sources */,

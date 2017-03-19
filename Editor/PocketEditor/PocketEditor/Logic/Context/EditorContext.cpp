@@ -11,6 +11,7 @@
 #include "CloneVariable.hpp"
 #include "AssetManager.hpp"
 #include "EditorDropTarget.hpp"
+#include "SystemHelper.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
@@ -51,8 +52,10 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     world.AddComponentType<ProjectSettings>();
     
     GameObject* initRoot = world.CreateRoot();
-    OpenWorld::CreateDefaultSystems(*initRoot);
-    OpenWorld::CreateEditorSystems(*initRoot);
+    
+    SystemHelper::AddGameSystems(*initRoot);
+    SystemHelper::AddEditorSystems(*initRoot);
+    
     initRoot->CreateSystem<AssetManager>();
     initRoot->Remove();
     

@@ -19,6 +19,10 @@
 #include "Touchable.hpp"
 #include "Draggable.hpp"
 #include "Renderable.hpp"
+#include "LineRenderer.hpp"
+#include "DistanceScaler.hpp"
+#include "Orderable.hpp"
+#include "Colorable.hpp"
 
 void EditorTransformSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Selectable>()->Selected.Changed.Bind(this, &EditorTransformSystem::SelectionChanged, object);
@@ -36,34 +40,71 @@ void EditorTransformSystem::SelectionChanged(Pocket::GameObject *object) {
         {
             GameObject* xaxis = transformerObject->CreateChild();
             xaxis->AddComponent<Transform>(object);
-            xaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({1,0,0}, {1,0.05f,0.05f});
-            xaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(1.0f,0,0.0f, 0.5f));
-            xaxis->AddComponent<Renderable>();
-            xaxis->AddComponent<Touchable>();
+            
             xaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::XAxis;
             xaxis->AddComponent<Selectable>(object);
+            
+            
+            GameObject* visual = xaxis->CreateChild();
+            visual->AddComponent<Transform>();
+            visual->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0.5f,0,0}, {0.5f,0.2f,0.2f});
+            //visual->AddComponent<Renderable>();
+            visual->AddComponent<Touchable>();
+            visual->AddComponent<DistanceScaler>()->Scale = 0.1f;
+            //visual->AddComponent<Orderable>()->Order = -100;
+            
+            visual->AddComponent<Colorable>()->Color = Colour(1.0f,0.0f,0.0f, 1.0f);
+            visual->AddComponent<LineRenderer>()->vertices = { Vector3(0), Vector3(1,0,0) };
+            visual->GetComponent<LineRenderer>()->Width = 10;
+            
+            xaxis->AddComponent<Touchable>(visual);
         }
         
         {
-            GameObject* yaxis = transformerObject->CreateChild();
-            yaxis->AddComponent<Transform>(object);
-            yaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,1,0}, {0.05f,1.0f,0.05f});
-            yaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,1.0f,0.0f, 0.5f));
-            yaxis->AddComponent<Renderable>();
-            yaxis->AddComponent<Touchable>();
-            yaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
-            yaxis->AddComponent<Selectable>(object);
+            GameObject* xaxis = transformerObject->CreateChild();
+            xaxis->AddComponent<Transform>(object);
+            
+            xaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
+            xaxis->AddComponent<Selectable>(object);
+
+            GameObject* visual = xaxis->CreateChild();
+            visual->AddComponent<Transform>();
+            visual->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0.5f,0}, {0.2f,0.5f,0.2f});
+            //visual->AddComponent<Renderable>();
+            visual->AddComponent<Touchable>();
+            visual->AddComponent<DistanceScaler>()->Scale = 0.1f;
+            //visual->AddComponent<Orderable>()->Order = -100;
+            
+            visual->AddComponent<Colorable>()->Color = Colour(0.0f,1,0.0f, 1.0f);
+            visual->AddComponent<LineRenderer>()->vertices = { Vector3(0), Vector3(0,1,0) };
+            visual->GetComponent<LineRenderer>()->Width = 10;
+            
+            xaxis->AddComponent<Touchable>(visual);
+
         }
         
         {
-            GameObject* zaxis = transformerObject->CreateChild();
-            zaxis->AddComponent<Transform>(object);
-            zaxis->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0,1}, {0.05f,0.05f,1.0f});
-            zaxis->GetComponent<Mesh>()->GetMesh<Vertex>().SetColor(Colour(0.0f,0.0f,1.0f, 0.5f));
-            zaxis->AddComponent<Renderable>();
-            zaxis->AddComponent<Touchable>();
-            zaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::ZAxis;
-            zaxis->AddComponent<Selectable>(object);
+            GameObject* xaxis = transformerObject->CreateChild();
+            xaxis->AddComponent<Transform>(object);
+            
+            xaxis->AddComponent<Draggable>()->Movement = Draggable::MovementMode::ZAxis;
+            xaxis->AddComponent<Selectable>(object);
+            
+            GameObject* visual = xaxis->CreateChild();
+            visual->AddComponent<Transform>();
+            visual->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({0,0,0.5f}, {0.2f,0.2f,0.5f});
+            //visual->AddComponent<Renderable>();
+            visual->AddComponent<Touchable>();
+            visual->AddComponent<DistanceScaler>()->Scale = 0.1f;
+            //visual->AddComponent<Orderable>()->Order = -100;
+            
+            visual->AddComponent<Colorable>()->Color = Colour(0.0f,0.0f,1.0f,1.0f);
+            visual->AddComponent<LineRenderer>()->vertices = { Vector3(0), Vector3(0,0,1) };
+            visual->GetComponent<LineRenderer>()->Width = 10;
+            
+            xaxis->AddComponent<Touchable>(visual);
+            
+
         }
         transformObjects[object] = transformerObject;
     } else {

@@ -13,6 +13,7 @@
 #include "FileHelper.hpp"
 #include <fstream>
 #include "FileArchive.hpp"
+#include "SystemHelper.hpp"
 
 Project::Project() {
     scriptWorld.Types.Add<Vector3>();
@@ -80,7 +81,9 @@ bool Project::Compile() {
     Worlds.PreCompile();
     scriptWorld.RemoveGameWorld(*world);
     RefreshSourceFiles();
-    scriptWorld.SetWorldType(*world);
+    scriptWorld.SetWorldType(*world, [] (int componentType) {
+        return !SystemHelper::IsComponentEditorSpecific(componentType);
+    });
     bool succes = scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
     if (succes) {
         scriptWorld.AddGameWorld(*world);
