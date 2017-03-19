@@ -109,6 +109,7 @@ namespace Pocket {
         void RemoveComponent(ComponentId id) override;
         void CloneComponent(ComponentId id, GameObject* object) override;
         void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
+        void EnableComponent(ComponentId id, bool enable);
         GameObject* GetComponentOwner(ComponentId id);
         
         template<typename T>
@@ -141,6 +142,11 @@ namespace Pocket {
         
         template<typename T>
         T* ReplaceComponent(GameObject* source);
+        
+        template<typename T>
+        void EnableComponent(bool enable) {
+            EnableComponent(GameIdHelper::GetComponentID<T>(), enable);
+        }
         
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
         

@@ -183,6 +183,12 @@ void GameObject::SetEnabled(bool enabled) {
     }
 }
 
+void GameObject::EnableComponent(ComponentId id, bool enable) {
+    scene->world->delayedActions.emplace_back([id, enable, this](){
+        TrySetComponentEnabled(id, enable);
+    });
+}
+
 void GameObject::TryAddToSystem(int systemId) {
     if (systemId>=scene->systemsIndexed.size()) return; // systemindex is beyond scene's systems list, thus nothing else to do
     IGameSystem* system = scene->systemsIndexed[systemId];
