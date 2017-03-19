@@ -38,6 +38,9 @@
 #include "TriggerTouchSystem.hpp"
 #include "SceneManagerSystem.hpp"
 
+#include "LineRendererSystem.hpp"
+#include "EditorCameraSelection.hpp"
+
 
 void EditorScene::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<RenderSystem>();
@@ -56,6 +59,10 @@ void EditorScene::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<SelectedColorerSystem>();
     editorWorld.CreateSystem<FirstPersonMoverSystem>();
     editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
+    
+    editorWorld.CreateSystem<LineRendererSystem>();
+    
+    editorWorld.CreateSystem<EditorCameraSelection>();
 }
 
 bool EditorScene::IsClonerInAncestry(GameObject* object) {
@@ -86,11 +93,18 @@ void EditorScene::BindToRoot(Pocket::GameObject *root) {
              auto it = rootToEditorMap.find(object);
             if (it == rootToEditorMap.end()) return;
             GameObject* editorGameObject = it->second;
-            for(auto id : editorObjectsComponents) {
-                if (id == componentId) {
-                    editorGameObject->AddComponent(id, object);
-                    break;
+            
+            auto proxyIt = proxyComponents.find(componentId);
+            
+            if (proxyIt==proxyComponents.end()) {
+                for(auto id : editorObjectsComponents) {
+                    if (id == componentId) {
+                        editorGameObject->AddComponent(id, object);
+                        break;
+                    }
                 }
+            } else {
+                proxyIt->second.add(object, editorGameObject);
             }
         }
         ,
@@ -98,11 +112,18 @@ void EditorScene::BindToRoot(Pocket::GameObject *root) {
             auto it = rootToEditorMap.find(object);
             if (it == rootToEditorMap.end()) return;
             GameObject* editorGameObject = it->second;
-            for(auto id : editorObjectsComponents) {
-                if (id == componentId) {
-                    editorGameObject->RemoveComponent(id);
-                    break;
+            
+            auto proxyIt = proxyComponents.find(componentId);
+            
+            if (proxyIt==proxyComponents.end()) {
+                for(auto id : editorObjectsComponents) {
+                    if (id == componentId) {
+                        editorGameObject->RemoveComponent(id);
+                        break;
+                    }
                 }
+            } else {
+                proxyIt->second.remove(editorGameObject);
             }
         }
     );
@@ -115,6 +136,12 @@ void EditorScene::AddEditorObject(Pocket::GameObject *object) {
     for(auto id : editorObjectsComponents) {
         if (object->HasComponent(id)) {
             editorGameObject->AddComponent(id, object);
+        }
+    }
+    
+    for(auto proxyIt : proxyComponents) {
+        if (object->HasComponent(proxyIt.first)) {
+            proxyIt.second.add(object, editorGameObject);
         }
     }
     for (auto child : object->Children()) {
@@ -149,8 +176,18 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     editorObjectsComponents = {
         GameIdHelper::GetComponentID<Transform>(),
         GameIdHelper::GetComponentID<Mesh>(),
-        GameIdHelper::GetComponentID<Sizeable>()
+        GameIdHelper::GetComponentID<Sizeable>(),
     };
+    
+    proxyComponents[GameIdHelper::GetComponentID<Camera>()] = {
+        [] (GameObject* o, GameObject* eo) {
+            eo->AddComponent<EditorProxyComponent<Camera>>()->component = o->GetComponent<Camera>();
+        },
+        [] (GameObject* o) {
+            o->RemoveComponent<EditorProxyComponent<Camera>>();
+        }
+    };
+    
     editorRoot = sceneRoot->World()->CreateRoot();
     CreateEditorSystems(*editorRoot);
     
@@ -158,7 +195,7 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     
     GameObject* editorCamera = editorRoot->CreateObject();
     editorCamera->AddComponent<Camera>();
-    editorCamera->AddComponent<Transform>()->Position = { 0, 0, 3 };
+    editorCamera->AddComponent<Transform>()->Position = { 0, 0, 30 };
     editorCamera->GetComponent<Camera>()->FieldOfView = 70;
     editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
     

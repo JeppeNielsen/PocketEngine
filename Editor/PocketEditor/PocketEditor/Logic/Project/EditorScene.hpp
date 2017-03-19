@@ -8,6 +8,7 @@
 
 #pragma once
 #include "GameWorld.hpp"
+#include <set>
 
 using namespace Pocket;
 
@@ -26,6 +27,13 @@ private:
     
     std::map<GameObject*, GameObject*> rootToEditorMap;
     std::vector<ComponentId> editorObjectsComponents;
+    
+    struct Proxy {
+        std::function<void(GameObject*, GameObject*)> add;
+        std::function<void(GameObject*)> remove;
+    };
+    
+    std::map<ComponentId, Proxy> proxyComponents;
     
     bool IsClonerInAncestry(GameObject* object);
     void CreateEditorSystems(Pocket::GameObject &editorWorld);

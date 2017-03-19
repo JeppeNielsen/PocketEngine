@@ -40,6 +40,8 @@
 #include "TriggerTouchSystem.hpp"
 #include "SceneManagerSystem.hpp"
 
+#include "LineRendererSystem.hpp"
+
 struct Turner {
     Vector3 speed;
     
@@ -96,6 +98,8 @@ void OpenWorld::CreateEditorSystems(Pocket::GameObject &editorWorld) {
     editorWorld.CreateSystem<SelectedColorerSystem>();
     editorWorld.CreateSystem<FirstPersonMoverSystem>();
     editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
+    
+    editorWorld.CreateSystem<LineRendererSystem>();
 }
 
 bool IsClonerInAncestry(GameObject* object) {
