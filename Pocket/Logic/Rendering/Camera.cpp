@@ -127,3 +127,13 @@ Vector3 Camera::TransformWorldToViewport(Transform* viewTransform, Vector3 world
     Matrix4x4 viewProjection = GetViewProjection(viewTransform);
     return viewProjection.TransformPosition(worldPoint);
 }
+
+Vector3 Camera::TransformViewPositionToScreenSpace(Transform* viewTransform, Vector3 viewPoint) {
+    const Matrix4x4& viewProjection = Projection();
+    viewPoint = viewProjection.TransformPosition(viewPoint);
+    Vector2 screenPoint = Vector2(viewPoint.x, viewPoint.y);
+    const Rect& viewPort = Viewport() * Engine::Context().ScreenSize();
+    screenPoint *= (viewPort.Size() * 0.5f);
+    screenPoint += viewPort.Center();
+    return Vector3(screenPoint.x, screenPoint.y, viewPoint.z);
+}

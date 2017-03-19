@@ -35,6 +35,7 @@ namespace Pocket {
         Vector3 TransformPointToScreenSpace(Transform* viewTransform, Vector3 worldPoint);
         Vector3 TransformViewportToWorld(Transform* viewTransform, Vector3 viewportPoint);
         Vector3 TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint);
+        Vector3 TransformViewPositionToScreenSpace(Transform* viewTransform, Vector3 viewPoint);
         
     private:
         void ScreenSizeChanged();
