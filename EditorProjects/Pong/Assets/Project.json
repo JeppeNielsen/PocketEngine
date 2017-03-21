@@ -1,0 +1,15 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "2gGl5T0VThixzYtGf2L49Q==",
+        "counter": 1,
+        "Components": [
+            {
+                "ProjectSettings": {
+                    "name": "Pong",
+                    "startupScene": "9KkPi0bmTS6f+W3nOFgVRw==:1"
+                }
+            }
+        ]
+    }
+}

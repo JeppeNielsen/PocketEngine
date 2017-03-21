@@ -1,0 +1,23 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "D8I69qFIQXeIB0SPIw2gfQ==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::InputMapper": {
+                    "map": [
+                        [
+                            "a",
+                            "down"
+                        ],
+                        [
+                            "q",
+                            "up"
+                        ]
+                    ]
+                }
+            }
+        ]
+    }
+}

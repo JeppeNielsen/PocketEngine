@@ -1,0 +1,184 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "9KkPi0bmTS6f+W3nOFgVRw==",
+        "counter": 182,
+        "Components": [],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 13,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0.43304,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        }
+                    ],
+                    "Children": [
+                        {
+                            "GameObject": {
+                                "id": 14,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-3,0,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 175
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "6,3"
+                                                },
+                                                {
+                                                    "Text": "Start"
+                                                },
+                                                {
+                                                    "FontSize": 1.5
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Trigger": {
+                                            "Source": "SuI5cwi0QbuAYteeNl6D4A==:1",
+                                            "variables": [
+                                                {
+                                                    "": [
+                                                        [
+                                                            0,
+                                                            "bP1nzwuqRI2+zFqh2ZQ5eQ==:1"
+                                                        ]
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        },
+                        {
+                            "GameObject": {
+                                "id": 18,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-3,-5.32335,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 178
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "6,3"
+                                                },
+                                                {
+                                                    "Text": "Quit"
+                                                },
+                                                {
+                                                    "FontSize": 1.2
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        },
+                        {
+                            "GameObject": {
+                                "id": 152,
+                                "Components": [
+                                    {
+                                        "Pocket::Transform": {
+                                            "Position": "-3,-2.6711,0",
+                                            "Rotation": "1,0,0,0",
+                                            "Scale": "1,1,1",
+                                            "Anchor": "0,0,0",
+                                            "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Touchable:ref": {
+                                            "id": 181
+                                        }
+                                    },
+                                    {
+                                        "Pocket::Cloner": {
+                                            "Source": "h93VDOfHRmGf8NnzTYVtyg==:1",
+                                            "variables": [
+                                                {
+                                                    "Size": "6,3"
+                                                },
+                                                {
+                                                    "Text": "Options"
+                                                },
+                                                {
+                                                    "FontSize": 1.2
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ],
+                                "Children": []
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 133,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,30",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Camera": {
+                                "FieldOfView": 15,
+                                "Near": 0.1,
+                                "Far": 512,
+                                "Viewport": "0,0,1,1",
+                                "Aspect": 0,
+                                "Orthographic": true,
+                                "Mask": 0
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

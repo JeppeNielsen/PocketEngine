@@ -1,0 +1,86 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "7z96OnjZQh63YKpPbipl0Q==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::Transform": {
+                    "Position": "-1.19209e-07,0,0",
+                    "Rotation": "1,0,0,0",
+                    "Scale": "1,1,1",
+                    "Anchor": "0,0,0",
+                    "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                }
+            },
+            {
+                "Pocket::Mesh": {
+                    "VertexMesh": {
+                        "vertices": [
+                            "0,0,0:0,0:255,255,255,255:0,0,0",
+                            "1,0,0:1,0:255,255,255,255:0,0,0",
+                            "1,1,0:1,1:255,255,255,255:0,0,0",
+                            "0,1,0:0,1:255,255,255,255:0,0,0"
+                        ],
+                        "triangles": [
+                            0,
+                            1,
+                            2,
+                            0,
+                            2,
+                            3
+                        ]
+                    }
+                }
+            },
+            {
+                "Pocket::Renderable": {
+                    "BlendMode": 1,
+                    "Mask": 0
+                }
+            },
+            {
+                "Pocket::TextureComponent:ref": {
+                    "id": "vOGD6rqIRB2ax+DnVT9j7Q==:1"
+                }
+            },
+            {
+                "Pocket::Sizeable": {
+                    "Size": "1,1"
+                }
+            },
+            {
+                "Pocket::Velocity": {
+                    "velocity": "-0.2,0,0"
+                }
+            },
+            {
+                "Pocket::SlicedQuad": {
+                    "OuterSize": 0,
+                    "InnerSize": 0
+                }
+            },
+            {
+                "Pocket::SlicedTexture": {
+                    "BaseArea": "0,0,1,1",
+                    "OuterArea": "0,0,1,1",
+                    "InnerArea": "0,0,1,1"
+                }
+            },
+            {
+                "Pocket::CloneVariable": {
+                    "Variables": [
+                        {
+                            "componentName": "Pocket::Sizeable",
+                            "fieldName": "Size"
+                        },
+                        {
+                            "componentName": "Pocket::Velocity",
+                            "fieldName": "velocity"
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
