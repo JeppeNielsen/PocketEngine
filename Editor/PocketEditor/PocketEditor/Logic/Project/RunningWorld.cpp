@@ -38,7 +38,7 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
     fileWorld.FindRoots(path, {".json", ".meta" });
     fileWorld.OnRootCreated = [this, &scriptWorld] (GameObject* root) {
         SystemHelper::AddGameSystems(*root);
-        root->CreateSystem<AssetManager>();
+        
         scriptWorld.AddGameRoot(root);
     };
     //world.AddComponentType<Cloner>();

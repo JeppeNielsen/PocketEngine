@@ -14,6 +14,7 @@
 #include "TouchSwitchSystem.hpp"
 #include "SlicedQuadMeshSystem.hpp"
 #include "AssetManager.hpp"
+#include "SystemHelper.hpp"
 
 using namespace Pocket;
 
@@ -39,19 +40,18 @@ public:
     
     void Initialize() {
     
-        std::string zipFile = "/Projects/PocketEngine/Editor/resources.zip";
+        std::string zipFile = "/Projects/PocketEngine/EditorProjects/Builds2/resources";
     
         fileArchive.Initialize(zipFile);
         File::SetArchive(fileArchive);
         
         world.GuidToRoot = [this] (const std::string& guid) {
             GameObject* root = 0;
-            if (!fileArchive.TryLoadData(guid, [&root, this] (void* data, size_t size) {
+            if (!fileArchive.TryLoadData(guid, [&root, guid, this] (void* data, size_t size) {
                 std::stringstream ss;
                 ss.write((const char*)data, size);
                 root = world.CreateRootFromJson(ss, [](GameObject* root) {
-                    CreateDefaultSystems(*root);
-                    
+                    SystemHelper::AddGameSystems(*root);
                 });
             })) {
                 std::cout << "unable to load: "<<guid <<std::endl;
@@ -59,7 +59,7 @@ public:
             return root;
         };
         world.GuidToPath = [] (const std::string& guid) { return guid; };
-        world.TryFindRoot("NDGyhUcqSkWLeRYFTKAdqA==");
+        world.SetLayerScene(0, world.TryFindRoot("9KkPi0bmTS6f+W3nOFgVRw=="));
     }
     
     void Update(float dt) {
@@ -72,7 +72,7 @@ public:
     }
 };
 
-int main_testScene() {
+int main_loadgui() {
     Engine e;
     e.Start<GameCode>();
 	return 0;

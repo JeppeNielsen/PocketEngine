@@ -153,9 +153,9 @@ void Project::BuildExecutable(const std::string& outputPath) {
     RefreshSourceFiles();
     
     scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", outputPath + "/" + projectSettings->name , [&] (std::string& source) {
-        source += "world.TryFindRoot(\"";
+        source += "world.SetLayerScene(0, world.TryFindRoot(\"";
         source += projectSettings->startupScene.SceneGuid();
-        source += "\");";
+        source += "\"));";
     });
 }
 

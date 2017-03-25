@@ -16,6 +16,13 @@ TypeInfo typeInfo;
 	      typeInfo.AddField(component->speed, "speed");
 return typeInfo;
 };
+componentToFunction[GameIDHelper::GetComponentID<TransformController>()] = [](GameObject* object) -> TypeInfo {
+TransformController* component = object->GetComponent<TransformController>();
+TypeInfo typeInfo;
+	      typeInfo.name = "TransformController";
+	      typeInfo.AddField(component->speed, "speed");
+return typeInfo;
+};
    }
 info.getTypeInfo = componentToFunction[componentID];
 };

@@ -63,6 +63,7 @@ void SystemHelper::AddGameSystems(Pocket::GameObject &world) {
     world.CreateSystem<TriggerSystem>();
     world.CreateSystem<TriggerTouchSystem>();
     world.CreateSystem<SceneManagerSystem>();
+    world.CreateSystem<AssetManager>();
 }
 
 void SystemHelper::AddEditorSystems(Pocket::GameObject& editorWorld) {
