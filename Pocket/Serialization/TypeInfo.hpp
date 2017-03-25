@@ -172,7 +172,7 @@ public:
                 auto field = GetField(name);
                 if (field) {
                     field->Deserialize(context, v);
-                } else if (v.type() == minijson::Object){
+                } else {
                     minijson::ignore(context);
                 }
             });
