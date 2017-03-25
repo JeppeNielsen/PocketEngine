@@ -31,11 +31,22 @@
     bool isLandscape = Pocket::IOSWindowCreator::Instance()->isLandscape;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    
+    CGFloat screenScale = [[UIScreen mainScreen] nativeScale];
+    
+    screenBounds.size.width *= screenScale;
+    screenBounds.size.height *= screenScale;
+    
     CGRect windowBounds = screenBounds;
+    
+    windowBounds.size = screenBounds.size;
+    
+
     if (isLandscape) {
         windowBounds.size = CGSizeMake(screenBounds.size.height, screenBounds.size.width);
     }
     self = [super initWithFrame:windowBounds];
+    [self setTransform:CGAffineTransformConcat(CGAffineTransformMakeTranslation(-screenBounds.size.width / 2, -screenBounds.size.height/2),CGAffineTransformMakeScale(0.5f, 0.5f))];
     if (self) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         if (isLandscape) {
