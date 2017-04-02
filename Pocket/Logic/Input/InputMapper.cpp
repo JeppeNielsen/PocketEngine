@@ -11,8 +11,9 @@
 using namespace Pocket;
 
 InputMapper::InputMapper() {
-    map["q"] = "up";
+   /* map["q"] = "up";
     map["a"] = "down";
     map["o"] = "up";
     map["l"] = "down";
+    */
 }
