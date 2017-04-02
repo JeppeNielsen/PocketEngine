@@ -57,6 +57,8 @@ namespace Pocket {
         Event<> BufferUpdated;
         Event<> Cleared;
         
+        float GetSpacing(float fontSize);
+        
     private:
         struct Character {
             Character() : enabled(false) {}

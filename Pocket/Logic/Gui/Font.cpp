@@ -83,6 +83,11 @@ void Font::RequestText(const std::string &text, float fontSize) {
     }
 }
 
+float Font::GetSpacing(float fontSize) {
+    RequestText(" ", fontSize);
+    return GetCharacterSet(fontSize).characters[32].xadvance * fontSize;
+}
+
 Font::CharacterSet& Font::RequestCharacterSet(float fontSize) {
     if (fontSize<0) fontSize = -fontSize;
     int index = floorf(fontSize / CharacterSetEverySize);
