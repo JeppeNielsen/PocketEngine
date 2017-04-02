@@ -22,6 +22,14 @@ class ScriptComponent;
 class ScriptWorld {
 public:
 
+    struct Error {
+        int lineNo;
+        int lineColumn;
+        std::string filename;
+        std::string type;
+        std::string description;
+    };
+
     ScriptWorld();
     
     void SetClangSdkPath(const std::string& clangSdkPath);
@@ -33,7 +41,7 @@ public:
                   const std::vector<std::string>& headerFiles);
     
     void SetWorldType(GameWorld& world, const std::function<bool(int)>& componentTypePredicate = 0);
-    bool Build(bool enableOutput, const std::string &pathToPocketEngineLib);
+    bool Build(bool enableOutput, const std::string &pathToPocketEngineLib, const std::function<void(const Error&)>& onError);
     bool LoadLib();
     void UnloadLib();
     
@@ -49,9 +57,11 @@ public:
     
     TypeIndexList Types;
     
-    bool BuildExecutable(const std::string& pathToPocketEngineLib, const std::string& outputPath, const std::function<void(std::string&)>& customCode);
+    bool BuildExecutable(const std::string& pathToPocketEngineLib, const std::string& outputPath, const std::function<void(std::string&)>& customCode, const std::function<void(const std::string&)>& onOutput = nullptr);
     
     void ExtractScriptClasses();
+    
+    void CheckForErrors(const std::string& file, const std::function<void(const Error& error)>& onError);
 private:
     void WriteMainIncludes(std::ofstream &file);
     void WriteMainCppFile(const std::string& path);
@@ -71,10 +81,13 @@ private:
     
     bool IsFieldValid(const ScriptClass::Field& field);
     
+    bool TryParseError(const std::string& codeFile, const std::string& line, Error& error);
+    
     std::string clangSdkPath;
     std::string dynamicLibPath;
     std::string scriptingIncludeDir;
     std::vector<std::string> sourceFiles;
+    std::vector<std::string> headerFiles;
     std::vector<std::string> headerNames;
     std::vector<std::string> headerPaths;
     
