@@ -14,12 +14,14 @@
 namespace Pocket {
     struct TextBox {
         TextBox() {
-             Text = "";
+            Text = "";
             Active = false;
+            DeselectOnEnter = true;
         }
         
         Property<std::string> Text;
         Property<bool> Active;
+        Property<bool> DeselectOnEnter;
         
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Text);

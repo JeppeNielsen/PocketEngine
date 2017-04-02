@@ -112,7 +112,7 @@ void TextBoxSystem::Update(float dt) {
 }
 
 void TextBoxSystem::KeyboardActiveChanged() {
-    if (!root->Input().KeyboardActive && ActiveTextBox()) {
+    if (!root->Input().KeyboardActive && ActiveTextBox() && ActiveTextBox()->DeselectOnEnter) {
         ActiveTextBox()->Active = false;
     }
 }
