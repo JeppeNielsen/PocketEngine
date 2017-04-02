@@ -171,3 +171,16 @@ std::string FileReader::ShowMessageTextBox(const std::string &message, const std
     }
     return "";
 }
+
+void FileReader::ParseFile(const std::string& filename, const std::function<void(const std::string& line)>& lineRead) {
+    std::ifstream file(filename);
+    std::string line;
+    if (file.is_open())
+    {
+        while ( std::getline (file,line) ) {
+            lineRead(line);
+        }
+        file.close();
+    }
+}
+

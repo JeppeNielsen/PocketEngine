@@ -7,6 +7,7 @@
 //
 #include <string>
 #include <vector>
+#include <functional>
 
 namespace Pocket {
     class FileReader {
@@ -25,5 +26,6 @@ namespace Pocket {
         static void OpenPathInFileExplorer(const std::string& path);
         static void ShowMessageBox(const std::string& message);
         static std::string ShowMessageTextBox(const std::string& message, const std::string& text);
+        static void ParseFile(const std::string& file, const std::function<void(const std::string& line)>& lineRead);
     };
 }

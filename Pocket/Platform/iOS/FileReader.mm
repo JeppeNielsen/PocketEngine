@@ -48,3 +48,16 @@ std::string FileReader::GetBundleDir() {
     }
     return path;
 }
+
+void FileReader::ParseFile(const std::string& file, const std::function<void(const std::string& line)>& lineRead) {
+    std::ifstream file;
+    std::string line;
+    if (file.is_open())
+    {
+        while ( std::getline (file,line) ) {
+            lineRead(line);
+        }
+        file.close();
+    }
+}
+
