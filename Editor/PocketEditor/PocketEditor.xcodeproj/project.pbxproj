@@ -407,6 +407,19 @@
 		72BA19611E2039FD00122007 /* ShaderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19601E2039FD00122007 /* ShaderComponent.cpp */; };
 		72BA19641E20F75800122007 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19621E20F75800122007 /* AssetLoader.cpp */; };
 		72BA19671E22900900122007 /* FileSystemWatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19661E22900900122007 /* FileSystemWatcher.cpp */; };
+		72C9B26E1E87061600033C56 /* ConsoleWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B26C1E87061600033C56 /* ConsoleWindow.cpp */; };
+		72C9B2721E884C7200033C56 /* LogMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2701E884C7200033C56 /* LogMessage.cpp */; };
+		72C9B2751E884D1D00033C56 /* LogSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2731E884D1D00033C56 /* LogSystem.cpp */; };
+		72C9B2771E8866F900033C56 /* testCOutRedirect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */; };
+		72C9B27A1E8ABF4000033C56 /* textEditorTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */; };
+		72C9B27E1E8AE20F00033C56 /* TextEditor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B27C1E8AE20F00033C56 /* TextEditor.cpp */; };
+		72C9B2811E8AEC6400033C56 /* TextEditorRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B27F1E8AEC6400033C56 /* TextEditorRenderer.cpp */; };
+		72C9B2841E8AED3200033C56 /* TextEditorRendererSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2821E8AED3200033C56 /* TextEditorRendererSystem.cpp */; };
+		72C9B2861E8AFC8900033C56 /* Courier New Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 72C9B2851E8AFC8900033C56 /* Courier New Bold.ttf */; };
+		72C9B28A1E8B18C700033C56 /* Courier New.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 72C9B2891E8B18C700033C56 /* Courier New.ttf */; };
+		72C9B28C1E8B191200033C56 /* PTMono.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 72C9B28B1E8B191200033C56 /* PTMono.ttc */; };
+		72C9B28F1E8C327800033C56 /* TextEditorEditSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B28D1E8C327800033C56 /* TextEditorEditSystem.cpp */; };
+		72C9B2921E8C48BD00033C56 /* TextEditorCursorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1459,6 +1472,27 @@
 		72BA19631E20F75800122007 /* AssetLoader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoader.hpp; sourceTree = "<group>"; };
 		72BA19651E228FC800122007 /* FileSystemWatcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileSystemWatcher.hpp; sourceTree = "<group>"; };
 		72BA19661E22900900122007 /* FileSystemWatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemWatcher.cpp; sourceTree = "<group>"; };
+		72C9B26C1E87061600033C56 /* ConsoleWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConsoleWindow.cpp; sourceTree = "<group>"; };
+		72C9B26D1E87061600033C56 /* ConsoleWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConsoleWindow.hpp; sourceTree = "<group>"; };
+		72C9B2701E884C7200033C56 /* LogMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogMessage.cpp; sourceTree = "<group>"; };
+		72C9B2711E884C7200033C56 /* LogMessage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogMessage.hpp; sourceTree = "<group>"; };
+		72C9B2731E884D1D00033C56 /* LogSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogSystem.cpp; sourceTree = "<group>"; };
+		72C9B2741E884D1D00033C56 /* LogSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogSystem.hpp; sourceTree = "<group>"; };
+		72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testCOutRedirect.cpp; sourceTree = "<group>"; };
+		72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = textEditorTest.cpp; sourceTree = "<group>"; };
+		72C9B27C1E8AE20F00033C56 /* TextEditor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditor.cpp; sourceTree = "<group>"; };
+		72C9B27D1E8AE20F00033C56 /* TextEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditor.hpp; sourceTree = "<group>"; };
+		72C9B27F1E8AEC6400033C56 /* TextEditorRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorRenderer.cpp; sourceTree = "<group>"; };
+		72C9B2801E8AEC6400033C56 /* TextEditorRenderer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorRenderer.hpp; sourceTree = "<group>"; };
+		72C9B2821E8AED3200033C56 /* TextEditorRendererSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorRendererSystem.cpp; sourceTree = "<group>"; };
+		72C9B2831E8AED3200033C56 /* TextEditorRendererSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorRendererSystem.hpp; sourceTree = "<group>"; };
+		72C9B2851E8AFC8900033C56 /* Courier New Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Courier New Bold.ttf"; sourceTree = "<group>"; };
+		72C9B2891E8B18C700033C56 /* Courier New.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Courier New.ttf"; sourceTree = "<group>"; };
+		72C9B28B1E8B191200033C56 /* PTMono.ttc */ = {isa = PBXFileReference; lastKnownFileType = file; path = PTMono.ttc; sourceTree = "<group>"; };
+		72C9B28D1E8C327800033C56 /* TextEditorEditSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorEditSystem.cpp; sourceTree = "<group>"; };
+		72C9B28E1E8C327800033C56 /* TextEditorEditSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorEditSystem.hpp; sourceTree = "<group>"; };
+		72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorCursorSystem.cpp; sourceTree = "<group>"; };
+		72C9B2911E8C48BD00033C56 /* TextEditorCursorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorCursorSystem.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -1929,6 +1963,9 @@
 		7287F10A1C9B41B3005D05FA /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				72C9B28B1E8B191200033C56 /* PTMono.ttc */,
+				72C9B2891E8B18C700033C56 /* Courier New.ttf */,
+				72C9B2851E8AFC8900033C56 /* Courier New Bold.ttf */,
 				7287F10C1C9B41B3005D05FA /* Font.fnt */,
 				7287F1121C9B41B3005D05FA /* images.png */,
 				7287F1131C9B41B3005D05FA /* images.xml */,
@@ -1983,6 +2020,7 @@
 		72994F971C99F74F00DAAE5D /* PocketEditor */ = {
 			isa = PBXGroup;
 			children = (
+				72C9B27B1E8AE01000033C56 /* TextEditor */,
 				72CE8EDE1CB2E494001F08E4 /* Logic */,
 				72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */,
 				721EA9A91C9DFEB60027D223 /* ScriptCode */,
@@ -1994,6 +2032,8 @@
 				72B492691DD3AE510063518A /* testGui.cpp */,
 				72A4AFB41E47D5C400A856F5 /* testResources.cpp */,
 				72A4B3B51E4BC16F00A856F5 /* extractCppFiles.cpp */,
+				72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */,
+				72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -3399,9 +3439,47 @@
 			path = Meta;
 			sourceTree = "<group>";
 		};
+		72C9B26B1E8705C700033C56 /* Console */ = {
+			isa = PBXGroup;
+			children = (
+				72C9B26C1E87061600033C56 /* ConsoleWindow.cpp */,
+				72C9B26D1E87061600033C56 /* ConsoleWindow.hpp */,
+			);
+			path = Console;
+			sourceTree = "<group>";
+		};
+		72C9B26F1E8848ED00033C56 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				72C9B2701E884C7200033C56 /* LogMessage.cpp */,
+				72C9B2711E884C7200033C56 /* LogMessage.hpp */,
+				72C9B2731E884D1D00033C56 /* LogSystem.cpp */,
+				72C9B2741E884D1D00033C56 /* LogSystem.hpp */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		72C9B27B1E8AE01000033C56 /* TextEditor */ = {
+			isa = PBXGroup;
+			children = (
+				72C9B27C1E8AE20F00033C56 /* TextEditor.cpp */,
+				72C9B27D1E8AE20F00033C56 /* TextEditor.hpp */,
+				72C9B27F1E8AEC6400033C56 /* TextEditorRenderer.cpp */,
+				72C9B2801E8AEC6400033C56 /* TextEditorRenderer.hpp */,
+				72C9B2821E8AED3200033C56 /* TextEditorRendererSystem.cpp */,
+				72C9B2831E8AED3200033C56 /* TextEditorRendererSystem.hpp */,
+				72C9B28D1E8C327800033C56 /* TextEditorEditSystem.cpp */,
+				72C9B28E1E8C327800033C56 /* TextEditorEditSystem.hpp */,
+				72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */,
+				72C9B2911E8C48BD00033C56 /* TextEditorCursorSystem.hpp */,
+			);
+			path = TextEditor;
+			sourceTree = "<group>";
+		};
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				72C9B26F1E8848ED00033C56 /* Logging */,
 				7220F6561E7F2B420063EAD5 /* Systems */,
 				7220F6431E75B0770063EAD5 /* EditorSystems */,
 				720585001E60B907009FFACF /* Assets */,
@@ -3423,6 +3501,7 @@
 			children = (
 				72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */,
 				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
+				72C9B26B1E8705C700033C56 /* Console */,
 				72CE8EE71CB43569001F08E4 /* Hierarchy */,
 				727729F61CD4FF2F005AC1D8 /* Inspector */,
 				72AE74CB1DAAA1B800CEB998 /* PlayButtons */,
@@ -3595,7 +3674,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72C9B2861E8AFC8900033C56 /* Courier New Bold.ttf in Resources */,
+				72C9B28C1E8B191200033C56 /* PTMono.ttc in Resources */,
 				7287F1161C9B4216005D05FA /* Font.fnt in Resources */,
+				72C9B28A1E8B18C700033C56 /* Courier New.ttf in Resources */,
 				7287F1171C9B4216005D05FA /* images.png in Resources */,
 				7287F1181C9B4216005D05FA /* images.xml in Resources */,
 				72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */,
@@ -3638,6 +3720,7 @@
 				729954951C99F76100DAAE5D /* btTriangleIndexVertexArray.cpp in Sources */,
 				729954A01C99F76100DAAE5D /* btTriangleShapeEx.cpp in Sources */,
 				729954CB1C99F76100DAAE5D /* SpuCollisionTaskProcess.cpp in Sources */,
+				72C9B2841E8AED3200033C56 /* TextEditorRendererSystem.cpp in Sources */,
 				7299545C1C99F76100DAAE5D /* btOverlappingPairCache.cpp in Sources */,
 				7299547E1C99F76100DAAE5D /* btConvex2dShape.cpp in Sources */,
 				7299548E1C99F76100DAAE5D /* btShapeHull.cpp in Sources */,
@@ -3712,6 +3795,7 @@
 				729954961C99F76100DAAE5D /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
 				729953E21C99F76100DAAE5D /* HierarchyOrder.cpp in Sources */,
 				72D719F71CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp in Sources */,
+				72C9B27A1E8ABF4000033C56 /* textEditorTest.cpp in Sources */,
 				7299548F1C99F76100DAAE5D /* btSphereShape.cpp in Sources */,
 				7299543D1C99F76100DAAE5D /* b2CircleShape.cpp in Sources */,
 				729954191C99F76100DAAE5D /* Selectable.cpp in Sources */,
@@ -3748,6 +3832,7 @@
 				729954571C99F76100DAAE5D /* btCollisionAlgorithm.cpp in Sources */,
 				7299545B1C99F76100DAAE5D /* btMultiSapBroadphase.cpp in Sources */,
 				729953F01C99F76100DAAE5D /* Gui.cpp in Sources */,
+				72C9B2721E884C7200033C56 /* LogMessage.cpp in Sources */,
 				723689B11D89DE1B006480F0 /* FileMenu.cpp in Sources */,
 				727B38A91E2B9C5300531B62 /* cff.c in Sources */,
 				729954871C99F76100DAAE5D /* btHeightfieldTerrainShape.cpp in Sources */,
@@ -3862,6 +3947,7 @@
 				729954021C99F76100DAAE5D /* FirstPersonMover.cpp in Sources */,
 				729953C71C99F76100DAAE5D /* Timer.cpp in Sources */,
 				720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */,
+				72C9B2771E8866F900033C56 /* testCOutRedirect.cpp in Sources */,
 				729955021C99F76100DAAE5D /* WindowOSX.mm in Sources */,
 				729954101C99F76100DAAE5D /* ColorSystem.cpp in Sources */,
 				729954B11C99F76100DAAE5D /* btKinematicCharacterController.cpp in Sources */,
@@ -3870,6 +3956,7 @@
 				727B38B81E2B9C5300531B62 /* psnames.c in Sources */,
 				729954491C99F76100DAAE5D /* b2CircleContact.cpp in Sources */,
 				729954E01C99F76100DAAE5D /* btAlignedAllocator.cpp in Sources */,
+				72C9B2811E8AEC6400033C56 /* TextEditorRenderer.cpp in Sources */,
 				729954941C99F76100DAAE5D /* btTriangleCallback.cpp in Sources */,
 				726DFD261D24742A00C862B7 /* ScriptClass.cpp in Sources */,
 				729954691C99F76100DAAE5D /* btConvexConvexAlgorithm.cpp in Sources */,
@@ -3877,6 +3964,7 @@
 				72CE8EEE1CB437F5001F08E4 /* Project.cpp in Sources */,
 				729954061C99F76100DAAE5D /* VelocitySystem.cpp in Sources */,
 				727B38BC1E2B9C5300531B62 /* raster.c in Sources */,
+				72C9B2751E884D1D00033C56 /* LogSystem.cpp in Sources */,
 				729953C51C99F76100DAAE5D /* InputDevice.cpp in Sources */,
 				72308D071E127A9100B92B8D /* FilePath.cpp in Sources */,
 				729954DB1C99F76100DAAE5D /* btSoftBodyHelpers.cpp in Sources */,
@@ -3891,6 +3979,7 @@
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,
 				729953E61C99F76100DAAE5D /* GameObjectEditorSystem.cpp in Sources */,
+				72C9B28F1E8C327800033C56 /* TextEditorEditSystem.cpp in Sources */,
 				7299546D1C99F76100DAAE5D /* btGhostObject.cpp in Sources */,
 				729953FF1C99F76100DAAE5D /* DraggableMotion.cpp in Sources */,
 				729954931C99F76100DAAE5D /* btTriangleBuffer.cpp in Sources */,
@@ -3921,6 +4010,7 @@
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
 				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,
 				720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */,
+				72C9B2921E8C48BD00033C56 /* TextEditorCursorSystem.cpp in Sources */,
 				729954E11C99F76100DAAE5D /* btConvexHull.cpp in Sources */,
 				72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */,
 				7299541F1C99F76100DAAE5D /* Transform.cpp in Sources */,
@@ -3955,6 +4045,7 @@
 				720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */,
 				726DFD251D24742A00C862B7 /* ClangUtil.cpp in Sources */,
 				729954071C99F76100DAAE5D /* Collidable.cpp in Sources */,
+				72C9B27E1E8AE20F00033C56 /* TextEditor.cpp in Sources */,
 				729954DD1C99F76100DAAE5D /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				7299540C1C99F76100DAAE5D /* RigidBody2d.cpp in Sources */,
 				72A4B3981E4BB5B200A856F5 /* SwitchEnabler.cpp in Sources */,
@@ -3982,6 +4073,7 @@
 				7299545F1C99F76100DAAE5D /* btActivatingCollisionAlgorithm.cpp in Sources */,
 				729954C11C99F76100DAAE5D /* btSimpleDynamicsWorld.cpp in Sources */,
 				72994F991C99F74F00DAAE5D /* main.cpp in Sources */,
+				72C9B26E1E87061600033C56 /* ConsoleWindow.cpp in Sources */,
 				729954C71C99F76100DAAE5D /* btThreadSupportInterface.cpp in Sources */,
 				729954051C99F76100DAAE5D /* LimitableSystem.cpp in Sources */,
 				72A4B3971E4BB5B200A856F5 /* Switch.cpp in Sources */,

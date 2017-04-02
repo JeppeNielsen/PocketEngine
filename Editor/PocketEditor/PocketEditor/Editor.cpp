@@ -28,6 +28,7 @@
 #include "AssetImporters.hpp"
 #include "SceneTab.hpp"
 #include <vector>
+#include "ConsoleWindow.hpp"
 
 using namespace Pocket;
 
@@ -50,6 +51,7 @@ public:
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
+        windows.push_back(new ConsoleWindow());
         
         menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());
@@ -85,9 +87,38 @@ public:
         
         Input.ButtonDown.Bind([this](std::string button) {
             if (button == "p") {
-                context.World().DebugSystems();
+                //context.World().DebugSystems();
+                context.Log().Log("Test message");
             }
         });
+        
+        
+        std::string header = "/Project/main.hpp";
+        
+        std::string line =   "/Project/main.hpp:4:3: error";
+        
+        
+        size_t found = line.find(header);
+        if (found != std::string::npos) {
+            size_t lineNo = found + header.size() + 1;
+            size_t column = line.find(":", lineNo);
+            size_t columnEnd = line.find(":", column+1);
+            
+            if (lineNo!=std::string::npos &&
+                column!=std::string::npos &&
+                columnEnd!=std::string::npos) {
+            
+                std::string lineNoStr = line.substr(lineNo, column - lineNo);
+                std::string columnStr = line.substr(column+1, columnEnd - column-1);
+                std::string errorStr = line.substr(columnEnd+1, line.size() - columnEnd-1);
+                
+                std::cout << lineNoStr << std::endl;
+                std::cout << columnStr << std::endl;
+                std::cout << errorStr << std::endl;
+            }
+        }
+        
+        
     }
     
     void Update(float dt) {
@@ -99,7 +130,7 @@ public:
     }
 };
 
-int main() {
+int main_editor() {
     Engine e;
     e.Start<Editor>();
 	return 0;

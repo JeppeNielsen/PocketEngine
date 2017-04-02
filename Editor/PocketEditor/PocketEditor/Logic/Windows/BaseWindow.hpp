@@ -31,6 +31,7 @@ protected:
     virtual void ActiveWorldChanged(OpenWorld* old, OpenWorld* current);
     virtual bool CreateBar();
     virtual void PostCompile();
+    virtual Vector2 Size();
     
     GameObject* CreateButton(GameObject* parent, const Vector2& position, const Vector2& size, const std::string& text);
 };

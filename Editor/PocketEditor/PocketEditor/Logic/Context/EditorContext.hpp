@@ -14,6 +14,7 @@
 #include "ScriptWorld.hpp"
 #include "EngineContext.hpp"
 #include "FileWorld.hpp"
+#include "LogSystem.hpp"
 #include <deque>
 
 using namespace Pocket;
@@ -27,6 +28,8 @@ private:
     Gui* gui;
     EngineContext* engineContext;
     Project project;
+    LogSystem* log;
+    GameObject* logRoot;
 public:
     GameWorld& World();
     FileWorld& FileWorld();
@@ -35,6 +38,7 @@ public:
     Gui& Gui();
     EngineContext& EngineContext();
     Project& Project();
+    LogSystem& Log();
     using Action = std::function<void()>;
     using Actions = std::deque<Action>;
     Actions preActions;

@@ -41,8 +41,8 @@ public:
     void Open(const std::string& path);
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
-    bool Compile();
-    void BuildExecutable(const std::string& outputPath);
+    bool Compile(const std::function<void(const std::string&)>& onError);
+    void BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput = 0);
     void CreateNewWorld(const std::string& worldPath);
     
     void SaveWorld();

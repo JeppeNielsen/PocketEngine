@@ -38,6 +38,7 @@ struct ShaderComponent;
 struct FirstPersonMover;
 struct LineRenderer;
 struct DistanceScaler;
+struct LogMessage;
 struct FileSystemListener;
 struct VirtualTreeList;
 struct VirtualTreeListSpawner;
@@ -207,49 +208,53 @@ template<> Pocket::DistanceScaler* Pocket::GameObject::GetComponent<Pocket::Dist
 template<> Pocket::DistanceScaler* Pocket::GameObject::AddComponent<Pocket::DistanceScaler>() { AddComponent(40); return (Pocket::DistanceScaler*) GetComponent(40); }
 template<> void Pocket::GameObject::RemoveComponent<Pocket::DistanceScaler>() { RemoveComponent(40); }
 template<> Pocket::DistanceScaler* Pocket::GameObject::CloneComponent<Pocket::DistanceScaler>(GameObject* source) { CloneComponent(40, source); return (Pocket::DistanceScaler*) GetComponent(40); }
-template<> Pocket::FileSystemListener* Pocket::GameObject::GetComponent<Pocket::FileSystemListener>() { return (Pocket::FileSystemListener*) GetComponent(41); }
-template<> Pocket::FileSystemListener* Pocket::GameObject::AddComponent<Pocket::FileSystemListener>() { AddComponent(41); return (Pocket::FileSystemListener*) GetComponent(41); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::FileSystemListener>() { RemoveComponent(41); }
-template<> Pocket::FileSystemListener* Pocket::GameObject::CloneComponent<Pocket::FileSystemListener>(GameObject* source) { CloneComponent(41, source); return (Pocket::FileSystemListener*) GetComponent(41); }
-template<> Pocket::VirtualTreeList* Pocket::GameObject::GetComponent<Pocket::VirtualTreeList>() { return (Pocket::VirtualTreeList*) GetComponent(42); }
-template<> Pocket::VirtualTreeList* Pocket::GameObject::AddComponent<Pocket::VirtualTreeList>() { AddComponent(42); return (Pocket::VirtualTreeList*) GetComponent(42); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::VirtualTreeList>() { RemoveComponent(42); }
-template<> Pocket::VirtualTreeList* Pocket::GameObject::CloneComponent<Pocket::VirtualTreeList>(GameObject* source) { CloneComponent(42, source); return (Pocket::VirtualTreeList*) GetComponent(42); }
-template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::GetComponent<Pocket::VirtualTreeListSpawner>() { return (Pocket::VirtualTreeListSpawner*) GetComponent(43); }
-template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::AddComponent<Pocket::VirtualTreeListSpawner>() { AddComponent(43); return (Pocket::VirtualTreeListSpawner*) GetComponent(43); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::VirtualTreeListSpawner>() { RemoveComponent(43); }
-template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::CloneComponent<Pocket::VirtualTreeListSpawner>(GameObject* source) { CloneComponent(43, source); return (Pocket::VirtualTreeListSpawner*) GetComponent(43); }
-template<> Pocket::FieldEditor* Pocket::GameObject::GetComponent<Pocket::FieldEditor>() { return (Pocket::FieldEditor*) GetComponent(44); }
-template<> Pocket::FieldEditor* Pocket::GameObject::AddComponent<Pocket::FieldEditor>() { AddComponent(44); return (Pocket::FieldEditor*) GetComponent(44); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::FieldEditor>() { RemoveComponent(44); }
-template<> Pocket::FieldEditor* Pocket::GameObject::CloneComponent<Pocket::FieldEditor>(GameObject* source) { CloneComponent(44, source); return (Pocket::FieldEditor*) GetComponent(44); }
-template<> Pocket::GameObjectEditor* Pocket::GameObject::GetComponent<Pocket::GameObjectEditor>() { return (Pocket::GameObjectEditor*) GetComponent(45); }
-template<> Pocket::GameObjectEditor* Pocket::GameObject::AddComponent<Pocket::GameObjectEditor>() { AddComponent(45); return (Pocket::GameObjectEditor*) GetComponent(45); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::GameObjectEditor>() { RemoveComponent(45); }
-template<> Pocket::GameObjectEditor* Pocket::GameObject::CloneComponent<Pocket::GameObjectEditor>(GameObject* source) { CloneComponent(45, source); return (Pocket::GameObjectEditor*) GetComponent(45); }
-template<> Pocket::AssetImporter* Pocket::GameObject::GetComponent<Pocket::AssetImporter>() { return (Pocket::AssetImporter*) GetComponent(46); }
-template<> Pocket::AssetImporter* Pocket::GameObject::AddComponent<Pocket::AssetImporter>() { AddComponent(46); return (Pocket::AssetImporter*) GetComponent(46); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::AssetImporter>() { RemoveComponent(46); }
-template<> Pocket::AssetImporter* Pocket::GameObject::CloneComponent<Pocket::AssetImporter>(GameObject* source) { CloneComponent(46, source); return (Pocket::AssetImporter*) GetComponent(46); }
-template<> Pocket::FilePath* Pocket::GameObject::GetComponent<Pocket::FilePath>() { return (Pocket::FilePath*) GetComponent(47); }
-template<> Pocket::FilePath* Pocket::GameObject::AddComponent<Pocket::FilePath>() { AddComponent(47); return (Pocket::FilePath*) GetComponent(47); }
-template<> void Pocket::GameObject::RemoveComponent<Pocket::FilePath>() { RemoveComponent(47); }
-template<> Pocket::FilePath* Pocket::GameObject::CloneComponent<Pocket::FilePath>(GameObject* source) { CloneComponent(47, source); return (Pocket::FilePath*) GetComponent(47); }
+template<> Pocket::LogMessage* Pocket::GameObject::GetComponent<Pocket::LogMessage>() { return (Pocket::LogMessage*) GetComponent(41); }
+template<> Pocket::LogMessage* Pocket::GameObject::AddComponent<Pocket::LogMessage>() { AddComponent(41); return (Pocket::LogMessage*) GetComponent(41); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::LogMessage>() { RemoveComponent(41); }
+template<> Pocket::LogMessage* Pocket::GameObject::CloneComponent<Pocket::LogMessage>(GameObject* source) { CloneComponent(41, source); return (Pocket::LogMessage*) GetComponent(41); }
+template<> Pocket::FileSystemListener* Pocket::GameObject::GetComponent<Pocket::FileSystemListener>() { return (Pocket::FileSystemListener*) GetComponent(42); }
+template<> Pocket::FileSystemListener* Pocket::GameObject::AddComponent<Pocket::FileSystemListener>() { AddComponent(42); return (Pocket::FileSystemListener*) GetComponent(42); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::FileSystemListener>() { RemoveComponent(42); }
+template<> Pocket::FileSystemListener* Pocket::GameObject::CloneComponent<Pocket::FileSystemListener>(GameObject* source) { CloneComponent(42, source); return (Pocket::FileSystemListener*) GetComponent(42); }
+template<> Pocket::VirtualTreeList* Pocket::GameObject::GetComponent<Pocket::VirtualTreeList>() { return (Pocket::VirtualTreeList*) GetComponent(43); }
+template<> Pocket::VirtualTreeList* Pocket::GameObject::AddComponent<Pocket::VirtualTreeList>() { AddComponent(43); return (Pocket::VirtualTreeList*) GetComponent(43); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::VirtualTreeList>() { RemoveComponent(43); }
+template<> Pocket::VirtualTreeList* Pocket::GameObject::CloneComponent<Pocket::VirtualTreeList>(GameObject* source) { CloneComponent(43, source); return (Pocket::VirtualTreeList*) GetComponent(43); }
+template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::GetComponent<Pocket::VirtualTreeListSpawner>() { return (Pocket::VirtualTreeListSpawner*) GetComponent(44); }
+template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::AddComponent<Pocket::VirtualTreeListSpawner>() { AddComponent(44); return (Pocket::VirtualTreeListSpawner*) GetComponent(44); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::VirtualTreeListSpawner>() { RemoveComponent(44); }
+template<> Pocket::VirtualTreeListSpawner* Pocket::GameObject::CloneComponent<Pocket::VirtualTreeListSpawner>(GameObject* source) { CloneComponent(44, source); return (Pocket::VirtualTreeListSpawner*) GetComponent(44); }
+template<> Pocket::FieldEditor* Pocket::GameObject::GetComponent<Pocket::FieldEditor>() { return (Pocket::FieldEditor*) GetComponent(45); }
+template<> Pocket::FieldEditor* Pocket::GameObject::AddComponent<Pocket::FieldEditor>() { AddComponent(45); return (Pocket::FieldEditor*) GetComponent(45); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::FieldEditor>() { RemoveComponent(45); }
+template<> Pocket::FieldEditor* Pocket::GameObject::CloneComponent<Pocket::FieldEditor>(GameObject* source) { CloneComponent(45, source); return (Pocket::FieldEditor*) GetComponent(45); }
+template<> Pocket::GameObjectEditor* Pocket::GameObject::GetComponent<Pocket::GameObjectEditor>() { return (Pocket::GameObjectEditor*) GetComponent(46); }
+template<> Pocket::GameObjectEditor* Pocket::GameObject::AddComponent<Pocket::GameObjectEditor>() { AddComponent(46); return (Pocket::GameObjectEditor*) GetComponent(46); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::GameObjectEditor>() { RemoveComponent(46); }
+template<> Pocket::GameObjectEditor* Pocket::GameObject::CloneComponent<Pocket::GameObjectEditor>(GameObject* source) { CloneComponent(46, source); return (Pocket::GameObjectEditor*) GetComponent(46); }
+template<> Pocket::AssetImporter* Pocket::GameObject::GetComponent<Pocket::AssetImporter>() { return (Pocket::AssetImporter*) GetComponent(47); }
+template<> Pocket::AssetImporter* Pocket::GameObject::AddComponent<Pocket::AssetImporter>() { AddComponent(47); return (Pocket::AssetImporter*) GetComponent(47); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::AssetImporter>() { RemoveComponent(47); }
+template<> Pocket::AssetImporter* Pocket::GameObject::CloneComponent<Pocket::AssetImporter>(GameObject* source) { CloneComponent(47, source); return (Pocket::AssetImporter*) GetComponent(47); }
+template<> Pocket::FilePath* Pocket::GameObject::GetComponent<Pocket::FilePath>() { return (Pocket::FilePath*) GetComponent(48); }
+template<> Pocket::FilePath* Pocket::GameObject::AddComponent<Pocket::FilePath>() { AddComponent(48); return (Pocket::FilePath*) GetComponent(48); }
+template<> void Pocket::GameObject::RemoveComponent<Pocket::FilePath>() { RemoveComponent(48); }
+template<> Pocket::FilePath* Pocket::GameObject::CloneComponent<Pocket::FilePath>(GameObject* source) { CloneComponent(48, source); return (Pocket::FilePath*) GetComponent(48); }
 using Script_RectCollider = RectCollider;
-template<> Script_RectCollider* Pocket::GameObject::GetComponent<Script_RectCollider>() { return (Script_RectCollider*) GetComponent(48); }
-template<> Script_RectCollider* Pocket::GameObject::AddComponent<Script_RectCollider>() { AddComponent(48); return (Script_RectCollider*) GetComponent(48); }
-template<> void Pocket::GameObject::RemoveComponent<Script_RectCollider>() { RemoveComponent(48); }
-template<> Script_RectCollider* Pocket::GameObject::CloneComponent<Script_RectCollider>(GameObject* source) { CloneComponent(48, source); return (Script_RectCollider*) GetComponent(48); }
+template<> Script_RectCollider* Pocket::GameObject::GetComponent<Script_RectCollider>() { return (Script_RectCollider*) GetComponent(49); }
+template<> Script_RectCollider* Pocket::GameObject::AddComponent<Script_RectCollider>() { AddComponent(49); return (Script_RectCollider*) GetComponent(49); }
+template<> void Pocket::GameObject::RemoveComponent<Script_RectCollider>() { RemoveComponent(49); }
+template<> Script_RectCollider* Pocket::GameObject::CloneComponent<Script_RectCollider>(GameObject* source) { CloneComponent(49, source); return (Script_RectCollider*) GetComponent(49); }
 using Script_Rotator = Rotator;
-template<> Script_Rotator* Pocket::GameObject::GetComponent<Script_Rotator>() { return (Script_Rotator*) GetComponent(49); }
-template<> Script_Rotator* Pocket::GameObject::AddComponent<Script_Rotator>() { AddComponent(49); return (Script_Rotator*) GetComponent(49); }
-template<> void Pocket::GameObject::RemoveComponent<Script_Rotator>() { RemoveComponent(49); }
-template<> Script_Rotator* Pocket::GameObject::CloneComponent<Script_Rotator>(GameObject* source) { CloneComponent(49, source); return (Script_Rotator*) GetComponent(49); }
+template<> Script_Rotator* Pocket::GameObject::GetComponent<Script_Rotator>() { return (Script_Rotator*) GetComponent(50); }
+template<> Script_Rotator* Pocket::GameObject::AddComponent<Script_Rotator>() { AddComponent(50); return (Script_Rotator*) GetComponent(50); }
+template<> void Pocket::GameObject::RemoveComponent<Script_Rotator>() { RemoveComponent(50); }
+template<> Script_Rotator* Pocket::GameObject::CloneComponent<Script_Rotator>(GameObject* source) { CloneComponent(50, source); return (Script_Rotator*) GetComponent(50); }
 using Script_TransformController = TransformController;
-template<> Script_TransformController* Pocket::GameObject::GetComponent<Script_TransformController>() { return (Script_TransformController*) GetComponent(50); }
-template<> Script_TransformController* Pocket::GameObject::AddComponent<Script_TransformController>() { AddComponent(50); return (Script_TransformController*) GetComponent(50); }
-template<> void Pocket::GameObject::RemoveComponent<Script_TransformController>() { RemoveComponent(50); }
-template<> Script_TransformController* Pocket::GameObject::CloneComponent<Script_TransformController>(GameObject* source) { CloneComponent(50, source); return (Script_TransformController*) GetComponent(50); }
+template<> Script_TransformController* Pocket::GameObject::GetComponent<Script_TransformController>() { return (Script_TransformController*) GetComponent(51); }
+template<> Script_TransformController* Pocket::GameObject::AddComponent<Script_TransformController>() { AddComponent(51); return (Script_TransformController*) GetComponent(51); }
+template<> void Pocket::GameObject::RemoveComponent<Script_TransformController>() { RemoveComponent(51); }
+template<> Script_TransformController* Pocket::GameObject::CloneComponent<Script_TransformController>(GameObject* source) { CloneComponent(51, source); return (Script_TransformController*) GetComponent(51); }
 #include "TypeInfo.hpp"
 #include "Property.hpp"
 #include "Transform.hpp"
@@ -295,10 +300,10 @@ extern "C" int CountSystems() {
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 59: return new RectCollisionSystem();
-      case 60: return new RotatorSystem();
-      case 61: return new TransformControllerSystem();
-      case 62: return new VelocityCollider();
+      case 60: return new RectCollisionSystem();
+      case 61: return new RotatorSystem();
+      case 62: return new TransformControllerSystem();
+      case 63: return new VelocityCollider();
       default: return 0;
    }
 }
@@ -310,28 +315,28 @@ extern "C" int CountComponents() {
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 48: return new RectCollider();
-      case 49: return new Rotator();
-      case 50: return new TransformController();
+      case 49: return new RectCollider();
+      case 50: return new Rotator();
+      case 51: return new TransformController();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 48: { delete ((RectCollider*)component); break; }
-      case 49: { delete ((Rotator*)component); break; }
-      case 50: { delete ((TransformController*)component); break; }
+      case 49: { delete ((RectCollider*)component); break; }
+      case 50: { delete ((Rotator*)component); break; }
+      case 51: { delete ((TransformController*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 48: { RectCollider* co = (RectCollider*)c; 
+      case 49: { RectCollider* co = (RectCollider*)c; 
       RectCollider* so = ((RectCollider*)s);
         co->operator=(*so);             break; }
-      case 49: { Rotator* co = (Rotator*)c; 
+      case 50: { Rotator* co = (Rotator*)c; 
       Rotator* so = ((Rotator*)s);
         co->operator=(*so);             break; }
-      case 50: { TransformController* co = (TransformController*)c; 
+      case 51: { TransformController* co = (TransformController*)c; 
       TransformController* so = ((TransformController*)s);
         co->operator=(*so);             break; }
    }
@@ -339,7 +344,7 @@ extern "C" void ResetComponent(int componentID, void* c, void* s) {
 
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
-      case 48: {
+      case 49: {
       RectCollider* component = (RectCollider*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "RectCollider";
@@ -347,14 +352,14 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      info->AddField(component->previousCollisions, "previousCollisions");
       return info;
       break; }
-      case 49: {
+      case 50: {
       Rotator* component = (Rotator*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Rotator";
 	      info->AddField(component->speed, "speed");
       return info;
       break; }
-      case 50: {
+      case 51: {
       TransformController* component = (TransformController*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "TransformController";

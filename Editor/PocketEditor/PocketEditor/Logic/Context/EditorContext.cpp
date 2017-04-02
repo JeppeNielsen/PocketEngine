@@ -60,6 +60,9 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     initRoot->Remove();
     
     project.Initialize(world);
+    
+    logRoot = world.CreateRoot();
+    log = logRoot->CreateSystem<LogSystem>();
 }
 
 void EditorContext::Update(float dt) {
@@ -85,3 +88,5 @@ void EditorContext::DoActions(Actions& actions) {
     }
     actions.clear();
 }
+
+LogSystem& EditorContext::Log() { return *log;

@@ -76,7 +76,7 @@ void Project::Open(const std::string& path) {
     Opened();
 }
 
-bool Project::Compile() {
+bool Project::Compile(const std::function<void(const std::string&)>& onError) {
     PostCompile();
     Worlds.PreCompile();
     scriptWorld.RemoveGameWorld(*world);
@@ -84,7 +84,11 @@ bool Project::Compile() {
     scriptWorld.SetWorldType(*world, [] (int componentType) {
         return !SystemHelper::IsComponentEditorSpecific(componentType);
     });
-    bool succes = scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+    bool succes = scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [&onError] (auto error) {
+        std::stringstream s;
+        s << "Error: "<<FileHelper::GetFileNameFromPath(error.filename) << " : "<<error.lineNo << " : "<< error.description;
+        onError(s.str());
+    });
     if (succes) {
         scriptWorld.AddGameWorld(*world);
         Worlds.PostCompile();
@@ -120,7 +124,7 @@ void Project::RefreshSourceFiles() {
     scriptWorld.ExtractScriptClasses();
 }
 
-void Project::BuildExecutable(const std::string& outputPath) {
+void Project::BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput) {
 
     ProjectSettings* projectSettings = GetProjectSettings();
     if (!projectSettings) {
@@ -156,7 +160,7 @@ void Project::BuildExecutable(const std::string& outputPath) {
         source += "world.SetLayerScene(0, world.TryFindRoot(\"";
         source += projectSettings->startupScene.SceneGuid();
         source += "\"));";
-    });
+    }, onOutput);
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {

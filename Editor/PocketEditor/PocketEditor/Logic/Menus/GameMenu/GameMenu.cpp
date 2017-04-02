@@ -23,7 +23,9 @@ void GameMenu::OnCreate() {
         Timer timer;
         std::cout << "Compilation started..."<< std::endl;
         timer.Begin();
-        context->Project().Compile();
+        context->Project().Compile([this] (auto error) {
+            context->Log().Log(error);
+        });
         double time = timer.End();
         std::cout << "Compilation finished, time = " << time << "s"<< std::endl;
     });
@@ -34,7 +36,9 @@ void GameMenu::OnCreate() {
                 Timer timer;
                 std::cout << "Build started... at path: "<< files[0] << std::endl;
                 timer.Begin();
-                context->Project().BuildExecutable(files[0]);
+                context->Project().BuildExecutable(files[0], [this] (const std::string& output) {
+                    context->Log().Log(output);
+                });
                 double time = timer.End();
                 std::cout << "Build finished, time = " << time << "s"<< std::endl;
         }

@@ -26,15 +26,17 @@ void BaseWindow::Create() {
 
     Gui& gui = context->Gui();
     
-    window = gui.CreateControl(0, "Box", {200,400});
+    Vector2 size = Size();
+    
+    window = gui.CreateControl(0, "Box", size);
     
     if (CreateBar()) {
-        GameObject* bar = gui.CreateControl(window, "TextBox", {200,50});
-        bar->GetComponent<Transform>()->Position = {0,400-50};
+        GameObject* bar = gui.CreateControl(window, "TextBox", {size.x,50});
+        bar->GetComponent<Transform>()->Position = {0,size.y-50};
         bar->RemoveComponent<Touchable>();
         bar->AddComponent<Touchable>(window);
         window->AddComponent<Draggable>();
-        GameObject* label = gui.CreateLabel(bar, 0, {200,50}, 0, Name(), 20);
+        GameObject* label = gui.CreateLabel(bar, 0, {size.x,50}, 0, Name(), 20);
         label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
         label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         label->GetComponent<Colorable>()->Color = Colour::Black();
@@ -78,4 +80,8 @@ bool BaseWindow::CreateBar() {
 
 void BaseWindow::PostCompile() {
 
+}
+
+Vector2 BaseWindow::Size() {
+    return {200,400};
 }
