@@ -89,4 +89,4 @@ void EditorContext::DoActions(Actions& actions) {
     actions.clear();
 }
 
-LogSystem& EditorContext::Log() { return *log;
+LogSystem& EditorContext::Log() { return *log; }
