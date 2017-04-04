@@ -21,6 +21,6 @@ protected:
     void ObjectRemoved(GameObject* object) override;
 private:
     void TextBoxActivated(GameObject* object);
-    void ButtonDown(std::string button);
+    void ButtonDown(ButtonEvent e);
     GameObject* activeTextEditor;
 };

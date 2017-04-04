@@ -420,6 +420,7 @@
 		72C9B28C1E8B191200033C56 /* PTMono.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 72C9B28B1E8B191200033C56 /* PTMono.ttc */; };
 		72C9B28F1E8C327800033C56 /* TextEditorEditSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B28D1E8C327800033C56 /* TextEditorEditSystem.cpp */; };
 		72C9B2921E8C48BD00033C56 /* TextEditorCursorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */; };
+		72C9B2951E92C51A00033C56 /* TextEditorSelectionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2931E92C51A00033C56 /* TextEditorSelectionSystem.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1493,6 +1494,8 @@
 		72C9B28E1E8C327800033C56 /* TextEditorEditSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorEditSystem.hpp; sourceTree = "<group>"; };
 		72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorCursorSystem.cpp; sourceTree = "<group>"; };
 		72C9B2911E8C48BD00033C56 /* TextEditorCursorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorCursorSystem.hpp; sourceTree = "<group>"; };
+		72C9B2931E92C51A00033C56 /* TextEditorSelectionSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorSelectionSystem.cpp; sourceTree = "<group>"; };
+		72C9B2941E92C51A00033C56 /* TextEditorSelectionSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorSelectionSystem.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -3462,6 +3465,8 @@
 		72C9B27B1E8AE01000033C56 /* TextEditor */ = {
 			isa = PBXGroup;
 			children = (
+				72C9B2931E92C51A00033C56 /* TextEditorSelectionSystem.cpp */,
+				72C9B2941E92C51A00033C56 /* TextEditorSelectionSystem.hpp */,
 				72C9B27C1E8AE20F00033C56 /* TextEditor.cpp */,
 				72C9B27D1E8AE20F00033C56 /* TextEditor.hpp */,
 				72C9B27F1E8AEC6400033C56 /* TextEditorRenderer.cpp */,
@@ -4098,6 +4103,7 @@
 				7299544E1C99F76100DAAE5D /* b2DistanceJoint.cpp in Sources */,
 				7299543F1C99F76100DAAE5D /* b2Shape.cpp in Sources */,
 				729954831C99F76100DAAE5D /* btConvexShape.cpp in Sources */,
+				72C9B2951E92C51A00033C56 /* TextEditorSelectionSystem.cpp in Sources */,
 				720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */,
 				729954D91C99F76100DAAE5D /* btSoftBody.cpp in Sources */,
 				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,

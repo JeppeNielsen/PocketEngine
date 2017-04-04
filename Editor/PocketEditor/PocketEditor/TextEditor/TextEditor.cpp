@@ -68,3 +68,15 @@ void TextEditor::MoveCursor(Pocket::Point dir) {
     Cursor = CartesianToCursor(p);
 }
 
+void TextEditor::MoveSelection(Pocket::Point dir) {
+    if (!SelectionActive()) {
+        SelectionActive = true;
+        Selection = { Cursor, Cursor };
+    }
+    Point s = Selection;
+    Point p = CursorToCartesian(s.y);
+    p += dir;
+    s.y = CartesianToCursor(p);
+    
+    Selection = s;
+}

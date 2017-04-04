@@ -18,6 +18,7 @@
 #include "TextEditorEditSystem.hpp"
 #include "TextBoxSystem.hpp"
 #include "TextEditorCursorSystem.hpp"
+#include "TextEditorSelectionSystem.hpp"
 
 using namespace Pocket;
 
@@ -43,6 +44,7 @@ public:
         root->CreateSystem<TextEditorEditSystem>();
         root->CreateSystem<TextBoxSystem>();
         root->CreateSystem<TextEditorCursorSystem>();
+        root->CreateSystem<TextEditorSelectionSystem>();
         
         font = root->CreateChild();
         font->AddComponent<TextureComponent>();
@@ -89,7 +91,7 @@ public:
             t += "1234567891O123456781234567891O1234567891OOOO1234567891O1234567891OOOO\n";
         }
         
-        textEditor->AddComponent<TextEditorRenderer>()->fontSize = 32;
+        textEditor->AddComponent<TextEditorRenderer>()->fontSize = 12;
         textEditor->AddComponent<Sizeable>()->Size = size;
         textEditor->AddComponent<TextBox>();
         textEditor->AddComponent<Touchable>(box);

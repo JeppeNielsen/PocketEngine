@@ -21,6 +21,8 @@ struct TextEditor {
     std::string text;
     
     Property<int> Cursor;
+    Property<bool> SelectionActive;
+    Property<Point> Selection;
     
     struct Line {
         std::string::size_type start;
@@ -34,4 +36,6 @@ struct TextEditor {
     int CartesianToCursor(Point coord);
     
     void MoveCursor(Point dir);
+    
+    void MoveSelection(Point dir);
 };

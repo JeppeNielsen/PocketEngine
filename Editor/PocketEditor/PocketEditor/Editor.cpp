@@ -85,8 +85,8 @@ public:
         
         context.Project().Open("/Projects/PocketEngine/EditorProjects/Pong");
         
-        Input.ButtonDown.Bind([this](std::string button) {
-            if (button == "p") {
+        Input.ButtonDown.Bind([this](ButtonEvent e) {
+            if (e.Id == "p") {
                 //context.World().DebugSystems();
                 context.Log().Log("Test message");
             }

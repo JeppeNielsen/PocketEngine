@@ -24,9 +24,9 @@ void TextEditorRendererSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void TextEditorRendererSystem::Update(float dt) {
-for(auto o : Objects()) {
-    UpdateMesh(o);
-}
+    for(auto o : Objects()) {
+        UpdateMesh(o);
+    }
 /*
     for(auto o : dirtyObjects) {
         UpdateMesh(o);
@@ -103,7 +103,7 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
      
      vertices.resize(vertices.size() + letters.size() * 4);
      
-     float yPos = subPosition + size.y - fontSize - fontSize*yLine; //subPosition + (numY - yLine) * fontSize;
+     float yPos = subPosition + size.y - fontSize - fontSize*yLine - font->GetLineHeightOffset(fontSize); //subPosition + (numY - yLine) * fontSize;
      float posX = -subPositionX + (xPos<0 ? -xPos * spacing : 0);
      
      Vector2 subPixel = 0;//0.5f;
