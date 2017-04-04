@@ -29,7 +29,7 @@ namespace Pocket {
 		void StartFrame(IInputManagerIterator* inputManagers);
         void EndFrame();
 
-		void SetButton(const std::string& button, bool isDown);
+		void SetButton(const std::string& button, bool isDown, ModifierKey modifierKey);
 		void ReleaseAllButtons();
         
         bool KeyboardActive;
@@ -58,7 +58,7 @@ namespace Pocket {
 		Touches currentTouches;
 		Touches previousTouches;
 
-		typedef std::map<std::string, int> Buttons;
+		typedef std::map<std::string, ModifierKey> Buttons;
 
 		Buttons currentButtons;
 		Buttons previousButtons;

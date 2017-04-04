@@ -18,8 +18,8 @@ namespace Pocket {
         void Initialize();
         void Update(float dt);
     private:
-        void ButtonDown(std::string button);
-        void ButtonUp(std::string button);
+        void ButtonDown(ButtonEvent e);
+        void ButtonUp(ButtonEvent e);
         
         using Buttons = std::vector<std::string>;
         Buttons buttons;

@@ -47,9 +47,9 @@ bool InputDevice::IsTouchSwallowed(int index, int depth) {
     return depth<currentTouches[index].swallowedDepth;
 }
 
-void InputDevice::SetButton(const std::string& button, bool isDown) {
+void InputDevice::SetButton(const std::string& button, bool isDown, ModifierKey modifierKey) {
 	if (isDown) {
-		currentButtons[button] = 0;
+		currentButtons[button] = modifierKey;
 	} else {
 		Buttons::iterator it = currentButtons.find(button);
 		if (it!=currentButtons.end()) currentButtons.erase(it);
@@ -101,12 +101,12 @@ void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
     
     for (Buttons::iterator it = currentButtons.begin(); it!=currentButtons.end(); ++it) {
         bool isDown = previousButtons.find(it->first)==previousButtons.end();
-        if (isDown) inputManager->ButtonDown(it->first);
+        if (isDown) inputManager->ButtonDown({ it->first, it->second });
     }
     
     for (Buttons::iterator it = previousButtons.begin(); it!=previousButtons.end(); ++it) {
         bool isUp = currentButtons.find(it->first)==currentButtons.end();
-        if (isUp) inputManager->ButtonUp(it->first);
+        if (isUp) inputManager->ButtonUp({ it->first, it->second });
     }
     
     updating = true;

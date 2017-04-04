@@ -56,6 +56,9 @@ bool Font::LoadTTF(const std::string &path) {
     error = FT_Set_Pixel_Sizes(face, 8,0);
     if (error) return false;
     
+    bbMin.x = face->bbox.yMin / 64.0f / 24.0f;
+    bbMin.y = face->bbox.yMax / 64.0f / 24.0f;
+    
     return true;
 }
 
@@ -86,6 +89,10 @@ void Font::RequestText(const std::string &text, float fontSize) {
 float Font::GetSpacing(float fontSize) {
     RequestText(" ", fontSize);
     return GetCharacterSet(fontSize).characters[32].xadvance * fontSize;
+}
+
+float Font::GetLineHeightOffset(float fontSize) {
+    return bbMin.x * fontSize;
 }
 
 Font::CharacterSet& Font::RequestCharacterSet(float fontSize) {

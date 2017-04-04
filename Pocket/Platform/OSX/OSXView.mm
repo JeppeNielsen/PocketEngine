@@ -136,10 +136,23 @@
 }
 
 -(void)keyDown:(NSEvent *)theEvent {
+
+    Pocket::ModifierKey modifierKey = Pocket::ModifierKey::None;
+
+    NSUInteger flags = [[NSApp currentEvent] modifierFlags];
+    if ((flags & NSShiftKeyMask)) {
+        modifierKey = Pocket::ModifierKey::Shift;
+    } else if ((flags & NSCommandKeyMask)) {
+        modifierKey = Pocket::ModifierKey::Command;
+    } else if ((flags & NSAlternateKeyMask)) {
+        modifierKey = Pocket::ModifierKey::Alt;
+    } else if ((flags & NSControlKeyMask)) {
+        modifierKey = Pocket::ModifierKey::Ctrl;
+    }
+
     unichar cd = [[theEvent characters] characterAtIndex:0];
     NSString* str = [NSString stringWithCharacters:&cd length:1];
-    
-    Pocket::OSXWindowCreator::Instance()->ButtonDown([str UTF8String]);
+    Pocket::OSXWindowCreator::Instance()->ButtonDown([str UTF8String], modifierKey);
 }
 
 -(void)keyUp:(NSEvent *)theEvent {

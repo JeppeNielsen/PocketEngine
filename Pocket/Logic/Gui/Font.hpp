@@ -58,6 +58,7 @@ namespace Pocket {
         Event<> Cleared;
         
         float GetSpacing(float fontSize);
+        float GetLineHeightOffset(float fontSize);
         
     private:
         struct Character {
@@ -97,6 +98,7 @@ namespace Pocket {
         FT_Face       face;
         
         File file;
+        Vector2 bbMin;
         
         
         TYPE_FIELDS_BEGIN

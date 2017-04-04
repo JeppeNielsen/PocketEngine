@@ -36,12 +36,12 @@ void InputMapperSystem::Update(float dt) {
     }
 }
 
-void InputMapperSystem::ButtonDown(std::string button) {
-    buttons.push_back(button);
+void InputMapperSystem::ButtonDown(ButtonEvent e) {
+    buttons.push_back(e.Id);
 }
 
-void InputMapperSystem::ButtonUp(std::string button) {
-    auto it = std::find(buttons.begin(), buttons.end(), button);
+void InputMapperSystem::ButtonUp(ButtonEvent e) {
+    auto it = std::find(buttons.begin(), buttons.end(), e.Id);
     if (it!=buttons.end()) {
         buttons.erase(it);
     }

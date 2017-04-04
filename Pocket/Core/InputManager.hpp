@@ -7,12 +7,26 @@
 #include "GamePadManager.hpp"
 
 namespace Pocket {
+
+    enum class ModifierKey {
+        None,
+        Shift,
+        Alt,
+        Command,
+        Ctrl,
+        Fn
+    };
     
 	struct TouchEvent {
 		TouchEvent(int index, Vector2 position) :Index(index), Position(position) {}
 		int Index;
 		Vector2 Position;
 	};
+    
+    struct ButtonEvent {
+        std::string Id;
+        ModifierKey modifierKey;
+    };
 
 	class InputDevice;
 	class InputManager {
@@ -20,8 +34,8 @@ namespace Pocket {
 		InputManager();
 		~InputManager();
 
-		Event<std::string> ButtonDown;
-		Event<std::string> ButtonUp;
+		Event<ButtonEvent> ButtonDown;
+		Event<ButtonEvent> ButtonUp;
 
 		Event<TouchEvent> TouchDown;
 		Event<TouchEvent> TouchUp;

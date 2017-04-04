@@ -32,7 +32,7 @@ namespace Pocket {
         void Move(int index, int x, int y);
         void Set(int index, int x, int y);
         
-        void ButtonDown(const std::string& button);
+        void ButtonDown(const std::string& button, ModifierKey modifierKey);
         void ButtonUp(const std::string& button);
         void SetScroll(float delta);
         

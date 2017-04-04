@@ -69,8 +69,8 @@ void OSXWindowCreator::SetScroll(float delta) {
     inputDevice().SetScroll(delta);
 }
 
-void OSXWindowCreator::ButtonDown(const std::string& button) {
-    inputDevice().SetButton(button, true);
+void OSXWindowCreator::ButtonDown(const std::string& button, ModifierKey modifierKey) {
+    inputDevice().SetButton(button, true, modifierKey);
 
     if (isKeyboardActive) {
         
@@ -91,7 +91,7 @@ void OSXWindowCreator::ButtonDown(const std::string& button) {
 }
 
 void OSXWindowCreator::ButtonUp(const std::string& button) {
-    inputDevice().SetButton(button, false);
+    inputDevice().SetButton(button, false, ModifierKey::None);
 }
 
 void OSXWindowCreator::KeyboardChanged(InputDevice::KeyboardEventData keyboardData) {
