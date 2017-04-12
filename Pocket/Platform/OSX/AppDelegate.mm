@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "OSXView.h"
 #include "OSXWindowCreator.h"
+#include "Engine.hpp"
 
 @implementation AppDelegate
 
@@ -71,7 +72,10 @@
 
     view = [[OSXView alloc]init];
     [view setWindow:window];
-    [view setWantsBestResolutionOpenGLSurface:NO];
+    [view setWantsBestResolutionOpenGLSurface:YES];
+    
+    float scalingFactor = [[NSScreen mainScreen] backingScaleFactor];
+    Pocket::Engine::Context().ScreenScalingFactor = scalingFactor;
     
     [window setContentView:view ];  
     
@@ -96,13 +100,7 @@
 }
 
 - (void)windowDidResize:(NSNotification *)notification {
-
-    NSRect backingBounds = [view convertRectToBacking:view.bounds];
- 
-    GLsizei backingPixelWidth  = (GLsizei)(backingBounds.size.width),
-            backingPixelHeight = (GLsizei)(backingBounds.size.height);
-
-    Pocket::OSXWindowCreator::Instance()->ScreenSizeChanged(backingPixelWidth, backingPixelHeight);
+    Pocket::OSXWindowCreator::Instance()->ScreenSizeChanged(view.bounds.size.width, view.bounds.size.height);
 }
 
 @end

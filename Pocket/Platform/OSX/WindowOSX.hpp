@@ -28,11 +28,7 @@ namespace Pocket {
     private:
         void Loop(bool exit);
         void osxWindowCreated(void* window);
-        /*
-         void* context;
-         GLuint framebuffer;
-         GLuint _colorRenderBuffer;
-         */
+        void CalcViewportSize();
         
         GLuint frameBuffer;
         
@@ -44,6 +40,8 @@ namespace Pocket {
         GLuint viewFramebuffer;
         
         void* openGLContext;
-        
+        void* win;
+        int backingPixelWidth;
+        int backingPixelHeight;
 	};
 }

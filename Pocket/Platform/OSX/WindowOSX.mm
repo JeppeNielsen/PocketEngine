@@ -31,25 +31,24 @@ void WindowOSX::Begin() {
     OSXWindowCreator::Instance()->ScreenSizeChanged.Bind([this](int w, int h){
         std::cout << "Screen size changed x:"<<w<< " : " << h << std::endl;
         context->ScreenSize = Vector2(w, h);
+        CalcViewportSize();
     });
-    
     OSXWindowCreator::Instance()->Create();
-    
 }
 
 void WindowOSX::osxWindowCreated(void* win) {
+    this->win = win;
     
     OSXView* window = (OSXView*)win;
-    
-    
-    NSRect backingBounds = [window bounds];//;[window convertRectToBacking:window.bounds];
+
+    NSRect windowBounds = [window bounds];
  
-    GLsizei backingPixelWidth  = (GLsizei)(backingBounds.size.width),
-            backingPixelHeight = (GLsizei)(backingBounds.size.height);
+    GLsizei windowWidth  = (GLsizei)(windowBounds.size.width),
+            windowHeight = (GLsizei)(windowBounds.size.height);
     
-    
-    context->ScreenSize = Vector2(backingPixelWidth, backingPixelHeight);
+    context->ScreenSize = Vector2(windowWidth, windowHeight);
     OSXWindowCreator::Instance()->win = win;
+    CalcViewportSize();
 }
 
 void WindowOSX::Loop(bool ee) {
@@ -67,17 +66,18 @@ bool WindowOSX::Update() {
 }
 
 void WindowOSX::PreRender() {
-    //[EAGLContext setCurrentContext:((EAGLContext*)context)];
-	//glBindFramebuffer(GL_FRAMEBUFFER, viewFramebuffer);
-    const Vector2 screenSize = context->ScreenSize;
-    glViewport(0, 0, screenSize.x, screenSize.y);
+    glViewport(0, 0, backingPixelWidth, backingPixelHeight);
     glClearColor(0, 0, 0, 0);
     glClear(GL_COLOR_BUFFER_BIT);    
 }
 
 void WindowOSX::PostRender() {
-    //glBindRenderbuffer(GL_RENDERBUFFER, viewRenderbuffer);
-	//[((EAGLContext*)context) presentRenderbuffer:GL_RENDERBUFFER];
     glFlush();
 }
 
+void WindowOSX::CalcViewportSize() {
+    OSXView* window = (OSXView*)win;
+    NSRect backingBounds = [window convertRectToBacking:window.bounds];
+    backingPixelWidth  = (int)(backingBounds.size.width);
+    backingPixelHeight = (int)(backingBounds.size.height);
+}

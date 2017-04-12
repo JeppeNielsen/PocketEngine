@@ -85,7 +85,7 @@
 }
 
 -(NSPoint) convertLocation: (NSPoint) point {
-    return [self convertPointToBacking:point];
+    return point;
 }
 
 -(NSPoint) convertViewLocationToWorldPoint: (NSPoint) point {
