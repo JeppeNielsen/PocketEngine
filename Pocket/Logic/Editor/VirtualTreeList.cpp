@@ -21,6 +21,11 @@ VirtualTreeList::VirtualTreeList() {
 
 void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
     Root = 0;
+    Pivot = 0;
+    visibleNodes.clear();
+    expandedNodes.clear();
+    NodeCreated.Clear();
+    NodeRemoved.Clear();
 }
 
 void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
