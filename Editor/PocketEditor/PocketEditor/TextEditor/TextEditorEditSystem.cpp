@@ -92,8 +92,10 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
             max = textEditor->Selection().x;
         }
         
-        textEditor->text.erase(textEditor->text.begin() + min, textEditor->text.begin() + max - 1);
-        textEditor->Cursor = min + 1;
+        if (min!=max) {
+            textEditor->text.erase(textEditor->text.begin() + min, textEditor->text.begin() + max - 1);
+            textEditor->Cursor = min + 1;
+        }
         
         textEditor->SelectionActive = false;
     }

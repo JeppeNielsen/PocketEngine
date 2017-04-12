@@ -1,163 +1,85 @@
 //
-//  TextEditorCursorSystem.cpp
+//  TextEditorSelectionSystem.cpp
 //  PocketEditor
 //
-//  Created by Jeppe Nielsen on 29/03/2017.
+//  Created by Jeppe Nielsen on 05/04/2017.
 //  Copyright © 2017 Jeppe Nielsen. All rights reserved.
 //
 
 #include "TextEditorSelectionSystem.hpp"
-#include "Transform.hpp"
-#include "Renderable.hpp"
-#include "Mesh.hpp"
-#include "MathHelper.hpp"
+#include "Camera.hpp"
+#include "EngineContext.hpp"
+#include <iostream>
 
 void TextEditorSelectionSystem::Initialize() {
-
-}
-
-void TextEditorSelectionSystem::Destroy() {
-    
+    isDown = false;
 }
 
 void TextEditorSelectionSystem::ObjectAdded(Pocket::GameObject *object) {
-    GameObject* selection = object->CreateChild();
-    selection->AddComponent<Transform>();
-    selection->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
-    selection->AddComponent<Mesh>();
-    SetMetaData(object, selection);
+    object->GetComponent<Touchable>()->Down.Bind(this, &TextEditorSelectionSystem::Down, object);
+    object->GetComponent<Touchable>()->Up.Bind(this, &TextEditorSelectionSystem::Up, object);
 }
 
 void TextEditorSelectionSystem::ObjectRemoved(Pocket::GameObject *object) {
-    GameObject* selection = static_cast<GameObject*>(GetMetaData(object));
-    selection->Remove();
-}
-
-void TextEditorSelectionSystem::Update(float dt) {
-    for(auto o : Objects()) {
-        UpdateMesh(o);
-    }
-}
-
-void TextEditorSelectionSystem::AddQuad(VertexMesh<Pocket::Vertex> &mesh, const Vector2& v1, const Vector2& v2, const Vector2& v3, const Vector2& v4) {
-    size_t size = mesh.vertices.size();
+    object->GetComponent<Touchable>()->Down.Unbind(this, &TextEditorSelectionSystem::Down, object);
+    object->GetComponent<Touchable>()->Up.Unbind(this, &TextEditorSelectionSystem::Up, object);
     
-    mesh.vertices.push_back({ {v1.x, v1.y,0 }, {0,0}, Colour(1.0f, 1.0f, 1.0f, 0.4f), {0,0,1} });
-    mesh.vertices.push_back({ {v2.x, v2.y,0 }, {0,0}, Colour(1.0f, 1.0f, 1.0f, 0.4f), {0,0,1} });
-    mesh.vertices.push_back({ {v3.x, v3.y,0 }, {0,0}, Colour(1.0f, 1.0f, 1.0f, 0.4f), {0,0,1} });
-    mesh.vertices.push_back({ {v4.x, v4.y,0 }, {0,0}, Colour(1.0f, 1.0f, 1.0f, 0.4f), {0,0,1} });
-    
-    mesh.triangles.push_back(size + 0);
-    mesh.triangles.push_back(size + 2);
-    mesh.triangles.push_back(size + 1);
-    mesh.triangles.push_back(size + 0);
-    mesh.triangles.push_back(size + 3);
-    mesh.triangles.push_back(size + 2);
 }
 
-void TextEditorSelectionSystem::UpdateMesh(Pocket::GameObject *object) {
+void TextEditorSelectionSystem::Down(Pocket::TouchData e, GameObject* object) {
+    if (e.Index!=0) return;
     TextEditor* textEditor = object->GetComponent<TextEditor>();
+    textEditor->Cursor = GetCursorPosition(object, e.WorldPosition);
+    textEditor->Selection = { textEditor->Cursor, textEditor->Cursor };
     
-    GameObject* selection = static_cast<GameObject*>(GetMetaData(object));
-    
-    auto& mesh = selection->GetComponent<Mesh>()->GetMesh<Vertex>();
-    
-    auto& v = mesh.vertices;
-    auto& t = mesh.triangles;
-    
-    v.clear();
-    t.clear();
-    
-    if (!textEditor->SelectionActive) return;
-    
-    int min;
-    int max;
-    if (textEditor->Selection().x<textEditor->Selection().y) {
-        min = textEditor->Selection().x;
-        max = textEditor->Selection().y;
-    } else {
-        min = textEditor->Selection().y;
-        max = textEditor->Selection().x;
-    }
-    
-    int selectionSize = max - min;
-    if (selectionSize == 0) return;
-    
-    Point start = textEditor->CursorToCartesian(min);
-    Point end = textEditor->CursorToCartesian(max);
-    
-    
+    isDown = true;
+    downObject.object = object;
+    downObject.touchData = e;
+}
+
+
+void TextEditorSelectionSystem::Up(Pocket::TouchData e, GameObject* object) {
+    if (e.Index!=0) return;
+    isDown = false;
+}
+
+int TextEditorSelectionSystem::GetCursorPosition(GameObject* object, Vector3 worldPosition) {
+    TextEditor* textEditor = object->GetComponent<TextEditor>();
+    Transform* transform = object->GetComponent<Transform>();
     TextEditorRenderer* renderer = object->GetComponent<TextEditorRenderer>();
     Font* font = object->GetComponent<Font>();
     Vector2 size = object->GetComponent<Sizeable>()->Size;
+    
+    Vector3 localPosition = transform->WorldInverse().TransformPosition(worldPosition);
     
     float fontSize = renderer->fontSize;
     float spacing = font->GetSpacing(fontSize);
     
     Vector2 scaler = { spacing, renderer->fontSize };
     
-    /*
-    Vector3 Position;
-    Vector2 TextureCoords;
-    Colour Color;
-    Vector3 Normal;
-    */
+    Point start = 0;
     
-    //v.push_back({ {0,0,0}, {0,0}, Colour(1.0f, 1.0f, 1.0f, 1.0f), {0,0,1} });
+    Point cursor;
     
-    Vector2 sp = {
-        -renderer->Offset().x + start.x * scaler.x,
-        renderer->Offset().y + size.y - fontSize - start.y * scaler.y
-    };
+    //localPosition.x = -renderer->Offset().x + cursor.x * scaler.x;
+    cursor.x = (int)roundf((localPosition.x + renderer->Offset().x) / scaler.x);
+    cursor.y = (int)roundf((localPosition.y - renderer->Offset().y - size.y + fontSize) / -scaler.y);
+    return textEditor->CartesianToCursor(cursor);
+}
+
+void TextEditorSelectionSystem::Update(float dt) {
+    if (!isDown) return;
+    const Vector2& touchPosition = downObject.touchData.Input->GetTouchPosition(0);
+    Ray ray = downObject.touchData.Camera->GetRay(downObject.touchData.CameraTransform, touchPosition);
+    Vector3 worldPosition = ray.GetPosition(downObject.touchData.WorldPosition.z);
     
-    Vector2 ep = {
-        -renderer->Offset().x + end.x * scaler.x,
-        renderer->Offset().y + size.y - fontSize - end.y * scaler.y
-    };
+    TextEditor* textEditor = downObject.object->GetComponent<TextEditor>();
+    Point selection = textEditor->Selection;
     
-    sp.x = MathHelper::Clamp(sp.x, 0, size.x);
-    sp.y = MathHelper::Clamp(sp.y, 0, size.y);
+    selection.y = GetCursorPosition(downObject.object, worldPosition);
     
-    ep.x = MathHelper::Clamp(ep.x, 0, size.x);
-    ep.y = MathHelper::Clamp(ep.y, 0, size.y);
+    textEditor->Selection = selection;
+    textEditor->SelectionActive = true;
     
-    if (start.y == end.y) {
-        AddQuad(mesh,
-            { sp.x, sp.y + fontSize }, { ep.x, sp.y + fontSize },
-            { ep.x, ep.y }, { sp.x, sp.y }
-        );
-    } else {
-        AddQuad(mesh,
-            { sp.x, sp.y + fontSize }, { size.x, sp.y + fontSize },
-            { size.x, sp.y }, { sp.x, sp.y }
-        );
-        
-        int height = (end.y - start.y) - 1;
-        if (height>0) {
-            AddQuad(mesh,
-                { 0, sp.y }, { size.x, sp.y },
-                { size.x, ep.y + fontSize }, { 0, ep.y + fontSize }
-            );
-        }
-        
-        
-        AddQuad(mesh,
-            { 0, ep.y + fontSize }, { ep.x, ep.y + fontSize },
-            { ep.x, ep.y }, { 0, ep.y }
-        );
-    
-    }
-    
-    
-    selection->GetComponent<Mesh>()->GetMesh<Vertex>().AddQuad(sp, fontSize*0.1f, Colour::Green());
-    
-    selection->GetComponent<Mesh>()->GetMesh<Vertex>().AddQuad(ep, fontSize*0.1f, Colour::Red());
-    
-    
-    
-    
-    
-    
-    
-    
+    textEditor->Cursor = selection.y;
 }

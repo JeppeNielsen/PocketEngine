@@ -18,7 +18,14 @@
 #include "TextEditorEditSystem.hpp"
 #include "TextBoxSystem.hpp"
 #include "TextEditorCursorSystem.hpp"
+#include "TextEditorSelectionMeshSystem.hpp"
 #include "TextEditorSelectionSystem.hpp"
+#include "TextEditorScrollSystem.hpp"
+#include "AutocompleterEntrySystem.hpp"
+#include "AutocompleterTextEditorSystem.hpp"
+#include "Gui.hpp"
+#include "VirtualTreeListSystem.hpp"
+#include "VirtualTreeListSpawnerSystem.hpp"
 
 using namespace Pocket;
 
@@ -35,16 +42,26 @@ public:
         
         
         GameObject* root = world.CreateRoot();
-        root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds({0,3000});
-        root->CreateSystem<TouchSystem>()->Octree().SetWorldBounds({0,3000});
-        root->CreateSystem<DraggableSystem>();
-        root->CreateSystem<FontTextureSystem>();
+        root->CreateSystem<Gui>()->Setup("images.png", "images.xml", Context().Viewport());
+        root->CreateSystem<Gui>()->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
+    
+        //root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds({0,3000});
+        //root->CreateSystem<TouchSystem>()->Octree().SetWorldBounds({0,3000});
+        //root->CreateSystem<DraggableSystem>();
+        //root->CreateSystem<FontTextureSystem>();
         root->CreateSystem<TextEditorRendererSystem>();
-        root->CreateSystem<TransformHierarchy>();
+        //root->CreateSystem<TransformHierarchy>();
         root->CreateSystem<TextEditorEditSystem>();
-        root->CreateSystem<TextBoxSystem>();
+        //root->CreateSystem<TextBoxSystem>();
         root->CreateSystem<TextEditorCursorSystem>();
+        root->CreateSystem<TextEditorSelectionMeshSystem>();
         root->CreateSystem<TextEditorSelectionSystem>();
+        root->CreateSystem<TextEditorScrollSystem>();
+        root->CreateSystem<AutocompleterEntrySystem>();
+        root->CreateSystem<AutocompleterTextEditorSystem>();
+        root->CreateSystem<VirtualTreeListSystem>();
+        root->CreateSystem<VirtualTreeListSpawnerSystem>();
+        
         
         font = root->CreateChild();
         font->AddComponent<TextureComponent>();
@@ -53,7 +70,7 @@ public:
         font->GetComponent<Font>()->CharacterSetEverySize = 12.0f;
         
         
-        GameObject* camera = root->CreateObject();
+        /*GameObject* camera = root->CreateObject();
         camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
         Camera* cam = camera->AddComponent<Camera>();
         
@@ -61,21 +78,26 @@ public:
         cam->Near = 1.0f;
         cam->Far = 2.0f;
         cam->FieldOfView = 0.0f;
+        */
         
-        for(int i=0; i<1; i++) {
+        GameObject* autoCompleter = root->CreateChild();
         
-        GameObject* box = root->CreateChild();
+        autoCompleter->AddComponent<Autocompleter>()->sourceFile = "/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp";
+        autoCompleter->AddComponent<AutocompleterEntry>();
         
-        Vector2 size = {500-i*400.0f,400-i*200.0f};
+        box = root->CreateChild();
+        
+        Vector2 size = Vector2(1280, 720);
         
         box->AddComponent<Transform>();
         box->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(size*0.5f, size, Colour::Blue(0.5f));
         box->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
-        box->AddComponent<Draggable>();
+        //box->AddComponent<Draggable>();
         box->AddComponent<Touchable>();
+        box->AddComponent<Orderable>();
         //box->AddComponent<TextureComponent>(font);
         
-        std::ifstream file("/Projects/PocketEngine/Editor/PocketEditor/Build/Build/Products/Debug/output.txt");
+        std::ifstream file("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp");
         
         textEditor = box->CreateChild();
         textEditor->AddComponent<Transform>();
@@ -95,52 +117,16 @@ public:
         textEditor->AddComponent<Sizeable>()->Size = size;
         textEditor->AddComponent<TextBox>();
         textEditor->AddComponent<Touchable>(box);
+        textEditor->AddComponent<Autocompleter>(autoCompleter);
+        textEditor->AddComponent<Orderable>();
         
-        GameObject* ref = box->CreateChild();
-        ref->AddComponent<Transform>()->Position = {0,0,0};
-        //ref->GetComponent<Transform>()->Scale = {100,10,0.2f};
-        ref->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0,{100,1,0.01f});
-        ref->AddComponent<Renderable>();
         
-
-        auto te = textEditor->GetComponent<TextEditor>();
-        te->Cursor.Changed.Bind([te] () {
-            if (te->Cursor<0) {
-                std::cout << "wolla"<< std::endl;
-            }
-        });
-
-        }
         
-        cursor = 200;
-        /*
-        Input.ButtonDown.Bind([this] (std::string b) {
-            
-            
-            
-            std::string& text = textEditor->GetComponent<TextEditor>()->text;
-            std::string t1 = text.substr(0, cursor);
-            std::string t2 = text.substr(cursor, text.size() - cursor);
-            
-            if (b == "\r") {
-                b = "\n";
-            } else if (b == "\x7f") {
-                t1 = t1.substr(0, t1.size()-1);
-                b = "";
-                cursor-=2;
-            } else if (b.size()>1) {
-                return;
-            }
-            
-            textEditor->GetComponent<TextEditor>()->text = t1 + b + t2;
-            textEditor->GetComponent<TextEditor>()->Lines.MakeDirty();
-            
-            cursor++;
-        });
-        */
     }
     
     void Update(float dt) {
+        //textEditor->GetComponent<Sizeable>()->Size = Context().ScreenSize;
+    
         Context().InputDevice().UpdateInputManager(&world.Input());
         //textEditor->GetComponent<TextEditorRenderer>()->Offset = {world.Input().GetTouchPosition(0).y,0};
         world.Update(dt);
@@ -153,7 +139,7 @@ public:
     }
 };
 
-int main() {
+int main_editorTest() {
     Engine e;
     e.Start<TextEditorState>();
 	return 0;

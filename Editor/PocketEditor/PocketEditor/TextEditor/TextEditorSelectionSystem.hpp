@@ -1,30 +1,40 @@
 //
-//  TextEditorCursorSystem.hpp
+//  TextEditorSelectionSystem.hpp
 //  PocketEditor
 //
-//  Created by Jeppe Nielsen on 29/03/2017.
+//  Created by Jeppe Nielsen on 05/04/2017.
 //  Copyright © 2017 Jeppe Nielsen. All rights reserved.
 //
 
-#pragma once
 #include "GameSystem.hpp"
 #include "TextEditor.hpp"
-#include "TextBox.hpp"
-#include "TextEditorRenderer.hpp"
 #include "Sizeable.hpp"
+#include "TextEditorRenderer.hpp"
+#include "Transform.hpp"
+#include "Touchable.hpp"
 #include "Font.hpp"
-#include "VertexMesh.hpp"
+#include <set>
 
-using namespace Pocket;
+struct TextEditorSelectionSystem : public GameSystem<Transform, TextEditor, TextEditorRenderer, Sizeable, Touchable, Font> {
 
-class TextEditorSelectionSystem : public GameSystem<TextEditor, TextBox, TextEditorRenderer, Sizeable, Font> {
-protected:
-    void Initialize() override;
-    void Destroy() override;
-    void ObjectAdded(GameObject* object) override;
-    void ObjectRemoved(GameObject* object) override;
-    void Update(float dt) override;
-private:
-    void UpdateMesh(GameObject* object);
-    void AddQuad(VertexMesh<Vertex>& mesh, const Vector2& v1, const Vector2& v2, const Vector2& v3, const Vector2& v4);
+    void Initialize();
+    
+    void ObjectAdded(GameObject* object);
+    void ObjectRemoved(GameObject* object);
+    
+    void Down(TouchData e, GameObject* object);
+    void Up(TouchData e, GameObject* object);
+    
+    void Update(float dt);
+
+    int GetCursorPosition(GameObject* object, Vector3 worldPosition);
+    
+    
+    struct DownObject {
+        GameObject* object;
+        TouchData touchData;
+    };
+    
+    bool isDown;
+    DownObject downObject;
 };

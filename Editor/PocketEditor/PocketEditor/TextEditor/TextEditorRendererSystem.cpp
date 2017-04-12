@@ -13,26 +13,28 @@ void TextEditorRendererSystem::Initialize() {
 }
 
 void TextEditorRendererSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Bind(this, &TextEditorRendererSystem::ObjectChanged, object);
+    object->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Bind(this, &TextEditorRendererSystem::LinesChanged, object);
     object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &TextEditorRendererSystem::ObjectChanged, object);
-    ObjectChanged(object);
+    object->GetComponent<TextEditorRenderer>()->Offset.Changed.Bind(this, &TextEditorRendererSystem::ObjectChanged, object);
+    LinesChanged(object);
 }
 
 void TextEditorRendererSystem::ObjectRemoved(Pocket::GameObject *object) {
-    object->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Unbind(this, &TextEditorRendererSystem::ObjectChanged, object);
+    object->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Unbind(this, &TextEditorRendererSystem::LinesChanged, object);
     object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &TextEditorRendererSystem::ObjectChanged, object);
+    object->GetComponent<TextEditorRenderer>()->Offset.Changed.Unbind(this, &TextEditorRendererSystem::ObjectChanged, object);
 }
 
 void TextEditorRendererSystem::Update(float dt) {
-    for(auto o : Objects()) {
-        UpdateMesh(o);
-    }
-/*
     for(auto o : dirtyObjects) {
         UpdateMesh(o);
     }
     dirtyObjects.clear();
-*/
+}
+
+void TextEditorRendererSystem::LinesChanged(GameObject* object) {
+    object->GetComponent<Font>()->RequestText(object->GetComponent<TextEditor>()->text, object->GetComponent<TextEditorRenderer>()->fontSize);
+    dirtyObjects.insert(object);
 }
 
 void TextEditorRendererSystem::ObjectChanged(GameObject* object) {
@@ -53,7 +55,7 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
     
     float spacing = font->GetSpacing(fontSize);
     
-    int numX = (int)ceil(size.x / spacing)+1;
+    int numX = (int)ceil(size.x / spacing);
     int numY = (int)ceil(size.y / fontSize);
     if (numX<=0) return;
     if (numY<=0) return;
@@ -71,8 +73,8 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
     int yPos = (int)floorf(textEditorRenderer->Offset().y / fontSize);
     int xPos = (int)floorf(textEditorRenderer->Offset().x / spacing);
     
-    float subPosition = textEditorRenderer->Offset().y - yPos * fontSize;
-    float subPositionX = textEditorRenderer->Offset().x - xPos * spacing;
+    float subPosition = roundf(textEditorRenderer->Offset().y) - yPos * fontSize;
+    float subPositionX = roundf(textEditorRenderer->Offset().x) - xPos * spacing;
     
     if (xPos<0) {
         numX += xPos;
@@ -92,7 +94,6 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
             lineWidth = numX;
         }
         std::string lineString = text.substr(lineStart, lineWidth);
-        font->RequestText(lineString, fontSize);
         std::vector<Font::Letter> letters;
         font->CreateText(letters, lineString, 0, fontSize, Pocket::Font::HAlignment::Left, Font::VAlignment::Top, false, true);
         

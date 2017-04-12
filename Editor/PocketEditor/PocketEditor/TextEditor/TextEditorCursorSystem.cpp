@@ -10,6 +10,7 @@
 #include "Transform.hpp"
 #include "Renderable.hpp"
 #include "Mesh.hpp"
+#include "Orderable.hpp"
 
 void TextEditorCursorSystem::Initialize() {
     cursorObject = 0;
@@ -17,7 +18,6 @@ void TextEditorCursorSystem::Initialize() {
 }
 
 void TextEditorCursorSystem::Destroy() {
-    
 }
 
 void TextEditorCursorSystem::ObjectAdded(Pocket::GameObject *object) {
@@ -32,6 +32,9 @@ void TextEditorCursorSystem::ObjectRemoved(Pocket::GameObject *object) {
         cursorObject->Remove();
         TextEditor* textEditor = object->GetComponent<TextEditor>();
         textEditor->Cursor.Changed.Unbind(this, &TextEditorCursorSystem::CursorChanged, object);
+        
+        TextEditorRenderer* renderer = object->GetComponent<TextEditorRenderer>();
+        renderer->Offset.Changed.Unbind(this, &TextEditorCursorSystem::OffsetChanged, object);
     }
 }
 
@@ -49,6 +52,7 @@ void TextEditorCursorSystem::TextBoxActivated(Pocket::GameObject *object) {
         cursorObject->AddComponent<Transform>();
         cursorObject->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(size*0.5f, size, Colour::Black());
         cursorObject->AddComponent<Renderable>();
+        cursorObject->AddComponent<Orderable>();
         
         textEditor->Cursor.Changed.Bind(this, &TextEditorCursorSystem::CursorChanged, object);
         renderer->Offset.Changed.Bind(this, &TextEditorCursorSystem::OffsetChanged, object);
