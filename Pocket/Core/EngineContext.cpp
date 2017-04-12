@@ -22,7 +22,7 @@ AppMenu& EngineContext::Menu() {
     return *menu;
 }
 
-EngineContext::EngineContext() : menu(0) { }
+EngineContext::EngineContext() : menu(0), ScreenScalingFactor(1.0f) { }
 
 EngineContext::~EngineContext() {
     delete menu;

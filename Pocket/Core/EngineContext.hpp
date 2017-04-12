@@ -22,6 +22,7 @@ namespace Pocket {
         Rect Viewport() const;
         AppMenu& Menu();
         InputDevice& InputDevice();
+        float ScreenScalingFactor;
     private:
         AppMenu* menu;
         class InputDevice inputDevice;

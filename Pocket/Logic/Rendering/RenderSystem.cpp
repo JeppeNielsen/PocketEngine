@@ -57,7 +57,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     RenderMask cameraMask = camera->Mask;
     //if (!camera->Orthographic()) {
         const Rect& viewport = camera->Viewport;
-        const Vector2& screenSize = Engine::Context().ScreenSize;
+        const Vector2& screenSize = Engine::Context().ScreenSize * Engine::Context().ScreenScalingFactor;
         Rect screenRect = viewport * screenSize;
         glViewport(screenRect.x, screenRect.y, screenRect.width, screenRect.height);
     //}
