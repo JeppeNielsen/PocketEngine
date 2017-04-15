@@ -17,6 +17,9 @@ VirtualTreeList::VirtualTreeList() {
         return DefaultExpandedHashFunction(go);
     };
     PredicateFunction = 0;
+    ShowRoot = false;
+    ItemHeight = 25;
+    ItemIndent = 25;
 }
 
 void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
@@ -40,6 +43,7 @@ void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
             }
         };
         expandedNode.Height.MakeDirty();
+        
         if (node->Parent()) {
             expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
         }
@@ -52,11 +56,20 @@ void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
 }
 
 bool VirtualTreeList::IsNodeExpanded(Pocket::GameObject *node) {
+    if (!ShowRoot && node == Root()) return true;
     std::string hash = ExpandedHashFunction(node);
     return expandedNodes.find(hash) != expandedNodes.end();
 }
 
 int VirtualTreeList::GetNodeHeight(Pocket::GameObject *node) {
+    if (!ShowRoot && node == Root) {
+        int v = 1;
+        for(auto o : node->Children()) {
+            v += this->GetNodeHeight(o);
+        }
+        return v;
+    }
+
     std::string hash = ExpandedHashFunction(node);
     auto it = expandedNodes.find(hash);
     return it!=expandedNodes.end() ? it->second.Height() : 1;
@@ -64,7 +77,7 @@ int VirtualTreeList::GetNodeHeight(Pocket::GameObject *node) {
 
 void VirtualTreeList::GetNodes(int lower, int upper, Nodes &nodesFound) {
     int index = 0;
-    GetNodesRecursive(Root, lower, upper, index, 0, nodesFound);
+    GetNodesRecursive(Root, lower, upper, index, ShowRoot ? 0 : -1, nodesFound);
 }
 
 void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, int upper, int &index, int depth, Nodes &nodesFound) {
@@ -72,7 +85,9 @@ void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, i
     if (PredicateFunction && !PredicateFunction(object)) return;
 
     if (index>=lower && index<=upper) {
-        nodesFound.push_back({object, index, depth });
+        if (ShowRoot || (object!=Root)) {
+            nodesFound.push_back({object, index, depth });
+        }
     }
     index++;
     

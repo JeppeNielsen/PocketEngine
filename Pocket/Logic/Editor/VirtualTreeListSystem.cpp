@@ -50,7 +50,7 @@ void VirtualTreeListSystem::UpdateVirtualList(Pocket::GameObject *object) {
     Vector3 endWorldPosition = pivotTransform->World().TransformPosition({0, sizable->Size().y,0});
     Vector3 endPosition = transform->WorldInverse().TransformPosition(endWorldPosition);
     
-    float itemHeight = 25;
+    float itemHeight = treeList->ItemHeight;
 
     //int startIndex = (int)floorf(startPosition.y / itemHeight);
     //int endIndex = (int)floorf(endPosition.y / itemHeight);

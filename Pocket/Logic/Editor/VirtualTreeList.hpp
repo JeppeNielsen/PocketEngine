@@ -20,6 +20,8 @@ namespace Pocket {
         
         Property<GameObject*> Pivot;
         Property<GameObject*> Root;
+        Property<float> ItemHeight;
+        Property<float> ItemIndent;
         
         std::function<std::string(GameObject*)> ExpandedHashFunction;
         std::function<bool(GameObject* object)> PredicateFunction;
@@ -72,5 +74,6 @@ namespace Pocket {
         
         void Clear();
         
+        bool ShowRoot;
     };
 }
