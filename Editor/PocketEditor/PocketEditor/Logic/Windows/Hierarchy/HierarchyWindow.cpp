@@ -53,6 +53,7 @@ void HierarchyWindow::OnCreate() {
     listBox->RemoveComponent<Sprite>();
 
     treeView = pivot->AddComponent<VirtualTreeList>();
+    treeView->ShowRoot = true;
     treeView->Root = 0;
     //treeView->SetNodeExpanded(root, true);
     treeView->Pivot = listBox;
@@ -68,18 +69,20 @@ void HierarchyWindow::OnCreate() {
         return !object->Children().empty();
     };
     
-    spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
+    spawner->OnCreate = [&, this](VirtualTreeListSpawner::SpawnedNode& n) {
         
-        GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
-        clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, node);
-        gui.CreateControl(clone, "TextBox", 0, {25,25});
+        GameObject* clone = gui.CreateControl(n.parent, "Box", 0, {200,n.height});
+        clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, n.node);
+        if (n.hasChildren) {
+            n.foldOutButton = gui.CreateControl(clone, "TextBox", 0, {25,25});
+        }
         
         clone->GetComponent<Droppable>()->OnCreate = [&gui, this](GameObject* o, TouchData d) -> GameObject* {
             Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
             GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
             return control;
         };
-        EditorObject* editorObject = node->GetComponent<EditorObject>();
+        EditorObject* editorObject = n.node->GetComponent<EditorObject>();
     
         if (editorObject && editorObject->editorObject) {
         
@@ -112,14 +115,14 @@ void HierarchyWindow::OnCreate() {
             SetNodeEnabled(enableButton, editorObject->gameObject->Enabled);
             objectToEnableButton[editorObject->gameObject] = enableButton;
         }
-        return clone;
     };
     
-    spawner->OnRemove = [this] (GameObject* node, GameObject* control) {
-        if (control == rootItem) {
+    spawner->OnRemove = [this] (auto& n) {
+        /*if (n.control == rootItem) {
             rootItem = 0;
-        }
-        EditorObject* editorObject = node->GetComponent<EditorObject>();
+        }*/
+        
+        EditorObject* editorObject = n.node->template GetComponent<EditorObject>();
         if (editorObject) {
         
             {

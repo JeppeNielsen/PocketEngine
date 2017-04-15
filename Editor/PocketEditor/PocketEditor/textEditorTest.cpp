@@ -139,7 +139,7 @@ public:
     }
 };
 
-int main_editorTest() {
+int main() {
     Engine e;
     e.Start<TextEditorState>();
 	return 0;

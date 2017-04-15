@@ -2260,12 +2260,12 @@
 				729950131C99F76000DAAE5D /* HierarchyEditorSystem.hpp */,
 				72D719EC1CA9AFA700868DDB /* VirtualTreeList.cpp */,
 				72D719ED1CA9AFA700868DDB /* VirtualTreeList.hpp */,
+				72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */,
+				72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */,
 				72D719F21CAB20BF00868DDB /* VirtualTreeListSpawner.cpp */,
 				72D719F31CAB20BF00868DDB /* VirtualTreeListSpawner.hpp */,
 				72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */,
 				72D719F61CAB211300868DDB /* VirtualTreeListSpawnerSystem.hpp */,
-				72D719EF1CA9B95000868DDB /* VirtualTreeListSystem.cpp */,
-				72D719F01CA9B95000868DDB /* VirtualTreeListSystem.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";

@@ -171,33 +171,32 @@ void ProjectWindow::OnCreate() {
     
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
-    spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
-        FilePath* filePath = node->GetComponent<FilePath>();
-        GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {200,25});
-        clone->RemoveComponent<Touchable>();
-        gui.CreateControl(clone, "TextBox", 0, {25,25});
+    spawner->OnCreate = [&, this](auto& n) {
+    
+        FilePath* filePath = n.node->template GetComponent<FilePath>();
         
-        GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
+        if (n.hasChildren) {
+            n.foldOutButton = gui.CreateControl(n.parent, "TextBox", 0, {25,25});
+        }
         
-        auto l = gui.CreateLabel(selectButton, {0,0}, {200-25,25}, 0, node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
+        GameObject* selectButton = gui.CreateControl(n.parent, "TextBox", {(n.hasChildren ? 25.0f : 0.0f),0}, {200-(n.hasChildren ? 0 : 25.0f),25});
+        
+        auto l = gui.CreateLabel(selectButton, {0,0}, {200-(n.hasChildren ? 0 : 25.0f),25}, 0, n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
         l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
         l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     
-        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { node, node!=fileRoot ? selectButton : 0, filePath ? filePath : &projectFilePath });
+        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { n.node, n.node!=fileRoot ? selectButton : 0, filePath ? filePath : &projectFilePath });
         
         if (filePath) {
-            if (node!=fileRoot) {
+            if (n.node!=fileRoot) {
                 selectButton->AddComponent<Selectable>();
                 selectButton->AddComponent<SelectedColorer>()->Selected = Colour(0.8f,0.8f,0.8f,1.0f);
             }
         }
-        return clone;
     };
     
-    spawner->OnRemove = [] (GameObject* node, GameObject* control) {
-        
-    };
+    spawner->OnRemove = [] (auto& n) {};
     
     ScreenSizeChanged();
     

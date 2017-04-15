@@ -74,29 +74,21 @@ void AutocompleterTextEditorSystem::ButtonDown(ButtonEvent e) {
         
         auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
         
-        spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
+        spawner->OnCreate = [&, this](auto& n) {
             
-            GameObject* clone = gui->CreateControl(parent, "Box", {-1000,0}, {200,25});
-            gui->CreateControl(clone, "TextBox", 0, {25,25});
+            AutocompleterEntry* entry = n.node->template GetComponent<AutocompleterEntry>();
             
-            AutocompleterEntry* entry = node->GetComponent<AutocompleterEntry>();
+            GameObject* elementBackground = gui->CreateControl(n.parent, "TextBox", 0, {200,n.height});
+            elementBackground->AddComponent<Colorable>()->Color = Colour::White();
+            elementBackground->GetComponent<Touchable>()->ClickThrough = true;
             
-            GameObject* selectButton = gui->CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-            //selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
-            selectButton->AddComponent<Colorable>()->Color = Colour::White();
-            selectButton->GetComponent<Touchable>()->ClickThrough = true;
-            
-            GameObject* label = gui->CreateLabel(selectButton, {0,0}, {60,25}, 0, entry->text, 12);
+            GameObject* label = gui->CreateLabel(elementBackground, {0,0}, {200,n.height}, 0, entry->text, 12);
             
             label->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
             label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
             label->AddComponent<Colorable>()->Color = Colour::Black();
-
-            return clone;
         };
         
-        spawner->OnRemove = [this] (GameObject* node, GameObject* control) {
-        
-        };
+        spawner->OnRemove = [this] (auto& n) {};
     }
 }

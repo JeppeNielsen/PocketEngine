@@ -40,11 +40,10 @@ void ConsoleWindow::OnCreate() {
     
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
-    spawner->OnCreate = [&, this](GameObject* node, GameObject* parent) -> GameObject* {
+    spawner->OnCreate = [&, this](auto& n) {
+        LogMessage* message = n.node->template GetComponent<LogMessage>();
         
-        LogMessage* message = node->GetComponent<LogMessage>();
-        
-        GameObject* clone = gui.CreateControl(parent, "Box", {-1000,0}, {500,25});
+        GameObject* clone = gui.CreateControl(n.parent, "Box", 0, {500,n.height});
         clone->RemoveComponent<Touchable>();
         gui.CreateControl(clone, "TextBox", 0, {25,25});
         
@@ -55,18 +54,12 @@ void ConsoleWindow::OnCreate() {
         l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
         l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     
-        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ConsoleWindow::Clicked, node);
-        return clone;
+        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ConsoleWindow::Clicked, n.node);
     };
     
-    spawner->OnRemove = [] (GameObject* node, GameObject* control) {
+    spawner->OnRemove = [] (auto n) {
         
     };
-
-    
-
-
-
 }
 
 void ConsoleWindow::Clicked(Pocket::TouchData d, Pocket::GameObject *node) {
