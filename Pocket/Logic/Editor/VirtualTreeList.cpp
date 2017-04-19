@@ -82,8 +82,7 @@ void VirtualTreeList::GetNodes(int lower, int upper, Nodes &nodesFound) {
 
 void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, int upper, int &index, int depth, Nodes &nodesFound) {
     if (index>upper) return;
-    if (PredicateFunction && !PredicateFunction(object)) return;
-
+    if ((ShowRoot || (object!=Root)) && PredicateFunction && !PredicateFunction(object)) return;
     if (index>=lower && index<=upper) {
         if (ShowRoot || (object!=Root)) {
             nodesFound.push_back({object, index, depth });
