@@ -244,3 +244,7 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     (*pivot)=p;
     return listbox;
 }
+
+const Gui::Fonts& Gui::GetFonts() const {
+    return fonts;
+}

@@ -35,6 +35,8 @@ namespace Pocket {
     class Gui : public GameConcept {
     public:
         
+        using Fonts = std::vector<GameObject*>;
+        
         void Initialize();
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport);
         void Setup(GameObject *atlas, const Rect &viewport);
@@ -58,13 +60,14 @@ namespace Pocket {
 
         void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation);
         GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot);
+        
+        const Fonts& GetFonts() const;
     private:
         RenderSystem* renderer;
         GameObject* camera;
         GameObject* atlas;
         TouchSystem* touchSystem;
         TextBoxSystem* textboxSystem;
-        typedef std::vector<GameObject*> Fonts;
         Fonts fonts;
     };
 }
