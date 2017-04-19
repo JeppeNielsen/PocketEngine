@@ -27,5 +27,6 @@ namespace Pocket {
         static std::string CreateGuid();
         
         static bool EndsWith(const std::string& str, const std::string& endsWith);
+        static bool StartsWith(const std::string& str, const std::string& endsWith);
     };
 }

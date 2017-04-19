@@ -540,3 +540,12 @@ bool StringHelper::EndsWith(const std::string& str, const std::string& endsWith)
         return false;
     }
 }
+
+bool StringHelper::StartsWith(const std::string& str, const std::string& endsWith) {
+    if (str.length() >= endsWith.length()) {
+        return (0 == str.compare (0, endsWith.length(), endsWith));
+    } else {
+        return false;
+    }
+}
+
