@@ -105,11 +105,6 @@ void TextEditorCursorSystem::UpdateCursorTransform() {
     float fontSize = renderer->fontSize;
     float spacing = font->GetSpacing(fontSize);
     
-    int numX = (int)ceilf(size.x / spacing);
-    int numY = (int)ceilf(size.y / fontSize);
-    if (numX<=0) return;
-    if (numY<=0) return;
-    
     Vector2 scaler = { spacing, renderer->fontSize };
     
     cursorObject->GetComponent<Transform>()->Position = {

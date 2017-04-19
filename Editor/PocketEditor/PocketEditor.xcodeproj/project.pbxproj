@@ -429,6 +429,8 @@
 		72C9B2A81E9AC46F00033C56 /* AutocompleterEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A61E9AC46F00033C56 /* AutocompleterEntry.cpp */; };
 		72C9B2AB1E9AC52200033C56 /* AutocompleterEntrySystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A91E9AC52200033C56 /* AutocompleterEntrySystem.cpp */; };
 		72C9B2AE1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2AC1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp */; };
+		72C9B2B01EA6226600033C56 /* testXCodeAutoComplete.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */; };
+		72C9B2B31EA7820100033C56 /* AutocompleterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2B11EA7820000033C56 /* AutocompleterSystem.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
 		72CE8EE61CB43357001F08E4 /* BaseWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */; };
@@ -1519,6 +1521,9 @@
 		72C9B2AA1E9AC52200033C56 /* AutocompleterEntrySystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterEntrySystem.hpp; sourceTree = "<group>"; };
 		72C9B2AC1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterTextEditorSystem.cpp; sourceTree = "<group>"; };
 		72C9B2AD1E9ACBF400033C56 /* AutocompleterTextEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterTextEditorSystem.hpp; sourceTree = "<group>"; };
+		72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testXCodeAutoComplete.cpp; sourceTree = "<group>"; };
+		72C9B2B11EA7820000033C56 /* AutocompleterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterSystem.cpp; sourceTree = "<group>"; };
+		72C9B2B21EA7820000033C56 /* AutocompleterSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterSystem.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
 		72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorContext.cpp; sourceTree = "<group>"; };
 		72CE8EE21CB431FF001F08E4 /* EditorContext.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorContext.hpp; sourceTree = "<group>"; };
@@ -2064,6 +2069,7 @@
 				72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */,
 				72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */,
 				72C9B29F1E97C7C400033C56 /* testAutoComplete.cpp */,
+				72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -3521,6 +3527,8 @@
 				72C9B2A71E9AC46F00033C56 /* AutocompleterEntry.hpp */,
 				72C9B2A91E9AC52200033C56 /* AutocompleterEntrySystem.cpp */,
 				72C9B2AA1E9AC52200033C56 /* AutocompleterEntrySystem.hpp */,
+				72C9B2B11EA7820000033C56 /* AutocompleterSystem.cpp */,
+				72C9B2B21EA7820000033C56 /* AutocompleterSystem.hpp */,
 				72C9B2AC1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp */,
 				72C9B2AD1E9ACBF400033C56 /* AutocompleterTextEditorSystem.hpp */,
 			);
@@ -3788,6 +3796,7 @@
 				729953CA1C99F76100DAAE5D /* BezierCurve3.cpp in Sources */,
 				729954BE1C99F76100DAAE5D /* btUniversalConstraint.cpp in Sources */,
 				729954611C99F76100DAAE5D /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
+				72C9B2B01EA6226600033C56 /* testXCodeAutoComplete.cpp in Sources */,
 				729954081C99F76100DAAE5D /* Joint2d.cpp in Sources */,
 				729954BC1C99F76100DAAE5D /* btSolve2LinearConstraint.cpp in Sources */,
 				729954E71C99F76100DAAE5D /* btVector3.cpp in Sources */,
@@ -4158,6 +4167,7 @@
 				7299543F1C99F76100DAAE5D /* b2Shape.cpp in Sources */,
 				729954831C99F76100DAAE5D /* btConvexShape.cpp in Sources */,
 				72C9B2951E92C51A00033C56 /* TextEditorSelectionMeshSystem.cpp in Sources */,
+				72C9B2B31EA7820100033C56 /* AutocompleterSystem.cpp in Sources */,
 				720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */,
 				729954D91C99F76100DAAE5D /* btSoftBody.cpp in Sources */,
 				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,

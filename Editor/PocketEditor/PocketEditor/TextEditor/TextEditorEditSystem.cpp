@@ -52,30 +52,42 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
     std::string button = e.Id;
     
     if (button == "") {
+        if (textEditor->AutoCompleteActive) {
+            textEditor->AutoCompleteEvent(TextEditor::AutoCompleteEventType::PrevToken);
+            return;
+        }
         if (shift) {
             textEditor->MoveSelection({0,1});
         }
         textEditor->MoveCursor({0,1});
         return;
     } else if (button == "") {
+        if (textEditor->AutoCompleteActive) {
+            textEditor->AutoCompleteEvent(TextEditor::AutoCompleteEventType::NextToken);
+            return;
+        }
         if (shift) {
             textEditor->MoveSelection({0,-1});
         }
         textEditor->MoveCursor({0,-1});
         return;
     } else if (button == "") {
+        
         if (shift) {
             textEditor->MoveSelection({-1,0});
         }
         textEditor->MoveCursor({-1,0});
+        textEditor->DisableAutoComplete();
         return;
     } else if (button == "") {
         if (shift) {
             textEditor->MoveSelection({1,0});
         }
         textEditor->MoveCursor({1,0});
+        textEditor->DisableAutoComplete();
         return;
     } else if (button.size()>1) {
+        textEditor->DisableAutoComplete();
         return;
     }
     
@@ -104,22 +116,60 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
     std::string t2 = textEditor->text.substr(textEditor->Cursor, textEditor->text.size() - textEditor->Cursor());
     
     
+    bool returnClicked = button == "\r";
+    bool tabClicked = button == "\t";
+    bool backspaceClicked = button == "\x7f";
+    bool escapeClicked = button == "\e";
     
-    if (button == "\r") {
+    if (returnClicked) {
+        if (textEditor->AutoCompleteActive) {
+            textEditor->AutoCompleteEvent(TextEditor::AutoCompleteEventType::TokenSelected);
+            textEditor->DisableAutoComplete();
+            return;
+        }
         button = "\n";
-    } else if (button == "\t") {
+    } else if (tabClicked) {
+        if (textEditor->AutoCompleteActive) {
+            textEditor->AutoCompleteEvent(TextEditor::AutoCompleteEventType::TokenSelected);
+            return;
+        }
         button = "   ";
         textEditor->Cursor+=2;
-    } else if (button == "\x7f") {
+    } else if (backspaceClicked) {
         t1 = t1.substr(0, t1.size()-1);
         button = "";
         textEditor->Cursor -= 2;
+    } else if (escapeClicked) {
+        button = "";
+        textEditor->DisableAutoComplete();
+        return;
     }
     
+    bool wasCursorAtWhiteSpace = textEditor->IsCursorAtWhiteSpace();
+    
     textEditor->text = t1 + button + t2;
-    textEditor->Lines.MakeDirty();
     
     textEditor->Cursor++;
+    textEditor->Lines.MakeDirty();
+    
+    if (textEditor->Cursor()<textEditor->AutoCompleteCursor) {
+        textEditor->DisableAutoComplete();
+    }
+    
+    if ((backspaceClicked && textEditor->IsCursorAtWhiteSpace()) || button == " " || button == ";") {
+        textEditor->DisableAutoComplete();
+    } else if (returnClicked || tabClicked || escapeClicked) {
+        textEditor->DisableAutoComplete();
+    } else if (wasCursorAtWhiteSpace) {
+        textEditor->EnableAutoComplete(textEditor->Cursor - 1);
+    } else if (textEditor->IsCursorAtToken(".") ||
+        textEditor->IsCursorAtToken("->") ||
+        textEditor->IsCursorAtToken("::") ||
+        textEditor->IsCursorAtToken("(") ||
+        textEditor->IsCursorAtToken(",") ||
+        textEditor->IsCursorAtToken("<")) {
+        textEditor->EnableAutoComplete(textEditor->Cursor);
+    }
     
     if (textEditor->Cursor<0) {
         textEditor->Cursor = 0;
@@ -130,4 +180,5 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
     if (textEditor->Cursor<0) {
         textEditor->Cursor = 0;
     }
+
 }

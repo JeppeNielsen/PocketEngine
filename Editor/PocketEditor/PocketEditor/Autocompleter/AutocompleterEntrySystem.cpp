@@ -7,6 +7,7 @@
 //
 
 #include "AutocompleterEntrySystem.hpp"
+#include <algorithm>
 
 void AutocompleterEntrySystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Autocompleter>()->OnAutoComplete.Bind(this, &AutocompleterEntrySystem::AutoCompleteDone, object);
@@ -18,22 +19,24 @@ void AutocompleterEntrySystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void AutocompleterEntrySystem::AutoCompleteDone(std::vector<Pocket::ScriptAutoCompleter::Result> results, Pocket::GameObject *object) {
     
+    //std::cout << "AutoCompleteDone" << std::endl;
+    
     for(auto child : object->Children()) {
         child->Remove();
     }
     
+    std::sort(results.begin(), results.end(), [] (auto& a, auto& b) {
+        return a.GetLowerCaseText() < b.GetLowerCaseText();
+    });
+    
     for(auto& result : results) {
+        if (result.cursorKind == 24) continue; //contructor
+        if (result.cursorKind == 25) continue; //destructor
+        if (result.cursorKind == 8) continue; //functions
         
         GameObject* entryGO = object->CreateChild();
         AutocompleterEntry* entry = entryGO->AddComponent<AutocompleterEntry>();
-      
-        for(auto& chunk : result.chunks) {
-            if (chunk.kind == 1) {
-                entry->text = chunk.text;
-            } else if (chunk.kind == 15) {
-                entry->returnType = chunk.text;
-            }
-        }
+        
+        entry->entry = result;
     }
-    
 }

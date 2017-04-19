@@ -24,6 +24,18 @@ struct TextEditor {
     Property<bool> SelectionActive;
     Property<Point> Selection;
     
+    Property<bool> AutoCompleteActive;
+    Event<> AutoCompleteEnabled;
+    Event<> AutoCompleteDisabled;
+    int AutoCompleteCursor;
+    
+    enum class AutoCompleteEventType {
+        NextToken,
+        PrevToken,
+        TokenSelected
+    };
+    Event<AutoCompleteEventType> AutoCompleteEvent;
+    
     struct Line {
         std::string::size_type start;
         std::string::size_type end;
@@ -38,4 +50,15 @@ struct TextEditor {
     void MoveCursor(Point dir);
     
     void MoveSelection(Point dir);
+    
+    void EraseText(int start, int end);
+    void InsertText(int position, const std::string& text);
+    
+    bool IsCursorAtWhiteSpace();
+    bool IsCursorAtToken(const std::string& token);
+    
+    void EnableAutoComplete(int cursor);
+    void DisableAutoComplete();
+    
+    std::string GetAutoCompleteString();
 };

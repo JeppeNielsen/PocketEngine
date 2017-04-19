@@ -26,6 +26,7 @@
 #include "Gui.hpp"
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
+#include "AutocompleterSystem.hpp"
 
 using namespace Pocket;
 
@@ -43,7 +44,7 @@ public:
         
         GameObject* root = world.CreateRoot();
         root->CreateSystem<Gui>()->Setup("images.png", "images.xml", Context().Viewport());
-        root->CreateSystem<Gui>()->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
+        root->CreateSystem<Gui>()->CreateFont("PTMono.ttc");//"/Library/Fonts/Arial Bold.ttf");//, "Font");
     
         //root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds({0,3000});
         //root->CreateSystem<TouchSystem>()->Octree().SetWorldBounds({0,3000});
@@ -61,7 +62,7 @@ public:
         root->CreateSystem<AutocompleterTextEditorSystem>();
         root->CreateSystem<VirtualTreeListSystem>();
         root->CreateSystem<VirtualTreeListSpawnerSystem>();
-        
+        root->CreateSystem<AutocompleterSystem>();
         
         font = root->CreateChild();
         font->AddComponent<TextureComponent>();
@@ -109,9 +110,9 @@ public:
         t.assign( (std::istreambuf_iterator<char>(file) ),
                 (std::istreambuf_iterator<char>()    ) );
     
-        for(int j=0; j<8; j++) {
+        /*for(int j=0; j<8; j++) {
             t += "1234567891O123456781234567891O1234567891OOOO1234567891O1234567891OOOO\n";
-        }
+        }*/
         
         textEditor->AddComponent<TextEditorRenderer>()->fontSize = 12;
         textEditor->AddComponent<Sizeable>()->Size = size;
@@ -119,12 +120,17 @@ public:
         textEditor->AddComponent<Touchable>(box);
         textEditor->AddComponent<Autocompleter>(autoCompleter);
         textEditor->AddComponent<Orderable>();
-        
-        
-        
+    
+    /*
+        textEditor->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Bind([this] () {
+            std::ofstream out("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp");
+            out<<textEditor->GetComponent<TextEditor>()->text;
+        });
+    */
     }
     
     void Update(float dt) {
+        
         //textEditor->GetComponent<Sizeable>()->Size = Context().ScreenSize;
     
         Context().InputDevice().UpdateInputManager(&world.Input());

@@ -14,7 +14,9 @@
 
 struct Autocompleter {
     std::string sourceFile;
-    void DoAutoComplete(int lineNo, int columnNo);
+    std::vector<Pocket::ScriptAutoCompleter::Result> DoAutoComplete(const std::string& unsavedStr, int lineNo, int columnNo);
     Pocket::Event<std::vector<Pocket::ScriptAutoCompleter::Result>> OnAutoComplete;
+    
+    std::vector<Pocket::ScriptAutoCompleter::Result> results;
 };
 

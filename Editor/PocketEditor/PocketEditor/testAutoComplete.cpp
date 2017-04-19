@@ -17,7 +17,7 @@ int main_autocompleter() {
 
     ScriptAutoCompleter completer;
     
-    auto results = completer.AutoCompleteFile("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp", 21, 7);
+    auto results = completer.AutoCompleteFile("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp", "", 21, 7);
     
 
 

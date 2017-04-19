@@ -8,8 +8,8 @@
 
 #pragma once
 #include <string>
+#include "ScriptAutoCompleter.hpp"
 
 struct AutocompleterEntry {
-    std::string returnType;
-    std::string text;
+    Pocket::ScriptAutoCompleter::Result entry;
 };

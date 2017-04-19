@@ -12,8 +12,9 @@
 
 using namespace Pocket;
 
-void Autocompleter::DoAutoComplete(int lineNo, int columnNo) {
+std::vector<Pocket::ScriptAutoCompleter::Result> Autocompleter::DoAutoComplete(const std::string& unsavedStr, int lineNo, int columnNo) {
     ScriptAutoCompleter completer;
-    auto results = completer.AutoCompleteFile(sourceFile, lineNo, columnNo);
+    auto results = completer.AutoCompleteFile(sourceFile, unsavedStr, lineNo, columnNo);
     OnAutoComplete(results);
+    return results;
 }
