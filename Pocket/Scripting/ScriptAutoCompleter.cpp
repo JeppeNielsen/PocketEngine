@@ -65,30 +65,43 @@ void PrintCompletionString(CXCompletionString string, int indent) {
     }
 }
 
-std::vector<ScriptAutoCompleter::Result> ScriptAutoCompleter::AutoCompleteFile(const std::string &file, int lineNo, int columnNo) {
+std::vector<ScriptAutoCompleter::Result> ScriptAutoCompleter::AutoCompleteFile(const std::string &file, const std::string& unsavedStr, int lineNo, int columnNo) {
 
     std::vector<const char*> arguments;
     arguments.push_back("c++");
     arguments.push_back("-std=c++11");
     arguments.push_back("-stdlib=libc++");
+    
     arguments.push_back("-I/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/include/c++/v1");
-    arguments.push_back("-I/usr/include");
-    arguments.push_back("-I/usr/include/c++/4.2.1/");
     arguments.push_back("-I/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/lib/clang/3.7.0/include");
+    
+    //arguments.push_back("-I/usr/include");
+    //arguments.push_back("-I/usr/include/c++/4.2.1/");
     arguments.push_back("-I/Projects/PocketEngine/Pocket/Data/");
+    arguments.push_back("-I/Projects/PocketEngine/Pocket/ComponentSystem/");
+    arguments.push_back("-I/Projects/PocketEngine/Pocket/ComponentSystem/Meta/");
     
     CXIndex index = clang_createIndex(0,1);
 
     // create Translation Unit
-    CXTranslationUnit tu = clang_parseTranslationUnit(index, file.c_str(), &arguments[0], (int)arguments.size(), NULL, 0, 0);
-    if (tu == NULL) {
-        printf("Cannot parse translation unit\n");
-        return {};
+    static CXTranslationUnit tu = 0;
+    
+    if (!tu) {
+        tu  = clang_parseTranslationUnit(index, file.c_str(), &arguments[0], (int)arguments.size(), NULL, 0, 0);
+        if (tu == NULL) {
+            printf("Cannot parse translation unit\n");
+            return {};
+        }
     }
     
     std::vector<ScriptAutoCompleter::Result> results;
     
-    CXCodeCompleteResults* completeResults = clang_codeCompleteAt(tu, file.c_str(), lineNo, columnNo, NULL, 0, 0);
+    CXUnsavedFile unsavedFile;
+    unsavedFile.Filename = file.c_str();
+    unsavedFile.Contents = unsavedStr.c_str();
+    unsavedFile.Length = unsavedStr.size();
+    
+    CXCodeCompleteResults* completeResults = clang_codeCompleteAt(tu, file.c_str(), lineNo, columnNo, &unsavedFile, 1, 0);
     
     if (completeResults) {
         
@@ -97,19 +110,27 @@ std::vector<ScriptAutoCompleter::Result> ScriptAutoCompleter::AutoCompleteFile(c
             if (completionResult.CursorKind == CXCursor_NotImplemented) continue;
             
             
-            std::cout <<"CXCursorKind: "<<completionResult.CursorKind<<std::endl;
+            //std::cout <<"CXCursorKind: "<<completionResult.CursorKind<<std::endl;
             
-            PrintCompletionString(completionResult.CompletionString , 3);
+            //PrintCompletionString(completionResult.CompletionString , 3);
             
             Result result;
             result.cursorKind = completionResult.CursorKind;
             
+            int angleBracket = 0;
+            
             int numCompletionChunks = clang_getNumCompletionChunks(completionResult.CompletionString);
             for(int chunkNo=0; chunkNo<numCompletionChunks; chunkNo++) {
                 
+                int kind = clang_getCompletionChunkKind(completionResult.CompletionString, chunkNo);
+                
+                if (kind == CXCompletionChunk_LeftAngle || kind == CXCompletionChunk_RightAngle) {
+                    angleBracket++;
+                }
+                
                 ResultChunk chunk;
                 
-                chunk.kind = clang_getCompletionChunkKind(completionResult.CompletionString, chunkNo);
+                chunk.kind = kind;
                 
                 CXString chuckText = clang_getCompletionChunkText(completionResult.CompletionString, chunkNo);
                 chunk.text = std::string(clang_getCString(chuckText));
