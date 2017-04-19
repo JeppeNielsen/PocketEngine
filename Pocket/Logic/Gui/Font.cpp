@@ -125,7 +125,7 @@ void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Ve
     if (text == "") return;
 
     const CharacterSet& set = GetCharacterSet(fontSize);
-    const Characters characters = set.characters;
+    const Characters& characters = set.characters;
     
 	float space = characters[32].xadvance * fontSize;
 	float lineSpace = set.lineHeight * fontSize;
