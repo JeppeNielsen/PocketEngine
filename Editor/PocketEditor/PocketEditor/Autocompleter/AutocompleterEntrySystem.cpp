@@ -33,6 +33,7 @@ void AutocompleterEntrySystem::AutoCompleteDone(std::vector<Pocket::ScriptAutoCo
         if (result.cursorKind == 24) continue; //contructor
         if (result.cursorKind == 25) continue; //destructor
         if (result.cursorKind == 8) continue; //functions
+        if (result.availability != 0) continue; // not available, ie private or protected
         
         GameObject* entryGO = object->CreateChild();
         AutocompleterEntry* entry = entryGO->AddComponent<AutocompleterEntry>();
