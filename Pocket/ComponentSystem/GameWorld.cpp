@@ -186,10 +186,10 @@ void GameWorld::UpdateRoot(float dt, GameObject* root) {
 }
 
 void GameWorld::DebugSystems() {
-    /*std::cout <<"-------------------------------------------"<<std::endl;
+    std::cout <<"-------------------------------------------"<<std::endl;
     for(auto&s : activeSystems) {
-        std::cout << systems[s.system->index].name<<" Order: "<<s.system->Order()<< " index: " << s.system->index <<" scene: "<<s.scene->index<<"  root->order: "<<s.scene->root->Order() << " Num objects:"<< s.system->ObjectCount() << std::endl;
-    }*/
+        std::cout << systems[s.system->GetIndex()].name<<" Order: "<<s.system->GetOrder()<< " index: " << s.system->GetIndex() <<" scene: "<<s.scene->index<<"  root->order: "<<s.scene->root->Order() << " Num objects:"<< s.system->ObjectCount() << std::endl;
+    }
 }
 
 void GameWorld::Render() {
