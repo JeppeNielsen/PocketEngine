@@ -43,6 +43,17 @@ std::string ChunkKindToString(CXCompletionChunkKind kind) {
     }
 }
 
+std::string ChunkAvailablilityToString(CXAvailabilityKind availablility) {
+    switch (availablility)  {
+        case CXAvailability_Available: return "CXAvailability_Available";
+        case CXAvailability_Deprecated: return "CXAvailability_Deprecated";
+        case CXAvailability_NotAvailable: return "CXAvailability_NotAvailable";
+        case CXAvailability_NotAccessible: return "CXAvailability_NotAccessible";
+        default:
+            return "undefined";
+    }
+}
+
 void PrintCompletionString(CXCompletionString string, int indent) {
 
     int numCompletionChunks = clang_getNumCompletionChunks(string);
@@ -59,6 +70,11 @@ void PrintCompletionString(CXCompletionString string, int indent) {
         }
         CXString chuckText = clang_getCompletionChunkText(string, i);
         std::cout <<"text:"<< clang_getCString(chuckText) << std::endl;
+        
+        CXAvailabilityKind availablilty = clang_getCompletionAvailability(string);
+        
+        std::cout <<"CXAvailabilityKind: "<< availablilty << " " << ChunkAvailablilityToString(availablilty) << std::endl;
+        
     
         CXCompletionString completionString = clang_getCompletionChunkCompletionString(string, i);
         PrintCompletionString(completionString, indent + 3);
@@ -81,12 +97,13 @@ std::vector<ScriptAutoCompleter::Result> ScriptAutoCompleter::AutoCompleteFile(c
     arguments.push_back("-I/Projects/PocketEngine/Pocket/ComponentSystem/");
     arguments.push_back("-I/Projects/PocketEngine/Pocket/ComponentSystem/Meta/");
     
-    CXIndex index = clang_createIndex(0,1);
+    
 
     // create Translation Unit
     static CXTranslationUnit tu = 0;
     
     if (!tu) {
+        CXIndex index = clang_createIndex(0,1);
         tu  = clang_parseTranslationUnit(index, file.c_str(), &arguments[0], (int)arguments.size(), NULL, 0, 0);
         if (tu == NULL) {
             printf("Cannot parse translation unit\n");
@@ -109,13 +126,13 @@ std::vector<ScriptAutoCompleter::Result> ScriptAutoCompleter::AutoCompleteFile(c
             CXCompletionResult completionResult = completeResults->Results[i];
             if (completionResult.CursorKind == CXCursor_NotImplemented) continue;
             
-            
             //std::cout <<"CXCursorKind: "<<completionResult.CursorKind<<std::endl;
             
             //PrintCompletionString(completionResult.CompletionString , 3);
             
             Result result;
             result.cursorKind = completionResult.CursorKind;
+            result.availability = clang_getCompletionAvailability(completionResult.CompletionString);
             
             int angleBracket = 0;
             

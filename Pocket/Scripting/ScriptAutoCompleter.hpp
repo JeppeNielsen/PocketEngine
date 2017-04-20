@@ -24,6 +24,7 @@ namespace Pocket {
         
             struct Result {
                 int cursorKind;
+                int availability;
                 std::vector<ResultChunk> chunks;
                 
                 std::string GetLowerCaseText() {
