@@ -68,7 +68,7 @@ void AutocompleterSystem::ThreadLoop() {
     
     while (true) {
         while (!anythingToProcess) {
-            std::this_thread::sleep_for(std::chrono::nanoseconds(1000000));
+            std::this_thread::sleep_for(std::chrono::nanoseconds(100000));
         }
         anythingToProcess = false;
         std::vector<ObjectToProcess> objectsToProcess;

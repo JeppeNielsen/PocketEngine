@@ -45,6 +45,7 @@ public:
         GameObject* root = world.CreateRoot();
         root->CreateSystem<Gui>()->Setup("images.png", "images.xml", Context().Viewport());
         root->CreateSystem<Gui>()->CreateFont("PTMono.ttc");//"/Library/Fonts/Arial Bold.ttf");//, "Font");
+        root->CreateSystem<Gui>()->GetFonts()[0]->GetComponent<Font>()->GetSpacing(14);
     
         //root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds({0,3000});
         //root->CreateSystem<TouchSystem>()->Octree().SetWorldBounds({0,3000});
@@ -58,11 +59,12 @@ public:
         root->CreateSystem<TextEditorSelectionMeshSystem>();
         root->CreateSystem<TextEditorSelectionSystem>();
         root->CreateSystem<TextEditorScrollSystem>();
+        
+        root->CreateSystem<AutocompleterSystem>();
         root->CreateSystem<AutocompleterEntrySystem>();
         root->CreateSystem<AutocompleterTextEditorSystem>();
         root->CreateSystem<VirtualTreeListSystem>();
         root->CreateSystem<VirtualTreeListSpawnerSystem>();
-        root->CreateSystem<AutocompleterSystem>();
         
         font = root->CreateChild();
         font->AddComponent<TextureComponent>();
