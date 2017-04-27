@@ -423,7 +423,6 @@
 		72C9B2951E92C51A00033C56 /* TextEditorSelectionMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2931E92C51A00033C56 /* TextEditorSelectionMeshSystem.cpp */; };
 		72C9B2981E95768500033C56 /* TextEditorSelectionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2961E95768500033C56 /* TextEditorSelectionSystem.cpp */; };
 		72C9B29B1E96C7F700033C56 /* TextEditorScrollSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2991E96C7F700033C56 /* TextEditorScrollSystem.cpp */; };
-		72C9B29E1E97C4BE00033C56 /* ScriptAutoCompleter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B29C1E97C4BE00033C56 /* ScriptAutoCompleter.cpp */; };
 		72C9B2A51E9938D600033C56 /* Autocompleter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A31E9938D600033C56 /* Autocompleter.cpp */; };
 		72C9B2A81E9AC46F00033C56 /* AutocompleterEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A61E9AC46F00033C56 /* AutocompleterEntry.cpp */; };
 		72C9B2AB1E9AC52200033C56 /* AutocompleterEntrySystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A91E9AC52200033C56 /* AutocompleterEntrySystem.cpp */; };
@@ -1515,8 +1514,6 @@
 		72C9B2971E95768500033C56 /* TextEditorSelectionSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorSelectionSystem.hpp; sourceTree = "<group>"; };
 		72C9B2991E96C7F700033C56 /* TextEditorScrollSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorScrollSystem.cpp; sourceTree = "<group>"; };
 		72C9B29A1E96C7F700033C56 /* TextEditorScrollSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorScrollSystem.hpp; sourceTree = "<group>"; };
-		72C9B29C1E97C4BE00033C56 /* ScriptAutoCompleter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptAutoCompleter.cpp; sourceTree = "<group>"; };
-		72C9B29D1E97C4BE00033C56 /* ScriptAutoCompleter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptAutoCompleter.hpp; sourceTree = "<group>"; };
 		72C9B2A31E9938D600033C56 /* Autocompleter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Autocompleter.cpp; sourceTree = "<group>"; };
 		72C9B2A41E9938D600033C56 /* Autocompleter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Autocompleter.hpp; sourceTree = "<group>"; };
 		72C9B2A61E9AC46F00033C56 /* AutocompleterEntry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterEntry.cpp; sourceTree = "<group>"; };
@@ -2031,8 +2028,6 @@
 				726DFD221D24742A00C862B7 /* ScriptParser.hpp */,
 				726DFD231D24742A00C862B7 /* ScriptWorld.cpp */,
 				726DFD241D24742A00C862B7 /* ScriptWorld.hpp */,
-				72C9B29C1E97C4BE00033C56 /* ScriptAutoCompleter.cpp */,
-				72C9B29D1E97C4BE00033C56 /* ScriptAutoCompleter.hpp */,
 			);
 			path = Scripting;
 			sourceTree = "<group>";
@@ -4181,7 +4176,6 @@
 				72994F991C99F74F00DAAE5D /* main.cpp in Sources */,
 				72C9B26E1E87061600033C56 /* ConsoleWindow.cpp in Sources */,
 				729954C71C99F76100DAAE5D /* btThreadSupportInterface.cpp in Sources */,
-				72C9B29E1E97C4BE00033C56 /* ScriptAutoCompleter.cpp in Sources */,
 				729954051C99F76100DAAE5D /* LimitableSystem.cpp in Sources */,
 				72A4B3971E4BB5B200A856F5 /* Switch.cpp in Sources */,
 				727B38D81E2B9C5300531B62 /* tinystr.cpp in Sources */,
