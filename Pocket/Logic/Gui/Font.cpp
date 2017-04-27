@@ -120,7 +120,7 @@ void Font::RequestCharacter(Font::CharacterSet &set, unsigned short c) {
     }
 }
 
-void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const {
+void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY, bool createSpaces) const {
 
     if (text == "") return;
 
@@ -171,6 +171,12 @@ void Font::CreateText(std::vector<Letter>& sentence, const std::string& text, Ve
                 continue;
             }
 			if (id==32) {
+                if (createSpaces) {
+                    sentence.push_back({
+                        0,0,0,0, 0,0,0,0
+                    });
+                }
+            
 				p.x+=space;
 				continue;
 			}

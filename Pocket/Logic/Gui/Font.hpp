@@ -48,7 +48,7 @@ namespace Pocket {
         
         void RequestText(const std::string& text, float fontSize);
 
-        void CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY) const;
+        void CreateText(std::vector<Letter>& sentence, const std::string& text, Vector2 size, float fontSize, HAlignment hAlign, VAlignment vAlign, bool wordWrap, bool flipY, bool createSpaces = false) const;
 
         bool IsDirty();
 
