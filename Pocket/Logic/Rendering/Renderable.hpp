@@ -8,7 +8,6 @@
 
 #pragma once
 #include "TypeInfo.hpp"
-#include "Shader.hpp"
 #include "Camera.hpp"
 
 namespace Pocket {
