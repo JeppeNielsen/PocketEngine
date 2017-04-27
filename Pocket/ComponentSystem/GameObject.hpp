@@ -109,7 +109,7 @@ namespace Pocket {
         void RemoveComponent(ComponentId id) override;
         void CloneComponent(ComponentId id, GameObject* object) override;
         void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
-        void EnableComponent(ComponentId id, bool enable);
+        void EnableComponent(ComponentId id, bool enable) override;
         GameObject* GetComponentOwner(ComponentId id);
         
         template<typename T>
