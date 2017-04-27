@@ -17,7 +17,7 @@ void AutocompleterEntrySystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<Autocompleter>()->OnAutoComplete.Unbind(this, &AutocompleterEntrySystem::AutoCompleteDone, object);
 }
 
-void AutocompleterEntrySystem::AutoCompleteDone(std::vector<Pocket::ScriptAutoCompleter::Result> results, Pocket::GameObject *object) {
+void AutocompleterEntrySystem::AutoCompleteDone(std::vector<Autocompleter::Result> results, Pocket::GameObject *object) {
     
     //std::cout << "AutoCompleteDone" << std::endl;
     

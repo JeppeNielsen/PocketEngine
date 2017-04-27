@@ -27,6 +27,11 @@
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "AutocompleterSystem.hpp"
+#include "TranslationUnitUpdater.hpp"
+#include "TextEditorColorer.hpp"
+#include "TextEditorSyntaxHighlightingSystem.hpp"
+#include "FileSystemWatcher.hpp"
+#include "TranslationUnitTextEditorUpdater.hpp"
 
 using namespace Pocket;
 
@@ -36,13 +41,18 @@ public:
     GameObject* font;
     GameObject* box;
     GameObject* textEditor;
+    FileSystemWatcher watcher;
     
     int cursor;
    
     void Initialize() {
         
+        watcher.Start("/Projects/PocketEngine/EditorProjects/AutoComplete/");
         
         GameObject* root = world.CreateRoot();
+        
+        root->CreateSystem<TranslationUnitUpdater>()->SetFileWatcher(&watcher);
+
         root->CreateSystem<Gui>()->Setup("images.png", "images.xml", Context().Viewport());
         root->CreateSystem<Gui>()->CreateFont("PTMono.ttc");//"/Library/Fonts/Arial Bold.ttf");//, "Font");
         root->CreateSystem<Gui>()->GetFonts()[0]->GetComponent<Font>()->GetSpacing(14);
@@ -65,6 +75,8 @@ public:
         root->CreateSystem<AutocompleterTextEditorSystem>();
         root->CreateSystem<VirtualTreeListSystem>();
         root->CreateSystem<VirtualTreeListSpawnerSystem>();
+        root->CreateSystem<TextEditorSyntaxHighlightingSystem>();
+        root->CreateSystem<TranslationUnitTextEditorUpdater>();
         
         font = root->CreateChild();
         font->AddComponent<TextureComponent>();
@@ -85,7 +97,8 @@ public:
         
         GameObject* autoCompleter = root->CreateChild();
         
-        autoCompleter->AddComponent<Autocompleter>()->sourceFile = "/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp";
+        autoCompleter->AddComponent<CodeFile>()->path = "/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp";
+        autoCompleter->AddComponent<Autocompleter>();
         autoCompleter->AddComponent<AutocompleterEntry>();
         
         box = root->CreateChild();
@@ -122,13 +135,17 @@ public:
         textEditor->AddComponent<Touchable>(box);
         textEditor->AddComponent<Autocompleter>(autoCompleter);
         textEditor->AddComponent<Orderable>();
+        textEditor->AddComponent<CodeFile>(autoCompleter);
+        
+        textEditor->AddComponent<TextEditorColorer>()->AddColor(0, 200, Colour::Red());
+        textEditor->GetComponent<TextEditorColorer>()->AddColor(300, 350, Colour::Yellow());
+        
     
-    /*
-        textEditor->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Bind([this] () {
-            std::ofstream out("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp");
-            out<<textEditor->GetComponent<TextEditor>()->text;
-        });
-    */
+    
+        //textEditor->GetComponent<TextEditor>()->Lines.HasBecomeDirty.Bind([this] () {
+        //    std::ofstream out("/Projects/PocketEngine/EditorProjects/AutoComplete/main.cpp");
+        //    out<<textEditor->GetComponent<TextEditor>()->text;
+        //});
     }
     
     void Update(float dt) {
@@ -147,7 +164,7 @@ public:
     }
 };
 
-int main() {
+int main_testTextEditor() {
     Engine e;
     e.Start<TextEditorState>();
 	return 0;

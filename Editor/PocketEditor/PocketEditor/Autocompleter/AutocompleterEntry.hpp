@@ -9,7 +9,8 @@
 #pragma once
 #include <string>
 #include "ScriptAutoCompleter.hpp"
+#include "Autocompleter.hpp"
 
 struct AutocompleterEntry {
-    Pocket::ScriptAutoCompleter::Result entry;
+    Autocompleter::Result entry;
 };

@@ -11,12 +11,73 @@
 #include <functional>
 #include "ScriptAutoCompleter.hpp"
 #include "Event.hpp"
+#include <clang-c/Index.h>
 
 struct Autocompleter {
-    std::string sourceFile;
-    std::vector<Pocket::ScriptAutoCompleter::Result> DoAutoComplete(const std::string& unsavedStr, int lineNo, int columnNo);
-    Pocket::Event<std::vector<Pocket::ScriptAutoCompleter::Result>> OnAutoComplete;
-    
-    std::vector<Pocket::ScriptAutoCompleter::Result> results;
+    struct ResultChunk {
+        int kind;
+        std::string text;
+        
+        std::string templateParameters;
+    };
+
+    struct Result {
+        int cursorKind;
+        int availability;
+        std::vector<ResultChunk> chunks;
+        
+        std::string GetLowerCaseText() {
+            for(auto& c : chunks) {
+                if (c.kind == 1) {
+                    std::string lower = c.text;
+                    std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+                    return lower;
+                }
+            }
+            return "";
+        }
+        
+        std::string GetText() {
+            for(auto& c : chunks) {
+                if (c.kind == 1) {
+                    return c.text;
+                }
+            }
+            return "";
+        }
+        
+        std::string GetTemplateText() {
+            std::string templates = "";
+            int templateSwitch = 0;
+            for(auto& c : chunks) {
+                if (c.kind == 12) {
+                    templateSwitch++;
+                }
+                if (templateSwitch == 1) {
+                    templates += c.text;
+                }
+                if(c.kind == 13) {
+                    templateSwitch++;
+                }
+            }
+            return templates;
+        }
+        
+        std::string GetDisplayedText() {
+            return GetText()+GetTemplateText();
+        }
+        
+        std::string GetReturnType() {
+            for(auto& c : chunks) {
+                if (c.kind == 15) {
+                    return c.text;
+                }
+            }
+            return "";
+        }
+    };
+
+    std::vector<Result> DoAutoComplete(CXTranslationUnit translationUnit, const std::string& filename, const std::string& unsavedStr, int lineNo, int columnNo);
+    Pocket::Event<std::vector<Result>> OnAutoComplete;
 };
 

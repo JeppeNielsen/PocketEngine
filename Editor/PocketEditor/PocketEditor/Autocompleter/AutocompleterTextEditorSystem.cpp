@@ -27,9 +27,11 @@ void AutocompleterTextEditorSystem::Destroy() {
 
 void AutocompleterTextEditorSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<TextBox>()->Active.Changed.Bind(this, &AutocompleterTextEditorSystem::TextBoxActivated, object);
+    
     object->GetComponent<TextEditor>()->AutoCompleteDisabled.Bind(this, &AutocompleterTextEditorSystem::AutoCompleteDisabled, object);
     object->GetComponent<Autocompleter>()->OnAutoComplete.Bind(this, &AutocompleterTextEditorSystem::OnAutoComplete, object);
     object->GetComponent<TextEditor>()->AutoCompleteEvent.Bind(this, &AutocompleterTextEditorSystem::OnAutoCompleteEvent, object);
+    object->GetComponent<TextEditor>()->AutoCompleteEnabled.Bind(this, &AutocompleterTextEditorSystem::AutoCompleteDisabled, object);
 }
 
 void AutocompleterTextEditorSystem::ObjectRemoved(Pocket::GameObject *object) {
@@ -37,6 +39,8 @@ void AutocompleterTextEditorSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<TextEditor>()->AutoCompleteDisabled.Unbind(this, &AutocompleterTextEditorSystem::AutoCompleteDisabled, object);
     object->GetComponent<Autocompleter>()->OnAutoComplete.Unbind(this, &AutocompleterTextEditorSystem::OnAutoComplete, object);
     object->GetComponent<TextEditor>()->AutoCompleteEvent.Unbind(this, &AutocompleterTextEditorSystem::OnAutoCompleteEvent, object);
+    object->GetComponent<TextEditor>()->AutoCompleteEnabled.Unbind(this, &AutocompleterTextEditorSystem::AutoCompleteDisabled, object);
+    
     
     if (activeTextEditor == object) {
         activeTextEditor = 0;
@@ -58,7 +62,7 @@ void AutocompleterTextEditorSystem::AutoCompleteDisabled(Pocket::GameObject *obj
     RemoveListBox();
 }
 
-void AutocompleterTextEditorSystem::OnAutoComplete(std::vector<Pocket::ScriptAutoCompleter::Result> results, Pocket::GameObject *object) {
+void AutocompleterTextEditorSystem::OnAutoComplete(std::vector<Autocompleter::Result> results, Pocket::GameObject *object) {
     RemoveListBox();
     if (!activeTextEditor) return;
     
@@ -77,7 +81,7 @@ void AutocompleterTextEditorSystem::OnAutoComplete(std::vector<Pocket::ScriptAut
     
     if (results.empty()) return;
     
-    
+    GameObject* autocompleterRoot = activeTextEditor->GetComponentOwner<Autocompleter>();
     
     float fontSize = renderer->fontSize;
     float spacing = font->GetSpacing(fontSize);
@@ -104,7 +108,7 @@ void AutocompleterTextEditorSystem::OnAutoComplete(std::vector<Pocket::ScriptAut
     
     treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->ItemHeight = 14;
-    treeView->Root = activeTextEditor->GetComponentOwner<Autocompleter>();
+    treeView->Root = autocompleterRoot;
     
     //treeView->Root()->ToJson(std::cout);
     

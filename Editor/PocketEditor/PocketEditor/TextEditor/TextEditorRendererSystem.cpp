@@ -7,6 +7,7 @@
 //
 
 #include "TextEditorRendererSystem.hpp"
+#include "TextEditorColorer.hpp"
 
 void TextEditorRendererSystem::Initialize() {
 
@@ -26,7 +27,7 @@ void TextEditorRendererSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void TextEditorRendererSystem::Update(float dt) {
-    for(auto o : dirtyObjects) {
+    for(auto o : Objects()) {
         UpdateMesh(o);
     }
     dirtyObjects.clear();
@@ -46,6 +47,7 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
     mesh->Clear();
     
     TextEditorRenderer* textEditorRenderer = object->GetComponent<TextEditorRenderer>();
+    TextEditorColorer* colorer = object->GetComponent<TextEditorColorer>();
     
     Font* font = object->GetComponent<Font>();
     
@@ -67,8 +69,6 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
     
     auto& vertices = mesh->Vertices();
     auto& triangles = mesh->Triangles();
-    
-    Colour color = Colour::Black();
     
     int yPos = (int)floorf(textEditorRenderer->Offset().y / fontSize);
     int xPos = (int)floorf(textEditorRenderer->Offset().x / spacing);
@@ -95,14 +95,21 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
         }
         std::string lineString = text.substr(lineStart, lineWidth);
         std::vector<Font::Letter> letters;
-        font->CreateText(letters, lineString, 0, fontSize, Pocket::Font::HAlignment::Left, Font::VAlignment::Top, false, true);
+        font->CreateText(letters, lineString, 0, fontSize, Pocket::Font::HAlignment::Left, Font::VAlignment::Top, false, true, true);
         
         //letters.clear();
         //letters.push_back({0,0,size.x/(lineNo+1.0f), fontSize, 0,0,0,0} );
         
      size_t verticesIndex = vertices.size();
      
-     vertices.resize(vertices.size() + letters.size() * 4);
+     int numberOfLetters = 0;
+     for(int i=0; i<letters.size(); ++i) {
+        if (letters[i].width>0.00001f) {
+            numberOfLetters++;
+        }
+     }
+     
+     vertices.resize(vertices.size() + numberOfLetters * 4);
      
      float yPos = subPosition + size.y - fontSize - fontSize*yLine - font->GetLineHeightOffset(fontSize); //subPosition + (numY - yLine) * fontSize;
      float posX = -subPositionX + (xPos<0 ? -xPos * spacing : 0);
@@ -110,9 +117,16 @@ void TextEditorRendererSystem::UpdateMesh(Pocket::GameObject *object) {
      Vector2 subPixel = 0;//0.5f;
      
      for (int i=0; i<letters.size(); i++) {
-     
-        
          
+         Colour color = Colour::White();
+         
+         if (colorer) {
+             int colorIndex = lineStart + i;
+             color = colorer->FindColor(colorIndex);
+         }
+        
+         if (letters[i].width<0.00001f) continue;
+        
          triangles.push_back((GLshort)(verticesIndex));
          triangles.push_back((GLshort)(verticesIndex+1));
          triangles.push_back((GLshort)(verticesIndex+2));

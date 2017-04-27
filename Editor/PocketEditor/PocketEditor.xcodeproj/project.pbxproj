@@ -424,12 +424,10 @@
 		72C9B2981E95768500033C56 /* TextEditorSelectionSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2961E95768500033C56 /* TextEditorSelectionSystem.cpp */; };
 		72C9B29B1E96C7F700033C56 /* TextEditorScrollSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2991E96C7F700033C56 /* TextEditorScrollSystem.cpp */; };
 		72C9B29E1E97C4BE00033C56 /* ScriptAutoCompleter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B29C1E97C4BE00033C56 /* ScriptAutoCompleter.cpp */; };
-		72C9B2A11E97C7C400033C56 /* testAutoComplete.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B29F1E97C7C400033C56 /* testAutoComplete.cpp */; };
 		72C9B2A51E9938D600033C56 /* Autocompleter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A31E9938D600033C56 /* Autocompleter.cpp */; };
 		72C9B2A81E9AC46F00033C56 /* AutocompleterEntry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A61E9AC46F00033C56 /* AutocompleterEntry.cpp */; };
 		72C9B2AB1E9AC52200033C56 /* AutocompleterEntrySystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2A91E9AC52200033C56 /* AutocompleterEntrySystem.cpp */; };
 		72C9B2AE1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2AC1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp */; };
-		72C9B2B01EA6226600033C56 /* testXCodeAutoComplete.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */; };
 		72C9B2B31EA7820100033C56 /* AutocompleterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2B11EA7820000033C56 /* AutocompleterSystem.cpp */; };
 		72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */; };
 		72CE8EE31CB431FF001F08E4 /* EditorContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CE8EE11CB431FF001F08E4 /* EditorContext.cpp */; };
@@ -446,6 +444,13 @@
 		72D736521D7B5DBB001E2047 /* BaseMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736501D7B5DBB001E2047 /* BaseMenu.cpp */; };
 		72D736561D7B64A2001E2047 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736541D7B64A2001E2047 /* GameMenu.cpp */; };
 		72D7365A1D7CC414001E2047 /* GameObjectMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736581D7CC414001E2047 /* GameObjectMenu.cpp */; };
+		72F908271EAB265A003BBCC1 /* Worker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908251EAB265A003BBCC1 /* Worker.cpp */; };
+		72F908291EAB7BCB003BBCC1 /* testWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908281EAB7BCB003BBCC1 /* testWorker.cpp */; };
+		72F9082D1EAC9198003BBCC1 /* CodeFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F9082B1EAC9198003BBCC1 /* CodeFile.cpp */; };
+		72F908301EAC9473003BBCC1 /* TranslationUnitUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F9082E1EAC9473003BBCC1 /* TranslationUnitUpdater.cpp */; };
+		72F908361EAD23EA003BBCC1 /* TextEditorColorer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908341EAD23EA003BBCC1 /* TextEditorColorer.cpp */; };
+		72F908391EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908371EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp */; };
+		72F9083C1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F9083A1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.cpp */; };
 		72FA3F471D4122DE00EA07A3 /* AppMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 72FA3F461D4122DE00EA07A3 /* AppMenu.mm */; };
 /* End PBXBuildFile section */
 
@@ -1512,7 +1517,6 @@
 		72C9B29A1E96C7F700033C56 /* TextEditorScrollSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorScrollSystem.hpp; sourceTree = "<group>"; };
 		72C9B29C1E97C4BE00033C56 /* ScriptAutoCompleter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptAutoCompleter.cpp; sourceTree = "<group>"; };
 		72C9B29D1E97C4BE00033C56 /* ScriptAutoCompleter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptAutoCompleter.hpp; sourceTree = "<group>"; };
-		72C9B29F1E97C7C400033C56 /* testAutoComplete.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testAutoComplete.cpp; sourceTree = "<group>"; };
 		72C9B2A31E9938D600033C56 /* Autocompleter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Autocompleter.cpp; sourceTree = "<group>"; };
 		72C9B2A41E9938D600033C56 /* Autocompleter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Autocompleter.hpp; sourceTree = "<group>"; };
 		72C9B2A61E9AC46F00033C56 /* AutocompleterEntry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterEntry.cpp; sourceTree = "<group>"; };
@@ -1521,7 +1525,6 @@
 		72C9B2AA1E9AC52200033C56 /* AutocompleterEntrySystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterEntrySystem.hpp; sourceTree = "<group>"; };
 		72C9B2AC1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterTextEditorSystem.cpp; sourceTree = "<group>"; };
 		72C9B2AD1E9ACBF400033C56 /* AutocompleterTextEditorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterTextEditorSystem.hpp; sourceTree = "<group>"; };
-		72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testXCodeAutoComplete.cpp; sourceTree = "<group>"; };
 		72C9B2B11EA7820000033C56 /* AutocompleterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AutocompleterSystem.cpp; sourceTree = "<group>"; };
 		72C9B2B21EA7820000033C56 /* AutocompleterSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AutocompleterSystem.hpp; sourceTree = "<group>"; };
 		72CE8EDC1CB16FBD001F08E4 /* NSOpenGLView-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "NSOpenGLView-Info.plist"; sourceTree = SOURCE_ROOT; };
@@ -1553,6 +1556,19 @@
 		72D736551D7B64A2001E2047 /* GameMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameMenu.hpp; sourceTree = "<group>"; };
 		72D736581D7CC414001E2047 /* GameObjectMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectMenu.cpp; sourceTree = "<group>"; };
 		72D736591D7CC414001E2047 /* GameObjectMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectMenu.hpp; sourceTree = "<group>"; };
+		72F908251EAB265A003BBCC1 /* Worker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Worker.cpp; sourceTree = "<group>"; };
+		72F908261EAB265A003BBCC1 /* Worker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Worker.hpp; sourceTree = "<group>"; };
+		72F908281EAB7BCB003BBCC1 /* testWorker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testWorker.cpp; sourceTree = "<group>"; };
+		72F9082B1EAC9198003BBCC1 /* CodeFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CodeFile.cpp; sourceTree = "<group>"; };
+		72F9082C1EAC9198003BBCC1 /* CodeFile.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CodeFile.hpp; sourceTree = "<group>"; };
+		72F9082E1EAC9473003BBCC1 /* TranslationUnitUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TranslationUnitUpdater.cpp; sourceTree = "<group>"; };
+		72F9082F1EAC9473003BBCC1 /* TranslationUnitUpdater.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TranslationUnitUpdater.hpp; sourceTree = "<group>"; };
+		72F908341EAD23EA003BBCC1 /* TextEditorColorer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorColorer.cpp; sourceTree = "<group>"; };
+		72F908351EAD23EA003BBCC1 /* TextEditorColorer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorColorer.hpp; sourceTree = "<group>"; };
+		72F908371EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextEditorSyntaxHighlightingSystem.cpp; sourceTree = "<group>"; };
+		72F908381EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TextEditorSyntaxHighlightingSystem.hpp; sourceTree = "<group>"; };
+		72F9083A1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TranslationUnitTextEditorUpdater.cpp; sourceTree = "<group>"; };
+		72F9083B1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TranslationUnitTextEditorUpdater.hpp; sourceTree = "<group>"; };
 		72FA3F3B1D3BDE4800EA07A3 /* executable_autogenerated.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = executable_autogenerated.hpp; sourceTree = "<group>"; };
 		72FA3F441D41204E00EA07A3 /* AppMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AppMenu.hpp; sourceTree = "<group>"; };
 		72FA3F461D4122DE00EA07A3 /* AppMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppMenu.mm; sourceTree = "<group>"; };
@@ -2068,8 +2084,7 @@
 				72A4B3B51E4BC16F00A856F5 /* extractCppFiles.cpp */,
 				72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */,
 				72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */,
-				72C9B29F1E97C7C400033C56 /* testAutoComplete.cpp */,
-				72C9B2AF1EA6226500033C56 /* testXCodeAutoComplete.cpp */,
+				72F908281EAB7BCB003BBCC1 /* testWorker.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -2162,6 +2177,8 @@
 				72994FD91C99F76000DAAE5D /* Triangulator.hpp */,
 				72A4AFBD1E491A7E00A856F5 /* FileHelper.cpp */,
 				72A4AFBE1E491A7E00A856F5 /* FileHelper.hpp */,
+				72F908251EAB265A003BBCC1 /* Worker.cpp */,
+				72F908261EAB265A003BBCC1 /* Worker.hpp */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -3500,6 +3517,8 @@
 			children = (
 				72C9B27C1E8AE20F00033C56 /* TextEditor.cpp */,
 				72C9B27D1E8AE20F00033C56 /* TextEditor.hpp */,
+				72F908341EAD23EA003BBCC1 /* TextEditorColorer.cpp */,
+				72F908351EAD23EA003BBCC1 /* TextEditorColorer.hpp */,
 				72C9B2901E8C48BD00033C56 /* TextEditorCursorSystem.cpp */,
 				72C9B2911E8C48BD00033C56 /* TextEditorCursorSystem.hpp */,
 				72C9B28D1E8C327800033C56 /* TextEditorEditSystem.cpp */,
@@ -3508,12 +3527,14 @@
 				72C9B2801E8AEC6400033C56 /* TextEditorRenderer.hpp */,
 				72C9B2821E8AED3200033C56 /* TextEditorRendererSystem.cpp */,
 				72C9B2831E8AED3200033C56 /* TextEditorRendererSystem.hpp */,
+				72C9B2991E96C7F700033C56 /* TextEditorScrollSystem.cpp */,
+				72C9B29A1E96C7F700033C56 /* TextEditorScrollSystem.hpp */,
 				72C9B2931E92C51A00033C56 /* TextEditorSelectionMeshSystem.cpp */,
 				72C9B2941E92C51A00033C56 /* TextEditorSelectionMeshSystem.hpp */,
 				72C9B2961E95768500033C56 /* TextEditorSelectionSystem.cpp */,
 				72C9B2971E95768500033C56 /* TextEditorSelectionSystem.hpp */,
-				72C9B2991E96C7F700033C56 /* TextEditorScrollSystem.cpp */,
-				72C9B29A1E96C7F700033C56 /* TextEditorScrollSystem.hpp */,
+				72F908371EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp */,
+				72F908381EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.hpp */,
 			);
 			path = TextEditor;
 			sourceTree = "<group>";
@@ -3538,17 +3559,18 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72C9B26F1E8848ED00033C56 /* Logging */,
-				7220F6561E7F2B420063EAD5 /* Systems */,
-				7220F6431E75B0770063EAD5 /* EditorSystems */,
 				720585001E60B907009FFACF /* Assets */,
 				72EC13811D2D957B00B69802 /* Building */,
+				72F9082A1EAC9189003BBCC1 /* Code */,
 				72CE8EE01CB2FD92001F08E4 /* Context */,
+				7220F6431E75B0770063EAD5 /* EditorSystems */,
+				72C9B26F1E8848ED00033C56 /* Logging */,
 				72D7364F1D7B5DB0001E2047 /* Menus */,
 				72308D141E1449AF00B92B8D /* Modules */,
 				72CE8F071CBAF34E001F08E4 /* Objects */,
 				72CE8EEB1CB437DF001F08E4 /* Project */,
 				72CE8EF31CB59AB4001F08E4 /* Selection */,
+				7220F6561E7F2B420063EAD5 /* Systems */,
 				72CE8EFD1CBA468D001F08E4 /* Transforming */,
 				72CE8EDF1CB2E580001F08E4 /* Windows */,
 			);
@@ -3676,6 +3698,19 @@
 			path = Building;
 			sourceTree = "<group>";
 		};
+		72F9082A1EAC9189003BBCC1 /* Code */ = {
+			isa = PBXGroup;
+			children = (
+				72F9082B1EAC9198003BBCC1 /* CodeFile.cpp */,
+				72F9082C1EAC9198003BBCC1 /* CodeFile.hpp */,
+				72F9082E1EAC9473003BBCC1 /* TranslationUnitUpdater.cpp */,
+				72F9082F1EAC9473003BBCC1 /* TranslationUnitUpdater.hpp */,
+				72F9083A1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.cpp */,
+				72F9083B1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.hpp */,
+			);
+			path = Code;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -3761,9 +3796,11 @@
 				729954421C99F76100DAAE5D /* b2Settings.cpp in Sources */,
 				72A4AFBF1E491A7E00A856F5 /* FileHelper.cpp in Sources */,
 				72B492761DD8ADCB0063518A /* FileWorld.cpp in Sources */,
+				72F908291EAB7BCB003BBCC1 /* testWorker.cpp in Sources */,
 				729954BF1C99F76100DAAE5D /* btDiscreteDynamicsWorld.cpp in Sources */,
 				729953E31C99F76100DAAE5D /* FieldEditor.cpp in Sources */,
 				729954881C99F76100DAAE5D /* btMinkowskiSumShape.cpp in Sources */,
+				72F908271EAB265A003BBCC1 /* Worker.cpp in Sources */,
 				729954A31C99F76100DAAE5D /* gim_memory.cpp in Sources */,
 				7299545E1C99F76100DAAE5D /* btSimpleBroadphase.cpp in Sources */,
 				729954CC1C99F76100DAAE5D /* SpuContactManifoldCollisionAlgorithm.cpp in Sources */,
@@ -3796,10 +3833,10 @@
 				729953CA1C99F76100DAAE5D /* BezierCurve3.cpp in Sources */,
 				729954BE1C99F76100DAAE5D /* btUniversalConstraint.cpp in Sources */,
 				729954611C99F76100DAAE5D /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
-				72C9B2B01EA6226600033C56 /* testXCodeAutoComplete.cpp in Sources */,
 				729954081C99F76100DAAE5D /* Joint2d.cpp in Sources */,
 				729954BC1C99F76100DAAE5D /* btSolve2LinearConstraint.cpp in Sources */,
 				729954E71C99F76100DAAE5D /* btVector3.cpp in Sources */,
+				72F9083C1EAFD355003BBCC1 /* TranslationUnitTextEditorUpdater.cpp in Sources */,
 				729954C91C99F76100DAAE5D /* SequentialThreadSupport.cpp in Sources */,
 				729954381C99F76100DAAE5D /* b2CollidePoly.cpp in Sources */,
 				729954C31C99F76100DAAE5D /* btRaycastVehicle.cpp in Sources */,
@@ -3892,7 +3929,6 @@
 				729954571C99F76100DAAE5D /* btCollisionAlgorithm.cpp in Sources */,
 				7299545B1C99F76100DAAE5D /* btMultiSapBroadphase.cpp in Sources */,
 				729953F01C99F76100DAAE5D /* Gui.cpp in Sources */,
-				72C9B2A11E97C7C400033C56 /* testAutoComplete.cpp in Sources */,
 				72C9B2721E884C7200033C56 /* LogMessage.cpp in Sources */,
 				723689B11D89DE1B006480F0 /* FileMenu.cpp in Sources */,
 				727B38A91E2B9C5300531B62 /* cff.c in Sources */,
@@ -3987,6 +4023,7 @@
 				7299542E1C99F76100DAAE5D /* Vector2.cpp in Sources */,
 				729955081C99F76100DAAE5D /* Clipper.cpp in Sources */,
 				7220F6591E7F2B4C0063EAD5 /* SystemHelper.cpp in Sources */,
+				72F908301EAC9473003BBCC1 /* TranslationUnitUpdater.cpp in Sources */,
 				727B38CE1E2B9C5300531B62 /* truetype.c in Sources */,
 				72C9B2A51E9938D600033C56 /* Autocompleter.cpp in Sources */,
 				7299547D1C99F76100DAAE5D /* btConeShape.cpp in Sources */,
@@ -4042,6 +4079,7 @@
 				72C9B2AB1E9AC52200033C56 /* AutocompleterEntrySystem.cpp in Sources */,
 				729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */,
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
+				72F908391EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,
 				729953E61C99F76100DAAE5D /* GameObjectEditorSystem.cpp in Sources */,
 				72C9B28F1E8C327800033C56 /* TextEditorEditSystem.cpp in Sources */,
@@ -4094,6 +4132,7 @@
 				729954851C99F76100DAAE5D /* btCylinderShape.cpp in Sources */,
 				7299549A1C99F76100DAAE5D /* btContactProcessing.cpp in Sources */,
 				72AE74CE1DAAA1B800CEB998 /* PlayButtons.cpp in Sources */,
+				72F908361EAD23EA003BBCC1 /* TextEditorColorer.cpp in Sources */,
 				7299544C1C99F76100DAAE5D /* b2PolyAndCircleContact.cpp in Sources */,
 				729953F71C99F76100DAAE5D /* MenuSystem.cpp in Sources */,
 				7299548C1C99F76100DAAE5D /* btPolyhedralConvexShape.cpp in Sources */,
@@ -4128,6 +4167,7 @@
 				729954D31C99F76100DAAE5D /* SpuGatheringCollisionTask.cpp in Sources */,
 				72B4925F1DCE59D10063518A /* GameObject.cpp in Sources */,
 				729954CD1C99F76100DAAE5D /* SpuFakeDma.cpp in Sources */,
+				72F9082D1EAC9198003BBCC1 /* CodeFile.cpp in Sources */,
 				7299550C1C99F76100DAAE5D /* ShaderCollection.cpp in Sources */,
 				729953DC1C99F76100DAAE5D /* TransformAnimator.cpp in Sources */,
 				729954C61C99F76100DAAE5D /* btParallelConstraintSolver.cpp in Sources */,

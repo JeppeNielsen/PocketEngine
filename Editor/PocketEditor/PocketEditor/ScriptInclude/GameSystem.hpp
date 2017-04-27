@@ -24,11 +24,16 @@ private:
     virtual void AddComponent(int id, GameObject* referenceObject) = 0;
     virtual void RemoveComponent(int id) = 0;
     virtual void CloneComponent(int id, GameObject* object) = 0;
+    virtual void ReplaceComponent(int id, GameObject* object) = 0;
+    virtual void EnableComponent(int id, bool enable) = 0;
+    
 public:
     template<typename T> T* GetComponent() { return (T*)0; }
     template<typename T> T* AddComponent() { }
     template<typename T> void RemoveComponent() { }
     template<typename T> T* CloneComponent(GameObject* source) { }
+    template<typename T> T* ReplaceComponent(GameObject* source) { }
+    template<typename T> void EnableComponent(bool enable) { }
 };
 }
 

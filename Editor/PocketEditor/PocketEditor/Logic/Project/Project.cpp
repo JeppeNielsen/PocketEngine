@@ -27,6 +27,7 @@ Project::Project() {
             "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
+            "/Projects/PocketEngine/Pocket/Logic/Rendering/Renderable.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
             "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
@@ -76,24 +77,41 @@ void Project::Open(const std::string& path) {
     Opened();
 }
 
-bool Project::Compile(const std::function<void(const std::string&)>& onError) {
-    PostCompile();
-    Worlds.PreCompile();
-    scriptWorld.RemoveGameWorld(*world);
-    RefreshSourceFiles();
+bool Project::Compile() {
+    if (IsCompiling) return false;
+    IsCompiling = true;
+    
+    
+    std::cout << "Compilation started..."<< std::endl;
+    compilationTimer.Begin();
+    
     scriptWorld.SetWorldType(*world, [] (int componentType) {
         return !SystemHelper::IsComponentEditorSpecific(componentType);
     });
-    bool succes = scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [&onError] (auto error) {
-        std::stringstream s;
-        s << "Error: "<<FileHelper::GetFileNameFromPath(error.filename) << " : "<<error.lineNo << " : "<< error.description;
-        onError(s.str());
+    
+    worker.DoTask([this] () -> std::vector<ScriptWorld::Error> {
+        RefreshSourceFiles();
+        std::vector<ScriptWorld::Error> errors;
+        scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [&errors] (const auto& error) {
+            errors.push_back(error);
+        });
+        return errors;
+    }, [this] (std::vector<ScriptWorld::Error> errors) {
+        if (errors.empty()) {
+            Worlds.PreCompile();
+            scriptWorld.RemoveGameWorld(*world);
+            scriptWorld.UnloadLib();
+            scriptWorld.LoadLib();
+            scriptWorld.AddGameWorld(*world);
+            Worlds.PostCompile();
+        }
+        compilationTimer.End();
+        double time = compilationTimer.End();
+        std::cout << "Compilation finished, time = " << time << "s"<< std::endl;
+        IsCompiling = false;
     });
-    if (succes) {
-        scriptWorld.AddGameWorld(*world);
-        Worlds.PostCompile();
-    }
-    return succes;
+    
+    return true;
 }
 
 void Project::RefreshSourceFiles() {
@@ -245,4 +263,8 @@ ProjectSettings* Project::GetProjectSettings() {
     }
 
     return 0;
+}
+
+void Project::Update() {
+    worker.Update();
 }

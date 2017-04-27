@@ -17,6 +17,8 @@
 #include "EditorObject.hpp"
 #include "FileSystemWatcher.hpp"
 #include "ProjectSettings.hpp"
+#include "Worker.hpp"
+#include "Timer.hpp"
 
 using namespace Pocket;
 
@@ -28,6 +30,7 @@ private:
     std::string path;
     std::vector<std::string> defaultIncludes;
     FileSystemWatcher fileSystemWatcher;
+    Worker worker;
     
     void RefreshSourceFiles();
     
@@ -41,11 +44,13 @@ public:
     void Open(const std::string& path);
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
-    bool Compile(const std::function<void(const std::string&)>& onError);
+    bool Compile();
     void BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput = 0);
     void CreateNewWorld(const std::string& worldPath);
     
     void SaveWorld();
+    
+    void Update();
     
     SelectableCollection<EditorObject>* GetSelectables();
     
@@ -60,5 +65,6 @@ public:
     std::string GetFolderName();
     
     Event<> Opened;
-    Event<> PostCompile;
+    Property<bool> IsCompiling;
+    Timer compilationTimer;
 };

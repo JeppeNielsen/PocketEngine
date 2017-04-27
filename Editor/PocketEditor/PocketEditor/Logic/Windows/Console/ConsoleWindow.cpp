@@ -60,6 +60,17 @@ void ConsoleWindow::OnCreate() {
     spawner->OnRemove = [] (auto n) {
         
     };
+    
+    
+    compilingText = gui.CreateLabel(window, 0, Size(), 0, "Compiling!!!", 20);
+    compilingText->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+    compilingText->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+    
+    compilingText->Enabled = false;
+    
+    context->Project().IsCompiling.Changed.Bind([this] {
+        compilingText->Enabled = context->Project().IsCompiling;
+    });
 }
 
 void ConsoleWindow::Clicked(Pocket::TouchData d, Pocket::GameObject *node) {

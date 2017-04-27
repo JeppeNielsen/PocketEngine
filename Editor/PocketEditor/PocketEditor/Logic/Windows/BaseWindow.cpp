@@ -14,7 +14,7 @@ void BaseWindow::Initialize(EditorContext *context) {
     currentWorld = 0;
     this->context = context;
     this->context->Project().Worlds.ActiveWorld.Changed.Bind(this, &BaseWindow::ActiveWorldChangedInternal);
-    this->context->Project().PostCompile.Bind([this] () {
+    this->context->Project().IsCompiling.Changed.Bind([this] () {
         PostCompile();
     });
     OnInitialize();

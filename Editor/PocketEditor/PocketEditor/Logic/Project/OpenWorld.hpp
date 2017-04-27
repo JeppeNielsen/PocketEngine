@@ -48,8 +48,6 @@ public:
     void PreCompile();
     void PostCompile();
     
-    Event<> Compiled;
-
     void Update(InputDevice& input, float dt);
     void Render();
 

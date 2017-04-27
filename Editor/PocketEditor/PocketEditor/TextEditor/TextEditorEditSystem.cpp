@@ -137,6 +137,7 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
         textEditor->Cursor+=2;
     } else if (backspaceClicked) {
         t1 = t1.substr(0, t1.size()-1);
+        textEditor->TextInserted({(int)t1.size(), -1});
         button = "";
         textEditor->Cursor -= 2;
     } else if (escapeClicked) {
@@ -148,6 +149,7 @@ void TextEditorEditSystem::ButtonDown(ButtonEvent e) {
     bool wasCursorAtWhiteSpace = textEditor->IsCursorAtWhiteSpace();
     
     textEditor->text = t1 + button + t2;
+    textEditor->TextInserted({(int)t1.size(), (int)button.size()});
     
     textEditor->Cursor++;
     textEditor->Lines.MakeDirty();

@@ -25,4 +25,5 @@ private:
 
     GameObject* listBox;
     VirtualTreeList* treeView;
+    GameObject* compilingText;
 };

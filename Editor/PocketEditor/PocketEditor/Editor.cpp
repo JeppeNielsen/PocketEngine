@@ -83,7 +83,7 @@ public:
             module->Create();
         }
         
-        context.Project().Open("/Projects/PocketEngine/EditorProjects/Pong");
+        context.Project().Open("/Projects/PocketEngine/EditorProjects/TestRecompile");
         
         Input.ButtonDown.Bind([this](ButtonEvent e) {
             if (e.Id == "p") {
@@ -117,8 +117,6 @@ public:
                 std::cout << errorStr << std::endl;
             }
         }
-        
-        
     }
     
     void Update(float dt) {
@@ -130,7 +128,7 @@ public:
     }
 };
 
-int main_editor() {
+int main() {
     Engine e;
     e.Start<Editor>();
 	return 0;

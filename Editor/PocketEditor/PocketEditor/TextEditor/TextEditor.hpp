@@ -61,4 +61,6 @@ struct TextEditor {
     void DisableAutoComplete();
     
     std::string GetAutoCompleteString();
+    
+    Event<Point> TextInserted;
 };

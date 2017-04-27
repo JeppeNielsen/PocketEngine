@@ -179,7 +179,14 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
     }
     
     for(auto& t : d.droppedTouches) {
-        EditorObject* destination = t.object->GetComponent<EditorObject>();
+        EditorObject* destination = 0;//t.object->GetComponent<EditorObject>();
+        for(auto it : objectToSelectButton) {
+            if (it.second == t.object) {
+                destination = it.first->GetComponent<EditorObject>();
+                break;
+            }
+        }
+        
         if (destination) {
             if (source!=destination && IsParentValid(source->gameObject, destination->gameObject)) {
                 source->gameObject->Parent = destination->gameObject;

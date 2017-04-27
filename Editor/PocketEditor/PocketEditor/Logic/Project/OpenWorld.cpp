@@ -73,7 +73,10 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
     root->TimeScale() = 0;
 
     SystemHelper::AddGameSystems(*root);
-    scriptWorld->AddGameRoot(root);
+    
+    if (context->Project().IsCompiling) {
+        scriptWorld->AddGameRoot(root);
+    }
     
     editorScene.Initialize(root);
     
@@ -142,10 +145,12 @@ void OpenWorld::UpdatePlayMode() {
 
 void OpenWorld::PreCompile() {
     Stop();
+    ScriptWorld* scriptWorld = &context->Project().ScriptWorld();
+    //scriptWorld->RemoveGameWorld(*root);
 }
 
 void OpenWorld::PostCompile() {
-    Compiled();
+    //scriptWorld->AddGameRoot(root);
 }
 
 void OpenWorld::Play() {

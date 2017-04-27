@@ -73,6 +73,7 @@ void EditorContext::Update(float dt) {
     if (Project().Worlds.ActiveWorld()) {
         Project().Worlds.ActiveWorld()->Update(engineContext->InputDevice(), dt);
     }
+    Project().Update();
 }
 
 void EditorContext::Render() {

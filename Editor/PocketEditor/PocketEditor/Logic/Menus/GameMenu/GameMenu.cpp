@@ -20,14 +20,10 @@ void GameMenu::OnInitialize() {
 
 void GameMenu::OnCreate() {
     menu->AddChild("Compile").Clicked.Bind([this] {
-        Timer timer;
-        std::cout << "Compilation started..."<< std::endl;
-        timer.Begin();
-        context->Project().Compile([this] (auto error) {
-            context->Log().Log(error);
-        });
-        double time = timer.End();
-        std::cout << "Compilation finished, time = " << time << "s"<< std::endl;
+        
+        context->Project().Compile();
+        //context->Log().Log(error);
+        
     });
     menu->AddChild("Create Executable").Clicked.Bind([this] {
     

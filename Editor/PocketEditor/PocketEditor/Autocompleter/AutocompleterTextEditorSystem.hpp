@@ -35,7 +35,7 @@ private:
     
     void AutoCompleteDisabled(GameObject* object);
 
-    void OnAutoComplete(std::vector<Pocket::ScriptAutoCompleter::Result> results, GameObject* object);
+    void OnAutoComplete(std::vector<Autocompleter::Result> results, GameObject* object);
     void RemoveListBox();
     void OnAutoCompleteEvent(TextEditor::AutoCompleteEventType eventType, GameObject* object);
     AutocompleterEntry* FindAutocompleterEntryByIndex(int index);

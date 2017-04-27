@@ -16,5 +16,5 @@ using namespace Pocket;
 struct AutocompleterEntrySystem : public GameSystem<Autocompleter, AutocompleterEntry> {
     void ObjectAdded(GameObject* object) override;
     void ObjectRemoved(GameObject* object) override;
-    void AutoCompleteDone(std::vector<Pocket::ScriptAutoCompleter::Result> results, GameObject* object);
+    void AutoCompleteDone(std::vector<Autocompleter::Result> results, GameObject* object);
 };
