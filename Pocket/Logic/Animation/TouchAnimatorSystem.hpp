@@ -16,7 +16,6 @@
 namespace Pocket {
     class TouchAnimatorSystem : public GameSystem<TouchAnimator, Touchable, TransformAnimator, TransformAnimationDatabase>  {
     public:
-        void Initialize();
         void ObjectAdded(GameObject* object);
         void ObjectRemoved(GameObject* object);
         

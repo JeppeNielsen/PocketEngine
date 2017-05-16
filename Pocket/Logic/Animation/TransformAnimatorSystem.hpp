@@ -14,7 +14,6 @@
 namespace Pocket {
     class TransformAnimatorSystem : public GameSystem<TransformAnimator, Transform> {
     public:
-        void Initialize();
         void Update(float dt);
     };
 }
