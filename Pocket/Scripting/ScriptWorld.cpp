@@ -8,7 +8,6 @@
 
 #include "ScriptWorld.hpp"
 #include <dlfcn.h>
-#include "ScriptParser.hpp"
 #include <set>
 #include <iostream>
 #include <stdio.h>
@@ -118,7 +117,7 @@ void ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     
     compilerArgs += mainCppFile + " ";
     compilerArgs += outputFile;
-    compilerArgs += " > output.txt 2>&1";
+    //compilerArgs += " > output.txt 2>&1";
     
     if (enableOutput) {
         std::cout << compilerArgs << std::endl;
@@ -390,18 +389,16 @@ void ScriptWorld::UnloadLib() {
 }
 
 void ScriptWorld::ExtractScriptClasses() {
-    ScriptClass allClasses;
-
-    ScriptParser parser;
-
-    parser.ParseCode(
-        allClasses,
-        sourceFiles,
-        headerPaths
-    );
-
-    //allClasses.Print();
-    scriptClasses = parser.ExtractSystemsAndComponents(allClasses);
+    data.Clear();
+    data.Parse(sourceFiles, headerPaths, [this](auto& componentName) {
+        for(auto& w : worldComponentNames) {
+            std::string componentNameWithNamespace = "Pocket::"+w.name;
+            if (componentName == componentNameWithNamespace) return false;
+        }
+        return true;
+    });
+    
+    std::cout << data.components.size() << std::endl;
 }
 
 void ScriptWorld::WriteMainCppFile(const std::string &path) {
@@ -422,21 +419,21 @@ void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
 
     //file<<"namespace Pocket { class IGameSystem; }"<<std::endl;
     
-    auto& components = scriptClasses.children["Components"].children;
-    auto& systems = scriptClasses.children["Systems"].children;
+    //auto& components = data.components;
+    //auto& systems = data.systems;
     
-    std::set<std::string> uniqueIncludes;
+    //std::set<std::string> uniqueIncludes;
 
-    for(auto sf : sourceFiles) {
-        uniqueIncludes.insert(ExtractHeaderName(sf));
-    }
+    //for(auto sf : sourceFiles) {
+    //    uniqueIncludes.insert(ExtractHeaderName(sf));
+    //}
     
-    for(auto& component : components) {
-        uniqueIncludes.insert(component.second.sourceFile);
+    /*for(auto& component : components) {
+        uniqueIncludes.insert(component.sourceFile);
     }
     for(auto& system : systems) {
         uniqueIncludes.insert(system.second.sourceFile);
-    }
+    }*/
     
     file<<"#include \"TypeInfo.hpp\""<<std::endl;
     
@@ -450,9 +447,9 @@ void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
     }
     */
     
-    for(auto& include : uniqueIncludes) {
+    //for(auto& include : uniqueIncludes) {
         //file << "#include \"" << include << "\""<< std::endl;
-    }
+    //}
     file<<std::endl;
     
 }
@@ -461,7 +458,7 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
     
     const std::string namespaceName = "Pocket::";
 
-    auto& scriptComponents = scriptClasses.children.find("Components")->second.children;
+    auto& scriptComponents = data.components;
     
     file<<"namespace Pocket {"<<std::endl;
     for(auto& componentName : worldComponentNames) {
@@ -472,8 +469,17 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
     //file<<"using namespace Pocket;"<<std::endl;
     
         
-    for (auto component : scriptComponents) {
-        file << "struct "<< component.second.name << ";"<<std::endl;
+    for (auto& component : scriptComponents) {
+        auto namespaceIndex = component.name.find("::");
+        if (namespaceIndex == std::string::npos) {
+            file << "struct "<< component.name << ";"<<std::endl;
+        } else {
+            std::string nameSpace = component.name.substr(0, namespaceIndex);
+            std::string nameWithoutNamespace = component.name.substr(namespaceIndex+2, component.name.size() - 2 - namespaceIndex);
+            file << "namespace "<<nameSpace<<" {" << std::endl;
+            file << "   struct "<<nameWithoutNamespace << ";"<< std::endl;
+            file << "}"<< std::endl;
+        }
     }
     
     file << std::endl;
@@ -515,12 +521,11 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
     }
     
     int index = baseComponentIndex;
-    for (auto it : scriptComponents) {
-        auto& component = it.second;
+    for (auto& component : scriptComponents) {
         
-        std::string aliasComponentName = "Script_" + component.name;
+        std::string aliasComponentName = component.name;
         
-        file<<"using "<<aliasComponentName<<" = "<<component.name<<";"<<std::endl;
+        //file<<"using "<<aliasComponentName<<" = "<<component.name<<";"<<std::endl;
         
         file<<"template<> " << aliasComponentName  << "* Pocket::GameObject::GetComponent<"<< aliasComponentName << ">() { return ("<< aliasComponentName <<"*) GetComponent("<<index<<"); }"<<std::endl;
         
@@ -540,7 +545,7 @@ void ScriptWorld::WriteMainGameObject(std::ofstream &file) {
 
 void ScriptWorld::WriteMainSystems(std::ofstream &file) {
     
-    auto& systems = scriptClasses.children["Systems"].children;
+    auto& systems = data.systems;
     
     {
        file<<"extern \"C\" int CountSystems() {"<<std::endl;
@@ -553,7 +558,7 @@ void ScriptWorld::WriteMainSystems(std::ofstream &file) {
             file << "   switch (systemID) { " << std::endl;
                 int index = baseSystemIndex;
                 for(auto& system : systems) {
-                    file<<"      case "<<index <<":"<<" return new "<<system.second.name<<"();"<<std::endl;
+                    file<<"      case "<<index <<":"<<" return new "<<system.name<<"();"<<std::endl;
                     index++;
                 }
         file<<"      default: return 0;"<<std::endl;
@@ -570,7 +575,7 @@ void ScriptWorld::WriteMainSystems(std::ofstream &file) {
 
 void ScriptWorld::WriteMainComponents(std::ofstream &file) {
     
-    auto& components = scriptClasses.children["Components"].children;
+    auto& components = data.components;
 
     {
        file<<"extern \"C\" int CountComponents() {"<<std::endl;
@@ -583,7 +588,7 @@ void ScriptWorld::WriteMainComponents(std::ofstream &file) {
         file << "   switch (componentID) { " << std::endl;
         int index = baseComponentIndex;
         for(auto& component : components) {
-            file<<"      case "<<index <<":"<<" return new "<<component.second.name<<"();"<<std::endl;
+            file<<"      case "<<index <<":"<<" return new "<<component.name<<"();"<<std::endl;
             index++;
         }
         file<<"      default: return 0;"<<std::endl;
@@ -596,7 +601,7 @@ void ScriptWorld::WriteMainComponents(std::ofstream &file) {
         file << "   switch (componentID) { " << std::endl;
         int index = baseComponentIndex;
         for(auto& component : components) {
-            file<<"      case "<<index <<":"<<" { delete (("<<component.second.name<<"*)component); break; }"<<std::endl;
+            file<<"      case "<<index <<":"<<" { delete (("<<component.name<<"*)component); break; }"<<std::endl;
             index++;
         }
         file<<"   }"<<std::endl;
@@ -608,8 +613,8 @@ void ScriptWorld::WriteMainComponents(std::ofstream &file) {
             file << "   switch (componentID) { " << std::endl;
                 int index = baseComponentIndex;
                 for(auto& component : components) {
-                    file<<"      case "<<index <<":"<<" { "<<component.second.name<<"* co = ("<<component.second.name<<"*)c; "<<std::endl;
-                    file<<"      "<<component.second.name<<"* so = (("<<component.second.name<<"*)s);"<<std::endl;
+                    file<<"      case "<<index <<":"<<" { "<<component.name<<"* co = ("<<component.name<<"*)c; "<<std::endl;
+                    file<<"      "<<component.name<<"* so = (("<<component.name<<"*)s);"<<std::endl;
                     file<<"        co->operator=(*so);             break; }"<<std::endl;
                     index++;
                 }
@@ -622,20 +627,18 @@ void ScriptWorld::WriteMainComponents(std::ofstream &file) {
 
 void ScriptWorld::WriteMainSerializedComponents(std::ofstream &file) {
 
-    auto& components = scriptClasses.children["Components"].children;
+    auto& components = data.components;
 
     file<<"extern \"C\" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {"<<std::endl;
         file << "   switch (componentID) { " << std::endl;
             int index = baseComponentIndex;
-            for(auto& componentIt : components) {
-                auto& component = componentIt.second;
+            for(auto& component : components) {
                 file<<"      case "<<index <<": {"<<std::endl;
                 file<<"      "<<component.name<<"* component = ("<<component.name<<"*)componentPtr;"<<std::endl;
                 file<<"	      Pocket::TypeInfo* info = new Pocket::TypeInfo();"<<std::endl;
                 file<<"	      info->name = \""<<component.name<<"\";"<<std::endl;
                 std::set<std::string> uniqueFields;
                 for(auto& f : component.fields) {
-                    if (!IsFieldValid(f)) continue;
                     uniqueFields.insert(f.name);
                 }
                 
@@ -672,8 +675,6 @@ void ScriptWorld::WriteTypes(std::ofstream &file) {
 #define FILE_SOURCE(...) #__VA_ARGS__
 
 void ScriptWorld::WriteExecutableMain(const std::string &path, const std::function<void(std::string&)>& customCode) {
-    
-    auto& systems = scriptClasses.children["Systems"].children;
     
     ofstream file;
     file.open(path);
@@ -728,18 +729,14 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     
     file << "void CreateScriptSystems(Pocket::GameObject &world) {"<<std::endl;
     
-    auto& components = scriptClasses.children["Components"].children;
-    
-    for(auto& componentIt : components) {
-        auto& component = componentIt.second;
-    
+    for(auto& component : data.components) {
+        
         file<<"world.World()->AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
         file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
         file<< "      Pocket::TypeInfo typeInfo;"<<std::endl;
         file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
         std::set<std::string> uniqueFields;
         for(auto& f : component.fields) {
-            if (!IsFieldValid(f)) continue;
             uniqueFields.insert(f.name);
         }
         
@@ -751,8 +748,8 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
         file<< "});"<<std::endl;
     }
     
-    for(auto& system : systems) {
-        file << "world.CreateSystem<"<<system.first << ">();"<<std::endl;
+    for(auto& system : data.systems) {
+        file << "world.CreateSystem<"<<system.name<< ">();"<<std::endl;
     }
     
     file<< "}"<<std::endl;
@@ -821,8 +818,6 @@ int main() {
 
 void ScriptWorld::WriteExecutableTypeInfos(const std::string &path) {
     
-    auto& components = scriptClasses.children["Components"].children;
-    
     ofstream file;
     file.open(path);
     
@@ -830,24 +825,22 @@ void ScriptWorld::WriteExecutableTypeInfos(const std::string &path) {
         file<<" static std::map<int, std::function<TypeInfo(GameObject*)>> componentToFunction; "<<std::endl;
         file<<" if (!componentToFunction.empty()) {" <<std::endl;
     
-            for(auto& componentIt : components) {
-                auto& component = componentIt.second;
-                    file << "componentToFunction[GameIDHelper::GetComponentID<"<<component.name<<">()] = [](GameObject* object) -> TypeInfo {"<<std::endl;
-                        file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
-                        file<< "TypeInfo typeInfo;"<<std::endl;
-                        file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
-                        std::set<std::string> uniqueFields;
-                        for(auto& f : component.fields) {
-                            if (!IsFieldValid(f)) continue;
-                            uniqueFields.insert(f.name);
-                        }
-                        
-                        for(auto& field : uniqueFields) {
-                            file<<"	      typeInfo.AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
-                        }
-                
-                        file<< "return typeInfo;"<<std::endl;
-                    file<<"};"<<std::endl;
+            for(auto& component : data.components) {
+                file << "componentToFunction[GameIDHelper::GetComponentID<"<<component.name<<">()] = [](GameObject* object) -> TypeInfo {"<<std::endl;
+                    file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
+                    file<< "TypeInfo typeInfo;"<<std::endl;
+                    file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
+                    std::set<std::string> uniqueFields;
+                    for(auto& f : component.fields) {
+                        uniqueFields.insert(f.name);
+                    }
+                    
+                    for(auto& field : uniqueFields) {
+                        file<<"	      typeInfo.AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
+                    }
+            
+                    file<< "return typeInfo;"<<std::endl;
+                file<<"};"<<std::endl;
                 
             }
         file<<"   }"<<std::endl;
@@ -858,16 +851,11 @@ void ScriptWorld::WriteExecutableTypeInfos(const std::string &path) {
     file.close();
 }
 
-bool ScriptWorld::IsFieldValid(const ScriptClass::Field &field) {
-    return field.type!="<";
-}
-
 bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComponent, int& index) {
-    auto& scriptComponents = scriptClasses.children["Components"].children;
     {
         index = 0;
-        for(auto& scriptComponent : scriptComponents) {
-            if (scriptComponent.second.name == componentName) {
+        for(auto& scriptComponent : data.components) {
+            if (scriptComponent.name == componentName) {
                 staticComponent = false;
                 return true;
             }
@@ -948,25 +936,23 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             return container;
         });
         
-        auto& components = scriptClasses.children["Components"].children;
+        
         int componentNameCounter = 0;
-        for(auto c : components) {
+        for(auto c : data.components) {
             if (componentNameCounter == i) {
-                world.components[componentIndex].name = c.second.name;
-                scriptComponents[c.second.name] = componentIndex;
+                world.components[componentIndex].name = c.name;
+                scriptComponents[c.name] = componentIndex;
             }
             componentNameCounter++;
         }
     }
     
-    auto& scriptSystems = scriptClasses.children["Systems"].children;
-    
     int index = 0;
-    for (auto& scriptSystem : scriptSystems) {
+    for (auto& scriptSystem : data.systems) {
         int systemIndex = baseSystemIndex + index;
         world.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameWorld::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
             
-            for (auto& component : scriptSystem.second.templateArguments) {
+            for (auto& component : scriptSystem.components) {
                 int componentIndex;
                 bool staticComponent;
                 if (FindComponentIndex(component, staticComponent, componentIndex)) {
@@ -997,10 +983,9 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
 
 void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
     
-    auto& scriptSystems = scriptClasses.children["Systems"].children;
     GameScene* scene = root->scene;
     
-    for (int i=0; i<scriptSystems.size(); ++i) {
+    for (int i=0; i<data.systems.size(); ++i) {
         int systemIndex = baseSystemIndex + i;
         scene->CreateSystem(systemIndex);
     }

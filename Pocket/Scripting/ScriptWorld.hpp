@@ -10,9 +10,9 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "ScriptClass.hpp"
 #include "GameWorld.hpp"
 #include "TypeInfo.hpp"
+#include "ScriptData.hpp"
 
 namespace Pocket {
 
@@ -81,8 +81,6 @@ private:
     
     bool FindComponentIndex(std::string componentName, bool& staticComponent, int& index);
     
-    bool IsFieldValid(const ScriptClass::Field& field);
-    
     bool TryParseError(const std::string& codeFile, const std::string& line, Error& error);
     
     std::string clangSdkPath;
@@ -99,7 +97,6 @@ private:
     };
     
     std::vector<ComponentName> worldComponentNames;
-    ScriptClass scriptClasses;
     int componentCount;
     int baseComponentIndex;
     int baseSystemIndex;
@@ -132,6 +129,8 @@ private:
     
     GetTypeInfoFunction getTypeInfo;
     DeleteTypeInfo deleteTypeInfo;
+    
+    ScriptData data;
     
 public:
     friend class ScriptComponent;
