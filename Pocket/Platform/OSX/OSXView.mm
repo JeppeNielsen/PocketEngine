@@ -89,7 +89,6 @@
 }
 
 -(NSPoint) convertViewLocationToWorldPoint: (NSPoint) point {
-    point = [self convertPointFromBacking:point];
     NSPoint p = [self convertPoint:point toView:nil];
     NSRect rect;
     rect.origin.x = p.x;
