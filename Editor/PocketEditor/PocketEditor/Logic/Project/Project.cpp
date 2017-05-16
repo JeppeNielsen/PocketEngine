@@ -139,8 +139,6 @@ void Project::RefreshSourceFiles() {
         foundSourceFiles,
         foundIncludeFiles
     );
-    
-    scriptWorld.ExtractScriptClasses();
 }
 
 void Project::BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput) {
