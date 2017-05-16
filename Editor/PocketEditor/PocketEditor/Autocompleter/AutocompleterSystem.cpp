@@ -7,8 +7,6 @@
 //
 
 #include "AutocompleterSystem.hpp"
-#include "ScriptAutoCompleter.hpp"
-
 
 void AutocompleterSystem::Initialize() {
 

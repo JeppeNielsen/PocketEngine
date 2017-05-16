@@ -109,6 +109,7 @@ bool Project::Compile() {
         double time = compilationTimer.End();
         std::cout << "Compilation finished, time = " << time << "s"<< std::endl;
         IsCompiling = false;
+        CompilationFinished();
     });
     
     return true;

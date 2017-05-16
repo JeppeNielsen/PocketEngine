@@ -8,7 +8,6 @@
 
 #pragma once
 #include <string>
-#include "ScriptAutoCompleter.hpp"
 #include "Autocompleter.hpp"
 
 struct AutocompleterEntry {

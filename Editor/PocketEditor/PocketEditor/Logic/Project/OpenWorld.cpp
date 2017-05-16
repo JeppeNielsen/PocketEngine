@@ -98,15 +98,19 @@ void OpenWorld::Close() {
 void OpenWorld::Enable() {
     root->UpdateEnabled() = !IsPlaying();
     root->RenderEnabled() = !IsPlaying();
-    editorScene.EditorRoot()->UpdateEnabled() = !IsPlaying();
-    editorScene.EditorRoot()->RenderEnabled() = !IsPlaying();
+    if (editorScene.EditorRoot()) {
+        editorScene.EditorRoot()->UpdateEnabled() = !IsPlaying();
+        editorScene.EditorRoot()->RenderEnabled() = !IsPlaying();
+    }
 }
 
 void OpenWorld::Disable() {
     root->UpdateEnabled() = false;
     root->RenderEnabled() = false;
-    editorScene.EditorRoot()->UpdateEnabled() = false;
-    editorScene.EditorRoot()->RenderEnabled() = false;
+    if (editorScene.EditorRoot()) {
+        editorScene.EditorRoot()->UpdateEnabled() = false;
+        editorScene.EditorRoot()->RenderEnabled() = false;
+    }
 }
 
 /*

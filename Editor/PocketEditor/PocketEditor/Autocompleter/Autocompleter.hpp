@@ -9,7 +9,6 @@
 #pragma once
 #include <string>
 #include <functional>
-#include "ScriptAutoCompleter.hpp"
 #include "Event.hpp"
 #include <clang-c/Index.h>
 

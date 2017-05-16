@@ -66,5 +66,6 @@ public:
     
     Event<> Opened;
     Property<bool> IsCompiling;
+    Event<> CompilationFinished;
     Timer compilationTimer;
 };

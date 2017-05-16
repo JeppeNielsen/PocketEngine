@@ -8,7 +8,6 @@
 
 
 #include "Autocompleter.hpp"
-#include "ScriptAutoCompleter.hpp"
 #include <vector>
 #include <iostream>
 

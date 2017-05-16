@@ -29,6 +29,8 @@
 #include "SceneTab.hpp"
 #include <vector>
 #include "ConsoleWindow.hpp"
+#include "ComponentMenu.hpp"
+#include "ScriptComponentMenu.hpp"
 
 using namespace Pocket;
 
@@ -56,6 +58,8 @@ public:
         menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());
         menus.push_back(new GameMenu());
+        menus.push_back(new ComponentMenu());
+        menus.push_back(new ScriptComponentMenu());
         
         modules.push_back(new AssetImporters());
         
