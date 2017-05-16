@@ -122,7 +122,15 @@ ComponentHelper::ComponentCollection ComponentHelper::GetSortedScriptComponents(
     ComponentCollection components;
     
     for (int i=startIndex; i<componentTypes.size(); ++i) {
-        components["Custom"].push_back({ componentTypes[i].name, i, "Custom" });
+        auto& ct = componentTypes[i];
+        auto namespaceIndex = ct.name.find("::");
+        if (namespaceIndex == std::string::npos){
+           components["Global"].push_back({ componentTypes[i].name, i, "Global" });
+        } else {
+            std::string nameSpace = ct.name.substr(0, namespaceIndex);
+            std::string nameWithoutNamespace = ct.name.substr(namespaceIndex+2, ct.name.size() - 2 - namespaceIndex);
+            components[nameSpace].push_back({ nameWithoutNamespace, i, nameSpace });
+        }
     }
     
     return components;
