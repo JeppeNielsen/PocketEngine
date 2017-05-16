@@ -350,7 +350,7 @@ GameObject* GameWorld::FindObject(const std::string &guid, int objectId) {
     return scene->FindObject(objectId);
 }
 
-ComponentTypeCollection GameWorld::GetComponentTypes() {
+ComponentTypeCollection GameWorld::GetComponentTypes() const {
     ComponentTypeCollection componentTypes;
     for(auto& c : components) {
         componentTypes.push_back({ c.name, c.getTypeInfo });

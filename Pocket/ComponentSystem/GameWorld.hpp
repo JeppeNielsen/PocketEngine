@@ -175,7 +175,7 @@ namespace Pocket {
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
         
-        ComponentTypeCollection GetComponentTypes();
+        ComponentTypeCollection GetComponentTypes() const;
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         std::function<std::string(const std::string& guid)> GuidToPath;
