@@ -12,6 +12,7 @@
 #include "AssetManager.hpp"
 #include "EditorDropTarget.hpp"
 #include "SystemHelper.hpp"
+#include "FilePath.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
@@ -50,6 +51,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     world.AddComponentType<CloneVariable>();
     world.AddComponentType<EditorDropTarget>();
     world.AddComponentType<ProjectSettings>();
+    world.AddComponentType<FilePath>();
     
     GameObject* initRoot = world.CreateRoot();
     

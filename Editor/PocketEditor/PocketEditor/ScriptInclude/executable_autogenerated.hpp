@@ -9,19 +9,19 @@ TypeInfo typeInfo;
 	      typeInfo.AddField(component->time, "time");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<Homeland::Particle>()] = [](GameObject* object) -> TypeInfo {
-Homeland::Particle* component = object->GetComponent<Homeland::Particle>();
+componentToFunction[GameIDHelper::GetComponentID<Particles::Particle>()] = [](GameObject* object) -> TypeInfo {
+Particles::Particle* component = object->GetComponent<Particles::Particle>();
 TypeInfo typeInfo;
-	      typeInfo.name = "Homeland::Particle";
+	      typeInfo.name = "Particles::Particle";
 	      typeInfo.AddField(component->rotation, "rotation");
 	      typeInfo.AddField(component->x, "x");
 	      typeInfo.AddField(component->y, "y");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<Homeland::Spring>()] = [](GameObject* object) -> TypeInfo {
-Homeland::Spring* component = object->GetComponent<Homeland::Spring>();
+componentToFunction[GameIDHelper::GetComponentID<Particles::Spring>()] = [](GameObject* object) -> TypeInfo {
+Particles::Spring* component = object->GetComponent<Particles::Spring>();
 TypeInfo typeInfo;
-	      typeInfo.name = "Homeland::Spring";
+	      typeInfo.name = "Particles::Spring";
 	      typeInfo.AddField(component->rotation, "rotation");
 	      typeInfo.AddField(component->x, "x");
 	      typeInfo.AddField(component->y, "y");

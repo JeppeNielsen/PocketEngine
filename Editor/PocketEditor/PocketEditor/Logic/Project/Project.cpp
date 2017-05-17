@@ -71,8 +71,14 @@ void Project::Open(const std::string& path) {
     this->path = path;
     Worlds.Clear();
     
-    //RefreshSourceFiles();
-    //scriptWorld.LoadLib();
+    RefreshSourceFiles();
+    
+    scriptWorld.SetWorldType(*world, [] (int componentType) {
+        return !SystemHelper::IsComponentEditorSpecific(componentType);
+    });
+    
+    scriptWorld.LoadLib();
+    scriptWorld.AddGameWorld(*world);
     fileSystemWatcher.Start(path);
     Opened();
 }
@@ -85,9 +91,9 @@ bool Project::Compile() {
     std::cout << "Compilation started..."<< std::endl;
     compilationTimer.Begin();
     
-    scriptWorld.SetWorldType(*world, [] (int componentType) {
+    /*scriptWorld.SetWorldType(*world, [] (int componentType) {
         return !SystemHelper::IsComponentEditorSpecific(componentType);
-    });
+    });*/
     
     worker.DoTask([this] () -> std::vector<ScriptWorld::Error> {
         RefreshSourceFiles();

@@ -21,6 +21,7 @@ void ScriptComponentMenu::OnInitialize() {
 
 void ScriptComponentMenu::OnCreate() {
 
+    context->Project().Opened.Bind(this, &ScriptComponentMenu::CompilationFinished);
     context->Project().CompilationFinished.Bind(this, &ScriptComponentMenu::CompilationFinished);
 }
 
