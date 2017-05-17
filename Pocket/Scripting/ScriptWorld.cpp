@@ -18,7 +18,7 @@
 using namespace std;
 using namespace Pocket;
 
-ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1) {
+ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1), componentCount(0) {
     Types.Add<bool>();
     Types.Add<int>();
     Types.Add<float>();
@@ -380,6 +380,36 @@ bool ScriptWorld::LoadLib() {
         return false;
     }
     
+    getComponentName = (GetComponentName) dlsym(libHandle, "GetComponentName");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol 'GetComponentName': " << dlsym_error << '\n';
+        dlclose(libHandle);
+        return false;
+    }
+    
+    getSystems = (GetSystems) dlsym(libHandle, "GetSystems");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol 'GetSystems': " << dlsym_error << '\n';
+        dlclose(libHandle);
+        return false;
+    }
+
+    deleteGetSystems = (DeleteGetSystems) dlsym(libHandle, "DeleteGetSystems");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol 'DeleteGetSystems': " << dlsym_error << '\n';
+        dlclose(libHandle);
+        return false;
+    }
+    
+    componentCount = countComponents();
+    
+    int* scriptSystemsPtr = getSystems();
+    scriptSystems = GetScriptSystemsFromPtr(scriptSystemsPtr);
+    deleteGetSystems(scriptSystemsPtr);
+    
     return true;
 }
 
@@ -411,6 +441,7 @@ void ScriptWorld::WriteMainCppFile(const std::string &path) {
     WriteMainSystems(file);
     WriteMainComponents(file);
     WriteMainSerializedComponents(file);
+    WriteSystemIndices(file);
     
     file.close();
 }
@@ -629,6 +660,7 @@ void ScriptWorld::WriteMainSerializedComponents(std::ofstream &file) {
 
     auto& components = data.components;
 
+    {
     file<<"extern \"C\" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {"<<std::endl;
         file << "   switch (componentID) { " << std::endl;
             int index = baseComponentIndex;
@@ -653,9 +685,54 @@ void ScriptWorld::WriteMainSerializedComponents(std::ofstream &file) {
     file<<"      default: return 0;"<<std::endl;
     file<<"   }"<<std::endl;
     file<<"}"<<std::endl;
+    }
 
     file<<"extern \"C\" void DeleteTypeInfo(Pocket::TypeInfo* typeInfo) {"<<std::endl;
     file << "delete typeInfo;"<<std::endl;
+    file<<"}"<<std::endl;
+    
+    
+    {
+    file<<"extern \"C\" const char* GetComponentName(int componentID) {"<<std::endl;
+        file << "   switch (componentID) { " << std::endl;
+            int index = baseComponentIndex;
+            for(auto& component : components) {
+                file<<"      case "<<index <<": "<<std::endl;
+                file<<"         return \""<<component.name<<"\";"<<std::endl;
+                index++;
+            }
+    file<<"      default: return \"\";"<<std::endl;
+    file<<"   }"<<std::endl;
+    file<<"}"<<std::endl;
+    }
+}
+
+void ScriptWorld::WriteSystemIndices(std::ofstream &file) {
+
+    std::vector<int> indicies;
+    
+    for(auto& s : data.systems) {
+        indicies.push_back(-1);
+        for(auto& c : s.components) {
+            bool staticComponent;
+            int componentIndex;
+            if (FindComponentIndex(c, staticComponent, componentIndex)) {
+                indicies.push_back(staticComponent ? componentIndex : (baseComponentIndex + componentIndex));
+            }
+        }
+    }
+    indicies.push_back(-2);
+    
+    file<<"extern \"C\" int* GetSystems() {"<<std::endl;
+    file<<" return new int["<<indicies.size()<<"] {";
+    for(int i : indicies) {
+        file << i << ",";
+    }
+    file << "};";
+    file<<"}"<<std::endl;
+    
+    file<<"extern \"C\" void DeleteGetSystems(int* indicies) {"<<std::endl;
+    file << "delete indicies;"<<std::endl;
     file<<"}"<<std::endl;
 }
 
@@ -866,7 +943,8 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
     index = -1;
     
     for(auto& worldComponentName : worldComponentNames) {
-        if (componentName == worldComponentName.name) {
+        std::string componentNameWithNamespace = "Pocket::"+worldComponentName.name;
+        if (componentName == componentNameWithNamespace) {
             index = worldComponentName.index;
             break;
         }
@@ -904,19 +982,38 @@ void ScriptWorld::SetWorldType(GameWorld& world, const std::function<bool(int)>&
     baseSystemIndex = (int)world.systems.size();
 }
 
+ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {
+    int index = 0;
+    
+    ScriptWorld::ScriptSystems systems;
+    
+    while (true) {
+        int i = ptr[index];
+        if (i == -2) {
+            break;
+        } else if (i == -1) {
+            systems.push_back({});
+        } else {
+            systems.back().push_back(i);
+        }
+        index++;
+    }
+    return systems;
+
+}
+
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
     if (!libHandle) return false;
     
     scriptComponents.clear();
     
-    int numberOfComponents = countComponents();
-    componentCount = numberOfComponents;
+    
 
     //assert(baseComponentIndex == (int)world.components.size());
     //assert(baseSystemIndex == (int)world.systems.size());
     
     
-    for(int i=0; i<numberOfComponents; ++i) {
+    for(int i=0; i<componentCount; ++i) {
         int componentIndex = baseComponentIndex + i;
         world.AddComponentType(componentIndex, [this, componentIndex](GameWorld::ComponentInfo& componentInfo) {
             Container<ScriptComponent>* container = new Container<ScriptComponent>();
@@ -937,28 +1034,32 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         });
         
         
-        int componentNameCounter = 0;
-        for(auto c : data.components) {
-            if (componentNameCounter == i) {
-                world.components[componentIndex].name = c.name;
-                scriptComponents[c.name] = componentIndex;
+        if (!data.components.empty()) {
+            int componentNameCounter = 0;
+            for(auto c : data.components) {
+                if (componentNameCounter == i) {
+                    world.components[componentIndex].name = c.name;
+                    scriptComponents[c.name] = componentIndex;
+                }
+                componentNameCounter++;
             }
-            componentNameCounter++;
+        } else {
+            const char* name = getComponentName(componentIndex);
+            std::string componentName = std::string(name);
+            world.components[componentIndex].name = componentName;
+            scriptComponents[componentName] = componentIndex;
         }
     }
     
     int index = 0;
-    for (auto& scriptSystem : data.systems) {
+    for (auto& scriptSystem : scriptSystems) {
         int systemIndex = baseSystemIndex + index;
         world.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameWorld::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
             
-            for (auto& component : scriptSystem.components) {
-                int componentIndex;
-                bool staticComponent;
-                if (FindComponentIndex(component, staticComponent, componentIndex)) {
-                    components.push_back(staticComponent ? componentIndex : (baseComponentIndex + componentIndex));
-                }
+            for(int c : scriptSystem) {
+                components.push_back(c);
             }
+
             systemInfo.createFunction = [this, systemIndex] (GameObject* root) {
                 IGameSystem* system = createSystem(systemIndex);
                 system->SetIndex(systemIndex);
@@ -970,7 +1071,6 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         });
         index++;
     }
-    
     
     int endComponentIndex = (int)world.components.size();
     world.objects.Iterate([endComponentIndex](GameObject* o) {
@@ -985,7 +1085,7 @@ void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
     
     GameScene* scene = root->scene;
     
-    for (int i=0; i<data.systems.size(); ++i) {
+    for (int i=0; i<scriptSystems.size(); ++i) {
         int systemIndex = baseSystemIndex + i;
         scene->CreateSystem(systemIndex);
     }

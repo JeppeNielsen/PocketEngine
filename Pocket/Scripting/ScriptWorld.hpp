@@ -71,6 +71,7 @@ private:
     void WriteMainSystems(std::ofstream& file);
     void WriteMainComponents(std::ofstream& file);
     void WriteMainSerializedComponents(std::ofstream& file);
+    void WriteSystemIndices(std::ofstream& file);
     void WriteTypes(std::ofstream& file);
     
     void WriteExecutableMain(const std::string& path, const std::function<void(std::string&)>& customCode);
@@ -82,6 +83,10 @@ private:
     bool FindComponentIndex(std::string componentName, bool& staticComponent, int& index);
     
     bool TryParseError(const std::string& codeFile, const std::string& line, Error& error);
+    
+    using ScriptSystems = std::vector<std::vector<int>>;
+    
+    ScriptSystems GetScriptSystemsFromPtr(int* ptr);
     
     std::string clangSdkPath;
     std::string dynamicLibPath;
@@ -101,6 +106,7 @@ private:
     int baseComponentIndex;
     int baseSystemIndex;
     ScriptComponents scriptComponents;
+    ScriptSystems scriptSystems;
     
     using LibHandle = void*;
     
@@ -117,6 +123,9 @@ private:
     
     typedef TypeInfo* (*GetTypeInfoFunction)(int, void*);
     typedef void (*DeleteTypeInfo)(TypeInfo*);
+    typedef const char* (*GetComponentName)(int);
+    typedef int* (*GetSystems)();
+    typedef void (*DeleteGetSystems)(int*);
     
     CreateSystem createSystem;
     CountSystems countSystems;
@@ -129,6 +138,10 @@ private:
     
     GetTypeInfoFunction getTypeInfo;
     DeleteTypeInfo deleteTypeInfo;
+    GetComponentName getComponentName;
+    
+    GetSystems getSystems;
+    DeleteGetSystems deleteGetSystems;
     
     ScriptData data;
     
