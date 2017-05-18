@@ -124,11 +124,11 @@ void ScriptWorld::Build(bool enableOutput, const std::string &pathToPocketEngine
     }
     
     //remove old library file
-    FileReader::RunCommmand("rm " + dynamicLibPath);
+    //FileReader::RunCommmand("rm " + dynamicLibPath);
     
     //remove old library dSYM folder
-    std::string dsymFile = dynamicLibPath + ".dSYM";
-    FileReader::RunCommmand("rm -r " + dsymFile);
+    //std::string dsymFile = dynamicLibPath + ".dSYM";
+    //FileReader::RunCommmand("rm -r " + dsymFile);
     
     auto out = FileReader::RunCommmand(compilerArgs);
     
