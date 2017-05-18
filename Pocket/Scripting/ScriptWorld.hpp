@@ -54,9 +54,6 @@ public:
     
     int ComponentCount();
     
-    using ScriptComponents = std::map<std::string, int>;
-    ScriptComponents Components();
-    
     TypeIndexList Types;
     
     bool BuildExecutable(const std::string& pathToPocketEngineLib, const std::string& outputPath, const std::function<void(std::string&)>& customCode, const std::function<void(const std::string&)>& onOutput = nullptr);
@@ -105,7 +102,6 @@ private:
     int componentCount;
     int baseComponentIndex;
     int baseSystemIndex;
-    ScriptComponents scriptComponents;
     ScriptSystems scriptSystems;
     
     using LibHandle = void*;

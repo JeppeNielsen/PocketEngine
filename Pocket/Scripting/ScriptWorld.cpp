@@ -1005,13 +1005,8 @@ ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
     if (!libHandle) return false;
     
-    scriptComponents.clear();
-    
-    
-
     //assert(baseComponentIndex == (int)world.components.size());
     //assert(baseSystemIndex == (int)world.systems.size());
-    
     
     for(int i=0; i<componentCount; ++i) {
         int componentIndex = baseComponentIndex + i;
@@ -1033,22 +1028,9 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             return container;
         });
         
-        
-        if (!data.components.empty()) {
-            int componentNameCounter = 0;
-            for(auto c : data.components) {
-                if (componentNameCounter == i) {
-                    world.components[componentIndex].name = c.name;
-                    scriptComponents[c.name] = componentIndex;
-                }
-                componentNameCounter++;
-            }
-        } else {
-            const char* name = getComponentName(componentIndex);
-            std::string componentName = std::string(name);
-            world.components[componentIndex].name = componentName;
-            scriptComponents[componentName] = componentIndex;
-        }
+        const char* name = getComponentName(componentIndex);
+        std::string componentName = std::string(name);
+        world.components[componentIndex].name = componentName;
     }
     
     int index = 0;
@@ -1129,10 +1111,6 @@ TypeInfo ScriptWorld::GetTypeInfo(const GameObject& object, ComponentId id) {
 }
 
 int ScriptWorld::ComponentCount() { return componentCount; }
-
-ScriptWorld::ScriptComponents ScriptWorld::Components() {
-    return scriptComponents;
-}
 
 template<> void* Container<ScriptComponent>::Get(int index) {
     return entries[index].data;
