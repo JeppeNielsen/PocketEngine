@@ -226,7 +226,7 @@ void SerializationTests::RunTests() {
         GameObject* loadedCloner = root->CreateChildFromJson(savedCloner);
         Cloner* cloner = loadedCloner->GetComponent<Cloner>();
         cloner->Source.SetRoot(root);
-        return cloner->Source == cubePrefab;
+        return cloner->Source() == cubePrefab;
     });
     
     

@@ -4,16 +4,18 @@ struct Position;
 struct Velocity;
 
 #include "GameSystem.hpp"
-using Script_Position = Position;
-template<> Script_Position* Pocket::GameObject::GetComponent<Script_Position>() { return (Script_Position*) GetComponent(0); }
-template<> Script_Position* Pocket::GameObject::AddComponent<Script_Position>() { AddComponent(0); return (Script_Position*) GetComponent(0); }
-template<> void Pocket::GameObject::RemoveComponent<Script_Position>() { RemoveComponent(0); }
-template<> Script_Position* Pocket::GameObject::CloneComponent<Script_Position>(GameObject* source) { CloneComponent(0, source); return (Script_Position*) GetComponent(0); }
-using Script_Velocity = Velocity;
-template<> Script_Velocity* Pocket::GameObject::GetComponent<Script_Velocity>() { return (Script_Velocity*) GetComponent(1); }
-template<> Script_Velocity* Pocket::GameObject::AddComponent<Script_Velocity>() { AddComponent(1); return (Script_Velocity*) GetComponent(1); }
-template<> void Pocket::GameObject::RemoveComponent<Script_Velocity>() { RemoveComponent(1); }
-template<> Script_Velocity* Pocket::GameObject::CloneComponent<Script_Velocity>(GameObject* source) { CloneComponent(1, source); return (Script_Velocity*) GetComponent(1); }
+template<> Position* Pocket::GameObject::GetComponent<Position>() { return (Position*) GetComponent(0); }
+template<> Position* Pocket::GameObject::AddComponent<Position>() { AddComponent(0); return (Position*) GetComponent(0); }
+template<> void Pocket::GameObject::RemoveComponent<Position>() { RemoveComponent(0); }
+template<> Position* Pocket::GameObject::CloneComponent<Position>(GameObject* source) { CloneComponent(0, source); return (Position*) GetComponent(0); }
+template<> Position* Pocket::GameObject::ReplaceComponent<Position>(GameObject* source) { ReplaceComponent(0, source); return (Position*) GetComponent(0); }
+template<> void Pocket::GameObject::EnableComponent<Position>(bool enable) { EnableComponent(0, enable); }
+template<> Velocity* Pocket::GameObject::GetComponent<Velocity>() { return (Velocity*) GetComponent(1); }
+template<> Velocity* Pocket::GameObject::AddComponent<Velocity>() { AddComponent(1); return (Velocity*) GetComponent(1); }
+template<> void Pocket::GameObject::RemoveComponent<Velocity>() { RemoveComponent(1); }
+template<> Velocity* Pocket::GameObject::CloneComponent<Velocity>(GameObject* source) { CloneComponent(1, source); return (Velocity*) GetComponent(1); }
+template<> Velocity* Pocket::GameObject::ReplaceComponent<Velocity>(GameObject* source) { ReplaceComponent(1, source); return (Velocity*) GetComponent(1); }
+template<> void Pocket::GameObject::EnableComponent<Velocity>(bool enable) { EnableComponent(1, enable); }
 #include "TypeInfo.hpp"
 #include "Property.hpp"
 #include "Transform.hpp"
@@ -26,6 +28,7 @@ template<> Script_Velocity* Pocket::GameObject::CloneComponent<Script_Velocity>(
 #include "Colour.hpp"
 #include "Touchable.hpp"
 #include "InputController.hpp"
+#include "ScriptTest.hpp"
 
 #include <string>
 #include <vector>
@@ -106,4 +109,18 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 }
 extern "C" void DeleteTypeInfo(Pocket::TypeInfo* typeInfo) {
 delete typeInfo;
+}
+extern "C" const char* GetComponentName(int componentID) {
+   switch (componentID) { 
+      case 0: 
+         return "Position";
+      case 1: 
+         return "Velocity";
+      default: return "";
+   }
+}
+extern "C" int* GetSystems() {
+ return new int[4] {-1,0,1,-2,};}
+extern "C" void DeleteGetSystems(int* indicies) {
+delete indicies;
 }

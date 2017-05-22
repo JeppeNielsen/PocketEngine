@@ -39,6 +39,8 @@ void ScriptTests::RunTests() {
         ScriptWorld scriptWorld;
         scriptWorld.SetClangSdkPath("/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/");
         
+        defaultIncludes.push_back("/Projects/PocketEngine/Projects/TestComponentSystem/TestComponentSystem/Scripts/ScriptTest.hpp");
+        
         scriptWorld.SetFiles(
             "ScriptExample.so",
             "/Projects/PocketEngine/Projects/TestComponentSystem/TestComponentSystem/ScriptInclude",
@@ -49,7 +51,8 @@ void ScriptTests::RunTests() {
         GameWorld world;
         scriptWorld.SetWorldType(world);
         
-        scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+        scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [] (auto& error) {});
+        scriptWorld.LoadLib();
     
         scriptWorld.AddGameWorld(world);
     

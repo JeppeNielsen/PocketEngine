@@ -19,7 +19,7 @@ class FieldInfo;
 class TypeInfo;
 
 template<typename T>
-struct FieldInfoIndexer { static int Index() { return 0; } };
+struct FieldInfoIndexer { static int Index() { return -1; } };
 
 namespace minijson {
     class object_writer;
@@ -51,7 +51,8 @@ public:
     int type;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
-    virtual void SetFromAny(FieldInfoAny* any) = 0;
+    virtual IFieldInfo* Clone() = 0;
+    virtual void SetFromAny(FieldInfoAny* any) { }
     virtual IFieldEditor* CreateEditor() = 0;
 };
 
@@ -61,10 +62,19 @@ public:
     ~FieldInfo() { }
     
     void Serialize(minijson::object_writer& writer) override {
+        
     }
     
     void Deserialize(minijson::istream_context& context, minijson::value& value) override {
         
+    }
+    
+    IFieldInfo* Clone() override {
+        FieldInfo<T>* clone = new FieldInfo<T>();
+        clone->name = this->name;
+        clone->type = this->type;
+        clone->field = this->field;
+        return clone;
     }
     
     void SetFromAny(FieldInfoAny* any) override {
