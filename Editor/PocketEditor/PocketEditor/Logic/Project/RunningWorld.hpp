@@ -26,10 +26,16 @@ public:
     
     Property<GameObject*> ActiveScene;
     GameObject* EditorRoot();
+    
+    void PreCompile();
+    void PostCompile();
 
 private:
     GameWorld world;
     FileWorld fileWorld;
     
     EditorScene editorScene;
+    ScriptWorld* scriptWorld;
+    
+    std::stringstream serializedComponents;
 };

@@ -58,6 +58,7 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
         world.SetLayerScene(layerNo, world.TryFindRoot(startScene));
         layerNo++;
     }
+    this->scriptWorld = &scriptWorld;
 }
 
 GameWorld& RunningWorld::World() {
@@ -70,4 +71,23 @@ void RunningWorld::Destroy() {
 
 GameObject* RunningWorld::EditorRoot() {
     return editorScene.EditorRoot();
+}
+
+void RunningWorld::PreCompile() {
+    world.SerializeAndRemoveComponents(serializedComponents, [this] (const GameObject* o, int componentId) {
+        return componentId>=scriptWorld->GetBaseComponentIndex();
+    });
+    
+    world.UpdateActions();
+    scriptWorld->RemoveGameWorld(world);
+    
+    std::cout << serializedComponents.str() << std::endl;
+}
+
+void RunningWorld::PostCompile() {
+    scriptWorld->AddGameWorld(world);
+    scriptWorld->AddAllGameRoots(world);
+    world.DeserializeAndAddComponents(serializedComponents);
+    world.UpdateActions();
+    serializedComponents.clear();
 }

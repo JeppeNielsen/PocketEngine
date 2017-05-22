@@ -148,13 +148,18 @@ void OpenWorld::UpdatePlayMode() {
 */
 
 void OpenWorld::PreCompile() {
-    Stop();
-    ScriptWorld* scriptWorld = &context->Project().ScriptWorld();
-    //scriptWorld->RemoveGameWorld(*root);
+    if (runningWorld) {
+        runningWorld->PreCompile();
+    }
 }
 
 void OpenWorld::PostCompile() {
-    //scriptWorld->AddGameRoot(root);
+
+    context->Project().ScriptWorld().AddGameRoot(root);
+
+    if (runningWorld) {
+        runningWorld->PostCompile();
+    }
 }
 
 void OpenWorld::Play() {

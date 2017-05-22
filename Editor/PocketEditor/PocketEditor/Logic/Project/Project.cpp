@@ -105,10 +105,19 @@ bool Project::Compile() {
     }, [this] (std::vector<ScriptWorld::Error> errors) {
         if (errors.empty()) {
             Worlds.PreCompile();
+            std::stringstream savedComponents;
+            world->SerializeAndRemoveComponents(savedComponents, [this] (const GameObject* object, int componentId) {
+                return componentId>=scriptWorld.GetBaseComponentIndex();
+            });
+            
             scriptWorld.RemoveGameWorld(*world);
             scriptWorld.UnloadLib();
             scriptWorld.LoadLib();
             scriptWorld.AddGameWorld(*world);
+            world->UpdateActions();
+            
+            world->DeserializeAndAddComponents(savedComponents);
+            world->UpdateActions();
             Worlds.PostCompile();
         }
         compilationTimer.End();
