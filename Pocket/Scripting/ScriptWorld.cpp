@@ -162,6 +162,8 @@ void ScriptWorld::CheckForErrors(const std::string &file, const std::function<vo
     });
 }
 
+int ScriptWorld::GetBaseComponentIndex() { return baseComponentIndex; }
+
 bool ScriptWorld::TryParseError(const std::string& codeFile, const std::string& line, Error& error) {
     size_t found = line.find(codeFile);
     if (found == std::string::npos) return false;
@@ -1071,6 +1073,12 @@ void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
         int systemIndex = baseSystemIndex + i;
         scene->CreateSystem(systemIndex);
     }
+}
+
+void ScriptWorld::AddAllGameRoots(Pocket::GameWorld& world) {
+    world.Scenes().Iterate([this](GameScene* scene) {
+        AddGameRoot(scene->root);
+    });
 }
 
 void ScriptWorld::RemoveGameWorld(GameWorld& world) {

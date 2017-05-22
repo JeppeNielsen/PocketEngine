@@ -494,7 +494,7 @@ GameObject* GameObject::Deserialize(const std::string &data) {
 
 //SERIALIZATION
 
-void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) const {
+void GameObject::ToJson(std::ostream& stream, const SerializePredicate& predicate) const {
     minijson::writer_configuration config;
     config = config.pretty_printing(true);
     minijson::object_writer writer(stream, config);
@@ -502,7 +502,7 @@ void GameObject::ToJson(std::ostream& stream, SerializePredicate predicate) cons
     writer.close();
 }
 
-void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const {
+void GameObject::WriteJson(minijson::object_writer& writer, const SerializePredicate& predicate) const {
 
     minijson::object_writer gameObject = writer.nested_object("GameObject");
 
@@ -514,7 +514,27 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
         gameObject.write("id", rootId);
     }
     
-    minijson::array_writer components = gameObject.nested_array("Components");
+    WriteJsonComponents(gameObject, predicate);
+    
+    if (!children.empty()) {
+        minijson::array_writer children_object = gameObject.nested_array("Children");
+        for(auto child : children) {
+            if (predicate && !predicate(child, -1)) {
+                continue;
+            }
+            minijson::object_writer child_object = children_object.nested_object();
+            child->WriteJson(child_object, predicate);
+            child_object.close();
+        }
+        children_object.close();
+    }
+    
+    gameObject.close();
+}
+
+void GameObject::WriteJsonComponents(minijson::object_writer& writer, const SerializePredicate& predicate) const {
+
+    minijson::array_writer components = writer.nested_array("Components");
     
     GameWorld* world = scene->world;
     
@@ -538,21 +558,14 @@ void GameObject::WriteJson(minijson::object_writer& writer, SerializePredicate p
         }
     }
     components.close();
-    
-    if (!children.empty()) {
-        minijson::array_writer children_object = gameObject.nested_array("Children");
-        for(auto child : children) {
-            if (predicate && !predicate(child, -1)) {
-                continue;
-            }
-            minijson::object_writer child_object = children_object.nested_object();
-            child->WriteJson(child_object, predicate);
-            child_object.close();
+}
+
+void GameObject::RemoveComponents(const SerializePredicate& predicate) {
+    for(int i=0; i<scene->world->components.size(); ++i) {
+        if (activeComponents[i] && !(predicate && !predicate(this, i))) {
+            RemoveComponent(i);
         }
-        children_object.close();
     }
-    
-    gameObject.close();
 }
 
 void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject ) const {

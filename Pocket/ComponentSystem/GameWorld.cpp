@@ -169,7 +169,7 @@ void GameWorld::RemoveRoot(Pocket::GameObject *root) {
 }
 
 void GameWorld::Update(float dt) {
-    DoActions(delayedActions);
+    UpdateActions();
     for(auto& s : activeSystems) {
         if (!s.scene->updateEnabled()) continue;
         s.system->Update(s.scene->timeScale() * dt);
@@ -177,12 +177,16 @@ void GameWorld::Update(float dt) {
 }
 
 void GameWorld::UpdateRoot(float dt, GameObject* root) {
-    DoActions(delayedActions);
+    UpdateActions();
     for(auto& s : activeSystems) {
         if (s.scene==root->scene) {
             s.system->Update(s.scene->timeScale() * dt);
         }
     }
+}
+
+void GameWorld::UpdateActions() {
+    DoActions(delayedActions);
 }
 
 void GameWorld::DebugSystems() {
@@ -478,3 +482,54 @@ void GameWorld::SetLayerScene(int layerNo, Pocket::GameObject *scene) {
 }
 
 const GameWorld::SceneLayers& GameWorld::GetSceneLayers() { return sceneLayers; }
+
+void GameWorld::SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate &predicate) {
+    minijson::writer_configuration config;
+    config = config.pretty_printing(true);
+    minijson::object_writer writer(stream, config);
+    objects.Iterate([&writer, &predicate](GameObject* object) {
+        object->WriteJsonComponents(writer, predicate);
+        object->RemoveComponents(predicate);
+    });
+    writer.close();
+}
+
+void GameWorld::DeserializeAndAddComponents(std::istream &jsonStream) {
+    minijson::istream_context context(jsonStream);
+
+    try {
+        GameObject::AddReferenceComponentList addReferenceComponents;
+
+        std::vector<GameObject*> objectsList;
+        objects.Iterate([&](GameObject* object) {
+            objectsList.push_back(object);
+        });
+    
+        int index = 0;
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            GameObject* object = objectsList[index];
+            index++;
+            if (v.type() == minijson::Array) {
+                minijson::parse_array(context, [&] (minijson::value v) {
+                    if (v.type() == minijson::Object) {
+                        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                            object->AddComponent(addReferenceComponents, context, n);
+                        });
+                    }
+                });
+            }
+        });
+        
+        GameObject* object;
+        int componentID;
+        GameObject* referenceObject;
+        while (GameObject::GetAddReferenceComponent(addReferenceComponents, &object, componentID, &referenceObject)) {
+            if (referenceObject) {
+                object->AddComponent(componentID, referenceObject);
+            }
+        }
+    } catch (minijson::parse_error e) {
+        std::cout << e.what() << std::endl;
+    }
+    GameObject::EndGetAddReferenceComponent();
+}

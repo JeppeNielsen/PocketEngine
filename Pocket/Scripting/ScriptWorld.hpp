@@ -47,6 +47,7 @@ public:
     
     bool AddGameWorld(GameWorld& world);
     void AddGameRoot(GameObject* root);
+    void AddAllGameRoots(GameWorld& world);
     void RemoveGameRoot(GameObject* root);
     
     void RemoveGameWorld(GameWorld& world);
@@ -61,6 +62,8 @@ public:
     void ExtractScriptClasses();
     
     void CheckForErrors(const std::string& file, const std::function<void(const Error& error)>& onError);
+    
+    int GetBaseComponentIndex();
 private:
     void WriteMainIncludes(std::ofstream &file);
     void WriteMainCppFile(const std::string& path);

@@ -162,6 +162,7 @@ namespace Pocket {
         
         void Update(float dt);
         void UpdateRoot(float dt, GameObject* root);
+        void UpdateActions();
         void Render();
         
         void DebugSystems();
@@ -206,6 +207,9 @@ namespace Pocket {
         Event<> LayersChanged;
         
         Event<GameObject*> RootRemoved;
+        
+        void SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate& predicate);
+        void DeserializeAndAddComponents(std::istream& jsonStream);
         
     private:
         void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,

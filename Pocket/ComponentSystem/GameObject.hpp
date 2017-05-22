@@ -93,7 +93,10 @@ namespace Pocket {
         void SetEnabled(bool enabled);
         void TryAddToSystem(int systemId);
         void TryRemoveFromSystem(int systemId);
-        void WriteJson(minijson::object_writer& writer, SerializePredicate predicate) const;
+        void WriteJson(minijson::object_writer& writer, const SerializePredicate& predicate) const;
+        void WriteJsonComponents(minijson::object_writer& writer, const SerializePredicate& predicate) const;
+        void RemoveComponents(const SerializePredicate& predicate);
+        
         void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
         void AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName);
         
@@ -170,7 +173,7 @@ namespace Pocket {
         GameObject* CreateChildClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
         GameObject* CreateCopy(const std::function<bool(GameObject*)>& predicate = 0);
         
-        void ToJson(std::ostream& stream, SerializePredicate predicate = 0) const;
+        void ToJson(std::ostream& stream, const SerializePredicate& predicate = 0) const;
         
         bool IsRoot() const;
         
