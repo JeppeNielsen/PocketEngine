@@ -299,5 +299,43 @@ void SerializationTests::RunTests() {
     });
     
     
+    AddTest("Serialize Range", [] () {
+        
+        GameWorld world;
+    
+        GameObject* root = world.CreateRoot();
+        root->CreateSystem<ClonerSystem>();
+        root->CreateSystem<RenderSystem>();
+        root->AddComponent<Renderable>()->imageNo = 53;
+        
+        std::vector<GameObject*> objects;
+        
+        for (int i = 0; i<1; i++) {
+            GameObject* cubePrefab = root->CreateChild();
+            cubePrefab->AddComponent<Transform>();
+            cubePrefab->AddComponent<Mesh>();
+            cubePrefab->AddComponent<Renderable>()->imageNo = i;
+            objects.push_back(cubePrefab);
+        }
+        
+        std::stringstream savedCloner;
+    
+        int componentToDelete = GameIdHelper::GetComponentID<Renderable>();
+    
+        world.SerializeAndRemoveComponents(savedCloner, [componentToDelete] (const GameObject* go, int componentId)  {
+            return componentId == componentToDelete;
+        });
+        
+        LogStream("Clone", savedCloner);
+        
+        world.DeserializeAndAddComponents(savedCloner);
+        
+        int index = 0;
+        for(auto o : objects) {
+            if (o->GetComponent<Renderable>()->imageNo != index) return false;
+            index++;
+        }
+        return true;
+    });
 }
 
