@@ -19,6 +19,7 @@
 - (void) prepareOpenGL;
 - (void)windowDidResize:(NSNotification *)n;
 -(NSMenuItem*) createMenuItem: (NSMenu*)menu withText:(NSString*)text withObject:(void*)object withShortCut:(NSString*)shortCut;
+-(void) removeMenuItem: (NSMenu*)menu withItem:(void*)item;
 -(void) menuItemClicked:(id)sender;
 -(NSPoint) convertViewLocationToWorldPoint: (NSPoint) point;
 @end

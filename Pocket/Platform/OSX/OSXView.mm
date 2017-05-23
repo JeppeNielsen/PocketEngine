@@ -170,6 +170,16 @@ std::map<NSMenuItem*, Pocket::AppMenu*> menuItemToAppMenu;
     return menuItem;
 }
 
+-(void)removeMenuItem:(NSMenu *)menu withItem:(void*)item {
+    for(auto it : menuItemToAppMenu) {
+        if (it.second == (Pocket::AppMenu*)item){
+            [menu removeItem:it.first];
+            menuItemToAppMenu.erase(menuItemToAppMenu.find(it.first));
+            break;
+        }
+    }
+}
+
 -(void)menuItemClicked:(id)sender
 {
     NSMenuItem* menuItem = (NSMenuItem*)sender;

@@ -24,6 +24,7 @@ namespace Pocket {
     
         void InitializeMainMenu();
         void InitializePopUp();
+        void Clear();
     
     private:
         void CreateAppMenu(AppMenu* parent, const std::string& text, const std::string& shortcut="");

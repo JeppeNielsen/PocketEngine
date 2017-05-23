@@ -29,10 +29,18 @@ AppMenu::~AppMenu() {
     }
     auto it = menuData.find(this);
     
+    auto parentIt = menuData.find(parent);
+    
+    if (parentIt!=menuData.end()) {
+        OSXView* osxView = (OSXView*)OSXWindowCreator::Instance()->win;
+        
+        [osxView removeMenuItem:parentIt->second.menu withItem:this];
+    }
+    
     if (it->second.menu && it->second.menu != [NSApp mainMenu]) {
         [it->second.menu release];
     }
-
+    
     if (it->second.menuItem) {
         [it->second.menuItem release];
     }
@@ -93,4 +101,11 @@ void AppMenu::ShowPopup(const Vector2& location) {
     point = [osxView convertViewLocationToWorldPoint:point];
     
     [menu popUpMenuPositioningItem:nil atLocation:point inView:nil];
+}
+
+void AppMenu::Clear() {
+    for(auto child : children) {
+        delete child;
+    }
+    children.clear();
 }
