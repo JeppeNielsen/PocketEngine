@@ -28,6 +28,8 @@ void ScriptComponentMenu::OnCreate() {
 void ScriptComponentMenu::CompilationFinished() {
     auto components = ComponentHelper::GetSortedScriptComponents(*this->context->ContextRoot().World(), this->context->Project().ScriptWorld());
 
+    menu->Clear();
+
     for(auto& category : components) {
         auto& componentMenu = menu->AddChild(category.first);
         
