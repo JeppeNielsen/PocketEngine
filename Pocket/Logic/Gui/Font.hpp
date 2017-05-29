@@ -10,11 +10,12 @@
 #include <vector>
 #include "Vector2.hpp"
 #include "Event.hpp"
-#include <ft2build.h>
-#include FT_FREETYPE_H
 #include "Texture.hpp"
 #include "TypeInfo.hpp"
 #include "File.hpp"
+
+struct FT_LibraryRec_;
+struct FT_FaceRec_;
 
 namespace Pocket {
     class Font {
@@ -94,8 +95,8 @@ namespace Pocket {
         
         bool isDirty;
         
-        FT_Library    library;
-        FT_Face       face;
+        FT_LibraryRec_*    library;
+        FT_FaceRec_*       face;
         
         File file;
         Vector2 bbMin;

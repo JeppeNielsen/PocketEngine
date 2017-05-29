@@ -13,6 +13,9 @@
 #include "OpenGL.hpp"
 #include "File.hpp"
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 using namespace std;
 using namespace Pocket;
 
