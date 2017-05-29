@@ -1020,13 +1020,13 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
             componentInfo.getTypeInfo = [this, componentIndex](const GameObject* object) -> TypeInfo {
                 return GetTypeInfo(*object, componentIndex);
             };
-            componentInfo.getFieldEditor = [this, componentIndex](GameObject* object) -> IFieldEditor* {
+            componentInfo.getFieldEditor = [this, componentIndex](const GameObject* object) -> IFieldEditor* {
                 IFieldEditor* editor = new TypeInfoEditor();
                 TypeInfo info = GetTypeInfo(*object, componentIndex);
                 editor->SetField(&info);
                 return editor;
             };
-            componentInfo.container = container;
+            componentInfo.container = std::unique_ptr<IContainer>( container );
             return container;
         });
         
@@ -1088,10 +1088,6 @@ void ScriptWorld::RemoveGameWorld(GameWorld& world) {
         world.RemoveSystemType(i);
     }
     world.systems.resize(baseSystemIndex);
-    int endComponentIndex = (int)world.components.size();
-    for(int i=baseComponentIndex; i<endComponentIndex; ++i) {
-        delete world.components[i].container;
-    }
     world.components.resize(baseComponentIndex);
     world.objects.Iterate([this](GameObject* o) {
         o->activeComponents.Resize(baseComponentIndex);
