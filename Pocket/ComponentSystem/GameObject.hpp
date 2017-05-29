@@ -62,7 +62,7 @@ namespace Pocket {
         Property<int> Order;
         
         struct ReferenceComponent {
-            GameObject* object;
+            const GameObject* object;
             int componentId;
             std::string name;
         };
@@ -104,7 +104,7 @@ namespace Pocket {
         static void EndGetAddReferenceComponent();
         GameObject* CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
     public:
-        bool Recurse(const std::function<bool(GameObject* object)>& function);
+        bool Recurse(const std::function<bool(const GameObject* object)>& function) const;
         bool HasComponent(ComponentId id) const override;
         void* GetComponent(ComponentId id) const override;
         void AddComponent(ComponentId id) override;
@@ -113,7 +113,7 @@ namespace Pocket {
         void CloneComponent(ComponentId id, GameObject* object) override;
         void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
         void EnableComponent(ComponentId id, bool enable) override;
-        GameObject* GetComponentOwner(ComponentId id);
+        GameObject* GetComponentOwner(ComponentId id) const;
         
         template<typename T>
         bool HasComponent() const {
@@ -151,24 +151,27 @@ namespace Pocket {
             EnableComponent(GameIdHelper::GetComponentID<T>(), enable);
         }
         
-        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0);
+        template<typename T>
+        Handle<T> GetComponentHandle() const;
+        
+        std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0) const ;
         
         struct ComponentEditor {
             TypeInfo type;
             IFieldEditor* editor;
         };
         
-        std::vector<ComponentEditor> GetComponentEditors(const std::function<bool(int componentID)>& predicate = 0);
-        std::vector<int> GetComponentIndicies();
+        std::vector<ComponentEditor> GetComponentEditors(const std::function<bool(int componentID)>& predicate = 0) const;
+        std::vector<int> GetComponentIndicies() const;
         
-        InputManager& Input();
+        InputManager& Input() const;
         
         void Remove();
         bool IsRemoved() const;
         
         GameObject* CreateChild();
         GameObject* CreateObject();
-        GameObject* Root();
+        GameObject* Root() const;
         GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated = 0);
         GameObject* CreateChildClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
         GameObject* CreateCopy(const std::function<bool(GameObject*)>& predicate = 0);
@@ -177,7 +180,7 @@ namespace Pocket {
         
         bool IsRoot() const;
         
-        const ObjectCollection& Children();
+        const ObjectCollection& Children() const;
         
         Handle<GameObject> GetHandle() const;
         
@@ -190,17 +193,17 @@ namespace Pocket {
         template<typename T>
         void RemoveSystem();
         
-        GameWorld* World();
+        GameWorld* World() const;
         
-        TypeInfo GetComponentTypeInfo(int index);
+        TypeInfo GetComponentTypeInfo(int index) const;
     
         Property<bool>& UpdateEnabled();
         Property<float>& TimeScale();
         Property<bool>& RenderEnabled();
         
-        GameObject* FindObject(int objectId);
+        GameObject* FindObject(int objectId) const;
         
-        std::string TryGetRootPath();
+        std::string TryGetRootPath() const;
         
         template<typename T>
         GameObject* GetComponentOwner();
@@ -210,9 +213,9 @@ namespace Pocket {
         	const std::function<void(GameObject* object)>& ObjectRemoved,
         	const std::function<void(GameObject* object, ComponentId componentId)>& ComponentCreated,
         	const std::function<void(GameObject* object, ComponentId componentId)>& ComponentRemoved
-        );
+        ) const;
         
-        bool HasAncestor(GameObject* ancestor);
+        bool HasAncestor(GameObject* ancestor) const;
         
         inline friend std::ostream& operator<<(std::ostream& stream, const GameObject& object) {
             stream<<object.RootGuid()<<":"<<object.rootId;

@@ -64,7 +64,7 @@ GameObject::GameObject(const GameObject& other) {
 void GameObject::Reset() {
     Enabled.Changed.Clear();
     removed = false;
-        forceSetNextParent = true;
+    forceSetNextParent = true;
     Parent = 0;
     forceSetNextParent = false;
     Enabled = true;
@@ -163,7 +163,7 @@ void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
     });
 }
 
-GameObject* GameObject::GetComponentOwner(ComponentId componentId) {
+GameObject* GameObject::GetComponentOwner(ComponentId componentId) const {
     int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
     return ownerIndex != -1 ? &scene->world->objects.entries[ownerIndex] : nullptr;
 }
@@ -329,7 +329,7 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
         GameObject* referenceObject = (GameObject*)World()->objects.Get(referenceComponent.referenceObjectId);
         if (referenceObject->HasAncestor(source)) {
             int referenceIndex = 0;
-            source->Recurse([&referenceIndex, &referenceObject] (GameObject* o) {
+            source->Recurse([&referenceIndex, &referenceObject] (const GameObject* o) {
                 if (o == referenceObject) {
                     return true;
                 } else {
@@ -339,9 +339,9 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
             });
         
             int indexCounter = 0;
-            clone->Recurse([&referenceIndex, &indexCounter, &referenceObject] (GameObject* o) {
+            clone->Recurse([&referenceIndex, &indexCounter, &referenceObject] (const GameObject* o) {
                 if (indexCounter == referenceIndex) {
-                    referenceObject = o;
+                    referenceObject = (GameObject*)o;
                     return true;
                 } else {
                     indexCounter++;
@@ -355,7 +355,7 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
     return clone;
 }
 
-bool GameObject::Recurse(const std::function<bool(GameObject* object)>& function) {
+bool GameObject::Recurse(const std::function<bool(const GameObject* object)>& function) const {
     if (function(this)) return true;
     for(auto child : children) {
         if (child->Recurse(function)) return true;
@@ -368,7 +368,7 @@ GameObject* GameObject::CreateCopy(const std::function<bool(GameObject*)>& predi
     return Parent()->CreateChildClone(this, predicate);
 }
 
-GameObject* GameObject::Root() {
+GameObject* GameObject::Root() const {
     return scene->root;
 }
 
@@ -380,13 +380,13 @@ std::string& GameObject::RootGuid() const {
     return scene->guid;
 }
 
-const ObjectCollection& GameObject::Children() {
+const ObjectCollection& GameObject::Children() const {
     return children;
 }
 
-InputManager& GameObject::Input() { return scene->world->Input(); }
+InputManager& GameObject::Input() const { return scene->world->Input(); }
 
-std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) {
+std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) const {
     std::vector<TypeInfo> infos;
     GameWorld* world = scene->world;
     for (int i=0; i<world->components.size(); ++i) {
@@ -399,7 +399,7 @@ std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int
     return infos;
 }
 
-std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) {
+std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) const {
     std::vector<GameObject::ComponentEditor> editors;
     GameWorld* world = scene->world;
     for (int i=0; i<world->components.size(); ++i) {
@@ -435,7 +435,7 @@ std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const s
     return editors;
 }
 
-std::vector<int> GameObject::GetComponentIndicies() {
+std::vector<int> GameObject::GetComponentIndicies() const {
     std::vector<int> indicies;
     for (int i=0; i<activeComponents.Size(); ++i) {
         if (activeComponents[i]) {
@@ -445,11 +445,11 @@ std::vector<int> GameObject::GetComponentIndicies() {
     return indicies;
 }
 
-GameWorld* GameObject::World() {
+GameWorld* GameObject::World() const {
     return scene->world;
 }
 
-TypeInfo GameObject::GetComponentTypeInfo(int index){
+TypeInfo GameObject::GetComponentTypeInfo(int index) const {
     GameWorld* world = scene->world;
     if (index>=world->components.size()) return TypeInfo();
     if (!activeComponents[index]) TypeInfo(); // gameobject hasn't got component
@@ -463,23 +463,23 @@ Property<bool>& GameObject::UpdateEnabled() { return scene->updateEnabled; }
 Property<float>& GameObject::TimeScale() { return scene->timeScale; }
 Property<bool>& GameObject::RenderEnabled() { return scene->renderEnabled; }
 
-GameObject* GameObject::FindObject(int objectId) {
+GameObject* GameObject::FindObject(int objectId) const{
     return scene->FindObject(objectId);
 }
 
-std::string GameObject::TryGetRootPath() {
+std::string GameObject::TryGetRootPath() const {
     return World()->TryFindScenePath(scene->guid);
 }
 
-void GameObject::SetCallbacks(const std::function<void (GameObject *)> &ObjectCreated, const std::function<void (GameObject *)> &ObjectRemoved, const std::function<void (GameObject *, ComponentId)> &ComponentCreated, const std::function<void (GameObject *, ComponentId)> &ComponentRemoved) {
+void GameObject::SetCallbacks(const std::function<void (GameObject *)> &ObjectCreated, const std::function<void (GameObject *)> &ObjectRemoved, const std::function<void (GameObject *, ComponentId)> &ComponentCreated, const std::function<void (GameObject *, ComponentId)> &ComponentRemoved) const {
     scene->ObjectCreated = ObjectCreated;
     scene->ObjectRemoved = ObjectRemoved;
     scene->ComponentCreated = ComponentCreated;
     scene->ComponentRemoved = ComponentRemoved;
 }
 
-bool GameObject::HasAncestor(Pocket::GameObject *ancestor) {
-    GameObject* object = this;
+bool GameObject::HasAncestor(Pocket::GameObject *ancestor) const {
+    const GameObject* object = this;
     while (true) {
         if (object == ancestor) return true;
         object = object->Parent();

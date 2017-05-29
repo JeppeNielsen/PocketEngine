@@ -9,6 +9,7 @@
 #pragma once
 #include <vector>
 #include <functional>
+#include <memory>
 #include "MetaLibrary.hpp"
 #include "Container.hpp"
 #include "TypeInfo.hpp"
@@ -34,11 +35,11 @@ namespace Pocket {
     private:
         
         struct ComponentInfo {
-            ComponentInfo() : container(0), getTypeInfo(0) {}
-            IContainer* container;
+            ComponentInfo() : getTypeInfo(0) {}
+            std::unique_ptr<IContainer> container;
             std::string name;
             std::function<TypeInfo(const GameObject*)> getTypeInfo;
-            std::function<IFieldEditor*(GameObject*)> getFieldEditor;
+            std::function<IFieldEditor*(const GameObject*)> getFieldEditor;
             std::vector<int> systemsUsingComponent;
         };
     
@@ -134,7 +135,7 @@ namespace Pocket {
         template<typename T>
         void AddComponentType() {
             AddComponentType(GameIdHelper::GetComponentID<T>(), [] (ComponentInfo& componentInfo) {
-                componentInfo.container = new Container<T>();
+                componentInfo.container = std::make_unique<Container<T>>();
                 componentInfo.name = GameIdHelper::GetClassName<T>();
                 T* ptr = 0;
                 Meta::static_if<Meta::HasGetTypeFunction::apply<T>::value, T*>(ptr, [&componentInfo](auto p) {
@@ -143,7 +144,7 @@ namespace Pocket {
                         auto component = object->GetComponent<SerializedComponentType>();
                         return component->GetType();
                     };
-                    componentInfo.getFieldEditor = [](GameObject* object) -> IFieldEditor* {
+                    componentInfo.getFieldEditor = [](const GameObject* object) -> IFieldEditor* {
                         auto component = object->GetComponent<SerializedComponentType>();
                         IFieldEditor* editor = FieldEditorCreator<SerializedComponentType>::Create(component);
                         return editor;
@@ -194,7 +195,7 @@ namespace Pocket {
         template<typename T>
         void AddComponentTypeWithGetType(const std::function<TypeInfo(const GameObject*)>& getTypeFunction) {
             AddComponentType(GameIdHelper::GetComponentID<T>(), [=] (ComponentInfo& componentInfo) {
-                componentInfo.container = new Container<T>();
+                componentInfo.container = std::make_unique<Container<T>>();
                 componentInfo.name = GameIdHelper::GetClassName<T>();
                 componentInfo.getTypeInfo = getTypeFunction;
             });
@@ -236,7 +237,7 @@ namespace Pocket {
     template<typename T>
     T* GameObject::AddComponent() {
         scene->world->AddComponentType<T>();
-        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
         AddComponent(componentId);
         return static_cast<T*>(GetComponent(componentId));
     }
@@ -244,22 +245,34 @@ namespace Pocket {
     template<typename T>
     T* GameObject::AddComponent(GameObject* source) {
         scene->world->AddComponentType<T>();
-        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
         AddComponent(componentId, source);
         return static_cast<T*>(GetComponent(componentId));
     }
     
     template<typename T>
     GameObject* GameObject::GetComponentOwner() {
-        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
         return GetComponentOwner(componentId);
     }
     
     template<typename T>
     T* GameObject::ReplaceComponent(GameObject* source) {
         scene->world->AddComponentType<T>();
-        ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
         ReplaceComponent(componentId, source);
         return static_cast<T*>(source->GetComponent(componentId));
     }
+    
+    template<typename T>
+    Handle<T> GameObject::GetComponentHandle() const {
+        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
+        if (componentId>=activeComponents.Size()) {
+            return Handle<T>();
+        }
+        if (!activeComponents[componentId]) return Handle<T>();
+        const Container<T>* container = static_cast<Container<T>*>(scene->world->components[componentId].container.get());
+        return container->GetHandle(componentIndicies[componentId]);
+    }
+
 }
