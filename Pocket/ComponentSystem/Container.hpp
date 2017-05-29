@@ -202,9 +202,9 @@ namespace Pocket {
         Handle(T& ptr) : Handle(ptr.GetHandle()) { }
         
         T* operator -> () const {
-            if (!container) return 0;
-            if (index>=container->versions.size()) return 0;
-            if (version != container->versions[index]) return 0;
+            if (!container) return nullptr;
+            if (index>=container->versions.size()) return nullptr;
+            if (version != container->versions[index]) return nullptr;
             return (T*)&container->entries[index];
         }
         
