@@ -17,6 +17,7 @@ namespace Pocket {
     public:
       
         struct SpawnedNode {
+            SpawnedNode() : node(nullptr), parent(nullptr), foldOutButton(nullptr) { }
             GameObject* node;
             GameObject* parent;
             bool hasChildren;
