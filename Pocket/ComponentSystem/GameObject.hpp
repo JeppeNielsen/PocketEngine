@@ -62,7 +62,7 @@ namespace Pocket {
         Property<int> Order;
         
         struct ReferenceComponent {
-            const GameObject* object;
+            GameObject* object;
             int componentId;
             std::string name;
         };
@@ -87,6 +87,7 @@ namespace Pocket {
         ~GameObject();
         GameObject(const GameObject& other);
     
+        void ParentChanged();
         void Reset();
         void TrySetComponentEnabled(ComponentId id, bool enable);
         void SetWorldEnableDirty();

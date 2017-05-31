@@ -25,40 +25,42 @@ GameObject::GameObject(const GameObject& other) {
     
     Parent = 0;
     
-    Parent.Changed.Bind([this]() {
-        assert(!IsRoot()); // roots are not allowed to have a parent
-        assert(Parent!=this); // parent cannot be self
-        if (!forceSetNextParent) {
-            assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
-            assert(Parent());// objects must have a parent
-        }
-        GameObject* prevParent = Parent.PreviousValue();
-        GameObject* currentParent = Parent;
-        
-        if (removed && !forceSetNextParent) return;
-        
-        if (prevParent) {
-            auto& children = prevParent->children;
-            children.erase(std::find(children.begin(), children.end(), this));
-            prevParent->WorldEnabled.HasBecomeDirty.Unbind(this, &GameObject::SetWorldEnableDirty);
-        }
-        
-        if (currentParent) {
-            auto& children = currentParent->children;
-            children.push_back(this);
-            currentParent->WorldEnabled.HasBecomeDirty.Bind(this, &GameObject::SetWorldEnableDirty);
-            
-            bool prevWorldEnabled = WorldEnabled;
-            WorldEnabled.MakeDirty();
-            if (WorldEnabled()!=prevWorldEnabled) {
-                SetWorldEnableDirty();
-            }
-        }
-    });
+    Parent.Changed.Bind(this, &GameObject::ParentChanged);
     
     WorldEnabled.Method = [this](bool& value) {
         value = (Parent) ? Parent()->WorldEnabled && Enabled : Enabled;
     }; 
+}
+
+void GameObject::ParentChanged() {
+    assert(!IsRoot()); // roots are not allowed to have a parent
+    assert(Parent!=this); // parent cannot be self
+    if (!forceSetNextParent) {
+        assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
+        assert(Parent());// objects must have a parent
+    }
+    GameObject* prevParent = Parent.PreviousValue();
+    GameObject* currentParent = Parent;
+    
+    if (removed && !forceSetNextParent) return;
+    
+    if (prevParent) {
+        auto& children = prevParent->children;
+        children.erase(std::find(children.begin(), children.end(), this));
+        prevParent->WorldEnabled.HasBecomeDirty.Unbind(this, &GameObject::SetWorldEnableDirty);
+    }
+    
+    if (currentParent) {
+        auto& children = currentParent->children;
+        children.push_back(this);
+        currentParent->WorldEnabled.HasBecomeDirty.Bind(this, &GameObject::SetWorldEnableDirty);
+        
+        bool prevWorldEnabled = WorldEnabled;
+        WorldEnabled.MakeDirty();
+        if (WorldEnabled()!=prevWorldEnabled) {
+            SetWorldEnableDirty();
+        }
+    }
 }
 
 void GameObject::Reset() {
@@ -412,7 +414,7 @@ std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const s
             GameObject::ReferenceComponent referenceComponent;
             referenceComponent.name = world->components[i].name;
             referenceComponent.componentId = i;
-            referenceComponent.object = this;
+            referenceComponent.object = (GameObject*)this;
             IFieldEditor* editor = FieldEditorCreator<GameObject::ReferenceComponent>::Create(&referenceComponent);
             editors.push_back({ type, editor });
             continue;
