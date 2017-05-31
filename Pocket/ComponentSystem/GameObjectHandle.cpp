@@ -93,7 +93,10 @@ GameObjectHandle GameObjectHandle::Deserialize(const std::string &data) {
 
 void GameObjectHandle::SetWorld(Pocket::GameWorld *world) {
     if (this->world) {
-        this->world->handles.erase(std::find(this->world->handles.begin(), this->world->handles.end(), this));
+        auto it = std::find(this->world->handles.begin(), this->world->handles.end(), this);
+        if (it!=this->world->handles.end()) {
+            this->world->handles.erase(it);
+        }
     }
     this->world = world;
     if (this->world) {
