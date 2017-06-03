@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7201C50D1ECA29280074C053 /* ScriptData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201C50B1ECA29280074C053 /* ScriptData.cpp */; };
+		7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA061EE1F2510074C053 /* EditorSizeableSelection.cpp */; };
+		7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0C1EE207E20074C053 /* Spawner.cpp */; };
+		7201DA111EE209400074C053 /* SpawnerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */; };
 		720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */; };
 		720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585051E61EDB6009FFACF /* SceneManager.cpp */; };
 		7205850A1E621813009FFACF /* SceneManagerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585081E621813009FFACF /* SceneManagerSystem.cpp */; };
@@ -469,6 +472,12 @@
 /* Begin PBXFileReference section */
 		7201C50B1ECA29280074C053 /* ScriptData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptData.cpp; sourceTree = "<group>"; };
 		7201C50C1ECA29280074C053 /* ScriptData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptData.hpp; sourceTree = "<group>"; };
+		7201DA061EE1F2510074C053 /* EditorSizeableSelection.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorSizeableSelection.cpp; sourceTree = "<group>"; };
+		7201DA071EE1F2510074C053 /* EditorSizeableSelection.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorSizeableSelection.hpp; sourceTree = "<group>"; };
+		7201DA0C1EE207E20074C053 /* Spawner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Spawner.cpp; sourceTree = "<group>"; };
+		7201DA0D1EE207E20074C053 /* Spawner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Spawner.hpp; sourceTree = "<group>"; };
+		7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnerSystem.cpp; sourceTree = "<group>"; };
+		7201DA101EE209400074C053 /* SpawnerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpawnerSystem.hpp; sourceTree = "<group>"; };
 		720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectSettings.cpp; sourceTree = "<group>"; };
 		720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectSettings.hpp; sourceTree = "<group>"; };
 		720585051E61EDB6009FFACF /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
@@ -1590,6 +1599,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7201DA0B1EE2078B0074C053 /* Spawning */ = {
+			isa = PBXGroup;
+			children = (
+				7201DA0C1EE207E20074C053 /* Spawner.cpp */,
+				7201DA0D1EE207E20074C053 /* Spawner.hpp */,
+				7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */,
+				7201DA101EE209400074C053 /* SpawnerSystem.hpp */,
+			);
+			path = Spawning;
+			sourceTree = "<group>";
+		};
 		720585041E61ED9F009FFACF /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
@@ -1716,10 +1736,12 @@
 		7220F6431E75B0770063EAD5 /* EditorSystems */ = {
 			isa = PBXGroup;
 			children = (
-				7220F6451E75B10A0063EAD5 /* EditorSelectionSystem.hpp */,
 				7220F64A1E75E3F10063EAD5 /* EditorCameraSelection.cpp */,
 				7220F64B1E75E3F10063EAD5 /* EditorCameraSelection.hpp */,
 				7220F64E1E772B410063EAD5 /* EditorProxyComponent.hpp */,
+				7220F6451E75B10A0063EAD5 /* EditorSelectionSystem.hpp */,
+				7201DA061EE1F2510074C053 /* EditorSizeableSelection.cpp */,
+				7201DA071EE1F2510074C053 /* EditorSizeableSelection.hpp */,
 			);
 			path = EditorSystems;
 			sourceTree = "<group>";
@@ -2248,6 +2270,7 @@
 				720585041E61ED9F009FFACF /* Scenes */,
 				729950841C99F76000DAAE5D /* Selection */,
 				729950951C99F76000DAAE5D /* Spatial */,
+				7201DA0B1EE2078B0074C053 /* Spawning */,
 				72A4B38C1E4BB5B200A856F5 /* Switching */,
 				7205850B1E6221E7009FFACF /* Triggering */,
 			);
@@ -3841,6 +3864,7 @@
 				729953E01C99F76100DAAE5D /* SoundListener.cpp in Sources */,
 				729953FD1C99F76100DAAE5D /* TouchCancelSystem.cpp in Sources */,
 				727B389D1E2B9C5300531B62 /* ftinit.c in Sources */,
+				7201DA111EE209400074C053 /* SpawnerSystem.cpp in Sources */,
 				7299540B1C99F76100DAAE5D /* RigidBody.cpp in Sources */,
 				72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */,
 				7299541B1C99F76100DAAE5D /* SelectableDragSystem.cpp in Sources */,
@@ -3886,6 +3910,7 @@
 				721543EA1EC259AF000305A9 /* TransformAnimationDatabase.cpp in Sources */,
 				721547681EC8C4D0000305A9 /* ScriptComponentMenu.cpp in Sources */,
 				72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */,
+				7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */,
 				729954721C99F76100DAAE5D /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				7299549E1C99F76100DAAE5D /* btGImpactQuantizedBvh.cpp in Sources */,
 				729954E91C99F76100DAAE5D /* MiniCLTask.cpp in Sources */,
@@ -4131,6 +4156,7 @@
 				729954651C99F76100DAAE5D /* btCollisionWorld.cpp in Sources */,
 				7299544D1C99F76100DAAE5D /* b2PolyContact.cpp in Sources */,
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
+				7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */,
 				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,
 				720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */,
 				72C9B2921E8C48BD00033C56 /* TextEditorCursorSystem.cpp in Sources */,

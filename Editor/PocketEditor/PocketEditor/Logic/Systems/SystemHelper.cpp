@@ -82,7 +82,8 @@
 #include "TriggerSystem.hpp"
 #include "TriggerTouchSystem.hpp"
 
-
+//Spawning
+#include "SpawnerSystem.hpp"
 
 //-------------------- Editor System --------------------
 
@@ -91,10 +92,14 @@
 #include "EditorSizeableSystem.hpp"
 #include "EditorObject.hpp"
 #include "EditorCameraSelection.hpp"
+#include "EditorSizeableSelection.hpp"
 
 using namespace Pocket;
 
 void SystemHelper::AddGameSystems(Pocket::GameObject &world) {
+    
+    //spawning
+    world.CreateSystem<SpawnerSystem>();
     
     //Animations
     world.CreateSystem<TouchAnimatorSystem>();
@@ -166,6 +171,9 @@ void SystemHelper::AddGameSystems(Pocket::GameObject &world) {
     //Triggering
     world.CreateSystem<TriggerSystem>();
     world.CreateSystem<TriggerTouchSystem>();
+    
+    
+    
 
 
 /*
@@ -211,6 +219,7 @@ void SystemHelper::AddEditorSystems(Pocket::GameObject& editorWorld) {
     editorWorld.CreateSystem<EditorCameraSelection>();
     
     editorWorld.CreateSystem<DistanceScalerSystem>();
+    editorWorld.CreateSystem<EditorSizeableSelection>();
 }
 
 bool SystemHelper::IsComponentEditorSpecific(int componentType) {

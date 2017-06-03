@@ -87,7 +87,7 @@ public:
             module->Create();
         }
         
-        context.Project().Open("/Projects/PocketEngine/EditorProjects/TestRecompile");
+        context.Project().Open("/Projects/PocketEngine/EditorProjects/Pong");
         
         Input.ButtonDown.Bind([this](ButtonEvent e) {
             if (e.Id == "p") {

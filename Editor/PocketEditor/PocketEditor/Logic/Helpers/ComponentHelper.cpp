@@ -87,6 +87,9 @@ ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket
         { "Spatial", {
             "Pocket::Transform",
         }},
+        { "Spawning", {
+            "Pocket::Spawner",
+        }},
         { "Triggering", {
             "Pocket::Trigger",
         }},
