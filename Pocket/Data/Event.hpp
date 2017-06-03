@@ -24,7 +24,7 @@ private:
     using Delegate = IDelegate<T...>;
     using Delegates = std::vector<Delegate*>;
     Delegates delegates;
-    short defaultDelegatesCount;
+    int defaultDelegatesCount;
     
     template<typename Obj>
     struct IDelegateMember : public IDelegate<T...> {
@@ -97,7 +97,7 @@ public:
     }
     
     void MarkDefaults() {
-        defaultDelegatesCount = (short)delegates.size();
+        defaultDelegatesCount = (int)delegates.size();
     }
     
     bool Empty() const noexcept {
