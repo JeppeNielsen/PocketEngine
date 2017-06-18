@@ -51,6 +51,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     }
     GameObject* source = cloner->Source;
     if (!source) return;
+    source->Enabled = false;
     GameObject* child = object->CreateChildClone(source);
     std::vector<IFieldInfo*> variables;
     FindVariables(variables, object, child);
