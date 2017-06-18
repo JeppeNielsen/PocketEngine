@@ -20,5 +20,6 @@ namespace Pocket {
         virtual void CloneComponent(ComponentId id, GameObject* object) = 0;
         virtual void ReplaceComponent(ComponentId id, GameObject* referenceObject) = 0;
         virtual void EnableComponent(ComponentId id, bool enable) = 0;
+        virtual void Remove() = 0;
     };
 }

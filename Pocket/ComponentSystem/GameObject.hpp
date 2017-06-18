@@ -167,7 +167,7 @@ namespace Pocket {
         
         InputManager& Input() const;
         
-        void Remove();
+        void Remove() override;
         bool IsRemoved() const;
         
         GameObject* CreateChild();
