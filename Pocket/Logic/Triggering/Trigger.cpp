@@ -50,6 +50,7 @@ void Trigger::operator=(const Pocket::Trigger& other) {
 
 void Trigger::Invoke() {
     GameObject* source = Source();
+    if (!source) return;
     
     std::vector<IFieldInfo*> sourceVaribles;
     FindVariables(sourceVaribles, source);
