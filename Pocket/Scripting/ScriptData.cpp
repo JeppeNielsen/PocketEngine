@@ -11,6 +11,7 @@
 #include <iostream>
 #include "StringHelper.hpp"
 #include <set>
+#include <map>
 
 using namespace Pocket;
 
@@ -48,6 +49,18 @@ bool ScriptData::Parse(const std::vector<std::string> &cppFiles, const std::vect
 
         CXCursor startCursor = clang_getTranslationUnitCursor(tu);
         clang_visitChildren(startCursor, parseCode, this);
+    }
+    
+    std::map<std::string, System> uniqueSystems;
+    
+    for(auto& s : systems) {
+        uniqueSystems[s.name] = s;
+    }
+    
+    systems.clear();
+    
+    for(auto& s : uniqueSystems) {
+        systems.push_back(s.second);
     }
     
     std::set<std::string> uniqueComponentNames;
