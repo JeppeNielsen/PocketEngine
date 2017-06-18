@@ -34,6 +34,7 @@ public:
     template<typename T> T* CloneComponent(GameObject* source) { }
     template<typename T> T* ReplaceComponent(GameObject* source) { }
     template<typename T> void EnableComponent(bool enable) { }
+    virtual void Remove() = 0;
 };
 }
 
