@@ -42,12 +42,8 @@ void SpawnerSystem::Update(float dt) {
         Spawner* spawner = o->GetComponent<Spawner>();
         spawner->Source.SetRoot(root);
         if (spawner->Source) {
-        
             spawner->Source()->Enabled = false;
-            std::cout << "Spawned Source Transform.Position = " << spawner->Source()->GetComponent<Transform>()->Position() << std::endl;
-            
             auto clone = o->CreateChildClone(spawner->Source);
-            std::cout << "Spawned clone Transform.Position = " << clone->GetComponent<Transform>()->Position() << std::endl;
             clone->Parent = o->Root();
         }
     }
