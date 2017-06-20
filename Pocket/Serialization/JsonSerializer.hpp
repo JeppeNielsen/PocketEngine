@@ -306,5 +306,17 @@ struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::t
     }
 };
 
+template<typename T>
+struct JsonSerializer<Event<T>> {
+    static void Serialize(std::string& key, const Event<T>& value, minijson::object_writer& writer) {
+    
+    }
+    
+    static void Deserialize(minijson::value& value, Event<T>* field, minijson::istream_context& context) {
+
+    }
+};
+
+
 
 }
