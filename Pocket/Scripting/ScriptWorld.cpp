@@ -227,7 +227,7 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib, cons
 
     
     string compilerFlags = "-std=c++14 -stdlib=libc++ -DOSX "+pathToPocketEngineLib+" -o " + outputPath + " -x objective-c++ -arch x86_64 -lobjc ";
-    compilerFlags += "-framework Foundation -framework OpenGL -framework IOKit -framework Cocoa ";
+    compilerFlags += "-framework Foundation -framework OpenGL -framework IOKit -framework Cocoa -framework OpenAL -O3";
     compilerFlags += " " + exeMainCpp;
     compilerFlags += " -v ";
     std::string POCKET_PATH=" -I /Projects/PocketEngine/Pocket/";
@@ -264,6 +264,8 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib, cons
     compilerFlags += POCKET_PATH + "Logic/Switching";
     compilerFlags += POCKET_PATH + "Logic/Triggering";
     compilerFlags += POCKET_PATH + "Logic/Scenes";
+    compilerFlags += POCKET_PATH + "Logic/Spawning";
+    
     
     
     compilerFlags += POCKET_PATH + "Rendering/";
@@ -282,7 +284,7 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib, cons
     compilerFlags += " ";
     
     
-    string compilerArgs = compilerPath + " " + compilerFlags + " > output 2>&1 ";
+    string compilerArgs = compilerPath + " " + compilerFlags;// + " > output 2>&1 ";
     
     auto out = FileReader::RunCommmand(compilerArgs);
 
@@ -757,26 +759,87 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     
     ofstream file;
     file.open(path);
-    
+
+    //Core
     file<<"#include \"Engine.hpp\""<<std::endl;
     file<<"#include \"File.hpp\""<<std::endl;
     file<<"#include \"FileArchive.hpp\""<<std::endl;
-    file<<"#include \"RenderSystem.hpp\""<<std::endl;
-    file<<"#include \"TransformHierarchy.hpp\""<<std::endl;
-    file<<"#include \"TouchSystem.hpp\""<<std::endl;
-    file<<"#include \"ClonerSystem.hpp\""<<std::endl;
-    file<<"#include \"InputMapperSystem.hpp\""<<std::endl;
-    file<<"#include \"VelocitySystem.hpp\""<<std::endl;
-    file<<"#include \"Gui.hpp\""<<std::endl;
-    file<<"#include \"SwitchSystem.hpp\""<<std::endl;
-    file<<"#include \"SwitchEnablerSystem.hpp\""<<std::endl;
-    file<<"#include \"TouchSwitchSystem.hpp\""<<std::endl;
-    file<<"#include \"SlicedQuadMeshSystem.hpp\""<<std::endl;
+    
+    //Animation
+    file<<"#include \"TouchAnimatorSystem.hpp\""<<std::endl;
+    file<<"#include \"TransformAnimatorSystem.hpp\""<<std::endl;
+
+    //Assets
     file<<"#include \"AssetManager.hpp\""<<std::endl;
+
+    //Audio
+    file<<"#include \"SoundSystem.hpp\""<<std::endl;
+
+    //Cloning
+    file<<"#include \"ClonerSystem.hpp\""<<std::endl;
+
+    //Common
+    file<<"#include \"HierarchyOrder.hpp\""<<std::endl;
+
+    //Effects
+    file<<"#include \"ParticleMeshUpdater.hpp\""<<std::endl;
+    file<<"#include \"ParticleUpdaterSystem.hpp\""<<std::endl;
+
+    //Gui
+    file<<"#include \"DroppableSystem.hpp\""<<std::endl;
+    file<<"#include \"FontTextureSystem.hpp\""<<std::endl;
+    file<<"#include \"LabelMeshSystem.hpp\""<<std::endl;
+    file<<"#include \"LayoutSystem.hpp\""<<std::endl;
+    file<<"#include \"SlicedQuadMeshSystem.hpp\""<<std::endl;
+    file<<"#include \"SpriteMeshSystem.hpp\""<<std::endl;
+    file<<"#include \"SpriteTextureSystem.hpp\""<<std::endl;
+    file<<"#include \"TextBoxLabelSystem.hpp\""<<std::endl;
+    file<<"#include \"TextBoxSystem.hpp\""<<std::endl;
+
+    //Input
+    file<<"#include \"InputMapperSystem.hpp\""<<std::endl;
+
+    //Interaction
+    file<<"#include \"TouchCancelSystem.hpp\""<<std::endl;
+    file<<"#include \"TouchSystem.hpp\""<<std::endl;
+
+    //Movement
+    file<<"#include \"DraggableMotionSystem.hpp\""<<std::endl;
+    file<<"#include \"DraggableSystem.hpp\""<<std::endl;
+    file<<"#include \"FirstPersonMoverSystem.hpp\""<<std::endl;
+    file<<"#include \"LimitableSystem.hpp\""<<std::endl;
+    file<<"#include \"VelocitySystem.hpp\""<<std::endl;
+
+//    //Physics
+//    file<<"#include \"PhysicsSystem.hpp\""<<std::endl;
+//    file<<"#include \"PhysicsSystem2d.hpp\""<<std::endl;
+
+    //Rendering
+    file<<"#include \"ColorSystem.hpp\""<<std::endl;
+    file<<"#include \"DistanceScalerSystem.hpp\""<<std::endl;
+    file<<"#include \"LineRendererSystem.hpp\""<<std::endl;
+    file<<"#include \"RenderSystem.hpp\""<<std::endl;
+
+    //Scenes
+    file<<"#include \"SceneManagerSystem.hpp\""<<std::endl;
+
+    //Selection
+    file<<"#include \"ClickSelectorSystem.hpp\""<<std::endl;
+    file<<"#include \"DragSelector.hpp\""<<std::endl;
+    file<<"#include \"SelectableCollection.hpp\""<<std::endl;
+    file<<"#include \"SelectableDragSystem.hpp\""<<std::endl;
+    file<<"#include \"SelectedColorerSystem.hpp\""<<std::endl;
+
+    //Spatial
+    file<<"#include \"TransformHierarchy.hpp\""<<std::endl;
+
+    //Triggering
     file<<"#include \"TriggerSystem.hpp\""<<std::endl;
     file<<"#include \"TriggerTouchSystem.hpp\""<<std::endl;
-    file<<"#include \"SceneManagerSystem.hpp\""<<std::endl;
-    
+
+    //Spawning
+    file<<"#include \"SpawnerSystem.hpp\""<<std::endl;
+        
     for(auto& header : headerNames) {
         file << "#include \""<<header<<"\""<<std::endl;
     }
@@ -784,21 +847,79 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file << FILE_SOURCE(
     
     void CreateDefaultSystems(Pocket::GameObject &world) {
-        world.CreateSystem<Pocket::RenderSystem>();
-        world.CreateSystem<Pocket::TransformHierarchy>();
-        world.CreateSystem<Pocket::TouchSystem>()->TouchDepth = 0;
-        world.CreateSystem<Pocket::ClonerSystem>();
-        world.CreateSystem<Pocket::InputMapperSystem>();
-        world.CreateSystem<Pocket::VelocitySystem>();
-        world.CreateSystem<Pocket::Gui>();
-        world.CreateSystem<Pocket::SwitchSystem>();
-        world.CreateSystem<Pocket::SwitchEnablerSystem>();
-        world.CreateSystem<Pocket::TouchSwitchSystem>();
-        world.CreateSystem<Pocket::SlicedQuadMeshSystem>();
-        world.CreateSystem<Pocket::AssetManager>();
-        world.CreateSystem<Pocket::TriggerSystem>();
-        world.CreateSystem<Pocket::TriggerTouchSystem>();
-        world.CreateSystem<Pocket::SceneManagerSystem>();
+            //spawning
+    world.CreateSystem<SpawnerSystem>();
+    
+    //Animations
+    world.CreateSystem<TouchAnimatorSystem>();
+    world.CreateSystem<TransformAnimatorSystem>();
+
+    //Assets
+    world.CreateSystem<AssetManager>();
+
+    //Audio
+    world.CreateSystem<SoundSystem>();
+
+    //Cloning
+    world.CreateSystem<ClonerSystem>();
+
+    //Common
+    world.CreateSystem<HierarchyOrder>();
+
+    //Effects
+    world.CreateSystem<ParticleMeshUpdater>();
+    world.CreateSystem<ParticleUpdaterSystem>();
+
+    //Gui
+    world.CreateSystem<DroppableSystem>();
+    world.CreateSystem<FontTextureSystem>();
+    world.CreateSystem<LabelMeshSystem>();
+    world.CreateSystem<LayoutSystem>();
+    world.CreateSystem<SlicedQuadMeshSystem>();
+    world.CreateSystem<SpriteMeshSystem>();
+    world.CreateSystem<SpriteTextureSystem>();
+    world.CreateSystem<TextBoxLabelSystem>();
+    world.CreateSystem<TextBoxSystem>();
+
+    //Input
+    world.CreateSystem<InputMapperSystem>();
+
+    //Interaction
+    world.CreateSystem<TouchCancelSystem>();
+    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
+
+    //Movement
+    world.CreateSystem<DraggableMotionSystem>();
+    world.CreateSystem<DraggableSystem>();
+    world.CreateSystem<FirstPersonMoverSystem>();
+    world.CreateSystem<LimitableSystem>();
+    world.CreateSystem<VelocitySystem>();
+
+    //Physics
+    //world.CreateSystem<PhysicsSystem>();
+    //world.CreateSystem<PhysicsSystem2d>();
+
+    //Rendering
+    world.CreateSystem<ColorSystem>();
+    world.CreateSystem<DistanceScalerSystem>();
+    world.CreateSystem<LineRendererSystem>();
+    world.CreateSystem<RenderSystem>();
+
+    //Scenes
+    world.CreateSystem<SceneManagerSystem>();
+
+    //Selection
+    world.CreateSystem<ClickSelectorSystem>();
+    world.CreateSystem<DragSelector>();
+    world.CreateSystem<SelectableDragSystem>();
+    world.CreateSystem<SelectedColorerSystem>();
+
+    //Spatial
+    world.CreateSystem<TransformHierarchy>();
+
+    //Triggering
+    world.CreateSystem<TriggerSystem>();
+    world.CreateSystem<TriggerTouchSystem>();
         
     
     ) << std::endl;
