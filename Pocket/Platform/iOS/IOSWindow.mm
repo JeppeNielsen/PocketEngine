@@ -134,6 +134,7 @@
 
 -(void) gameLoop {
     Pocket::IOSWindowCreator::Instance()->OnUpdate(true);
+    [self setNeedsDisplay];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
