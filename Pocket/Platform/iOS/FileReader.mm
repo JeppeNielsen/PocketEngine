@@ -10,7 +10,7 @@
 #import <Foundation/Foundation.h>
 #include <map>
 #include "StringHelper.hpp"
-#include <istream>
+#include <fstream>
 
 using namespace Pocket;
 
@@ -49,8 +49,8 @@ std::string FileReader::GetBundleDir() {
     return path;
 }
 
-void FileReader::ParseFile(const std::string& file, const std::function<void(const std::string& line)>& lineRead) {
-    std::ifstream file;
+void FileReader::ParseFile(const std::string& filename, const std::function<void(const std::string& line)>& lineRead) {
+    std::ifstream file(filename);
     std::string line;
     if (file.is_open())
     {
