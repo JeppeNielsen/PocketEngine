@@ -28,5 +28,7 @@ namespace Pocket {
         
         static bool EndsWith(const std::string& str, const std::string& endsWith);
         static bool StartsWith(const std::string& str, const std::string& endsWith);
+        
+        static std::string FindAndReplaceAll(const std::string& str, const std::string& find, const std::string& replace);
     };
 }

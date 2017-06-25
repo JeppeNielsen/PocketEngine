@@ -549,3 +549,19 @@ bool StringHelper::StartsWith(const std::string& str, const std::string& endsWit
     }
 }
 
+std::string StringHelper::FindAndReplaceAll(const std::string &str, const std::string &find, const std::string &replace) {
+    
+    std::string result = str;
+    
+    while (true) {
+        auto pos = result.find(find);
+        if (pos==std::string::npos) break;
+        std::string left = result.substr(0, pos);
+        std::string right = result.substr(pos + find.size(), result.size()-pos-find.size());
+        result = left + replace + right;
+    }
+
+    return result;
+}
+
+
