@@ -12,6 +12,7 @@
 #include <vector>
 #include <dirent.h>
 #include <fstream>
+#include <sys/stat.h>
 
 using namespace Pocket;
 
@@ -52,6 +53,10 @@ bool FileHelper::FileExists(const std::string &path) {
 
 bool FileHelper::DeleteFile(const std::string &path) {
     return remove( path.c_str() ) == 0;
+}
+
+bool FileHelper::CreateFolder(const std::string &path) {
+    return mkdir(path.c_str(), 0755) == 0;
 }
 
 std::string FileHelper::GetFileNameFromPath(const std::string &path) {
