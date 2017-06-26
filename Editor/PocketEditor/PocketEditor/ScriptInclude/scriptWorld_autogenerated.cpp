@@ -58,6 +58,7 @@ struct FieldEditor;
 struct GameObjectEditor;
 struct AssetImporter;
 }
+struct KillTrigger;
 struct RectCollider;
 struct Rotator;
 struct Score;
@@ -413,36 +414,42 @@ template<> void Pocket::GameObject::RemoveComponent<Pocket::AssetImporter>() { R
 template<> Pocket::AssetImporter* Pocket::GameObject::CloneComponent<Pocket::AssetImporter>(GameObject* source) { CloneComponent(59, source); return (Pocket::AssetImporter*) GetComponent(59); }
 template<> Pocket::AssetImporter* Pocket::GameObject::ReplaceComponent<Pocket::AssetImporter>(GameObject* source) { ReplaceComponent(59, source); return (Pocket::AssetImporter*) GetComponent(59); }
 template<> void Pocket::GameObject::EnableComponent<Pocket::AssetImporter>(bool enable) { EnableComponent(59, enable); }
-template<> RectCollider* Pocket::GameObject::GetComponent<RectCollider>() { return (RectCollider*) GetComponent(60); }
-template<> RectCollider* Pocket::GameObject::AddComponent<RectCollider>() { AddComponent(60); return (RectCollider*) GetComponent(60); }
-template<> void Pocket::GameObject::RemoveComponent<RectCollider>() { RemoveComponent(60); }
-template<> RectCollider* Pocket::GameObject::CloneComponent<RectCollider>(GameObject* source) { CloneComponent(60, source); return (RectCollider*) GetComponent(60); }
-template<> RectCollider* Pocket::GameObject::ReplaceComponent<RectCollider>(GameObject* source) { ReplaceComponent(60, source); return (RectCollider*) GetComponent(60); }
-template<> void Pocket::GameObject::EnableComponent<RectCollider>(bool enable) { EnableComponent(60, enable); }
-template<> Rotator* Pocket::GameObject::GetComponent<Rotator>() { return (Rotator*) GetComponent(61); }
-template<> Rotator* Pocket::GameObject::AddComponent<Rotator>() { AddComponent(61); return (Rotator*) GetComponent(61); }
-template<> void Pocket::GameObject::RemoveComponent<Rotator>() { RemoveComponent(61); }
-template<> Rotator* Pocket::GameObject::CloneComponent<Rotator>(GameObject* source) { CloneComponent(61, source); return (Rotator*) GetComponent(61); }
-template<> Rotator* Pocket::GameObject::ReplaceComponent<Rotator>(GameObject* source) { ReplaceComponent(61, source); return (Rotator*) GetComponent(61); }
-template<> void Pocket::GameObject::EnableComponent<Rotator>(bool enable) { EnableComponent(61, enable); }
-template<> Score* Pocket::GameObject::GetComponent<Score>() { return (Score*) GetComponent(62); }
-template<> Score* Pocket::GameObject::AddComponent<Score>() { AddComponent(62); return (Score*) GetComponent(62); }
-template<> void Pocket::GameObject::RemoveComponent<Score>() { RemoveComponent(62); }
-template<> Score* Pocket::GameObject::CloneComponent<Score>(GameObject* source) { CloneComponent(62, source); return (Score*) GetComponent(62); }
-template<> Score* Pocket::GameObject::ReplaceComponent<Score>(GameObject* source) { ReplaceComponent(62, source); return (Score*) GetComponent(62); }
-template<> void Pocket::GameObject::EnableComponent<Score>(bool enable) { EnableComponent(62, enable); }
-template<> ScoreTrigger* Pocket::GameObject::GetComponent<ScoreTrigger>() { return (ScoreTrigger*) GetComponent(63); }
-template<> ScoreTrigger* Pocket::GameObject::AddComponent<ScoreTrigger>() { AddComponent(63); return (ScoreTrigger*) GetComponent(63); }
-template<> void Pocket::GameObject::RemoveComponent<ScoreTrigger>() { RemoveComponent(63); }
-template<> ScoreTrigger* Pocket::GameObject::CloneComponent<ScoreTrigger>(GameObject* source) { CloneComponent(63, source); return (ScoreTrigger*) GetComponent(63); }
-template<> ScoreTrigger* Pocket::GameObject::ReplaceComponent<ScoreTrigger>(GameObject* source) { ReplaceComponent(63, source); return (ScoreTrigger*) GetComponent(63); }
-template<> void Pocket::GameObject::EnableComponent<ScoreTrigger>(bool enable) { EnableComponent(63, enable); }
-template<> TransformController* Pocket::GameObject::GetComponent<TransformController>() { return (TransformController*) GetComponent(64); }
-template<> TransformController* Pocket::GameObject::AddComponent<TransformController>() { AddComponent(64); return (TransformController*) GetComponent(64); }
-template<> void Pocket::GameObject::RemoveComponent<TransformController>() { RemoveComponent(64); }
-template<> TransformController* Pocket::GameObject::CloneComponent<TransformController>(GameObject* source) { CloneComponent(64, source); return (TransformController*) GetComponent(64); }
-template<> TransformController* Pocket::GameObject::ReplaceComponent<TransformController>(GameObject* source) { ReplaceComponent(64, source); return (TransformController*) GetComponent(64); }
-template<> void Pocket::GameObject::EnableComponent<TransformController>(bool enable) { EnableComponent(64, enable); }
+template<> KillTrigger* Pocket::GameObject::GetComponent<KillTrigger>() { return (KillTrigger*) GetComponent(60); }
+template<> KillTrigger* Pocket::GameObject::AddComponent<KillTrigger>() { AddComponent(60); return (KillTrigger*) GetComponent(60); }
+template<> void Pocket::GameObject::RemoveComponent<KillTrigger>() { RemoveComponent(60); }
+template<> KillTrigger* Pocket::GameObject::CloneComponent<KillTrigger>(GameObject* source) { CloneComponent(60, source); return (KillTrigger*) GetComponent(60); }
+template<> KillTrigger* Pocket::GameObject::ReplaceComponent<KillTrigger>(GameObject* source) { ReplaceComponent(60, source); return (KillTrigger*) GetComponent(60); }
+template<> void Pocket::GameObject::EnableComponent<KillTrigger>(bool enable) { EnableComponent(60, enable); }
+template<> RectCollider* Pocket::GameObject::GetComponent<RectCollider>() { return (RectCollider*) GetComponent(61); }
+template<> RectCollider* Pocket::GameObject::AddComponent<RectCollider>() { AddComponent(61); return (RectCollider*) GetComponent(61); }
+template<> void Pocket::GameObject::RemoveComponent<RectCollider>() { RemoveComponent(61); }
+template<> RectCollider* Pocket::GameObject::CloneComponent<RectCollider>(GameObject* source) { CloneComponent(61, source); return (RectCollider*) GetComponent(61); }
+template<> RectCollider* Pocket::GameObject::ReplaceComponent<RectCollider>(GameObject* source) { ReplaceComponent(61, source); return (RectCollider*) GetComponent(61); }
+template<> void Pocket::GameObject::EnableComponent<RectCollider>(bool enable) { EnableComponent(61, enable); }
+template<> Rotator* Pocket::GameObject::GetComponent<Rotator>() { return (Rotator*) GetComponent(62); }
+template<> Rotator* Pocket::GameObject::AddComponent<Rotator>() { AddComponent(62); return (Rotator*) GetComponent(62); }
+template<> void Pocket::GameObject::RemoveComponent<Rotator>() { RemoveComponent(62); }
+template<> Rotator* Pocket::GameObject::CloneComponent<Rotator>(GameObject* source) { CloneComponent(62, source); return (Rotator*) GetComponent(62); }
+template<> Rotator* Pocket::GameObject::ReplaceComponent<Rotator>(GameObject* source) { ReplaceComponent(62, source); return (Rotator*) GetComponent(62); }
+template<> void Pocket::GameObject::EnableComponent<Rotator>(bool enable) { EnableComponent(62, enable); }
+template<> Score* Pocket::GameObject::GetComponent<Score>() { return (Score*) GetComponent(63); }
+template<> Score* Pocket::GameObject::AddComponent<Score>() { AddComponent(63); return (Score*) GetComponent(63); }
+template<> void Pocket::GameObject::RemoveComponent<Score>() { RemoveComponent(63); }
+template<> Score* Pocket::GameObject::CloneComponent<Score>(GameObject* source) { CloneComponent(63, source); return (Score*) GetComponent(63); }
+template<> Score* Pocket::GameObject::ReplaceComponent<Score>(GameObject* source) { ReplaceComponent(63, source); return (Score*) GetComponent(63); }
+template<> void Pocket::GameObject::EnableComponent<Score>(bool enable) { EnableComponent(63, enable); }
+template<> ScoreTrigger* Pocket::GameObject::GetComponent<ScoreTrigger>() { return (ScoreTrigger*) GetComponent(64); }
+template<> ScoreTrigger* Pocket::GameObject::AddComponent<ScoreTrigger>() { AddComponent(64); return (ScoreTrigger*) GetComponent(64); }
+template<> void Pocket::GameObject::RemoveComponent<ScoreTrigger>() { RemoveComponent(64); }
+template<> ScoreTrigger* Pocket::GameObject::CloneComponent<ScoreTrigger>(GameObject* source) { CloneComponent(64, source); return (ScoreTrigger*) GetComponent(64); }
+template<> ScoreTrigger* Pocket::GameObject::ReplaceComponent<ScoreTrigger>(GameObject* source) { ReplaceComponent(64, source); return (ScoreTrigger*) GetComponent(64); }
+template<> void Pocket::GameObject::EnableComponent<ScoreTrigger>(bool enable) { EnableComponent(64, enable); }
+template<> TransformController* Pocket::GameObject::GetComponent<TransformController>() { return (TransformController*) GetComponent(65); }
+template<> TransformController* Pocket::GameObject::AddComponent<TransformController>() { AddComponent(65); return (TransformController*) GetComponent(65); }
+template<> void Pocket::GameObject::RemoveComponent<TransformController>() { RemoveComponent(65); }
+template<> TransformController* Pocket::GameObject::CloneComponent<TransformController>(GameObject* source) { CloneComponent(65, source); return (TransformController*) GetComponent(65); }
+template<> TransformController* Pocket::GameObject::ReplaceComponent<TransformController>(GameObject* source) { ReplaceComponent(65, source); return (TransformController*) GetComponent(65); }
+template<> void Pocket::GameObject::EnableComponent<TransformController>(bool enable) { EnableComponent(65, enable); }
 #include "TypeInfo.hpp"
 #include "Property.hpp"
 #include "Transform.hpp"
@@ -457,6 +464,7 @@ template<> void Pocket::GameObject::EnableComponent<TransformController>(bool en
 #include "Touchable.hpp"
 #include "InputController.hpp"
 #include "Velocity.hpp"
+#include "KillTrigger.hpp"
 #include "RectCollider.hpp"
 #include "Rotator.hpp"
 #include "Score.hpp"
@@ -487,21 +495,17 @@ template<> struct Pocket::FieldInfoIndexer<std::vector<Pocket::Vector3>> { stati
 template<> struct Pocket::FieldInfoIndexer<Pocket::Property<Pocket::Vector3>> { static int Index() { return 17; } };
 
 extern "C" int CountSystems() {
-   return 11;
+   return 7;
 }
 extern "C" IGameSystem* CreateSystem(int systemID) {
    switch (systemID) { 
-      case 71: return new RectCollisionSystem();
-      case 72: return new RotatorSystem();
-      case 73: return new ScoreSystem();
-      case 74: return new RectCollisionSystem();
-      case 75: return new ScoreSystem();
-      case 76: return new ScoreTriggerSystem();
-      case 77: return new TransformControllerSystem();
-      case 78: return new RectCollisionSystem();
-      case 79: return new VelocityCollider();
-      case 80: return new ScoreSystem();
-      case 81: return new ScoreTriggerSystem();
+      case 71: return new KillTriggerSystem();
+      case 72: return new RectCollisionSystem();
+      case 73: return new RotatorSystem();
+      case 74: return new ScoreSystem();
+      case 75: return new ScoreTriggerSystem();
+      case 76: return new TransformControllerSystem();
+      case 77: return new VelocityCollider();
       default: return 0;
    }
 }
@@ -509,42 +513,47 @@ extern "C" void DeleteSystem(IGameSystem* scriptSystem) {
    delete scriptSystem; 
 }
 extern "C" int CountComponents() {
-   return 5;
+   return 6;
 }
 extern "C" void* CreateComponent(int componentID) {
    switch (componentID) { 
-      case 60: return new RectCollider();
-      case 61: return new Rotator();
-      case 62: return new Score();
-      case 63: return new ScoreTrigger();
-      case 64: return new TransformController();
+      case 60: return new KillTrigger();
+      case 61: return new RectCollider();
+      case 62: return new Rotator();
+      case 63: return new Score();
+      case 64: return new ScoreTrigger();
+      case 65: return new TransformController();
       default: return 0;
    }
 }
 extern "C" void DeleteComponent(int componentID, void* component) {
    switch (componentID) { 
-      case 60: { delete ((RectCollider*)component); break; }
-      case 61: { delete ((Rotator*)component); break; }
-      case 62: { delete ((Score*)component); break; }
-      case 63: { delete ((ScoreTrigger*)component); break; }
-      case 64: { delete ((TransformController*)component); break; }
+      case 60: { delete ((KillTrigger*)component); break; }
+      case 61: { delete ((RectCollider*)component); break; }
+      case 62: { delete ((Rotator*)component); break; }
+      case 63: { delete ((Score*)component); break; }
+      case 64: { delete ((ScoreTrigger*)component); break; }
+      case 65: { delete ((TransformController*)component); break; }
    }
 }
 extern "C" void ResetComponent(int componentID, void* c, void* s) {
    switch (componentID) { 
-      case 60: { RectCollider* co = (RectCollider*)c; 
+      case 60: { KillTrigger* co = (KillTrigger*)c; 
+      KillTrigger* so = ((KillTrigger*)s);
+        co->operator=(*so);             break; }
+      case 61: { RectCollider* co = (RectCollider*)c; 
       RectCollider* so = ((RectCollider*)s);
         co->operator=(*so);             break; }
-      case 61: { Rotator* co = (Rotator*)c; 
+      case 62: { Rotator* co = (Rotator*)c; 
       Rotator* so = ((Rotator*)s);
         co->operator=(*so);             break; }
-      case 62: { Score* co = (Score*)c; 
+      case 63: { Score* co = (Score*)c; 
       Score* so = ((Score*)s);
         co->operator=(*so);             break; }
-      case 63: { ScoreTrigger* co = (ScoreTrigger*)c; 
+      case 64: { ScoreTrigger* co = (ScoreTrigger*)c; 
       ScoreTrigger* so = ((ScoreTrigger*)s);
         co->operator=(*so);             break; }
-      case 64: { TransformController* co = (TransformController*)c; 
+      case 65: { TransformController* co = (TransformController*)c; 
       TransformController* so = ((TransformController*)s);
         co->operator=(*so);             break; }
    }
@@ -553,6 +562,13 @@ extern "C" void ResetComponent(int componentID, void* c, void* s) {
 extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
    switch (componentID) { 
       case 60: {
+      KillTrigger* component = (KillTrigger*)componentPtr;
+	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
+	      info->name = "KillTrigger";
+	      info->AddField(component->variable, "variable");
+      return info;
+      break; }
+      case 61: {
       RectCollider* component = (RectCollider*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "RectCollider";
@@ -562,28 +578,28 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      info->AddField(component->previousCollisions, "previousCollisions");
       return info;
       break; }
-      case 61: {
+      case 62: {
       Rotator* component = (Rotator*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Rotator";
 	      info->AddField(component->speed, "speed");
       return info;
       break; }
-      case 62: {
+      case 63: {
       Score* component = (Score*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Score";
 	      info->AddField(component->score, "score");
       return info;
       break; }
-      case 63: {
+      case 64: {
       ScoreTrigger* component = (ScoreTrigger*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "ScoreTrigger";
 	      info->AddField(component->scoreToAdd, "scoreToAdd");
       return info;
       break; }
-      case 64: {
+      case 65: {
       TransformController* component = (TransformController*)componentPtr;
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "TransformController";
@@ -599,20 +615,22 @@ delete typeInfo;
 extern "C" const char* GetComponentName(int componentID) {
    switch (componentID) { 
       case 60: 
-         return "RectCollider";
+         return "KillTrigger";
       case 61: 
-         return "Rotator";
+         return "RectCollider";
       case 62: 
-         return "Score";
+         return "Rotator";
       case 63: 
-         return "ScoreTrigger";
+         return "Score";
       case 64: 
+         return "ScoreTrigger";
+      case 65: 
          return "TransformController";
       default: return "";
    }
 }
 extern "C" int* GetSystems() {
- return new int[41] {-1,0,60,9,-1,61,0,-1,62,21,-1,0,60,9,-1,62,21,-1,63,60,62,-1,0,64,41,-1,0,60,9,-1,15,60,9,-1,62,21,-1,63,60,62,-2,};}
+ return new int[26] {-1,60,61,-1,0,61,9,-1,62,0,-1,63,21,-1,64,61,63,-1,0,65,41,-1,15,61,9,-2,};}
 extern "C" void DeleteGetSystems(int* indicies) {
 delete indicies;
 }

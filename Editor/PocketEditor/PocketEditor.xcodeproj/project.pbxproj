@@ -20,6 +20,10 @@
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
+		7214E04B1EFEEFE900F61526 /* ProjectBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E0491EFEEFE900F61526 /* ProjectBuilder.cpp */; };
+		7214E04D1EFEF83300F61526 /* testXCodeProject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E04C1EFEF83300F61526 /* testXCodeProject.cpp */; };
+		7214E06A1F0036FC00F61526 /* PlatformBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E0681F0036FC00F61526 /* PlatformBuilder.cpp */; };
+		7214E06D1F003AC800F61526 /* IOSBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E06B1F003AC800F61526 /* IOSBuilder.cpp */; };
 		721543791EC0F424000305A9 /* ComponentMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 721543771EC0F424000305A9 /* ComponentMenu.cpp */; };
 		7215437D1EC10650000305A9 /* AssetHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7215437B1EC10650000305A9 /* AssetHelper.cpp */; };
 		721543801EC10669000305A9 /* ComponentHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7215437E1EC10669000305A9 /* ComponentHelper.cpp */; };
@@ -496,6 +500,13 @@
 		720B3D421D8DD2B9006195E8 /* Cloner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Cloner.hpp; sourceTree = "<group>"; };
 		720B3D441D8DD424006195E8 /* ClonerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ClonerSystem.cpp; sourceTree = "<group>"; };
 		720B3D451D8DD424006195E8 /* ClonerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ClonerSystem.hpp; sourceTree = "<group>"; };
+		7214E0491EFEEFE900F61526 /* ProjectBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectBuilder.cpp; sourceTree = "<group>"; };
+		7214E04A1EFEEFE900F61526 /* ProjectBuilder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectBuilder.hpp; sourceTree = "<group>"; };
+		7214E04C1EFEF83300F61526 /* testXCodeProject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testXCodeProject.cpp; sourceTree = "<group>"; };
+		7214E0681F0036FC00F61526 /* PlatformBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlatformBuilder.cpp; sourceTree = "<group>"; };
+		7214E0691F0036FC00F61526 /* PlatformBuilder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PlatformBuilder.hpp; sourceTree = "<group>"; };
+		7214E06B1F003AC800F61526 /* IOSBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = IOSBuilder.cpp; sourceTree = "<group>"; };
+		7214E06C1F003AC800F61526 /* IOSBuilder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = IOSBuilder.hpp; sourceTree = "<group>"; };
 		721543771EC0F424000305A9 /* ComponentMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ComponentMenu.cpp; sourceTree = "<group>"; };
 		721543781EC0F424000305A9 /* ComponentMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ComponentMenu.hpp; sourceTree = "<group>"; };
 		7215437B1EC10650000305A9 /* AssetHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetHelper.cpp; sourceTree = "<group>"; };
@@ -1656,6 +1667,19 @@
 			path = Cloning;
 			sourceTree = "<group>";
 		};
+		7214E0481EFEEE5A00F61526 /* Building */ = {
+			isa = PBXGroup;
+			children = (
+				7214E0491EFEEFE900F61526 /* ProjectBuilder.cpp */,
+				7214E04A1EFEEFE900F61526 /* ProjectBuilder.hpp */,
+				7214E0681F0036FC00F61526 /* PlatformBuilder.cpp */,
+				7214E0691F0036FC00F61526 /* PlatformBuilder.hpp */,
+				7214E06B1F003AC800F61526 /* IOSBuilder.cpp */,
+				7214E06C1F003AC800F61526 /* IOSBuilder.hpp */,
+			);
+			path = Building;
+			sourceTree = "<group>";
+		};
 		721543761EC0F424000305A9 /* ComponentMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -2140,6 +2164,7 @@
 				72C9B2761E8866F900033C56 /* testCOutRedirect.cpp */,
 				72C9B2781E8ABF4000033C56 /* textEditorTest.cpp */,
 				72F908281EAB7BCB003BBCC1 /* testWorker.cpp */,
+				7214E04C1EFEF83300F61526 /* testXCodeProject.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -2148,6 +2173,7 @@
 		72994F9F1C99F76000DAAE5D /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
+				7214E0481EFEEE5A00F61526 /* Building */,
 				727B37A81E2B9C5300531B62 /* Libs */,
 				72B4924E1DCE59D10063518A /* ComponentSystem */,
 				72994FAD1C99F76000DAAE5D /* Core */,
@@ -4038,6 +4064,7 @@
 				721543801EC10669000305A9 /* ComponentHelper.cpp in Sources */,
 				729954731C99F76100DAAE5D /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				729954481C99F76100DAAE5D /* b2WorldCallbacks.cpp in Sources */,
+				7214E04D1EFEF83300F61526 /* testXCodeProject.cpp in Sources */,
 				729954311C99F76100DAAE5D /* ChromecastReceiver.cpp in Sources */,
 				7299549F1C99F76100DAAE5D /* btGImpactShape.cpp in Sources */,
 				729954761C99F76100DAAE5D /* btBox2dShape.cpp in Sources */,
@@ -4123,10 +4150,12 @@
 				729953F51C99F76100DAAE5D /* MenuButton.cpp in Sources */,
 				729954EA1C99F76100DAAE5D /* MiniCLTaskScheduler.cpp in Sources */,
 				72F908391EAD32BC003BBCC1 /* TextEditorSyntaxHighlightingSystem.cpp in Sources */,
+				7214E06A1F0036FC00F61526 /* PlatformBuilder.cpp in Sources */,
 				729954A61C99F76100DAAE5D /* btConvexCast.cpp in Sources */,
 				729953E61C99F76100DAAE5D /* GameObjectEditorSystem.cpp in Sources */,
 				72C9B28F1E8C327800033C56 /* TextEditorEditSystem.cpp in Sources */,
 				7299546D1C99F76100DAAE5D /* btGhostObject.cpp in Sources */,
+				7214E04B1EFEEFE900F61526 /* ProjectBuilder.cpp in Sources */,
 				721543EC1EC259AF000305A9 /* TransformAnimatorSystem.cpp in Sources */,
 				729953FF1C99F76100DAAE5D /* DraggableMotion.cpp in Sources */,
 				729954931C99F76100DAAE5D /* btTriangleBuffer.cpp in Sources */,
@@ -4239,6 +4268,7 @@
 				729953EC1C99F76100DAAE5D /* ParticleMeshUpdater.cpp in Sources */,
 				7299547B1C99F76100DAAE5D /* btCompoundShape.cpp in Sources */,
 				723689A71D873A4E006480F0 /* ProjectWindow.cpp in Sources */,
+				7214E06D1F003AC800F61526 /* IOSBuilder.cpp in Sources */,
 				72C9B2AE1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp in Sources */,
 				729954A51C99F76100DAAE5D /* btContinuousConvexCollision.cpp in Sources */,
 				729954D21C99F76100DAAE5D /* SpuContactResult.cpp in Sources */,

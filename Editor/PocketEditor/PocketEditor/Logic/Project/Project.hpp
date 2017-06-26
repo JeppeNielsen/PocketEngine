@@ -19,6 +19,7 @@
 #include "ProjectSettings.hpp"
 #include "Worker.hpp"
 #include "Timer.hpp"
+#include "ProjectBuilder.hpp"
 
 using namespace Pocket;
 
@@ -33,6 +34,8 @@ private:
     Worker worker;
     
     void RefreshSourceFiles();
+    
+    ProjectBuilder projectBuilder;
     
 public:
     OpenWorldCollection Worlds;
@@ -68,4 +71,6 @@ public:
     Property<bool> IsCompiling;
     Event<> CompilationFinished;
     Timer compilationTimer;
+    
+    ProjectBuilder& Builder();
 };

@@ -154,6 +154,9 @@ void Project::RefreshSourceFiles() {
         foundSourceFiles,
         foundIncludeFiles
     );
+    
+    projectBuilder.Initialize("/Projects/PocketEngine/Pocket", "/Projects/PocketEngine/Editor/TestXCodeProject/WorkingDirectory", path, scriptWorld);
+    projectBuilder.SetSourceFiles(foundSourceFiles, foundIncludeFiles);
 }
 
 void Project::BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput) {
@@ -163,6 +166,8 @@ void Project::BuildExecutable(const std::string& outputPath, const std::function
         std::cout << "Failed to find Project Settings"<<std::endl;
         return;
     }
+    
+    /*
     
     bool wasCreated = FileArchive::TryCreateArchiveFile(path, outputPath + "/resources", [] (const std::string& path) -> std::string {
         std::string metaPath = path + ".meta";
@@ -193,6 +198,13 @@ void Project::BuildExecutable(const std::string& outputPath, const std::function
         source += projectSettings->startupScene.SceneGuid();
         source += "\"));";
     }, onOutput);
+    
+    */
+    
+    projectBuilder.SetStartupScene(projectSettings->startupScene.SceneGuid());
+    
+    projectBuilder.IOS.Build(outputPath, "/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a");
+    
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {
@@ -281,4 +293,8 @@ ProjectSettings* Project::GetProjectSettings() {
 
 void Project::Update() {
     worker.Update();
+}
+
+ProjectBuilder& Project::Builder() {
+    return projectBuilder;
 }

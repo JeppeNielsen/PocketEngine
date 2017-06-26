@@ -1,6 +1,13 @@
 GameWorld::OnGetTypeInfo = [] (int componentID, GameObject::ComponentInfo& info) {
  static std::map<int, std::function<TypeInfo(GameObject*)>> componentToFunction; 
  if (!componentToFunction.empty()) {
+componentToFunction[GameIDHelper::GetComponentID<KillTrigger>()] = [](GameObject* object) -> TypeInfo {
+KillTrigger* component = object->GetComponent<KillTrigger>();
+TypeInfo typeInfo;
+	      typeInfo.name = "KillTrigger";
+	      typeInfo.AddField(component->variable, "variable");
+return typeInfo;
+};
 componentToFunction[GameIDHelper::GetComponentID<RectCollider>()] = [](GameObject* object) -> TypeInfo {
 RectCollider* component = object->GetComponent<RectCollider>();
 TypeInfo typeInfo;
