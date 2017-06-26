@@ -12,6 +12,8 @@
 #include <fstream>
 #include "StringHelper.hpp"
 #include "FileReader.hpp"
+#include "FileArchive.hpp"
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 
@@ -19,9 +21,11 @@ ProjectBuilder::ProjectBuilder() {
     IOS.project = this;
 }
 
-void ProjectBuilder::Initialize(const std::string &pocketEngineIncludePath, const std::string &workingDirectory) {
+void ProjectBuilder::Initialize(const std::string &pocketEngineIncludePath, const std::string &workingDirectory, const std::string& resourcesPath, ScriptWorld& world) {
     this->pocketEngineIncludePath = pocketEngineIncludePath;
     this->workingDirectory = workingDirectory;
+    this->resourcesPath = resourcesPath;
+    this->world = &world;
 }
 
 void ProjectBuilder::SetSourceFiles(const std::vector<std::string> &sourceFiles, const std::vector<std::string> &headerFiles) {
@@ -73,6 +77,30 @@ std::vector<std::string> ProjectBuilder::GetEngineHeaders() {
     };
 }
 
+bool ProjectBuilder::CreateResources(const std::string &outputFile) {
+    bool wasCreated = FileArchive::TryCreateArchiveFile(resourcesPath, outputFile, [] (const std::string& path) -> std::string {
+        std::string metaPath = path + ".meta";
+        
+        if (FileHelper::FileExists(metaPath)) {
+            std::ifstream file;
+            file.open(metaPath);
+            std::string guid = GameWorld::ReadGuidFromJson(file);
+            if (guid == "") return "";
+            return guid + "-asset";
+        } else {
+            
+            std::ifstream file;
+            file.open(path);
+            return GameWorld::ReadGuidFromJson(file);
+        }
+    });
+
+    return wasCreated;
+}
+
+void ProjectBuilder::SetStartupScene(const std::string &sceneGUID) {
+    startupSceneGUID = sceneGUID;
+}
 
 //
 //void ProjectBuilder::BuildIOS(const std::string &outputPath, const std::string &pocketEngineLibPath) {

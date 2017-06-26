@@ -13,6 +13,7 @@
 #include <fstream>
 #include "StringHelper.hpp"
 #include "FileReader.hpp"
+#include <set>
 
 using namespace Pocket;
 
@@ -46,16 +47,30 @@ void IOSBuilder::Build(const std::string &outputPath, const std::string &pocketE
     //main
     {
         std::string cppFile = gameDir+"/main.cpp";
+        /*
         std::ofstream file;
         file.open(cppFile);
         file << GetMainFile();
         file.close();
+        */
+        
+        p.world->WriteExecutableMain(cppFile, [this] (std::string& code){
+            code += "world.SetLayerScene(0, world.TryFindRoot(\"";
+            code += project->startupSceneGUID;
+            code += "\"));";
+        });
+    }
+    
+    //resources
+    {
+        std::string resourcesPath = gameDir+"/resources";
+        p.CreateResources(resourcesPath);
     }
 
     std::string xcodeProjectPath = p.workingDirectory+"/"+GameName+".xcodeproj";
 
     CreateXCodeProject(xcodeProjectPath);
-    
+
     FileReader::RunCommmand("xcodebuild -project "+xcodeProjectPath);
     
     std::string builtGamePath = p.workingDirectory+"/build/Release-iphoneos/"+GameName+".app";
@@ -111,6 +126,7 @@ std::string file = FILE_SOURCE(
 		7214E0431EFB08BD00F61526 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0421EFB08BD00F61526 /* QuartzCore.framework */; };
 		7214E0451EFB08DC00F61526 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0441EFB08DC00F61526 /* CoreGraphics.framework */; };
 		7214E0471EFB091B00F61526 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0461EFB091B00F61526 /* OpenAL.framework */; };
+		7214E06F1F005FCA00F61526 /* resources in Resources */ = {isa = PBXBuildFile; fileRef = 7214E06E1F005FCA00F61526 /* resources */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -125,6 +141,7 @@ std::string file = FILE_SOURCE(
 		7214E0421EFB08BD00F61526 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7214E0441EFB08DC00F61526 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		7214E0461EFB091B00F61526 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		7214E06E1F005FCA00F61526 /* resources */ = {isa = PBXFileReference; lastKnownFileType = file; path = resources; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -165,6 +182,7 @@ std::string file = FILE_SOURCE(
 		7214E0131EFAFC8000F61526 /* Game */ = {
 			isa = PBXGroup;
 			children = (
+				7214E06E1F005FCA00F61526 /* resources */,
 				7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */,
 				7214E0251EFAFC8000F61526 /* Info.plist */,
 				7214E0301EFB035600F61526 /* main.cpp */,
@@ -245,6 +263,7 @@ std::string file = FILE_SOURCE(
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7214E06F1F005FCA00F61526 /* resources in Resources */,
 				7214E02C1EFAFD6900F61526 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -366,7 +385,7 @@ std::string file = FILE_SOURCE(
 				);
 				HEADER_SEARCH_PATHS = (
 					POCKET_ENGINE_HEADERS
-				);
+                );
 				INFOPLIST_FILE = Game/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -389,7 +408,7 @@ std::string file = FILE_SOURCE(
 				DEVELOPMENT_TEAM = 24H2455352;
 				GCC_PREPROCESSOR_DEFINITIONS = "IPHONE=1";
 				HEADER_SEARCH_PATHS = (
-					POCKET_ENGINE_HEADERS
+                    POCKET_ENGINE_HEADERS
 				);
 				INFOPLIST_FILE = Game/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -442,6 +461,15 @@ std::string file = FILE_SOURCE(
     for(auto& h : headerPaths) {
         headerPathStr += (startQuote +
             project->pocketEngineIncludePath + "/" + h + endQuote + ",");
+    }
+    
+    std::set<std::string> uniqueHeaderPaths;
+    for(auto& h : project->headerFiles) {
+        std::string headerPath = project->world->ExtractHeaderPath(h);
+        uniqueHeaderPaths.insert(headerPath);
+    }
+    for(auto& h : uniqueHeaderPaths) {
+        headerPathStr += (startQuote + h + endQuote + ",");
     }
     
     file = StringHelper::FindAndReplaceAll(file, "POCKET_ENGINE_HEADERS", headerPathStr);
