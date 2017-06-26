@@ -73,13 +73,15 @@ private:
     void WriteMainSerializedComponents(std::ofstream& file);
     void WriteSystemIndices(std::ofstream& file);
     void WriteTypes(std::ofstream& file);
-    
+public:
     void WriteExecutableMain(const std::string& path, const std::function<void(std::string&)>& customCode);
+private:
     void WriteExecutableTypeInfos(const std::string &path);
-    
+
+public:
     std::string ExtractHeaderPath(const std::string& headerFile);
     std::string ExtractHeaderName(const std::string& headerFile);
-    
+private:
     bool FindComponentIndex(std::string componentName, bool& staticComponent, int& index);
     
     bool TryParseError(const std::string& codeFile, const std::string& line, Error& error);

@@ -757,6 +757,8 @@ void ScriptWorld::WriteTypes(std::ofstream &file) {
 
 void ScriptWorld::WriteExecutableMain(const std::string &path, const std::function<void(std::string&)>& customCode) {
     
+    ExtractScriptClasses();
+    
     ofstream file;
     file.open(path);
 
@@ -845,6 +847,8 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     }
     
     file << FILE_SOURCE(
+    
+    using namespace Pocket;
     
     void CreateDefaultSystems(Pocket::GameObject &world) {
             //spawning
