@@ -14,6 +14,7 @@
 #include "StringHelper.hpp"
 #include "FileReader.hpp"
 #include <set>
+#include <sstream>
 
 using namespace Pocket;
 
@@ -103,6 +104,16 @@ void IOSBuilder::CreateXCodeProject(const std::string &outputFile) {
 
 #define FILE_SOURCE(...) #__VA_ARGS__
 
+std::string IOSBuilder::CreateId(const std::string& baseId, int size, int id) {
+    std::stringstream s;
+    s<<id;
+    std::string idStr = s.str();
+    int extraZeros = size - (int)idStr.size();
+    for (int i=0; i<extraZeros; i++) {
+        idStr.insert((size_t)i, "0");
+    }
+    return baseId + idStr;
+}
 
 std::string IOSBuilder::GetXCodeProjectTemplate() {
 
@@ -119,6 +130,9 @@ std::string file = FILE_SOURCE(
 /* Begin PBXBuildFile section */
 		7214E02C1EFAFD6900F61526 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */; };
 		7214E0311EFB035600F61526 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E0301EFB035600F61526 /* main.cpp */; };
+        
+        POCKET_BUILD_FILES
+        
 		7214E0331EFB040500F61526 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0321EFB040500F61526 /* OpenGLES.framework */; };
 		7214E03D1EFB083700F61526 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E03C1EFB083700F61526 /* Foundation.framework */; };
 		7214E03F1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E03E1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a */; };
@@ -134,6 +148,9 @@ std::string file = FILE_SOURCE(
 		7214E0251EFAFC8000F61526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		7214E0301EFB035600F61526 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+        
+        POCKET_FILE_REFERENCES
+        
 		7214E0321EFB040500F61526 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		7214E03C1EFB083700F61526 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7214E03E1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a"; sourceTree = "<group>"; };
@@ -186,7 +203,8 @@ std::string file = FILE_SOURCE(
 				7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */,
 				7214E0251EFAFC8000F61526 /* Info.plist */,
 				7214E0301EFB035600F61526 /* main.cpp */,
-			);
+                POCKET_GROUP_FILES
+            );
 			path = Game;
 			sourceTree = "<group>";
 		};
@@ -276,6 +294,7 @@ std::string file = FILE_SOURCE(
 			buildActionMask = 2147483647;
 			files = (
 				7214E0311EFB035600F61526 /* main.cpp in Sources */,
+                POCKET_BUILD_PHASE
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,6 +492,48 @@ std::string file = FILE_SOURCE(
     }
     
     file = StringHelper::FindAndReplaceAll(file, "POCKET_ENGINE_HEADERS", headerPathStr);
+    
+{
+    std::string  str = "";
+    for(int i=0; i<project->sourceFiles.size(); i++) {
+
+       str += CreateId("7214E0311EFAAAAAAA", 6, i) +
+                        " /* "+project->sourceFiles[i]+" in Sources */ = {isa = PBXBuildFile; fileRef = " +
+                        CreateId("7214E0311EFAAAAAAB", 6, i) + " /* "+project->sourceFiles[i]+" */; }; \n";
+    }
+    file = StringHelper::FindAndReplaceAll(file, "POCKET_BUILD_FILES", str);
+}
+
+
+{
+    std::string  str = "";
+    for(int i=0; i<project->sourceFiles.size(); i++) {
+    
+    //7214E0311EFAAAAAAB000000 /* file.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = file.cpp; sourceTree = "<group>"; };
+        
+
+       str += CreateId("7214E0311EFAAAAAAB", 6, i) +
+                        " /* "+project->sourceFiles[i]+" */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "+project->sourceFiles[i]+"; sourceTree = \"<absolute>\"; }; \n";
+    }
+    file = StringHelper::FindAndReplaceAll(file, "POCKET_FILE_REFERENCES", str);
+}
+
+
+{
+    std::string  str = "";
+    for(int i=0; i<project->sourceFiles.size(); i++) {
+       str += CreateId("7214E0311EFAAAAAAB", 6, i) + " /* "+project->sourceFiles[i]+" */, \n";
+    }
+    file = StringHelper::FindAndReplaceAll(file, "POCKET_GROUP_FILES", str);
+}
+
+{
+    std::string  str = "";
+    for(int i=0; i<project->sourceFiles.size(); i++) {
+       str += CreateId("7214E0311EFAAAAAAA", 6, i) + " /* "+project->sourceFiles[i]+" */, \n";
+    }
+    file = StringHelper::FindAndReplaceAll(file, "POCKET_BUILD_PHASE", str);
+}
 
     return file;
 }

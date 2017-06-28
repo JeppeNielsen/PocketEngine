@@ -25,6 +25,7 @@ namespace Pocket {
         std::string GetXCodePlistTemplate();
         std::string GetSplashPngData();
         std::string GetMainFile();
+        std::string CreateId(const std::string& baseId, int size, int id);
         
         friend class PlatformBuilder;
     };
