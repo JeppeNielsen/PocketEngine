@@ -10,6 +10,7 @@
 #include <vector>
 #include <iostream>
 #include <type_traits>
+#include <memory>
 #include "MetaLibrary.hpp"
 #include "JsonSerializer.hpp"
 #include "TypeIndexList.hpp"
@@ -22,47 +23,6 @@ class FieldInfo;
 
 class TypeInfo;
 
-
-
-/*
-template<typename T>
-struct FieldEditorProperty : public FieldInfoEditor<Property<T>, void, void> {
-    IFieldEditor* editor;
-    
-    FieldEditorProperty() : editor(0) {}
-    ~FieldEditorProperty() { delete editor; }
-    
-    void Initialize(void* context, void* parent) {
-        editor = FieldInfo<T>::Editor ? FieldInfo<T>::Editor() : 0;
-        if (editor) {
-            editor->Create(&currentValue, context, parent);
-        }
-    }
-    
-    void Destroy() {
-        if (editor) {
-            editor->Destroy();
-        }
-    }
-    
-    void Update(float dt) {
-        if (!editor) return;
-        
-        if (currentValue!=prevValue) {
-            prevValue = currentValue;
-            this->field->operator=(currentValue);
-        } else {
-            currentValue = this->field->operator()();
-            prevValue = currentValue;
-        }
-        editor->Update(dt);
-    }
-    
-    T currentValue;
-    T prevValue;
-};
-*/
-
 class FieldInfoAny;
 
 class IFieldInfo {
@@ -72,7 +32,7 @@ public:
     int type;
     virtual void Serialize(minijson::object_writer& writer) = 0;
     virtual void Deserialize(minijson::istream_context& context, minijson::value& value) = 0;
-    virtual IFieldInfo* Clone() = 0;
+    virtual std::unique_ptr<IFieldInfo> Clone() = 0;
     virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
     virtual void SetFromOther(IFieldInfo* other) = 0;
@@ -81,7 +41,6 @@ public:
 template<class T>
 class FieldInfo : public IFieldInfo {
 public:
-    ~FieldInfo() { }
     
     void Serialize(minijson::object_writer& writer) override {
         JsonSerializer<T>::Serialize(name, *field, writer);
@@ -91,12 +50,12 @@ public:
         JsonSerializer<T>::Deserialize(value, field, context);
     }
     
-    IFieldInfo* Clone() override {
-        FieldInfo<T>* clone = new FieldInfo<T>();
+    std::unique_ptr<IFieldInfo> Clone() override {
+        auto clone = std::make_unique<FieldInfo<T>>();
         clone->name = this->name;
         clone->type = this->type;
         clone->field = this->field;
-        return clone;
+        return std::unique_ptr<IFieldInfo>( std::move( clone ) );
     }
     
     void SetFromAny(FieldInfoAny* any) override;
@@ -118,17 +77,11 @@ public:
 
 class TypeInfo {
 public:
-    
-    TypeInfo() { }
-    
-    ~TypeInfo() {
-        for (size_t i=0; i<fields.size(); ++i) {
-            delete fields[i];
-        }
-    }
+
+    TypeInfo() {}
     
     TypeInfo(TypeInfo&& other) {
-        fields = other.fields;
+        fields = std::move( other.fields );
         name = other.name;
         other.fields.clear();
         other.name.clear();
@@ -136,31 +89,31 @@ public:
     
     TypeInfo(const TypeInfo& other) {
         fields.clear();
-        for(auto f : other.fields) {
-            fields.push_back(f->Clone());
+        for(auto& field : other.fields) {
+            fields.push_back(field->Clone());
         }
         name = other.name;
     }
     
     void operator = (const TypeInfo& other) {
         fields.clear();
-        for(auto f : other.fields) {
-            fields.push_back(f->Clone());
+        for(auto& field : other.fields) {
+            fields.push_back(field->Clone());
         }
         name = other.name;
     }
     
     template<class T>
     void AddField(T& field, std::string name) {
-        FieldInfo<T>* serializedField = new FieldInfo<T>();
+        auto serializedField = std::make_unique<FieldInfo<T>>();
         serializedField->name = name;
         serializedField->field = &field;
         serializedField->type = 0;
-        fields.push_back(serializedField);
+        fields.emplace_back(std::move( serializedField ) );
     }
     
     void Serialize(minijson::object_writer& writer) {
-        for(auto field : fields) {
+        for(auto& field : fields) {
             field->Serialize(writer);
         }
     }
@@ -169,7 +122,7 @@ public:
     void Deserialize(Context& context) {
         try {
             minijson::parse_object(context, [&] (const char* name, minijson::value v) {
-                auto field = GetField(name);
+                auto field = GetFieldInternal(name);
                 if (field) {
                     field->Deserialize(context, v);
                 } else {
@@ -181,23 +134,30 @@ public:
         }
     }
     
-    IFieldInfo* GetField(std::string name) {
-        for(auto field : fields) {
-            if (field->name == name) return field;
+    std::unique_ptr<IFieldInfo> GetField(std::string name) {
+        for(auto& field : fields) {
+            if (field->name == name) return field->Clone();
         }
-        return 0;
+        return nullptr;
     }
 
-    using Fields = std::vector<IFieldInfo*>;
+    using Fields = std::vector<std::unique_ptr<IFieldInfo>>;
     Fields fields;
     std::string name;
     
-    
     void UpdateFromPointer(TypeInfo* info, TypeIndexList& list) {
         name = info->name;
-        for(auto field : info->fields) {
-            list.AddToTypeInfo(this, field->type, field);
+        for(auto& field : info->fields) {
+            list.AddToTypeInfo(this, field->type, field.get());
         }
+    }
+
+private:
+    IFieldInfo* GetFieldInternal(std::string name) {
+        for(auto& field : fields) {
+            if (field->name == name) return field.get();
+        }
+        return nullptr;
     }
 };
 
@@ -355,11 +315,11 @@ public:
         }
     }
     
-    IFieldInfo* Clone() override {
-        FieldInfoAny* clone = new FieldInfoAny();
+    std::unique_ptr<IFieldInfo> Clone() override {
+        auto clone = std::make_unique<FieldInfoAny>();
         clone->name = name;
         clone->root = root;
-        return clone;
+        return std::unique_ptr<IFieldInfo>(std::move(clone));
     }
     
     IFieldEditor* CreateEditor() override {
@@ -429,6 +389,41 @@ struct JsonSerializer<IFieldInfo*> {
     }
 };
 
+template<typename T>
+struct JsonSerializer<std::shared_ptr<T>> {
+    static void Serialize(std::string& key, const std::shared_ptr<T>& value, minijson::object_writer& writer) {
+        JsonSerializer<T*>::Serialize(key, (const T*)value.get(), writer);
+    }
+    
+    static void Serialize(const std::shared_ptr<T>& value, minijson::array_writer& writer) {
+        JsonSerializer<T*>::Serialize((const T*)value.get(), writer);
+    }
+
+    static void Deserialize(minijson::value& value, std::shared_ptr<T>* field, minijson::istream_context& context) {
+        T* data;
+        JsonSerializer<T*>::Deserialize(value, &data, context);
+        field->reset(data);
+    }
+};
+
+template<typename T>
+struct JsonSerializer<std::unique_ptr<T>> {
+    static void Serialize(std::string& key, const std::unique_ptr<T>& value, minijson::object_writer& writer) {
+        JsonSerializer<T*>::Serialize(key, (const T*)value.get(), writer);
+    }
+    
+    static void Serialize(const std::unique_ptr<T>& value, minijson::array_writer& writer) {
+        JsonSerializer<T*>::Serialize((const T*)value.get(), writer);
+    }
+
+    static void Deserialize(minijson::value& value, std::unique_ptr<T>* field, minijson::istream_context& context) {
+        T* data;
+        JsonSerializer<T*>::Deserialize(value, &data, context);
+        field->reset(data);
+    }
+};
+
+
 struct TypeEditorTitle {
     using Callback = std::function<void*(void* context, void* parent, const std::string& title)>;
     static Callback Title;
@@ -459,7 +454,7 @@ struct TypeEditor : public IFieldEditor {
     }
 
     void Create(void* context, void* parent) override {
-        for(auto field : type.fields) {
+        for(auto& field : type.fields) {
             auto editor = field->CreateEditor();
             if (!editor) continue;
             editor->Create(context, parent);
@@ -496,7 +491,7 @@ struct TypeInfoEditor : public IFieldEditor {
     }
 
     void Create(void* context, void* parent) override {
-        for(auto field : type.fields) {
+        for(auto& field : type.fields) {
             auto editor = field->CreateEditor();
             if (!editor) continue;
             editor->Create(context, parent);
@@ -537,6 +532,22 @@ template<>
 struct FieldEditorCreator<IFieldInfo*> {
     static IFieldEditor* Create(IFieldInfo** ptr) {
         return (*ptr)->CreateEditor();
+    }
+};
+
+template<typename T>
+struct FieldEditorCreator<std::shared_ptr<T>> {
+    static IFieldEditor* Create(std::shared_ptr<T>* ptr) {
+        T* p = ptr->get();
+        return FieldEditorCreator<T*>::Create(&p);
+    }
+};
+
+template<typename T>
+struct FieldEditorCreator<std::unique_ptr<T>> {
+    static IFieldEditor* Create(std::unique_ptr<T>* ptr) {
+        T* p = ptr->get();
+        return FieldEditorCreator<T*>::Create(&p);
     }
 };
 

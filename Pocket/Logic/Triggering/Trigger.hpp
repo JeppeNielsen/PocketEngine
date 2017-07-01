@@ -15,18 +15,16 @@ namespace Pocket {
     class Trigger {
     public:
         Trigger();
-        ~Trigger();
-        Trigger(const Trigger& other);
-        void operator = (const Trigger& other);
         
         GameObjectHandle Source;
-        
-        std::vector<IFieldInfo*> variables;
+        std::vector<std::shared_ptr<IFieldInfo>> variables;
         
         void CreateVariables(GameObject* root);
         void Invoke();
         
         GameObject* clone;
+        
+        void TryStoreVariables();
         
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(Source)
@@ -34,6 +32,6 @@ namespace Pocket {
         TYPE_FIELDS_END        
     
     private:
-        void FindVariables(std::vector<IFieldInfo*>& variables, GameObject* objectWithVariable);
+        void FindVariables(std::vector<std::shared_ptr<IFieldInfo>>& variables, GameObject* objectWithVariable);
     };
 }

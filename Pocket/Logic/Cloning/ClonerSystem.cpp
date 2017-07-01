@@ -25,7 +25,7 @@ void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
         CloneSourceChanged(object);
     } else {
         Cloner* cloner = object->GetComponent<Cloner>();
-        std::vector<IFieldInfo*> variables;
+        std::vector<std::shared_ptr<IFieldInfo>> variables;
         cloner->components.clear();
         FindVariables(variables, object, object->Children()[0]);
         cloner->variables = variables;
@@ -53,16 +53,15 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     if (!source) return;
     source->Enabled = false;
     GameObject* child = object->CreateChildClone(source);
-    std::vector<IFieldInfo*> variables;
+    std::vector<std::shared_ptr<IFieldInfo>> variables;
     FindVariables(variables, object, child);
     if (variables.size() == cloner->variables.size()) {
         for (int i=0; i<variables.size(); ++i) {
             //std::cout << "Cloner Want to remove variable:  " << &variables[i] << "  " << object->RootId() << std::endl;
             //std::cout << cloner->variables[i]->ToString() << "  " << std::endl;
             if (cloner->variables[i] && cloner->variables[i]->type == -1) {
-                variables[i]->SetFromAny(static_cast<FieldInfoAny*>(cloner->variables[i]));
+                variables[i]->SetFromAny(static_cast<FieldInfoAny*>(cloner->variables[i].get()));
                 //std::cout << "Cloner  Remove variable:  " << cloner->variables[i] << "  " << object->RootId() << std::endl;
-                delete cloner->variables[i];
                 cloner->variables[i] = 0;
             }
         }
@@ -70,7 +69,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     cloner->variables = variables;
 }
 
-void ClonerSystem::FindVariables(std::vector<IFieldInfo*>& variables, GameObject* cloner, Pocket::GameObject *objectWithVariable) {
+void ClonerSystem::FindVariables(std::vector<std::shared_ptr<IFieldInfo>>& variables, GameObject* cloner, Pocket::GameObject *objectWithVariable) {
     CloneVariable* vars = objectWithVariable->GetComponent<CloneVariable>();
     
     if (vars) {

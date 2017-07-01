@@ -15,14 +15,10 @@
 namespace Pocket {
     class Cloner {
     public:
-        Cloner();
-        ~Cloner();
-        Cloner(const Cloner& other);
-        void operator = (const Cloner& other);
         
         GameObjectHandle Source;
         
-        std::vector<IFieldInfo*> variables;
+        std::vector<std::shared_ptr<IFieldInfo>> variables;
         std::vector<ComponentId> components;
         
         void TryStoreVariables();
