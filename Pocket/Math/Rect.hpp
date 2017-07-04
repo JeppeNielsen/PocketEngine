@@ -58,5 +58,6 @@ namespace Pocket {
             return Vector2(x + width * 0.5f, y + height * 0.5f);
         }
         
+        static Rect Lerp(const Rect& a, const Rect& b, float t);
     };
 }

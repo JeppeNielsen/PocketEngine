@@ -106,7 +106,7 @@ public:
         if (!vertexType) {
             GetMesh<Vertex>(); //TODO: needs to support other vertex types
         }
-        info.AddField(*vertexMesh, "VertexMesh");
+        info.AddField(vertexMesh, "VertexMesh");
         return info;
     }
 private:

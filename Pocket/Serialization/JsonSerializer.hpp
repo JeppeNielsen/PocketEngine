@@ -212,6 +212,10 @@ struct JsonSerializer<Property<T>> {
         JsonSerializer<T>::Serialize(key, value(), writer);
     }
     
+    static void Serialize(const Property<T>& value, minijson::array_writer& writer) {
+        JsonSerializer<T>::Serialize(value(), writer);
+    }
+    
     static void Deserialize(minijson::value& value, Property<T>* field, minijson::istream_context& context) {
        T data;
        JsonSerializer<T>::Deserialize(value, &data, context);
@@ -300,9 +304,7 @@ struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::t
     }
     
     static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
-        if (value.type() != minijson::String) return;
-        using typeName = typename std::remove_pointer<T>::type;
-        (*field) = typeName::Deserialize(value.as_string());
+        JsonSerializer<typename std::remove_pointer<T>::type>::Deserialize(value, *field, context);
     }
 };
 

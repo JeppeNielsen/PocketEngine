@@ -120,6 +120,13 @@ Vector2 Box::Interpolate(const Vector2& p) const {
 	return Vector2(left + (right - left) * p.x, top + (bottom - top) * p.y);
 }
 
+Box Box::Lerp(const Box &a, const Box &b, float t) {
+	return Box(a.left + (b.left - a.left) * t,
+               a.top + (b.top - a.top) * t,
+               a.right + (b.right - a.right) * t,
+               a.bottom + (b.bottom - a.bottom) * t);
+}
+
 /*
 
 public static void CalculateRectangle(

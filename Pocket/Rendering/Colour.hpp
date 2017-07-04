@@ -137,8 +137,7 @@ namespace Pocket {
             return Colour((float)num4, (float)num5, (float)num6, (float)alpha);
         }
 
-
-        static Colour Lerp(const Colour& source, const Colour& dest, const float& amount) {
+        static Colour Lerp(const Colour& source, const Colour& dest, const float amount) {
 
             float s_r = (((float)source.r) / 255.0f);
             float s_g = (((float)source.g) / 255.0f);

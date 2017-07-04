@@ -36,6 +36,7 @@ namespace Pocket {
             float Aspect() const;
         
             static Box Deserialize(const std::string &data);
+            static Box Lerp(const Box& a, const Box& b, float t);
 
 	private:
 		static Vector2 corners[4];

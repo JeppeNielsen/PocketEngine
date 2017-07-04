@@ -10,6 +10,7 @@
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
 #include "Event.hpp"
+#include "TypeInterpolator.hpp"
 
 namespace Pocket {
     class GameObjectHandle {
@@ -67,5 +68,12 @@ namespace Pocket {
         std::string sceneGuid;
         
         friend class GameWorld;
+    };
+    
+    template<>
+    struct TypeInterpolator<GameObjectHandle> {
+        static void Interpolate(GameObjectHandle* value, float t, const GameObjectHandle& a, const GameObjectHandle& b) {
+            value->operator=(t<0.5f ? a : b);
+        }
     };
 }

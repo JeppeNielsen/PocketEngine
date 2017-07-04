@@ -20,3 +20,10 @@ Rect Rect::Deserialize(const std::string &data, const char delim) {
                 v.size()>2 ? v[2] : 0,
                 v.size()>3 ? v[3] : 0);
 }
+
+Rect Rect::Lerp(const Pocket::Rect &a, const Pocket::Rect &b, float t) {
+    return Rect(a.x + (b.x - a.x) * t,
+                a.y + (b.y - a.y) * t,
+                a.width + (b.width - a.width) * t,
+                a.height + (b.height - a.height) * t);
+}

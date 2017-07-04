@@ -15,6 +15,8 @@
 #include "JsonSerializer.hpp"
 #include "TypeIndexList.hpp"
 #include "IFieldEditor.hpp"
+#include "Timeline.hpp"
+#include "TypeInterpolator.hpp"
 
 namespace Pocket {
 
@@ -24,6 +26,12 @@ class FieldInfo;
 class TypeInfo;
 
 class FieldInfoAny;
+
+class IFieldDataCollection;
+
+template<class T>
+class FieldDataCollection;
+
 
 class IFieldInfo {
 public:
@@ -36,6 +44,7 @@ public:
     virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
     virtual void SetFromOther(IFieldInfo* other) = 0;
+    virtual std::unique_ptr<IFieldDataCollection> CreateDataCollection() = 0;
 };
 
 template<class T>
@@ -70,6 +79,10 @@ public:
         (*field) = (*otherTyped->field);
     }
     
+    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
+        return std::make_unique<FieldDataCollection<T>>();
+    }
+
     friend class TypeInfo;
 public:
     T* field;
@@ -134,7 +147,7 @@ public:
         }
     }
     
-    std::unique_ptr<IFieldInfo> GetField(std::string name) {
+    std::unique_ptr<IFieldInfo> GetField(const std::string& name) {
         for(auto& field : fields) {
             if (field->name == name) return field->Clone();
         }
@@ -153,7 +166,7 @@ public:
     }
 
 private:
-    IFieldInfo* GetFieldInternal(std::string name) {
+    IFieldInfo* GetFieldInternal(const std::string& name) {
         for(auto& field : fields) {
             if (field->name == name) return field.get();
         }
@@ -329,7 +342,10 @@ public:
     void SetFromAny(FieldInfoAny* any) override {}
     void SetFromOther(IFieldInfo* other) override {}
     
-    
+    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
+        return nullptr;
+    }
+
 };
 
 
@@ -392,11 +408,11 @@ struct JsonSerializer<IFieldInfo*> {
 template<typename T>
 struct JsonSerializer<std::shared_ptr<T>> {
     static void Serialize(std::string& key, const std::shared_ptr<T>& value, minijson::object_writer& writer) {
-        JsonSerializer<T*>::Serialize(key, (const T*)value.get(), writer);
+        JsonSerializer<T*>::Serialize(key, value.get(), writer);
     }
     
     static void Serialize(const std::shared_ptr<T>& value, minijson::array_writer& writer) {
-        JsonSerializer<T*>::Serialize((const T*)value.get(), writer);
+        JsonSerializer<T*>::Serialize(value.get(), writer);
     }
 
     static void Deserialize(minijson::value& value, std::shared_ptr<T>* field, minijson::istream_context& context) {
@@ -409,11 +425,11 @@ struct JsonSerializer<std::shared_ptr<T>> {
 template<typename T>
 struct JsonSerializer<std::unique_ptr<T>> {
     static void Serialize(std::string& key, const std::unique_ptr<T>& value, minijson::object_writer& writer) {
-        JsonSerializer<T*>::Serialize(key, (const T*)value.get(), writer);
+        JsonSerializer<T*>::Serialize(key, value.get(), writer);
     }
     
     static void Serialize(const std::unique_ptr<T>& value, minijson::array_writer& writer) {
-        JsonSerializer<T*>::Serialize((const T*)value.get(), writer);
+        JsonSerializer<T*>::Serialize(value.get(), writer);
     }
 
     static void Deserialize(minijson::value& value, std::unique_ptr<T>* field, minijson::istream_context& context) {
@@ -599,5 +615,76 @@ fields.AddField(field, #field);
 return fields; \
 } \
 private:
+
+template<typename T>
+struct FieldDataCollectionTimeline {
+    Timeline<T> t;
+};
+
+class IFieldDataCollection {
+public:
+    virtual ~IFieldDataCollection() { }
+    virtual void AddData(float time, IFieldInfo* field) = 0;
+    virtual void Apply(float time, IFieldInfo* field) = 0;
+    virtual TypeInfo GetType() = 0;
+};
+
+template<class T>
+class FieldDataCollection : public IFieldDataCollection {
+public:
+    void AddData(float time, IFieldInfo* field) override {
+        FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
+        timeline.t.AddNode(time, *f->field);
+    }
+    
+    void Apply(float time, IFieldInfo* field) override {
+        FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
+        timeline.t.Evaluate(time, [f] (float time, const T& a, const T& b) {
+            TypeInterpolator<T>::Interpolate(f->field, time, a, b);
+        });
+    }
+    
+    TypeInfo GetType() override {
+        TypeInfo info;
+        info.AddField(timeline, "timeline");
+        return info;
+    }
+    
+private:
+    FieldDataCollectionTimeline<T> timeline;
+};
+
+template<typename T>
+class FieldInfo<FieldDataCollectionTimeline<T>> : public IFieldInfo {
+public:
+
+    void Serialize(minijson::object_writer& writer) override {
+        JsonSerializer<std::vector<float>>::Serialize(name, field->t.keys, writer);
+        JsonSerializer<std::vector<T>>::Serialize(name, field->t.values, writer);
+    }
+    
+    void Deserialize(minijson::istream_context& context, minijson::value& value) override {
+        JsonSerializer<std::vector<float>>::Deserialize(value, &field->t.keys, context);
+        JsonSerializer<std::vector<T>>::Deserialize(value, &field->t.values, context);
+    }
+    
+    std::unique_ptr<IFieldInfo> Clone() override {
+        return nullptr;
+    }
+    
+    void SetFromAny(FieldInfoAny* any) override { }
+    
+    IFieldEditor* CreateEditor() override {
+        return nullptr;
+    }
+    
+    void SetFromOther(IFieldInfo* other) override { }
+    
+    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
+        return nullptr;
+    }
+
+    FieldDataCollectionTimeline<T>* field;
+};
 
 }
