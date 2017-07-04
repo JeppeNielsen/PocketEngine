@@ -27,10 +27,10 @@ class TypeInfo;
 
 class FieldInfoAny;
 
-class IFieldDataCollection;
+class IFieldInfoTimeline;
 
 template<class T>
-class FieldDataCollection;
+class FieldInfoTimeline;
 
 
 class IFieldInfo {
@@ -44,7 +44,7 @@ public:
     virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
     virtual void SetFromOther(IFieldInfo* other) = 0;
-    virtual std::unique_ptr<IFieldDataCollection> CreateDataCollection() = 0;
+    virtual std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() = 0;
 };
 
 template<class T>
@@ -79,8 +79,8 @@ public:
         (*field) = (*otherTyped->field);
     }
     
-    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
-        return std::make_unique<FieldDataCollection<T>>();
+    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
+        return std::make_unique<FieldInfoTimeline<T>>();
     }
 
     friend class TypeInfo;
@@ -342,7 +342,7 @@ public:
     void SetFromAny(FieldInfoAny* any) override {}
     void SetFromOther(IFieldInfo* other) override {}
     
-    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
+    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
         return nullptr;
     }
 
@@ -617,55 +617,55 @@ return fields; \
 private:
 
 template<typename T>
-struct FieldDataCollectionTimeline {
-    Timeline<T> t;
+struct FieldInfoTimelineData {
+    Timeline<T> timeline;
 };
 
-class IFieldDataCollection {
+class IFieldInfoTimeline {
 public:
-    virtual ~IFieldDataCollection() { }
+    virtual ~IFieldInfoTimeline() { }
     virtual void AddData(float time, IFieldInfo* field) = 0;
     virtual void Apply(float time, IFieldInfo* field) = 0;
     virtual TypeInfo GetType() = 0;
 };
 
 template<class T>
-class FieldDataCollection : public IFieldDataCollection {
+class FieldInfoTimeline : public IFieldInfoTimeline {
 public:
     void AddData(float time, IFieldInfo* field) override {
         FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
-        timeline.t.AddNode(time, *f->field);
+        data.timeline.AddNode(time, *f->field);
     }
     
     void Apply(float time, IFieldInfo* field) override {
         FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
-        timeline.t.Evaluate(time, [f] (float time, const T& a, const T& b) {
+        data.timeline.Evaluate(time, [f] (float time, const T& a, const T& b) {
             TypeInterpolator<T>::Interpolate(f->field, time, a, b);
         });
     }
     
     TypeInfo GetType() override {
         TypeInfo info;
-        info.AddField(timeline, "timeline");
+        info.AddField(data, "timeline");
         return info;
     }
     
 private:
-    FieldDataCollectionTimeline<T> timeline;
+    FieldInfoTimelineData<T> data;
 };
 
 template<typename T>
-class FieldInfo<FieldDataCollectionTimeline<T>> : public IFieldInfo {
+class FieldInfo<FieldInfoTimelineData<T>> : public IFieldInfo {
 public:
 
     void Serialize(minijson::object_writer& writer) override {
-        JsonSerializer<std::vector<float>>::Serialize(name, field->t.keys, writer);
-        JsonSerializer<std::vector<T>>::Serialize(name, field->t.values, writer);
+        JsonSerializer<std::vector<float>>::Serialize(name, field->timeline.keys, writer);
+        JsonSerializer<std::vector<T>>::Serialize(name, field->timeline.values, writer);
     }
     
     void Deserialize(minijson::istream_context& context, minijson::value& value) override {
-        JsonSerializer<std::vector<float>>::Deserialize(value, &field->t.keys, context);
-        JsonSerializer<std::vector<T>>::Deserialize(value, &field->t.values, context);
+        JsonSerializer<std::vector<float>>::Deserialize(value, &field->timeline.keys, context);
+        JsonSerializer<std::vector<T>>::Deserialize(value, &field->timeline.values, context);
     }
     
     std::unique_ptr<IFieldInfo> Clone() override {
@@ -680,11 +680,11 @@ public:
     
     void SetFromOther(IFieldInfo* other) override { }
     
-    std::unique_ptr<IFieldDataCollection> CreateDataCollection() override {
+    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
         return nullptr;
     }
 
-    FieldDataCollectionTimeline<T>* field;
+    FieldInfoTimelineData<T>* field;
 };
 
 }

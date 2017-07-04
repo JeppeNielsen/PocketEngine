@@ -16,7 +16,7 @@ namespace Pocket {
     class Animation {
     public:
         
-        using Nodes = std::map<std::string, std::shared_ptr<IFieldDataCollection>>;
+        using Nodes = std::map<std::string, std::shared_ptr<IFieldInfoTimeline>>;
         Nodes nodes;
         
         struct Target {

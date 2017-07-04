@@ -30,7 +30,7 @@ void Animation::AddNode(Pocket::GameObject *object, int componentId, const std::
     
     auto fieldInfo = typeinfo.GetField(fieldName);
     
-    IFieldDataCollection* collection;
+    IFieldInfoTimeline* collection;
     const auto& it = nodes.find(fieldName);
     if (it == nodes.end()) {
         auto collectionPtr = fieldInfo->CreateDataCollection();
