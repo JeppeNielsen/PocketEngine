@@ -15,37 +15,58 @@
 namespace Pocket {
     class Animation {
     public:
+        using FieldTimelines = std::map<std::string, std::shared_ptr<IFieldInfoTimeline>>;
         
-        using Nodes = std::map<std::string, std::shared_ptr<IFieldInfoTimeline>>;
-        Nodes nodes;
+        struct Path {
+            std::vector<int> indices;
+            void Set(GameObject* root, GameObject* child);
+        
+            inline bool operator ==(const Path& other) const{
+                if (other.indices.size()!=indices.size()) return false;
+                for(int i=0; i<indices.size(); ++i) {
+                    if (indices[i]!=other.indices[i]) return false;
+                }
+                return true;
+            }
+        
+            inline bool operator !=(const Path& other) const{
+                return !operator==(other);
+            }
+            
+            GameObject* TryFindObject(GameObject* root);
+        };
         
         struct Target {
-            GameObjectHandle object;
-            std::map<std::string, Nodes> nodes;
+            Path path;
+            std::map<std::string, FieldTimelines> components;
+            
+            Target() = default;
+            Target(const Target& target);
+            Target& operator=(const Target& other);
             
             TYPE_FIELDS_BEGIN
-            TYPE_FIELD(object)
-            TYPE_FIELD(nodes)
+            TYPE_FIELD(path.indices)
+            TYPE_FIELD(components)
             TYPE_FIELDS_END
         };
     
+    private:
         using Targets = std::vector<Target>;
         Targets targets;
-        
-        Target& CreateTarget(GameObject* object);
+        Target& CreateTarget(Path& path);
         
     public:
-        void AddNode(GameObject* object, int componentId, const std::string& fieldName, float time);
-        void Apply(float time);
+    
+        void AddNode(GameObject* rootNode, GameObject* node, int componentId, const std::string& fieldName, float time);
+        void Apply(GameObject* root, float time);
         
         template<typename T>
-        void AddNode(GameObject* object, const std::string& fieldName, float time) {
-            AddNode(object, GameIdHelper::GetComponentID<T>(), fieldName, time);
+        void AddNode(GameObject* rootNode, GameObject* node, const std::string& fieldName, float time) {
+            AddNode(rootNode, node, GameIdHelper::GetComponentID<T>(), fieldName, time);
         }
         
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(targets)
         TYPE_FIELDS_END
-        
     };
 }

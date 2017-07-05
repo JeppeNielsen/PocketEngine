@@ -10,52 +10,108 @@
 
 using namespace Pocket;
 
-Animation::Target& Animation::CreateTarget(Pocket::GameObject *object) {
+Animation::Target& Animation::CreateTarget(Path& path) {
     for(auto& target : targets) {
-        if (target.object.operator()() == object) {
+        if (target.path == path) {
             return target;
         }
     }
     targets.resize(targets.size() + 1);
-    targets.back().object = object;
+    targets.back().path = path;
     return targets.back();
 }
 
-void Animation::AddNode(Pocket::GameObject *object, int componentId, const std::string &fieldName, float time) {
-    auto& target = CreateTarget(object);
+void Animation::Path::Set(Pocket::GameObject *root, Pocket::GameObject *child) {
+    if (root == child) return;
     
-    auto typeinfo = object->GetComponentTypeInfo(componentId);
+    GameObject* current = child;
     
-    auto& nodes = target.nodes[typeinfo.name];
+    while (true) {
+        indices.push_back(current->ChildIndex());
+        current = current->Parent;
+        if (!current || current == root) break;
+    }
+    std::reverse(indices.begin(), indices.end());
+}
+
+GameObject* Animation::Path::TryFindObject(Pocket::GameObject *root) {
+    if (indices.empty()) return root;
+    
+    GameObject* parent = root;
+    for (int i=0; i<indices.size(); i++) {
+        auto& children = parent->Children();
+        int index = indices[i];
+        if (index>=children.size()) {
+            return 0;
+        }
+        parent = children[index];
+    }
+    return parent;
+}
+
+Animation::Target::Target(const Animation::Target& other) {
+    path = other.path;
+    components = other.components;
+    for(auto& c : other.components) {
+        auto& cc = components[c.first];
+        for(auto& f : c.second) {
+            cc[f.first] = f.second->Clone();
+        }
+    }
+}
+
+Animation::Target& Animation::Target::operator=(const Pocket::Animation::Target &other) {
+    path = other.path;
+    components = other.components;
+    for(auto& c : other.components) {
+        auto& cc = components[c.first];
+        for(auto& f : c.second) {
+            cc[f.first] = f.second->Clone();
+        }
+    }
+    return *this;
+}
+
+void Animation::AddNode(GameObject *rootNode, GameObject* node, int componentId, const std::string &fieldName, float time) {
+
+    Path path;
+    path.Set(rootNode, node);
+
+    auto& target = CreateTarget(path);
+    
+    auto typeinfo = node->GetComponentTypeInfo(componentId);
+    
+    auto& fieldTimelines = target.components[typeinfo.name];
     
     auto fieldInfo = typeinfo.GetField(fieldName);
     
-    IFieldInfoTimeline* collection;
-    const auto& it = nodes.find(fieldName);
-    if (it == nodes.end()) {
-        auto collectionPtr = fieldInfo->CreateDataCollection();
-        collection = collectionPtr.get();
-        nodes[fieldName] = std::move(collectionPtr);
+    IFieldInfoTimeline* timeline;
+    const auto& it = fieldTimelines.find(fieldName);
+    if (it == fieldTimelines.end()) {
+        auto timelinePtr = fieldInfo->CreateDataCollection();
+        timeline = timelinePtr.get();
+        fieldTimelines[fieldName] = std::move(timelinePtr);
     } else {
-        collection = it->second.get();
+        timeline = it->second.get();
     }
     
-    collection->AddData(time, fieldInfo.get());
+    timeline->AddData(time, fieldInfo.get());
 }
 
-void Animation::Apply(float time) {
+void Animation::Apply(GameObject* root, float time) {
     for(auto& target : targets) {
-        GameObject* object = target.object();
+        GameObject* object = target.path.TryFindObject(root);
+        if (!object) continue;
         
-        for(auto& node : target.nodes) {
+        for(auto& componentTimeline : target.components) {
             
             int index;
-            if (object->World()->TryGetComponentIndex(node.first, index)) {
+            if (object->World()->TryGetComponentIndex(componentTimeline.first, index)) {
                 TypeInfo info = object->GetComponentTypeInfo(index);
-                for(auto& fieldName : node.second) {
-                    auto field = info.GetField(fieldName.first);
+                for(auto& fieldTimeline : componentTimeline.second) {
+                    auto field = info.GetField(fieldTimeline.first);
                     if (field) {
-                        fieldName.second->Apply(time, field.get());
+                        fieldTimeline.second->Apply(time, field.get());
                     }
                 }
             }
