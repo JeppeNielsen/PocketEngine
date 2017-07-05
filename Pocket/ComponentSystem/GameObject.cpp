@@ -386,6 +386,16 @@ const ObjectCollection& GameObject::Children() const {
     return children;
 }
 
+int GameObject::ChildIndex() const {
+    GameObject* parent = Parent();
+    if (!parent) return 0;
+    auto& children = parent->children;
+    for(int i=0; i<children.size(); ++i) {
+        if (children[i] == this) return i;
+    }
+    return 0;
+}
+
 InputManager& GameObject::Input() const { return scene->world->Input(); }
 
 std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) const {

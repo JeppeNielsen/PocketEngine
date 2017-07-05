@@ -182,6 +182,7 @@ namespace Pocket {
         bool IsRoot() const;
         
         const ObjectCollection& Children() const;
+        int ChildIndex() const;
         
         Handle<GameObject> GetHandle() const;
         
