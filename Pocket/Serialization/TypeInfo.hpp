@@ -627,6 +627,7 @@ public:
     virtual void AddData(float time, IFieldInfo* field) = 0;
     virtual void Apply(float time, IFieldInfo* field) = 0;
     virtual TypeInfo GetType() = 0;
+    virtual std::unique_ptr<IFieldInfoTimeline> Clone() = 0;
 };
 
 template<class T>
@@ -648,6 +649,12 @@ public:
         TypeInfo info;
         info.AddField(data, "timeline");
         return info;
+    }
+    
+    std::unique_ptr<IFieldInfoTimeline> Clone() override {
+        std::unique_ptr<FieldInfoTimeline<T>> clone = std::make_unique<FieldInfoTimeline<T>>();
+        clone->data = this->data;
+        return std::unique_ptr<IFieldInfoTimeline>(std::move(clone));
     }
     
 private:
