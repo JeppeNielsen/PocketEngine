@@ -32,6 +32,41 @@ class IFieldInfoTimeline;
 template<class T>
 class FieldInfoTimeline;
 
+template<class T, typename S = void>
+struct TimelineCreator {
+    static std::unique_ptr<IFieldInfoTimeline> CreateTimeline() {
+        return std::make_unique<FieldInfoTimeline<T>>();
+    }
+};
+
+template<typename T>
+struct TimelineCreator<std::unique_ptr<T>> {
+    static std::unique_ptr<IFieldInfoTimeline> CreateTimeline() {
+        return nullptr;
+    }
+};
+
+template<typename T>
+struct TimelineCreator<std::vector<std::unique_ptr<T>>> {
+    static std::unique_ptr<IFieldInfoTimeline> CreateTimeline() {
+        return nullptr;
+    }
+};
+
+template<class T, typename S = void>
+struct FieldInfoCopier {
+    static void Copy(IFieldInfo* source, IFieldInfo* dest);
+};
+
+template<typename T>
+struct FieldInfoCopier<std::unique_ptr<T>> {
+    static void Copy(IFieldInfo* source, IFieldInfo* dest) {}
+};
+
+template<typename T>
+struct FieldInfoCopier<std::vector<std::unique_ptr<T>>> {
+    static void Copy(IFieldInfo* source, IFieldInfo* dest) {}
+};
 
 class IFieldInfo {
 public:
@@ -44,7 +79,7 @@ public:
     virtual void SetFromAny(FieldInfoAny* any) = 0;
     virtual IFieldEditor* CreateEditor() = 0;
     virtual void SetFromOther(IFieldInfo* other) = 0;
-    virtual std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() = 0;
+    virtual std::unique_ptr<IFieldInfoTimeline> CreateTimeline() = 0;
 };
 
 template<class T>
@@ -75,18 +110,24 @@ public:
     }
     
     void SetFromOther(IFieldInfo* other) override {
-        FieldInfo<T>* otherTyped = static_cast<FieldInfo<T>*>(other);
-        (*field) = (*otherTyped->field);
+        FieldInfoCopier<T>::Copy(other, this);
     }
     
-    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
-        return std::make_unique<FieldInfoTimeline<T>>();
+    std::unique_ptr<IFieldInfoTimeline> CreateTimeline() override {
+        return TimelineCreator<T>::CreateTimeline();
     }
 
     friend class TypeInfo;
 public:
     T* field;
 };
+
+template<class T, typename S>
+void FieldInfoCopier<T,S>::Copy(IFieldInfo* source, IFieldInfo* dest) {
+    FieldInfo<T>* sourceTyped = static_cast<FieldInfo<T>*>(source);
+    FieldInfo<T>* destTyped = static_cast<FieldInfo<T>*>(dest);
+    (*destTyped->field) = (*sourceTyped->field);
+}
 
 class TypeInfo {
 public:
@@ -142,7 +183,7 @@ public:
                     minijson::ignore(context);
                 }
             });
-        } catch (std::exception e) {
+        } catch (minijson::parse_error e) {
             std::cout<< e.what() << std::endl;
         }
     }
@@ -342,7 +383,7 @@ public:
     void SetFromAny(FieldInfoAny* any) override {}
     void SetFromOther(IFieldInfo* other) override {}
     
-    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
+    std::unique_ptr<IFieldInfoTimeline> CreateTimeline() override {
         return nullptr;
     }
 
@@ -618,8 +659,11 @@ private:
 
 template<typename T>
 struct FieldInfoTimelineData {
-    Timeline<T> timeline;
+    Timeline<T> t;
 };
+
+template<class T>
+class FieldInfoTimeline;
 
 class IFieldInfoTimeline {
 public:
@@ -628,6 +672,42 @@ public:
     virtual void Apply(float time, IFieldInfo* field) = 0;
     virtual TypeInfo GetType() = 0;
     virtual std::unique_ptr<IFieldInfoTimeline> Clone() = 0;
+    virtual int TypeIndex() = 0;
+    
+    using Types = std::tuple<
+            FieldInfoTimeline<int>,
+            FieldInfoTimeline<short>,
+            FieldInfoTimeline<float>,
+            FieldInfoTimeline<double>,
+            FieldInfoTimeline<std::string>,
+            FieldInfoTimeline<bool>,
+            FieldInfoTimeline<uint64_t>,
+            FieldInfoTimeline<Vector2>,
+            FieldInfoTimeline<Vector3>,
+            FieldInfoTimeline<Quaternion>,
+            FieldInfoTimeline<Colour>,
+            FieldInfoTimeline<Matrix4x4>,
+            FieldInfoTimeline<Rect>,
+            FieldInfoTimeline<Box>,
+            FieldInfoTimeline<Matrix4x4>,
+    
+            FieldInfoTimeline<Property<int>>,
+            FieldInfoTimeline<Property<short>>,
+            FieldInfoTimeline<Property<float>>,
+            FieldInfoTimeline<Property<double>>,
+            FieldInfoTimeline<Property<std::string>>,
+            FieldInfoTimeline<Property<bool>>,
+            FieldInfoTimeline<Property<uint64_t>>,
+            FieldInfoTimeline<Property<Vector2>>,
+            FieldInfoTimeline<Property<Vector3>>,
+            FieldInfoTimeline<Property<Quaternion>>,
+            FieldInfoTimeline<Property<Colour>>,
+            FieldInfoTimeline<Property<Matrix4x4>>,
+            FieldInfoTimeline<Property<Rect>>,
+            FieldInfoTimeline<Property<Box>>,
+            FieldInfoTimeline<Property<Matrix4x4>>
+    
+            >;
 };
 
 template<class T>
@@ -635,63 +715,77 @@ class FieldInfoTimeline : public IFieldInfoTimeline {
 public:
     void AddData(float time, IFieldInfo* field) override {
         FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
-        data.timeline.AddNode(time, *f->field);
+        timeline.t.AddNode(time, *f->field);
     }
     
     void Apply(float time, IFieldInfo* field) override {
         FieldInfo<T>* f = static_cast<FieldInfo<T>*>(field);
-        data.timeline.Evaluate(time, [f] (float time, const T& a, const T& b) {
+        timeline.t.Evaluate(time, [f] (float time, const T& a, const T& b) {
             TypeInterpolator<T>::Interpolate(f->field, time, a, b);
         });
     }
     
     TypeInfo GetType() override {
         TypeInfo info;
-        info.AddField(data, "timeline");
+        info.AddField(timeline, "timeline");
         return info;
     }
-    
+
     std::unique_ptr<IFieldInfoTimeline> Clone() override {
         std::unique_ptr<FieldInfoTimeline<T>> clone = std::make_unique<FieldInfoTimeline<T>>();
-        clone->data = this->data;
+        clone->timeline = this->timeline;
         return std::unique_ptr<IFieldInfoTimeline>(std::move(clone));
     }
     
-private:
-    FieldInfoTimelineData<T> data;
+    int TypeIndex() {
+        return IndexInTuple<std::remove_pointer_t<decltype(this)>, IFieldInfoTimeline::Types>::value;
+    }
+    
+public:
+    FieldInfoTimelineData<T> timeline;
 };
 
-template<typename T>
-class FieldInfo<FieldInfoTimelineData<T>> : public IFieldInfo {
-public:
 
-    void Serialize(minijson::object_writer& writer) override {
-        JsonSerializer<std::vector<float>>::Serialize(name, field->timeline.keys, writer);
-        JsonSerializer<std::vector<T>>::Serialize(name, field->timeline.values, writer);
-    }
-    
-    void Deserialize(minijson::istream_context& context, minijson::value& value) override {
-        JsonSerializer<std::vector<float>>::Deserialize(value, &field->timeline.keys, context);
-        JsonSerializer<std::vector<T>>::Deserialize(value, &field->timeline.values, context);
-    }
-    
-    std::unique_ptr<IFieldInfo> Clone() override {
-        return nullptr;
-    }
-    
-    void SetFromAny(FieldInfoAny* any) override { }
-    
-    IFieldEditor* CreateEditor() override {
-        return nullptr;
-    }
-    
-    void SetFromOther(IFieldInfo* other) override { }
-    
-    std::unique_ptr<IFieldInfoTimeline> CreateDataCollection() override {
-        return nullptr;
-    }
 
-    FieldInfoTimelineData<T>* field;
+template<typename S>
+struct TimelineCreator<FieldInfoTimelineData<S>> {
+    static std::unique_ptr<IFieldInfoTimeline> CreateTimeline() {
+        return nullptr;
+    }
+};
+
+template<typename S>
+struct JsonSerializer<FieldInfoTimelineData<S>> {
+
+    static void Serialize(std::string& key, const FieldInfoTimelineData<S>& value, minijson::object_writer& writer) {
+        minijson::object_writer object = writer.nested_object(key.c_str());
+        std::string keys = "keys";
+        std::string values = "values";
+        
+        JsonSerializer<std::vector<float>>::Serialize(keys, value.t.keys, object);
+        JsonSerializer<std::vector<S>>::Serialize(values, value.t.values, object);
+        object.close();
+    }
+    
+    static void Serialize(const FieldInfoTimelineData<S>& value, minijson::array_writer& writer) {
+        JsonSerializer<std::vector<float>>::Serialize(value.t.keys, writer);
+        JsonSerializer<std::vector<S>>::Serialize(value.t.values, writer);
+    }
+    
+    static void Deserialize(minijson::value& value, FieldInfoTimelineData<S>* field, minijson::istream_context& context) {
+        try {
+            minijson::parse_object(context, [&] (const char* name, minijson::value v) {
+                std::string n = std::string(name);
+                if (n == "keys") {
+                    JsonSerializer<std::vector<float>>::Deserialize(v, &field->t.keys, context);
+                } else if (n == "values") {
+                    JsonSerializer<std::vector<S>>::Deserialize(v, &field->t.values, context);
+                }
+            });
+        } catch (std::exception e) {
+            std::cout<< e.what() << std::endl;
+        }
+    }
 };
 
 }

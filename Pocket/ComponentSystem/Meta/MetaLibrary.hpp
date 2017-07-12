@@ -76,4 +76,50 @@ HAS_OPTIONAL_METHOD(GetType, TypeInfo());
 
 }
 
+
+//Tuple helper functions
+
+template<class F, class...Ts, std::size_t...Is>
+constexpr void for_each_in_tuple(const std::tuple<Ts...> & tuple, F&& func, std::index_sequence<Is...>){
+    using expander = int[];
+    (void)expander { 0, ((void)func(std::get<Is>(tuple)), 0)... };
+}
+
+template<class F, class...Ts>
+constexpr void for_each_in_tuple(const std::tuple<Ts...> & tuple, F&& func){
+    for_each_in_tuple(tuple, func, std::make_index_sequence<sizeof...(Ts)>());
+}
+
+template <class T, class Tuple>
+struct IndexInTuple
+{
+    static const int value = -100000;
+};
+
+template <class T, class... Types>
+struct IndexInTuple<T, std::tuple<T, Types...>> {
+    static const int value = 0;
+};
+
+template <class T, class U, class... Types>
+struct IndexInTuple<T, std::tuple<U, Types...>> {
+    static const int value = 1 + IndexInTuple<T, std::tuple<Types...>>::value;
+};
+
+template<typename Base, typename Types>
+static Base* IndexToType(const int typeId) {
+    const static Types serializableTypes;
+    Base* ret = nullptr;
+    int n = 0;
+    Pocket::for_each_in_tuple(serializableTypes, [&] (auto p) {
+        if (n == typeId) {
+           using Type = std::remove_pointer_t< decltype(p) >;
+           ret = new Type();
+        }
+        n++;
+    });
+    return ret;
+}
+
+
 }

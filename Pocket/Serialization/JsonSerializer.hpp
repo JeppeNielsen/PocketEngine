@@ -296,16 +296,50 @@ struct JsonSerializer<T, typename std::enable_if< std::is_enum<T>::value >::type
 template<typename T>
 struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::type> {
     static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
-        JsonSerializer<typename std::remove_pointer<T>::type>::Serialize(key, *value, writer);
+        if (!value) return;
+    
+        std::string typeId = "typeId";
+        int id = value->TypeIndex();
+        JsonSerializer<int>::Serialize(typeId, id, writer);
+        JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(key, *value, writer);
+        
     }
     
     static void Serialize(const T& value, minijson::array_writer& writer) {
-        JsonSerializer<typename std::remove_pointer<T>::type>::Serialize(*value, writer);
+        if (!value) return;
+        minijson::object_writer object = writer.nested_object();
+        std::string typeId = "typeId";
+        int id = value->TypeIndex();
+        JsonSerializer<int>::Serialize(typeId, id, object);
+        std::string objName = "obj";
+        JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(objName, *value, object);
+        object.close();
+    
     }
     
     static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
-        JsonSerializer<typename std::remove_pointer<T>::type>::Deserialize(value, *field, context);
+        using nonPointerType = typename std::remove_pointer_t<T>;
+        
+        try {
+            static int typeId = -1;
+            minijson::parse_object(context, [&] (const char* name, minijson::value v) {
+                if (strcmp(name, "typeId")==0) {
+                    typeId = (int)v.as_long();
+                } else if (typeId>=0) {
+                    *field = Pocket::IndexToType<nonPointerType, typename nonPointerType::Types>(typeId);
+                    JsonSerializer<nonPointerType>::Deserialize(v, *field, context);
+                }
+                else {
+                    minijson::ignore(context);
+                }
+            });
+        } catch (minijson::parse_error e) {
+            std::cout<< e.what() << std::endl;
+        }
+
+        
     }
+    
 };
 
 template<typename T>

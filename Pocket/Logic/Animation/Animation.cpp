@@ -55,7 +55,9 @@ Animation::Target::Target(const Animation::Target& other) {
     for(auto& c : other.components) {
         auto& cc = components[c.first];
         for(auto& f : c.second) {
-            cc[f.first] = f.second->Clone();
+            if (f.second) {
+                cc[f.first] = f.second->Clone();
+            }
         }
     }
 }
@@ -88,8 +90,9 @@ void Animation::AddNode(GameObject *rootNode, GameObject* node, int componentId,
     IFieldInfoTimeline* timeline;
     const auto& it = fieldTimelines.find(fieldName);
     if (it == fieldTimelines.end()) {
-        auto timelinePtr = fieldInfo->CreateDataCollection();
+        auto timelinePtr = fieldInfo->CreateTimeline();
         timeline = timelinePtr.get();
+
         fieldTimelines[fieldName] = std::move(timelinePtr);
     } else {
         timeline = it->second.get();
@@ -109,6 +112,8 @@ void Animation::Apply(GameObject* root, float time) {
             if (object->World()->TryGetComponentIndex(componentTimeline.first, index)) {
                 TypeInfo info = object->GetComponentTypeInfo(index);
                 for(auto& fieldTimeline : componentTimeline.second) {
+                    if (!fieldTimeline.second) continue;
+                    
                     auto field = info.GetField(fieldTimeline.first);
                     if (field) {
                         fieldTimeline.second->Apply(time, field.get());

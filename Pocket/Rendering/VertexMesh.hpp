@@ -18,6 +18,9 @@
 
 namespace Pocket {
 
+template<typename T>
+class VertexMesh;
+
 class IVertexMesh {
 public:
     virtual ~IVertexMesh() { }
@@ -74,6 +77,9 @@ public:
     }
     
     virtual TypeInfo GetType() = 0;
+    virtual int TypeIndex() = 0;
+    
+    using Types = std::tuple<VertexMesh<Vertex>>;
 };
 
 template<class Vertex>
@@ -88,6 +94,10 @@ public:
         info.AddField(vertices, "vertices");
         info.AddField(triangles, "triangles");
         return info;
+    }
+    
+    int TypeIndex() override {
+        return IndexInTuple<std::remove_pointer_t<decltype(this)>, IVertexMesh::Types>::value;
     }
     
     const Vector3& GetPosition(size_t index) override {
