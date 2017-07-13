@@ -70,11 +70,11 @@ void ScriptTests::RunTests() {
             return true;
         });
         
-        auto* fieldType = types[1].GetField("velocity");
-        FieldInfo<int>* info = (FieldInfo<int>*)fieldType;
-        
-        *info->field = 12;
-        
+//        auto fieldType = types[1].GetField("velocity");
+//        FieldInfo<int>* info = (FieldInfo<int>*)fieldType;
+//        
+//        *info->field = 12;
+//        
         {
             minijson::writer_configuration config;
             config = config.pretty_printing(true);

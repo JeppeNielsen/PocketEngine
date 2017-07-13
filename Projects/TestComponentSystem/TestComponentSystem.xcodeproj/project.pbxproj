@@ -69,6 +69,7 @@
 		7201D9C11ED313520074C053 /* ScriptData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201D7C31ED313510074C053 /* ScriptData.cpp */; };
 		7201D9C31ED313520074C053 /* ScriptWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201D7CB1ED313510074C053 /* ScriptWorld.cpp */; };
 		7201D9C41ED313520074C053 /* TypeIndexList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201D7D21ED313510074C053 /* TypeIndexList.cpp */; };
+		7227450F1F16A492009B0528 /* testInitializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227450D1F16A492009B0528 /* testInitializer.cpp */; };
 		724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724E323E1D0DFB9F0007E8CA /* LogicTests.cpp */; };
 		724E32491D0DFB9F0007E8CA /* LogicTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 724E32441D0DFB9F0007E8CA /* LogicTest.cpp */; };
 		724E324B1D0E14020007E8CA /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724E324A1D0E14020007E8CA /* IOKit.framework */; };
@@ -76,10 +77,11 @@
 		724E324F1D0E14150007E8CA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724E324E1D0E14150007E8CA /* OpenGL.framework */; };
 		724E32511D0E141C0007E8CA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724E32501D0E141C0007E8CA /* OpenAL.framework */; };
 		72772F651D0763FD005AC1D8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F641D0763FD005AC1D8 /* main.cpp */; };
+		72B3AD8B1EE5FD2F000A6258 /* ScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */; };
 		72B491E41DBD15A50063518A /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B491E31DBD15A50063518A /* libclang.dylib */; };
-		72B491ED1DBD57400063518A /* ScriptTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B491EC1DBD57400063518A /* ScriptTest.cpp */; };
-		72B492651DCF37C70063518A /* SerializationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492631DCF37C70063518A /* SerializationTests.cpp */; };
-		72B492681DCF40DA0063518A /* ScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492661DCF40DA0063518A /* ScriptTests.cpp */; };
+		72FBB0721F0ED9500036AC7A /* Colour.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FBB05E1F0ED9500036AC7A /* Colour.cpp */; };
+		72FBB07C1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FBB07B1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp */; };
+		72FBB07E1F12BE5F0036AC7A /* testConstexpr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72FBB07D1F12BE5F0036AC7A /* testConstexpr.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -95,7 +97,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		7201CBFA1ED311DE0074C053 /* ScriptTest.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScriptTest.hpp; sourceTree = "<group>"; };
 		7201D2E61ED3134F0074C053 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		7201D2E71ED3134F0074C053 /* FileWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileWorld.cpp; sourceTree = "<group>"; };
 		7201D2E81ED3134F0074C053 /* FileWorld.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileWorld.hpp; sourceTree = "<group>"; };
@@ -241,6 +242,8 @@
 		7201D7D21ED313510074C053 /* TypeIndexList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TypeIndexList.cpp; sourceTree = "<group>"; };
 		7201D7D31ED313510074C053 /* TypeIndexList.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeIndexList.hpp; sourceTree = "<group>"; };
 		7201D7D41ED313510074C053 /* TypeInfo.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeInfo.hpp; sourceTree = "<group>"; };
+		7227450D1F16A492009B0528 /* testInitializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testInitializer.cpp; sourceTree = "<group>"; };
+		722745111F1804CA009B0528 /* ObjectConstructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjectConstructor.hpp; sourceTree = "<group>"; };
 		724E323E1D0DFB9F0007E8CA /* LogicTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogicTests.cpp; sourceTree = "<group>"; };
 		724E323F1D0DFB9F0007E8CA /* LogicTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LogicTests.hpp; sourceTree = "<group>"; };
 		724E32441D0DFB9F0007E8CA /* LogicTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogicTest.cpp; sourceTree = "<group>"; };
@@ -251,17 +254,19 @@
 		724E32501D0E141C0007E8CA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		72772F611D0763FD005AC1D8 /* TestComponentSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestComponentSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 		72772F641D0763FD005AC1D8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTests.cpp; sourceTree = "<group>"; };
+		72B3AD8A1EE5FD2F000A6258 /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
 		72B491E31DBD15A50063518A /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = TestComponentSystem/clang/lib/libclang.dylib; sourceTree = "<group>"; };
-		72B491EC1DBD57400063518A /* ScriptTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTest.cpp; sourceTree = "<group>"; };
 		72B492131DBEAC080063518A /* executable_autogenerated.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = executable_autogenerated.hpp; sourceTree = "<group>"; };
 		72B492141DBEAC080063518A /* GameSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameSystem.hpp; sourceTree = "<group>"; };
 		72B492151DBEAC080063518A /* OpenGL.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = OpenGL.hpp; sourceTree = "<group>"; };
 		72B492161DBEAC080063518A /* scriptWorld_autogenerated.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = scriptWorld_autogenerated.cpp; sourceTree = "<group>"; };
 		72B492171DBEAC080063518A /* TypeInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TypeInfo.hpp; sourceTree = "<group>"; };
-		72B492631DCF37C70063518A /* SerializationTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializationTests.cpp; sourceTree = "<group>"; };
-		72B492641DCF37C70063518A /* SerializationTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializationTests.hpp; sourceTree = "<group>"; };
-		72B492661DCF40DA0063518A /* ScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTests.cpp; sourceTree = "<group>"; };
-		72B492671DCF40DA0063518A /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
+		72FBB05E1F0ED9500036AC7A /* Colour.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Colour.cpp; sourceTree = "<group>"; };
+		72FBB05F1F0ED9500036AC7A /* Colour.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Colour.hpp; sourceTree = "<group>"; };
+		72FBB07A1F0ED96F0036AC7A /* TypeInterpolator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeInterpolator.hpp; sourceTree = "<group>"; };
+		72FBB07B1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = serializeTemplateTypes.cpp; sourceTree = "<group>"; };
+		72FBB07D1F12BE5F0036AC7A /* testConstexpr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testConstexpr.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +288,7 @@
 		7201D2E41ED3134F0074C053 /* Pocket */ = {
 			isa = PBXGroup;
 			children = (
+				72FBB05B1F0ED9500036AC7A /* Rendering */,
 				7201D2E51ED3134F0074C053 /* ComponentSystem */,
 				7201D2F91ED3134F0074C053 /* Core */,
 				7201D30A1ED3134F0074C053 /* Data */,
@@ -558,6 +564,7 @@
 		7201D7CD1ED313510074C053 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
+				72FBB07A1F0ED96F0036AC7A /* TypeInterpolator.hpp */,
 				7201D7CE1ED313510074C053 /* IFieldEditor.hpp */,
 				7201D7CF1ED313510074C053 /* JsonSerializer.hpp */,
 				7201D7D01ED313510074C053 /* minijson_reader.hpp */,
@@ -565,6 +572,7 @@
 				7201D7D21ED313510074C053 /* TypeIndexList.cpp */,
 				7201D7D31ED313510074C053 /* TypeIndexList.hpp */,
 				7201D7D41ED313510074C053 /* TypeInfo.hpp */,
+				722745111F1804CA009B0528 /* ObjectConstructor.hpp */,
 			);
 			path = Serialization;
 			sourceTree = "<group>";
@@ -572,10 +580,8 @@
 		724E323D1D0DFB9F0007E8CA /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				72B492661DCF40DA0063518A /* ScriptTests.cpp */,
-				72B492671DCF40DA0063518A /* ScriptTests.hpp */,
-				72B492631DCF37C70063518A /* SerializationTests.cpp */,
-				72B492641DCF37C70063518A /* SerializationTests.hpp */,
+				72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */,
+				72B3AD8A1EE5FD2F000A6258 /* ScriptTests.hpp */,
 				724E323E1D0DFB9F0007E8CA /* LogicTests.cpp */,
 				724E323F1D0DFB9F0007E8CA /* LogicTests.hpp */,
 				724E32441D0DFB9F0007E8CA /* LogicTest.cpp */,
@@ -610,20 +616,13 @@
 			isa = PBXGroup;
 			children = (
 				72B4920C1DBEAB430063518A /* ScriptInclude */,
-				72B491EB1DBD572D0063518A /* Scripts */,
 				724E323D1D0DFB9F0007E8CA /* Tests */,
 				72772F641D0763FD005AC1D8 /* main.cpp */,
+				72FBB07B1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp */,
+				72FBB07D1F12BE5F0036AC7A /* testConstexpr.cpp */,
+				7227450D1F16A492009B0528 /* testInitializer.cpp */,
 			);
 			path = TestComponentSystem;
-			sourceTree = "<group>";
-		};
-		72B491EB1DBD572D0063518A /* Scripts */ = {
-			isa = PBXGroup;
-			children = (
-				7201CBFA1ED311DE0074C053 /* ScriptTest.hpp */,
-				72B491EC1DBD57400063518A /* ScriptTest.cpp */,
-			);
-			path = Scripts;
 			sourceTree = "<group>";
 		};
 		72B4920C1DBEAB430063518A /* ScriptInclude */ = {
@@ -636,6 +635,15 @@
 				72B492171DBEAC080063518A /* TypeInfo.hpp */,
 			);
 			path = ScriptInclude;
+			sourceTree = "<group>";
+		};
+		72FBB05B1F0ED9500036AC7A /* Rendering */ = {
+			isa = PBXGroup;
+			children = (
+				72FBB05E1F0ED9500036AC7A /* Colour.cpp */,
+				72FBB05F1F0ED9500036AC7A /* Colour.hpp */,
+			);
+			path = Rendering;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -708,13 +716,12 @@
 				7201D8D61ED313510074C053 /* Ray.cpp in Sources */,
 				7201D7E71ED313510074C053 /* FileWorld.cpp in Sources */,
 				724E32491D0DFB9F0007E8CA /* LogicTest.cpp in Sources */,
+				72FBB0721F0ED9500036AC7A /* Colour.cpp in Sources */,
 				724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */,
 				7201D9B71ED313520074C053 /* Profiler.cpp in Sources */,
-				72B491ED1DBD57400063518A /* ScriptTest.cpp in Sources */,
 				7201D9C31ED313520074C053 /* ScriptWorld.cpp in Sources */,
 				7201D9B01ED313520074C053 /* OSXWindowCreator.mm in Sources */,
 				7201D7EC1ED313510074C053 /* GameSystem.cpp in Sources */,
-				72B492681DCF40DA0063518A /* ScriptTests.cpp in Sources */,
 				7201D8011ED313510074C053 /* Worker.cpp in Sources */,
 				7201D8D51ED313510074C053 /* Quaternion.cpp in Sources */,
 				7201D7F01ED313510074C053 /* GameState.cpp in Sources */,
@@ -724,16 +731,19 @@
 				7201D7F41ED313510074C053 /* Window.cpp in Sources */,
 				7201D8CD1ED313510074C053 /* Box.cpp in Sources */,
 				7201D8E01ED313510074C053 /* RectPacker.cpp in Sources */,
+				72FBB07C1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp in Sources */,
 				7201D7F61ED313510074C053 /* BezierCurve3.cpp in Sources */,
 				7201D8D21ED313510074C053 /* Plane.cpp in Sources */,
 				7201D9B11ED313520074C053 /* WindowOSX.mm in Sources */,
 				7201D8DB1ED313510074C053 /* ChromecastMessage.cpp in Sources */,
+				7227450F1F16A492009B0528 /* testInitializer.cpp in Sources */,
 				7201D8021ED313510074C053 /* TimeMeasurer.cpp in Sources */,
 				7201D7F31ED313510074C053 /* Timer.cpp in Sources */,
 				7201D7FE1ED313510074C053 /* QuadTree.cpp in Sources */,
 				7201D9AE1ED313520074C053 /* GamePadManager.mm in Sources */,
 				7201D8D31ED313510074C053 /* Point.cpp in Sources */,
 				7201D7FF1ED313510074C053 /* StringHelper.cpp in Sources */,
+				72B3AD8B1EE5FD2F000A6258 /* ScriptTests.cpp in Sources */,
 				7201D8D91ED313510074C053 /* Vector2.cpp in Sources */,
 				7201D8D81ED313510074C053 /* TransitionHelper.cpp in Sources */,
 				7201D9C11ED313520074C053 /* ScriptData.cpp in Sources */,
@@ -754,9 +764,9 @@
 				7201D7EF1ED313510074C053 /* EngineContext.cpp in Sources */,
 				7201D8D11ED313510074C053 /* Matrix4x4.cpp in Sources */,
 				7201D9AD1ED313520074C053 /* FileSystemWatcher.cpp in Sources */,
-				72B492651DCF37C70063518A /* SerializationTests.cpp in Sources */,
 				7201D8001ED313510074C053 /* Triangulator.cpp in Sources */,
 				7201D9C41ED313520074C053 /* TypeIndexList.cpp in Sources */,
+				72FBB07E1F12BE5F0036AC7A /* testConstexpr.cpp in Sources */,
 				7201D8CC1ED313510074C053 /* BoundingFrustum.cpp in Sources */,
 				7201D8DE1ED313510074C053 /* clipper.cpp in Sources */,
 				7201D8CF1ED313510074C053 /* MathHelper.cpp in Sources */,
@@ -872,6 +882,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_PREPROCESSOR_DEFINITIONS = OSX;
 				HEADER_SEARCH_PATHS = "\"$(SRCROOT)/TestComponentSystem/clang/include\"";
 				LIBRARY_SEARCH_PATHS = (
