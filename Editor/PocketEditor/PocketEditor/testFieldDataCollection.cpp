@@ -28,7 +28,7 @@ int main_fieldDataCollection() {
     Component transform;
     auto type = transform.GetType();
     auto field = type.GetField("position");
-    auto collection = field->CreateDataCollection();
+    auto collection = field->CreateTimeline();
     
     transform.position = {1,2};
     collection->AddData(0.0f, field.get());
@@ -41,15 +41,14 @@ int main_fieldDataCollection() {
         transform.position = {5+(float)i,6-(float)i};
         collection->AddData(i/100.0f, field.get());
     }
-    auto collectionData = collection->GetType();
     
-    
+    /*auto collectionData = collection->GetType();
     minijson::writer_configuration config;
     config = config.pretty_printing(true);
     minijson::object_writer writer(std::cout, config);
     collectionData.Serialize(writer);
     writer.close();
-
+*/
 
     return 0;
 }
