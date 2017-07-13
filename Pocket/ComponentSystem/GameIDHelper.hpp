@@ -23,6 +23,18 @@ namespace Pocket {
         static ComponentId componentIDCounter;
         static SystemId systemIDCounter;
         
+        template<typename Class>
+        static std::string GetClassNameInternal() {
+#ifdef WIN32
+			const std::string functionName = __FUNCTION__;
+#else
+            const std::string functionName = __PRETTY_FUNCTION__;
+#endif
+            const std::string token = "Class = ";
+            size_t equal = functionName.find(token) + token.size();
+            return functionName.substr(equal, functionName.size() - equal - 1);
+        }
+        
     public:
     
         template<typename T>
@@ -38,15 +50,9 @@ namespace Pocket {
         }
         
         template<typename Class>
-        static std::string GetClassName() {
-#ifdef WIN32
-			std::string functionName = __FUNCTION__;
-#else
-            std::string functionName = __PRETTY_FUNCTION__;
-#endif
-            const std::string token = "Class = ";
-            size_t equal = functionName.find(token) + token.size();
-            return functionName.substr(equal, functionName.size() - equal - 1);
+        static std::string& GetClassName() {
+            static std::string name = GetClassNameInternal<Class>();
+            return name;
         }
     };
 }

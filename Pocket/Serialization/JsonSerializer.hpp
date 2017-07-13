@@ -13,6 +13,7 @@
 #include <type_traits>
 #include <sstream>
 #include <map>
+#include "ObjectConstructor.hpp"
 
 namespace Pocket {
 
@@ -299,18 +300,17 @@ struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::t
         if (!value) return;
     
         std::string typeId = "typeId";
-        int id = value->TypeIndex();
-        JsonSerializer<int>::Serialize(typeId, id, writer);
+        std::string id = value->Id();
+        JsonSerializer<std::string>::Serialize(typeId, id, writer);
         JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(key, *value, writer);
-        
     }
     
     static void Serialize(const T& value, minijson::array_writer& writer) {
         if (!value) return;
         minijson::object_writer object = writer.nested_object();
         std::string typeId = "typeId";
-        int id = value->TypeIndex();
-        JsonSerializer<int>::Serialize(typeId, id, object);
+        std::string id = value->Id();
+        JsonSerializer<std::string>::Serialize(typeId, id, object);
         std::string objName = "obj";
         JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(objName, *value, object);
         object.close();
@@ -321,12 +321,12 @@ struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::t
         using nonPointerType = typename std::remove_pointer_t<T>;
         
         try {
-            static int typeId = -1;
+            static std::string typeId = "";
             minijson::parse_object(context, [&] (const char* name, minijson::value v) {
                 if (strcmp(name, "typeId")==0) {
-                    typeId = (int)v.as_long();
-                } else if (typeId>=0) {
-                    *field = Pocket::IndexToType<nonPointerType, typename nonPointerType::Types>(typeId);
+                    typeId = v.as_string();
+                } else if (typeId!="") {
+                    *field = nonPointerType::ConstructObject(typeId); //Pocket::IndexToType<nonPointerType, typename nonPointerType::Types>(typeId);
                     JsonSerializer<nonPointerType>::Deserialize(v, *field, context);
                 }
                 else {
@@ -336,10 +336,7 @@ struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::t
         } catch (minijson::parse_error e) {
             std::cout<< e.what() << std::endl;
         }
-
-        
     }
-    
 };
 
 template<typename T>

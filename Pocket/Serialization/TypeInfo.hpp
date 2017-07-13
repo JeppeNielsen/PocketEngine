@@ -672,42 +672,8 @@ public:
     virtual void Apply(float time, IFieldInfo* field) = 0;
     virtual TypeInfo GetType() = 0;
     virtual std::unique_ptr<IFieldInfoTimeline> Clone() = 0;
-    virtual int TypeIndex() = 0;
     
-    using Types = std::tuple<
-            FieldInfoTimeline<int>,
-            FieldInfoTimeline<short>,
-            FieldInfoTimeline<float>,
-            FieldInfoTimeline<double>,
-            FieldInfoTimeline<std::string>,
-            FieldInfoTimeline<bool>,
-            FieldInfoTimeline<uint64_t>,
-            FieldInfoTimeline<Vector2>,
-            FieldInfoTimeline<Vector3>,
-            FieldInfoTimeline<Quaternion>,
-            FieldInfoTimeline<Colour>,
-            FieldInfoTimeline<Matrix4x4>,
-            FieldInfoTimeline<Rect>,
-            FieldInfoTimeline<Box>,
-            FieldInfoTimeline<Matrix4x4>,
-    
-            FieldInfoTimeline<Property<int>>,
-            FieldInfoTimeline<Property<short>>,
-            FieldInfoTimeline<Property<float>>,
-            FieldInfoTimeline<Property<double>>,
-            FieldInfoTimeline<Property<std::string>>,
-            FieldInfoTimeline<Property<bool>>,
-            FieldInfoTimeline<Property<uint64_t>>,
-            FieldInfoTimeline<Property<Vector2>>,
-            FieldInfoTimeline<Property<Vector3>>,
-            FieldInfoTimeline<Property<Quaternion>>,
-            FieldInfoTimeline<Property<Colour>>,
-            FieldInfoTimeline<Property<Matrix4x4>>,
-            FieldInfoTimeline<Property<Rect>>,
-            FieldInfoTimeline<Property<Box>>,
-            FieldInfoTimeline<Property<Matrix4x4>>
-    
-            >;
+    CONSTRUCTOR_BASE(IFieldInfoTimeline)
 };
 
 template<class T>
@@ -737,15 +703,14 @@ public:
         return std::unique_ptr<IFieldInfoTimeline>(std::move(clone));
     }
     
-    int TypeIndex() {
-        return IndexInTuple<std::remove_pointer_t<decltype(this)>, IFieldInfoTimeline::Types>::value;
-    }
     
 public:
     FieldInfoTimelineData<T> timeline;
+
+    CONSTRUCTOR_DERIVED(FieldInfoTimeline, T)
 };
 
-
+CONSTRUCTOR_DERIVED_INITIALIZER(FieldInfoTimeline)
 
 template<typename S>
 struct TimelineCreator<FieldInfoTimelineData<S>> {

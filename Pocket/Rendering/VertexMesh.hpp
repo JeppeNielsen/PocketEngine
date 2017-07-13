@@ -77,9 +77,8 @@ public:
     }
     
     virtual TypeInfo GetType() = 0;
-    virtual int TypeIndex() = 0;
     
-    using Types = std::tuple<VertexMesh<Vertex>>;
+    CONSTRUCTOR_BASE(IVertexMesh)
 };
 
 template<class Vertex>
@@ -94,10 +93,6 @@ public:
         info.AddField(vertices, "vertices");
         info.AddField(triangles, "triangles");
         return info;
-    }
-    
-    int TypeIndex() override {
-        return IndexInTuple<std::remove_pointer_t<decltype(this)>, IVertexMesh::Types>::value;
     }
     
     const Vector3& GetPosition(size_t index) override {
@@ -453,7 +448,11 @@ public:
     }
     
     static VertexMesh<Vertex> empty;
+    
+    CONSTRUCTOR_DERIVED(VertexMesh, Vertex)
 };
+
+CONSTRUCTOR_DERIVED_INITIALIZER(VertexMesh)
 
 template<class Vertex> class VertexMesh<Vertex> VertexMesh<Vertex>::empty;
 
