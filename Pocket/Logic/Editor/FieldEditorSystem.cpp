@@ -8,6 +8,8 @@
 
 #include "FieldEditorSystem.hpp"
 
+using namespace Pocket;
+
 void FieldEditorSystem::Initialize() {
 
 }

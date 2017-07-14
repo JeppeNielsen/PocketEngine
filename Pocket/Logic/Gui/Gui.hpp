@@ -21,8 +21,6 @@
 #include "LayoutSystem.hpp"
 #include "TextBoxSystem.hpp"
 #include "TextBoxLabelSystem.hpp"
-#include "MenuButtonSystem.hpp"
-#include "MenuSystem.hpp"
 #include "ColorSystem.hpp"
 #include "DraggableMotionSystem.hpp"
 #include "VelocitySystem.hpp"
@@ -55,10 +53,6 @@ namespace Pocket {
         GameObject* CreateLabel(GameObject *parent, const Vector2 &position, const Vector2 &size, GameObject *font, const std::string &text, float fontSize);
         GameObject* CreateLabelControl(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
         GameObject* CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
-        
-        GameObject* CreateMenu(GameObject *parent, const Vector2 &position);
-
-        void AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation);
         GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot);
         
         const Fonts& GetFonts() const;

@@ -26,8 +26,6 @@ void Gui::Initialize() {
     root->CreateSystem<HierarchyOrder>()->Order = 1000;
     root->CreateSystem<DraggableSystem>();
     root->CreateSystem<LayoutSystem>();
-    //root->CreateSystem<MenuSystem>();
-    root->CreateSystem<MenuButtonSystem>();
     root->CreateSystem<ColorSystem>();
     root->CreateSystem<DraggableMotionSystem>();
     root->CreateSystem<VelocitySystem>();
@@ -204,25 +202,6 @@ GameObject* Gui::CreateTextBox(GameObject *parent, const std::string &spriteName
     labelGO->AddComponent<Touchable>(control);
     labelGO->GetComponent<Colorable>()->Color = Colour::Black();
     return control;
-}
-
-
-GameObject* Gui::CreateMenu(GameObject *parent, const Vector2 &position) {
-    GameObject* pivot = CreatePivot(parent);
-    pivot->GetComponent<Transform>()->Position = position;
-    pivot->AddComponent<Menu>();
-    return pivot;
-}
-
-
-void Gui::AddMenuAnimator(GameObject *control, GameObject *menu, std::string activeMenu, GameObject *animations, const std::string &fadeInAnimation, const std::string &fadeOutAnimation) {
-    control->AddComponent<Menu>(menu);
-    control->AddComponent<TransformAnimator>();
-    MenuAnimator* menuAnimator = control->AddComponent<MenuAnimator>();
-    menuAnimator->Menu = activeMenu;
-    menuAnimator->FadeInAnimation = fadeInAnimation;
-    menuAnimator->FadeOutAnimation = fadeOutAnimation;
-    control->AddComponent<TransformAnimationDatabase>(animations);
 }
 
 GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot) {
