@@ -206,7 +206,7 @@ public:
         }
     }
 
-private:
+public:
     IFieldInfo* GetFieldInternal(const std::string& name) {
         for(auto& field : fields) {
             if (field->name == name) return field.get();

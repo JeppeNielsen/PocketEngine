@@ -298,43 +298,45 @@ template<typename T>
 struct JsonSerializer<T, typename std::enable_if< std::is_pointer<T>::value >::type> {
     static void Serialize(std::string& key, const T& value, minijson::object_writer& writer) {
         if (!value) return;
-    
-        std::string typeId = "typeId";
-        std::string id = value->Id();
-        JsonSerializer<std::string>::Serialize(typeId, id, writer);
-        JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(key, *value, writer);
+        
+        auto type = value->GetType();
+        minijson::object_writer object = writer.nested_object(key.c_str());
+        object.write("typeId", value->Id());
+        type.Serialize(object);
+        object.close();
     }
     
     static void Serialize(const T& value, minijson::array_writer& writer) {
         if (!value) return;
+        auto type = value->GetType();
         minijson::object_writer object = writer.nested_object();
-        std::string typeId = "typeId";
-        std::string id = value->Id();
-        JsonSerializer<std::string>::Serialize(typeId, id, object);
-        std::string objName = "obj";
-        JsonSerializer<typename std::remove_pointer_t<T>>::Serialize(objName, *value, object);
+        object.write("typeId", value->Id());
+        type.Serialize(object);
         object.close();
-    
     }
     
     static void Deserialize(minijson::value& value, T* field, minijson::istream_context& context) {
         using nonPointerType = typename std::remove_pointer_t<T>;
-        
         try {
-            static std::string typeId = "";
+            T ptr = nullptr;
             minijson::parse_object(context, [&] (const char* name, minijson::value v) {
                 if (strcmp(name, "typeId")==0) {
-                    typeId = v.as_string();
-                } else if (typeId!="") {
-                    *field = nonPointerType::ConstructObject(typeId); //Pocket::IndexToType<nonPointerType, typename nonPointerType::Types>(typeId);
-                    JsonSerializer<nonPointerType>::Deserialize(v, *field, context);
-                }
-                else {
-                    minijson::ignore(context);
+                    ptr = nonPointerType::ConstructObject(v.as_string());
+                } else if (ptr!=nullptr) {
+                    auto type =  ptr->GetType();
+                    auto field = type.GetFieldInternal(name);
+                    if (field) {
+                        field->Deserialize(context, v);
+                    } else {
+                        minijson::ignore(context);
+                    }
                 }
             });
+            
+            *field = ptr;
         } catch (minijson::parse_error e) {
             std::cout<< e.what() << std::endl;
+            *field = nullptr;
         }
     }
 };
