@@ -18,7 +18,7 @@
 
 using namespace Pocket;
 
-int main() {
+int main_Animation() {
 
     GameWorld world;
     

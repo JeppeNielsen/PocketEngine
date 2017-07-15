@@ -16,9 +16,8 @@ ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket
     
     const static map<string, vector<string>> categories = {
         { "Animation", {
-            "Pocket::TouchAnimator",
-            "Pocket::TransformAnimation",
-            "Pocket::TransformAnimator"
+            "Pocket::Animation",
+            "Pocket::Animator",
         }},
         { "Audio", {
             "Pocket::Sound",

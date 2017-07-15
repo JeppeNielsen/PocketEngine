@@ -132,7 +132,7 @@ public:
     }
 };
 
-int main_editor() {
+int main() {
     Engine e;
     e.Start<Editor>();
 	return 0;

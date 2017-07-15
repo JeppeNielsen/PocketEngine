@@ -11,8 +11,7 @@
 //-------------------- Game Systems --------------------
 
 //Animation
-#include "TouchAnimatorSystem.hpp"
-#include "TransformAnimatorSystem.hpp"
+#include "AnimatorSystem.hpp"
 
 //Assets
 #include "AssetManager.hpp"
@@ -102,8 +101,7 @@ void SystemHelper::AddGameSystems(Pocket::GameObject &world) {
     world.CreateSystem<SpawnerSystem>();
     
     //Animations
-    world.CreateSystem<TouchAnimatorSystem>();
-    world.CreateSystem<TransformAnimatorSystem>();
+    world.CreateSystem<AnimatorSystem>();
 
     //Assets
     world.CreateSystem<AssetManager>();
