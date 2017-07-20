@@ -124,4 +124,5 @@ void Animation::Apply(GameObject* root, float time) {
     }
 }
 
+const Animation::Targets& Animation::GetTargets() const { return targets; }
 

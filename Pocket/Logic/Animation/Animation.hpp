@@ -50,8 +50,8 @@ namespace Pocket {
             TYPE_FIELDS_END
         };
     
-    private:
         using Targets = std::vector<Target>;
+    private:
         Targets targets;
         Target& CreateTarget(Path& path);
         
@@ -64,6 +64,8 @@ namespace Pocket {
         void AddNode(GameObject* rootNode, GameObject* node, const std::string& fieldName, float time) {
             AddNode(rootNode, node, GameIdHelper::GetComponentID<T>(), fieldName, time);
         }
+        
+        const Targets& GetTargets() const;
         
         TYPE_FIELDS_BEGIN
         TYPE_FIELD(targets)

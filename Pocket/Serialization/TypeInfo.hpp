@@ -672,6 +672,7 @@ public:
     virtual void Apply(float time, IFieldInfo* field) = 0;
     virtual TypeInfo GetType() = 0;
     virtual std::unique_ptr<IFieldInfoTimeline> Clone() = 0;
+    virtual const std::vector<float>& GetTimeNodes() = 0;
     
     CONSTRUCTOR_BASE(IFieldInfoTimeline)
 };
@@ -703,6 +704,9 @@ public:
         return std::unique_ptr<IFieldInfoTimeline>(std::move(clone));
     }
     
+    const std::vector<float>& GetTimeNodes() override {
+        return timeline.t.keys;
+    }
     
 public:
     FieldInfoTimelineData<T> timeline;
