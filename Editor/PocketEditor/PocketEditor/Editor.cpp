@@ -31,6 +31,7 @@
 #include "ConsoleWindow.hpp"
 #include "ComponentMenu.hpp"
 #include "ScriptComponentMenu.hpp"
+#include "AnimationWindow.hpp"
 
 using namespace Pocket;
 
@@ -54,6 +55,7 @@ public:
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
         windows.push_back(new ConsoleWindow());
+        windows.push_back(new AnimationWindow());
         
         menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());

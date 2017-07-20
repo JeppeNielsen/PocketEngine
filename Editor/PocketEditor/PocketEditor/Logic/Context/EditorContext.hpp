@@ -44,6 +44,8 @@ public:
     Actions preActions;
     Actions postActions;
     
+    Event<float> UpdateLoop;
+    
     void Initialize(class EngineContext& engineContext);
     void Update(float dt);
     void Render();

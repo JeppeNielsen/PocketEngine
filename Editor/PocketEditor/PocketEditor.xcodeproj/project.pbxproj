@@ -40,6 +40,7 @@
 		7220F6591E7F2B4C0063EAD5 /* SystemHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6571E7F2B4C0063EAD5 /* SystemHelper.cpp */; };
 		722745151F194935009B0528 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745131F194935009B0528 /* Animator.cpp */; };
 		722745181F1949BD009B0528 /* AnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745161F1949BD009B0528 /* AnimatorSystem.cpp */; };
+		7227451D1F1CAE06009B0528 /* AnimationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -541,6 +542,8 @@
 		722745161F1949BD009B0528 /* AnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimatorSystem.cpp; sourceTree = "<group>"; };
 		722745171F1949BD009B0528 /* AnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimatorSystem.hpp; sourceTree = "<group>"; };
 		722745191F195034009B0528 /* ObjectConstructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjectConstructor.hpp; sourceTree = "<group>"; };
+		7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationWindow.cpp; sourceTree = "<group>"; };
+		7227451C1F1CAE06009B0528 /* AnimationWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimationWindow.hpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -1759,6 +1762,15 @@
 				7220F6581E7F2B4C0063EAD5 /* SystemHelper.hpp */,
 			);
 			path = Systems;
+			sourceTree = "<group>";
+		};
+		7227451A1F1CADF0009B0528 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */,
+				7227451C1F1CAE06009B0528 /* AnimationWindow.hpp */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		72308CF31E127A7A00B92B8D /* Assets */ = {
@@ -3614,6 +3626,7 @@
 		72CE8EDF1CB2E580001F08E4 /* Windows */ = {
 			isa = PBXGroup;
 			children = (
+				7227451A1F1CADF0009B0528 /* Animation */,
 				72CE8EE41CB43357001F08E4 /* BaseWindow.cpp */,
 				72CE8EE51CB43357001F08E4 /* BaseWindow.hpp */,
 				72C9B26B1E8705C700033C56 /* Console */,
@@ -4046,6 +4059,7 @@
 				729954011C99F76100DAAE5D /* DraggableSystem.cpp in Sources */,
 				7220F6551E7ECE280063EAD5 /* DistanceScalerSystem.cpp in Sources */,
 				7299550D1C99F76100DAAE5D /* Texture.cpp in Sources */,
+				7227451D1F1CAE06009B0528 /* AnimationWindow.cpp in Sources */,
 				7244C4A11DF428EA00ADF008 /* LayoutSystem.cpp in Sources */,
 				729954CE1C99F76100DAAE5D /* SpuGatheringCollisionDispatcher.cpp in Sources */,
 				7205850E1E6221F4009FFACF /* Trigger.cpp in Sources */,

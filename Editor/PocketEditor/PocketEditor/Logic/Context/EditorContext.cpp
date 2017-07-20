@@ -69,6 +69,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
 
 void EditorContext::Update(float dt) {
     engineContext->InputDevice().UpdateInputManager(&world.Input());
+    UpdateLoop(dt);
     DoActions(preActions);
     world.Update(dt);
     DoActions(postActions);
