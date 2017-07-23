@@ -179,6 +179,33 @@ struct FieldInfoEditorRect : public FieldInfoEditorTextboxes<Rect, 4> {
     }
 };
 
+struct FieldInfoEditorColor : public FieldInfoEditorTextboxes<Colour, 4> {
+    void TextboxChanged(int index, std::string text) override {
+        Colour::Component value = (Colour::Component)atoi(text.c_str());
+        
+        if (index == 0) {
+            (*field).r = value;
+        } else if (index == 1) {
+            (*field).g = value;
+        } else if (index == 2) {
+            (*field).b = value;
+        } else {
+            (*field).a = value;
+        }
+    }
+    void UpdateTextbox(int index, std::stringstream& stream) override {
+        if (index == 0) {
+            stream<<(int)(*field).r;
+        } else if (index == 1) {
+            stream<<(int)(*field).g;
+        } else if (index == 2) {
+            stream<<(int)(*field).b;
+        } else {
+            stream<<(int)(*field).a;
+        }
+    }
+};
+
 struct FieldInfoEditorBool : public GuiFieldEditor {
 
     void SetField(void* field) override {
@@ -309,6 +336,11 @@ template<> IFieldEditor* FieldEditorCreator<Box>::Create(Box* ptr) {
     return editor;
 }
 
+template<> IFieldEditor* FieldEditorCreator<Colour>::Create(Colour* ptr) {
+    FieldInfoEditorColor* editor = new FieldInfoEditorColor();
+    editor->SetField(ptr);
+    return editor;
+}
 
 TypeEditorTitle::Callback TypeEditorTitle::Title = [] (void* guiPtr, void* parentPtr, const std::string& title) -> void* {
     Gui* gui = static_cast<Gui*>(guiPtr);
