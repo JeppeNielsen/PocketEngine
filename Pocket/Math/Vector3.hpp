@@ -134,11 +134,11 @@ namespace Pocket {
             return *this;
         }
         
-        inline bool operator ==(const Vector3 &other) {
+        inline bool operator ==(const Vector3 &other) const {
             return !(x!=other.x || y!=other.y || z!=other.z);
         }
         
-        inline bool operator !=(const Vector3 &other) {
+        inline bool operator !=(const Vector3 &other) const {
             return (x!=other.x || y!=other.y || z!=other.z);
         }
         

@@ -100,7 +100,7 @@ namespace Pocket {
             return !(x!=other.x || y!=other.y);
         }
         
-        inline  bool operator !=(const Vector2 &other) const{
+        inline bool operator !=(const Vector2 &other) const{
             return (x!=other.x || y!=other.y);
         }
         
