@@ -34,6 +34,9 @@ private:
     float PositionToTime(float position);
     void TimeChanged();
     void UpdateTime(float dt, int index);
+    void Record(float dt);
+    void StoreValues();
+    void Refresh();
     
     VirtualTreeList* treeView;
     GameObject* rootItem;
@@ -42,12 +45,16 @@ private:
     GameObject* animationRoot;
     Animator* animator;
     Property<float> Zoom;
+    Property<bool> IsRecording;
+    bool isScrupping;
     
     GameObject* timeIndicator;
     GameObject* timeline;
+    GameObject* recordButton;
     
     struct TimeLineInfo {
         TimeLineInfo() : timeline(0) {}
+        Animation::Path path;
         std::string name;
         IFieldInfoTimeline* timeline;
     };
@@ -55,4 +62,8 @@ private:
     std::map<GameObject*, TimeLineInfo> timelines;
     
     SelectableCollection<EditorObject>* selectables;
+
+    std::vector<std::string> previousValues;
+    
+    std::vector<int> nonRecordableComponents;
 };
