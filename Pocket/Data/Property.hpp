@@ -81,6 +81,14 @@ public:
     Property(const Property<Value>& other) {
         value = other.value;
     }
+    
+    inline bool operator ==(const Property<Value>& other) const{
+        return value == other.value;
+    }
+    
+    inline bool operator !=(const Property<Value>& other) const{
+        return value != other.value;
+    }
 };
 
 template<class Value>
