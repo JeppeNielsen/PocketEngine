@@ -673,6 +673,7 @@ public:
     virtual TypeInfo GetType() = 0;
     virtual std::unique_ptr<IFieldInfoTimeline> Clone() = 0;
     virtual const std::vector<float>& GetTimeNodes() = 0;
+    virtual void ChangeNodeTime(int nodeIndex, float newTime) = 0;
     
     CONSTRUCTOR_BASE(IFieldInfoTimeline)
 };
@@ -708,6 +709,9 @@ public:
         return timeline.t.keys;
     }
     
+    void ChangeNodeTime(int nodeIndex, float newTime) override {
+        timeline.t.ChangeNodeTime(nodeIndex, newTime);
+    }    
 public:
     FieldInfoTimelineData<T> timeline;
 

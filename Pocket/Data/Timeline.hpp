@@ -13,17 +13,29 @@ namespace Pocket {
         Values values;
         
         void AddNode(float time, const T& value) {
-            keys.push_back(time);
-            values.push_back(value);
+            int foundIndex = -1;
+            for(int i=0; i<keys.size(); i++) {
+                if (keys[i]==time) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+            if (foundIndex==-1) {
+                keys.push_back(time);
+                values.push_back(value);
+            } else {
+                values[foundIndex] = value;
+                return;
+            }
             
-            auto p = VectorHelper::SortPermutation(keys, [] (const float a, const float b) {
-                return a<b;
-            });
-            
-            keys = VectorHelper::ApplyPermutation(keys, p);
-            values = VectorHelper::ApplyPermutation(values, p);
+            SortNodes();
         }
         
+        void ChangeNodeTime(int nodeIndex, float newTime) {
+            keys[nodeIndex] = newTime;
+            SortNodes();
+        }
+    
         void Clear() {
             keys.clear();
             values.clear();
@@ -53,6 +65,15 @@ namespace Pocket {
                     }
                 }
             }
+        }
+        
+        void SortNodes() {
+            auto p = VectorHelper::SortPermutation(keys, [] (const float a, const float b) {
+                return a<b;
+            });
+            
+            keys = VectorHelper::ApplyPermutation(keys, p);
+            values = VectorHelper::ApplyPermutation(values, p);
         }
     };
 }
