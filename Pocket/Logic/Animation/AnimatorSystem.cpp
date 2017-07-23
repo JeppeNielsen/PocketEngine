@@ -20,7 +20,9 @@ void AnimatorSystem::ObjectRemoved(GameObject *object) {
 
 void AnimatorSystem::Update(float dt) {
     for(auto o : Objects()) {
-        o->GetComponent<Animator>()->Time += dt * 0.1f;
-        o->GetComponent<Animation>()->Apply(o, fmodf(o->GetComponent<Animator>()->Time, 2.0f));
+        Animator* animator = o->GetComponent<Animator>();
+        Animation* animation = o->GetComponent<Animation>();
+        animator->Time += dt;
+        animation->Apply(o, animator->Time);
     }
 }
