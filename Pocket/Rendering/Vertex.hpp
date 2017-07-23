@@ -145,6 +145,21 @@ struct Vertex {
         }
         return v;
     }
+    
+    inline bool operator ==(const Vertex& other) const{
+        return !(Position!=other.Position ||
+                 TextureCoords!=other.TextureCoords ||
+                 Color!=other.Color ||
+                 Normal!=other.Normal);
+    }
+    
+    inline bool operator !=(const Vertex& other) const{
+        return (Position!=other.Position ||
+                 TextureCoords!=other.TextureCoords ||
+                 Color!=other.Color ||
+                 Normal!=other.Normal);
+    }
+
 };
 
 }
