@@ -134,7 +134,7 @@ public:
     }
 };
 
-int main() {
+int main_editor() {
     Engine e;
     e.Start<Editor>();
 	return 0;

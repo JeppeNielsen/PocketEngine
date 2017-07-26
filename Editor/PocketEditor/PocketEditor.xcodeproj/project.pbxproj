@@ -41,6 +41,7 @@
 		722745151F194935009B0528 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745131F194935009B0528 /* Animator.cpp */; };
 		722745181F1949BD009B0528 /* AnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745161F1949BD009B0528 /* AnimatorSystem.cpp */; };
 		7227451D1F1CAE06009B0528 /* AnimationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */; };
+		722745201F267C08009B0528 /* testWindowSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227451E1F267C08009B0528 /* testWindowSystem.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -544,6 +545,7 @@
 		722745191F195034009B0528 /* ObjectConstructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjectConstructor.hpp; sourceTree = "<group>"; };
 		7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationWindow.cpp; sourceTree = "<group>"; };
 		7227451C1F1CAE06009B0528 /* AnimationWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimationWindow.hpp; sourceTree = "<group>"; };
+		7227451E1F267C08009B0528 /* testWindowSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testWindowSystem.cpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -2161,6 +2163,7 @@
 				7214E04C1EFEF83300F61526 /* testXCodeProject.cpp */,
 				7214E0701F08309E00F61526 /* testFieldDataCollection.cpp */,
 				72FBB0551F0983470036AC7A /* testAnimation.cpp */,
+				7227451E1F267C08009B0528 /* testWindowSystem.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -4072,6 +4075,7 @@
 				729953C21C99F76100DAAE5D /* Engine.cpp in Sources */,
 				729954AF1C99F76100DAAE5D /* btSubSimplexConvexCast.cpp in Sources */,
 				729955071C99F76100DAAE5D /* Profiler.cpp in Sources */,
+				722745201F267C08009B0528 /* testWindowSystem.cpp in Sources */,
 				729954531C99F76100DAAE5D /* b2PulleyJoint.cpp in Sources */,
 				729954131C99F76100DAAE5D /* RenderSystem.cpp in Sources */,
 				729954B81C99F76100DAAE5D /* btHingeConstraint.cpp in Sources */,
