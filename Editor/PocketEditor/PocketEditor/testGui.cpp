@@ -418,7 +418,7 @@ public:
     
     void Initialize() {
         
-        /*
+        
         GameObject* root = world.CreateRoot();
         Gui* gui = root->CreateSystem<Gui>();
         root->CreateSystem<LayoutSystem>();
@@ -435,7 +435,7 @@ public:
         
         for(int i=0; i<4; i++) {
             GameObject* row = gui->CreateControl(box, "Box");
-            row->AddComponent<Layouter>()->Min = {300, 5};
+            row->AddComponent<Layouter>()->Min = {300, 1};
             row->GetComponent<Layouter>()->Max = {300.0f, static_cast<float>((i == 1 ? 60 : 20))};
             row->GetComponent<Layouter>()->Desired = {300.0f, static_cast<float>((i == 1 ? 60 : 20))};
             
@@ -458,9 +458,9 @@ public:
         //gui->CreateClipper(box, false);
         
         
-        */
         
         
+        /*
         GameObject* root = world.CreateRoot();
         
         Selectable* sel1 = 0;
@@ -496,6 +496,7 @@ public:
         {
         
         }
+        */
         
     }
     
@@ -505,17 +506,16 @@ public:
     
     void AddTextBox(GameObject* parent, Gui* gui, Vector2 desired, Vector2 max) {
         GameObject* box = gui->CreateControl(parent, "TextBox");
-        box->AddComponent<Layouter>()->Min = {30,20};
+        box->AddComponent<Layouter>()->Min = {30,2};
         box->GetComponent<Layouter>()->Max = max;
         box->GetComponent<Layouter>()->Desired = desired;
     }
     
     void Update(float dt) {
-       /* Context().InputDevice().UpdateInputManager(&world.Input());
+        Context().InputDevice().UpdateInputManager(&world.Input());
         Vector3 pos = dragger->GetComponent<Transform>()->Position;
         box->GetComponent<Sizeable>()->Size = { pos.x, pos.y };
         world.Update(dt);
-        */
     }
     
     void Render() {
@@ -525,7 +525,7 @@ public:
     }
 };
 
-int main_tests() {
+int main_layouting() {
     Engine e;
     e.Start<Game>();
 	return 0;
