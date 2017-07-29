@@ -401,6 +401,12 @@ struct PanelDropSystem : public GameSystem<Droppable, PanelDropper, Transform> {
         for(auto o : d.droppedTouches) {
             if (o.object == panelObject) continue;
             
+            PanelArea* droppedPanelArea = o.object->GetComponent<PanelArea>();
+            if (droppedPanelArea) {
+                panel->Area = o.object;
+                return;
+            }
+            
             Panel* droppedPanel = o.object->GetComponent<Panel>();
             if (!droppedPanel) continue;
             
@@ -501,17 +507,38 @@ public:
         GameObject* window = gui->CreateControl(root, "TextBox", pos, size);
         window->AddComponent<Draggable>();
         window->AddComponent<Panel>();
-        GameObject* bar = gui->CreateControl(window, "Box", {0, 0}, {size.x, 32});
+        window->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
+        
+        GameObject* content = gui->CreatePivot(window);
+        content->AddComponent<Sizeable>();
+        content->AddComponent<Layouter>()->Min = {20,20};
+        content->GetComponent<Layouter>()->Desired = {2000,2000};
+        content->GetComponent<Layouter>()->Max = {2000,2000};
+        content->GetComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
+        
+        
+        GameObject* horizontal = gui->CreateLayout(content, 20, {2000,20}, {2000,20}, Layouter::LayoutMode::Horizontal);
+        {
+            gui->CreateLayout(horizontal, 20, 20, 20);
+            GameObject* button = gui->CreateTextBox(horizontal, "Box", 0, 0, 0, "Text", 20);//(horizontal, "Box", 30, {200,30}, {2000,30});
+            gui->AddLayouter(button, 30, {200,30}, {2000,30});
+            gui->CreateLayout(horizontal, 20, 20, 20);
+        }
+        GameObject* fill = gui->CreateLayout(content, 20, {2000,2000}, {2000,2000});
+        
+        
+        GameObject* bar = gui->CreateLayoutControl(window, "Box", 20, {2000,20}, {2000,20});
         bar->AddComponent<Droppable>()->OnCreate = [this](GameObject* o, TouchData d) -> GameObject* {
             Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
             GameObject* control = gui->CreateControl(0, "Box", position, {200,25});
             return control;
         };
         bar->AddComponent<PanelDropper>()->panel = window;
-        auto label = gui->CreateLabel(bar, 0, bar->GetComponent<Sizeable>()->Size, 0, text, 16);
+        auto label = gui->CreateLabel(bar, 0, 0, 0, text, 16);
         label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
         label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         label->GetComponent<Colorable>()->Color = Colour::Black();
+        label->ReplaceComponent<Sizeable>(bar);
         
         return window->GetComponent<Panel>();
     }
@@ -531,7 +558,7 @@ public:
         area = CreateArea(Context().Viewport().Size());
         
         auto p = CreatePanel({0,50},{200,500}, "Project");
-        p->Area = area;
+        //p->Area = area;
         
         CreatePanel({250,50},{200,500}, "Systems");
         CreatePanel({500,50},{200,500}, "Inspector");
