@@ -227,3 +227,32 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
 const Gui::Fonts& Gui::GetFonts() const {
     return fonts;
 }
+
+GameObject* Gui::CreateLayout(GameObject *parent, const Vector2 &minSize, const Vector2 &desiredSize, const Vector2 &maxSize, Layouter::LayoutMode layoutMode) {
+    GameObject* control = CreatePivot(parent);
+    control->AddComponent<Sizeable>();
+    Layouter* l = control->AddComponent<Layouter>();
+    l->Min = minSize;
+    l->Desired = desiredSize;
+    l->Max = maxSize;
+    l->ChildrenLayoutMode = layoutMode;
+    return control;
+}
+
+GameObject* Gui::CreateLayoutControl(GameObject *parent, const std::string &spriteName, const Vector2 &minSize, const Vector2 &desiredSize, const Vector2 &maxSize, Layouter::LayoutMode layoutMode) {
+    GameObject* control = CreateControl(parent, spriteName);
+    Layouter* l = control->AddComponent<Layouter>();
+    l->Min = minSize;
+    l->Desired = desiredSize;
+    l->Max = maxSize;
+    l->ChildrenLayoutMode = layoutMode;
+    return control;
+}
+
+void Gui::AddLayouter(GameObject* object, const Vector2& minSize, const Vector2& desiredSize, const Vector2& maxSize, Layouter::LayoutMode layoutMode) {
+    Layouter* l = object->AddComponent<Layouter>();
+    l->Min = minSize;
+    l->Desired = desiredSize;
+    l->Max = maxSize;
+    l->ChildrenLayoutMode = layoutMode;
+}

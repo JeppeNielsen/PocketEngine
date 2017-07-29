@@ -54,6 +54,11 @@ namespace Pocket {
         GameObject* CreateTextBox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize);
         GameObject* CreateListbox(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject** pivot);
         
+        GameObject* CreateLayoutControl(GameObject* parent, const std::string& spriteName, const Vector2& minSize, const Vector2& desiredSize, const Vector2& maxSize, Layouter::LayoutMode layoutMode = Layouter::LayoutMode::Vertical);
+        GameObject* CreateLayout(GameObject* parent, const Vector2& minSize, const Vector2& desiredSize, const Vector2& maxSize, Layouter::LayoutMode layoutMode = Layouter::LayoutMode::Vertical);
+        
+        void AddLayouter(GameObject* object, const Vector2& minSize, const Vector2& desiredSize, const Vector2& maxSize, Layouter::LayoutMode layoutMode = Layouter::LayoutMode::Vertical);
+        
         const Fonts& GetFonts() const;
     private:
         RenderSystem* renderer;
