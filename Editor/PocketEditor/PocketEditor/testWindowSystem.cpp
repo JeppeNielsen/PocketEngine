@@ -62,7 +62,7 @@ public:
         return split;
     }
     
-    std::string Id() {
+    std::string Id() const {
         const char dirIds[] = "TBLR";
         std::string id = "";
         for(auto d : directions) {
@@ -71,7 +71,7 @@ public:
         return id;
     }
     
-    Rect GetRect(Vector2 size, const std::function<float(const std::string&)>& splitFunction) {
+    Rect GetRect(Vector2 size, const std::function<float(const std::string&)>& splitFunction) const {
         const char dirIds[] = "TBLR";
         Rect rect(0, size);
         std::string id = "";
@@ -82,7 +82,7 @@ public:
         return rect;
     }
     
-    Rect DivideRect(Rect input, PanelDirection direction, float splitPosition) {
+    Rect DivideRect(Rect input, PanelDirection direction, float splitPosition) const {
         
         switch (direction) {
             case PanelDirection::Top: {
@@ -111,8 +111,18 @@ public:
         return input;
     }
     
-    bool IsHorizontal() {
+    bool IsHorizontal() const {
         return directions.empty() ? false : (directions.back() == PanelDirection::Right || directions.back() == PanelDirection::Left);
+    }
+    
+    void RecurseLocations(const std::function<void(const PanelLocation&)> callback) const {
+        std::vector<PanelDirection> dirs;
+        for(int i = 0; i<directions.size(); ++i) {
+            dirs.push_back(directions[i]);
+            PanelLocation location;
+            location.directions = dirs;
+            callback(location);
+        }
     }
 };
 
@@ -315,14 +325,6 @@ struct PanelAreaSystem : public GameSystem<PanelArea> {
         panels = root->CreateSystem<PanelSystem>();
         gui = root->CreateSystem<Gui>();
     }
-
-    void ObjectAdded(GameObject* object) override {
-        
-    }
-    
-    void ObjectRemoved(GameObject* object) override {
-    
-    }
     
     void Update(float dt) override {
         for(auto o : Objects()) {
@@ -348,23 +350,28 @@ struct PanelAreaSystem : public GameSystem<PanelArea> {
             GameObject* panelArea = panel->Area;
             if (panelArea!=object) continue;
             
-            auto splitLocation = panel->location.Split();
-            std::string id = splitLocation.Id();
+            panel->location.RecurseLocations([this, &newSplits, area, object, panelArea, panel] (const PanelLocation& location) {
+                PanelLocation splitLocation = location.Split();
+                std::string id = splitLocation.Id();
+                
+                if (newSplits.find(id)!=newSplits.end()) return;
+                
+                auto it = area->Splits.find(id);
+                if (it != area->Splits.end()) {
+                    newSplits[id] = it->second;
+                } else {
+                    newSplits[id] = 0.5f;
+                }
+                
+                GameObject* splitter = gui->CreateControl(object, "Box");
+                splitter->AddComponent<PanelSplitter>()->location = splitLocation;
+                splitter->GetComponent<PanelSplitter>()->isHorizontal = location.IsHorizontal();
+                splitter->GetComponent<PanelSplitter>()->area = panelArea;
+                splitter->AddComponent<Draggable>()->Movement = location.IsHorizontal() ? Draggable::MovementMode::XAxis : Draggable::MovementMode::YAxis;
+                splitter->RemoveComponent<Renderable>();
+            });
             
-            if (newSplits.find(id)!=newSplits.end()) continue;
             
-            auto it = area->Splits.find(id);
-            if (it != area->Splits.end()) {
-                newSplits[id] = it->second;
-            } else {
-                newSplits[id] = 0.5f;
-            }
-            
-            GameObject* splitter = gui->CreateControl(object, "Box");
-            splitter->AddComponent<PanelSplitter>()->location = splitLocation;
-            splitter->GetComponent<PanelSplitter>()->isHorizontal = panel->location.IsHorizontal();
-            splitter->GetComponent<PanelSplitter>()->area = panelArea;
-            splitter->AddComponent<Draggable>()->Movement = panel->location.IsHorizontal() ? Draggable::MovementMode::XAxis : Draggable::MovementMode::YAxis;
         }
         
         area->Splits = newSplits;
