@@ -25,7 +25,6 @@
 #include "DraggableMotionSystem.hpp"
 #include "VelocitySystem.hpp"
 #include "LimitableSystem.hpp"
-#include "DroppableSystem.hpp"
 #include "SelectedColorerSystem.hpp"
 #include "LayoutSystem.hpp"
 
