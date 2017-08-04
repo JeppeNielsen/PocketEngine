@@ -27,6 +27,9 @@
 #include "LimitableSystem.hpp"
 #include "SelectedColorerSystem.hpp"
 #include "LayoutSystem.hpp"
+#include "PanelSystem.hpp"
+#include "PanelDropSystem.hpp"
+#include "PanelAreaSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameConcept {
