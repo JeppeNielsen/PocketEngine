@@ -8,9 +8,10 @@
 
 #include "Engine.hpp"
 #include "Gui.hpp"
-#include "DroppableSystem.hpp"
 
 using namespace Pocket;
+
+/*
 
 class Panel;
 
@@ -167,7 +168,6 @@ struct PanelSplitter {
     PanelLocation location;
     bool isHorizontal;
 };
-
 
 struct PanelDropper {
     GameObject* panel;
@@ -375,7 +375,6 @@ struct PanelAreaSystem : public GameSystem<PanelArea> {
         }
         
         area->Splits = newSplits;
-        
     }
 };
 
@@ -488,6 +487,8 @@ struct PanelDropSystem : public GameSystem<Droppable, PanelDropper, Transform> {
     }
 };
 
+*/
+
 
 class TestWindowSystem : public GameState<TestWindowSystem> {
 public:
@@ -509,20 +510,14 @@ public:
         window->AddComponent<Panel>();
         window->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
         
-        GameObject* content = gui->CreatePivot(window);
-        content->AddComponent<Sizeable>();
-        content->AddComponent<Layouter>()->Min = {20,20};
-        content->GetComponent<Layouter>()->Desired = {2000,2000};
-        content->GetComponent<Layouter>()->Max = {2000,2000};
-        content->GetComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
-        
+        GameObject* content = gui->CreateLayout(window, 20, {2000,2000}, {2000,2000}, Layouter::LayoutMode::Vertical);
         
         GameObject* horizontal = gui->CreateLayout(content, 20, {2000,20}, {2000,20}, Layouter::LayoutMode::Horizontal);
         {
-            gui->CreateLayout(horizontal, 20, 20, 20);
+            gui->CreateLayout(horizontal, 20, 20, {50,20});
             GameObject* button = gui->CreateTextBox(horizontal, "Box", 0, 0, 0, "Text", 20);//(horizontal, "Box", 30, {200,30}, {2000,30});
             gui->AddLayouter(button, 30, {200,30}, {2000,30});
-            gui->CreateLayout(horizontal, 20, 20, 20);
+            gui->CreateLayout(horizontal, 20, 20, {50,20});
         }
         GameObject* fill = gui->CreateLayout(content, 20, {2000,2000}, {2000,2000});
         
@@ -547,10 +542,6 @@ public:
     
         root = world.CreateRoot();
         gui = root->CreateSystem<Gui>();
-        root->CreateSystem<PanelDropSystem>();
-        root->CreateSystem<PanelSystem>();
-        root->CreateSystem<PanelAreaSystem>();
-        root->CreateSystem<PanelSplitterSystem>();
         
         gui->Setup("images.png", "images.xml", Context().Viewport());
         gui->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
@@ -565,6 +556,9 @@ public:
         CreatePanel({560,50},{200,300}, "Extra");
         CreatePanel({600,50},{200,300}, "Animation");
         
+        //Input.ButtonDown.Bind([this](ButtonEvent b){
+        //    color = Colour::HslToRgb(MathHelper::Random(0, 360), 1, 1, 1);
+        //});
     }
     
     void Update(float dt) {
@@ -573,7 +567,12 @@ public:
         world.Update(dt);
     }
     
+    Colour color;
+    
     void Render() {
+        //glClearColor(color.R(), color.G(), color.B(), 1);
+        //	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//glEnable(GL_CULL_FACE);
         world.Render();
     }
 };

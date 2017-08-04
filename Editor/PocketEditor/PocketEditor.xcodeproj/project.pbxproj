@@ -42,6 +42,13 @@
 		722745181F1949BD009B0528 /* AnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745161F1949BD009B0528 /* AnimatorSystem.cpp */; };
 		7227451D1F1CAE06009B0528 /* AnimationWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */; };
 		722745201F267C08009B0528 /* testWindowSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227451E1F267C08009B0528 /* testWindowSystem.cpp */; };
+		722745241F347B51009B0528 /* PanelLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745221F347B51009B0528 /* PanelLocation.cpp */; };
+		722745271F347C76009B0528 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745251F347C76009B0528 /* Panel.cpp */; };
+		7227452A1F347D2E009B0528 /* PanelArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745281F347D2E009B0528 /* PanelArea.cpp */; };
+		7227453A1F348399009B0528 /* PanelAreaSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745381F348399009B0528 /* PanelAreaSystem.cpp */; };
+		7227453D1F34916E009B0528 /* PanelSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227453B1F34916E009B0528 /* PanelSystem.cpp */; };
+		722745401F349278009B0528 /* PanelDropper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227453E1F349278009B0528 /* PanelDropper.cpp */; };
+		722745431F3492D8009B0528 /* PanelDropSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745411F3492D8009B0528 /* PanelDropSystem.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -546,6 +553,20 @@
 		7227451B1F1CAE06009B0528 /* AnimationWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationWindow.cpp; sourceTree = "<group>"; };
 		7227451C1F1CAE06009B0528 /* AnimationWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimationWindow.hpp; sourceTree = "<group>"; };
 		7227451E1F267C08009B0528 /* testWindowSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testWindowSystem.cpp; sourceTree = "<group>"; };
+		722745221F347B51009B0528 /* PanelLocation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelLocation.cpp; sourceTree = "<group>"; };
+		722745231F347B51009B0528 /* PanelLocation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelLocation.hpp; sourceTree = "<group>"; };
+		722745251F347C76009B0528 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Panel.cpp; sourceTree = "<group>"; };
+		722745261F347C76009B0528 /* Panel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Panel.hpp; sourceTree = "<group>"; };
+		722745281F347D2E009B0528 /* PanelArea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelArea.cpp; sourceTree = "<group>"; };
+		722745291F347D2E009B0528 /* PanelArea.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelArea.hpp; sourceTree = "<group>"; };
+		722745381F348399009B0528 /* PanelAreaSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelAreaSystem.cpp; sourceTree = "<group>"; };
+		722745391F348399009B0528 /* PanelAreaSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelAreaSystem.hpp; sourceTree = "<group>"; };
+		7227453B1F34916E009B0528 /* PanelSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelSystem.cpp; sourceTree = "<group>"; };
+		7227453C1F34916E009B0528 /* PanelSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelSystem.hpp; sourceTree = "<group>"; };
+		7227453E1F349278009B0528 /* PanelDropper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelDropper.cpp; sourceTree = "<group>"; };
+		7227453F1F349278009B0528 /* PanelDropper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelDropper.hpp; sourceTree = "<group>"; };
+		722745411F3492D8009B0528 /* PanelDropSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelDropSystem.cpp; sourceTree = "<group>"; };
+		722745421F3492D8009B0528 /* PanelDropSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelDropSystem.hpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -1775,6 +1796,27 @@
 			path = Animation;
 			sourceTree = "<group>";
 		};
+		722745211F347B33009B0528 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				722745251F347C76009B0528 /* Panel.cpp */,
+				722745261F347C76009B0528 /* Panel.hpp */,
+				722745281F347D2E009B0528 /* PanelArea.cpp */,
+				722745291F347D2E009B0528 /* PanelArea.hpp */,
+				722745381F348399009B0528 /* PanelAreaSystem.cpp */,
+				722745391F348399009B0528 /* PanelAreaSystem.hpp */,
+				7227453E1F349278009B0528 /* PanelDropper.cpp */,
+				7227453F1F349278009B0528 /* PanelDropper.hpp */,
+				722745221F347B51009B0528 /* PanelLocation.cpp */,
+				722745231F347B51009B0528 /* PanelLocation.hpp */,
+				7227453B1F34916E009B0528 /* PanelSystem.cpp */,
+				7227453C1F34916E009B0528 /* PanelSystem.hpp */,
+				722745411F3492D8009B0528 /* PanelDropSystem.cpp */,
+				722745421F3492D8009B0528 /* PanelDropSystem.hpp */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
 		72308CF31E127A7A00B92B8D /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -2375,6 +2417,7 @@
 		7299501F1C99F76000DAAE5D /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				722745211F347B33009B0528 /* Panels */,
 				729950201C99F76000DAAE5D /* Droppable.hpp */,
 				729950211C99F76000DAAE5D /* DroppableSystem.cpp */,
 				729950221C99F76000DAAE5D /* DroppableSystem.hpp */,
@@ -3895,6 +3938,7 @@
 				729954C91C99F76100DAAE5D /* SequentialThreadSupport.cpp in Sources */,
 				729954381C99F76100DAAE5D /* b2CollidePoly.cpp in Sources */,
 				729954C31C99F76100DAAE5D /* btRaycastVehicle.cpp in Sources */,
+				722745271F347C76009B0528 /* Panel.cpp in Sources */,
 				729954A91C99F76100DAAE5D /* btGjkEpaPenetrationDepthSolver.cpp in Sources */,
 				72308D101E127F7F00B92B8D /* AssetImporterSystem.cpp in Sources */,
 				722745151F194935009B0528 /* Animator.cpp in Sources */,
@@ -3925,6 +3969,7 @@
 				721547681EC8C4D0000305A9 /* ScriptComponentMenu.cpp in Sources */,
 				72A4AF961E3A9B8D00A856F5 /* EditorDropTarget.cpp in Sources */,
 				7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */,
+				722745431F3492D8009B0528 /* PanelDropSystem.cpp in Sources */,
 				729954721C99F76100DAAE5D /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
 				7299549E1C99F76100DAAE5D /* btGImpactQuantizedBvh.cpp in Sources */,
 				729954E91C99F76100DAAE5D /* MiniCLTask.cpp in Sources */,
@@ -3973,6 +4018,7 @@
 				729954DA1C99F76100DAAE5D /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
 				727B38D91E2B9C5300531B62 /* tinyxml.cpp in Sources */,
 				729953D01C99F76100DAAE5D /* Triangulator.cpp in Sources */,
+				722745241F347B51009B0528 /* PanelLocation.cpp in Sources */,
 				7299543A1C99F76100DAAE5D /* b2Distance.cpp in Sources */,
 				729953E41C99F76100DAAE5D /* FieldEditorSystem.cpp in Sources */,
 				729953F81C99F76100DAAE5D /* SpriteMeshSystem.cpp in Sources */,
@@ -4091,6 +4137,7 @@
 				720585141E6232FC009FFACF /* TriggerTouchSystem.cpp in Sources */,
 				72A4AFB01E451B4500A856F5 /* SlicedQuadMeshSystem.cpp in Sources */,
 				72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */,
+				7227453D1F34916E009B0528 /* PanelSystem.cpp in Sources */,
 				729954551C99F76100DAAE5D /* btAxisSweep3.cpp in Sources */,
 				7299541E1C99F76100DAAE5D /* SelectionVisualizer.cpp in Sources */,
 				729954441C99F76100DAAE5D /* b2Body.cpp in Sources */,
@@ -4111,6 +4158,7 @@
 				729955021C99F76100DAAE5D /* WindowOSX.mm in Sources */,
 				72C9B29B1E96C7F700033C56 /* TextEditorScrollSystem.cpp in Sources */,
 				729954101C99F76100DAAE5D /* ColorSystem.cpp in Sources */,
+				722745401F349278009B0528 /* PanelDropper.cpp in Sources */,
 				729954B11C99F76100DAAE5D /* btKinematicCharacterController.cpp in Sources */,
 				721543791EC0F424000305A9 /* ComponentMenu.cpp in Sources */,
 				729954511C99F76100DAAE5D /* b2MouseJoint.cpp in Sources */,
@@ -4160,6 +4208,7 @@
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
 				7244C4951DECBBCB00ADF008 /* GuiFieldEditors.cpp in Sources */,
 				729954781C99F76100DAAE5D /* btBvhTriangleMeshShape.cpp in Sources */,
+				7227452A1F347D2E009B0528 /* PanelArea.cpp in Sources */,
 				729954521C99F76100DAAE5D /* b2PrismaticJoint.cpp in Sources */,
 				7299547C1C99F76100DAAE5D /* btConcaveShape.cpp in Sources */,
 				729954291C99F76100DAAE5D /* Point.cpp in Sources */,
@@ -4232,6 +4281,7 @@
 				729954B91C99F76100DAAE5D /* btPoint2PointConstraint.cpp in Sources */,
 				729953F11C99F76100DAAE5D /* LabelMeshSystem.cpp in Sources */,
 				729954271C99F76100DAAE5D /* Matrix4x4.cpp in Sources */,
+				7227453A1F348399009B0528 /* PanelAreaSystem.cpp in Sources */,
 				729953DE1C99F76100DAAE5D /* Sound.cpp in Sources */,
 				729954C41C99F76100DAAE5D /* btWheelInfo.cpp in Sources */,
 				7299545F1C99F76100DAAE5D /* btActivatingCollisionAlgorithm.cpp in Sources */,
