@@ -47,12 +47,7 @@ void LayoutSystem::ObjectAdded(GameObject* object) {
     object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &LayoutSystem::SizeChanged, object);
     
     dirtyObjects.insert(object);
-    
-    GameObject* current = object->Parent;
-    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
-    if (currentLayouter) {
-        dirtyObjects.insert(current);
-    }
+    TryInvokeChangesToParent(object);
 }
 
 void LayoutSystem::ObjectRemoved(GameObject* object) {
@@ -73,11 +68,7 @@ void LayoutSystem::ObjectRemoved(GameObject* object) {
     
     object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &LayoutSystem::SizeChanged, object);
     
-    GameObject* current = object->Parent;
-    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
-    if (currentLayouter) {
-        dirtyObjects.insert(current);
-    }
+    TryInvokeChangesToParent(object);
     
     auto it = dirtyObjects.find(object);
     if (it!=dirtyObjects.end()) {
@@ -85,6 +76,16 @@ void LayoutSystem::ObjectRemoved(GameObject* object) {
     }
 }
 
+void LayoutSystem::TryInvokeChangesToParent(Pocket::GameObject *object) {
+    GameObject* current = object->Parent;
+    Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
+    if (currentLayouter) {
+        currentLayouter->GlobalMin.MakeDirty();
+        currentLayouter->GlobalMax.MakeDirty();
+        currentLayouter->GlobalDesired.MakeDirty();
+        dirtyObjects.insert(current);
+    }
+}
 
 void LayoutSystem::MinChanged(Layouter* layouter) {
     layouter->GlobalMin.MakeDirty();

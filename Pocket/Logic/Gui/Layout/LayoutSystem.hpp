@@ -37,6 +37,7 @@ namespace Pocket {
         );
         
         void CalcLayout(GameObject* object);
+        void TryInvokeChangesToParent(GameObject* object);
     private:
         std::set<GameObject*> dirtyObjects;
         
