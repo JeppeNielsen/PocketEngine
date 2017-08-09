@@ -525,7 +525,7 @@ public:
     }
 };
 
-int main_layouting() {
+int main_tesGui() {
     Engine e;
     e.Start<Game>();
 	return 0;

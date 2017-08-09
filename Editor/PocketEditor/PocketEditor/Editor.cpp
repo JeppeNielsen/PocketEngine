@@ -50,13 +50,13 @@ public:
     void Initialize() {
     
         windows.push_back(new BackgroundArea());
-//        windows.push_back(new WorldTab());
+        windows.push_back(new WorldTab());
 //        windows.push_back(new SceneTab());
 //        windows.push_back(new PlayButtons());
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
-        windows.push_back(new ConsoleWindow());
+        //windows.push_back(new ConsoleWindow());
 //        windows.push_back(new AnimationWindow());
         
         menus.push_back(new FileMenu());

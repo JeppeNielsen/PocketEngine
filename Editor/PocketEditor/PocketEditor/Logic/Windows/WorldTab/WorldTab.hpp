@@ -20,16 +20,17 @@ protected:
     bool CreateBar() override;
 private:
 
-    void ScreenSizeChanged();
     void WorldLoaded(OpenWorld* world);
     void WorldClosed(OpenWorld* world);
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
-    
-    void AlignTabs();
 
     void Clicked(TouchData d, OpenWorld* clickedWorld);
     GameObject* fileRoot;
     
     using OpenedTabs = std::map<OpenWorld*, GameObject*>;
     OpenedTabs openedTabs;
+    
+    GameObject* tabArea;
+    GameObject* renderArea;
+    
 };

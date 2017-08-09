@@ -50,6 +50,7 @@
 		722745401F349278009B0528 /* PanelDropper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227453E1F349278009B0528 /* PanelDropper.cpp */; };
 		722745431F3492D8009B0528 /* PanelDropSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745411F3492D8009B0528 /* PanelDropSystem.cpp */; };
 		7227454A1F3A4C39009B0528 /* BackgroundArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745481F3A4C39009B0528 /* BackgroundArea.cpp */; };
+		7227454C1F3B94D9009B0528 /* testLayouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227454B1F3B94D9009B0528 /* testLayouting.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -570,6 +571,7 @@
 		722745421F3492D8009B0528 /* PanelDropSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelDropSystem.hpp; sourceTree = "<group>"; };
 		722745481F3A4C39009B0528 /* BackgroundArea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundArea.cpp; sourceTree = "<group>"; };
 		722745491F3A4C39009B0528 /* BackgroundArea.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BackgroundArea.hpp; sourceTree = "<group>"; };
+		7227454B1F3B94D9009B0528 /* testLayouting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testLayouting.cpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -2218,6 +2220,7 @@
 				7214E0701F08309E00F61526 /* testFieldDataCollection.cpp */,
 				72FBB0551F0983470036AC7A /* testAnimation.cpp */,
 				7227451E1F267C08009B0528 /* testWindowSystem.cpp */,
+				7227454B1F3B94D9009B0528 /* testLayouting.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -4237,6 +4240,7 @@
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
 				7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */,
 				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,
+				7227454C1F3B94D9009B0528 /* testLayouting.cpp in Sources */,
 				720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */,
 				72C9B2921E8C48BD00033C56 /* TextEditorCursorSystem.cpp in Sources */,
 				729954E11C99F76100DAAE5D /* btConvexHull.cpp in Sources */,

@@ -41,4 +41,7 @@ private:
     
     using OpenedTabs = std::map<GameObject*, GameObject*>;
     OpenedTabs openedTabs;
+    
+    GameObject* tabArea;
+    GameObject* renderArea;
 };

@@ -17,6 +17,7 @@ void BackgroundArea::OnInitialize() {
 void BackgroundArea::OnCreate() {
     window->RemoveComponent<Renderable>();
     window->AddComponent<PanelArea>();
+    window->GetComponent<Touchable>()->ClickThrough = true;
     ScreenSizeChanged();
 }
 

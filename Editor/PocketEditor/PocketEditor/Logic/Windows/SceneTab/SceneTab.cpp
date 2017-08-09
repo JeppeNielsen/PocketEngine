@@ -19,18 +19,22 @@ void SceneTab::OnInitialize() {
 }
 
 void SceneTab::OnCreate() {
-    window->GetComponent<Colorable>()->Color = Colour(1.0f,1.0f,1.0f,0.5f);
+    //window->GetComponent<Colorable>()->Color = Colour(1.0f,1.0f,1.0f,0.5f);
+    
+    renderArea = context->Gui().CreateLayoutControl(window, "TextBox", 25, 2000, 2000);
+    tabArea = context->Gui().CreateLayoutControl(window, "Box", 25, {25,2000}, {25,2000}, Layouter::LayoutMode::Horizontal);
+    
     ScreenSizeChanged();
 }
 
 bool SceneTab::CreateBar() {
-    return false;
+    return true;
 }
 
 void SceneTab::ScreenSizeChanged() {
-    Vector2 size = context->EngineContext().ScreenSize;
-    window->GetComponent<Sizeable>()->Size = {size.x-200, 30};
-    window->GetComponent<Transform>()->Position = {200,size.y - window->GetComponent<Sizeable>()->Size().y - 30 };
+//    Vector2 size = context->EngineContext().ScreenSize;
+//    window->GetComponent<Sizeable>()->Size = {size.x-200, 30};
+//    window->GetComponent<Transform>()->Position = {200,size.y - window->GetComponent<Sizeable>()->Size().y - 30 };
 }
 
 void SceneTab::Clicked(TouchData d, OpenWorld* clickedWorld) {
@@ -92,19 +96,17 @@ void SceneTab::UpdateWorld(OpenWorld *world) {
         AddTab(world, r);
     }
     */
-    
-    AlignTabs();
     ActiveSceneChanged(world->GetRunningWorld());
 }
 
 void SceneTab::AddTab(OpenWorld* world, GameObject* scene) {
     Gui& gui = context->Gui();
-    GameObject* button = gui.CreateControl(window, "Box", 0, {200,30});
+    GameObject* button = gui.CreateLayoutControl(tabArea, "Box", 25, {200,25}, {200,25});
     GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
     label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
     label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
-    
     label->GetComponent<Colorable>()->Color = Colour::Black();
+    label->ReplaceComponent<Sizeable>(button);
     
     button->GetComponent<Touchable>()->Click.Bind([world, scene, this] (TouchData d) {
         world->GetRunningWorld()->ActiveScene = scene;
@@ -123,15 +125,14 @@ void SceneTab::AddTab(OpenWorld* world, GameObject* scene) {
     }
     
     openedTabs[scene] = button;
-    AlignTabs();
 }
 
 void SceneTab::AlignTabs() {
-    Vector2 pos{0,0};
-    for(auto t : openedTabs) {
-        t.second->GetComponent<Transform>()->Position = pos;
-        pos += { t.second->GetComponent<Sizeable>()->Size().x, 0};
-    }
+//    Vector2 pos{0,0};
+//    for(auto t : openedTabs) {
+//        t.second->GetComponent<Transform>()->Position = pos;
+//        pos += { t.second->GetComponent<Sizeable>()->Size().x, 0};
+//    }
 }
 
 void SceneTab::ClearTabs() {
