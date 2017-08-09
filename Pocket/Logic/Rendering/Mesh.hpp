@@ -86,7 +86,9 @@ public:
     
     void RevertDefaultCalcBoundingBox() {
         LocalBoundingBox.Method = [this] (BoundingBox& box) {
-            vertexMesh->CalcBoundingBox(box);
+            if (vertexMesh) {
+                vertexMesh->CalcBoundingBox(box);
+            }
         };
     }
     
