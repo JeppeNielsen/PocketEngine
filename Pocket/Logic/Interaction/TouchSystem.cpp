@@ -117,7 +117,7 @@ void TouchSystem::TouchDown(Pocket::TouchEvent e) {
         list[i].Touchable->Cancelled.Bind(this, &TouchSystem::TouchableCancelled);
     }
     
-    if (!list.empty()) {
+    if (!list.empty() && !list[0].Touchable->ClickThrough) {
         root->Input().SwallowTouch(e.Index, TouchDepth);
     }
 }
