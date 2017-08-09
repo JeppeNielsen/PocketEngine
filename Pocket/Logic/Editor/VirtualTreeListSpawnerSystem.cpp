@@ -18,8 +18,8 @@ void VirtualTreeListSpawnerSystem::Initialize() {
 void VirtualTreeListSpawnerSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<VirtualTreeList>()->NodeCreated.Bind(this, &VirtualTreeListSpawnerSystem::NodeCreated, object);
     object->GetComponent<VirtualTreeList>()->NodeRemoved.Bind(this, &VirtualTreeListSpawnerSystem::NodeRemoved, object);
+    object->GetComponent<Sizeable>()->Size.Changed.Bind(this, &VirtualTreeListSpawnerSystem::SizeChanged, object);
 }
-
 
 void VirtualTreeListSpawnerSystem::ObjectRemoved(Pocket::GameObject *object) {
     object->GetComponent<VirtualTreeList>()->NodeCreated.Unbind(this, &VirtualTreeListSpawnerSystem::NodeCreated, object);
@@ -29,6 +29,7 @@ void VirtualTreeListSpawnerSystem::ObjectRemoved(Pocket::GameObject *object) {
         o.second.parent->Remove();
     }
     object->GetComponent<VirtualTreeListSpawner>()->objects.clear();
+    object->GetComponent<Sizeable>()->Size.Changed.Unbind(this, &VirtualTreeListSpawnerSystem::SizeChanged, object);
 }
 
 void VirtualTreeListSpawnerSystem::NodeCreated(VirtualTreeList::Node e, Pocket::GameObject *object) {
@@ -42,6 +43,7 @@ void VirtualTreeListSpawnerSystem::NodeCreated(VirtualTreeList::Node e, Pocket::
     node.node = e.node;
     node.parent = object->CreateChild();
     node.parent->AddComponent<Transform>()->Position = nodePosition;
+    node.parent->AddComponent<Sizeable>()->Size = { object->GetComponent<Sizeable>()->Size().x-e.depth*treeList->ItemIndent(), treeList->ItemHeight };
     node.height = treeList->ItemHeight;
     node.foldOutButton = 0;
     node.hasChildren = !spawner->HasChildren ? !e.node->Children().empty() : spawner->HasChildren(e.node);
@@ -77,4 +79,17 @@ void VirtualTreeListSpawnerSystem::NodeRemoved(VirtualTreeList::Node e, Pocket::
 
 void VirtualTreeListSpawnerSystem::FoldOutClicked(Pocket::TouchData d, FoldoutData foldout) {
     foldout.treelist->SetNodeExpanded(foldout.node, !foldout.treelist->IsNodeExpanded(foldout.node));
+}
+
+void VirtualTreeListSpawnerSystem::SizeChanged(Pocket::GameObject *object) {
+    VirtualTreeList* treeList = object->GetComponent<VirtualTreeList>();
+    VirtualTreeListSpawner* spawner = object->GetComponent<VirtualTreeListSpawner>();
+    Sizeable* sizeable = object->GetComponent<Sizeable>();
+    
+    auto& objects = spawner->objects;
+    
+    for(auto o : objects) {
+        auto s = o.second.parent->GetComponent<Sizeable>();
+        s->Size = { sizeable->Size().x - o.first.depth * treeList->ItemIndent(), s->Size().y };
+    }
 }

@@ -214,7 +214,7 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     listbox->GetComponent<Touchable>()->ClickThrough = false;
     CreateClipper(listbox, true);
     GameObject* p = CreatePivot(listbox);
-    p->AddComponent<Sizeable>();
+    p->AddComponent<Sizeable>(listbox);
     p->AddComponent<Touchable>(listbox);
     p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
     //p->AddComponent<DraggableMotion>();

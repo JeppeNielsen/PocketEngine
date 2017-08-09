@@ -12,9 +12,10 @@
 #include "VirtualTreeList.hpp"
 #include "VirtualTreeListSpawner.hpp"
 #include "Touchable.hpp"
+#include "Sizeable.hpp"
 
 namespace Pocket {
-  class VirtualTreeListSpawnerSystem : public GameSystem<VirtualTreeList, VirtualTreeListSpawner, Transform> {
+  class VirtualTreeListSpawnerSystem : public GameSystem<VirtualTreeList, VirtualTreeListSpawner, Transform, Sizeable> {
     public:
         void Initialize();
         void ObjectAdded(GameObject* object);
@@ -37,6 +38,7 @@ namespace Pocket {
         };
       
         void FoldOutClicked(TouchData d, FoldoutData foldout);
+        void SizeChanged(GameObject* object);
       
   };
 }
