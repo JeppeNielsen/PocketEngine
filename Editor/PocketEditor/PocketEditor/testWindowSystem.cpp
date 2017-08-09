@@ -98,7 +98,7 @@ public:
     }
 };
 
-int main() {
+int main_testPanels() {
     Engine e;
     e.Start<TestWindowSystem>();
 	return 0;

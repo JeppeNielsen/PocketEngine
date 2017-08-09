@@ -32,6 +32,7 @@
 #include "ComponentMenu.hpp"
 #include "ScriptComponentMenu.hpp"
 #include "AnimationWindow.hpp"
+#include "BackgroundArea.hpp"
 
 using namespace Pocket;
 
@@ -47,15 +48,16 @@ public:
     Modules modules;
     
     void Initialize() {
-
-        windows.push_back(new WorldTab());
-        windows.push_back(new SceneTab());
-        windows.push_back(new PlayButtons());
+    
+        windows.push_back(new BackgroundArea());
+//        windows.push_back(new WorldTab());
+//        windows.push_back(new SceneTab());
+//        windows.push_back(new PlayButtons());
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
         windows.push_back(new ConsoleWindow());
-        windows.push_back(new AnimationWindow());
+//        windows.push_back(new AnimationWindow());
         
         menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());
@@ -134,7 +136,7 @@ public:
     }
 };
 
-int main_editor() {
+int main() {
     Engine e;
     e.Start<Editor>();
 	return 0;

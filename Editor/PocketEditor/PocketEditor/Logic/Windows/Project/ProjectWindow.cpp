@@ -151,9 +151,10 @@ void ProjectWindow::OnCreate() {
     Gui& gui = context->Gui();
 
     GameObject* pivot;
-    listBox = gui.CreateListbox(window, "Box", {0,0}, {200,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
-    listBox->RemoveComponent<Sprite>();
-    
+    listBox = gui.CreateListbox(window, "Box", {0,0}, 200, &pivot);
+    gui.AddLayouter(listBox, 20, {2000,2000}, {2000,2000});
+    //listBox->RemoveComponent<Sprite>();
+
     pivot->GetComponent<Transform>()->Position = {0,400};
     
     treeView = pivot->AddComponent<VirtualTreeList>();
@@ -172,14 +173,17 @@ void ProjectWindow::OnCreate() {
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
     spawner->OnCreate = [&, this](auto& n) {
-    
+        
         FilePath* filePath = n.node->template GetComponent<FilePath>();
+        
+        gui.AddLayouter(n.parent, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
         
         if (n.hasChildren) {
             n.foldOutButton = gui.CreateControl(n.parent, "TextBox", 0, {25,25});
+            gui.AddLayouter(n.foldOutButton, {25,25}, 25, 25);
         }
-        
-        GameObject* selectButton = gui.CreateControl(n.parent, "TextBox", {(n.hasChildren ? 25.0f : 0.0f),0}, {200-(n.hasChildren ? 0 : 25.0f),25});
+        GameObject* selectButton = gui.CreateControl(n.parent, "TextBox", {(n.hasChildren ? 25.0f : 0.0f),0}, 25);
+        gui.AddLayouter(selectButton, {4,25}, 2000, 2000);
         
         auto l = gui.CreateLabel(selectButton, {0,0}, {200-(n.hasChildren ? 0 : 25.0f),25}, 0, n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
@@ -205,7 +209,7 @@ void ProjectWindow::OnCreate() {
     });
 }
 
-bool ProjectWindow::CreateBar() { return false; }
+bool ProjectWindow::CreateBar() { return true; }
 
 void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     selectedNode = nodeInfo;
@@ -223,10 +227,10 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
 }
 
 void ProjectWindow::ScreenSizeChanged() {
-    Vector2 size = context->EngineContext().ScreenSize;
-    window->GetComponent<Sizeable>()->Size = {200, size.y};
-    window->GetComponent<Transform>()->Position = 0;
-    listBox->GetComponent<Sizeable>()->Size = window->GetComponent<Sizeable>()->Size;
+//    Vector2 size = context->EngineContext().ScreenSize;
+//    window->GetComponent<Sizeable>()->Size = {200, size.y};
+//    window->GetComponent<Transform>()->Position = 0;
+//    listBox->GetComponent<Sizeable>()->Size = window->GetComponent<Sizeable>()->Size;
 }
 
 void ProjectWindow::SetProjectPath(const std::string &path) {
