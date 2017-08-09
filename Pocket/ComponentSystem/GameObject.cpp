@@ -251,6 +251,7 @@ void GameObject::Remove() {
     if (removed) return;
     int localIndex = index;
     scene->world->delayedActions.emplace_back([this, localIndex]() {
+        SetEnabled(false);
         forceSetNextParent = true;
         if (IsRoot()) {
             scene->world->RemoveRoot(this);
@@ -258,7 +259,6 @@ void GameObject::Remove() {
             Parent = 0;
         }
         forceSetNextParent = false;
-        SetEnabled(false);
         for(int i=0; i<activeComponents.Size(); ++i) {
             if (activeComponents[i]) {
                 scene->world->components[i].container->Delete(componentIndicies[i], index);
