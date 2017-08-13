@@ -1,13 +1,12 @@
 #include "Texture.hpp"
 #include "OpenGL.hpp"
 #include "ImageLoader.hpp"
+#include "RenderTexture.hpp"
 
 using namespace Pocket;
 
-Texture::Texture() {
-	width = 0;
-	height = 0;
-	texture = 0;
+Texture::Texture() :
+    width(0), height(0), texture(0), renderTexture(0) {
 }
 
 Texture::~Texture() {
@@ -15,15 +14,15 @@ Texture::~Texture() {
 }
 
 int Texture::GetWidth() {
-	return width;
+	return renderTexture ? renderTextureWidth : width;
 }
 
 int Texture::GetHeight() {
-	return height;
+	return renderTexture ? renderTextureHeight : height;
 }
 
 GLuint Texture::GetHandle() {
-	return texture;
+	return renderTexture ? renderTexture->GetTexture() : texture;
 }
 
 void Texture::LoadFromMemory(unsigned char *data, int size) {
@@ -99,3 +98,10 @@ void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
 	LodePNG::saveFile(out, path);
     */
 }
+
+void Texture::SetRenderTexture(Pocket::RenderTexture *renderTexture, int width, int height) {
+    this->renderTexture = renderTexture;
+    renderTextureWidth = width;
+    renderTextureHeight = height;
+}
+

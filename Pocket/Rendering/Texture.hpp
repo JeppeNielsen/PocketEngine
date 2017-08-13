@@ -2,6 +2,7 @@
 #include <string>
 
 namespace Pocket {
+    class RenderTexture;
 	class Texture {
 	public:
         using GLuint = uint32_t;
@@ -27,11 +28,16 @@ namespace Pocket {
         void DisableMipmapping();
         
         void SaveToPng(const std::string& path, GLenum pixelFormat);
+        
+        void SetRenderTexture(RenderTexture* renderTexture, int width, int height);
 
 	protected:
 		GLuint texture;
 		int width;
 		int height;
-
+        RenderTexture* renderTexture;
+        int renderTextureWidth;
+        int renderTextureHeight;
+        
 	};
 }
