@@ -92,9 +92,9 @@ void InputDevice::UpdateInputManager(Pocket::InputManager *inputManager) {
         const Touch& prev = previousTouches[i];
         if (current.IsDown!=prev.IsDown) {
             if (current.IsDown) {
-                inputManager->TouchDown(TouchEvent(i, current.Position));
+                inputManager->TouchDown(TouchEvent(i, inputManager->transformationMatrix.TransformPosition(current.Position)));
             } else {
-                inputManager->TouchUp(TouchEvent(i, current.Position));
+                inputManager->TouchUp(TouchEvent(i, inputManager->transformationMatrix.TransformPosition(current.Position)));
             }
         }
     }

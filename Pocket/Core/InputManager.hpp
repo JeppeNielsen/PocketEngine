@@ -5,6 +5,7 @@
 #include "Property.hpp"
 #include <string>
 #include "GamePadManager.hpp"
+#include "Matrix4x4.hpp"
 
 namespace Pocket {
 
@@ -40,7 +41,7 @@ namespace Pocket {
 		Event<TouchEvent> TouchDown;
 		Event<TouchEvent> TouchUp;
 
-		const Vector2& GetTouchPosition(int index);
+		const Vector2 GetTouchPosition(int index);
         
         Property<bool> KeyboardActive;
         Property<std::string> KeyboardText;
@@ -52,10 +53,14 @@ namespace Pocket {
         void SwallowTouch(int index, int depth);
         bool IsTouchSwallowed(int index, int depth);
         
+        void SetTransformationMatrix(const Matrix4x4& transformationMatrix);
+        
+        InputDevice* GetDevice();
+                
 	private:
 		InputDevice* device;
+        Matrix4x4 transformationMatrix;
 		friend class InputDevice;
-        
 	};
     
     class IInputManagerUpdater {
