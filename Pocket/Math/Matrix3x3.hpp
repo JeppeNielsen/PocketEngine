@@ -36,9 +36,9 @@ namespace Pocket {
 			Matrix3x3& operator*=(const Matrix3x3& mat);
 
 			Matrix3x3& Invert();
-			Vector2& TransformPoint(const Vector2& source) const;
+			Vector2 TransformPoint(const Vector2& source) const;
 			void TransformPointRef(Vector2& source) const;
-			Vector2& TransformVector(const Vector2& source) const;
+			Vector2 TransformVector(const Vector2& source) const;
 			void TransformVectorRef(Vector2& source) const;
 			void TransformPointRef2(Vector2& dest, const Vector2& source) const;
 
@@ -47,15 +47,11 @@ namespace Pocket {
 
 			void GetGlMatrix(float* mat);
 
-			Vector2& Position() const;
+			Vector2 Position() const;
 			float Angle() const;
 
 		public:
-
-				float m[3][3];
-
-				
-
+            float m[3][3];
 	};
 
 }

@@ -71,24 +71,17 @@ void Matrix3x3::Translation(const Vector2& v) {
 	m[2][0] = v.x; m[2][1] = v.y; m[2][2] = 1;
 }
 
-Vector2& Matrix3x3::Position() const {
-	Vector2* v = new Vector2();
-	v->x = m[2][0];
-	v->y = m[2][1];
-	return *v;
+Vector2 Matrix3x3::Position() const {
+	return Vector2(m[2][0], m[2][1]);
 }
 
 float Matrix3x3::Angle() const {
 	return atan2(m[1][0], m[0][0]);
 }
 
-Matrix3x3::Matrix3x3() {
-	
-}
+Matrix3x3::Matrix3x3() { }
 
-Matrix3x3::~Matrix3x3() {
-}
-
+Matrix3x3::~Matrix3x3() { }
 
 Matrix3x3::Matrix3x3(float m00, float m01, float m02, float m10, float m11, float m12, float m20, float m21, float m22) {
 	m[0][0] = m00;	m[0][1] = m01;	m[0][2] = m02;
@@ -124,7 +117,6 @@ void Matrix3x3::GetRow(const int r, float& x, float& y, float& z) const	{
 	y = m[r][1];	
 	z = m[r][2];	
 }
-
 
 void Matrix3x3::Mult(const Matrix3x3& a, const Matrix3x3& b) {
 	m[0][0] = a.m[0][0] * b.m[0][0] + a.m[0][1] * b.m[1][0] + a.m[0][2] * b.m[2][0];
@@ -197,18 +189,18 @@ Matrix3x3& Matrix3x3::Invert() {
 	return	*this;
 }
 
-Vector2& Matrix3x3::TransformPoint(const Vector2& source) const {
-	Vector2* v = new Vector2();
-	v->x = m[2][0] + source.x * m[0][0] + source.y * m[1][0];
-	v->y = m[2][1] + source.x * m[0][1] + source.y * m[1][1];
-	return *v;
+Vector2 Matrix3x3::TransformPoint(const Vector2& source) const {
+	return Vector2(
+        m[2][0] + source.x * m[0][0] + source.y * m[1][0],
+        m[2][1] + source.x * m[0][1] + source.y * m[1][1]
+    );
 }
 
-Vector2& Matrix3x3::TransformVector(const Vector2& source) const {
-	Vector2* v = new Vector2();
-	v->x = source.x * m[0][0] + source.y * m[1][0];
-	v->y = source.x * m[0][1] + source.y * m[1][1];
-	return *v;
+Vector2 Matrix3x3::TransformVector(const Vector2& source) const {
+	return Vector2(
+        source.x * m[0][0] + source.y * m[1][0],
+        source.x * m[0][1] + source.y * m[1][1]
+    );
 }
 
 void Matrix3x3::TransformPointRef(Vector2& source) const {
