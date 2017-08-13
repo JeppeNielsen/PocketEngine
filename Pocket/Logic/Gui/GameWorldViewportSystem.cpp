@@ -14,7 +14,11 @@ using namespace Pocket;
 void GameWorldViewportSystem::ObjectAdded(GameObject* object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
     viewport->renderTexture.Initialize(viewport->RenderSize.x, viewport->RenderSize.y);
-    object->GetComponent<TextureComponent>()->Texture().SetCustomTexture(viewport->renderTexture.GetTexture(), viewport->RenderSize.x, viewport->RenderSize.y);
+    object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(&viewport->renderTexture, viewport->RenderSize.x, viewport->RenderSize.y);
+}
+
+void GameWorldViewportSystem::ObjectRemoved(GameObject* object) {
+    object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(nullptr, 0,0);
 }
 
 void GameWorldViewportSystem::Update(float dt) {

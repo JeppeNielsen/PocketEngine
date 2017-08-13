@@ -18,6 +18,7 @@ namespace Pocket {
     class GameWorldViewportSystem : public GameSystem<GameWorldViewport, Transform, Sizeable, Mesh, TextureComponent> {
     protected:
         void ObjectAdded(GameObject* object) override;
+        void ObjectRemoved(GameObject* object) override;
         void Update(float dt) override;
         void Render() override;
     private:
