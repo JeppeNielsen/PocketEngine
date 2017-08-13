@@ -51,6 +51,10 @@
 		722745431F3492D8009B0528 /* PanelDropSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745411F3492D8009B0528 /* PanelDropSystem.cpp */; };
 		7227454A1F3A4C39009B0528 /* BackgroundArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745481F3A4C39009B0528 /* BackgroundArea.cpp */; };
 		7227454C1F3B94D9009B0528 /* testLayouting.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227454B1F3B94D9009B0528 /* testLayouting.cpp */; };
+		7227454E1F3CBF51009B0528 /* testRenderBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227454D1F3CBF51009B0528 /* testRenderBuffer.cpp */; };
+		722745511F40CCD2009B0528 /* RenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7227454F1F40CCD2009B0528 /* RenderTexture.cpp */; };
+		722745541F40D8F6009B0528 /* GameWorldViewport.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745521F40D8F6009B0528 /* GameWorldViewport.cpp */; };
+		722745571F40DA88009B0528 /* GameWorldViewportSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 722745551F40DA88009B0528 /* GameWorldViewportSystem.cpp */; };
 		72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */; };
 		72308CFC1E127A7A00B92B8D /* AssetManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308CF81E127A7A00B92B8D /* AssetManager.cpp */; };
 		72308D071E127A9100B92B8D /* FilePath.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D001E127A9100B92B8D /* FilePath.cpp */; };
@@ -572,6 +576,13 @@
 		722745481F3A4C39009B0528 /* BackgroundArea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BackgroundArea.cpp; sourceTree = "<group>"; };
 		722745491F3A4C39009B0528 /* BackgroundArea.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BackgroundArea.hpp; sourceTree = "<group>"; };
 		7227454B1F3B94D9009B0528 /* testLayouting.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testLayouting.cpp; sourceTree = "<group>"; };
+		7227454D1F3CBF51009B0528 /* testRenderBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testRenderBuffer.cpp; sourceTree = "<group>"; };
+		7227454F1F40CCD2009B0528 /* RenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTexture.cpp; sourceTree = "<group>"; };
+		722745501F40CCD2009B0528 /* RenderTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RenderTexture.hpp; sourceTree = "<group>"; };
+		722745521F40D8F6009B0528 /* GameWorldViewport.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameWorldViewport.cpp; sourceTree = "<group>"; };
+		722745531F40D8F6009B0528 /* GameWorldViewport.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameWorldViewport.hpp; sourceTree = "<group>"; };
+		722745551F40DA88009B0528 /* GameWorldViewportSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameWorldViewportSystem.cpp; sourceTree = "<group>"; };
+		722745561F40DA88009B0528 /* GameWorldViewportSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameWorldViewportSystem.hpp; sourceTree = "<group>"; };
 		72308CF61E127A7A00B92B8D /* AssetLoaderSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetLoaderSystem.cpp; sourceTree = "<group>"; };
 		72308CF71E127A7A00B92B8D /* AssetLoaderSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoaderSystem.hpp; sourceTree = "<group>"; };
 		72308CF81E127A7A00B92B8D /* AssetManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetManager.cpp; sourceTree = "<group>"; };
@@ -2221,6 +2232,7 @@
 				72FBB0551F0983470036AC7A /* testAnimation.cpp */,
 				7227451E1F267C08009B0528 /* testWindowSystem.cpp */,
 				7227454B1F3B94D9009B0528 /* testLayouting.cpp */,
+				7227454D1F3CBF51009B0528 /* testRenderBuffer.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -2460,6 +2472,10 @@
 				729950411C99F76000DAAE5D /* TextBoxLabelSystem.hpp */,
 				729950421C99F76000DAAE5D /* TextBoxSystem.cpp */,
 				729950431C99F76000DAAE5D /* TextBoxSystem.hpp */,
+				722745521F40D8F6009B0528 /* GameWorldViewport.cpp */,
+				722745531F40D8F6009B0528 /* GameWorldViewport.hpp */,
+				722745551F40DA88009B0528 /* GameWorldViewportSystem.cpp */,
+				722745561F40DA88009B0528 /* GameWorldViewportSystem.hpp */,
 			);
 			path = Gui;
 			sourceTree = "<group>";
@@ -3490,6 +3506,8 @@
 				729953111C99F76100DAAE5D /* VertexRenderer.hpp */,
 				72A4AFA61E3FED4900A856F5 /* ImageLoader.cpp */,
 				72A4AFA71E3FED4900A856F5 /* ImageLoader.hpp */,
+				7227454F1F40CCD2009B0528 /* RenderTexture.cpp */,
+				722745501F40CCD2009B0528 /* RenderTexture.hpp */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -4005,6 +4023,7 @@
 				729954321C99F76100DAAE5D /* ChromecastUser.cpp in Sources */,
 				729954031C99F76100DAAE5D /* FirstPersonMoverSystem.cpp in Sources */,
 				729954B31C99F76100DAAE5D /* btContactConstraint.cpp in Sources */,
+				722745571F40DA88009B0528 /* GameWorldViewportSystem.cpp in Sources */,
 				729953C41C99F76100DAAE5D /* GameState.cpp in Sources */,
 				7220F64C1E75E3F10063EAD5 /* EditorCameraSelection.cpp in Sources */,
 				726DFD2C1D247C8F00C862B7 /* TypeIndexList.cpp in Sources */,
@@ -4078,6 +4097,7 @@
 				729954451C99F76100DAAE5D /* b2ContactManager.cpp in Sources */,
 				729954181C99F76100DAAE5D /* DragSelector.cpp in Sources */,
 				729954981C99F76100DAAE5D /* btTriangleMeshShape.cpp in Sources */,
+				722745541F40D8F6009B0528 /* GameWorldViewport.cpp in Sources */,
 				72C9B2981E95768500033C56 /* TextEditorSelectionSystem.cpp in Sources */,
 				7299547A1C99F76100DAAE5D /* btCollisionShape.cpp in Sources */,
 				729953CD1C99F76100DAAE5D /* Pointer.cpp in Sources */,
@@ -4279,6 +4299,7 @@
 				729954DD1C99F76100DAAE5D /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				7215437D1EC10650000305A9 /* AssetHelper.cpp in Sources */,
 				7299540C1C99F76100DAAE5D /* RigidBody2d.cpp in Sources */,
+				7227454E1F3CBF51009B0528 /* testRenderBuffer.cpp in Sources */,
 				72A4B3981E4BB5B200A856F5 /* SwitchEnabler.cpp in Sources */,
 				720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */,
 				729954971C99F76100DAAE5D /* btTriangleMesh.cpp in Sources */,
@@ -4309,6 +4330,7 @@
 				729954C71C99F76100DAAE5D /* btThreadSupportInterface.cpp in Sources */,
 				729954051C99F76100DAAE5D /* LimitableSystem.cpp in Sources */,
 				72A4B3971E4BB5B200A856F5 /* Switch.cpp in Sources */,
+				722745511F40CCD2009B0528 /* RenderTexture.cpp in Sources */,
 				727B38D81E2B9C5300531B62 /* tinystr.cpp in Sources */,
 				729955091C99F76100DAAE5D /* Colour.cpp in Sources */,
 				729953DF1C99F76100DAAE5D /* SoundEmitter.cpp in Sources */,

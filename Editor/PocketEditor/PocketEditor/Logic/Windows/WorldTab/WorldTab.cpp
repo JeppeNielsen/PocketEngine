@@ -21,7 +21,7 @@ void WorldTab::OnInitialize() {
 void WorldTab::OnCreate() {
     window->Parent()->GetComponent<Transform>()->Position = {300,100};
     window->Parent()->RemoveComponent<Renderable>();
-    window->Parent()->RemoveComponent<Touchable>();
+    //window->Parent()->RemoveComponent<Touchable>();
 
     renderArea = context->Gui().CreateLayoutControl(window, "Box", 25, 2000, 2000);
     renderArea->RemoveComponent<Renderable>();

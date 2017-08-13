@@ -59,13 +59,17 @@ void BaseWindow::Create() {
 //        }
         
         
+        GameObject* barArea = gui.CreateLayoutControl(windowObject, "Box", 20, {2000,20}, {2000,20}, Layouter::LayoutMode::Horizontal);
+        barArea->RemoveComponent<Renderable>();
+        barArea->RemoveComponent<Touchable>();
         
-        GameObject* bar = gui.CreateLayoutControl(windowObject, "Box", 20, {2000,20}, {2000,20});
+        GameObject* bar = gui.CreateLayoutControl(barArea, "TextBox", 20, {2000,20}, {2000,20});
         bar->AddComponent<Droppable>()->OnCreate = [this](GameObject* o, TouchData d) -> GameObject* {
             Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
             GameObject* control = context->Gui().CreateControl(0, "Box", position, {200,25});
             return control;
         };
+        gui.AddLayouter(bar, 20, {130,20}, {130,20});
         bar->AddComponent<PanelDropper>()->panel = windowObject;
         auto label = gui.CreateLabel(bar, 0, 0, 0, Name(), 16);
         label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
