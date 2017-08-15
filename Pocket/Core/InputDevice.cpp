@@ -74,8 +74,9 @@ void InputDevice::StartFrame(IInputManagerIterator* inputManagers) {
         }
     }
 
-    
-    inputManagers->UpdateInput(this);
+    if (inputManagers) {
+        inputManagers->UpdateInput(this);
+    }
 }
 
 void InputDevice::EndFrame() {

@@ -15,10 +15,15 @@ void GameWorldViewportSystem::ObjectAdded(GameObject* object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
     viewport->renderTexture.Initialize(viewport->RenderSize.x, viewport->RenderSize.y);
     object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(&viewport->renderTexture, viewport->RenderSize.x, viewport->RenderSize.y);
+    object->GetComponent<Touchable>()->Down.Bind(this, &GameWorldViewportSystem::TouchDown, object);
+    object->GetComponent<Touchable>()->Up.Bind(this, &GameWorldViewportSystem::TouchUp, object);
+    viewport->inputDevice.Initialize(12);
 }
 
 void GameWorldViewportSystem::ObjectRemoved(GameObject* object) {
     object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(nullptr, 0,0);
+    object->GetComponent<Touchable>()->Down.Unbind(this, &GameWorldViewportSystem::TouchDown, object);
+    object->GetComponent<Touchable>()->Up.Unbind(this, &GameWorldViewportSystem::TouchUp, object);
 }
 
 void GameWorldViewportSystem::Update(float dt) {
@@ -31,6 +36,16 @@ void GameWorldViewportSystem::Render() {
     for(auto o : Objects()) {
         RenderObject(o);
     }
+}
+
+void GameWorldViewportSystem::TouchDown(Pocket::TouchData d, Pocket::GameObject *object) {
+    auto viewport = object->GetComponent<GameWorldViewport>();
+    viewport->inputDevice.SetTouch(d.Index, true, d.Position);
+}
+
+void GameWorldViewportSystem::TouchUp(Pocket::TouchData d, Pocket::GameObject *object) {
+    auto viewport = object->GetComponent<GameWorldViewport>();
+    viewport->inputDevice.SetTouch(d.Index, false, d.Position);
 }
 
 void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
@@ -84,10 +99,17 @@ void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
     Engine::Context().ScreenSize = Vector2(viewport->RenderSize.x, viewport->RenderSize.y);
     Engine::Context().ScreenScalingFactor = 1.0f;
     
+    for (int i=0; i<12; i++) {
+        viewport->inputDevice.SetTouchPosition(i, root->Input().GetDevice()->GetTouchPosition(i));
+    }
+    
     viewport->World->Input().SetTransformationMatrix(mat);
-    root->Input().GetDevice()->UpdateInputManager(&viewport->World->Input());
-   
+    viewport->inputDevice.StartFrame(nullptr);
+    viewport->inputDevice.UpdateInputManager(&viewport->World->Input());
     viewport->World->Update(dt);
+    viewport->World->Input().SetTransformationMatrix(Matrix4x4::IDENTITY);
+    viewport->inputDevice.EndFrame();
+    
     Engine::Context().ScreenSize = oldScreenSize;
     Engine::Context().ScreenScalingFactor = oldScalingFactor;
 }
@@ -97,7 +119,7 @@ void GameWorldViewportSystem::RenderObject(GameObject* object) {
     if (!viewport->World) return;
     
     viewport->renderTexture.Begin();
-    glClearColor(1,0,0, 1);
+    glClearColor(0,0,0.7f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     Vector2 oldScreenSize = Engine::Context().ScreenSize;

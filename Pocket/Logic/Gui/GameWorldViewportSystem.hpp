@@ -13,9 +13,10 @@
 #include "Sizeable.hpp"
 #include "Mesh.hpp"
 #include "TextureComponent.hpp"
+#include "Touchable.hpp"
 
 namespace Pocket {
-    class GameWorldViewportSystem : public GameSystem<GameWorldViewport, Transform, Sizeable, Mesh, TextureComponent> {
+    class GameWorldViewportSystem : public GameSystem<GameWorldViewport, Transform, Sizeable, Mesh, TextureComponent, Touchable> {
     protected:
         void ObjectAdded(GameObject* object) override;
         void ObjectRemoved(GameObject* object) override;
@@ -24,5 +25,7 @@ namespace Pocket {
     private:
         void UpdateObject(GameObject* object, float dt);
         void RenderObject(GameObject* object);
+        void TouchDown(TouchData d, GameObject* object);
+        void TouchUp(TouchData d, GameObject* object);
     };
 }

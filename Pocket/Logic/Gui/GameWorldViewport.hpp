@@ -9,6 +9,7 @@
 #pragma once
 #include "RenderTexture.hpp"
 #include "Point.hpp"
+#include "InputDevice.hpp"
 
 namespace Pocket {
     class GameWorld;
@@ -18,5 +19,6 @@ namespace Pocket {
         GameWorld* World;
         Point RenderSize;
         RenderTexture renderTexture;
+        InputDevice inputDevice;
     };
 }

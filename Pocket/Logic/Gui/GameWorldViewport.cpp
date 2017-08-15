@@ -10,4 +10,4 @@
 
 using namespace Pocket;
 
-GameWorldViewport::GameWorldViewport() : World(0), RenderSize(1024,1024) {}
+GameWorldViewport::GameWorldViewport() : World(nullptr), RenderSize(1024,1024) {}
