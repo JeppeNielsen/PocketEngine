@@ -24,6 +24,7 @@ private:
     GameWorld world;
     FileWorld fileWorld;
     GameObject* contextRoot;
+    GameWorld guiWorld;
     GameObject* guiRoot;
     Gui* gui;
     EngineContext* engineContext;
@@ -34,6 +35,7 @@ public:
     GameWorld& World();
     FileWorld& FileWorld();
     GameObject& ContextRoot();
+    GameWorld& GuiWorld();
     GameObject& GuiRoot();
     Gui& Gui();
     EngineContext& EngineContext();

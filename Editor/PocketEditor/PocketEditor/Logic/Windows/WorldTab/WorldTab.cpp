@@ -10,6 +10,7 @@
 #include "VirtualTreeListSystem.hpp"
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "FileSystemListenerSystem.hpp"
+#include "GameWorldViewport.hpp"
 
 std::string WorldTab::Name() { return "WorldTab"; }
 
@@ -21,11 +22,19 @@ void WorldTab::OnInitialize() {
 void WorldTab::OnCreate() {
     window->Parent()->GetComponent<Transform>()->Position = {300,100};
     window->Parent()->RemoveComponent<Renderable>();
-    //window->Parent()->RemoveComponent<Touchable>();
+    window->Parent()->GetComponent<Touchable>()->ClickThrough = true;
 
-    renderArea = context->Gui().CreateLayoutControl(window, "Box", 25, 2000, 2000);
-    renderArea->RemoveComponent<Renderable>();
-    renderArea->RemoveComponent<Touchable>();
+    renderArea = context->Gui().CreatePivot(window);
+    renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
+    renderArea->GetComponent<GameWorldViewport>()->RenderSize = {2048, 1152 };
+    
+    renderArea->AddComponent<Touchable>();
+    renderArea->AddComponent<TextureComponent>();
+    renderArea->AddComponent<Sizeable>();
+    renderArea->AddComponent<Mesh>();
+    renderArea->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
+    context->Gui().AddLayouter(renderArea, 25, 2000, 2000);
+    
     tabArea = context->Gui().CreateLayoutControl(window, "TextBox", 25, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
 }
 

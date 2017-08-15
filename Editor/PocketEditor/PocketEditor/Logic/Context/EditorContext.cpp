@@ -13,10 +13,12 @@
 #include "EditorDropTarget.hpp"
 #include "SystemHelper.hpp"
 #include "FilePath.hpp"
+#include "GameWorldViewportSystem.hpp"
 
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
 GameObject& EditorContext::ContextRoot() { return *contextRoot; }
+GameWorld& EditorContext::GuiWorld() { return guiWorld; }
 GameObject& EditorContext::GuiRoot() { return *guiRoot; }
 Gui& EditorContext::Gui() { return *gui; }
 EngineContext& EditorContext::EngineContext() { return *engineContext; }
@@ -33,11 +35,13 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     //    child->AddComponent<EditorObject>();
     };
     
-    guiRoot = world.CreateRoot();
+    
+    guiRoot = guiWorld.CreateRoot();
     
     gui = guiRoot->CreateSystem<class Gui>();
     guiRoot->CreateSystem<TouchSystem>()->TouchDepth = 10;
     guiRoot->CreateSystem<TouchSystem>()->Order = -200;
+    guiRoot->CreateSystem<GameWorldViewportSystem>();
     
     gui->Setup("images.png", "images.xml", engineContext.Viewport());
     gui->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
@@ -68,10 +72,12 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
 }
 
 void EditorContext::Update(float dt) {
-    engineContext->InputDevice().UpdateInputManager(&world.Input());
+    //engineContext->InputDevice().UpdateInputManager(&world.Input());
+    engineContext->InputDevice().UpdateInputManager(&guiWorld.Input());
     UpdateLoop(dt);
     DoActions(preActions);
-    world.Update(dt);
+    //world.Update(dt);
+    guiWorld.Update(dt);
     DoActions(postActions);
     if (Project().Worlds.ActiveWorld()) {
         Project().Worlds.ActiveWorld()->Update(engineContext->InputDevice(), dt);
@@ -80,10 +86,11 @@ void EditorContext::Update(float dt) {
 }
 
 void EditorContext::Render() {
-    if (Project().Worlds.ActiveWorld()) {
-        Project().Worlds.ActiveWorld()->Render();
-    }
-    world.Render();
+//    if (Project().Worlds.ActiveWorld()) {
+//        Project().Worlds.ActiveWorld()->Render();
+//    }
+    //world.Render();
+    guiWorld.Render();
 }
 
 void EditorContext::DoActions(Actions& actions) {

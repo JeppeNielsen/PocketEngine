@@ -220,13 +220,17 @@ public:
         root->CreateSystem<GameWorldViewportSystem>();
         
         viewport = gui->CreatePivot(root, 100);
-        viewport->AddComponent<GameWorldViewport>()->RenderSize = {1024,1024};
+        viewport->AddComponent<GameWorldViewport>();
         viewport->GetComponent<GameWorldViewport>()->World = &cubeWorld;
+        
         viewport->AddComponent<Mesh>();
         viewport->AddComponent<Sizeable>()->Size = {500,300};
         viewport->AddComponent<TextureComponent>();
-        viewport->AddComponent<Renderable>();
+        viewport->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
         
+        
+        GameObject* window = gui->CreateControl(root, "Box", 0, 300);
+        window->AddComponent<Draggable>();
         
         auto cubeRoot = cubeWorld.CreateRoot();
         cubeRoot->CreateSystem<RenderSystem>();
@@ -260,7 +264,7 @@ public:
     }
 };
 
-int main() {
+int main_renderbuffer() {
     Engine e;
     e.Start<TestRenderBuffer>();
 	return 0;
