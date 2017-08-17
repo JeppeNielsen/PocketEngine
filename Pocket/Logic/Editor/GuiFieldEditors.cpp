@@ -40,7 +40,9 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
             textBox->AddComponent<Layouter>()->Min = {20, 20};
             textBox->GetComponent<Layouter>()->Desired = {100, 20};
             textBox->GetComponent<Layouter>()->Max = {5000, 20};
-            
+            if (LeftAlign()) {
+                textBox->Children()[0]->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
+            }
             textBoxes[i] = textBox;
         }
         prev = (*this->field);
@@ -82,6 +84,7 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
 
     virtual void TextboxChanged(int index, std::string text) = 0;
     virtual void UpdateTextbox(int index, std::stringstream& stream) = 0;
+    virtual bool LeftAlign() { return false; }
     GameObject* textBoxes[Size];
     
     T* field;
@@ -155,6 +158,9 @@ struct FieldInfoEditorString : public FieldInfoEditorTextboxes<std::string, 1> {
     }
     void UpdateTextbox(int index, std::stringstream& stream) override {
         stream<<(*field);
+    }
+    bool LeftAlign() override {
+        return true;
     }
 };
 
@@ -241,27 +247,6 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
         checkBox->GetComponent<Colorable>()->Color = Colour::Black();
         checkBox->ReplaceComponent<Sizeable>(checkBoxBackground);
 
-//    
-//        control = gui->CreateControl(container, "TextBox");
-//        control->AddComponent<Layouter>()->Min = {20, 20};
-//        control->GetComponent<Layouter>()->Desired = {100, 20};
-//        control->GetComponent<Layouter>()->Max = {5000, 20};
-//        control->GetComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
-//        control->GetComponent<Touchable>()->Click.Bind(this, &FieldInfoEditorBool::Clicked);
-//        
-//        checkBox = gui->CreateControl(control, "TextBox");
-//
-//        checkBox->AddComponent<Layouter>()->Min = {20, 20};
-//        checkBox->GetComponent<Layouter>()->Desired = {100, 20};
-//        checkBox->GetComponent<Layouter>()->Max = {5000, 20};
-//
-//        checkBox->RemoveComponent<Touchable>();
-//        checkBox->GetComponent<Colorable>()->Color = Colour::Black();
-
-
-        
-
-        
         UpdateVisuals();
     }
     
