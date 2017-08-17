@@ -22,9 +22,15 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
         this->field = static_cast<T*>(field);
     }
 
-    void Initialize(Gui* gui, GameObject* parent) override {
-        GameObject* control = gui->CreateControl(parent);
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+        GameObject* control = gui->CreatePivot(parent);
+        control->AddComponent<Sizeable>();
         control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
+        
+        auto label = gui->CreateLabel(control, 0, 1, nullptr, name, 12);
+        gui->AddLayouter(label, {20,20}, {80,20}, {80,20});
+        label->GetComponent<Colorable>()->Color = Colour::Black();
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         
         for(int i=0; i<Size; ++i) {
             GameObject* textBox = gui->CreateTextBox(control, "TextBox", 0, 0, 0, "", 15.0f);
@@ -212,28 +218,55 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
         this->field = static_cast<bool*>(field);
     }
 
-    void Initialize(Gui* gui, GameObject* parent) override {
-        control = gui->CreateControl(parent, "TextBox");
-        control->AddComponent<Layouter>()->Min = {20, 20};
-        control->GetComponent<Layouter>()->Desired = {100, 20};
-        control->GetComponent<Layouter>()->Max = {5000, 20};
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+    
+        control = gui->CreatePivot(parent);
+        control->AddComponent<Sizeable>();
         control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
-        control->GetComponent<Touchable>()->Click.Bind(this, &FieldInfoEditorBool::Clicked);
+        
+        auto label = gui->CreateLabel(control, 0, 1, nullptr, name, 12);
+        gui->AddLayouter(label, {20,20}, {80,20}, {80,20});
+        label->GetComponent<Colorable>()->Color = Colour::Black();
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
 
-        checkBox = gui->CreateControl(control, "TextBox");
-
-        checkBox->AddComponent<Layouter>()->Min = {20, 20};
-        checkBox->GetComponent<Layouter>()->Desired = {100, 20};
-        checkBox->GetComponent<Layouter>()->Max = {5000, 20};
-
+        checkBoxBackground = gui->CreateControl(control, "TextBox");
+        checkBoxBackground->GetComponent<Touchable>()->ClickThrough = true;
+        checkBoxBackground->AddComponent<Layouter>()->Min = {20, 20};
+        checkBoxBackground->GetComponent<Layouter>()->Desired = {100, 20};
+        checkBoxBackground->GetComponent<Layouter>()->Max = {5000, 20};
+        checkBoxBackground->GetComponent<Touchable>()->Click.Bind(this, &FieldInfoEditorBool::Clicked);
+        
+        checkBox = gui->CreateControl(checkBoxBackground, "TextBox");
         checkBox->RemoveComponent<Touchable>();
         checkBox->GetComponent<Colorable>()->Color = Colour::Black();
+        checkBox->ReplaceComponent<Sizeable>(checkBoxBackground);
+
+//    
+//        control = gui->CreateControl(container, "TextBox");
+//        control->AddComponent<Layouter>()->Min = {20, 20};
+//        control->GetComponent<Layouter>()->Desired = {100, 20};
+//        control->GetComponent<Layouter>()->Max = {5000, 20};
+//        control->GetComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
+//        control->GetComponent<Touchable>()->Click.Bind(this, &FieldInfoEditorBool::Clicked);
+//        
+//        checkBox = gui->CreateControl(control, "TextBox");
+//
+//        checkBox->AddComponent<Layouter>()->Min = {20, 20};
+//        checkBox->GetComponent<Layouter>()->Desired = {100, 20};
+//        checkBox->GetComponent<Layouter>()->Max = {5000, 20};
+//
+//        checkBox->RemoveComponent<Touchable>();
+//        checkBox->GetComponent<Colorable>()->Color = Colour::Black();
+
+
+        
+
         
         UpdateVisuals();
     }
     
     void Destroy() override {
-        control->GetComponent<Touchable>()->Click.Unbind(this, &FieldInfoEditorBool::Clicked);
+        checkBoxBackground->GetComponent<Touchable>()->Click.Unbind(this, &FieldInfoEditorBool::Clicked);
         control->Remove();
     }
     
@@ -252,6 +285,7 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
     
     bool* field;
     GameObject* control;
+    GameObject* checkBoxBackground;
     GameObject* checkBox;
 };
 
@@ -369,7 +403,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         menu = 0;
     }
 
-    void Initialize(Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
     
         this->parent = parent;
     
@@ -540,7 +574,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         menu = 0;
     }
 
-    void Initialize(Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
     
         this->parent = parent;
     

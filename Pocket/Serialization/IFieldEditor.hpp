@@ -7,7 +7,7 @@ namespace Pocket {
 struct IFieldEditor {
     virtual ~IFieldEditor() { }
     virtual void SetField(void* field) = 0;
-    virtual void Create(void* context, void* parent) = 0;
+    virtual void Create(const std::string& name, void* context, void* parent) = 0;
     virtual void Destroy() = 0;
     virtual void Update(float dt) = 0;
 };
@@ -37,11 +37,11 @@ struct PropertyEditor : public IFieldEditor {
         this->field = static_cast<Property<T>*>(field);
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         currentValue = this->field->operator()();
         editor = FieldEditorCreator<T>::Create(&currentValue);
         if (editor) {
-            editor->Create(context, parent);
+            editor->Create(name, context, parent);
         }
     }
     
@@ -92,11 +92,11 @@ struct VectorEditor : public IFieldEditor {
         this->field = static_cast<std::vector<T>*>(field);
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         for(auto&& item : *this->field) {
             auto editor = FieldEditorCreator<T>::Create(&item);
             if (!editor) continue;
-            editor->Create(context, parent);
+            editor->Create("Item", context, parent);
             entries.push_back(editor);
         }
     }
@@ -148,10 +148,10 @@ struct EnumEditor : public IFieldEditor {
         this->field = static_cast<T*>(field);
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         currentValue = (int)*field;
         editor = FieldEditorCreator<int>::Create(&currentValue);
-        editor->Create(context, parent);
+        editor->Create(name, context, parent);
     }
     
     void Update(float dt) override {

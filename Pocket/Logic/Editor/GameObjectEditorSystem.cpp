@@ -73,8 +73,8 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
     Vector2 size = { 200, 100 };
     
     GameObject* control = gui->CreateControl(object, "Box", 0, size);
-    auto layouter = control->AddComponent<Layouter>();
-    layouter->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
+    gui->AddLayouter(control, {40,50}, 2000, 2000);
+    control->RemoveComponent<Touchable>();
     
     editor->editors = editor->Object()->GetComponentEditors(Predicate);
 
@@ -82,7 +82,7 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
 
     for(auto componentEditor : editor->editors) {
         int countBefore = (int)control->Children().size();
-        componentEditor.editor->Create(gui, control);
+        componentEditor.editor->Create(componentEditor.type.name, gui, control);
         if (control->Children().size()>countBefore) {
             GameObject* editorControl = control->Children()[control->Children().size()-1];
             controls.push_back(editorControl);

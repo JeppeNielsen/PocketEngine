@@ -510,11 +510,11 @@ struct TypeEditor : public IFieldEditor {
         type = this->field->GetType();
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         for(auto& field : type.fields) {
             auto editor = field->CreateEditor();
             if (!editor) continue;
-            editor->Create(context, parent);
+            editor->Create(field->name, context, parent);
             fieldEditors.push_back(editor);
         }
         if (TypeEditorTitle::Title) {
@@ -547,11 +547,11 @@ struct TypeInfoEditor : public IFieldEditor {
         type = TypeInfo(*typeInfo);
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         for(auto& field : type.fields) {
             auto editor = field->CreateEditor();
             if (!editor) continue;
-            editor->Create(context, parent);
+            editor->Create(field->name, context, parent);
             fieldEditors.push_back(editor);
         }
         if (TypeEditorTitle::Title) {
@@ -615,7 +615,7 @@ struct EmptyComponentEditor : public IFieldEditor {
         name = typeInfo->name;
     }
 
-    void Create(void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent) override {
         if (TypeEditorTitle::Title) {
             TypeEditorTitle::Title(context, parent, name);
         }

@@ -54,7 +54,7 @@ void FieldEditorSystem::FieldChanged(GameObject* object) {
     auto field = editor->Type.GetField(editor->Field);
     if (field) {
         editor->editor = field->CreateEditor();
-        editor->editor->Create(gui, object);
+        editor->editor->Create(field->name, gui, object);
     }
 }
 
