@@ -97,19 +97,6 @@ void InspectorWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObje
 
 void InspectorWindow::OnCreate() {
 
-/*
-
-    GameWorld& world = context->Project().World();
-    GameObject* go = world.CreateObject();
- 
-    go->AddComponent<Transform>();
-    go->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {2,1,1});
-    go->AddComponent<Renderable>();
-    go->AddComponent<EditorObject>();
-    go->AddComponent<Rotator>();
-
-*/
-
     GameObject& guiWorld = context->GuiRoot();
     Gui& gui = context->Gui();
     
@@ -122,10 +109,14 @@ void InspectorWindow::OnCreate() {
     addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);
     addComponentButton->Enabled = false;
     
+    GameObject* space = gui.CreatePivot(window);
+    space->AddComponent<Sizeable>();
+    gui.AddLayouter(space, 20, 2000, 2000);
+    
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-80}, &pivot);
     gui.AddLayouter(listBox, 25, 2000, 2000);
-    listBox->RemoveComponent<Sprite>();
+    listBox->RemoveComponent<Renderable>();
     
     inspectorEditor = pivot;
     gui.AddLayouter(pivot, 25, 2000, 2000);
