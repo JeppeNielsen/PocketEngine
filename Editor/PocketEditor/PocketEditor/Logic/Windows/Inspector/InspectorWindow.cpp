@@ -124,11 +124,13 @@ void InspectorWindow::OnCreate() {
     
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Box", {0,0}, {200,400-80}, &pivot);
+    gui.AddLayouter(listBox, 25, 2000, 2000);
     listBox->RemoveComponent<Sprite>();
     
-    
-    inspectorEditor = gui.CreatePivot(pivot);
-    inspectorEditor->AddComponent<Sizeable>()->Size = {200,400};
+    inspectorEditor = pivot;
+    gui.AddLayouter(pivot, 25, 2000, 2000);
+    //inspectorEditor->AddComponent<Sizeable>()->Size = {300,400};
+    //gui.AddLayouter(inspectorEditor, 25, 2000, 2000);
     inspectorEditor->AddComponent<GameObjectEditor>()->Object = 0;
     inspectorEditor->GetComponent<GameObjectEditor>()->ComponentEditorCreated.Bind(
     [this](GameObjectEditor::ComponentCreatedData data) {

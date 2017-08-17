@@ -49,7 +49,8 @@ void HierarchyWindow::OnCreate() {
     Gui& gui = context->Gui();
 
     GameObject* pivot;
-    GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, {200,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
+    GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, 200, &pivot);
+    gui.AddLayouter(listBox, 20, {2000,2000}, {2000,2000});
     listBox->RemoveComponent<Sprite>();
 
     treeView = pivot->AddComponent<VirtualTreeList>();
@@ -71,10 +72,15 @@ void HierarchyWindow::OnCreate() {
     
     spawner->OnCreate = [&, this](VirtualTreeListSpawner::SpawnedNode& n) {
         
+        gui.AddLayouter(n.parent, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
+        
         GameObject* clone = gui.CreateControl(n.parent, "Box", 0, {200,n.height});
         clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, n.node);
+        gui.AddLayouter(clone, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
+        
         if (n.hasChildren) {
             n.foldOutButton = gui.CreateControl(clone, "TextBox", 0, {25,25});
+            gui.AddLayouter(n.foldOutButton, {25,25}, 25, 25);
         }
         
         clone->GetComponent<Droppable>()->OnCreate = [&gui, this](GameObject* o, TouchData d) -> GameObject* {
@@ -91,6 +97,7 @@ void HierarchyWindow::OnCreate() {
             selectButton->AddComponent<Colorable>()->Color = Colour::White();
             selectButton->GetComponent<Touchable>()->ClickThrough = true;
             
+            gui.AddLayouter(selectButton, {4,25}, 2000, 2000);
             
             objectToSelectButton[editorObject->editorObject] = selectButton;
             editorObject->editorObject->GetComponent<Selectable>()->Selected.Changed.Bind(this, &::HierarchyWindow::SelectedChanged, editorObject->editorObject);
