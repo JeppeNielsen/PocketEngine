@@ -10,6 +10,8 @@
 
 BaseWindow::~BaseWindow() { }
 
+GameObject* BaseWindow::Window() { return window; }
+
 void BaseWindow::Initialize(EditorContext *context) {
     currentWorld = 0;
     this->context = context;

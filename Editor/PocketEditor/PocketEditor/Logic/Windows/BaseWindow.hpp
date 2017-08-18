@@ -16,6 +16,7 @@ public:
     virtual ~BaseWindow();
     void Initialize(EditorContext* context);
     virtual void Create();
+    GameObject* Window();
     
 private:
     void ActiveWorldChangedInternal();
