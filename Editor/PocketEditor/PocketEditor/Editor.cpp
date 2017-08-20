@@ -57,7 +57,7 @@ public:
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
         //windows.push_back(new ConsoleWindow());
-//        windows.push_back(new AnimationWindow());
+        windows.push_back(new AnimationWindow());
         
         menus.push_back(new FileMenu());
         menus.push_back(new GameObjectMenu());
