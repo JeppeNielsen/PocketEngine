@@ -130,4 +130,10 @@ public:
 #define TYPE_FIELD(field)
 #define TYPE_FIELDS_END
 
+#define CONSTRUCTOR_BASE(Type) 
+
+#define CONSTRUCTOR_DERIVED(TypeName, TemplateName)
+
+#define CONSTRUCTOR_DERIVED_INITIALIZER(TypeName)
+
 }

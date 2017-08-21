@@ -25,6 +25,7 @@ private:
     void ActiveWorldChanged(OpenWorld* old, OpenWorld* current) override;
 
     void Clicked(TouchData d, OpenWorld* clickedWorld);
+    
     GameObject* fileRoot;
     
     using OpenedTabs = std::map<OpenWorld*, GameObject*>;
@@ -33,4 +34,11 @@ private:
     GameObject* tabArea;
     GameObject* renderArea;
     
+    
+    
+    GameObject* editModePivot;
+    GameObject* gameModePivot;
+    
+    void CreatePlayButtons();
+    void UpdatePlayButtons(OpenWorld* openWorld);
 };

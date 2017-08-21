@@ -35,6 +35,8 @@ void WorldTab::OnCreate() {
     renderArea->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
     context->Gui().AddLayouter(renderArea, 25, 2000, 2000);
     
+    CreatePlayButtons();
+    
     tabArea = context->Gui().CreateLayoutControl(window, "TextBox", 25, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
 }
 
@@ -54,6 +56,9 @@ void WorldTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
         Colour(1.0f,1.0f,1.0f, 1.0f) :
         Colour(0.6f,0.6f,0.6f, 1.0f);
     }
+    UpdatePlayButtons(current);
+    
+    
 }
 
 void WorldTab::WorldLoaded(OpenWorld *world) {
@@ -89,3 +94,67 @@ void WorldTab::WorldClosed(OpenWorld *world) {
     openedTabs.erase(openedTabs.find(world));
 }
 
+void WorldTab::CreatePlayButtons() {
+    Gui& gui = context->Gui();
+    
+    editModePivot = gui.CreatePivot(window);
+    editModePivot->AddComponent<Sizeable>();
+    gui.AddLayouter(editModePivot, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Horizontal);
+    {
+        GameObject* testButton = gui.CreateLabelControl(editModePivot, "TextBox", 0, {100,30},0, "Test", 20);
+        gui.AddLayouter(testButton, 30, {2000,30}, {2000,30});
+        testButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        testButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
+            if (!currentWorld) return;
+            context->preActions.emplace_back([this] {
+                currentWorld->Play();
+                UpdatePlayButtons(currentWorld);
+            });
+        });
+    }
+
+    gameModePivot = gui.CreatePivot(window);
+    gameModePivot->AddComponent<Sizeable>();
+    gui.AddLayouter(gameModePivot, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Horizontal);
+    {
+        GameObject* stopButton = gui.CreateLabelControl(gameModePivot, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
+        gui.AddLayouter(stopButton, 30, {2000,30}, {2000,30});
+        
+        stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        stopButton->GetComponent<Touchable>()->Click.Bind([this] (TouchData d) {
+            if (!currentWorld) return;
+            context->preActions.emplace_back([this] {
+                currentWorld->Stop();
+                UpdatePlayButtons(currentWorld);
+            });
+        });
+    
+        GameObject* pauseButton = gui.CreateLabelControl(gameModePivot, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
+        gui.AddLayouter(pauseButton, 30, {2000,30}, {2000,30});
+        
+        pauseButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        pauseButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
+            if (!currentWorld) return;
+            currentWorld->IsPaused = !currentWorld->IsPaused();
+        });
+    }
+    
+    editModePivot->Enabled = false;
+    gameModePivot->Enabled = false;
+}
+
+void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
+    if (openWorld) {
+        editModePivot->Enabled = !openWorld->IsPlaying();
+        gameModePivot->Enabled = openWorld->IsPlaying();
+    } else {
+        editModePivot->Enabled = false;
+        gameModePivot->Enabled = false;
+    }
+    
+    if (openWorld) {
+        renderArea->AddComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? &context->World() : &openWorld->GetRunningWorld()->World();
+    } else {
+        renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
+    }
+}
