@@ -154,6 +154,7 @@ Vector2 LayoutSystem::DoLayout(Layouter* layouter, GameObject* object,
 ) {
     int count = 0;
     for(auto child : object->Children()) {
+        if (!child->Enabled) continue;
         Layouter* childLayouter = child->GetComponent<Layouter>();
         if (!childLayouter) continue;
         count++;
@@ -165,6 +166,7 @@ Vector2 LayoutSystem::DoLayout(Layouter* layouter, GameObject* object,
     if (layouter->ChildrenLayoutMode() == Layouter::LayoutMode::Horizontal) {
         Vector2 size { 0, localGetter(layouter).y };
         for(auto child : object->Children()) {
+            if (!child->Enabled) continue;
             Layouter* childLayouter = child->GetComponent<Layouter>();
             if (!childLayouter) continue;
             Vector2 childSize = globalGetter(childLayouter);
@@ -176,6 +178,7 @@ Vector2 LayoutSystem::DoLayout(Layouter* layouter, GameObject* object,
     } else {
         Vector2 size { localGetter(layouter).x, 0 };
         for(auto child : object->Children()) {
+            if (!child->Enabled) continue;
             Layouter* childLayouter = child->GetComponent<Layouter>();
             if (!childLayouter) continue;
             Vector2 childSize = globalGetter(childLayouter);
@@ -205,6 +208,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
         if (layouter->GlobalMin().x>=size.x) {
             float x = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
@@ -221,6 +225,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
             float fraction = (size.x - layouter->GlobalMin().x) / desiredMargin;
             float x = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
@@ -242,6 +247,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
             
             float x = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
@@ -262,6 +268,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
         if (layouter->GlobalMin().y>=size.y) {
             float y = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
@@ -278,6 +285,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
             float fraction = (size.y - layouter->GlobalMin().y) / desiredMargin;
             float y = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
@@ -299,6 +307,7 @@ void LayoutSystem::CalcLayout(GameObject* object) {
         
             float y = 0;
             for(auto child : object->Children()) {
+                if (!child->Enabled) continue;
                 Layouter* childLayouter = child->GetComponent<Layouter>();
                 Sizeable* childSizable = child->GetComponent<Sizeable>();
                 Transform* childTransform = child->GetComponent<Transform>();
