@@ -172,11 +172,11 @@ GameObject* Gui::CreateLabel(GameObject *parent, const Vector2 &position, const 
 
 GameObject* Gui::CreateLabelControl(GameObject *parent, const std::string &spriteName, const Vector2 &position, const Vector2 &size, GameObject *font, std::string text, float fontSize) {
     GameObject* control = CreateControl(parent, spriteName, position, size);
-    control->GetComponent<Transform>()->Anchor = size * 0.5f;
     GameObject* labelGO = CreateLabel(control, 0, size, font, text, fontSize);
     Label* label = labelGO->GetComponent<Label>();
     label->HAlignment = Font::HAlignment::Center;
     label->VAlignment = Font::VAlignment::Middle;
+    labelGO->ReplaceComponent<Sizeable>(control);
     
     return control;
 }
