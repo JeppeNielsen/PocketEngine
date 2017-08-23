@@ -53,13 +53,10 @@ namespace Pocket {
         void SwallowTouch(int index, int depth);
         bool IsTouchSwallowed(int index, int depth);
         
-        void SetTransformationMatrix(const Matrix4x4& transformationMatrix);
-        
         InputDevice* GetDevice();
                 
 	private:
 		InputDevice* device;
-        Matrix4x4 transformationMatrix;
 		friend class InputDevice;
 	};
     

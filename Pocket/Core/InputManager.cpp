@@ -11,13 +11,12 @@ InputManager::InputManager() : device(0) {
     KeyboardActive.Changed.Bind(keyBoardChanged);
     KeyboardText.Changed.Bind(keyBoardChanged);
     GamePad.Initialize();
-    transformationMatrix = Matrix4x4::IDENTITY;
 }
 
 InputManager::~InputManager() {}
 
 const Vector2 InputManager::GetTouchPosition(int index) {
-	return transformationMatrix.TransformPosition(device->GetTouchPosition(index));
+	return device->GetTouchPosition(index);
 }
 
 void InputManager::SwallowTouch(int index, int depth) {
@@ -26,10 +25,6 @@ void InputManager::SwallowTouch(int index, int depth) {
 
 bool InputManager::IsTouchSwallowed(int index, int depth) {
     return device->IsTouchSwallowed(index, depth);
-}
-
-void InputManager::SetTransformationMatrix(const Matrix4x4& transformationMatrix) {
-    this->transformationMatrix = transformationMatrix;
 }
 
 InputDevice* InputManager::GetDevice() {
