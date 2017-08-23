@@ -40,12 +40,24 @@ void GameWorldViewportSystem::Render() {
 
 void GameWorldViewportSystem::TouchDown(Pocket::TouchData d, Pocket::GameObject *object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
-    viewport->inputDevice.SetTouch(d.Index, true, d.Position);
+    Vector2 size = object->GetComponent<Sizeable>()->Size;
+    Vector2 local = object->GetComponent<Transform>()->WorldInverse().TransformPosition(d.WorldPosition);
+    
+    viewport->inputDevice.SetTouch(d.Index, true, {
+        (local.x / size.x) * viewport->RenderSize.x,
+        (local.y / size.y) * viewport->RenderSize.y
+    });
 }
 
 void GameWorldViewportSystem::TouchUp(Pocket::TouchData d, Pocket::GameObject *object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
-    viewport->inputDevice.SetTouch(d.Index, false, d.Position);
+    Vector2 size = object->GetComponent<Sizeable>()->Size;
+    Vector2 local = object->GetComponent<Transform>()->WorldInverse().TransformPosition(d.WorldPosition);
+    
+    viewport->inputDevice.SetTouch(d.Index, false, {
+        (local.x / size.x) * viewport->RenderSize.x,
+        (local.y / size.y) * viewport->RenderSize.y
+    });
 }
 
 void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
@@ -91,23 +103,24 @@ void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
     
     Vector2 scale = { size.x / viewport->RenderSize.x, size.y / viewport->RenderSize.y };
     
-    Matrix4x4 mat = Matrix4x4::CreateTranslation(worldPosition) * Matrix4x4::CreateScale({scale.x, scale.y,1});
-    mat = mat.Invert();
-    
     Vector2 oldScreenSize = Engine::Context().ScreenSize;
     float oldScalingFactor = Engine::Context().ScreenScalingFactor;
     Engine::Context().ScreenSize = Vector2(viewport->RenderSize.x, viewport->RenderSize.y);
     Engine::Context().ScreenScalingFactor = 1.0f;
     
+    const Matrix4x4& inv = object->GetComponent<Transform>()->WorldInverse();
+    
     for (int i=0; i<12; i++) {
-        viewport->inputDevice.SetTouchPosition(i, root->Input().GetDevice()->GetTouchPosition(i));
+        Vector2 local = inv.TransformPosition(root->Input().GetDevice()->GetTouchPosition(i));
+        viewport->inputDevice.SetTouchPosition(i, {
+            (local.x / size.x) * viewport->RenderSize.x,
+            (local.y / size.y) * viewport->RenderSize.y
+        });
     }
     
-    viewport->World->Input().SetTransformationMatrix(mat);
     viewport->inputDevice.StartFrame(nullptr);
     viewport->inputDevice.UpdateInputManager(&viewport->World->Input());
     viewport->World->Update(dt);
-    viewport->World->Input().SetTransformationMatrix(Matrix4x4::IDENTITY);
     viewport->inputDevice.EndFrame();
     
     Engine::Context().ScreenSize = oldScreenSize;
