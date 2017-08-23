@@ -195,20 +195,20 @@ void OpenWorld::Stop() {
 }
 
 void OpenWorld::Update(InputDevice& input, float dt) {
-    if (!runningWorld) return;
-    input.UpdateInputManager(&runningWorld->World().Input());
-    if (IsPaused) {
-        if (runningWorld->EditorRoot()) {
-            runningWorld->World().UpdateRoot(dt, runningWorld->EditorRoot());
-        }
-    } else {
-        runningWorld->World().Update(dt);
-    }
+//    if (!runningWorld) return;
+//    input.UpdateInputManager(&runningWorld->World().Input());
+//    if (IsPaused) {
+//        if (runningWorld->EditorRoot()) {
+//            runningWorld->World().UpdateRoot(dt, runningWorld->EditorRoot());
+//        }
+//    } else {
+//        runningWorld->World().Update(dt);
+//    }
 }
 
 void OpenWorld::Render() {
-    if (!runningWorld) return;
-    runningWorld->World().Render();
+//    if (!runningWorld) return;
+//    runningWorld->World().Render();
 }
 
 RunningWorld* OpenWorld::GetRunningWorld() { return runningWorld; }
