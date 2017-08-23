@@ -91,7 +91,7 @@ Matrix4x4 Camera::GetViewProjection(Transform* viewTransform) {
 	return Projection().Multiply(viewTransform->WorldInverse);
 }
 
-Ray Camera::GetRay(Transform* viewTransform, Pocket::Vector2 screenPosition) {
+Ray Camera::GetRay(Transform* viewTransform, const Vector2& screenPosition) {
     const Rect& viewPort = Viewport() * Engine::Context().ScreenSize();
     
     Vector2 fromCenter = screenPosition - viewPort.Center();
@@ -104,34 +104,32 @@ Ray Camera::GetRay(Transform* viewTransform, Pocket::Vector2 screenPosition) {
     return Ray(rayStartPosition, rayEndPosition - rayStartPosition);
 }
 
-Vector3 Camera::TransformPointToViewSpace(Transform* viewTransform, Vector3 worldPoint) {
+Vector3 Camera::TransformPointToViewSpace(Transform* viewTransform, const Vector3& worldPoint) {
     Matrix4x4 viewProjection = GetViewProjection(viewTransform);
     return viewProjection.TransformPosition(worldPoint);
 }
 
-Vector3 Camera::TransformPointToScreenSpace(Transform* viewTransform, Vector3 worldPoint) {
-    worldPoint = TransformPointToViewSpace(viewTransform, worldPoint);
-    Vector2 screenPoint = Vector2(worldPoint.x, worldPoint.y );
+Vector3 Camera::TransformPointToScreenSpace(Transform* viewTransform, const Vector3& worldPoint) {
+    Vector2 screenPoint = TransformPointToViewSpace(viewTransform, worldPoint);
     const Rect& viewPort = Viewport() * Engine::Context().ScreenSize();
     screenPoint *= (viewPort.Size() * 0.5f);
     screenPoint += viewPort.Center();
     return Vector3(screenPoint.x, screenPoint.y, worldPoint.z);
 }
 
-Vector3 Camera::TransformViewportToWorld(Transform* viewTransform, Vector3 viewportPoint) {
+Vector3 Camera::TransformViewportToWorld(Transform* viewTransform, const Vector3& viewportPoint) {
     Matrix4x4 viewProjection = GetViewProjection(viewTransform).Invert();
     return viewProjection.TransformPosition(viewportPoint);
 }
 
-Vector3 Camera::TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint) {
+Vector3 Camera::TransformWorldToViewport(Transform* viewTransform, const Vector3& worldPoint) {
     Matrix4x4 viewProjection = GetViewProjection(viewTransform);
     return viewProjection.TransformPosition(worldPoint);
 }
 
-Vector3 Camera::TransformViewPositionToScreenSpace(Transform* viewTransform, Vector3 viewPoint) {
+Vector3 Camera::TransformViewPositionToScreenSpace(Transform* viewTransform, const Vector3& viewPoint) {
     const Matrix4x4& viewProjection = Projection();
-    viewPoint = viewProjection.TransformPosition(viewPoint);
-    Vector2 screenPoint = Vector2(viewPoint.x, viewPoint.y);
+    Vector2 screenPoint = viewProjection.TransformPosition(viewPoint);
     const Rect& viewPort = Viewport() * Engine::Context().ScreenSize();
     screenPoint *= (viewPort.Size() * 0.5f);
     screenPoint += viewPort.Center();

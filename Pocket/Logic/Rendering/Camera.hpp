@@ -29,13 +29,13 @@ namespace Pocket {
 		DirtyProperty<Matrix4x4> ProjectionInverse;
         
         Matrix4x4 GetViewProjection(Transform* viewTransform);
-        Ray GetRay(Transform* viewTransform, Vector2 screenPosition);
+        Ray GetRay(Transform* viewTransform, const Vector2& screenPosition);
     
-        Vector3 TransformPointToViewSpace(Transform* viewTransform, Vector3 worldPoint);
-        Vector3 TransformPointToScreenSpace(Transform* viewTransform, Vector3 worldPoint);
-        Vector3 TransformViewportToWorld(Transform* viewTransform, Vector3 viewportPoint);
-        Vector3 TransformWorldToViewport(Transform* viewTransform, Vector3 worldPoint);
-        Vector3 TransformViewPositionToScreenSpace(Transform* viewTransform, Vector3 viewPoint);
+        Vector3 TransformPointToViewSpace(Transform* viewTransform, const Vector3& worldPoint);
+        Vector3 TransformPointToScreenSpace(Transform* viewTransform, const Vector3& worldPoint);
+        Vector3 TransformViewportToWorld(Transform* viewTransform, const Vector3& viewportPoint);
+        Vector3 TransformWorldToViewport(Transform* viewTransform, const Vector3& worldPoint);
+        Vector3 TransformViewPositionToScreenSpace(Transform* viewTransform, const Vector3& viewPoint);
         
     private:
         void ScreenSizeChanged();
