@@ -41,4 +41,7 @@ private:
     void ComponentClicked(TouchData d, GameObjectEditor::ComponentCreatedData data);
     void RefreshInspector();
     GameObject* TryGetFirstObjectWithComponent(int componentId);
+    
+    int numberOfComponents;
+    void PollForChanges(float dt);
 };

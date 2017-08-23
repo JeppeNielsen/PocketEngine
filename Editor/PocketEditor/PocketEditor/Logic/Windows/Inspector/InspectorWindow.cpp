@@ -17,6 +17,8 @@
 std::string InspectorWindow::Name() { return "Inspector"; }
 
 void InspectorWindow::OnInitialize() {
+
+    numberOfComponents = 0;
     
     //selectables = world.CreateSystem<SelectableCollection<EditorObject>>();
     //selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
@@ -66,6 +68,8 @@ void InspectorWindow::OnInitialize() {
             RefreshInspector();
         });
     });
+    
+    context->UpdateLoop.Bind(this, &InspectorWindow::PollForChanges);
 }
 
 void InspectorWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
@@ -122,7 +126,7 @@ void InspectorWindow::OnCreate() {
     gui.AddLayouter(pivot, 25, 2000, 2000);
     //inspectorEditor->AddComponent<Sizeable>()->Size = {300,400};
     //gui.AddLayouter(inspectorEditor, 25, 2000, 2000);
-    inspectorEditor->AddComponent<GameObjectEditor>()->Object = 0;
+    inspectorEditor->AddComponent<GameObjectEditor>()->Object = nullptr;
     inspectorEditor->GetComponent<GameObjectEditor>()->ComponentEditorCreated.Bind(
     [this](GameObjectEditor::ComponentCreatedData data) {
         data.editorPivot->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::ComponentClicked, data);
@@ -140,8 +144,9 @@ void InspectorWindow::ComponentClicked(Pocket::TouchData d, GameObjectEditor::Co
 }
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
-    inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? 0 : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? nullptr : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
     addComponentButton->Enabled = !selectables->Selected().empty();
+    numberOfComponents =  inspectorEditor->GetComponent<GameObjectEditor>()->Object() ?  inspectorEditor->GetComponent<GameObjectEditor>()->Object()->ComponentCount() : 0;
 }
 
 void InspectorWindow::AddComponentClicked(Pocket::TouchData d) {
@@ -227,4 +232,15 @@ GameObject* InspectorWindow::TryGetFirstObjectWithComponent(int componentId) {
     }
     
     return 0;
+}
+
+void InspectorWindow::PollForChanges(float dt) {
+    GameObject* object = inspectorEditor->GetComponent<GameObjectEditor>()->Object();
+    if (!object) return;
+    int currentComponentCount = object->ComponentCount();
+    
+    if (numberOfComponents!=currentComponentCount) {
+        currentComponentCount = numberOfComponents;
+        RefreshInspector();
+    }
 }
