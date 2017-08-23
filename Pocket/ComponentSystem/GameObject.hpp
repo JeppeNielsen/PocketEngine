@@ -115,6 +115,7 @@ namespace Pocket {
         void ReplaceComponent(ComponentId id, GameObject* referenceObject) override;
         void EnableComponent(ComponentId id, bool enable) override;
         GameObject* GetComponentOwner(ComponentId id) const;
+        int ComponentCount() const;
         
         template<typename T>
         bool HasComponent() const {

@@ -170,6 +170,16 @@ GameObject* GameObject::GetComponentOwner(ComponentId componentId) const {
     return ownerIndex != -1 ? &scene->world->objects.entries[ownerIndex] : nullptr;
 }
 
+int GameObject::ComponentCount() const {
+    int componentCounter = 0;
+    for(int i=0; i<activeComponents.Size(); ++i) {
+        if (activeComponents[i]) {
+            componentCounter++;
+        }
+    }
+    return componentCounter;
+}
+
 void GameObject::SetWorldEnableDirty() {
     WorldEnabled.MakeDirty();
     scene->world->delayedActions.emplace_back([this](){
