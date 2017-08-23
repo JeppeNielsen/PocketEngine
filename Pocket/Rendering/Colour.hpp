@@ -201,7 +201,7 @@ namespace Pocket {
         Colour static Deserialize(const std::string& data);
         friend std::ostream& operator<<(std::ostream& stream, const Pocket::Colour& c) {
             int red = (int)c.r;
-            int green = (int)c.r;
+            int green = (int)c.g;
             int blue = (int)c.b;
             int alpha = (int)c.a;
             stream<<red<<','<<green<<","<<blue<<","<<alpha;
