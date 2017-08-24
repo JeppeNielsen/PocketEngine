@@ -10,6 +10,7 @@
 #include <OpenGL/gl.h>
 #include "Window.hpp"
 #include "AppMenu.hpp"
+#include "Engine.hpp"
 
 @implementation OSXView
 
@@ -184,6 +185,12 @@ std::map<NSMenuItem*, Pocket::AppMenu*> menuItemToAppMenu;
 {
     NSMenuItem* menuItem = (NSMenuItem*)sender;
     menuItemToAppMenu[menuItem]->Clicked();
+}
+
+- (void)viewDidChangeBackingProperties {
+    NSScreen* scr = [[self window] screen];
+    float scalingFactor = [scr backingScaleFactor];
+    Pocket::Engine::Context().ScreenScalingFactor = scalingFactor;
 }
 
 @end
