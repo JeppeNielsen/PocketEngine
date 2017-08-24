@@ -27,7 +27,7 @@ namespace Pocket {
         
         void DisableMipmapping();
         
-        void SaveToPng(const std::string& path, GLenum pixelFormat);
+        void SaveToTga(const std::string& path, GLenum pixelFormat);
         
         void SetRenderTexture(RenderTexture* renderTexture, int width, int height);
 

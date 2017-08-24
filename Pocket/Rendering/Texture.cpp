@@ -83,7 +83,7 @@ void Texture::Free() {
 	}
 }
 
-void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
+void Texture::SaveToTga(const std::string &path, GLenum pixelFormat) {
 #ifdef EMSCRIPTEN
 #elif IPHONE
 #else
@@ -91,12 +91,7 @@ void Texture::SaveToPng(const std::string &path, GLenum pixelFormat) {
     unsigned char* pixels = new unsigned char[width * height * 4];
     ASSERT_GL(glGetTexImage(GL_TEXTURE_2D, 0, pixelFormat, GL_UNSIGNED_BYTE, pixels));
 #endif
-    /*std::vector<unsigned char> out;
-    LodePNG::Encoder encoder;
-	encoder.encode(out, (const unsigned char*)pixels, width, height);
-    delete[] pixels;
-	LodePNG::saveFile(out, path);
-    */
+    ImageLoader::SaveTga(path, pixels, width, height);
 }
 
 void Texture::SetRenderTexture(Pocket::RenderTexture *renderTexture, int width, int height) {
