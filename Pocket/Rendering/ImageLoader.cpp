@@ -46,8 +46,10 @@ bool ImageLoader::SaveTga(const std::string &path, unsigned char *pixels, int wi
 	o.put(0);
    	o.put(0);
    	o.put(2);                         /* uncompressed RGB */
-   	o.put(0); 		o.put(0);
-   	o.put(0); 	o.put(0);
+   	o.put(0);
+    o.put(0);
+   	o.put(0);
+    o.put(0);
    	o.put(0);
    	o.put(0); 	o.put(0);           /* X origin */
    	o.put(0); 	o.put(0);           /* y origin */
@@ -59,27 +61,15 @@ bool ImageLoader::SaveTga(const std::string &path, unsigned char *pixels, int wi
    	o.put(0);
    	
 	//Write the pixel data
-    
     for (int y=height-1; y>=0; y--) {
         for (int x=0; x<width; x++) {
-    
-            int index = (y * height + x)*4;
+            int index = (y * width + x)*4;
             o.put(pixels[index]);
             o.put(pixels[index+1]);
             o.put(pixels[index+2]);
             o.put(pixels[index+3]);
         }
     }
-    
-//	for (int i=0;i<height*width*4;i+=4) {
-//		o.put(pixels[i]);
-//		o.put(pixels[i+1]);
-//		o.put(pixels[i+2]);
-//		o.put(pixels[i+3]);
-//	}   
-	
-	//close the file
 	o.close();
-
     return true;
 }
