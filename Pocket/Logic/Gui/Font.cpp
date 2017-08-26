@@ -313,7 +313,7 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
                 character.height = height * scale;
                 character.xoffset = offsetX * scale;
                 character.yoffset = (-offsetY) * scale;
-                character.xadvance = advanceX * scale;
+                character.xadvance = (advanceX - 1) * scale;
                 
                 character.textureX = rect.x;
                 character.textureY = rect.y;
