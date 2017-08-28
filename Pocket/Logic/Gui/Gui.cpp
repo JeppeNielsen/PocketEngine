@@ -42,6 +42,7 @@ void Gui::Initialize() {
     root->CreateSystem<PanelDropSystem>()->Order = -1;
     root->CreateSystem<PanelSystem>()->Order = -1;
     root->CreateSystem<PanelAreaSystem>()->Order = -1;
+    root->CreateSystem<TouchCancelSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {

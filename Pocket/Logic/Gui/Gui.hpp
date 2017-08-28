@@ -30,6 +30,7 @@
 #include "PanelSystem.hpp"
 #include "PanelDropSystem.hpp"
 #include "PanelAreaSystem.hpp"
+#include "TouchCancelSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameConcept {
