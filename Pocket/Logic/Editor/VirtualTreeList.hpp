@@ -22,6 +22,7 @@ namespace Pocket {
         Property<GameObject*> Root;
         Property<float> ItemHeight;
         Property<float> ItemIndent;
+        Property<Vector2> Margins;
         
         std::function<std::string(GameObject*)> ExpandedHashFunction;
         std::function<bool(GameObject* object)> PredicateFunction;
@@ -67,6 +68,7 @@ namespace Pocket {
         
         Event<Node> NodeCreated;
         Event<Node> NodeRemoved;
+        Event<Node> NodeExpanded;
         
         void GetNodes(int lower, int upper, Nodes& nodesFound);
         

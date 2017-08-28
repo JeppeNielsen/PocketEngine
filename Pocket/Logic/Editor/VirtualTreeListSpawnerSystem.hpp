@@ -23,6 +23,7 @@ namespace Pocket {
     private:
         void NodeCreated(VirtualTreeList::Node e, GameObject* object);
         void NodeRemoved(VirtualTreeList::Node e, GameObject* object);
+        void NodeExpanded(VirtualTreeList::Node e, GameObject* object);
       
         struct FoldoutData {
             GameObject* node;

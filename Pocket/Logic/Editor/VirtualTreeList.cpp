@@ -20,6 +20,7 @@ VirtualTreeList::VirtualTreeList() {
     ShowRoot = false;
     ItemHeight = 25;
     ItemIndent = 25;
+    Margins = 2;
 }
 
 void VirtualTreeList::operator=(const Pocket::VirtualTreeList &other) {
@@ -51,6 +52,13 @@ void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
         expandedNodes.erase(it);
         if (node->Parent()) {
             expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
+        }
+    }
+    
+    for(auto& n : visibleNodes) {
+        if (n.node == node) {
+            NodeExpanded(n);
+            break;
         }
     }
 }

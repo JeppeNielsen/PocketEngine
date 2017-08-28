@@ -23,11 +23,14 @@ namespace Pocket {
             bool hasChildren;
             float height;
             GameObject* foldOutButton;
+            int depth;
+            int position;
         };
     
         VirtualTreeListSpawner();
         std::function<void(SpawnedNode& node)> OnCreate;
         std::function<void(const SpawnedNode& node)> OnRemove;
+        std::function<void(const SpawnedNode& node)> OnFoldoutChanged;
         std::map<VirtualTreeList::Node, SpawnedNode> objects;
         std::function<bool(GameObject*)> HasChildren;
   };
