@@ -41,7 +41,9 @@ void SpriteTextureSystem::SpriteChanged(GameObject* object) {
         if (atlasNode.inner != atlasNode.outer) {
             cornerSize = atlasNode.outer.Size() - atlasNode.inner.Size();
             cornerSize.y = -cornerSize.y;
-            cornerSize *= atlas->TextureSize() * 0.5f;
+            cornerSize.x *= atlas->TextureSize().x * 0.5f;
+            cornerSize.y *= atlas->TextureSize().y * 0.5f;
+            
             sprite->CornerSize = cornerSize;
             normal = false;
         }
