@@ -8,9 +8,10 @@
 
 #include "Gui.hpp"
 #include "FontTextureSystem.hpp"
+#include "FileReader.hpp"
+#include <fstream>
 
 using namespace Pocket;
-
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
@@ -45,11 +46,14 @@ void Gui::Initialize() {
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
 
-    atlas = root->CreateObject();
+    auto atlasFile = FileReader::GetFile(atlasXml);
+    std::ifstream file;
+    file.open(atlasFile);
+    atlas = root->CreateChildFromJson(file);
+    file.close();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromFile(atlasTexture);
-    atlas->AddComponent<Atlas>()->Load(atlasXml,Vector2(texture.GetWidth(), texture.GetHeight()));
-    //atlas->SetID("Gui.Atlas");
+    texture.DisableMipmapping();
     
     Setup(atlas, viewport);
 }
