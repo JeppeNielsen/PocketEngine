@@ -33,6 +33,7 @@
 #include "ScriptComponentMenu.hpp"
 #include "AnimationWindow.hpp"
 #include "BackgroundArea.hpp"
+#include "AtlasCreator.hpp"
 
 using namespace Pocket;
 
@@ -46,8 +47,23 @@ public:
     Menus menus;
     using Modules = std::vector<BaseModule*>;
     Modules modules;
+    AtlasCreator atlasCreator;
     
     void Initialize() {
+    
+        std::string inputPath = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI";
+    std::string outputFile = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.tga";
+    std::string outputAtlas = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.json";
+    
+        atlasCreator.CreateAtlas(
+        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI",
+        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.tga",
+        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.json", 1024, 1024,
+        {
+            {"Box", {1,1,2,2} },
+            {"TextBox", {1,1,1,1} },
+            {"Window", {1,1,1,1} },
+        });
     
         windows.push_back(new BackgroundArea());
         windows.push_back(new WorldTab());

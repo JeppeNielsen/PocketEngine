@@ -149,12 +149,13 @@ void ProjectWindow::OnCreate() {
     });
 
     Gui& gui = context->Gui();
-
+    
     GameObject* pivot;
-    listBox = gui.CreateListbox(window, "Box", {0,0}, 200, &pivot);
+    listBox = gui.CreateListbox(window, "Window", {1,0}, 200, &pivot);
+    listBox->RemoveComponent<Renderable>();
+    
     gui.AddLayouter(listBox, 20, {2000,2000}, {2000,2000});
-    //listBox->RemoveComponent<Sprite>();
-
+    
     pivot->GetComponent<Transform>()->Position = {0,400};
     
     treeView = pivot->AddComponent<VirtualTreeList>();
@@ -169,23 +170,39 @@ void ProjectWindow::OnCreate() {
             return treeView->DefaultExpandedHashFunction(go);
         }
     };
+    treeView->ItemHeight = 18.0f;
     
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
+    static int colorIndex = 0;
+    
     spawner->OnCreate = [&, this](auto& n) {
         
+        const float height = 18.0f;
         FilePath* filePath = n.node->template GetComponent<FilePath>();
         
-        gui.AddLayouter(n.parent, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
+        GameObject* selectButton = gui.CreateControl(n.parent, "white");
+        selectButton->AddComponent<TouchableCanceller>();
+        selectButton->GetComponent<Touchable>()->ClickThrough = true;
+        selectButton->ReplaceComponent<Sizeable>(n.parent);
+        gui.AddLayouter(selectButton, {4,height}, {2000,height}, {2000,height}, Layouter::LayoutMode::Horizontal);
         
+        Vector2 startPos = { 8.0f + n.depth * 16.0f , 0 };
         if (n.hasChildren) {
-            n.foldOutButton = gui.CreateControl(n.parent, "TextBox", 0, {25,25});
-            gui.AddLayouter(n.foldOutButton, {25,25}, 25, 25);
-        }
-        GameObject* selectButton = gui.CreateControl(n.parent, "TextBox", {(n.hasChildren ? 25.0f : 0.0f),0}, 25);
-        gui.AddLayouter(selectButton, {4,25}, 2000, 2000);
         
-        auto l = gui.CreateLabel(selectButton, {0,0}, {200-(n.hasChildren ? 0 : 25.0f),25}, 0, n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
+            bool isUnfolded = treeView->IsNodeExpanded(n.node);
+        
+            Vector2 s = isUnfolded ? Vector2(9.0f, 7.5f) : Vector2(7.5f, 9.0f);
+            n.foldOutButton = gui.CreateControl(selectButton, isUnfolded ? "Icon_arrowDown" : "Icon_arrowRight",startPos + Vector2(0, height / 2 - s.y /2),s);
+            
+            s = {16.0f, 12.0f};
+            gui.CreateControl(selectButton, "Icon_folder", startPos + Vector2(15.0f, height / 2 - s.y/2),s);
+        } else {
+            Vector2 s = {13.0f, 16.0f};
+            gui.CreateControl(selectButton, "Icon_file", startPos + Vector2(15.0f, height / 2 - s.y/2),s);
+        }
+        
+        auto l = gui.CreateLabel(selectButton, startPos + Vector2(40.0f, 0), {200, height}, nullptr, n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
         l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
         l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
@@ -194,13 +211,28 @@ void ProjectWindow::OnCreate() {
         
         if (filePath) {
             if (n.node!=fileRoot) {
-                selectButton->AddComponent<Selectable>();
-                selectButton->AddComponent<SelectedColorer>()->Selected = Colour(0.8f,0.8f,0.8f,1.0f);
+                selectButton->AddComponent<Selectable>()->Selected.Changed.Bind([selectButton, l] {
+                    l->GetComponent<Colorable>()->Color = selectButton->GetComponent<Selectable>()->Selected() ?
+                    Colour::White() : Colour::Black();
+                });
+                
+                selectButton->AddComponent<SelectedColorer>()->Deselected = n.position % 2 == 0 ? Colour((Colour::Component)245,245,245,255) : Colour((Colour::Component)255,255,255,255);
+                selectButton->AddComponent<SelectedColorer>()->Selected = Colour((Colour::Component)17,108,214,255);
+                
             }
         }
+        
+        colorIndex++;
     };
     
     spawner->OnRemove = [] (auto& n) {};
+    
+    spawner->OnFoldoutChanged = [this] (auto& n) {
+        bool isUnfolded = treeView->IsNodeExpanded(n.node);
+        n.foldOutButton->template GetComponent<Sprite>()->SpriteName = isUnfolded ? "Icon_arrowDown" : "Icon_arrowRight";
+        Vector2 s = isUnfolded ? Vector2(9.0f, 7.5f) : Vector2(7.5f, 9.0f);
+        n.foldOutButton->template GetComponent<Sizeable>()->Size = s;
+    };
     
     ScreenSizeChanged();
     

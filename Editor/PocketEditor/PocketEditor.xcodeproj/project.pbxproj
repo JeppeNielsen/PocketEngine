@@ -17,6 +17,12 @@
 		7205850E1E6221F4009FFACF /* Trigger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7205850C1E6221F4009FFACF /* Trigger.cpp */; };
 		720585111E6222BD009FFACF /* TriggerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7205850F1E6222BC009FFACF /* TriggerSystem.cpp */; };
 		720585141E6232FC009FFACF /* TriggerTouchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585121E6232FC009FFACF /* TriggerTouchSystem.cpp */; };
+		7206DDCD1F4F4B830069B8E9 /* LucidaGrande.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDCC1F4F4B830069B8E9 /* LucidaGrande.ttf */; };
+		7206DDCF1F51CD840069B8E9 /* LucidaGrandeBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDCE1F51CD840069B8E9 /* LucidaGrandeBold.ttf */; };
+		7206DDD11F51EB3D0069B8E9 /* SanFranciscoText-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD01F51EB3D0069B8E9 /* SanFranciscoText-Bold.otf */; };
+		7206DDD61F52AB890069B8E9 /* NewUI.json in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD41F52AB880069B8E9 /* NewUI.json */; };
+		7206DDD71F52AB890069B8E9 /* NewUI.tga in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD51F52AB890069B8E9 /* NewUI.tga */; };
+		7206DDDB1F53030C0069B8E9 /* AtlasCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */; };
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
@@ -505,6 +511,13 @@
 		720585101E6222BD009FFACF /* TriggerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerSystem.hpp; sourceTree = "<group>"; };
 		720585121E6232FC009FFACF /* TriggerTouchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerTouchSystem.cpp; sourceTree = "<group>"; };
 		720585131E6232FC009FFACF /* TriggerTouchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerTouchSystem.hpp; sourceTree = "<group>"; };
+		7206DDCC1F4F4B830069B8E9 /* LucidaGrande.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LucidaGrande.ttf; sourceTree = "<group>"; };
+		7206DDCE1F51CD840069B8E9 /* LucidaGrandeBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = LucidaGrandeBold.ttf; sourceTree = "<group>"; };
+		7206DDD01F51EB3D0069B8E9 /* SanFranciscoText-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SanFranciscoText-Bold.otf"; sourceTree = "<group>"; };
+		7206DDD41F52AB880069B8E9 /* NewUI.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = NewUI.json; sourceTree = "<group>"; };
+		7206DDD51F52AB890069B8E9 /* NewUI.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewUI.tga; sourceTree = "<group>"; };
+		7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AtlasCreator.cpp; sourceTree = "<group>"; };
+		7206DDDA1F53030C0069B8E9 /* AtlasCreator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AtlasCreator.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -724,7 +737,7 @@
 		727B388D1E2B9C5300531B62 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		727B388E1E2B9C5300531B62 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		7287F1051C9A11F1005D05FA /* EngineContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EngineContext.cpp; sourceTree = "<group>"; };
-		7287F1071C9B3F4C005D05FA /* Editor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Editor.cpp; sourceTree = "<group>"; };
+		7287F1071C9B3F4C005D05FA /* Editor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Editor.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		7287F10C1C9B41B3005D05FA /* Font.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Font.fnt; sourceTree = "<group>"; };
 		7287F1121C9B41B3005D05FA /* images.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = images.png; sourceTree = "<group>"; };
 		7287F1131C9B41B3005D05FA /* images.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = images.xml; sourceTree = "<group>"; };
@@ -1434,7 +1447,7 @@
 		729952E51C99F76100DAAE5D /* File.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = File.mm; sourceTree = "<group>"; };
 		729952E61C99F76100DAAE5D /* FileReader.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileReader.mm; sourceTree = "<group>"; };
 		729952E71C99F76100DAAE5D /* GamePadManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GamePadManager.mm; sourceTree = "<group>"; };
-		729952E81C99F76100DAAE5D /* OSXView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXView.h; sourceTree = "<group>"; };
+		729952E81C99F76100DAAE5D /* OSXView.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = OSXView.h; sourceTree = "<group>"; usesTabs = 0; wrapsLines = 0; };
 		729952E91C99F76100DAAE5D /* OSXView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXView.mm; sourceTree = "<group>"; };
 		729952EC1C99F76100DAAE5D /* OSXWindowCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSXWindowCreator.h; sourceTree = "<group>"; };
 		729952ED1C99F76100DAAE5D /* OSXWindowCreator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OSXWindowCreator.mm; sourceTree = "<group>"; };
@@ -1672,6 +1685,15 @@
 				720585131E6232FC009FFACF /* TriggerTouchSystem.hpp */,
 			);
 			path = Triggering;
+			sourceTree = "<group>";
+		};
+		7206DDD81F5302FD0069B8E9 /* Atlas */ = {
+			isa = PBXGroup;
+			children = (
+				7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */,
+				7206DDDA1F53030C0069B8E9 /* AtlasCreator.hpp */,
+			);
+			path = Atlas;
 			sourceTree = "<group>";
 		};
 		720B3D3C1D8B2424006195E8 /* WorldTab */ = {
@@ -2158,6 +2180,11 @@
 		7287F10A1C9B41B3005D05FA /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				7206DDD41F52AB880069B8E9 /* NewUI.json */,
+				7206DDD51F52AB890069B8E9 /* NewUI.tga */,
+				7206DDD01F51EB3D0069B8E9 /* SanFranciscoText-Bold.otf */,
+				7206DDCE1F51CD840069B8E9 /* LucidaGrandeBold.ttf */,
+				7206DDCC1F4F4B830069B8E9 /* LucidaGrande.ttf */,
 				72C9B28B1E8B191200033C56 /* PTMono.ttc */,
 				72C9B2891E8B18C700033C56 /* Courier New.ttf */,
 				72C9B2851E8AFC8900033C56 /* Courier New Bold.ttf */,
@@ -3684,7 +3711,7 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
-				72EC13811D2D957B00B69802 /* Building */,
+				7206DDD81F5302FD0069B8E9 /* Atlas */,
 				72F9082A1EAC9189003BBCC1 /* Code */,
 				72CE8EE01CB2FD92001F08E4 /* Context */,
 				7220F6431E75B0770063EAD5 /* EditorSystems */,
@@ -3820,13 +3847,6 @@
 			path = GameObjectMenu;
 			sourceTree = "<group>";
 		};
-		72EC13811D2D957B00B69802 /* Building */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Building;
-			sourceTree = "<group>";
-		};
 		72F9082A1EAC9189003BBCC1 /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -3901,9 +3921,14 @@
 				72C9B28C1E8B191200033C56 /* PTMono.ttc in Resources */,
 				7287F1161C9B4216005D05FA /* Font.fnt in Resources */,
 				72C9B28A1E8B18C700033C56 /* Courier New.ttf in Resources */,
+				7206DDD61F52AB890069B8E9 /* NewUI.json in Resources */,
 				7287F1171C9B4216005D05FA /* images.png in Resources */,
 				7287F1181C9B4216005D05FA /* images.xml in Resources */,
+				7206DDD71F52AB890069B8E9 /* NewUI.tga in Resources */,
 				72CE8EDD1CB16FBD001F08E4 /* NSOpenGLView-Info.plist in Resources */,
+				7206DDCF1F51CD840069B8E9 /* LucidaGrandeBold.ttf in Resources */,
+				7206DDCD1F4F4B830069B8E9 /* LucidaGrande.ttf in Resources */,
+				7206DDD11F51EB3D0069B8E9 /* SanFranciscoText-Bold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4257,6 +4282,7 @@
 				7299541C1C99F76100DAAE5D /* SelectedColorer.cpp in Sources */,
 				729954651C99F76100DAAE5D /* btCollisionWorld.cpp in Sources */,
 				7299544D1C99F76100DAAE5D /* b2PolyContact.cpp in Sources */,
+				7206DDDB1F53030C0069B8E9 /* AtlasCreator.cpp in Sources */,
 				72B492611DCE59D10063518A /* GameSystem.cpp in Sources */,
 				7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */,
 				72A4B39A1E4BB5B200A856F5 /* SwitchSystem.cpp in Sources */,

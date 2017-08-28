@@ -30,7 +30,7 @@ void BaseWindow::Create() {
     
     Vector2 size = Size();
     
-    GameObject* windowObject = gui.CreateControl(0, "Box", size);
+    GameObject* windowObject = gui.CreateControl(0, "Window", size);
     
     if (CreateBar()) {
     

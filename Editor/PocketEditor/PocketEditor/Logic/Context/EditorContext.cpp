@@ -43,8 +43,8 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     guiRoot->CreateSystem<TouchSystem>()->Order = -200;
     guiRoot->CreateSystem<GameWorldViewportSystem>();
     
-    gui->Setup("images.png", "images.xml", engineContext.Viewport());
-    gui->CreateFont("/Library/Fonts/Arial Bold.ttf");//, "Font");
+    gui->Setup("NewUI.tga", "NewUI.json", engineContext.Viewport());
+    gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");
 
     guiRoot->CreateSystem<RenderSystem>()->Order = 10;
     
