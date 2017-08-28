@@ -64,9 +64,9 @@ bool ImageLoader::SaveTga(const std::string &path, unsigned char *pixels, int wi
     for (int y=height-1; y>=0; y--) {
         for (int x=0; x<width; x++) {
             int index = (y * width + x)*4;
-            o.put(pixels[index]);
-            o.put(pixels[index+1]);
             o.put(pixels[index+2]);
+            o.put(pixels[index+1]);
+            o.put(pixels[index+0]);
             o.put(pixels[index+3]);
         }
     }
