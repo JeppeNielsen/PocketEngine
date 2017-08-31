@@ -214,10 +214,12 @@ void LayoutSystem::CalcLayout(GameObject* object) {
                 Transform* childTransform = child->GetComponent<Transform>();
                 if (!childLayouter || !childSizable || !childTransform) continue;
                 
-                Vector2 childSize = { childLayouter->GlobalMin().x, size.y };
+                float yPos = size.y * 0.5f - childLayouter->Min().y*0.5f;
+                
+                Vector2 childSize = { childLayouter->GlobalMin().x, childLayouter->Min().y };
                 
                 childSizable->Size = childSize;
-                childTransform->Position = {x,0};
+                childTransform->Position = {x,yPos};
                 x+=childSize.x;
             }
         } else if (layouter->GlobalDesired().x>=size.x) {
@@ -234,10 +236,13 @@ void LayoutSystem::CalcLayout(GameObject* object) {
                 float minWidth = childLayouter->GlobalMin().x;
                 float desWidth = childLayouter->GlobalDesired().x;
                 
-                Vector2 childSize = { minWidth + (desWidth - minWidth) * fraction, size.y };
+                float yPos = size.y * 0.5f - childLayouter->Min().y*0.5f;
+                
+                
+                Vector2 childSize = { minWidth + (desWidth - minWidth) * fraction, childLayouter->Min().y };
                 
                 childSizable->Size = childSize;
-                childTransform->Position = {x,0};
+                childTransform->Position = {x,yPos};
                 x+=childSize.x;
             }
         } else {
@@ -256,10 +261,12 @@ void LayoutSystem::CalcLayout(GameObject* object) {
                 float desWidth = childLayouter->GlobalDesired().x;
                 float maxWidth = childLayouter->GlobalMax().x;
                 
-                Vector2 childSize = { desWidth + (maxWidth - desWidth) * fraction, size.y };
+                float yPos = size.y * 0.5f - childLayouter->Min().y*0.5f;
+                
+                Vector2 childSize = { desWidth + (maxWidth - desWidth) * fraction, childLayouter->Min().y };
                 
                 childSizable->Size = childSize;
-                childTransform->Position = {x, 0};
+                childTransform->Position = {x, yPos};
                 x+=childSize.x;
             }
         }
