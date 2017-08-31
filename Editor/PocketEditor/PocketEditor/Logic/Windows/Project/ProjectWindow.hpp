@@ -11,6 +11,7 @@
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
 #include "FilePath.hpp"
+#include "EditorGui.hpp"
 
 using namespace Pocket;
 
@@ -27,7 +28,6 @@ protected:
     bool CreateBar() override;
     void SetProjectPath(const std::string& path);
 private:
-    void ScreenSizeChanged();
     void UpdateFileWorld();
     
     struct ClickedNodeInfo {
@@ -45,4 +45,5 @@ private:
     VirtualTreeList* treeView;
     
     FilePath projectFilePath;
+    EditorGui* editorGui;
 };

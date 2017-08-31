@@ -23,6 +23,7 @@
 		7206DDD61F52AB890069B8E9 /* NewUI.json in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD41F52AB880069B8E9 /* NewUI.json */; };
 		7206DDD71F52AB890069B8E9 /* NewUI.tga in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD51F52AB890069B8E9 /* NewUI.tga */; };
 		7206DDDB1F53030C0069B8E9 /* AtlasCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */; };
+		7206DDDF1F55FD9F0069B8E9 /* EditorGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DDDD1F55FD9F0069B8E9 /* EditorGui.cpp */; };
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
@@ -518,6 +519,8 @@
 		7206DDD51F52AB890069B8E9 /* NewUI.tga */ = {isa = PBXFileReference; lastKnownFileType = file; path = NewUI.tga; sourceTree = "<group>"; };
 		7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AtlasCreator.cpp; sourceTree = "<group>"; };
 		7206DDDA1F53030C0069B8E9 /* AtlasCreator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AtlasCreator.hpp; sourceTree = "<group>"; };
+		7206DDDD1F55FD9F0069B8E9 /* EditorGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorGui.cpp; sourceTree = "<group>"; };
+		7206DDDE1F55FD9F0069B8E9 /* EditorGui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorGui.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -1694,6 +1697,15 @@
 				7206DDDA1F53030C0069B8E9 /* AtlasCreator.hpp */,
 			);
 			path = Atlas;
+			sourceTree = "<group>";
+		};
+		7206DDDC1F55FD940069B8E9 /* Gui */ = {
+			isa = PBXGroup;
+			children = (
+				7206DDDD1F55FD9F0069B8E9 /* EditorGui.cpp */,
+				7206DDDE1F55FD9F0069B8E9 /* EditorGui.hpp */,
+			);
+			path = Gui;
 			sourceTree = "<group>";
 		};
 		720B3D3C1D8B2424006195E8 /* WorldTab */ = {
@@ -3711,6 +3723,7 @@
 		72CE8EDE1CB2E494001F08E4 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
+				7206DDDC1F55FD940069B8E9 /* Gui */,
 				7206DDD81F5302FD0069B8E9 /* Atlas */,
 				72F9082A1EAC9189003BBCC1 /* Code */,
 				72CE8EE01CB2FD92001F08E4 /* Context */,
@@ -4349,6 +4362,7 @@
 				7227453A1F348399009B0528 /* PanelAreaSystem.cpp in Sources */,
 				729953DE1C99F76100DAAE5D /* Sound.cpp in Sources */,
 				729954C41C99F76100DAAE5D /* btWheelInfo.cpp in Sources */,
+				7206DDDF1F55FD9F0069B8E9 /* EditorGui.cpp in Sources */,
 				7299545F1C99F76100DAAE5D /* btActivatingCollisionAlgorithm.cpp in Sources */,
 				729954C11C99F76100DAAE5D /* btSimpleDynamicsWorld.cpp in Sources */,
 				72994F991C99F74F00DAAE5D /* main.cpp in Sources */,

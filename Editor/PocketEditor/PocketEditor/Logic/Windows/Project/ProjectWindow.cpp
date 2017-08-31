@@ -21,6 +21,7 @@ std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
 
+    
     GameObject& contextRoot = context->ContextRoot();
     contextRoot.CreateSystem<FileSystemListenerSystem>();
     
@@ -29,9 +30,8 @@ void ProjectWindow::OnInitialize() {
     guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
     guiRoot.CreateSystem<SelectedColorerSystem>();
     guiRoot.CreateSystem<ClickSelectorSystem>();
-    
-    context->EngineContext().ScreenSize.Changed.Bind(this, &ProjectWindow::ScreenSizeChanged);
-    
+    editorGui = guiRoot.CreateSystem<EditorGui>();
+
     popupMenu.InitializePopUp();
     {
         AppMenu& createMenu = popupMenu.AddChild("Create");
@@ -147,9 +147,31 @@ void ProjectWindow::OnCreate() {
     fileSystemListener->Path.Changed.Bind([this] {
         UpdateFileWorld();
     });
-
-    Gui& gui = context->Gui();
     
+    GameObject* treeViewGo = editorGui->CreateTreeList(window, fileRoot,
+    
+        [this] (GameObject* go) {
+            FilePath* filePath = go->GetComponent<FilePath>();
+            if (filePath)  {
+                return filePath->GetFilePath();
+            } else {
+                return treeView->DefaultExpandedHashFunction(go);
+            }
+        },
+        nullptr, nullptr,
+        [this] (auto& n, GameObject* button, std::string& text) {
+            FilePath* filePath = n.node->template GetComponent<FilePath>();
+            text = n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName();
+            
+            button->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { n.node, n.node!=fileRoot ? button : 0, filePath ? filePath : &projectFilePath });
+        },
+        [this] (auto& n, GameObject* button) {
+        
+        });
+    
+    treeView = treeViewGo->GetComponent<VirtualTreeList>();
+    
+    /*
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Window", {1,0}, 200, &pivot);
     listBox->RemoveComponent<Renderable>();
@@ -174,12 +196,9 @@ void ProjectWindow::OnCreate() {
     
     auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
     
-    static int colorIndex = 0;
-    
     spawner->OnCreate = [&, this](auto& n) {
         
         const float height = 18.0f;
-        FilePath* filePath = n.node->template GetComponent<FilePath>();
         
         GameObject* selectButton = gui.CreateControl(n.parent, "white");
         selectButton->AddComponent<TouchableCanceller>();
@@ -202,6 +221,8 @@ void ProjectWindow::OnCreate() {
             gui.CreateControl(selectButton, "Icon_file", startPos + Vector2(15.0f, height / 2 - s.y/2),s);
         }
         
+        FilePath* filePath = n.node->template GetComponent<FilePath>();
+        
         auto l = gui.CreateLabel(selectButton, startPos + Vector2(40.0f, 0), {200, height}, nullptr, n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName(), 12);
         l->GetComponent<Colorable>()->Color = Colour::Black();
         l->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
@@ -221,8 +242,6 @@ void ProjectWindow::OnCreate() {
                 
             }
         }
-        
-        colorIndex++;
     };
     
     spawner->OnRemove = [] (auto& n) {};
@@ -234,8 +253,8 @@ void ProjectWindow::OnCreate() {
         n.foldOutButton->template GetComponent<Sizeable>()->Size = s;
     };
     
-    ScreenSizeChanged();
-    
+    */
+
     context->Project().Opened.Bind([this] () {
         SetProjectPath(context->Project().Path());
     });
@@ -256,13 +275,6 @@ void ProjectWindow::Clicked(TouchData d, ClickedNodeInfo nodeInfo) {
     } else if (d.Index == 1) {
         popupMenu.ShowPopup(d.Input->GetTouchPosition(1));
     }
-}
-
-void ProjectWindow::ScreenSizeChanged() {
-//    Vector2 size = context->EngineContext().ScreenSize;
-//    window->GetComponent<Sizeable>()->Size = {200, size.y};
-//    window->GetComponent<Transform>()->Position = 0;
-//    listBox->GetComponent<Sizeable>()->Size = window->GetComponent<Sizeable>()->Size;
 }
 
 void ProjectWindow::SetProjectPath(const std::string &path) {

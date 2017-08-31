@@ -11,6 +11,7 @@
 #include "SelectableCollection.hpp"
 #include "EditorObject.hpp"
 #include "VirtualTreeList.hpp"
+#include "EditorGui.hpp"
 
 class HierarchyWindow : public BaseWindow {
 protected:
@@ -34,4 +35,5 @@ private:
     GameObject* rootItem;
     std::map<GameObject*, GameObject*> objectToSelectButton;
     std::map<GameObject*, GameObject*> objectToEnableButton;
+    EditorGui* editorGui;
 };
