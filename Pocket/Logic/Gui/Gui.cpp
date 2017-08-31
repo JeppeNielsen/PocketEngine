@@ -259,6 +259,10 @@ GameObject* Gui::CreateLayoutControl(GameObject *parent, const std::string &spri
 }
 
 void Gui::AddLayouter(GameObject* object, const Vector2& minSize, const Vector2& desiredSize, const Vector2& maxSize, Layouter::LayoutMode layoutMode) {
+    if (!object->GetComponent<Sizeable>()) {
+        object->AddComponent<Sizeable>();
+    }
+    
     Layouter* l = object->AddComponent<Layouter>();
     l->Min = minSize;
     l->Desired = desiredSize;
