@@ -26,7 +26,7 @@ void WorldTab::OnCreate() {
 
     renderArea = context->Gui().CreatePivot(window);
     renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
-    renderArea->GetComponent<GameWorldViewport>()->RenderSize = {2048, 1152 };
+    renderArea->GetComponent<GameWorldViewport>()->RenderSize = {2880, 1800};
     
     renderArea->AddComponent<Touchable>();
     renderArea->AddComponent<TextureComponent>();
