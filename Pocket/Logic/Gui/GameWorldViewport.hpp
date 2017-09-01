@@ -17,7 +17,7 @@ namespace Pocket {
     public:
         GameWorldViewport();
         GameWorld* World;
-        Point RenderSize;
+        Point RenderTextureSize;
         RenderTexture renderTexture;
         InputDevice inputDevice;
     };

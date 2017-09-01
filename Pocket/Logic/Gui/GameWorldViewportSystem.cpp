@@ -13,8 +13,8 @@ using namespace Pocket;
 
 void GameWorldViewportSystem::ObjectAdded(GameObject* object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
-    viewport->renderTexture.Initialize(viewport->RenderSize.x, viewport->RenderSize.y);
-    object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(&viewport->renderTexture, viewport->RenderSize.x, viewport->RenderSize.y);
+    viewport->renderTexture.Initialize(viewport->RenderTextureSize.x, viewport->RenderTextureSize.y);
+    object->GetComponent<TextureComponent>()->Texture().SetRenderTexture(&viewport->renderTexture, viewport->RenderTextureSize.x, viewport->RenderTextureSize.y);
     object->GetComponent<Touchable>()->Down.Bind(this, &GameWorldViewportSystem::TouchDown, object);
     object->GetComponent<Touchable>()->Up.Bind(this, &GameWorldViewportSystem::TouchUp, object);
     viewport->inputDevice.Initialize(12);
@@ -40,24 +40,14 @@ void GameWorldViewportSystem::Render() {
 
 void GameWorldViewportSystem::TouchDown(Pocket::TouchData d, Pocket::GameObject *object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
-    Vector2 size = object->GetComponent<Sizeable>()->Size;
     Vector2 local = object->GetComponent<Transform>()->WorldInverse().TransformPosition(d.WorldPosition);
-    
-    viewport->inputDevice.SetTouch(d.Index, true, {
-        (local.x / size.x) * viewport->RenderSize.x,
-        (local.y / size.y) * viewport->RenderSize.y
-    });
+    viewport->inputDevice.SetTouch(d.Index, true, local);
 }
 
 void GameWorldViewportSystem::TouchUp(Pocket::TouchData d, Pocket::GameObject *object) {
     auto viewport = object->GetComponent<GameWorldViewport>();
-    Vector2 size = object->GetComponent<Sizeable>()->Size;
     Vector2 local = object->GetComponent<Transform>()->WorldInverse().TransformPosition(d.WorldPosition);
-    
-    viewport->inputDevice.SetTouch(d.Index, false, {
-        (local.x / size.x) * viewport->RenderSize.x,
-        (local.y / size.y) * viewport->RenderSize.y
-    });
+    viewport->inputDevice.SetTouch(d.Index, false, local);
 }
 
 void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
@@ -83,8 +73,8 @@ void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
     }
     
     Vector2 size = sizeable->Size;
-    Vector2 uv = { sizeable->Size().x / (float)viewport->RenderSize.x,
-                   sizeable->Size().y / (float)viewport->RenderSize.y};
+    Vector2 uv = { size.x / (float)viewport->RenderTextureSize.x,
+                   size.y / (float)viewport->RenderTextureSize.y};
     
     mesh.vertices[0].Position = {0,0,0};
     mesh.vertices[1].Position = {size.x,0,0};
@@ -100,21 +90,16 @@ void GameWorldViewportSystem::UpdateObject(GameObject* object, float dt) {
     mesh.vertices[2].TextureCoords = uv;
     mesh.vertices[3].TextureCoords = {0,uv.y};
     
-    Vector2 worldPosition = object->GetComponent<Transform>()->World().TransformPosition(0);
-    
     Vector2 oldScreenSize = Engine::Context().ScreenSize;
     float oldScalingFactor = Engine::Context().ScreenScalingFactor;
-    Engine::Context().ScreenSize = sizeable->Size;// Vector2(viewport->RenderSize.x, viewport->RenderSize.y);
+    Engine::Context().ScreenSize = size;
     Engine::Context().ScreenScalingFactor = 1.0f;
     
     const Matrix4x4& inv = object->GetComponent<Transform>()->WorldInverse();
     
     for (int i=0; i<12; i++) {
         Vector2 local = inv.TransformPosition(root->Input().GetDevice()->GetTouchPosition(i));
-        viewport->inputDevice.SetTouchPosition(i, {
-            (local.x / size.x) * sizeable->Size().x, // * viewport->RenderSize.x,
-            (local.y / size.y) * sizeable->Size().y
-        });
+        viewport->inputDevice.SetTouchPosition(i, local);
     }
     
     viewport->inputDevice.StartFrame(nullptr);
