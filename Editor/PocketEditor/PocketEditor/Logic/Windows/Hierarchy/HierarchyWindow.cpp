@@ -230,7 +230,7 @@ void HierarchyWindow::SelectedChanged(Pocket::GameObject *object) {
 }
 
 void HierarchyWindow::SetNodeSelected(Pocket::GameObject *node, bool enabled) {
-    node->GetComponent<Colorable>()->Color = enabled ? Colour(0.0f, 0.0f, 1.0f, 1.0f) : Colour(1.0f, 1.0f, 1.0f, 1.0f);
+    node->GetComponent<Selectable>()->Selected = enabled;
 }
 
 void HierarchyWindow::EnabledChanged(Pocket::GameObject *object) {
