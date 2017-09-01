@@ -80,9 +80,7 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
         l->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
         
         std::string text;
-        OnCreate(n, selectButton, text);
-        l->GetComponent<Label>()->Text = text;
-        
+       
         selectButton->AddComponent<Selectable>()->Selected.Changed.Bind([selectButton, l] {
             l->GetComponent<Colorable>()->Color = selectButton->GetComponent<Selectable>()->Selected() ?
             Colour::White() : Colour::Black();
@@ -91,7 +89,8 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
         selectButton->AddComponent<SelectedColorer>()->Deselected = n.position % 2 == 0 ? Colour((Colour::Component)245,245,245,255) : Colour((Colour::Component)255,255,255,255);
         selectButton->AddComponent<SelectedColorer>()->Selected = Colour((Colour::Component)17,108,214,255);
         
-
+        OnCreate(n, selectButton, text);
+        l->GetComponent<Label>()->Text = text;
         
     
 //        FilePath* filePath = n.node->template GetComponent<FilePath>();
