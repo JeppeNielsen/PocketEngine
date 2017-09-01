@@ -53,7 +53,7 @@ public:
         
         root->CreateSystem<TranslationUnitUpdater>()->SetFileWatcher(&watcher);
 
-        root->CreateSystem<Gui>()->Setup("images.png", "images.xml", Context().Viewport());
+        root->CreateSystem<Gui>()->Setup("NewUI.tga", "NewUI.json", Context().Viewport());
         root->CreateSystem<Gui>()->CreateFont("PTMono.ttc");//"/Library/Fonts/Arial Bold.ttf");//, "Font");
         root->CreateSystem<Gui>()->GetFonts()[0]->GetComponent<Font>()->GetSpacing(14);
     
@@ -83,7 +83,6 @@ public:
         font->AddComponent<Font>()->LoadTTF("PTMono.ttc");
         font->GetComponent<Font>()->fontSizeToPixelFactor = 1.0f;
         font->GetComponent<Font>()->CharacterSetEverySize = 12.0f;
-        
         
         /*GameObject* camera = root->CreateObject();
         camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
@@ -164,7 +163,7 @@ public:
     }
 };
 
-int main_testTextEditor() {
+int main_TextEditor() {
     Engine e;
     e.Start<TextEditorState>();
 	return 0;
