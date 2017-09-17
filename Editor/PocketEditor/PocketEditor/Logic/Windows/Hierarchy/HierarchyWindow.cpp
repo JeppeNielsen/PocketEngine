@@ -87,11 +87,15 @@ void HierarchyWindow::OnCreate() {
                 editorObject->gameObject->Enabled.Changed.Bind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
                 SetNodeEnabled(enableButton, editorObject->gameObject->Enabled);
                 objectToEnableButton[editorObject->gameObject] = enableButton;
-            }
+                
+                button->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, n.node);
 
-            
-            
-            
+                button->GetComponent<Droppable>()->OnCreate = [&gui, this](GameObject* o, TouchData d) -> GameObject* {
+                    Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
+                    GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
+                    return control;
+                };
+            }
         },
         [this] (auto& n, GameObject* button) {
         
@@ -116,113 +120,7 @@ void HierarchyWindow::OnCreate() {
             }
         }
     );
-    
     treeView = treeViewGo->GetComponent<VirtualTreeList>();
-    
-//
-//    GameObject* pivot;
-//    GameObject* listBox = gui.CreateListbox(window, "Box", {0,0}, 200, &pivot);
-//    gui.AddLayouter(listBox, 20, {2000,2000}, {2000,2000});
-//    listBox->RemoveComponent<Sprite>();
-//
-//    treeView = pivot->AddComponent<VirtualTreeList>();
-//    treeView->ShowRoot = true;
-//    treeView->Root = 0;
-//    //treeView->SetNodeExpanded(root, true);
-//    treeView->Pivot = listBox;
-//    treeView->PredicateFunction = [] (GameObject* object) {
-//        if (object->Parent() && object->Parent()->GetComponent<Cloner>()) return false;
-//        return true;
-//    };
-//    
-//    auto spawner = pivot->AddComponent<VirtualTreeListSpawner>();
-//    
-//    spawner->HasChildren = [] (GameObject* object) {
-//        if (object->GetComponent<Cloner>()) return false;
-//        return !object->Children().empty();
-//    };
-//    
-//    spawner->OnCreate = [&, this](VirtualTreeListSpawner::SpawnedNode& n) {
-//        
-//        gui.AddLayouter(n.parent, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
-//        
-//        GameObject* clone = gui.CreateControl(n.parent, "Box", 0, {200,n.height});
-//        clone->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, n.node);
-//        gui.AddLayouter(clone, {4,25}, {2000,25}, {2000,25}, Layouter::LayoutMode::Horizontal);
-//        
-//        if (n.hasChildren) {
-//            n.foldOutButton = gui.CreateControl(clone, "TextBox", 0, {25,25});
-//            gui.AddLayouter(n.foldOutButton, {25,25}, 25, 25);
-//        }
-//        
-//        clone->GetComponent<Droppable>()->OnCreate = [&gui, this](GameObject* o, TouchData d) -> GameObject* {
-//            Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
-//            GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
-//            return control;
-//        };
-//        EditorObject* editorObject = n.node->GetComponent<EditorObject>();
-//    
-//        if (editorObject && editorObject->editorObject) {
-//        
-//            GameObject* selectButton = gui.CreateControl(clone, "TextBox", {25,0}, {200-25,25});
-//            selectButton->GetComponent<Touchable>()->Click.Bind(this, &HierarchyWindow::Clicked, editorObject->editorObject);
-//            selectButton->AddComponent<Colorable>()->Color = Colour::White();
-//            selectButton->GetComponent<Touchable>()->ClickThrough = true;
-//            
-//            gui.AddLayouter(selectButton, {4,25}, 2000, 2000);
-//            
-//            objectToSelectButton[editorObject->editorObject] = selectButton;
-//            editorObject->editorObject->GetComponent<Selectable>()->Selected.Changed.Bind(this, &::HierarchyWindow::SelectedChanged, editorObject->editorObject);
-//            SetNodeSelected(selectButton, editorObject->editorObject->GetComponent<Selectable>()->Selected);
-//            
-//            {
-//                std::stringstream str;
-//                str<<editorObject->gameObject->RootId();
-//                
-//                GameObject* label = gui.CreateLabel(clone, {0,0}, {60,25}, 0, str.str(), 12);
-//                
-//                label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
-//                label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
-//                label->AddComponent<Colorable>()->Color = Colour::Black();
-//            }
-//            
-//            GameObject* enableButton = gui.CreateControl(clone, "TextBox", {25, 0}, {25,25});
-//            enableButton->GetComponent<Touchable>()->Click.Bind([editorObject] (TouchData d) {
-//                editorObject->gameObject->Enabled = !editorObject->gameObject->Enabled;
-//            });
-//            editorObject->gameObject->Enabled.Changed.Bind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
-//            SetNodeEnabled(enableButton, editorObject->gameObject->Enabled);
-//            objectToEnableButton[editorObject->gameObject] = enableButton;
-//        }
-//    };
-//    
-//    spawner->OnRemove = [this] (auto& n) {
-//        /*if (n.control == rootItem) {
-//            rootItem = 0;
-//        }*/
-//        
-//        EditorObject* editorObject = n.node->template GetComponent<EditorObject>();
-//        if (editorObject) {
-//        
-//            {
-//                editorObject->editorObject->GetComponent<Selectable>()->Selected.Changed.Unbind(this, &::HierarchyWindow::SelectedChanged, editorObject->editorObject);
-//                auto it = objectToSelectButton.find(editorObject->editorObject);
-//                if (it!=objectToSelectButton.end()) {
-//                    objectToSelectButton.erase(it);
-//                }
-//            }
-//            
-//            {
-//                editorObject->gameObject->Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
-//                auto it = objectToEnableButton.find(editorObject->gameObject);
-//                if (it!=objectToEnableButton.end()) {
-//                    objectToEnableButton.erase(it);
-//                }
-//            }
-//        }
-//    };
-    
-    window->GetComponent<Transform>()->Position += {300,200};
 }
 
 void HierarchyWindow::SelectedChanged(Pocket::GameObject *object) {
