@@ -91,24 +91,6 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
         
         OnCreate(n, selectButton, text);
         l->GetComponent<Label>()->Text = text;
-        
-    
-//        FilePath* filePath = n.node->template GetComponent<FilePath>();
-//        
-//        selectButton->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { n.node, n.node!=fileRoot ? selectButton : 0, filePath ? filePath : &projectFilePath });
-//        
-//        if (filePath) {
-//            if (n.node!=fileRoot) {
-//                selectButton->AddComponent<Selectable>()->Selected.Changed.Bind([selectButton, l] {
-//                    l->GetComponent<Colorable>()->Color = selectButton->GetComponent<Selectable>()->Selected() ?
-//                    Colour::White() : Colour::Black();
-//                });
-//                
-//                selectButton->AddComponent<SelectedColorer>()->Deselected = n.position % 2 == 0 ? Colour((Colour::Component)245,245,245,255) : Colour((Colour::Component)255,255,255,255);
-//                selectButton->AddComponent<SelectedColorer>()->Selected = Colour((Colour::Component)17,108,214,255);
-//                
-//            }
-//        }
     };
     
     spawner->OnRemove = [=] (const VirtualTreeListSpawner::SpawnedNode& n) {
