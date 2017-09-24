@@ -27,6 +27,5 @@ namespace Pocket {
         
     private:
         std::map<std::string, std::string> guidToPath;
-        GameWorld* world;
     };
 }
