@@ -412,7 +412,38 @@ public:
         }
     }
         
+    void AddSphere(const Pocket::Vector3 center, float radius, int xSegments, int ySegments) {
         
+        size_t vertIndex = vertices.size();
+        
+        float dy = MathHelper::Pi / ySegments;
+        float dx = (2.0f * MathHelper::Pi) / xSegments;
+        
+        for (int y = 0; y<=ySegments; y++) {
+            for(int x = 0; x<=xSegments; x++) {
+                Quaternion rot;
+                rot.FromEuler({-MathHelper::Pi * 0.5f + dy * y, dx * x, 0});
+                Matrix4x4 world = Matrix4x4::CreateTransform(0,1.0f,rot);
+                
+                Vector3 position = world.TransformPositionAffine(Vector3(0,0,radius));
+                
+                vertices.push_back({center + position, Vector2(x/(float)xSegments, y/(float)ySegments), Colour::White(), position.Normalized()});
+            }
+        }
+        
+        for (int y = 0; y<ySegments; y++) {
+            for(int x = 0; x<xSegments; x++) {
+                int vert = vertIndex + x + y * (xSegments+1);
+                triangles.push_back(vert);
+                triangles.push_back(vert+xSegments+2);
+                triangles.push_back(vert+1);
+                
+                triangles.push_back(vert);
+                triangles.push_back(vert+xSegments+1);
+                triangles.push_back(vert+xSegments +2);
+            }
+        }
+    }
     
 
 
