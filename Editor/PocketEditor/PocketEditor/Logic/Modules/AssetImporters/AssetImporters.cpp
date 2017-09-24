@@ -34,6 +34,15 @@ void AssetImporters::OnCreate() {
             object->AddComponent<TextureComponent>();
         };
     }
+    assetImporterSystem->SetFileWatcher(context->Project().FileSystemWatcher());
+    {
+        GameObject* pngImporter = context->ContextRoot().CreateObject();
+        pngImporter->AddComponent<AssetImporter>()->extension = "jpg";
+        pngImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
+            object->AddComponent<AssetLoader>();
+            object->AddComponent<TextureComponent>();
+        };
+    }
     {
         GameObject* shaderImporter = context->ContextRoot().CreateObject();
         shaderImporter->AddComponent<AssetImporter>()->extension = "shader";
