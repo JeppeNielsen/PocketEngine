@@ -4,10 +4,12 @@
 
 namespace Pocket {
 
+class GameObject;
+
 struct IFieldEditor {
     virtual ~IFieldEditor() { }
     virtual void SetField(void* field) = 0;
-    virtual void Create(const std::string& name, void* context, void* parent) = 0;
+    virtual void Create(const std::string& name, void* context, void* parent, GameObject* object) = 0;
     virtual void Destroy() = 0;
     virtual void Update(float dt) = 0;
 };
@@ -37,11 +39,11 @@ struct PropertyEditor : public IFieldEditor {
         this->field = static_cast<Property<T>*>(field);
     }
 
-    void Create(const std::string& name, void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent, GameObject* object) override {
         currentValue = this->field->operator()();
         editor = FieldEditorCreator<T>::Create(&currentValue);
         if (editor) {
-            editor->Create(name, context, parent);
+            editor->Create(name, context, parent, object);
         }
     }
     
@@ -92,11 +94,11 @@ struct VectorEditor : public IFieldEditor {
         this->field = static_cast<std::vector<T>*>(field);
     }
 
-    void Create(const std::string& name, void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent, GameObject* object) override {
         for(auto&& item : *this->field) {
             auto editor = FieldEditorCreator<T>::Create(&item);
             if (!editor) continue;
-            editor->Create("Item", context, parent);
+            editor->Create("Item", context, parent, object);
             entries.push_back(editor);
         }
     }
@@ -148,10 +150,10 @@ struct EnumEditor : public IFieldEditor {
         this->field = static_cast<T*>(field);
     }
 
-    void Create(const std::string& name, void* context, void* parent) override {
+    void Create(const std::string& name, void* context, void* parent, GameObject* object) override {
         currentValue = (int)*field;
         editor = FieldEditorCreator<int>::Create(&currentValue);
-        editor->Create(name, context, parent);
+        editor->Create(name, context, parent, object);
     }
     
     void Update(float dt) override {

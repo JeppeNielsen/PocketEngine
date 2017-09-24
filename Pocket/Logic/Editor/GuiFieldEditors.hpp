@@ -16,9 +16,9 @@
 
 namespace Pocket {
     struct GuiFieldEditor : public IFieldEditor {
-        void Create(const std::string& name, void* context, void* parent) override {
-            Initialize(name, (Gui*)context, (GameObject*) parent);
+        void Create(const std::string& name, void* context, void* parent, GameObject* object) override {
+            Initialize(name, (Gui*)context, (GameObject*) parent, object);
         }
-        virtual void Initialize(const std::string& name, Gui* gui, GameObject* object) = 0;
+        virtual void Initialize(const std::string& name, Gui* gui, GameObject* guiParent, GameObject* fieldObject) = 0;
     };
 }

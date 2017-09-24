@@ -82,7 +82,7 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
 
     for(auto componentEditor : editor->editors) {
         int countBefore = (int)control->Children().size();
-        componentEditor.editor->Create(componentEditor.type.name, gui, control);
+        componentEditor.editor->Create(componentEditor.type.name, gui, control, editor->Object());
         if (control->Children().size()>countBefore) {
             GameObject* editorControl = control->Children()[control->Children().size()-1];
             controls.push_back(editorControl);

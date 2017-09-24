@@ -22,7 +22,7 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
         this->field = static_cast<T*>(field);
     }
 
-    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent, GameObject* fieldObject) override {
         GameObject* control = gui->CreatePivot(parent);
         control->AddComponent<Sizeable>();
         control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
@@ -224,7 +224,7 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
         this->field = static_cast<bool*>(field);
     }
 
-    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent, GameObject* fieldObject) override {
     
         control = gui->CreatePivot(parent);
         control->AddComponent<Sizeable>();
@@ -388,7 +388,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         menu = 0;
     }
 
-    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent, GameObject* fieldObject) override {
     
         this->parent = parent;
     
@@ -553,15 +553,18 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
     GameObject* control;
     GameObject* parent;
     GameObject* label;
+    
+    GameObject* fieldObject;
 
     void SetField(void* field) override {
         handle = static_cast<GameObjectHandle*>(field);
         menu = 0;
     }
 
-    void Initialize(const std::string& name, Gui* gui, GameObject* parent) override {
+    void Initialize(const std::string& name, Gui* gui, GameObject* parent, GameObject* fieldObject) override {
     
         this->parent = parent;
+        this->fieldObject = fieldObject;
     
         control = gui->CreateControl(parent);
         control->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Horizontal;
@@ -632,7 +635,10 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
     };
     
     void MenuClicked() {
-        if (!parent->World()->GetPaths) {
+        
+        GameWorld* world = fieldObject->World();
+    
+        if (!world->GetPaths) {
             return;
         }
         
@@ -640,14 +646,10 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
             menu->Remove();
         }
         
-        GameWorld* world = parent->World();
-        
         std::vector<std::string> guids;
         std::vector<std::string> paths;
         world->GetPaths(guids, paths);
         
-        
-    
         menu = gui->CreateControl(0, "TextBox", 0, {200,200});
         menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
         menu->GetComponent<Transform>()->Position = control->GetComponent<Transform>()->World().TransformPosition(0);
@@ -702,7 +704,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         
         std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
         
-        GameObject* root = parent->World()->TryFindRoot(d.guid);
+        GameObject* root = fieldObject->World()->TryFindRoot(d.guid);
         if (!root) return;
         GameObject* object = root->FindObject(d.objectId);
         
