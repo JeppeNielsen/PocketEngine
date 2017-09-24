@@ -21,8 +21,8 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
         const std::function<bool(GameObject* object)>& predicateFunction,
         const std::function<bool(GameObject*)>& hasChildren,
         const std::function<void(VirtualTreeListSpawner::SpawnedNode& node, GameObject* button, std::string& text)>& OnCreate,
-        const std::function<void(const VirtualTreeListSpawner::SpawnedNode& node, GameObject* button)>& OnRemove
-        ) {
+        const std::function<void(const VirtualTreeListSpawner::SpawnedNode& node, GameObject* button)>& OnRemove,
+        bool showRoot) {
 
     GameObject* pivot;
     GameObject* listBox = gui->CreateListbox(parent, "Window", {1,0}, 200, &pivot);
@@ -34,6 +34,7 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
     
     auto treeView = pivot->AddComponent<VirtualTreeList>();
     treeView->Root = root;
+    treeView->ShowRoot = showRoot;
     if (root) {
         treeView->SetNodeExpanded(root, true);
     }

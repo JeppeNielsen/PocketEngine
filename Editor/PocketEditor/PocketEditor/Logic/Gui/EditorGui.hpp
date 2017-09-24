@@ -25,6 +25,7 @@ public:
         const std::function<bool(Pocket::GameObject* object)>& predicateFunction,
         const std::function<bool(Pocket::GameObject*)>& hasChildren,
         const std::function<void(Pocket::VirtualTreeListSpawner::SpawnedNode& node, Pocket::GameObject* button, std::string& text)>& OnCreate,
-        const std::function<void(const Pocket::VirtualTreeListSpawner::SpawnedNode& node, Pocket::GameObject* button)>& OnRemove
+        const std::function<void(const Pocket::VirtualTreeListSpawner::SpawnedNode& node, Pocket::GameObject* button)>& OnRemove,
+        bool showRoot
         );
 };
