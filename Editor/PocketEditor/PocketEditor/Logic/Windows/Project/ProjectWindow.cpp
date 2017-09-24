@@ -167,7 +167,7 @@ void ProjectWindow::OnCreate() {
         },
         [this] (auto& n, GameObject* button) {
         
-        });
+        }, false);
     
     treeView = treeViewGo->GetComponent<VirtualTreeList>();
     
