@@ -118,7 +118,8 @@ void HierarchyWindow::OnCreate() {
                     }
                 }
             }
-        }
+        },
+        true
     );
     treeView = treeViewGo->GetComponent<VirtualTreeList>();
 }
