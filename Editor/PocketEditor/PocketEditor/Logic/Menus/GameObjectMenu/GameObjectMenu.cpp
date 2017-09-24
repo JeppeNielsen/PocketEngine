@@ -41,9 +41,9 @@ void GameObjectMenu::OnCreate() {
             GameObject* source = o->GetComponent<EditorObject>()->gameObject;
             if (source->IsRoot()) continue;
             source->CreateCopy([] (GameObject* object) {
-                //if (object->Parent() && object->Parent()->GetComponent<Cloner>()) {
-                //    return false;
-                //}
+                if (object->Parent() && object->Parent()->GetComponent<Cloner>()) {
+                    return false;
+                }
                 return true;
             });
          }
@@ -52,6 +52,14 @@ void GameObjectMenu::OnCreate() {
         auto object = context->Project().Worlds.ActiveWorld()->Root()->CreateObject();
         object->AddComponent<Transform>()->Position = {0,0,0};
         object->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
+        object->AddComponent<Renderable>();
+        object->AddComponent<EditorObject>();
+    });
+    
+    menu->AddChild("New Sphere", "S").Clicked.Bind([this] {
+        auto object = context->Project().Worlds.ActiveWorld()->Root()->CreateObject();
+        object->AddComponent<Transform>()->Position = {0,0,0};
+        object->AddComponent<Mesh>()->GetMesh<Vertex>().AddSphere(0, 1, 12, 12);
         object->AddComponent<Renderable>();
         object->AddComponent<EditorObject>();
     });
