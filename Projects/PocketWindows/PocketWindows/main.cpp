@@ -74,9 +74,14 @@ class Game : public GameState<Game> {
 		LitColored.SetValue("LightDirection", Vector3(1, 1, 1).Normalized());
 		LitColored.SetValue("AmbientLight", Colour(0.0f));
 
-
+		
 		cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
 		cube->AddComponent<Rotator>()->rot = { 3,1,0 };
+
+		cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube({ -4,0,0 }, 1);
+		cube->AddComponent<Rotator>()->rot = { 3,1,0 };
+
+
 
 		auto& verts = cube->GetComponent<Mesh>()->GetMesh<Vertex>().vertices;
 		int counter = 0;
@@ -88,8 +93,8 @@ class Game : public GameState<Game> {
 		Input.ButtonDown.Bind(this, &Game::KeyDown);
 	}
 
-	void KeyDown(std::string key) {
-		if (key == "Esc") {
+	void KeyDown(ButtonEvent key) {
+		if (key.Id == "Esc") {
 			exit(0);
 		}
 	}
