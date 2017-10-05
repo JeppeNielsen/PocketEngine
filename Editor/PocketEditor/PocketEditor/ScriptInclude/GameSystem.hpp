@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <string>
 #include "Property.hpp"
 
 /*namespace Pocket {
@@ -105,4 +106,61 @@ protected:
     }
 };
 
+}
+
+
+
+namespace Pocket {
+  class IGameObjectHandleRetriever;
+}
+
+extern "C" Pocket::IGameObjectHandleRetriever* SetGameObjectHandleRetriever(Pocket::IGameObjectHandleRetriever* ret);
+
+namespace Pocket {
+    class GameWorld;
+    
+    class IGameObjectHandleRetriever {
+    public:
+        virtual GameObject* Get(int index, int version, int rootId, std::string sceneGuid) = 0;
+    };
+    
+    static IGameObjectHandleRetriever* gameObjectHandleRetriever = nullptr;
+    
+    class GameObjectHandle {
+    public:
+        inline bool operator ==(const GameObjectHandle &other) const{
+            return !(index!=other.index || version!=other.version || rootId!=other.version || sceneGuid!=other.sceneGuid);
+        }
+        
+        inline  bool operator !=(const GameObjectHandle &other) const{
+            return (index!=other.index || version!=other.version || rootId!=other.version || sceneGuid!=other.sceneGuid);
+        }
+        
+        GameObjectHandle() : world(0), index(-1) {}
+        
+        GameObject* Get() {
+            return SetGameObjectHandleRetriever(nullptr)->Get(index, version, rootId, sceneGuid);
+        }
+
+        Event<> Changed;
+    private:
+    
+        GameWorld* world;
+        int index;
+        int version;
+        int rootId;
+        std::string sceneGuid;
+        
+        explicit operator bool() {
+            return operator->();
+        }
+        
+        GameObject* operator->() {
+            return Get();
+        }
+        
+        GameObject* operator()() {
+            return Get();
+        }
+    };
 }
