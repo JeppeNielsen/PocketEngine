@@ -12,29 +12,34 @@
 
 using namespace Pocket;
 
-BezierCurve3::BezierCurve3() { nodes.Extrapolate = true; }
-BezierCurve3::~BezierCurve3() {}
+BezierCurve3::BezierCurve3() { }
+BezierCurve3::~BezierCurve3() { }
 
 void BezierCurve3::Add(float position, const Vector3& value) {
     Add(position, value, value, value);
 }
 
 void BezierCurve3::Add(float position, const Vector3& value, const Vector3& leftTangent, const Vector3& rightTangent) {
-    Node n;
-    n.value = value;
-    n.leftTangent = leftTangent;
-    n.rightTangent = rightTangent;
-    nodes.Add(n, position);
+    nodes.AddNode(position, {
+        value,
+        leftTangent,
+        rightTangent
+    });
 }
 
 Vector3 BezierCurve3::Evaluate(float position) {
-    if (nodes.Nodes().empty()) return position;
-    const NodeLine<Node>::Result& result = nodes.Get(position);
-    return Vector3(
-                   MathHelper::Bezier(result.Source.value.x, result.Source.rightTangent.x, result.Dest.value.x, result.Dest.leftTangent.x, result.t),
-                   MathHelper::Bezier(result.Source.value.y, result.Source.rightTangent.y, result.Dest.value.y, result.Dest.leftTangent.y, result.t),
-                   MathHelper::Bezier(result.Source.value.z, result.Source.rightTangent.z, result.Dest.value.z, result.Dest.leftTangent.z, result.t)
-                   );
+    if (nodes.Count() == 0) {
+        return Vector3(0,0,0);
+    }
+    
+    Vector3 result;
+    nodes.Evaluate(position, [&result](float t, const Node& a, const Node&b) {
+        result.x = MathHelper::Bezier(a.value.x, a.rightTangent.x, b.value.x, b.leftTangent.x, t);
+        result.y = MathHelper::Bezier(a.value.y, a.rightTangent.y, b.value.y, b.leftTangent.y, t);
+        result.z = MathHelper::Bezier(a.value.z, a.rightTangent.z, b.value.z, b.leftTangent.z, t);
+    });
+
+    return result;
 }
 
 Matrix4x4 BezierCurve3::GetWorld(float position, const Vector3& up) {

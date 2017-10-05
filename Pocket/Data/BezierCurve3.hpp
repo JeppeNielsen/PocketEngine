@@ -8,10 +8,10 @@
 
 
 #pragma once
-#include "NodeLine.hpp"
+#include "Timeline.hpp"
 #include "Vector3.hpp"
 #include "Matrix4x4.hpp"
-
+#include "TypeInfo.hpp"
 
 namespace Pocket {
     class BezierCurve3 {
@@ -30,8 +30,18 @@ namespace Pocket {
             Vector3 value;
             Vector3 leftTangent;
             Vector3 rightTangent;
+            
+            TYPE_FIELDS_BEGIN
+            TYPE_FIELD(value)
+            TYPE_FIELD(leftTangent)
+            TYPE_FIELD(rightTangent)
+            TYPE_FIELDS_END
         };
         
-        NodeLine<Node> nodes;
+        Timeline<Node> nodes;
+        
+        TYPE_FIELDS_BEGIN
+        TYPE_FIELD(nodes)
+        TYPE_FIELDS_END
     };
 }
