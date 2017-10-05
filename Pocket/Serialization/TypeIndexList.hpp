@@ -11,6 +11,7 @@
 #include <map>
 #include <string>
 #include "Property.hpp"
+#include "Timeline.hpp"
 
 namespace Pocket {
 
@@ -28,6 +29,7 @@ class TypeInfo;
        AddInternal<T>();
        AddInternal<std::vector<T>>();
        AddInternal<Property<T>>();
+       AddInternal<Timeline<T>>();
     }
     
     void AddToTypeInfo(TypeInfo* info, int index, IFieldInfo* fieldInfo) {
