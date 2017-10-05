@@ -18,6 +18,7 @@ namespace Pocket {
 
 class TypeInfo;
 class ScriptComponent;
+class IGameObjectHandleRetriever;
     
 class ScriptWorld {
 public:
@@ -127,6 +128,7 @@ private:
     typedef const char* (*GetComponentName)(int);
     typedef int* (*GetSystems)();
     typedef void (*DeleteGetSystems)(int*);
+    typedef Pocket::IGameObjectHandleRetriever* (*SetGameObjectHandleRetriever)(IGameObjectHandleRetriever*);
     
     CreateSystem createSystem;
     CountSystems countSystems;
@@ -144,7 +146,11 @@ private:
     GetSystems getSystems;
     DeleteGetSystems deleteGetSystems;
     
+    SetGameObjectHandleRetriever setGameObjectHandleRetriever;
+    
     ScriptData data;
+    
+    std::unique_ptr<IGameObjectHandleRetriever> handleRetriever;
     
 public:
     friend class ScriptComponent;

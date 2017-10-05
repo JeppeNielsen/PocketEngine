@@ -14,6 +14,7 @@
 #include "FileReader.hpp"
 #include "StringHelper.hpp"
 #include "FileHelper.hpp"
+#include "GameObjectHandle.hpp"
 
 using namespace std;
 using namespace Pocket;
@@ -24,6 +25,7 @@ ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1), componentCount(0
     Types.Add<float>();
     Types.Add<double>();
     Types.Add<std::string>();
+    Types.Add<GameObjectHandle>();
 }
 
 string ScriptWorld::ExtractHeaderPath(const std::string &headerFile) {
@@ -408,6 +410,14 @@ bool ScriptWorld::LoadLib() {
         return false;
     }
     
+    setGameObjectHandleRetriever = (SetGameObjectHandleRetriever) dlsym(libHandle, "SetGameObjectHandleRetriever");
+    dlsym_error = dlerror();
+    if (dlsym_error) {
+        cerr << "Cannot load symbol 'SetGameObjectHandleRetriever': " << dlsym_error << '\n';
+        dlclose(libHandle);
+        return false;
+    }
+    
     componentCount = countComponents();
     
     int* scriptSystemsPtr = getSystems();
@@ -656,6 +666,16 @@ void ScriptWorld::WriteMainComponents(std::ofstream &file) {
         file<<"   }"<<std::endl;
         file<<"}"<<std::endl;
     }
+    
+    {
+       file<<"extern \"C\" Pocket::IGameObjectHandleRetriever* SetGameObjectHandleRetriever(Pocket::IGameObjectHandleRetriever* ret) {"<<std::endl;
+       file << " static Pocket::IGameObjectHandleRetriever* retriever = nullptr; " << std::endl;
+       file << " if (ret) { "<<std::endl;
+       file << "    retriever = ret; "<<std::endl;
+       file << " }"<<std::endl;
+       file << " return retriever;"<<std::endl;
+       file<<"}"<<std::endl;
+    }
 
     file<<std::endl;
 }
@@ -679,7 +699,7 @@ void ScriptWorld::WriteMainSerializedComponents(std::ofstream &file) {
                 }
                 
                 for(auto& field : uniqueFields) {
-                    file<<"	      info->AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
+                    file<<"	      info->AddScriptField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
                 }
                 file<<"      return info;"<<std::endl;
                 
@@ -1186,6 +1206,13 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         o->activeComponents.Resize(endComponentIndex);
         o->enabledComponents.Resize(endComponentIndex);
     });
+    
+    if (setGameObjectHandleRetriever) {
+        handleRetriever = std::make_unique<GameObjectHandleRetriever>();
+        GameObjectHandleRetriever* ptr = static_cast<GameObjectHandleRetriever*>(handleRetriever.get());
+        ptr->world = &world;
+        setGameObjectHandleRetriever(ptr);
+    }
 
     return true;
 }
@@ -1244,5 +1271,3 @@ int ScriptWorld::ComponentCount() { return componentCount; }
 template<> void* Container<ScriptComponent>::Get(int index) {
     return entries[index].data;
 }
-
-
