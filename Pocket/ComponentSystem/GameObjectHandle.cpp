@@ -107,3 +107,14 @@ void GameObjectHandle::SetWorld(Pocket::GameWorld *world) {
 const std::string& GameObjectHandle::SceneGuid() { return sceneGuid; }
 
 bool GameObjectHandle::HasRoot() { return world !=nullptr; }
+
+GameObject* GameObjectHandleRetriever::Get(int index, int version, int rootId, std::string sceneGuid) {
+    GameObjectHandle handle;
+    handle.SetWorld(world);
+    handle.index = index;
+    handle.version = version;
+    handle.rootId = rootId;
+    handle.sceneGuid = sceneGuid;
+    return handle.Get();
+}
+

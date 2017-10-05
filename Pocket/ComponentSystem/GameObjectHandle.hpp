@@ -13,6 +13,18 @@
 #include "TypeInterpolator.hpp"
 
 namespace Pocket {
+
+    class IGameObjectHandleRetriever {
+    public:
+        virtual GameObject* Get(int index, int version, int rootId, std::string sceneGuid) = 0;
+    };
+    
+    class GameObjectHandleRetriever : public IGameObjectHandleRetriever {
+        public:
+            GameWorld* world;
+            GameObject* Get(int index, int version, int rootId, std::string sceneGuid);
+    };
+
     class GameObjectHandle {
     public:
         GameObjectHandle();
@@ -68,6 +80,7 @@ namespace Pocket {
         std::string sceneGuid;
         
         friend class GameWorld;
+        friend class GameObjectHandleRetriever;
     };
     
     template<>
