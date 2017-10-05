@@ -761,4 +761,46 @@ struct JsonSerializer<FieldInfoTimelineData<S>> {
     }
 };
 
+template<typename S>
+struct JsonSerializer<Timeline<S>> {
+
+    static void Serialize(std::string& key, const Timeline<S>& value, minijson::object_writer& writer) {
+        minijson::object_writer object = writer.nested_object(key.c_str());
+        std::string keys = "keys";
+        std::string values = "values";
+        
+        JsonSerializer<std::vector<float>>::Serialize(keys, value.keys, object);
+        JsonSerializer<std::vector<S>>::Serialize(values, value.values, object);
+        object.close();
+    }
+    
+    static void Serialize(const Timeline<S>& value, minijson::array_writer& writer) {
+        JsonSerializer<std::vector<float>>::Serialize(value.keys, writer);
+        JsonSerializer<std::vector<S>>::Serialize(value.values, writer);
+    }
+    
+    static void Deserialize(minijson::value& value, Timeline<S>* field, minijson::istream_context& context) {
+        try {
+            minijson::parse_object(context, [&] (const char* name, minijson::value v) {
+                std::string n = std::string(name);
+                if (n == "keys") {
+                    JsonSerializer<std::vector<float>>::Deserialize(v, &field->keys, context);
+                } else if (n == "values") {
+                    JsonSerializer<std::vector<S>>::Deserialize(v, &field->values, context);
+                }
+            });
+        } catch (std::exception e) {
+            std::cout<< e.what() << std::endl;
+        }
+    }
+};
+
+
+
+
+
+
+
+
+
 }
