@@ -593,7 +593,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
     
     void UpdateLabel() {
         if (!handle->HasRoot()) {
-            handle->SetRoot(parent->Root());
+            handle->SetRoot(fieldObject);
         }
         GameObject* target = handle->operator->();
         
