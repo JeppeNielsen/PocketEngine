@@ -19,7 +19,6 @@ TouchSystem::~TouchSystem() { }
 void TouchSystem::Initialize() {
     octree = root->CreateSystem<OctreeSystem>();
     cameras = root->CreateSystem<TouchSystem::CameraSystem>();
-    root->CreateSystem<OrderableSystem>();
 
     root->Input().TouchDown.Bind(this, &TouchSystem::TouchDown);
     root->Input().TouchUp.Bind(this, &TouchSystem::TouchUp);

@@ -25,7 +25,6 @@ namespace Pocket {
         using OctreeSystem = OctreeSystem<Touchable>;
         
         struct CameraSystem : GameSystem<Transform, Camera> {};
-        struct OrderableSystem : GameSystem<Orderable> {};
         
     public:
         
