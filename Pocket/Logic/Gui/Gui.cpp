@@ -43,6 +43,9 @@ void Gui::Initialize() {
     root->CreateSystem<PanelSystem>()->Order = -1;
     root->CreateSystem<PanelAreaSystem>()->Order = -1;
     root->CreateSystem<TouchCancelSystem>();
+    
+    root->CreateSystem<HoverSystem>();
+    root->CreateSystem<ScrollWheelMoverSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
@@ -217,6 +220,7 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     GameObject* listbox = CreateControl(parent, spriteName, position, size);
     listbox->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
     listbox->GetComponent<Touchable>()->ClickThrough = false;
+    listbox->AddComponent<Hoverable>();
     CreateClipper(listbox, true);
     GameObject* p = CreatePivot(listbox);
     p->AddComponent<Sizeable>(listbox);
@@ -225,6 +229,10 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     //p->AddComponent<DraggableMotion>();
     p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
     p->GetComponent<Velocity>()->Friction = 5;
+    p->AddComponent<Hoverable>(listbox);
+    p->AddComponent<ScrollWheelMover>()->Movement = {0,-100,0};
+    p->GetComponent<ScrollWheelMover>()->Speed = 1.0f;
+    
     //Limitable* limitable = p->AddComponent<Limitable>();
     //limitable->Size = p->GetComponent<Sizeable>();
     //limitable->View = listbox->GetComponent<Sizeable>();

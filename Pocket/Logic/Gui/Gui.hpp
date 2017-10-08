@@ -31,6 +31,8 @@
 #include "PanelDropSystem.hpp"
 #include "PanelAreaSystem.hpp"
 #include "TouchCancelSystem.hpp"
+#include "HoverSystem.hpp"
+#include "ScrollWheelMoverSystem.hpp"
 
 namespace Pocket {
     class Gui : public GameConcept {
