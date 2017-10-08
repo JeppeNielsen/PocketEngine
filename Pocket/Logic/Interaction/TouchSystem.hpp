@@ -16,6 +16,7 @@
 #include "Touchable.hpp"
 #include "Orderable.hpp"
 #include <set>
+#include "Picker.hpp"
 
 namespace Pocket {
 
@@ -25,6 +26,8 @@ namespace Pocket {
         using OctreeSystem = OctreeSystem<Touchable>;
         
         struct CameraSystem : GameSystem<Transform, Camera> {};
+        
+        Picker picker;
         
     public:
         
@@ -51,39 +54,6 @@ namespace Pocket {
         CameraSystem* cameras;
         OctreeSystem* octree;
         
-        ObjectCollection touchableList;
-        
-        struct TouchableObject {
-            TouchableObject(GameObject* object);
-            
-            Transform* transform;
-            Mesh* mesh;
-            Touchable* touchable;
-            Orderable* orderable;
-            int clip;
-        };
-        
-        using Clippers = std::vector<TouchableObject*>;
-        
-        Clippers clippers;
-        
-        static bool SortClippers(const TouchableObject *a, const TouchableObject *b);
-        
-        TouchableObject* FindClipper(TouchableObject *fromThis);
-        
-        struct Intersection {
-            GameObject* object;
-            float distanceToPick;
-            float u, v;
-            size_t triIndex;
-            Vector3 normal;
-            TouchableObject* touchable;
-            Ray localRay;
-        };
-        
-        using Intersections = std::vector<Intersection>;
-        Intersections intersections;
-        
         typedef std::vector<TouchData> Touched;
         
         Touched touches[12];
@@ -95,17 +65,15 @@ namespace Pocket {
         Touched equeuedDowns;
         
     public:
-        void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
         void SetCameras(CameraSystem* cameraSystem);
         CameraSystem* GetCameras();
         CameraSystem* GetOriginalCameras();
+        void FindTouchedObjects(Touched& list, const TouchEvent& e, bool forceClickThrough = false);
     private:
         
-        void FindTouchedObjectsFromCamera(GameObject* cameraObject, Touched& list, const TouchEvent& e, bool forceClickThrough);
         using CancelledTouchables = std::set<Touchable*>;
         CancelledTouchables cancelledTouchables;
         
-        static bool SortIntersections(const Intersection &a, const Intersection &b);
         void AddToTouchList(Touched &from, Touched &to);
         bool IsTouchInList(const Pocket::TouchData &touchData, const Touched &list);
         void TouchableCancelled(Pocket::Touchable *touchable);
