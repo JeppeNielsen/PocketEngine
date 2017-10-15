@@ -67,6 +67,7 @@ GameWorld& RunningWorld::World() {
 
 void RunningWorld::Destroy() {
     editorScene.Destroy();
+    scriptWorld->RemoveGameWorld(world);
 }
 
 GameObject* RunningWorld::EditorRoot() {

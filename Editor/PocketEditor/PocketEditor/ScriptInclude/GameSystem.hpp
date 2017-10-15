@@ -121,7 +121,7 @@ namespace Pocket {
     
     class IGameObjectHandleRetriever {
     public:
-        virtual GameObject* Get(int index, int version, int rootId, std::string sceneGuid) = 0;
+        virtual GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) = 0;
     };
     
     static IGameObjectHandleRetriever* gameObjectHandleRetriever = nullptr;
@@ -139,7 +139,7 @@ namespace Pocket {
         GameObjectHandle() : world(0), index(-1) {}
         
         GameObject* Get() {
-            return SetGameObjectHandleRetriever(nullptr)->Get(index, version, rootId, sceneGuid);
+            return SetGameObjectHandleRetriever(nullptr)->Get(world, index, version, rootId, sceneGuid);
         }
 
         Event<> Changed;

@@ -1,49 +1,71 @@
 GameWorld::OnGetTypeInfo = [] (int componentID, GameObject::ComponentInfo& info) {
  static std::map<int, std::function<TypeInfo(GameObject*)>> componentToFunction; 
  if (!componentToFunction.empty()) {
-componentToFunction[GameIDHelper::GetComponentID<KillTrigger>()] = [](GameObject* object) -> TypeInfo {
-KillTrigger* component = object->GetComponent<KillTrigger>();
+componentToFunction[GameIDHelper::GetComponentID<Road>()] = [](GameObject* object) -> TypeInfo {
+Road* component = object->GetComponent<Road>();
 TypeInfo typeInfo;
-	      typeInfo.name = "KillTrigger";
+	      typeInfo.name = "Road";
+	      typeInfo.AddField(component->Origin, "Origin");
+	      typeInfo.AddField(component->positions, "positions");
+	      typeInfo.AddField(component->rotations, "rotations");
+	      typeInfo.AddField(component->widths, "widths");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<RoadGenerator>()] = [](GameObject* object) -> TypeInfo {
+RoadGenerator* component = object->GetComponent<RoadGenerator>();
+TypeInfo typeInfo;
+	      typeInfo.name = "RoadGenerator";
+	      typeInfo.AddField(component->frequency, "frequency");
+	      typeInfo.AddField(component->time, "time");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<RoadMovement>()] = [](GameObject* object) -> TypeInfo {
+RoadMovement* component = object->GetComponent<RoadMovement>();
+TypeInfo typeInfo;
+	      typeInfo.name = "RoadMovement";
+	      typeInfo.AddField(component->speed, "speed");
+return typeInfo;
+};
+componentToFunction[GameIDHelper::GetComponentID<RoadOrigin>()] = [](GameObject* object) -> TypeInfo {
+RoadOrigin* component = object->GetComponent<RoadOrigin>();
+TypeInfo typeInfo;
+	      typeInfo.name = "RoadOrigin";
 	      typeInfo.AddField(component->variable, "variable");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<RectCollider>()] = [](GameObject* object) -> TypeInfo {
-RectCollider* component = object->GetComponent<RectCollider>();
+componentToFunction[GameIDHelper::GetComponentID<RoadPosition>()] = [](GameObject* object) -> TypeInfo {
+RoadPosition* component = object->GetComponent<RoadPosition>();
 TypeInfo typeInfo;
-	      typeInfo.name = "RectCollider";
-	      typeInfo.AddField(component->Enter, "Enter");
-	      typeInfo.AddField(component->Exit, "Exit");
-	      typeInfo.AddField(component->collisions, "collisions");
-	      typeInfo.AddField(component->previousCollisions, "previousCollisions");
+	      typeInfo.name = "RoadPosition";
+	      typeInfo.AddField(component->Position, "Position");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<Rotator>()] = [](GameObject* object) -> TypeInfo {
-Rotator* component = object->GetComponent<Rotator>();
+componentToFunction[GameIDHelper::GetComponentID<RoadRenderer>()] = [](GameObject* object) -> TypeInfo {
+RoadRenderer* component = object->GetComponent<RoadRenderer>();
 TypeInfo typeInfo;
-	      typeInfo.name = "Rotator";
-	      typeInfo.AddField(component->speed, "speed");
+	      typeInfo.name = "RoadRenderer";
+	      typeInfo.AddField(component->Depth, "Depth");
+	      typeInfo.AddField(component->origin, "origin");
+	      typeInfo.AddField(component->renderOffset, "renderOffset");
+	      typeInfo.AddField(component->segments, "segments");
+	      typeInfo.AddField(component->vScale, "vScale");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<Score>()] = [](GameObject* object) -> TypeInfo {
-Score* component = object->GetComponent<Score>();
+componentToFunction[GameIDHelper::GetComponentID<Rotatable>()] = [](GameObject* object) -> TypeInfo {
+Rotatable* component = object->GetComponent<Rotatable>();
 TypeInfo typeInfo;
-	      typeInfo.name = "Score";
-	      typeInfo.AddField(component->score, "score");
+	      typeInfo.name = "Rotatable";
+	      typeInfo.AddField(component->angularVelocity, "angularVelocity");
 return typeInfo;
 };
-componentToFunction[GameIDHelper::GetComponentID<ScoreTrigger>()] = [](GameObject* object) -> TypeInfo {
-ScoreTrigger* component = object->GetComponent<ScoreTrigger>();
+componentToFunction[GameIDHelper::GetComponentID<TransformFollower>()] = [](GameObject* object) -> TypeInfo {
+TransformFollower* component = object->GetComponent<TransformFollower>();
 TypeInfo typeInfo;
-	      typeInfo.name = "ScoreTrigger";
-	      typeInfo.AddField(component->scoreToAdd, "scoreToAdd");
-return typeInfo;
-};
-componentToFunction[GameIDHelper::GetComponentID<TransformController>()] = [](GameObject* object) -> TypeInfo {
-TransformController* component = object->GetComponent<TransformController>();
-TypeInfo typeInfo;
-	      typeInfo.name = "TransformController";
-	      typeInfo.AddField(component->speed, "speed");
+	      typeInfo.name = "TransformFollower";
+	      typeInfo.AddField(component->lookAt, "lookAt");
+	      typeInfo.AddField(component->position, "position");
+	      typeInfo.AddField(component->smoothness, "smoothness");
+	      typeInfo.AddField(component->target, "target");
 return typeInfo;
 };
    }

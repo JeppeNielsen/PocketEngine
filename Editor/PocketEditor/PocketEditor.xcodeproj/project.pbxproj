@@ -24,6 +24,11 @@
 		7206DDD71F52AB890069B8E9 /* NewUI.tga in Resources */ = {isa = PBXBuildFile; fileRef = 7206DDD51F52AB890069B8E9 /* NewUI.tga */; };
 		7206DDDB1F53030C0069B8E9 /* AtlasCreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DDD91F53030C0069B8E9 /* AtlasCreator.cpp */; };
 		7206DDDF1F55FD9F0069B8E9 /* EditorGui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DDDD1F55FD9F0069B8E9 /* EditorGui.cpp */; };
+		7206DE111F8973DE0069B8E9 /* Hoverable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE0F1F8973DE0069B8E9 /* Hoverable.cpp */; };
+		7206DE151F8AAA6D0069B8E9 /* Picker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE131F8AAA6D0069B8E9 /* Picker.cpp */; };
+		7206DE181F8ABDD20069B8E9 /* HoverSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE161F8ABDD20069B8E9 /* HoverSystem.cpp */; };
+		7206DE1B1F8AC12F0069B8E9 /* ScrollWheelMover.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE191F8AC12F0069B8E9 /* ScrollWheelMover.cpp */; };
+		7206DE1E1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE1C1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp */; };
 		720B3D3F1D8B2424006195E8 /* WorldTab.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D3D1D8B2424006195E8 /* WorldTab.cpp */; };
 		720B3D431D8DD2B9006195E8 /* Cloner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D411D8DD2B9006195E8 /* Cloner.cpp */; };
 		720B3D461D8DD424006195E8 /* ClonerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720B3D441D8DD424006195E8 /* ClonerSystem.cpp */; };
@@ -521,6 +526,16 @@
 		7206DDDA1F53030C0069B8E9 /* AtlasCreator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AtlasCreator.hpp; sourceTree = "<group>"; };
 		7206DDDD1F55FD9F0069B8E9 /* EditorGui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorGui.cpp; sourceTree = "<group>"; };
 		7206DDDE1F55FD9F0069B8E9 /* EditorGui.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = EditorGui.hpp; sourceTree = "<group>"; };
+		7206DE0F1F8973DE0069B8E9 /* Hoverable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hoverable.cpp; sourceTree = "<group>"; };
+		7206DE101F8973DE0069B8E9 /* Hoverable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hoverable.hpp; sourceTree = "<group>"; };
+		7206DE131F8AAA6D0069B8E9 /* Picker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Picker.cpp; sourceTree = "<group>"; };
+		7206DE141F8AAA6D0069B8E9 /* Picker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Picker.hpp; sourceTree = "<group>"; };
+		7206DE161F8ABDD20069B8E9 /* HoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoverSystem.cpp; sourceTree = "<group>"; };
+		7206DE171F8ABDD20069B8E9 /* HoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HoverSystem.hpp; sourceTree = "<group>"; };
+		7206DE191F8AC12F0069B8E9 /* ScrollWheelMover.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollWheelMover.cpp; sourceTree = "<group>"; };
+		7206DE1A1F8AC12F0069B8E9 /* ScrollWheelMover.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMover.hpp; sourceTree = "<group>"; };
+		7206DE1C1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollWheelMoverSystem.cpp; sourceTree = "<group>"; };
+		7206DE1D1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMoverSystem.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -2532,6 +2547,12 @@
 		729950441C99F76000DAAE5D /* Interaction */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE0F1F8973DE0069B8E9 /* Hoverable.cpp */,
+				7206DE101F8973DE0069B8E9 /* Hoverable.hpp */,
+				7206DE161F8ABDD20069B8E9 /* HoverSystem.cpp */,
+				7206DE171F8ABDD20069B8E9 /* HoverSystem.hpp */,
+				7206DE131F8AAA6D0069B8E9 /* Picker.cpp */,
+				7206DE141F8AAA6D0069B8E9 /* Picker.hpp */,
 				729950451C99F76000DAAE5D /* Touchable.cpp */,
 				729950461C99F76000DAAE5D /* Touchable.hpp */,
 				729950471C99F76000DAAE5D /* TouchableCanceller.hpp */,
@@ -2564,6 +2585,10 @@
 				7299505C1C99F76000DAAE5D /* Velocity.hpp */,
 				7299505D1C99F76000DAAE5D /* VelocitySystem.cpp */,
 				7299505E1C99F76000DAAE5D /* VelocitySystem.hpp */,
+				7206DE191F8AC12F0069B8E9 /* ScrollWheelMover.cpp */,
+				7206DE1A1F8AC12F0069B8E9 /* ScrollWheelMover.hpp */,
+				7206DE1C1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp */,
+				7206DE1D1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.hpp */,
 			);
 			path = Movement;
 			sourceTree = "<group>";
@@ -3959,6 +3984,7 @@
 				729953D11C99F76100DAAE5D /* TimeMeasurer.cpp in Sources */,
 				729954B61C99F76100DAAE5D /* btGeneric6DofSpringConstraint.cpp in Sources */,
 				7287F11B1C9B56E6005D05FA /* Rect.cpp in Sources */,
+				7206DE1E1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp in Sources */,
 				7299541D1C99F76100DAAE5D /* SelectedColorerSystem.cpp in Sources */,
 				729954421C99F76100DAAE5D /* b2Settings.cpp in Sources */,
 				72A4AFBF1E491A7E00A856F5 /* FileHelper.cpp in Sources */,
@@ -4074,6 +4100,7 @@
 				729954191C99F76100DAAE5D /* Selectable.cpp in Sources */,
 				729954741C99F76100DAAE5D /* btUnionFind.cpp in Sources */,
 				727B38951E2B9C5300531B62 /* ftbase.c in Sources */,
+				7206DE1B1F8AC12F0069B8E9 /* ScrollWheelMover.cpp in Sources */,
 				7299541A1C99F76100DAAE5D /* SelectableCollection.cpp in Sources */,
 				7299544B1C99F76100DAAE5D /* b2ContactSolver.cpp in Sources */,
 				729954751C99F76100DAAE5D /* SphereTriangleDetector.cpp in Sources */,
@@ -4097,6 +4124,7 @@
 				729953E41C99F76100DAAE5D /* FieldEditorSystem.cpp in Sources */,
 				729953F81C99F76100DAAE5D /* SpriteMeshSystem.cpp in Sources */,
 				729954001C99F76100DAAE5D /* DraggableMotionSystem.cpp in Sources */,
+				7206DE181F8ABDD20069B8E9 /* HoverSystem.cpp in Sources */,
 				7299542B1C99F76100DAAE5D /* Quaternion.cpp in Sources */,
 				7299540E1C99F76100DAAE5D /* Camera.cpp in Sources */,
 				72B4925E1DCE59D10063518A /* GameIdHelper.cpp in Sources */,
@@ -4278,6 +4306,7 @@
 				7299549D1C99F76100DAAE5D /* btGImpactCollisionAlgorithm.cpp in Sources */,
 				729954801C99F76100DAAE5D /* btConvexInternalShape.cpp in Sources */,
 				7220F6331E6A03040063EAD5 /* EditorScene.cpp in Sources */,
+				7206DE111F8973DE0069B8E9 /* Hoverable.cpp in Sources */,
 				729954B51C99F76100DAAE5D /* btGeneric6DofConstraint.cpp in Sources */,
 				72C9B2A81E9AC46F00033C56 /* AutocompleterEntry.cpp in Sources */,
 				729954401C99F76100DAAE5D /* b2BlockAllocator.cpp in Sources */,
@@ -4399,6 +4428,7 @@
 				729954D91C99F76100DAAE5D /* btSoftBody.cpp in Sources */,
 				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,
 				7299543B1C99F76100DAAE5D /* b2PairManager.cpp in Sources */,
+				7206DE151F8AAA6D0069B8E9 /* Picker.cpp in Sources */,
 				72D736561D7B64A2001E2047 /* GameMenu.cpp in Sources */,
 				72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */,
 				729953F91C99F76100DAAE5D /* SpriteTextureSystem.cpp in Sources */,

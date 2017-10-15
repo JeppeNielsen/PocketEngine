@@ -35,6 +35,7 @@ Project::Project() {
             "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Input/InputController.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Movement/Velocity.hpp",
+            "/Projects/PocketEngine/Pocket/Math/MathHelper.hpp",
         };
     
     /*
