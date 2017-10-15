@@ -634,6 +634,14 @@ void GameObject::AddComponent(AddReferenceComponentList& addReferenceComponents,
             if (componentInfo.getTypeInfo) {
                 auto type = componentInfo.getTypeInfo(this);
                 type.Deserialize(context);
+                
+                for(auto& f : type.fields) {
+                    if (f->GetTypeIndex() == TypeIndexList::Index<GameObjectHandle>()) {
+                        FieldInfo<GameObjectHandle>* handleField = static_cast<FieldInfo<GameObjectHandle>*>(f.get());
+                        handleField->field->SetWorld(World());
+                    }
+                }
+                
             } else {
                 minijson::ignore(context);
             }
