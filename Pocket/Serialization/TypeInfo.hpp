@@ -80,6 +80,7 @@ public:
     virtual IFieldEditor* CreateEditor() = 0;
     virtual void SetFromOther(IFieldInfo* other) = 0;
     virtual std::unique_ptr<IFieldInfoTimeline> CreateTimeline() = 0;
+    virtual int GetTypeIndex() = 0;
 };
 
 template<class T>
@@ -115,6 +116,10 @@ public:
     
     std::unique_ptr<IFieldInfoTimeline> CreateTimeline() override {
         return TimelineCreator<T>::CreateTimeline();
+    }
+
+    int GetTypeIndex() override {
+        return TypeIndexList::Index<T>();
     }
 
     friend class TypeInfo;
@@ -387,6 +392,9 @@ public:
         return nullptr;
     }
 
+    int GetTypeIndex() override {
+        return 0;
+    }
 };
 
 
