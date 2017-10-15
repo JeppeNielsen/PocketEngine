@@ -99,8 +99,8 @@ void GameWorld::RemoveSystemType(SystemId systemId) {
         IGameSystem* system = scene->systemsIndexed[systemId];
         if (!system) return;
         if (system->ObjectCount()>0) {
-            objects.Iterate([&systemInfo, system] (GameObject* object) {
-                if (systemInfo.bitset.Contains(object->enabledComponents)) {
+            scene->IterateObjects([&systemInfo, system] (GameObject* object) {
+                if ( systemInfo.bitset.Contains(object->enabledComponents)) {
                     system->ObjectRemoved(object);
                     system->RemoveObject(object);
                 }
