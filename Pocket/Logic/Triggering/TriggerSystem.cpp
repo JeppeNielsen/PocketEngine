@@ -13,7 +13,6 @@
 using namespace Pocket;
 
 void TriggerSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Trigger>()->Source.SetRoot(root);
     object->GetComponent<Trigger>()->Source.Changed.Bind(this, &TriggerSystem::CloneSourceChanged, object);
     if (Objects().size() == 1) {
         variablesRoot = root->World()->CreateRoot();

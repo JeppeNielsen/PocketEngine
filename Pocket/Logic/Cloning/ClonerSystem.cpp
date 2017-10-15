@@ -19,7 +19,6 @@ void ClonerSystem::Initialize() {
 }
 
 void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Cloner>()->Source.SetRoot(root);
     object->GetComponent<Cloner>()->Source.Changed.Bind(this, &ClonerSystem::CloneSourceChanged, object);
     if (object->Children().empty()) {
         CloneSourceChanged(object);
@@ -51,7 +50,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
     }
     GameObject* source = cloner->Source;
     if (!source) return;
-    source->Enabled = false;
+    //source->Enabled = false;
     GameObject* child = object->CreateChildClone(source);
     std::vector<std::shared_ptr<IFieldInfo>> variables;
     FindVariables(variables, object, child);

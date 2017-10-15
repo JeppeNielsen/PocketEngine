@@ -12,7 +12,6 @@
 using namespace Pocket;
 
 void SpawnerSystem::ObjectAdded(Pocket::GameObject *object) {
-    object->GetComponent<Spawner>()->Source.SetRoot(root);
     object->GetComponent<Spawner>()->Spawn.Changed.Bind(this, &SpawnerSystem::SpawnChanged, object);
 }
 
@@ -40,7 +39,6 @@ void SpawnerSystem::SpawnChanged(Pocket::GameObject *object) {
 void SpawnerSystem::Update(float dt) {
     for(auto o : spawningObjects) {
         Spawner* spawner = o->GetComponent<Spawner>();
-        spawner->Source.SetRoot(root);
         if (spawner->Source) {
             spawner->Source()->Enabled = false;
             auto clone = o->CreateChildClone(spawner->Source);

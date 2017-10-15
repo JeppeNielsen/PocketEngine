@@ -52,7 +52,6 @@ void SceneManagerSystem::ScenesSet(Pocket::GameObject *object) {
     
     for(auto s : scenesSet) {
         auto& handle = s.second;
-        handle.SetRoot(root);
         root->World()->SetLayerScene(s.first, handle());
     }
 }
