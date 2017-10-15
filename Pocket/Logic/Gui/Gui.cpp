@@ -44,7 +44,7 @@ void Gui::Initialize() {
     root->CreateSystem<PanelAreaSystem>()->Order = -1;
     root->CreateSystem<TouchCancelSystem>();
     
-    root->CreateSystem<HoverSystem>();
+    hoverSystem = root->CreateSystem<HoverSystem>();
     root->CreateSystem<ScrollWheelMoverSystem>();
 }
 
@@ -69,6 +69,7 @@ void Gui::Setup(GameObject *atlas, const Rect &viewport) {
     BoundingBox bounds(0, Vector3(viewport.width * 2.0f, viewport.height * 2.0f, 3000.0f));
     renderer->Octree().SetWorldBounds(bounds);
     touchSystem->Octree().SetWorldBounds(bounds);
+    hoverSystem->Octree().SetWorldBounds(bounds);
     
     camera = root->CreateObject();
     camera->AddComponent<Transform>()->Position = Vector3(0,0,1);
@@ -225,10 +226,10 @@ GameObject* Gui::CreateListbox(GameObject *parent, const std::string &spriteName
     GameObject* p = CreatePivot(listbox);
     p->AddComponent<Sizeable>(listbox);
     p->AddComponent<Touchable>(listbox);
-    p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
+    //p->AddComponent<Draggable>()->Movement = Draggable::MovementMode::YAxis;
     //p->AddComponent<DraggableMotion>();
-    p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
-    p->GetComponent<Velocity>()->Friction = 5;
+    //p->AddComponent<Velocity>()->MinimumSpeedBeforeStop = 5;
+    //p->GetComponent<Velocity>()->Friction = 5;
     p->AddComponent<Hoverable>(listbox);
     p->AddComponent<ScrollWheelMover>()->Movement = {0,-100,0};
     p->GetComponent<ScrollWheelMover>()->Speed = 1.0f;

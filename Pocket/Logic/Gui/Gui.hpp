@@ -71,6 +71,7 @@ namespace Pocket {
         GameObject* camera;
         GameObject* atlas;
         TouchSystem* touchSystem;
+        HoverSystem* hoverSystem;
         TextBoxSystem* textboxSystem;
         Fonts fonts;
     };
