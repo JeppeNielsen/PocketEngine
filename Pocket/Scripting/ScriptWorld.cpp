@@ -26,6 +26,8 @@ ScriptWorld::ScriptWorld() : libHandle(0), baseSystemIndex(-1), componentCount(0
     Types.Add<double>();
     Types.Add<std::string>();
     Types.Add<GameObjectHandle>();
+    
+    handleRetriever = std::make_unique<GameObjectHandleRetriever>();
 }
 
 string ScriptWorld::ExtractHeaderPath(const std::string &headerFile) {
@@ -417,6 +419,8 @@ bool ScriptWorld::LoadLib() {
         dlclose(libHandle);
         return false;
     }
+    
+    setGameObjectHandleRetriever(handleRetriever.get());
     
     componentCount = countComponents();
     
@@ -1194,7 +1198,7 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
                 system->SetIndex(systemIndex);
                 return system;
             };
-            systemInfo.deleteFunction = [this, systemIndex] (IGameSystem* system) {
+            systemInfo.deleteFunction = [this] (IGameSystem* system) {
                 deleteSystem(system);
             };
         });
@@ -1207,13 +1211,6 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         o->enabledComponents.Resize(endComponentIndex);
     });
     
-    if (setGameObjectHandleRetriever) {
-        handleRetriever = std::make_unique<GameObjectHandleRetriever>();
-        GameObjectHandleRetriever* ptr = static_cast<GameObjectHandleRetriever*>(handleRetriever.get());
-        ptr->world = &world;
-        setGameObjectHandleRetriever(ptr);
-    }
-
     return true;
 }
 
