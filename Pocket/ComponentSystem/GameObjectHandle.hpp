@@ -16,15 +16,14 @@ namespace Pocket {
 
     class IGameObjectHandleRetriever {
     public:
-        virtual GameObject* Get(int index, int version, int rootId, std::string sceneGuid) = 0;
+        virtual GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) = 0;
     };
     
     class GameObjectHandleRetriever : public IGameObjectHandleRetriever {
-        public:
-            GameWorld* world;
-            GameObject* Get(int index, int version, int rootId, std::string sceneGuid);
+    public:
+        GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) override;
     };
-
+    
     class GameObjectHandle {
     public:
         GameObjectHandle();
@@ -51,9 +50,7 @@ namespace Pocket {
         
         GameObject* operator() ();
         operator GameObject* ();
-    
-        void SetRoot(const GameObject* root);
-        
+            
         inline friend std::ostream& operator<<(std::ostream& stream, const GameObjectHandle& handle) {
             stream<<handle.sceneGuid<<":"<<handle.rootId;
             return stream;
@@ -81,6 +78,7 @@ namespace Pocket {
         
         friend class GameWorld;
         friend class GameObjectHandleRetriever;
+        friend class GameObject;
     };
     
     template<>

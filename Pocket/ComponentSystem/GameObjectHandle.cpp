@@ -50,12 +50,8 @@ void GameObjectHandle::operator=(const GameObjectHandle& handle) {
     sceneGuid = handle.sceneGuid;
 }
 
-void GameObjectHandle::SetRoot(const Pocket::GameObject* root) {
-    SetWorld(root->scene->world);
-}
-
 void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
-    SetRoot(ptr);
+    SetWorld(ptr->World());
     index = ptr->index;
     rootId = ptr->rootId;
     sceneGuid = ptr->scene->guid;
@@ -108,13 +104,14 @@ const std::string& GameObjectHandle::SceneGuid() { return sceneGuid; }
 
 bool GameObjectHandle::HasRoot() { return world !=nullptr; }
 
-GameObject* GameObjectHandleRetriever::Get(int index, int version, int rootId, std::string sceneGuid) {
+ 
+GameObject* GameObjectHandleRetriever::Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) {
     GameObjectHandle handle;
     handle.SetWorld(world);
     handle.index = index;
     handle.version = version;
     handle.rootId = rootId;
     handle.sceneGuid = sceneGuid;
-    return handle.Get();
+    return handle();
 }
 
