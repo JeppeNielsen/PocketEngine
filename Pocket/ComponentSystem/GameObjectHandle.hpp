@@ -63,12 +63,14 @@ namespace Pocket {
         const std::string& SceneGuid();
         
         bool HasRoot();
+        
+        void SetWorld(GameWorld* world);
     
     private:
     
         void Set(const GameObject* ptr);
         GameObject* Get();
-        void SetWorld(GameWorld* world);
+        
         
         GameWorld* world;
         int index;
