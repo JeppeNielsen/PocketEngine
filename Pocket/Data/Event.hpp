@@ -27,7 +27,7 @@ private:
     int defaultDelegatesCount;
     
     template<typename Obj>
-    struct IDelegateMember : public IDelegate<T...> {
+    struct DelegateMember : public IDelegate<T...> {
         Obj* object;
         void (Obj::*method)(T...);
         
@@ -37,7 +37,7 @@ private:
     };
     
     template<typename Obj, typename Context>
-    struct IDelegateMemberContext : public IDelegate<T...> {
+    struct DelegateMemberContext : public IDelegate<T...> {
         Obj* object;
         Context context;
         void (Obj::*method)(T..., Context);
@@ -47,7 +47,7 @@ private:
         }
     };
     
-    struct IDelegateLambda : public IDelegate<T...> {
+    struct DelegateLambda : public IDelegate<T...> {
         std::function<void(T...)> function;
         void Invoke(T... values) override {
             function(std::forward<T>(values)...);
@@ -112,7 +112,7 @@ public:
     
     template<typename Obj>
     void Bind(Obj* object, void (Obj::*method)(T...)) {
-        IDelegateMember<Obj>* delegate = new IDelegateMember<Obj>();
+        DelegateMember<Obj>* delegate = new DelegateMember<Obj>();
         delegate->type = GetObjectID<Obj>();
         delegate->object = object;
         delegate->method = method;
@@ -122,20 +122,22 @@ public:
     template<typename Obj>
     void Unbind(Obj* object, void (Obj::*method)(T...)) {
         short typeID = GetObjectID<Obj>();
-        for(int i=0; i<delegates.size(); ++i) {
+        int size = (int)delegates.size();
+        for(int i=0; i<size; ++i) {
             auto d = delegates[i];
             if (d->type != typeID) continue;
-            IDelegateMember<Obj>* delegate = (IDelegateMember<Obj>*)(d);
+            DelegateMember<Obj>* delegate = (DelegateMember<Obj>*)(d);
             if (delegate->object != object) continue;
             if (delegate->method != method) continue;
             delegates.erase(delegates.begin() + i);
+            delete d;
             return;
         }
     }
     
     template<typename Obj, typename Context>
     void Bind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
-        IDelegateMemberContext<Obj, Context>* delegate = new IDelegateMemberContext<Obj, Context>();
+        DelegateMemberContext<Obj, Context>* delegate = new DelegateMemberContext<Obj, Context>();
         delegate->type = 10000 + GetObjectID<Obj>() + GetObjectID<Context>() * 10000;
         delegate->object = object;
         delegate->method = method;
@@ -146,21 +148,23 @@ public:
     template<typename Obj, typename Context>
     void Unbind(Obj* object, void (Obj::*method)(T..., Context), Context context) {
         int typeID = 10000 + GetObjectID<Obj>() + GetObjectID<Context>() * 10000;
-        for(int i=0; i<delegates.size(); ++i) {
+        int size = (int)delegates.size();
+        for(int i=0; i<size; ++i) {
             auto d = delegates[i];
             if (d->type != typeID) continue;
-            IDelegateMemberContext<Obj, Context>* delegate = (IDelegateMemberContext<Obj, Context>*)(d);
+            DelegateMemberContext<Obj, Context>* delegate = (DelegateMemberContext<Obj, Context>*)(d);
             if (delegate->object != object) continue;
             if (delegate->method != method) continue;
             if (delegate->context != context) continue;
             delegates.erase(delegates.begin() + i);
+            delete d;
             return;
         }
     }
     
     template<typename Lambda>
     void Bind(Lambda&& lambda) {
-        IDelegateLambda* delegate = new IDelegateLambda();
+        DelegateLambda* delegate = new DelegateLambda();
         delegate->type = -1;
         delegate->function = lambda;
         delegates.push_back(delegate);
