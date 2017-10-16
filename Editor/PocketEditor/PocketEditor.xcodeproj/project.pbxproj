@@ -3856,13 +3856,13 @@
 		72D7364F1D7B5DB0001E2047 /* Menus */ = {
 			isa = PBXGroup;
 			children = (
-				721547651EC8C4D0000305A9 /* ScriptComponents */,
 				72D736501D7B5DBB001E2047 /* BaseMenu.cpp */,
 				72D736511D7B5DBB001E2047 /* BaseMenu.hpp */,
 				721543761EC0F424000305A9 /* ComponentMenu */,
 				723689AE1D89DE1B006480F0 /* FileMenu */,
 				72D736531D7B6496001E2047 /* GameMenu */,
 				72D736571D7CC414001E2047 /* GameObjectMenu */,
+				721547651EC8C4D0000305A9 /* ScriptComponents */,
 			);
 			path = Menus;
 			sourceTree = "<group>";
