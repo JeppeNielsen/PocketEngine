@@ -91,8 +91,8 @@ void Texture::SaveToTga(const std::string &path, GLenum pixelFormat) {
     ASSERT_GL(glBindTexture(GL_TEXTURE_2D, texture));
     unsigned char* pixels = new unsigned char[width * height * 4];
     ASSERT_GL(glGetTexImage(GL_TEXTURE_2D, 0, pixelFormat, GL_UNSIGNED_BYTE, pixels));
-#endif
     ImageLoader::SaveTga(path, pixels, width, height);
+#endif
 }
 
 void Texture::SetRenderTexture(Pocket::RenderTexture *renderTexture, int width, int height) {
