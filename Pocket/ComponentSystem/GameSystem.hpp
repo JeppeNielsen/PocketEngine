@@ -10,6 +10,7 @@
 #include <vector>
 #include <map>
 #include "GameWorld.hpp"
+#include "GameObjectHandle.hpp"
 
 namespace Pocket {
     
