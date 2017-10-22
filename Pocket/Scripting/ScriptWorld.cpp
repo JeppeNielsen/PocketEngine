@@ -792,9 +792,8 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"FileArchive.hpp\""<<std::endl;
     
     //Animation
-    file<<"#include \"TouchAnimatorSystem.hpp\""<<std::endl;
-    file<<"#include \"TransformAnimatorSystem.hpp\""<<std::endl;
-
+    file<<"#include \"AnimatorSystem.hpp\""<<std::endl;
+    
     //Assets
     file<<"#include \"AssetManager.hpp\""<<std::endl;
 
@@ -826,6 +825,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"InputMapperSystem.hpp\""<<std::endl;
 
     //Interaction
+    file<<"#include \"HoverSystem.hpp\""<<std::endl;
     file<<"#include \"TouchCancelSystem.hpp\""<<std::endl;
     file<<"#include \"TouchSystem.hpp\""<<std::endl;
 
@@ -835,6 +835,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"FirstPersonMoverSystem.hpp\""<<std::endl;
     file<<"#include \"LimitableSystem.hpp\""<<std::endl;
     file<<"#include \"VelocitySystem.hpp\""<<std::endl;
+    file<<"#include \"ScrollWheelMoverSystem.hpp\""<<std::endl;
 
 //    //Physics
 //    file<<"#include \"PhysicsSystem.hpp\""<<std::endl;
@@ -858,14 +859,14 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
 
     //Spatial
     file<<"#include \"TransformHierarchy.hpp\""<<std::endl;
+    
+    //Spawning
+    file<<"#include \"SpawnerSystem.hpp\""<<std::endl;
 
     //Triggering
     file<<"#include \"TriggerSystem.hpp\""<<std::endl;
     file<<"#include \"TriggerTouchSystem.hpp\""<<std::endl;
-
-    //Spawning
-    file<<"#include \"SpawnerSystem.hpp\""<<std::endl;
-        
+    
     for(auto& header : headerNames) {
         file << "#include \""<<header<<"\""<<std::endl;
     }
@@ -875,12 +876,8 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     using namespace Pocket;
     
     void CreateDefaultSystems(Pocket::GameObject &world) {
-            //spawning
-    world.CreateSystem<SpawnerSystem>();
-    
-    //Animations
-    world.CreateSystem<TouchAnimatorSystem>();
-    world.CreateSystem<TransformAnimatorSystem>();
+   
+    world.CreateSystem<AnimatorSystem>();
 
     //Assets
     world.CreateSystem<AssetManager>();
@@ -913,6 +910,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     world.CreateSystem<InputMapperSystem>();
 
     //Interaction
+    world.CreateSystem<HoverSystem>();
     world.CreateSystem<TouchCancelSystem>();
     world.CreateSystem<TouchSystem>()->TouchDepth = 0;
 
@@ -922,6 +920,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     world.CreateSystem<FirstPersonMoverSystem>();
     world.CreateSystem<LimitableSystem>();
     world.CreateSystem<VelocitySystem>();
+    world.CreateSystem<ScrollWheelMoverSystem>();
 
     //Physics
     //world.CreateSystem<PhysicsSystem>();
@@ -944,11 +943,13 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
 
     //Spatial
     world.CreateSystem<TransformHierarchy>();
+    
+    //Spawning
+    world.CreateSystem<SpawnerSystem>();
 
     //Triggering
     world.CreateSystem<TriggerSystem>();
     world.CreateSystem<TriggerTouchSystem>();
-        
     
     ) << std::endl;
 
