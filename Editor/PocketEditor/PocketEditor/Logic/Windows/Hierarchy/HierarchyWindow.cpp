@@ -12,7 +12,7 @@
 #include "SelectedColorer.hpp"
 #include "Selectable.hpp"
 #include "DroppableSystem.hpp"
-#include "EditorDropTarget.hpp"
+#include "GameObjectFieldEditor.hpp"
 #include "Cloner.hpp"
 
 std::string HierarchyWindow::Name() { return "Hierarchy"; }
@@ -173,9 +173,10 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
         } else if (t.object == rootItem) {
             source->gameObject->Parent = source->gameObject->Root();
         } else {
-            EditorDropTarget* target = t.object->GetComponent<EditorDropTarget>();
-            if (target && target->OnDropped) {
-                target->OnDropped(source);
+        
+            GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
+            if (goField && goField->SetObject) {
+                goField->SetObject(source->gameObject);
             }
         }
     }

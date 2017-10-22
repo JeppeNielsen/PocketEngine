@@ -21,11 +21,11 @@
 
 using namespace Pocket;
 
-int main_createAssets() {
+int main_testResources() {
 
     std::string zipFile = "/Projects/PocketEngine/Editor/resources.zip";
     
-    bool wasCreated = FileArchive::TryCreateArchiveFile("/Projects/PocketEngine/Editor/Pong", zipFile, [] (const std::string& path) -> std::string {
+    bool wasCreated = FileArchive::TryCreateArchiveFile("/Projects/PocketEngine/EditorProjects/BallRunners", zipFile, [] (const std::string& path) -> std::string {
         std::string metaPath = path + ".meta";
         
         if (FileHelper::FileExists(metaPath)) {

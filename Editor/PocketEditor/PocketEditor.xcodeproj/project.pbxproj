@@ -536,6 +536,7 @@
 		7206DE1A1F8AC12F0069B8E9 /* ScrollWheelMover.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMover.hpp; sourceTree = "<group>"; };
 		7206DE1C1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollWheelMoverSystem.cpp; sourceTree = "<group>"; };
 		7206DE1D1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMoverSystem.hpp; sourceTree = "<group>"; };
+		7206DE731F9BD74B0069B8E9 /* GameObjectFieldEditor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectFieldEditor.hpp; sourceTree = "<group>"; };
 		720B3D3D1D8B2424006195E8 /* WorldTab.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WorldTab.cpp; sourceTree = "<group>"; };
 		720B3D3E1D8B2424006195E8 /* WorldTab.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = WorldTab.hpp; sourceTree = "<group>"; };
 		720B3D411D8DD2B9006195E8 /* Cloner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cloner.cpp; sourceTree = "<group>"; };
@@ -2476,6 +2477,7 @@
 				72D719F31CAB20BF00868DDB /* VirtualTreeListSpawner.hpp */,
 				72D719F51CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp */,
 				72D719F61CAB211300868DDB /* VirtualTreeListSpawnerSystem.hpp */,
+				7206DE731F9BD74B0069B8E9 /* GameObjectFieldEditor.hpp */,
 			);
 			path = Editor;
 			sourceTree = "<group>";

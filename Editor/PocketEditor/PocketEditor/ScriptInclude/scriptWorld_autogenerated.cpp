@@ -658,7 +658,7 @@ extern "C" const char* GetComponentName(int componentID) {
    }
 }
 extern "C" int* GetSystems() {
- return new int[27] {-1,66,65,-1,67,69,-1,68,69,65,-1,69,65,1,-1,70,65,2,69,-1,65,-1,71,-1,72,1,-2,};}
+ return new int[28] {-1,66,65,-1,67,69,-1,68,69,65,-1,69,65,1,-1,70,65,2,69,-1,65,-1,71,1,-1,72,1,-2,};}
 extern "C" void DeleteGetSystems(int* indicies) {
 delete indicies;
 }

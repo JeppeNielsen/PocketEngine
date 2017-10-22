@@ -138,19 +138,6 @@ namespace Pocket {
         
         GameObjectHandle() : world(0), index(-1) {}
         
-        GameObject* Get() {
-            return SetGameObjectHandleRetriever(nullptr)->Get(world, index, version, rootId, sceneGuid);
-        }
-
-        Event<> Changed;
-    private:
-    
-        GameWorld* world;
-        int index;
-        int version;
-        int rootId;
-        std::string sceneGuid;
-        
         explicit operator bool() {
             return operator->();
         }
@@ -162,5 +149,19 @@ namespace Pocket {
         GameObject* operator()() {
             return Get();
         }
+
+        Event<> Changed;
+    private:
+    
+        GameWorld* world;
+        int index;
+        int version;
+        int rootId;
+        std::string sceneGuid;
+        
+        GameObject* Get() {
+            return SetGameObjectHandleRetriever(nullptr)->Get(world, index, version, rootId, sceneGuid);
+        }
+
     };
 }
