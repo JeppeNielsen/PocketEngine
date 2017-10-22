@@ -18,7 +18,7 @@ bool FileArchive::TryCreateArchiveFile(const std::string &path, const std::strin
     mz_zip_archive zipArchive;
     memset(&zipArchive, 0, sizeof(zipArchive));
     
-    bool succes = mz_zip_writer_init_file(&zipArchive, archiveFile.c_str(), 1);
+    mz_bool succes = mz_zip_writer_init_file(&zipArchive, archiveFile.c_str(), 1);
     if (!succes) {
         return false;
     }
@@ -29,7 +29,8 @@ bool FileArchive::TryCreateArchiveFile(const std::string &path, const std::strin
         if (wasAnyErrorAddedFiles) return;
         std::string id = onFileParsed(path);
         if (id!="") {
-            bool canAddFile = mz_zip_writer_add_file(&zipArchive, id.c_str(), path.c_str(), "", 0, MZ_UBER_COMPRESSION);
+            id = "F" + id; // if id starts with a '/' it will fail to add
+            mz_bool canAddFile = mz_zip_writer_add_file(&zipArchive, id.c_str(), path.c_str(), "", 0, MZ_UBER_COMPRESSION);
             if (!canAddFile) {
                 wasAnyErrorAddedFiles = true;
             }
@@ -83,6 +84,7 @@ bool FileArchive::Initialize(const std::string &path) {
             return false;
         }
         std::string id(stats.m_filename);
+        id = id.substr(1, id.size() - 1);
         files[id] = { i, id, static_cast<size_t>(stats.m_comp_size), static_cast<size_t>(stats.m_uncomp_size) };
     }
     return true;
