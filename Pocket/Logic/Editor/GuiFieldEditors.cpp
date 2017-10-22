@@ -11,7 +11,7 @@
 #include "FileHelper.hpp"
 #include "GameObjectHandle.hpp"
 #include "Cloner.hpp"
-//#include "EditorDropTarget.hpp" // <- TODO: not part of engine
+#include "GameObjectFieldEditor.hpp"
 
 using namespace Pocket;
 
@@ -402,19 +402,14 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         textBox->GetComponent<Touchable>()->Click.Bind([this] (TouchData d){
             MenuClicked();
         });
-        /*
-        textBox->AddComponent<EditorDropTarget>()->OnDropped = [this] (EditorObject* editorObject) {
-            if (!editorObject->gameObject->HasComponent(component.componentId)) return;
-            component.object->ReplaceComponent(component.componentId, editorObject->gameObject);
+        textBox->AddComponent<GameObjectFieldEditor>()->SetObject = [this] (GameObject* obj) {
+            if (!obj->HasComponent(component.componentId)) return;
+            component.object->ReplaceComponent(component.componentId, obj);
             UpdateLabel();
         };
-        */
-        
-        //gui->CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize)
+
         label = gui->CreateLabel(textBox, 0, 20, 0, "", 20);
         label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
-        
-        //label->AddComponent<Layouter>(textBox);
         label->AddComponent<Colorable>()->Color = Colour::Black();
         
         TypeEditorTitle::Title(gui, parent, component.name);
@@ -576,7 +571,10 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         textBox->GetComponent<Touchable>()->Click.Bind([this] (TouchData d){
             MenuClicked();
         });
-        
+        textBox->AddComponent<GameObjectFieldEditor>()->SetObject = [this] (GameObject* obj) {
+            handle->operator=(obj);
+            UpdateLabel();
+        };
         
         //gui->CreateLabel(Pocket::GameObject *parent, const Pocket::Vector2 &position, const Pocket::Vector2 &size, Pocket::GameObject *font, const std::string &text, float fontSize)
         label = gui->CreateLabel(textBox, 0, 20, 0, "", 20);
