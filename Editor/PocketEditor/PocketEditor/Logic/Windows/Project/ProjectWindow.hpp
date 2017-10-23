@@ -37,6 +37,8 @@ private:
     };
     
     void Clicked(TouchData d, ClickedNodeInfo nodeInfo);
+    void Dropped(Pocket::DroppedData d, Pocket::GameObject *object);
+
     GameObject* fileRoot;
     GameObject* listBox;
     AppMenu popupMenu;

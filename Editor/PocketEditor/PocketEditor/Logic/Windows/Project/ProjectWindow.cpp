@@ -14,6 +14,7 @@
 #include "ClickSelectorSystem.hpp"
 #include "FileHelper.hpp"
 #include "AssetHelper.hpp"
+#include "GameObjectFieldEditor.hpp"
 
 #include <stdio.h>
 
@@ -164,6 +165,20 @@ void ProjectWindow::OnCreate() {
             text = n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName();
             
             button->GetComponent<Touchable>()->Click.Bind(this, &ProjectWindow::Clicked, { n.node, n.node!=fileRoot ? button : 0, filePath ? filePath : &projectFilePath });
+            
+            button->AddComponent<Droppable>()->OnCreate = [text, this](GameObject* o, TouchData d) -> GameObject* {
+                Gui& gui = context->Gui();
+                Vector3 position = o->GetComponent<Transform>()->World().TransformPosition(0);
+                GameObject* control = gui.CreateControl(0, "Box", position, {200,25});
+                GameObject* label = gui.CreateLabel(control, 0, {200,25}, nullptr, text, 20);
+                label->GetComponent<Colorable>()->Color = Colour::Black();
+                label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+                label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+                
+                return control;
+            };
+            
+            button->AddComponent<Droppable>()->Dropped.Bind(this, &ProjectWindow::Dropped, n.node);
         },
         [this] (auto& n, GameObject* button) {
         
@@ -200,3 +215,33 @@ void ProjectWindow::SetProjectPath(const std::string &path) {
     fileSystemListener->Path = path;
     fileSystemListener->watcher.Changed();
 }
+
+
+void ProjectWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object) {
+
+    FilePath* filePath = object->GetComponent<FilePath>();
+    if (!filePath || filePath->isFolder) {
+        return;
+    }
+    
+    //text = n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName();
+    
+    for(auto& t : d.droppedTouches) {
+        GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
+        if (goField && goField->SetObject) {
+        
+            std::ifstream file;
+        
+            file.open(filePath->GetFilePath());
+            std::string guid = context->World().ReadGuidFromJson(file);
+            file.close();
+            
+            GameObject* root = context->World().TryFindRoot(guid);
+            if (root) {
+                goField->SetObject(root);
+                return;
+            }
+        }
+    }
+}
+
