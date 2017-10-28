@@ -26,8 +26,6 @@
     
     [self setRootViewController:[[IOSViewController alloc]init]];
     
-    
-    
     bool isLandscape = Pocket::IOSWindowCreator::Instance()->isLandscape;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
@@ -58,6 +56,7 @@
         }
         keyboard = NULL;
         [self createKeyBoard];
+        [self makeKeyAndVisible];
     }
     return self;
 }
@@ -112,7 +111,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self makeKeyAndVisible];
+
     self.backgroundColor = [UIColor blackColor];
     self.userInteractionEnabled = true;
     [self setMultipleTouchEnabled: YES];
@@ -167,6 +166,7 @@
     /*
      Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
      */
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
