@@ -394,7 +394,7 @@ std::string file = FILE_SOURCE(
 		7214E0291EFAFC8000F61526 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = 24H2455352;
@@ -414,14 +414,14 @@ std::string file = FILE_SOURCE(
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dk.jeppenielsen.Game;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
 		7214E02A1EFAFC8000F61526 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = armv7;
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = 24H2455352;
@@ -438,7 +438,7 @@ std::string file = FILE_SOURCE(
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dk.jeppenielsen.Game;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				VALID_ARCHS = armv7;
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -574,7 +574,7 @@ std::string IOSBuilder::GetXCodePlistTemplate() {
 	<string></string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
-		<string>armv7</string>
+		<string>arm64</string>
 	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
