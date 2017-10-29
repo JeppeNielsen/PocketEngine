@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7206DE451F9553E80069B8E9 /* AnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE3F1F9553E80069B8E9 /* AnimatorSystem.cpp */; };
+		7206DE461F9553E80069B8E9 /* Animation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE401F9553E80069B8E9 /* Animation.cpp */; };
+		7206DE471F9553E80069B8E9 /* Animator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE441F9553E80069B8E9 /* Animator.cpp */; };
+		7206DE571F9554010069B8E9 /* Panel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE491F9554010069B8E9 /* Panel.cpp */; };
+		7206DE581F9554010069B8E9 /* PanelArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE4B1F9554010069B8E9 /* PanelArea.cpp */; };
+		7206DE591F9554010069B8E9 /* PanelAreaSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE4D1F9554010069B8E9 /* PanelAreaSystem.cpp */; };
+		7206DE5A1F9554010069B8E9 /* PanelDropper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE4F1F9554010069B8E9 /* PanelDropper.cpp */; };
+		7206DE5B1F9554010069B8E9 /* PanelDropSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE511F9554010069B8E9 /* PanelDropSystem.cpp */; };
+		7206DE5C1F9554010069B8E9 /* PanelLocation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE531F9554010069B8E9 /* PanelLocation.cpp */; };
+		7206DE5D1F9554010069B8E9 /* PanelSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE551F9554010069B8E9 /* PanelSystem.cpp */; };
+		7206DE621F9554120069B8E9 /* ScrollWheelMoverSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE5E1F9554120069B8E9 /* ScrollWheelMoverSystem.cpp */; };
+		7206DE631F9554120069B8E9 /* ScrollWheelMover.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE611F9554120069B8E9 /* ScrollWheelMover.cpp */; };
+		7206DE6A1F9554560069B8E9 /* HoverSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE641F9554560069B8E9 /* HoverSystem.cpp */; };
+		7206DE6B1F9554560069B8E9 /* Picker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE661F9554560069B8E9 /* Picker.cpp */; };
+		7206DE6C1F9554560069B8E9 /* Hoverable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE691F9554560069B8E9 /* Hoverable.cpp */; };
+		7206DE711F955AF60069B8E9 /* RenderTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7206DE6F1F955AF60069B8E9 /* RenderTexture.cpp */; };
 		7214DE201EFAF27D00F61526 /* FileWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214D91B1EFAF27B00F61526 /* FileWorld.cpp */; };
 		7214DE211EFAF27D00F61526 /* GameIDHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214D91D1EFAF27B00F61526 /* GameIDHelper.cpp */; };
 		7214DE221EFAF27D00F61526 /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214D91F1EFAF27B00F61526 /* GameObject.cpp */; };
@@ -52,11 +68,6 @@
 		7214DE911EFAF27D00F61526 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA6E1EFAF27C00F61526 /* tinyxmlerror.cpp */; };
 		7214DE921EFAF27D00F61526 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA6F1EFAF27C00F61526 /* tinyxmlparser.cpp */; };
 		7214DE931EFAF27D00F61526 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA711EFAF27C00F61526 /* miniz.c */; };
-		7214DE9A1EFAF27D00F61526 /* TouchAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA831EFAF27C00F61526 /* TouchAnimatorSystem.cpp */; };
-		7214DE9B1EFAF27D00F61526 /* TransformAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA851EFAF27C00F61526 /* TransformAnimation.cpp */; };
-		7214DE9C1EFAF27D00F61526 /* TransformAnimationDatabase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA871EFAF27C00F61526 /* TransformAnimationDatabase.cpp */; };
-		7214DE9D1EFAF27D00F61526 /* TransformAnimator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA891EFAF27C00F61526 /* TransformAnimator.cpp */; };
-		7214DE9E1EFAF27D00F61526 /* TransformAnimatorSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA8B1EFAF27C00F61526 /* TransformAnimatorSystem.cpp */; };
 		7214DE9F1EFAF27D00F61526 /* AssetImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA8E1EFAF27C00F61526 /* AssetImporter.cpp */; };
 		7214DEA01EFAF27D00F61526 /* AssetImporterSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA901EFAF27C00F61526 /* AssetImporterSystem.cpp */; };
 		7214DEA11EFAF27D00F61526 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DA921EFAF27C00F61526 /* AssetLoader.cpp */; };
@@ -93,10 +104,6 @@
 		7214DEC01EFAF27D00F61526 /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DADA1EFAF27C00F61526 /* Gui.cpp */; };
 		7214DEC11EFAF27D00F61526 /* LabelMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DADD1EFAF27C00F61526 /* LabelMeshSystem.cpp */; };
 		7214DEC21EFAF27D00F61526 /* LayoutSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAE11EFAF27C00F61526 /* LayoutSystem.cpp */; };
-		7214DEC31EFAF27D00F61526 /* Menu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAE41EFAF27C00F61526 /* Menu.cpp */; };
-		7214DEC41EFAF27D00F61526 /* MenuButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAE71EFAF27C00F61526 /* MenuButton.cpp */; };
-		7214DEC51EFAF27D00F61526 /* MenuButtonSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAE91EFAF27C00F61526 /* MenuButtonSystem.cpp */; };
-		7214DEC61EFAF27D00F61526 /* MenuSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAEB1EFAF27C00F61526 /* MenuSystem.cpp */; };
 		7214DEC71EFAF27D00F61526 /* SlicedQuadMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAEF1EFAF27C00F61526 /* SlicedQuadMeshSystem.cpp */; };
 		7214DEC81EFAF27D00F61526 /* SpriteMeshSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAF21EFAF27C00F61526 /* SpriteMeshSystem.cpp */; };
 		7214DEC91EFAF27D00F61526 /* SpriteTextureSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214DAF41EFAF27C00F61526 /* SpriteTextureSystem.cpp */; };
@@ -394,6 +401,40 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7206DE3F1F9553E80069B8E9 /* AnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AnimatorSystem.cpp; sourceTree = "<group>"; };
+		7206DE401F9553E80069B8E9 /* Animation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animation.cpp; sourceTree = "<group>"; };
+		7206DE411F9553E80069B8E9 /* Animation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Animation.hpp; sourceTree = "<group>"; };
+		7206DE421F9553E80069B8E9 /* AnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AnimatorSystem.hpp; sourceTree = "<group>"; };
+		7206DE431F9553E80069B8E9 /* Animator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Animator.hpp; sourceTree = "<group>"; };
+		7206DE441F9553E80069B8E9 /* Animator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Animator.cpp; sourceTree = "<group>"; };
+		7206DE491F9554010069B8E9 /* Panel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Panel.cpp; sourceTree = "<group>"; };
+		7206DE4A1F9554010069B8E9 /* Panel.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Panel.hpp; sourceTree = "<group>"; };
+		7206DE4B1F9554010069B8E9 /* PanelArea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelArea.cpp; sourceTree = "<group>"; };
+		7206DE4C1F9554010069B8E9 /* PanelArea.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelArea.hpp; sourceTree = "<group>"; };
+		7206DE4D1F9554010069B8E9 /* PanelAreaSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelAreaSystem.cpp; sourceTree = "<group>"; };
+		7206DE4E1F9554010069B8E9 /* PanelAreaSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelAreaSystem.hpp; sourceTree = "<group>"; };
+		7206DE4F1F9554010069B8E9 /* PanelDropper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelDropper.cpp; sourceTree = "<group>"; };
+		7206DE501F9554010069B8E9 /* PanelDropper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelDropper.hpp; sourceTree = "<group>"; };
+		7206DE511F9554010069B8E9 /* PanelDropSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelDropSystem.cpp; sourceTree = "<group>"; };
+		7206DE521F9554010069B8E9 /* PanelDropSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelDropSystem.hpp; sourceTree = "<group>"; };
+		7206DE531F9554010069B8E9 /* PanelLocation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelLocation.cpp; sourceTree = "<group>"; };
+		7206DE541F9554010069B8E9 /* PanelLocation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelLocation.hpp; sourceTree = "<group>"; };
+		7206DE551F9554010069B8E9 /* PanelSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PanelSystem.cpp; sourceTree = "<group>"; };
+		7206DE561F9554010069B8E9 /* PanelSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = PanelSystem.hpp; sourceTree = "<group>"; };
+		7206DE5E1F9554120069B8E9 /* ScrollWheelMoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollWheelMoverSystem.cpp; sourceTree = "<group>"; };
+		7206DE5F1F9554120069B8E9 /* ScrollWheelMoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMoverSystem.hpp; sourceTree = "<group>"; };
+		7206DE601F9554120069B8E9 /* ScrollWheelMover.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScrollWheelMover.hpp; sourceTree = "<group>"; };
+		7206DE611F9554120069B8E9 /* ScrollWheelMover.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollWheelMover.cpp; sourceTree = "<group>"; };
+		7206DE641F9554560069B8E9 /* HoverSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HoverSystem.cpp; sourceTree = "<group>"; };
+		7206DE651F9554560069B8E9 /* HoverSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = HoverSystem.hpp; sourceTree = "<group>"; };
+		7206DE661F9554560069B8E9 /* Picker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Picker.cpp; sourceTree = "<group>"; };
+		7206DE671F9554560069B8E9 /* Picker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Picker.hpp; sourceTree = "<group>"; };
+		7206DE681F9554560069B8E9 /* Hoverable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hoverable.hpp; sourceTree = "<group>"; };
+		7206DE691F9554560069B8E9 /* Hoverable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hoverable.cpp; sourceTree = "<group>"; };
+		7206DE6D1F9554730069B8E9 /* ObjectConstructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjectConstructor.hpp; sourceTree = "<group>"; };
+		7206DE6E1F9554730069B8E9 /* TypeInterpolator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TypeInterpolator.hpp; sourceTree = "<group>"; };
+		7206DE6F1F955AF60069B8E9 /* RenderTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTexture.cpp; sourceTree = "<group>"; };
+		7206DE701F955AF60069B8E9 /* RenderTexture.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RenderTexture.hpp; sourceTree = "<group>"; };
 		7214D90C1EFAF11100F61526 /* libPocketEngine.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPocketEngine.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		7214D91A1EFAF27B00F61526 /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		7214D91B1EFAF27B00F61526 /* FileWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileWorld.cpp; sourceTree = "<group>"; };
@@ -577,17 +618,6 @@
 		7214DA6F1EFAF27C00F61526 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
 		7214DA711EFAF27C00F61526 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		7214DA721EFAF27C00F61526 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
-		7214DA821EFAF27C00F61526 /* TouchAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchAnimator.hpp; sourceTree = "<group>"; };
-		7214DA831EFAF27C00F61526 /* TouchAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TouchAnimatorSystem.cpp; sourceTree = "<group>"; };
-		7214DA841EFAF27C00F61526 /* TouchAnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TouchAnimatorSystem.hpp; sourceTree = "<group>"; };
-		7214DA851EFAF27C00F61526 /* TransformAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimation.cpp; sourceTree = "<group>"; };
-		7214DA861EFAF27C00F61526 /* TransformAnimation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimation.hpp; sourceTree = "<group>"; };
-		7214DA871EFAF27C00F61526 /* TransformAnimationDatabase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimationDatabase.cpp; sourceTree = "<group>"; };
-		7214DA881EFAF27C00F61526 /* TransformAnimationDatabase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimationDatabase.hpp; sourceTree = "<group>"; };
-		7214DA891EFAF27C00F61526 /* TransformAnimator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimator.cpp; sourceTree = "<group>"; };
-		7214DA8A1EFAF27C00F61526 /* TransformAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimator.hpp; sourceTree = "<group>"; };
-		7214DA8B1EFAF27C00F61526 /* TransformAnimatorSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TransformAnimatorSystem.cpp; sourceTree = "<group>"; };
-		7214DA8C1EFAF27C00F61526 /* TransformAnimatorSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TransformAnimatorSystem.hpp; sourceTree = "<group>"; };
 		7214DA8E1EFAF27C00F61526 /* AssetImporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetImporter.cpp; sourceTree = "<group>"; };
 		7214DA8F1EFAF27C00F61526 /* AssetImporter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetImporter.hpp; sourceTree = "<group>"; };
 		7214DA901EFAF27C00F61526 /* AssetImporterSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetImporterSystem.cpp; sourceTree = "<group>"; };
@@ -665,15 +695,6 @@
 		7214DAE01EFAF27C00F61526 /* Layouter.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Layouter.hpp; sourceTree = "<group>"; };
 		7214DAE11EFAF27C00F61526 /* LayoutSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LayoutSystem.cpp; sourceTree = "<group>"; };
 		7214DAE21EFAF27C00F61526 /* LayoutSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = LayoutSystem.hpp; sourceTree = "<group>"; };
-		7214DAE41EFAF27C00F61526 /* Menu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Menu.cpp; sourceTree = "<group>"; };
-		7214DAE51EFAF27C00F61526 /* Menu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Menu.hpp; sourceTree = "<group>"; };
-		7214DAE61EFAF27C00F61526 /* MenuAnimator.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuAnimator.hpp; sourceTree = "<group>"; };
-		7214DAE71EFAF27C00F61526 /* MenuButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuButton.cpp; sourceTree = "<group>"; };
-		7214DAE81EFAF27C00F61526 /* MenuButton.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuButton.hpp; sourceTree = "<group>"; };
-		7214DAE91EFAF27C00F61526 /* MenuButtonSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuButtonSystem.cpp; sourceTree = "<group>"; };
-		7214DAEA1EFAF27C00F61526 /* MenuButtonSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuButtonSystem.hpp; sourceTree = "<group>"; };
-		7214DAEB1EFAF27C00F61526 /* MenuSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MenuSystem.cpp; sourceTree = "<group>"; };
-		7214DAEC1EFAF27C00F61526 /* MenuSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MenuSystem.hpp; sourceTree = "<group>"; };
 		7214DAED1EFAF27C00F61526 /* Sizeable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Sizeable.hpp; sourceTree = "<group>"; };
 		7214DAEE1EFAF27C00F61526 /* SlicedQuad.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SlicedQuad.hpp; sourceTree = "<group>"; };
 		7214DAEF1EFAF27C00F61526 /* SlicedQuadMeshSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SlicedQuadMeshSystem.cpp; sourceTree = "<group>"; };
@@ -1373,6 +1394,27 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7206DE481F9554010069B8E9 /* Panels */ = {
+			isa = PBXGroup;
+			children = (
+				7206DE491F9554010069B8E9 /* Panel.cpp */,
+				7206DE4A1F9554010069B8E9 /* Panel.hpp */,
+				7206DE4B1F9554010069B8E9 /* PanelArea.cpp */,
+				7206DE4C1F9554010069B8E9 /* PanelArea.hpp */,
+				7206DE4D1F9554010069B8E9 /* PanelAreaSystem.cpp */,
+				7206DE4E1F9554010069B8E9 /* PanelAreaSystem.hpp */,
+				7206DE4F1F9554010069B8E9 /* PanelDropper.cpp */,
+				7206DE501F9554010069B8E9 /* PanelDropper.hpp */,
+				7206DE511F9554010069B8E9 /* PanelDropSystem.cpp */,
+				7206DE521F9554010069B8E9 /* PanelDropSystem.hpp */,
+				7206DE531F9554010069B8E9 /* PanelLocation.cpp */,
+				7206DE541F9554010069B8E9 /* PanelLocation.hpp */,
+				7206DE551F9554010069B8E9 /* PanelSystem.cpp */,
+				7206DE561F9554010069B8E9 /* PanelSystem.hpp */,
+			);
+			path = Panels;
+			sourceTree = "<group>";
+		};
 		7214D9031EFAF11000F61526 = {
 			isa = PBXGroup;
 			children = (
@@ -1819,17 +1861,12 @@
 		7214DA741EFAF27C00F61526 /* Animation */ = {
 			isa = PBXGroup;
 			children = (
-				7214DA821EFAF27C00F61526 /* TouchAnimator.hpp */,
-				7214DA831EFAF27C00F61526 /* TouchAnimatorSystem.cpp */,
-				7214DA841EFAF27C00F61526 /* TouchAnimatorSystem.hpp */,
-				7214DA851EFAF27C00F61526 /* TransformAnimation.cpp */,
-				7214DA861EFAF27C00F61526 /* TransformAnimation.hpp */,
-				7214DA871EFAF27C00F61526 /* TransformAnimationDatabase.cpp */,
-				7214DA881EFAF27C00F61526 /* TransformAnimationDatabase.hpp */,
-				7214DA891EFAF27C00F61526 /* TransformAnimator.cpp */,
-				7214DA8A1EFAF27C00F61526 /* TransformAnimator.hpp */,
-				7214DA8B1EFAF27C00F61526 /* TransformAnimatorSystem.cpp */,
-				7214DA8C1EFAF27C00F61526 /* TransformAnimatorSystem.hpp */,
+				7206DE3F1F9553E80069B8E9 /* AnimatorSystem.cpp */,
+				7206DE401F9553E80069B8E9 /* Animation.cpp */,
+				7206DE411F9553E80069B8E9 /* Animation.hpp */,
+				7206DE421F9553E80069B8E9 /* AnimatorSystem.hpp */,
+				7206DE431F9553E80069B8E9 /* Animator.hpp */,
+				7206DE441F9553E80069B8E9 /* Animator.cpp */,
 			);
 			path = Animation;
 			sourceTree = "<group>";
@@ -1948,6 +1985,7 @@
 		7214DAD21EFAF27C00F61526 /* Gui */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE481F9554010069B8E9 /* Panels */,
 				7214DAD31EFAF27C00F61526 /* Droppable.hpp */,
 				7214DAD41EFAF27C00F61526 /* DroppableSystem.cpp */,
 				7214DAD51EFAF27C00F61526 /* DroppableSystem.hpp */,
@@ -1961,7 +1999,6 @@
 				7214DADD1EFAF27C00F61526 /* LabelMeshSystem.cpp */,
 				7214DADE1EFAF27C00F61526 /* LabelMeshSystem.hpp */,
 				7214DADF1EFAF27C00F61526 /* Layout */,
-				7214DAE31EFAF27C00F61526 /* Menu */,
 				7214DAED1EFAF27C00F61526 /* Sizeable.hpp */,
 				7214DAEE1EFAF27C00F61526 /* SlicedQuad.hpp */,
 				7214DAEF1EFAF27C00F61526 /* SlicedQuadMeshSystem.cpp */,
@@ -1990,22 +2027,6 @@
 			path = Layout;
 			sourceTree = "<group>";
 		};
-		7214DAE31EFAF27C00F61526 /* Menu */ = {
-			isa = PBXGroup;
-			children = (
-				7214DAE41EFAF27C00F61526 /* Menu.cpp */,
-				7214DAE51EFAF27C00F61526 /* Menu.hpp */,
-				7214DAE61EFAF27C00F61526 /* MenuAnimator.hpp */,
-				7214DAE71EFAF27C00F61526 /* MenuButton.cpp */,
-				7214DAE81EFAF27C00F61526 /* MenuButton.hpp */,
-				7214DAE91EFAF27C00F61526 /* MenuButtonSystem.cpp */,
-				7214DAEA1EFAF27C00F61526 /* MenuButtonSystem.hpp */,
-				7214DAEB1EFAF27C00F61526 /* MenuSystem.cpp */,
-				7214DAEC1EFAF27C00F61526 /* MenuSystem.hpp */,
-			);
-			path = Menu;
-			sourceTree = "<group>";
-		};
 		7214DAFB1EFAF27C00F61526 /* Input */ = {
 			isa = PBXGroup;
 			children = (
@@ -2022,6 +2043,12 @@
 		7214DB021EFAF27C00F61526 /* Interaction */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE691F9554560069B8E9 /* Hoverable.cpp */,
+				7206DE681F9554560069B8E9 /* Hoverable.hpp */,
+				7206DE641F9554560069B8E9 /* HoverSystem.cpp */,
+				7206DE651F9554560069B8E9 /* HoverSystem.hpp */,
+				7206DE661F9554560069B8E9 /* Picker.cpp */,
+				7206DE671F9554560069B8E9 /* Picker.hpp */,
 				7214DB031EFAF27C00F61526 /* Touchable.cpp */,
 				7214DB041EFAF27C00F61526 /* Touchable.hpp */,
 				7214DB051EFAF27C00F61526 /* TouchableCanceller.hpp */,
@@ -2036,6 +2063,10 @@
 		7214DB0A1EFAF27C00F61526 /* Movement */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE5E1F9554120069B8E9 /* ScrollWheelMoverSystem.cpp */,
+				7206DE5F1F9554120069B8E9 /* ScrollWheelMoverSystem.hpp */,
+				7206DE601F9554120069B8E9 /* ScrollWheelMover.hpp */,
+				7206DE611F9554120069B8E9 /* ScrollWheelMover.cpp */,
 				7214DB0B1EFAF27C00F61526 /* Draggable.hpp */,
 				7214DB0C1EFAF27C00F61526 /* DraggableMotion.cpp */,
 				7214DB0D1EFAF27C00F61526 /* DraggableMotion.hpp */,
@@ -3059,6 +3090,8 @@
 		7214DDE51EFAF27D00F61526 /* Rendering */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE6F1F955AF60069B8E9 /* RenderTexture.cpp */,
+				7206DE701F955AF60069B8E9 /* RenderTexture.hpp */,
 				7214DDE61EFAF27D00F61526 /* Clipper.cpp */,
 				7214DDE71EFAF27D00F61526 /* Clipper.hpp */,
 				7214DDE81EFAF27D00F61526 /* Colour.cpp */,
@@ -3087,6 +3120,8 @@
 		7214DE061EFAF27D00F61526 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
+				7206DE6D1F9554730069B8E9 /* ObjectConstructor.hpp */,
+				7206DE6E1F9554730069B8E9 /* TypeInterpolator.hpp */,
 				7214DE071EFAF27D00F61526 /* IFieldEditor.hpp */,
 				7214DE081EFAF27D00F61526 /* JsonSerializer.hpp */,
 				7214DE091EFAF27D00F61526 /* minijson_reader.hpp */,
@@ -3190,6 +3225,7 @@
 				7214DE871EFAF27D00F61526 /* truetype.c in Sources */,
 				7214DF241EFAF27D00F61526 /* b2PolygonShape.cpp in Sources */,
 				7214DEA11EFAF27D00F61526 /* AssetLoader.cpp in Sources */,
+				7206DE5C1F9554010069B8E9 /* PanelLocation.cpp in Sources */,
 				7214DF7C1EFAF27E00F61526 /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
 				7214DFB31EFAF27E00F61526 /* SpuFakeDma.cpp in Sources */,
 				7214DFBA1EFAF27E00F61526 /* SpuMinkowskiPenetrationDepthSolver.cpp in Sources */,
@@ -3215,12 +3251,15 @@
 				7214DFC81EFAF27E00F61526 /* btConvexHullComputer.cpp in Sources */,
 				7214DE381EFAF27D00F61526 /* StringHelper.cpp in Sources */,
 				7214DF0F1EFAF27D00F61526 /* Point3.cpp in Sources */,
+				7206DE471F9553E80069B8E9 /* Animator.cpp in Sources */,
 				7214DE251EFAF27D00F61526 /* GameSystem.cpp in Sources */,
 				7214DF7B1EFAF27E00F61526 /* btTriangleIndexVertexArray.cpp in Sources */,
 				7214DF931EFAF27E00F61526 /* btPolyhedralContactClipping.cpp in Sources */,
+				7206DE5B1F9554010069B8E9 /* PanelDropSystem.cpp in Sources */,
 				7214DF311EFAF27D00F61526 /* b2ContactSolver.cpp in Sources */,
 				7214DF411EFAF27D00F61526 /* btMultiSapBroadphase.cpp in Sources */,
 				7214DFCC1EFAF27E00F61526 /* btSerializer.cpp in Sources */,
+				7206DE6A1F9554560069B8E9 /* HoverSystem.cpp in Sources */,
 				7214DF471EFAF27D00F61526 /* btBoxBoxCollisionAlgorithm.cpp in Sources */,
 				7214DF5D1EFAF27E00F61526 /* btBoxShape.cpp in Sources */,
 				7214DF421EFAF27D00F61526 /* btOverlappingPairCache.cpp in Sources */,
@@ -3249,6 +3288,7 @@
 				7214DEE01EFAF27D00F61526 /* Atlas.cpp in Sources */,
 				7214DE291EFAF27D00F61526 /* GameState.cpp in Sources */,
 				7214DF481EFAF27D00F61526 /* btBoxBoxDetector.cpp in Sources */,
+				7206DE711F955AF60069B8E9 /* RenderTexture.cpp in Sources */,
 				7214DF6C1EFAF27E00F61526 /* btEmptyShape.cpp in Sources */,
 				7214DE2C1EFAF27D00F61526 /* Timer.cpp in Sources */,
 				7214DF231EFAF27D00F61526 /* b2CircleShape.cpp in Sources */,
@@ -3256,7 +3296,6 @@
 				7214DE271EFAF27D00F61526 /* Engine.cpp in Sources */,
 				7214DEAF1EFAF27D00F61526 /* GameObjectEditorSystem.cpp in Sources */,
 				7214DF701EFAF27E00F61526 /* btMultiSphereShape.cpp in Sources */,
-				7214DEC51EFAF27D00F61526 /* MenuButtonSystem.cpp in Sources */,
 				7214DEE11EFAF27D00F61526 /* Camera.cpp in Sources */,
 				7214DFBD1EFAF27E00F61526 /* Win32ThreadSupport.cpp in Sources */,
 				7214DEF81EFAF27D00F61526 /* SelectedColorerSystem.cpp in Sources */,
@@ -3272,7 +3311,6 @@
 				7214DF051EFAF27D00F61526 /* TriggerTouchSystem.cpp in Sources */,
 				7214DF6B1EFAF27E00F61526 /* btCylinderShape.cpp in Sources */,
 				7214DEBF1EFAF27D00F61526 /* FontTextureSystem.cpp in Sources */,
-				7214DE9D1EFAF27D00F61526 /* TransformAnimator.cpp in Sources */,
 				7214DF101EFAF27D00F61526 /* Quaternion.cpp in Sources */,
 				7214DE241EFAF27D00F61526 /* GameScene.cpp in Sources */,
 				7214DECE1EFAF27D00F61526 /* InputMapperSystem.cpp in Sources */,
@@ -3315,7 +3353,6 @@
 				7214DF2E1EFAF27D00F61526 /* b2WorldCallbacks.cpp in Sources */,
 				7214DFC01EFAF27E00F61526 /* btSoftBodyConcaveCollisionAlgorithm.cpp in Sources */,
 				7214DFC71EFAF27E00F61526 /* btConvexHull.cpp in Sources */,
-				7214DE9A1EFAF27D00F61526 /* TouchAnimatorSystem.cpp in Sources */,
 				7214DEE81EFAF27D00F61526 /* LineRenderer.cpp in Sources */,
 				7214DF321EFAF27D00F61526 /* b2PolyAndCircleContact.cpp in Sources */,
 				7214DE2D1EFAF27D00F61526 /* Window.cpp in Sources */,
@@ -3327,7 +3364,6 @@
 				7214DF371EFAF27D00F61526 /* b2MouseJoint.cpp in Sources */,
 				7214DF3C1EFAF27D00F61526 /* btBroadphaseProxy.cpp in Sources */,
 				7214DEB71EFAF27D00F61526 /* ParticleEffect.cpp in Sources */,
-				7214DEC41EFAF27D00F61526 /* MenuButton.cpp in Sources */,
 				7214DFFA1EFAF27E00F61526 /* TextureAtlas.cpp in Sources */,
 				7214DF8E1EFAF27E00F61526 /* btGjkEpa2.cpp in Sources */,
 				7214DF771EFAF27E00F61526 /* btStridingMeshInterface.cpp in Sources */,
@@ -3342,13 +3378,13 @@
 				7214DEC91EFAF27D00F61526 /* SpriteTextureSystem.cpp in Sources */,
 				7214DF451EFAF27D00F61526 /* btActivatingCollisionAlgorithm.cpp in Sources */,
 				7214DFE01EFAF27E00F61526 /* IOSWindow.mm in Sources */,
-				7214DE9E1EFAF27D00F61526 /* TransformAnimatorSystem.cpp in Sources */,
 				7214DF0A1EFAF27D00F61526 /* MathHelper.cpp in Sources */,
 				7214DFAA1EFAF27E00F61526 /* btWheelInfo.cpp in Sources */,
 				7214DF4F1EFAF27D00F61526 /* btConvexConvexAlgorithm.cpp in Sources */,
 				7214DECA1EFAF27D00F61526 /* TextBoxLabelSystem.cpp in Sources */,
 				7214DEEA1EFAF27D00F61526 /* RenderSystem.cpp in Sources */,
 				7214DEC81EFAF27D00F61526 /* SpriteMeshSystem.cpp in Sources */,
+				7206DE461F9553E80069B8E9 /* Animation.cpp in Sources */,
 				7214DF041EFAF27D00F61526 /* TriggerSystem.cpp in Sources */,
 				7214DE231EFAF27D00F61526 /* GameObjectHandle.cpp in Sources */,
 				7214DED31EFAF27D00F61526 /* DraggableMotionSystem.cpp in Sources */,
@@ -3363,18 +3399,18 @@
 				7214DED11EFAF27D00F61526 /* TouchSystem.cpp in Sources */,
 				7214DF841EFAF27E00F61526 /* btGImpactQuantizedBvh.cpp in Sources */,
 				7214DF3A1EFAF27D00F61526 /* b2RevoluteJoint.cpp in Sources */,
-				7214DE9B1EFAF27D00F61526 /* TransformAnimation.cpp in Sources */,
-				7214DEC61EFAF27D00F61526 /* MenuSystem.cpp in Sources */,
 				7214DEB21EFAF27D00F61526 /* HierarchyEditorSystem.cpp in Sources */,
 				7214DF9D1EFAF27E00F61526 /* btHinge2Constraint.cpp in Sources */,
 				7214DFA11EFAF27E00F61526 /* btSliderConstraint.cpp in Sources */,
 				7214DFC31EFAF27E00F61526 /* btSoftRigidCollisionAlgorithm.cpp in Sources */,
 				7214DF351EFAF27D00F61526 /* b2GearJoint.cpp in Sources */,
+				7206DE451F9553E80069B8E9 /* AnimatorSystem.cpp in Sources */,
+				7206DE591F9554010069B8E9 /* PanelAreaSystem.cpp in Sources */,
+				7206DE5D1F9554010069B8E9 /* PanelSystem.cpp in Sources */,
 				7214DE561EFAF27D00F61526 /* ftinit.c in Sources */,
 				7214DFBE1EFAF27E00F61526 /* btDefaultSoftBodySolver.cpp in Sources */,
 				7214DEE51EFAF27D00F61526 /* DistanceScaler.cpp in Sources */,
 				7214DE281EFAF27D00F61526 /* EngineContext.cpp in Sources */,
-				7214DE9C1EFAF27D00F61526 /* TransformAnimationDatabase.cpp in Sources */,
 				7214DE2F1EFAF27D00F61526 /* BezierCurve3.cpp in Sources */,
 				7214DEA31EFAF27D00F61526 /* AssetManager.cpp in Sources */,
 				7214DEF11EFAF27D00F61526 /* SceneManagerSystem.cpp in Sources */,
@@ -3401,6 +3437,7 @@
 				7214DF121EFAF27D00F61526 /* Rect.cpp in Sources */,
 				7214DFCB1EFAF27E00F61526 /* btQuickprof.cpp in Sources */,
 				7214DFA71EFAF27E00F61526 /* btSimpleDynamicsWorld.cpp in Sources */,
+				7206DE5A1F9554010069B8E9 /* PanelDropper.cpp in Sources */,
 				7214DEFC1EFAF27D00F61526 /* Spawner.cpp in Sources */,
 				7214DEDB1EFAF27D00F61526 /* Joint2d.cpp in Sources */,
 				7214DF5F1EFAF27E00F61526 /* btCapsuleShape.cpp in Sources */,
@@ -3436,6 +3473,7 @@
 				7214DEF01EFAF27D00F61526 /* SceneManager.cpp in Sources */,
 				7214DF751EFAF27E00F61526 /* btSphereShape.cpp in Sources */,
 				7214DF621EFAF27E00F61526 /* btConcaveShape.cpp in Sources */,
+				7206DE6B1F9554560069B8E9 /* Picker.cpp in Sources */,
 				7214DF801EFAF27E00F61526 /* btContactProcessing.cpp in Sources */,
 				7214DEA71EFAF27D00F61526 /* SoundSystem.cpp in Sources */,
 				7214DEEF1EFAF27D00F61526 /* TextureComponent.cpp in Sources */,
@@ -3452,6 +3490,7 @@
 				7214DFB01EFAF27E00F61526 /* SpuCollisionObjectWrapper.cpp in Sources */,
 				7214DF921EFAF27E00F61526 /* btPersistentManifold.cpp in Sources */,
 				7214DF461EFAF27D00F61526 /* btBox2dBox2dCollisionAlgorithm.cpp in Sources */,
+				7206DE581F9554010069B8E9 /* PanelArea.cpp in Sources */,
 				7214DED21EFAF27D00F61526 /* DraggableMotion.cpp in Sources */,
 				7214DECD1EFAF27D00F61526 /* InputMapper.cpp in Sources */,
 				7214DEF31EFAF27D00F61526 /* DragSelector.cpp in Sources */,
@@ -3471,9 +3510,11 @@
 				7214DFF41EFAF27E00F61526 /* Colour.cpp in Sources */,
 				7214DEB01EFAF27D00F61526 /* GuiFieldEditors.cpp in Sources */,
 				7214DF501EFAF27D00F61526 /* btConvexPlaneCollisionAlgorithm.cpp in Sources */,
+				7206DE6C1F9554560069B8E9 /* Hoverable.cpp in Sources */,
 				7214DEA21EFAF27D00F61526 /* AssetLoaderSystem.cpp in Sources */,
 				7214DF4B1EFAF27D00F61526 /* btCollisionWorld.cpp in Sources */,
 				7214DE861EFAF27D00F61526 /* smooth.c in Sources */,
+				7206DE621F9554120069B8E9 /* ScrollWheelMoverSystem.cpp in Sources */,
 				7214DFC21EFAF27E00F61526 /* btSoftBodyRigidBodyCollisionConfiguration.cpp in Sources */,
 				7214DFDF1EFAF27E00F61526 /* IOSViewController.mm in Sources */,
 				7214DECB1EFAF27D00F61526 /* TextBoxSystem.cpp in Sources */,
@@ -3481,7 +3522,6 @@
 				7214DF9C1EFAF27E00F61526 /* btGeneric6DofSpringConstraint.cpp in Sources */,
 				7214DF5B1EFAF27E00F61526 /* SphereTriangleDetector.cpp in Sources */,
 				7214DE311EFAF27D00F61526 /* FileArchive.cpp in Sources */,
-				7214DEC31EFAF27D00F61526 /* Menu.cpp in Sources */,
 				7214DE341EFAF27D00F61526 /* ICellItem.cpp in Sources */,
 				7214DFAE1EFAF27E00F61526 /* PosixThreadSupport.cpp in Sources */,
 				7214DF7E1EFAF27E00F61526 /* btTriangleMeshShape.cpp in Sources */,
@@ -3503,11 +3543,13 @@
 				7214DE4E1EFAF27D00F61526 /* ftbase.c in Sources */,
 				7214DE2A1EFAF27D00F61526 /* InputDevice.cpp in Sources */,
 				7214DF4E1EFAF27D00F61526 /* btConvexConcaveCollisionAlgorithm.cpp in Sources */,
+				7206DE571F9554010069B8E9 /* Panel.cpp in Sources */,
 				7214DFBB1EFAF27E00F61526 /* SpuSampleTask.cpp in Sources */,
 				7214DFAF1EFAF27E00F61526 /* SequentialThreadSupport.cpp in Sources */,
 				7214DF7F1EFAF27E00F61526 /* btUniformScalingShape.cpp in Sources */,
 				7214DE781EFAF27D00F61526 /* sfnt.c in Sources */,
 				7214DEEB1EFAF27D00F61526 /* ShaderComponent.cpp in Sources */,
+				7206DE631F9554120069B8E9 /* ScrollWheelMover.cpp in Sources */,
 				7214DED91EFAF27D00F61526 /* VelocitySystem.cpp in Sources */,
 				7214DFDD1EFAF27E00F61526 /* FileReader.mm in Sources */,
 				7214DFA21EFAF27E00F61526 /* btSolve2LinearConstraint.cpp in Sources */,
@@ -3562,7 +3604,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_OPTIMIZATION_LEVEL = s;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -3573,10 +3615,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
@@ -3614,16 +3657,19 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
 		7214D9161EFAF11100F61526 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3641,15 +3687,18 @@
 					"\"$(SRCROOT)/../../../../Pocket/Physics/Box2D/Collision\"",
 					"\"$(SRCROOT)/../../../../Pocket/Libs/FreeType/include\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
 		7214D9171EFAF11100F61526 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -3666,9 +3715,11 @@
 					"\"$(SRCROOT)/../../../../Pocket/Physics/Box2D/Collision\"",
 					"\"$(SRCROOT)/../../../../Pocket/Libs/FreeType/include\"",
 				);
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -3691,6 +3742,7 @@
 				7214D9171EFAF11100F61526 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
