@@ -207,6 +207,7 @@ namespace Pocket {
         
         Event<> LayersChanged;
         
+        Event<GameObject*> RootCreated;
         Event<GameObject*> RootRemoved;
         
         void SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate& predicate);

@@ -141,6 +141,7 @@ GameObject* GameWorld::CreateRoot() {
     GameObject* root = CreateEmptyObject(0, scene, true);
     scene->root = root;
     roots.push_back(root);
+    RootCreated(root);
     return root;
 }
 
