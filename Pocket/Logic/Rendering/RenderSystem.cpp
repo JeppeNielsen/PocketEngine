@@ -179,6 +179,9 @@ void RenderSystem::RenderTransparentVisibleObjects(const VisibleObjects& visible
 }
 
 void RenderSystem::Render() {
+    if (!cameras) {
+        return;
+    }
     renderInfo.drawCalls = 0;
     renderInfo.verticesRendered = 0;
     renderInfo.objectsRendered = 0;
