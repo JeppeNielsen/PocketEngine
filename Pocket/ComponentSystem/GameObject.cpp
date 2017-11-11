@@ -338,6 +338,9 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
     GameObject* clone = CreateChildCloneInternal(referenceComponents, source, predicate);
     
     for(auto& referenceComponent : referenceComponents) {
+        if (referenceComponent.referenceObjectId<0) {
+            continue; // this reference object is removed
+        }
         GameObject* referenceObject = (GameObject*)World()->objects.Get(referenceComponent.referenceObjectId);
         if (referenceObject->HasAncestor(source)) {
             int referenceIndex = 0;
