@@ -11,6 +11,7 @@
 		7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA061EE1F2510074C053 /* EditorSizeableSelection.cpp */; };
 		7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0C1EE207E20074C053 /* Spawner.cpp */; };
 		7201DA111EE209400074C053 /* SpawnerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */; };
+		7204597F1FA4D10B0079CD35 /* clickToFlashScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */; };
 		720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */; };
 		720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585051E61EDB6009FFACF /* SceneManager.cpp */; };
 		7205850A1E621813009FFACF /* SceneManagerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585081E621813009FFACF /* SceneManagerSystem.cpp */; };
@@ -505,6 +506,7 @@
 		7201DA0D1EE207E20074C053 /* Spawner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Spawner.hpp; sourceTree = "<group>"; };
 		7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnerSystem.cpp; sourceTree = "<group>"; };
 		7201DA101EE209400074C053 /* SpawnerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpawnerSystem.hpp; sourceTree = "<group>"; };
+		7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = clickToFlashScreen.cpp; sourceTree = "<group>"; };
 		720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectSettings.cpp; sourceTree = "<group>"; };
 		720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectSettings.hpp; sourceTree = "<group>"; };
 		720585051E61EDB6009FFACF /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
@@ -2275,6 +2277,7 @@
 				7287F21F1C9DB496005D05FA /* libclang.dylib */,
 				7287F10A1C9B41B3005D05FA /* Assets */,
 				72994F981C99F74F00DAAE5D /* main.cpp */,
+				7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */,
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
 				72B492691DD3AE510063518A /* testGui.cpp */,
 				72A4AFB41E47D5C400A856F5 /* testResources.cpp */,
@@ -4024,6 +4027,7 @@
 				7299540B1C99F76100DAAE5D /* RigidBody.cpp in Sources */,
 				72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */,
 				7299541B1C99F76100DAAE5D /* SelectableDragSystem.cpp in Sources */,
+				7204597F1FA4D10B0079CD35 /* clickToFlashScreen.cpp in Sources */,
 				72B4926A1DD3AE510063518A /* testGui.cpp in Sources */,
 				729954C01C99F76100DAAE5D /* btRigidBody.cpp in Sources */,
 				729954211C99F76100DAAE5D /* BoundingBox.cpp in Sources */,

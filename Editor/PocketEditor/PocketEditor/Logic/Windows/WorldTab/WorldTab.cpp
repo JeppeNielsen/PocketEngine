@@ -11,6 +11,7 @@
 #include "VirtualTreeListSpawnerSystem.hpp"
 #include "FileSystemListenerSystem.hpp"
 #include "GameWorldViewport.hpp"
+#include "FileHelper.hpp"
 
 std::string WorldTab::Name() { return "WorldTab"; }
 
@@ -58,7 +59,25 @@ void WorldTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     }
     UpdatePlayButtons(current);
     
+    if (old) {
+        old->IsPlaying.Changed.Unbind(this, &WorldTab::IsPlayingChanged, current);
+        if (old->GetRunningWorld()) {
+            old->GetRunningWorld()->World().RootCreated.Unbind(this, &WorldTab::RootCreated, old);
+            old->GetRunningWorld()->World().RootRemoved.Unbind(this, &WorldTab::RootRemoved, old);
+            old->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &WorldTab::ActiveSceneChanged, old->GetRunningWorld());
+        }
+        ClearTabs();
+    }
     
+    if (current) {
+        current->IsPlaying.Changed.Bind(this, &WorldTab::IsPlayingChanged, current);
+        if (current->GetRunningWorld()) {
+            current->GetRunningWorld()->World().RootCreated.Bind(this, &WorldTab::RootCreated, current);
+            current->GetRunningWorld()->World().RootRemoved.Bind(this, &WorldTab::RootRemoved, current);
+            current->GetRunningWorld()->ActiveScene.Changed.Bind(this, &WorldTab::ActiveSceneChanged, current->GetRunningWorld());
+        }
+        UpdateWorld(current);
+    }
 }
 
 void WorldTab::WorldLoaded(OpenWorld *world) {
@@ -114,10 +133,13 @@ void WorldTab::CreatePlayButtons() {
     }
 
     gameModePivot = gui.CreatePivot(window);
-    gameModePivot->AddComponent<Sizeable>();
-    gui.AddLayouter(gameModePivot, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Horizontal);
+    gui.AddLayouter(gameModePivot, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Vertical);
+    
+    
+    GameObject* buttons = gui.CreatePivot(gameModePivot);
+    gui.AddLayouter(buttons, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Horizontal);
     {
-        GameObject* stopButton = gui.CreateLabelControl(gameModePivot, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
+        GameObject* stopButton = gui.CreateLabelControl(buttons, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
         gui.AddLayouter(stopButton, 30, {2000,30}, {2000,30});
         
         stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
@@ -129,7 +151,7 @@ void WorldTab::CreatePlayButtons() {
             });
         });
     
-        GameObject* pauseButton = gui.CreateLabelControl(gameModePivot, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
+        GameObject* pauseButton = gui.CreateLabelControl(buttons, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
         gui.AddLayouter(pauseButton, 30, {2000,30}, {2000,30});
         
         pauseButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
@@ -138,6 +160,13 @@ void WorldTab::CreatePlayButtons() {
             currentWorld->IsPaused = !currentWorld->IsPaused();
         });
     }
+    
+    rootPanel = gui.CreatePivot(gameModePivot);
+    gui.AddLayouter(rootPanel, 30, {2000,30}, {2000,30}, Layouter::LayoutMode::Horizontal);
+    {
+        
+    }
+    
     
     editModePivot->Enabled = false;
     gameModePivot->Enabled = false;
@@ -153,8 +182,92 @@ void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
     }
     
     if (openWorld) {
-        renderArea->AddComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? &context->World() : &openWorld->GetRunningWorld()->World();
+        renderArea->GetComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? &context->World() : &openWorld->GetRunningWorld()->World();
     } else {
-        renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
+        renderArea->GetComponent<GameWorldViewport>()->World = &context->World();
     }
+}
+
+void WorldTab::IsPlayingChanged(OpenWorld* world) {
+    if (world->IsPlaying) {
+        if (world->GetRunningWorld()) {
+            world->GetRunningWorld()->World().RootCreated.Bind(this, &WorldTab::RootCreated, world);
+            world->GetRunningWorld()->World().RootRemoved.Bind(this, &WorldTab::RootRemoved, world);
+            world->GetRunningWorld()->ActiveScene.Changed.Bind(this, &WorldTab::ActiveSceneChanged, world->GetRunningWorld());
+        }
+    } else {
+        if (world->GetRunningWorld()) {
+            world->GetRunningWorld()->World().RootCreated.Unbind(this, &WorldTab::RootCreated, world);
+            world->GetRunningWorld()->World().RootRemoved.Unbind(this, &WorldTab::RootRemoved, world);
+            world->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &WorldTab::ActiveSceneChanged, world->GetRunningWorld());
+        }
+    }
+    UpdateWorld(world);
+}
+
+void WorldTab::UpdateWorld(OpenWorld *world) {
+    ClearTabs();
+    if (!world->IsPlaying) return;
+    auto& runningWorld = world->GetRunningWorld()->World();
+    
+    for (auto r : runningWorld.Roots()) {
+        if (r!=world->GetRunningWorld()->EditorRoot()) {
+            AddTab(world, r);
+        }
+    }
+    ActiveSceneChanged(world->GetRunningWorld());
+}
+
+void WorldTab::AddTab(OpenWorld* world, GameObject* scene) {
+
+    Gui& gui = context->Gui();
+
+    GameObject* button = gui.CreateLayoutControl(rootPanel, "Box", {200,25}, {200,25}, {200,25}, Layouter::LayoutMode::Horizontal);
+    GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
+    label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+    label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+    label->GetComponent<Colorable>()->Color = Colour::Black();
+
+    gui.AddLayouter(label, 25, {175,25}, {175,25});
+
+    button->GetComponent<Touchable>()->Click.Bind([world, scene] (TouchData d){
+        world->GetRunningWorld()->ActiveScene = scene;
+    });
+
+    {
+        GameObject* closeButton = gui.CreateLayoutControl(button, "Box", 25,25,25);
+        closeButton->GetComponent<Touchable>()->Click.Bind([world, this] (TouchData d) {
+            world->GetRunningWorld()->ActiveScene = nullptr;
+        });
+        
+        GameObject* label = gui.CreateLabel(closeButton, 0, {20,20}, 0, "X", 12);
+        label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+        label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+        label->GetComponent<Colorable>()->Color = Colour::Black();
+        label->ReplaceComponent<Sizeable>(closeButton);
+    }
+}
+
+void WorldTab::ClearTabs() {
+    for (auto o : rootPanel->Children()) {
+        o->Remove();
+    }
+}
+
+void WorldTab::ActiveSceneChanged(RunningWorld *world) {
+//    for(auto t : rootPanel->Children()) {
+//        bool active = t.first == world->ActiveScene;
+//        t->GetComponent<Colorable>()->Color =
+//            active ?
+//        Colour(1.0f,1.0f,1.0f, 1.0f) :
+//        Colour(0.6f,0.6f,0.6f, 1.0f);
+//    }
+}
+
+void WorldTab::RootCreated(GameObject* root, OpenWorld* world) {
+    UpdateWorld(world);
+}
+
+void WorldTab::RootRemoved(GameObject* root, OpenWorld* world) {
+    UpdateWorld(world);
 }

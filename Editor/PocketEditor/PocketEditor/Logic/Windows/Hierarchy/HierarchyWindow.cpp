@@ -40,7 +40,7 @@ void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
 }
 
 void HierarchyWindow::GameSceneChanged(OpenWorld *world) {
-    GameObject* root =  world ? world->GameRoot : 0;
+    GameObject* root =  world ? world->GameRoot : nullptr;
     context->preActions.emplace_back([this, root] () {
         treeView->Root = root;
     });
@@ -137,7 +137,9 @@ void HierarchyWindow::EnabledChanged(Pocket::GameObject *object) {
 }
 
 void HierarchyWindow::SetNodeEnabled(Pocket::GameObject *node, bool enabled) {
-    node->GetComponent<Sprite>()->SpriteName = enabled ? "CheckBox_on" : "CheckBox_off";
+    if (node->HasComponent<Sprite>()) {
+        node->GetComponent<Sprite>()->SpriteName = enabled ? "CheckBox_on" : "CheckBox_off";
+    }
 }
 
 void HierarchyWindow::Clicked(TouchData d, GameObject* object) {

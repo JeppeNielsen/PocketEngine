@@ -39,6 +39,16 @@ private:
     GameObject* editModePivot;
     GameObject* gameModePivot;
     
+    GameObject* rootPanel;
+    
     void CreatePlayButtons();
     void UpdatePlayButtons(OpenWorld* openWorld);
+    
+    void UpdateWorld(OpenWorld *world);
+    void AddTab(OpenWorld* world, GameObject* scene);
+    void ClearTabs();
+    void ActiveSceneChanged(RunningWorld *world);
+    void IsPlayingChanged(OpenWorld* world);
+    void RootCreated(GameObject* root, OpenWorld* world);
+    void RootRemoved(GameObject* root, OpenWorld* world);
 };

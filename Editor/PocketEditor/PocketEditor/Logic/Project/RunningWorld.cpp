@@ -22,6 +22,15 @@ RunningWorld::RunningWorld() {
         editorScene.Destroy();
         if (ActiveScene) {
             editorScene.Initialize(ActiveScene);
+            for(auto root : world.Roots()) {
+                if (root!=editorScene.EditorRoot()) {
+                    root->RenderEnabled() = (root == ActiveScene);
+                }
+            }
+        } else {
+            for(auto o : world.Roots()) {
+                o->RenderEnabled() = true;
+            }
         }
     });
 }
