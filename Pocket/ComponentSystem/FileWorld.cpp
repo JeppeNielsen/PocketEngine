@@ -58,3 +58,8 @@ void FileWorld::FindRoots(const std::string &path, const std::vector<std::string
 const std::map<std::string, std::string>& FileWorld::Paths() {
     return guidToPath;
 }
+
+std::string FileWorld::GetPathFromGuid(const std::string &guid) {
+    auto it = guidToPath.find(guid);
+    return it == guidToPath.end() ? "" : it->second;
+}

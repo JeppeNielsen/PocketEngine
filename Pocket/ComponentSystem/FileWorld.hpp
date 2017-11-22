@@ -25,6 +25,8 @@ namespace Pocket {
         
         const std::map<std::string, std::string>& Paths();
         
+        std::string GetPathFromGuid(const std::string& guid);
+        
     private:
         std::map<std::string, std::string> guidToPath;
     };
