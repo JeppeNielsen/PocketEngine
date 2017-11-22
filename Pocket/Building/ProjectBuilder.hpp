@@ -10,6 +10,7 @@
 #include <string>
 #include <vector>
 #include "IOSBuilder.hpp"
+#include "OSXBuilder.hpp"
 #include "ScriptWorld.hpp"
 
 namespace Pocket {
@@ -23,8 +24,12 @@ namespace Pocket {
                             const std::vector<std::string>& headerFiles
                            );
         void SetStartupScene(const std::string& sceneGUID);
+        void SetProjectName(const std::string& projectName);
+        void SetBundleIdentifier(const std::string& bundleIdentifier);
+        void SetIconPath(const std::string& iconPath);
         
-        IOSBuilder IOS;
+        IOSBuilder ios;
+        OSXBuilder osx;
         
     protected:
         bool CreateResources(const std::string& outputFile);
@@ -39,9 +44,14 @@ namespace Pocket {
         std::string workingDirectory;
         std::string resourcesPath;
         std::string startupSceneGUID;
+        std::string projectName;
+        std::string bundleIdentifier;
+        std::string iconPath;
+        
         ScriptWorld* world;
         
         friend class PlatformBuilder;
         friend class IOSBuilder;
+        friend class OSXBuilder;
     };
 }

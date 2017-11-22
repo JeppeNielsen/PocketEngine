@@ -18,7 +18,8 @@
 using namespace Pocket;
 
 ProjectBuilder::ProjectBuilder() {
-    IOS.project = this;
+    ios.project = this;
+    osx.project = this;
 }
 
 void ProjectBuilder::Initialize(const std::string &pocketEngineIncludePath, const std::string &workingDirectory, const std::string& resourcesPath, ScriptWorld& world) {
@@ -101,3 +102,16 @@ bool ProjectBuilder::CreateResources(const std::string &outputFile) {
 void ProjectBuilder::SetStartupScene(const std::string &sceneGUID) {
     startupSceneGUID = sceneGUID;
 }
+
+void ProjectBuilder::SetProjectName(const std::string &projectName) {
+    this->projectName = projectName;
+}
+
+void ProjectBuilder::SetBundleIdentifier(const std::string &bundleIdentifier) {
+    this->bundleIdentifier = bundleIdentifier;
+}
+
+void ProjectBuilder::SetIconPath(const std::string &iconPath) {
+    this->iconPath = iconPath;
+}
+
