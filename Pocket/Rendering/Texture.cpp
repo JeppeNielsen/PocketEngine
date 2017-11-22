@@ -62,6 +62,8 @@ void Texture::CreateFromBuffer(unsigned char *buffer, int width, int height, GLe
     ASSERT_GL(glTexImage2D(GL_TEXTURE_2D, 0, pixelFormat, width, height, 0, pixelFormat, GL_UNSIGNED_BYTE, buffer));
 	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, &image[0]);
     //GenerateMipmaps();
+    
+    delete [] buffer;
 }
 
 void Texture::DisableMipmapping() {
