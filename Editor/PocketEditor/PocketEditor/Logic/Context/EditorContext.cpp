@@ -65,7 +65,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     initRoot->CreateSystem<AssetManager>();
     initRoot->Remove();
     
-    project.Initialize(world);
+    project.Initialize(world, fileWorld);
     
     logRoot = world.CreateRoot();
     log = logRoot->CreateSystem<LogSystem>();

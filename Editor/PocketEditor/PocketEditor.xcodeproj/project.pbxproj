@@ -11,7 +11,6 @@
 		7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA061EE1F2510074C053 /* EditorSizeableSelection.cpp */; };
 		7201DA0E1EE207E20074C053 /* Spawner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0C1EE207E20074C053 /* Spawner.cpp */; };
 		7201DA111EE209400074C053 /* SpawnerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */; };
-		7204597F1FA4D10B0079CD35 /* clickToFlashScreen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */; };
 		720584FE1E5CC7D9009FFACF /* ProjectSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */; };
 		720585071E61EDB6009FFACF /* SceneManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585051E61EDB6009FFACF /* SceneManager.cpp */; };
 		7205850A1E621813009FFACF /* SceneManagerSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 720585081E621813009FFACF /* SceneManagerSystem.cpp */; };
@@ -437,6 +436,9 @@
 		72BA19611E2039FD00122007 /* ShaderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19601E2039FD00122007 /* ShaderComponent.cpp */; };
 		72BA19641E20F75800122007 /* AssetLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19621E20F75800122007 /* AssetLoader.cpp */; };
 		72BA19671E22900900122007 /* FileSystemWatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72BA19661E22900900122007 /* FileSystemWatcher.cpp */; };
+		72C82F9D1FB8D03800B86855 /* OSXBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C82F9B1FB8D03700B86855 /* OSXBuilder.cpp */; };
+		72C82FCF1FBB8DFA00B86855 /* testIconSaving.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C82FCE1FBB8DFA00B86855 /* testIconSaving.cpp */; };
+		72C82FDC1FC372A400B86855 /* ImageHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C82FDA1FC372A400B86855 /* ImageHelper.cpp */; };
 		72C9B26E1E87061600033C56 /* ConsoleWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B26C1E87061600033C56 /* ConsoleWindow.cpp */; };
 		72C9B2721E884C7200033C56 /* LogMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2701E884C7200033C56 /* LogMessage.cpp */; };
 		72C9B2751E884D1D00033C56 /* LogSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72C9B2731E884D1D00033C56 /* LogSystem.cpp */; };
@@ -506,7 +508,6 @@
 		7201DA0D1EE207E20074C053 /* Spawner.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Spawner.hpp; sourceTree = "<group>"; };
 		7201DA0F1EE209400074C053 /* SpawnerSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpawnerSystem.cpp; sourceTree = "<group>"; };
 		7201DA101EE209400074C053 /* SpawnerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SpawnerSystem.hpp; sourceTree = "<group>"; };
-		7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = clickToFlashScreen.cpp; sourceTree = "<group>"; };
 		720584FC1E5CC7D9009FFACF /* ProjectSettings.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectSettings.cpp; sourceTree = "<group>"; };
 		720584FD1E5CC7D9009FFACF /* ProjectSettings.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectSettings.hpp; sourceTree = "<group>"; };
 		720585051E61EDB6009FFACF /* SceneManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SceneManager.cpp; sourceTree = "<group>"; };
@@ -1568,6 +1569,13 @@
 		72BA19631E20F75800122007 /* AssetLoader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetLoader.hpp; sourceTree = "<group>"; };
 		72BA19651E228FC800122007 /* FileSystemWatcher.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileSystemWatcher.hpp; sourceTree = "<group>"; };
 		72BA19661E22900900122007 /* FileSystemWatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSystemWatcher.cpp; sourceTree = "<group>"; };
+		72C82F9B1FB8D03700B86855 /* OSXBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSXBuilder.cpp; sourceTree = "<group>"; };
+		72C82F9C1FB8D03800B86855 /* OSXBuilder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = OSXBuilder.hpp; sourceTree = "<group>"; };
+		72C82FCE1FBB8DFA00B86855 /* testIconSaving.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testIconSaving.cpp; sourceTree = "<group>"; };
+		72C82FD81FC3717F00B86855 /* stb_image_write.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
+		72C82FD91FC3727100B86855 /* stb_image_resize.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_image_resize.h; sourceTree = "<group>"; };
+		72C82FDA1FC372A400B86855 /* ImageHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ImageHelper.cpp; sourceTree = "<group>"; };
+		72C82FDB1FC372A400B86855 /* ImageHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ImageHelper.hpp; sourceTree = "<group>"; };
 		72C9B26C1E87061600033C56 /* ConsoleWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ConsoleWindow.cpp; sourceTree = "<group>"; };
 		72C9B26D1E87061600033C56 /* ConsoleWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ConsoleWindow.hpp; sourceTree = "<group>"; };
 		72C9B2701E884C7200033C56 /* LogMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LogMessage.cpp; sourceTree = "<group>"; };
@@ -1751,6 +1759,8 @@
 		7214E0481EFEEE5A00F61526 /* Building */ = {
 			isa = PBXGroup;
 			children = (
+				72C82F9B1FB8D03700B86855 /* OSXBuilder.cpp */,
+				72C82F9C1FB8D03800B86855 /* OSXBuilder.hpp */,
 				7214E0491EFEEFE900F61526 /* ProjectBuilder.cpp */,
 				7214E04A1EFEEFE900F61526 /* ProjectBuilder.hpp */,
 				7214E0681F0036FC00F61526 /* PlatformBuilder.cpp */,
@@ -2277,7 +2287,6 @@
 				7287F21F1C9DB496005D05FA /* libclang.dylib */,
 				7287F10A1C9B41B3005D05FA /* Assets */,
 				72994F981C99F74F00DAAE5D /* main.cpp */,
-				7204597E1FA4D10B0079CD35 /* clickToFlashScreen.cpp */,
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
 				72B492691DD3AE510063518A /* testGui.cpp */,
 				72A4AFB41E47D5C400A856F5 /* testResources.cpp */,
@@ -2291,6 +2300,7 @@
 				7227451E1F267C08009B0528 /* testWindowSystem.cpp */,
 				7227454B1F3B94D9009B0528 /* testLayouting.cpp */,
 				7227454D1F3CBF51009B0528 /* testRenderBuffer.cpp */,
+				72C82FCE1FBB8DFA00B86855 /* testIconSaving.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -3577,6 +3587,8 @@
 				72A4AFA71E3FED4900A856F5 /* ImageLoader.hpp */,
 				7227454F1F40CCD2009B0528 /* RenderTexture.cpp */,
 				722745501F40CCD2009B0528 /* RenderTexture.hpp */,
+				72C82FDA1FC372A400B86855 /* ImageHelper.cpp */,
+				72C82FDB1FC372A400B86855 /* ImageHelper.hpp */,
 			);
 			path = Rendering;
 			sourceTree = "<group>";
@@ -3601,6 +3613,8 @@
 			isa = PBXGroup;
 			children = (
 				72A4AFAA1E3FF19400A856F5 /* stb_image.h */,
+				72C82FD81FC3717F00B86855 /* stb_image_write.h */,
+				72C82FD91FC3727100B86855 /* stb_image_resize.h */,
 			);
 			path = STBImage;
 			sourceTree = "<group>";
@@ -3988,6 +4002,7 @@
 				727B38DA1E2B9C5300531B62 /* tinyxmlerror.cpp in Sources */,
 				729953D11C99F76100DAAE5D /* TimeMeasurer.cpp in Sources */,
 				729954B61C99F76100DAAE5D /* btGeneric6DofSpringConstraint.cpp in Sources */,
+				72C82FCF1FBB8DFA00B86855 /* testIconSaving.cpp in Sources */,
 				7287F11B1C9B56E6005D05FA /* Rect.cpp in Sources */,
 				7206DE1E1F8AC1A00069B8E9 /* ScrollWheelMoverSystem.cpp in Sources */,
 				7299541D1C99F76100DAAE5D /* SelectedColorerSystem.cpp in Sources */,
@@ -4027,7 +4042,6 @@
 				7299540B1C99F76100DAAE5D /* RigidBody.cpp in Sources */,
 				72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */,
 				7299541B1C99F76100DAAE5D /* SelectableDragSystem.cpp in Sources */,
-				7204597F1FA4D10B0079CD35 /* clickToFlashScreen.cpp in Sources */,
 				72B4926A1DD3AE510063518A /* testGui.cpp in Sources */,
 				729954C01C99F76100DAAE5D /* btRigidBody.cpp in Sources */,
 				729954211C99F76100DAAE5D /* BoundingBox.cpp in Sources */,
@@ -4086,6 +4100,7 @@
 				72A4AFB51E47D5C400A856F5 /* testResources.cpp in Sources */,
 				7299542A1C99F76100DAAE5D /* Point3.cpp in Sources */,
 				729954E51C99F76100DAAE5D /* btQuickprof.cpp in Sources */,
+				72C82FDC1FC372A400B86855 /* ImageHelper.cpp in Sources */,
 				729954CA1C99F76100DAAE5D /* SpuCollisionObjectWrapper.cpp in Sources */,
 				729954D01C99F76100DAAE5D /* boxBoxDistance.cpp in Sources */,
 				729954841C99F76100DAAE5D /* btConvexTriangleMeshShape.cpp in Sources */,
@@ -4418,6 +4433,7 @@
 				7299547B1C99F76100DAAE5D /* btCompoundShape.cpp in Sources */,
 				723689A71D873A4E006480F0 /* ProjectWindow.cpp in Sources */,
 				7214E06D1F003AC800F61526 /* IOSBuilder.cpp in Sources */,
+				72C82F9D1FB8D03800B86855 /* OSXBuilder.cpp in Sources */,
 				72C9B2AE1E9ACBF400033C56 /* AutocompleterTextEditorSystem.cpp in Sources */,
 				729954A51C99F76100DAAE5D /* btContinuousConvexCollision.cpp in Sources */,
 				729954D21C99F76100DAAE5D /* SpuContactResult.cpp in Sources */,

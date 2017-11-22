@@ -27,6 +27,7 @@ class Project {
 private:
     
     GameWorld* world;
+    FileWorld* fileWorld;
     ScriptWorld scriptWorld;
     std::string path;
     std::vector<std::string> defaultIncludes;
@@ -42,13 +43,16 @@ public:
 
     Project();
     
-    void Initialize(GameWorld& world);
+    void Initialize(GameWorld& world, FileWorld& fileWorld);
     
     void Open(const std::string& path);
     ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
     bool Compile();
-    void BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput = 0);
+    
+    enum class Platform { osx, ios };
+    
+    void BuildExecutable(Platform platform, const std::string& outputPath, const std::function<void(const std::string&)>& onOutput = 0);
     void CreateNewWorld(const std::string& worldPath);
     
     void SaveWorld();

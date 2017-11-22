@@ -62,8 +62,9 @@ Project::Project() {
     });
 }
 
-void Project::Initialize(Pocket::GameWorld &world) {
+void Project::Initialize(GameWorld &world, FileWorld& fileWorld) {
     this->world = &world;
+    this->fileWorld = &fileWorld;
 }
 
 ScriptWorld& Project::ScriptWorld() { return scriptWorld; }
@@ -160,7 +161,7 @@ void Project::RefreshSourceFiles() {
     projectBuilder.SetSourceFiles(foundSourceFiles, foundIncludeFiles);
 }
 
-void Project::BuildExecutable(const std::string& outputPath, const std::function<void(const std::string&)>& onOutput) {
+void Project::BuildExecutable(Platform platform, const std::string& outputPath, const std::function<void(const std::string&)>& onOutput) {
 
     ProjectSettings* projectSettings = GetProjectSettings();
     if (!projectSettings) {
@@ -168,44 +169,23 @@ void Project::BuildExecutable(const std::string& outputPath, const std::function
         return;
     }
     
-    /*
-    
-    bool wasCreated = FileArchive::TryCreateArchiveFile(path, outputPath + "/resources", [] (const std::string& path) -> std::string {
-        std::string metaPath = path + ".meta";
-        
-        if (FileHelper::FileExists(metaPath)) {
-            std::ifstream file;
-            file.open(metaPath);
-            std::string guid = GameWorld::ReadGuidFromJson(file);
-            if (guid == "") return "";
-            return guid + "-asset";
-        } else {
-            
-            std::ifstream file;
-            file.open(path);
-            return GameWorld::ReadGuidFromJson(file);
-        }
-    });
-    
-    if (!wasCreated) {
-        std::cout << "Failed creating reources file"<<std::endl;
-        return;
-    }
-    
-    RefreshSourceFiles();
-    
-    scriptWorld.BuildExecutable("/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", outputPath + "/" + projectSettings->name , [&] (std::string& source) {
-        source += "world.SetLayerScene(0, world.TryFindRoot(\"";
-        source += projectSettings->startupScene.SceneGuid();
-        source += "\"));";
-    }, onOutput);
-    
-    */
-    
     projectBuilder.SetStartupScene(projectSettings->startupScene.SceneGuid());
+    projectBuilder.SetProjectName(projectSettings->name);
+    projectBuilder.SetBundleIdentifier(projectSettings->bundleIdentifier);
+    projectBuilder.SetIconPath(fileWorld->GetPathFromGuid(projectSettings->icon.SceneGuid()));
     
-    projectBuilder.IOS.Build(outputPath, "/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a");
-    
+    switch (platform) {
+        case Platform::osx: {
+            projectBuilder.osx.Build(outputPath, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+            break;
+        }
+        case Platform::ios: {
+            projectBuilder.ios.Build(outputPath, "/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a");
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 void Project::CreateNewWorld(const std::string &worldPath) {

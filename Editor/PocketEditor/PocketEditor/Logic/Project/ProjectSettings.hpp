@@ -17,9 +17,13 @@ using namespace Pocket;
 struct ProjectSettings {
     std::string name;
     GameObjectHandle startupScene;
+    std::string bundleIdentifier;
+    GameObjectHandle icon;
     
     TYPE_FIELDS_BEGIN
     TYPE_FIELD(name)
     TYPE_FIELD(startupScene)
+    TYPE_FIELD(bundleIdentifier)
+    TYPE_FIELD(icon)
     TYPE_FIELDS_END
 };

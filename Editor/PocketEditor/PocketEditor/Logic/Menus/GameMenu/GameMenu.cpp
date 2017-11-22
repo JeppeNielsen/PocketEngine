@@ -30,14 +30,16 @@ void GameMenu::OnCreate() {
     
         auto files = FileReader::ShowOpenFileRequester("", false, true);
         if (!files.empty()) {
+            context->preActions.push_back([=] {
                 Timer timer;
                 std::cout << "Build started... at path: "<< files[0] << std::endl;
                 timer.Begin();
-                context->Project().BuildExecutable(files[0], [this] (const std::string& output) {
+                context->Project().BuildExecutable(Project::Platform::osx, files[0], [this] (const std::string& output) {
                     context->Log().Log(output);
                 });
                 double time = timer.End();
                 std::cout << "Build finished, time = " << time << "s"<< std::endl;
+            });
         }
         
     });
@@ -54,7 +56,7 @@ void GameMenu::OnCreate() {
             timer.Begin();
             
             
-            context->Project().BuildExecutable(files[0], [this] (const std::string& output) {
+            context->Project().BuildExecutable(Project::Platform::ios, files[0], [this] (const std::string& output) {
                     context->Log().Log(output);
                 });
             
