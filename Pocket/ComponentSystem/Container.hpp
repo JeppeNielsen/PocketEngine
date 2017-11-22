@@ -31,12 +31,6 @@ namespace Pocket {
     };
     
     template<typename T>
-    class Handle;
-    
-    template<typename T>
-    using HandleCollection = std::vector<Handle<T>>;
-    
-    template<typename T>
     class Container : public IContainer {
     public:
         Container() : maxVersion(0) { }
@@ -148,18 +142,6 @@ namespace Pocket {
             }
         }
         
-        Handle<T> GetHandle(int index) const;
-        
-        HandleCollection<T> GetCollection() const {
-            HandleCollection<T> collection;
-            for(int i=0; i<references.size();++i) {
-                if (references[i]>0) {
-                    collection.emplace_back(Handle<T>(this, i, versions[i]));
-                }
-            }
-            return collection;
-        }
-    
         using Entries = std::deque<T>;
         Entries entries;
         
@@ -179,45 +161,4 @@ namespace Pocket {
         
         T defaultObject;
     };
-    
-    template<typename T>
-    class Handle {
-    private:
-        const Container<T>* container;
-        int index;
-        int version;
-        Handle(const Container<T>* container, int index, int version) :
-            container(container), index(index), version(version) {
-        }
-    public:
-        Handle() : container(0) {  }
-        ~Handle() {}
-        Handle(const Handle<T>& other) {
-            container = other.container;
-            index = other.index;
-            version = other.index;
-        }
-        
-        Handle(T* ptr) : Handle(ptr->GetHandle()) { }
-        Handle(T& ptr) : Handle(ptr.GetHandle()) { }
-        
-        T* operator -> () const {
-            if (!container) return nullptr;
-            if (index>=container->versions.size()) return nullptr;
-            if (version != container->versions[index]) return nullptr;
-            return (T*)&container->entries[index];
-        }
-        
-        explicit operator bool() const {
-            return operator->();
-        }
-        
-        friend class Container<T>;
-    };
-    
-    template<typename T>
-    Handle<T> Container<T>::GetHandle(int index) const {
-        return Handle<T>(this, index, versions[index]);
-    }
-    
 }

@@ -264,16 +264,4 @@ namespace Pocket {
         ReplaceComponent(componentId, source);
         return static_cast<T*>(source->GetComponent(componentId));
     }
-    
-    template<typename T>
-    Handle<T> GameObject::GetComponentHandle() const {
-        const ComponentId componentId = GameIdHelper::GetComponentID<T>();
-        if (componentId>=activeComponents.Size()) {
-            return Handle<T>();
-        }
-        if (!activeComponents[componentId]) return Handle<T>();
-        const Container<T>* container = static_cast<Container<T>*>(scene->world->components[componentId].container.get());
-        return container->GetHandle(componentIndicies[componentId]);
-    }
-
 }

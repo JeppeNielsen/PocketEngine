@@ -33,7 +33,6 @@ namespace Pocket {
     private:
         friend class GameWorld;
         friend class GameScene;
-        friend class Handle<GameObject>;
         friend class Container<GameObject>;
         friend class std::allocator<GameObject>;
         friend class ScriptWorld;
@@ -153,9 +152,6 @@ namespace Pocket {
             EnableComponent(GameIdHelper::GetComponentID<T>(), enable);
         }
         
-        template<typename T>
-        Handle<T> GetComponentHandle() const;
-        
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0) const ;
         
         struct ComponentEditor {
@@ -184,8 +180,6 @@ namespace Pocket {
         
         const ObjectCollection& Children() const;
         int ChildIndex() const;
-        
-        Handle<GameObject> GetHandle() const;
         
         int RootId() const;
         std::string& RootGuid() const;

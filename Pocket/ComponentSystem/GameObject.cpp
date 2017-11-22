@@ -84,9 +84,9 @@ bool GameObject::HasComponent(ComponentId id) const {
 
 void* GameObject::GetComponent(ComponentId id) const {
     if (id>=activeComponents.Size()) {
-        return 0;
+        return nullptr;
     }
-    if (!activeComponents[id]) return 0;
+    if (!activeComponents[id]) return nullptr;
     return scene->world->components[id].container->Get(componentIndicies[id]);
 }
 
@@ -288,10 +288,6 @@ void GameObject::Remove() {
 
 bool GameObject::IsRemoved() const {
     return removed;
-}
-
-Handle<GameObject> GameObject::GetHandle() const {
-    return scene->world->objects.GetHandle(index);
 }
 
 int GameObject::RootId() const {
