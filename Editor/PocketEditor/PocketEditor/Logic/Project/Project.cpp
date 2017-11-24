@@ -176,7 +176,8 @@ void Project::BuildExecutable(Platform platform, const std::string& outputPath, 
     
     switch (platform) {
         case Platform::osx: {
-            projectBuilder.osx.Build(outputPath, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+            //projectBuilder.osx.Build(outputPath, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a");
+            projectBuilder.osx.Build(outputPath, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Release/libPocketEngine.a");
             break;
         }
         case Platform::ios: {
