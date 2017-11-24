@@ -20,9 +20,9 @@ OpenWorldCollection::~OpenWorldCollection() {
 }
 
 void OpenWorldCollection::Clear() {
-    for(auto w : worlds) {
-        w->Close();
-        delete w;
+    auto temp = worlds;
+    for(auto w : temp) {
+        CloseWorld(w);
     }
     worlds.clear();
     ActiveWorld = 0;
