@@ -99,6 +99,9 @@
 		727B38D91E2B9C5300531B62 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B388B1E2B9C5300531B62 /* tinyxml.cpp */; };
 		727B38DA1E2B9C5300531B62 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B388D1E2B9C5300531B62 /* tinyxmlerror.cpp */; };
 		727B38DB1E2B9C5300531B62 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 727B388E1E2B9C5300531B62 /* tinyxmlparser.cpp */; };
+		728278871FCB421100AE0805 /* BigButtonManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728278851FCB421000AE0805 /* BigButtonManager.cpp */; };
+		7282788F1FCB424100AE0805 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728278891FCB424100AE0805 /* Thread.cpp */; };
+		728278931FCB435B00AE0805 /* TestBigButtons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 728278921FCB435B00AE0805 /* TestBigButtons.cpp */; };
 		7287F1061C9A11F1005D05FA /* EngineContext.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7287F1051C9A11F1005D05FA /* EngineContext.cpp */; };
 		7287F1091C9B416F005D05FA /* Editor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7287F1071C9B3F4C005D05FA /* Editor.cpp */; };
 		7287F1161C9B4216005D05FA /* Font.fnt in Resources */ = {isa = PBXBuildFile; fileRef = 7287F10C1C9B41B3005D05FA /* Font.fnt */; };
@@ -475,6 +478,12 @@
 		72D736521D7B5DBB001E2047 /* BaseMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736501D7B5DBB001E2047 /* BaseMenu.cpp */; };
 		72D736561D7B64A2001E2047 /* GameMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736541D7B64A2001E2047 /* GameMenu.cpp */; };
 		72D7365A1D7CC414001E2047 /* GameObjectMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72D736581D7CC414001E2047 /* GameObjectMenu.cpp */; };
+		72EF3DA81FCC9AE000F43E5B /* hid.c in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DA61FCC9AE000F43E5B /* hid.c */; };
+		72EF3DAA1FCC9B4800F43E5B /* testHID.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DA91FCC9B4800F43E5B /* testHID.cpp */; };
+		72EF3DB71FCCC27500F43E5B /* HidDevice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DB51FCCC27500F43E5B /* HidDevice.cpp */; };
+		72EF3DBA1FCCC2F600F43E5B /* HidDeviceSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DB81FCCC2F600F43E5B /* HidDeviceSystem.cpp */; };
+		72EF3DBD1FCCD11F00F43E5B /* CompetitionProJoystick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DBB1FCCD11F00F43E5B /* CompetitionProJoystick.cpp */; };
+		72EF3DC01FCCD1B800F43E5B /* CompetitionProJoystickSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72EF3DBE1FCCD1B800F43E5B /* CompetitionProJoystickSystem.cpp */; };
 		72F908271EAB265A003BBCC1 /* Worker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908251EAB265A003BBCC1 /* Worker.cpp */; };
 		72F908291EAB7BCB003BBCC1 /* testWorker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F908281EAB7BCB003BBCC1 /* testWorker.cpp */; };
 		72F9082D1EAC9198003BBCC1 /* CodeFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72F9082B1EAC9198003BBCC1 /* CodeFile.cpp */; };
@@ -758,6 +767,11 @@
 		727B388C1E2B9C5300531B62 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tinyxml.h; sourceTree = "<group>"; };
 		727B388D1E2B9C5300531B62 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlerror.cpp; sourceTree = "<group>"; };
 		727B388E1E2B9C5300531B62 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxmlparser.cpp; sourceTree = "<group>"; };
+		728278851FCB421000AE0805 /* BigButtonManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BigButtonManager.cpp; sourceTree = "<group>"; };
+		728278861FCB421100AE0805 /* BigButtonManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BigButtonManager.hpp; sourceTree = "<group>"; };
+		728278891FCB424100AE0805 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
+		7282788A1FCB424100AE0805 /* Thread.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Thread.hpp; sourceTree = "<group>"; };
+		728278921FCB435B00AE0805 /* TestBigButtons.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestBigButtons.cpp; sourceTree = "<group>"; };
 		7287F1051C9A11F1005D05FA /* EngineContext.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EngineContext.cpp; sourceTree = "<group>"; };
 		7287F1071C9B3F4C005D05FA /* Editor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Editor.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		7287F10C1C9B41B3005D05FA /* Font.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Font.fnt; sourceTree = "<group>"; };
@@ -1642,6 +1656,17 @@
 		72D736551D7B64A2001E2047 /* GameMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameMenu.hpp; sourceTree = "<group>"; };
 		72D736581D7CC414001E2047 /* GameObjectMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectMenu.cpp; sourceTree = "<group>"; };
 		72D736591D7CC414001E2047 /* GameObjectMenu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectMenu.hpp; sourceTree = "<group>"; };
+		72EF3DA61FCC9AE000F43E5B /* hid.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = hid.c; sourceTree = "<group>"; };
+		72EF3DA71FCC9AE000F43E5B /* hidapi.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hidapi.h; sourceTree = "<group>"; };
+		72EF3DA91FCC9B4800F43E5B /* testHID.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = testHID.cpp; sourceTree = "<group>"; };
+		72EF3DB51FCCC27500F43E5B /* HidDevice.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HidDevice.cpp; sourceTree = "<group>"; };
+		72EF3DB61FCCC27500F43E5B /* HidDevice.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HidDevice.hpp; sourceTree = "<group>"; };
+		72EF3DB81FCCC2F600F43E5B /* HidDeviceSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = HidDeviceSystem.cpp; sourceTree = "<group>"; };
+		72EF3DB91FCCC2F600F43E5B /* HidDeviceSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = HidDeviceSystem.hpp; sourceTree = "<group>"; };
+		72EF3DBB1FCCD11F00F43E5B /* CompetitionProJoystick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CompetitionProJoystick.cpp; sourceTree = "<group>"; };
+		72EF3DBC1FCCD11F00F43E5B /* CompetitionProJoystick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CompetitionProJoystick.hpp; sourceTree = "<group>"; };
+		72EF3DBE1FCCD1B800F43E5B /* CompetitionProJoystickSystem.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CompetitionProJoystickSystem.cpp; sourceTree = "<group>"; };
+		72EF3DBF1FCCD1B800F43E5B /* CompetitionProJoystickSystem.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CompetitionProJoystickSystem.hpp; sourceTree = "<group>"; };
 		72F908251EAB265A003BBCC1 /* Worker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Worker.cpp; sourceTree = "<group>"; };
 		72F908261EAB265A003BBCC1 /* Worker.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Worker.hpp; sourceTree = "<group>"; };
 		72F908281EAB7BCB003BBCC1 /* testWorker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = testWorker.cpp; sourceTree = "<group>"; };
@@ -1982,6 +2007,7 @@
 		727B37A81E2B9C5300531B62 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				72EF3DA51FCC9AD100F43E5B /* HID */,
 				727B37A91E2B9C5300531B62 /* FreeType */,
 				72A4AFA91E3FF19400A856F5 /* STBImage */,
 				727B38881E2B9C5300531B62 /* TinyXml */,
@@ -2217,6 +2243,15 @@
 			path = TinyXml;
 			sourceTree = "<group>";
 		};
+		728278881FCB424100AE0805 /* Threads */ = {
+			isa = PBXGroup;
+			children = (
+				728278891FCB424100AE0805 /* Thread.cpp */,
+				7282788A1FCB424100AE0805 /* Thread.hpp */,
+			);
+			path = Threads;
+			sourceTree = "<group>";
+		};
 		7287F10A1C9B41B3005D05FA /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -2301,6 +2336,8 @@
 				7227454B1F3B94D9009B0528 /* testLayouting.cpp */,
 				7227454D1F3CBF51009B0528 /* testRenderBuffer.cpp */,
 				72C82FCE1FBB8DFA00B86855 /* testIconSaving.cpp */,
+				728278921FCB435B00AE0805 /* TestBigButtons.cpp */,
+				72EF3DA91FCC9B4800F43E5B /* testHID.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -2310,11 +2347,11 @@
 			isa = PBXGroup;
 			children = (
 				7214E0481EFEEE5A00F61526 /* Building */,
-				727B37A81E2B9C5300531B62 /* Libs */,
 				72B4924E1DCE59D10063518A /* ComponentSystem */,
 				72994FAD1C99F76000DAAE5D /* Core */,
 				72994FBD1C99F76000DAAE5D /* Data */,
 				72994FDA1C99F76000DAAE5D /* Debugging */,
+				727B37A81E2B9C5300531B62 /* Libs */,
 				72994FE01C99F76000DAAE5D /* Logic */,
 				7299509B1C99F76000DAAE5D /* Math */,
 				729950BA1C99F76000DAAE5D /* OpenGL */,
@@ -2326,6 +2363,7 @@
 				729952FC1C99F76100DAAE5D /* Rendering */,
 				7287F1221C9DB09B005D05FA /* Scripting */,
 				7299539D1C99F76100DAAE5D /* Serialization */,
+				728278881FCB424100AE0805 /* Threads */,
 			);
 			name = Pocket;
 			path = ../../Pocket;
@@ -3535,6 +3573,8 @@
 		729952E01C99F76100DAAE5D /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				728278851FCB421000AE0805 /* BigButtonManager.cpp */,
+				728278861FCB421100AE0805 /* BigButtonManager.hpp */,
 				72BA19661E22900900122007 /* FileSystemWatcher.cpp */,
 				729952E11C99F76100DAAE5D /* AppDelegate.h */,
 				729952E21C99F76100DAAE5D /* AppDelegate.mm */,
@@ -3663,6 +3703,14 @@
 				72AE74D41DAC254E00CEB998 /* InputMapper.hpp */,
 				72AE74D61DAC284D00CEB998 /* InputMapperSystem.cpp */,
 				72AE74D71DAC284D00CEB998 /* InputMapperSystem.hpp */,
+				72EF3DB51FCCC27500F43E5B /* HidDevice.cpp */,
+				72EF3DB61FCCC27500F43E5B /* HidDevice.hpp */,
+				72EF3DB81FCCC2F600F43E5B /* HidDeviceSystem.cpp */,
+				72EF3DB91FCCC2F600F43E5B /* HidDeviceSystem.hpp */,
+				72EF3DBB1FCCD11F00F43E5B /* CompetitionProJoystick.cpp */,
+				72EF3DBC1FCCD11F00F43E5B /* CompetitionProJoystick.hpp */,
+				72EF3DBE1FCCD1B800F43E5B /* CompetitionProJoystickSystem.cpp */,
+				72EF3DBF1FCCD1B800F43E5B /* CompetitionProJoystickSystem.hpp */,
 			);
 			path = Input;
 			sourceTree = "<group>";
@@ -3904,6 +3952,15 @@
 			path = GameObjectMenu;
 			sourceTree = "<group>";
 		};
+		72EF3DA51FCC9AD100F43E5B /* HID */ = {
+			isa = PBXGroup;
+			children = (
+				72EF3DA61FCC9AE000F43E5B /* hid.c */,
+				72EF3DA71FCC9AE000F43E5B /* hidapi.h */,
+			);
+			path = HID;
+			sourceTree = "<group>";
+		};
 		72F9082A1EAC9189003BBCC1 /* Code */ = {
 			isa = PBXGroup;
 			children = (
@@ -4000,6 +4057,7 @@
 				7287F1061C9A11F1005D05FA /* EngineContext.cpp in Sources */,
 				729954A81C99F76100DAAE5D /* btGjkEpa2.cpp in Sources */,
 				727B38DA1E2B9C5300531B62 /* tinyxmlerror.cpp in Sources */,
+				728278931FCB435B00AE0805 /* TestBigButtons.cpp in Sources */,
 				729953D11C99F76100DAAE5D /* TimeMeasurer.cpp in Sources */,
 				729954B61C99F76100DAAE5D /* btGeneric6DofSpringConstraint.cpp in Sources */,
 				72C82FCF1FBB8DFA00B86855 /* testIconSaving.cpp in Sources */,
@@ -4014,6 +4072,7 @@
 				729953E31C99F76100DAAE5D /* FieldEditor.cpp in Sources */,
 				729954881C99F76100DAAE5D /* btMinkowskiSumShape.cpp in Sources */,
 				72F908271EAB265A003BBCC1 /* Worker.cpp in Sources */,
+				728278871FCB421100AE0805 /* BigButtonManager.cpp in Sources */,
 				729954A31C99F76100DAAE5D /* gim_memory.cpp in Sources */,
 				7299545E1C99F76100DAAE5D /* btSimpleBroadphase.cpp in Sources */,
 				7227454A1F3A4C39009B0528 /* BackgroundArea.cpp in Sources */,
@@ -4039,6 +4098,7 @@
 				729953FD1C99F76100DAAE5D /* TouchCancelSystem.cpp in Sources */,
 				727B389D1E2B9C5300531B62 /* ftinit.c in Sources */,
 				7201DA111EE209400074C053 /* SpawnerSystem.cpp in Sources */,
+				72EF3DBD1FCCD11F00F43E5B /* CompetitionProJoystick.cpp in Sources */,
 				7299540B1C99F76100DAAE5D /* RigidBody.cpp in Sources */,
 				72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */,
 				7299541B1C99F76100DAAE5D /* SelectableDragSystem.cpp in Sources */,
@@ -4113,6 +4173,7 @@
 				7220F64C1E75E3F10063EAD5 /* EditorCameraSelection.cpp in Sources */,
 				726DFD2C1D247C8F00C862B7 /* TypeIndexList.cpp in Sources */,
 				729954961C99F76100DAAE5D /* btTriangleIndexVertexMaterialArray.cpp in Sources */,
+				72EF3DBA1FCCC2F600F43E5B /* HidDeviceSystem.cpp in Sources */,
 				729953E21C99F76100DAAE5D /* HierarchyOrder.cpp in Sources */,
 				72D719F71CAB211300868DDB /* VirtualTreeListSpawnerSystem.cpp in Sources */,
 				72C9B27A1E8ABF4000033C56 /* textEditorTest.cpp in Sources */,
@@ -4216,6 +4277,7 @@
 				723689AA1D888BD6006480F0 /* OpenWorld.cpp in Sources */,
 				7220F6301E6762370063EAD5 /* RunningWorld.cpp in Sources */,
 				7220F63D1E74A21D0063EAD5 /* LineRendererSystem.cpp in Sources */,
+				72EF3DC01FCCD1B800F43E5B /* CompetitionProJoystickSystem.cpp in Sources */,
 				72AE74EF1DB2D5E400CEB998 /* Guid.cpp in Sources */,
 				72CE8EFC1CB5A18E001F08E4 /* EditorMeshSystem.cpp in Sources */,
 				729953E71C99F76100DAAE5D /* HierarchyEditor.cpp in Sources */,
@@ -4223,6 +4285,7 @@
 				729954731C99F76100DAAE5D /* btSphereTriangleCollisionAlgorithm.cpp in Sources */,
 				729954481C99F76100DAAE5D /* b2WorldCallbacks.cpp in Sources */,
 				7214E04D1EFEF83300F61526 /* testXCodeProject.cpp in Sources */,
+				7282788F1FCB424100AE0805 /* Thread.cpp in Sources */,
 				729954311C99F76100DAAE5D /* ChromecastReceiver.cpp in Sources */,
 				7299549F1C99F76100DAAE5D /* btGImpactShape.cpp in Sources */,
 				729954761C99F76100DAAE5D /* btBox2dShape.cpp in Sources */,
@@ -4263,6 +4326,7 @@
 				72A4AF7A1E2BB71C00A856F5 /* smooth.c in Sources */,
 				7227453D1F34916E009B0528 /* PanelSystem.cpp in Sources */,
 				729954551C99F76100DAAE5D /* btAxisSweep3.cpp in Sources */,
+				72EF3DA81FCC9AE000F43E5B /* hid.c in Sources */,
 				7299541E1C99F76100DAAE5D /* SelectionVisualizer.cpp in Sources */,
 				729954441C99F76100DAAE5D /* b2Body.cpp in Sources */,
 				729954891C99F76100DAAE5D /* btMultimaterialTriangleMeshShape.cpp in Sources */,
@@ -4443,6 +4507,7 @@
 				729954AB1C99F76100DAAE5D /* btMinkowskiPenetrationDepthSolver.cpp in Sources */,
 				7299544E1C99F76100DAAE5D /* b2DistanceJoint.cpp in Sources */,
 				7299543F1C99F76100DAAE5D /* b2Shape.cpp in Sources */,
+				72EF3DB71FCCC27500F43E5B /* HidDevice.cpp in Sources */,
 				729954831C99F76100DAAE5D /* btConvexShape.cpp in Sources */,
 				72C9B2951E92C51A00033C56 /* TextEditorSelectionMeshSystem.cpp in Sources */,
 				72C9B2B31EA7820100033C56 /* AutocompleterSystem.cpp in Sources */,
@@ -4451,6 +4516,7 @@
 				72A4B3991E4BB5B200A856F5 /* SwitchEnablerSystem.cpp in Sources */,
 				7299543B1C99F76100DAAE5D /* b2PairManager.cpp in Sources */,
 				7206DE151F8AAA6D0069B8E9 /* Picker.cpp in Sources */,
+				72EF3DAA1FCC9B4800F43E5B /* testHID.cpp in Sources */,
 				72D736561D7B64A2001E2047 /* GameMenu.cpp in Sources */,
 				72308CFB1E127A7A00B92B8D /* AssetLoaderSystem.cpp in Sources */,
 				729953F91C99F76100DAAE5D /* SpriteTextureSystem.cpp in Sources */,
