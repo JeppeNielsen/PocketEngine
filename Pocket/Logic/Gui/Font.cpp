@@ -20,7 +20,7 @@ using namespace std;
 using namespace Pocket;
 
 Font::Font() :
-CharacterSetEverySize(12),
+CharacterSetEverySize(4),
 library(0),
 maxTextureWidth(512), maxTextureHeight(512), fontSizeToPixelFactor(2.0f), face(0)
 { }
@@ -426,7 +426,7 @@ void Font::UpdateBuffer(Pocket::Texture& texture) {
             character.textureHeight = (character.textureHeight - 2) / actualHeight;
         }
     }
-    texture.GenerateMipmaps();
+    //texture.GenerateMipmaps();
     //texture.SaveToTga("/Users/Jeppe/Downloads/ImageSaverCode/FontTexture.tga", GL_RGBA);
    
     BufferUpdated();
