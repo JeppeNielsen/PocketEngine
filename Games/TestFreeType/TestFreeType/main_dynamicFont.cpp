@@ -52,14 +52,18 @@ struct DynamicFont : public GameState<DynamicFont> {
         {
             label = root->CreateObject();
             label->AddComponent<Transform>();
-            label->AddComponent<Sizeable>()->Size = {12,64};
+            label->AddComponent<Sizeable>()->Size = {64,64};
             label->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
             label->AddComponent<TextureComponent>(font);
             label->AddComponent<Mesh>();
             label->AddComponent<Font>(font);
-            label->AddComponent<Label>()->Text = "Testing word wrapping and a lot of small words";
+            label->AddComponent<Label>()->Text = "Testing";
             label->GetComponent<Label>()->FontSize = 12;
-            label->GetComponent<Label>()->WordWrap = true;
+            label->GetComponent<Label>()->WordWrap = false;
+            label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
+            label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
+            
+            
             
             label->AddComponent<Colorable>()->Color = Colour::Black();
         }
@@ -80,8 +84,8 @@ struct DynamicFont : public GameState<DynamicFont> {
         
         {
         GameObject* cube = root->CreateObject();
-        cube->AddComponent<Transform>();
-        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {0.02f,6.0f,0.02f});
+        cube->AddComponent<Transform>()->Position = {32,32,-1};
+        cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, {32,32,0.02f});
         cube->AddComponent<Renderable>();
         }
         {
@@ -123,7 +127,7 @@ float timer;
 
 
     void Render() {
-        glClearColor(1, 1, 1, 1);
+        glClearColor(0, 0, 1, 1);
         glClear(GL_COLOR_BUFFER_BIT);
         world.Render();
     }
