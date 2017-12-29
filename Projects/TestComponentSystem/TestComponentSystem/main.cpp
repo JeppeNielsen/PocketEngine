@@ -11,14 +11,14 @@
 #include "ScriptTests.hpp"
 //#include "SerializationTests.hpp"
 
-int main_old(int argc, const char * argv[]) {
+int main(int argc, const char * argv[]) {
 
     //SerializationTests serializationTests;
     //serializationTests.Run();
     
     LogicTests tests;
     tests.Run();
-   /*
+    /*
     ScriptTests scriptTests;
     scriptTests.Run();
     */

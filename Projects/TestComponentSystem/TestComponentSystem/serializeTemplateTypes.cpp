@@ -55,7 +55,7 @@ struct ListContainer {
     TYPE_FIELDS_END
 };
 
-int main() {
+int main_templatesTypes() {
 
     std::unique_ptr<List<int>> intList = std::make_unique<List<int>>();
     intList->data = {1,2,3,4};

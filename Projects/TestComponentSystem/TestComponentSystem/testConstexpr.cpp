@@ -72,23 +72,23 @@ int main_constExpr() {
     //std::cout << Meta::ordinal<int>() << std::endl;
     
     
-    IVector* type1 = Pocket::IndexToType<IVector, IVector::Types>(0);
-    IVector* type2 = Pocket::IndexToType<IVector, IVector::Types>(1);
-    
-    type1->Print();
-    type2->Print();
-    
-    Vector<float>* floatVector = new Vector<float>();
-    Vector<int>* intVector = new Vector<int>();
-    
-    
-    int index1 = Pocket::IndexInTuple<std::remove_pointer_t<decltype(floatVector)>, IVector::Types>::value;
-    int index2 = Pocket::IndexInTuple<std::remove_pointer_t<decltype(intVector)>, IVector::Types>::value;
-    
-    
-    std::cout << index1 << std::endl;
-    std::cout << index2 << std::endl;
-    
+//    IVector* type1 = Pocket::IndexToType<IVector, IVector::Types>(0);
+//    IVector* type2 = Pocket::IndexToType<IVector, IVector::Types>(1);
+//    
+//    type1->Print();
+//    type2->Print();
+//    
+//    Vector<float>* floatVector = new Vector<float>();
+//    Vector<int>* intVector = new Vector<int>();
+//    
+//    
+//    int index1 = Pocket::IndexInTuple<std::remove_pointer_t<decltype(floatVector)>, IVector::Types>::value;
+//    int index2 = Pocket::IndexInTuple<std::remove_pointer_t<decltype(intVector)>, IVector::Types>::value;
+//    
+//    
+//    std::cout << index1 << std::endl;
+//    std::cout << index2 << std::endl;
+//    
     
     
 //    
