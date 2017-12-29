@@ -1,0 +1,15 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "ljocxupcRyGpfcqfBk9Rtg==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::TextureComponent": {}
+            },
+            {
+                "Pocket::AssetLoader": {}
+            }
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "LOOIReUHQUOPeLOgrbsTiw==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::TextureComponent": {}
+            },
+            {
+                "Pocket::Font": {
+                    "CharacterSetEverySize": 4,
+                    "fontSizeToPixelFactor": 16,
+                    "maxTextureWidth": 1024,
+                    "maxTextureHeight": 1024
+                }
+            },
+            {
+                "Pocket::AssetLoader": {}
+            }
+        ]
+    }
+}

@@ -1,0 +1,135 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "rRc51rwWSb6IRtiEma2SKw==",
+        "counter": 295,
+        "Components": [],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 33,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "8.08094,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "hAIJ7XYVTHSx6/qDjUNKHw==:1",
+                                "variables": []
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 42,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "hAIJ7XYVTHSx6/qDjUNKHw==:1",
+                                "variables": []
+                            }
+                        },
+                        {
+                            "Rotatable": {
+                                "angularVelocity": "0,0,0.2"
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 55,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "7.22693,-2.2166,33.888",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Camera": {
+                                "FieldOfView": 100,
+                                "Near": 0.1,
+                                "Far": 512,
+                                "Viewport": "0,0,1,1",
+                                "Aspect": 0,
+                                "Orthographic": true,
+                                "Mask": 0
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                "GameObject": {
+                    "id": 278,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "0,0,2.80615",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Touchable:ref": {
+                                "id": 282
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "lqbHZ4l1TEa8Mc3AsJ4osw==:1",
+                                "variables": [
+                                    {
+                                        "Size": "50,25"
+                                    },
+                                    {
+                                        "Text": "Small button"
+                                    },
+                                    {
+                                        "FontSize": 6
+                                    },
+                                    {
+                                        "Size": "50,25"
+                                    },
+                                    {
+                                        "Text": "Large button"
+                                    },
+                                    {
+                                        "FontSize": 6
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            }
+        ]
+    }
+}

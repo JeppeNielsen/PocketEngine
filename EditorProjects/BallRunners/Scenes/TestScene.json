@@ -1,0 +1,37 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "he7b9qHgSaqR+RjITU707w==",
+        "counter": 8,
+        "Components": [],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 6,
+                    "Components": [
+                        {
+                            "Pocket::Transform": {
+                                "Position": "9.64884,0,0",
+                                "Rotation": "1,0,0,0",
+                                "Scale": "1,1,1",
+                                "Anchor": "0,0,0",
+                                "Matrix": "1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1"
+                            }
+                        },
+                        {
+                            "Pocket::Cloner": {
+                                "Source": "hAIJ7XYVTHSx6/qDjUNKHw==:1",
+                                "variables": [
+                                    {
+                                        "Scale": "1,1,1"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "Children": []
+                }
+            }
+        ]
+    }
+}

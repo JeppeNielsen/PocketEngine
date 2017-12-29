@@ -1,0 +1,17 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "2gGl5T0VThixzYtGf2L49Q==",
+        "counter": 1,
+        "Components": [
+            {
+                "ProjectSettings": {
+                    "name": "BallRunners",
+                    "startupScene": "8zJP6GddQayowtpjUDt3ug==:1",
+                    "bundleIdentifier": "",
+                    "icon": "dDYBBn5/QvmG+nqdfiJayA==:1"
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "VSeO3KfxQpSORxjfBO1qYg==",
+        "counter": 1,
+        "Components": [
+            {
+                "Pocket::SceneManager": {
+                    "SetScenes": []
+                }
+            }
+        ]
+    }
+}
