@@ -48,21 +48,22 @@ void ScriptTests::RunTests() {
             defaultIncludes
         );
         
-        GameWorld world;
-        scriptWorld.SetWorldType(world);
+        GameStorage storage;
+        GameWorld world(storage);
+        scriptWorld.SetStorage(storage);
         
         scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [] (auto& error) {});
         scriptWorld.LoadLib();
     
-        scriptWorld.AddGameWorld(world);
+        //scriptWorld.AddGameWorld(world);
     
         GameObject* root = world.CreateRoot();
-        scriptWorld.AddGameRoot(root);
+        //scriptWorld.AddGameRoot(root);
         root->AddComponent(0);
         root->AddComponent(1);
         
         GameObject* root2 = world.CreateRoot();
-        scriptWorld.AddGameRoot(root2);
+        //scriptWorld.AddGameRoot(root2);
         root2->AddComponent(0);
         root2->AddComponent(1);
         
@@ -99,7 +100,7 @@ void ScriptTests::RunTests() {
             writer.close();
         }
         
-        root2->ToJson(std::cout, 0);
+        //root2->ToJson(std::cout, 0);
     
         return true;
     });

@@ -60,8 +60,8 @@ void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
 GameObject* GameObjectHandle::Get() {
     if (!world) return 0;
     
-    if (index>=0 && index<world->objects.entries.size() && world->objects.versions[index] == version) {
-        GameObject* ptr = &world->objects.entries[index];
+    if (index>=0 && index<world->storage->objects.entries.size() && world->storage->objects.versions[index] == version) {
+        GameObject* ptr = &world->storage->objects.entries[index];
         if (ptr->rootId == rootId) return ptr;
     }
     

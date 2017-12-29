@@ -87,7 +87,7 @@ void* GameObject::GetComponent(ComponentId id) const {
         return nullptr;
     }
     if (!activeComponents[id]) return nullptr;
-    return scene->world->components[id].container->Get(componentIndicies[id]);
+    return scene->storage->components[id].container->Get(componentIndicies[id]);
 }
 
 void GameObject::AddComponent(ComponentId id) {
@@ -95,7 +95,7 @@ void GameObject::AddComponent(ComponentId id) {
     if (removed) return;
     if (activeComponents[id]) return;
 
-    componentIndicies[id] = scene->world->components[id].container->Create(index);
+    componentIndicies[id] = scene->storage->components[id].container->Create(index);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
         if (scene->ComponentCreated) {
@@ -113,7 +113,7 @@ void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     if (!referenceObject->activeComponents[id]) return;
     
     componentIndicies[id] = referenceObject->componentIndicies[id];
-    scene->world->components[id].container->Reference(referenceObject->componentIndicies[id]);
+    scene->storage->components[id].container->Reference(referenceObject->componentIndicies[id]);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
         if (scene->ComponentCreated) {
@@ -135,7 +135,7 @@ void GameObject::RemoveComponent(ComponentId id) {
             scene->ComponentRemoved(this, id);
         }
         TrySetComponentEnabled(id, false);
-        scene->world->components[id].container->Delete(componentIndicies[id], index);
+        scene->storage->components[id].container->Delete(componentIndicies[id], index);
         activeComponents.Set(id, false);
     });
 }
@@ -145,7 +145,7 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     if (removed) return;
     if (activeComponents[id]) return;
     if (!object->activeComponents[id]) return;
-    componentIndicies[id] = scene->world->components[id].container->Clone(object->componentIndicies[id], index);
+    componentIndicies[id] = scene->storage->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
     scene->world->delayedActions.emplace_back([this, id]() {
         if (scene->ComponentCreated) {
@@ -166,8 +166,8 @@ void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
 }
 
 GameObject* GameObject::GetComponentOwner(ComponentId componentId) const {
-    int ownerIndex = scene->world->components[componentId].container->GetOwner(componentIndicies[componentId]);
-    return ownerIndex != -1 ? &scene->world->objects.entries[ownerIndex] : nullptr;
+    int ownerIndex = scene->storage->components[componentId].container->GetOwner(componentIndicies[componentId]);
+    return ownerIndex != -1 ? &scene->storage->objects.entries[ownerIndex] : nullptr;
 }
 
 int GameObject::ComponentCount() const {
@@ -206,7 +206,7 @@ void GameObject::TryAddToSystem(int systemId) {
     IGameSystem* system = scene->systemsIndexed[systemId];
     if (!system) return; // system is not part of scene/root
     GameWorld* world = scene->world;
-    auto& systemBitset = world->systems[systemId].bitset;
+    auto& systemBitset = scene->storage->systems[systemId].bitset;
     bool isInterest = systemBitset.Contains(enabledComponents);
     if (isInterest) {
         system->AddObject(this);
@@ -222,7 +222,7 @@ void GameObject::TryRemoveFromSystem(int systemId) {
     IGameSystem* system = scene->systemsIndexed[systemId];
     if (!system) return; // system is not part of scene/root
     GameWorld* world = scene->world;
-    auto& systemBitset = world->systems[systemId].bitset;
+    auto& systemBitset = scene->storage->systems[systemId].bitset;
     bool wasInterest = systemBitset.Contains(enabledComponents);
     if (wasInterest) {
         system->ObjectRemoved(this);
@@ -242,7 +242,7 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
         return; //cannot double enable/disable components
     }
 
-    GameWorld::ComponentInfo& componentInfo = scene->world->components[id];
+    auto& componentInfo = scene->storage->components[id];
     
     if (enable) {
         enabledComponents.Set(id, true);
@@ -271,11 +271,11 @@ void GameObject::Remove() {
         forceSetNextParent = false;
         for(int i=0; i<activeComponents.Size(); ++i) {
             if (activeComponents[i]) {
-                scene->world->components[i].container->Delete(componentIndicies[i], index);
+                scene->storage->components[i].container->Delete(componentIndicies[i], index);
                 activeComponents.Set(i, false);
             }
         }
-        scene->world->objects.Delete(index, 0);
+        scene->storage->objects.Delete(index, 0);
         if (scene->ObjectRemoved) {
             scene->ObjectRemoved(this);
         }
@@ -295,15 +295,11 @@ int GameObject::RootId() const {
 }
 
 GameObject* GameObject::CreateChild() {
-    return scene->world->CreateEmptyObject(this, scene, true);
+    return scene->CreateEmptyObject(this, scene, true);
 }
 
 GameObject* GameObject::CreateObject() {
     return scene->root->CreateChild();
-}
-
-GameObject* GameObject::CreateChildFromJson(std::istream &jsonStream, const std::function<void (GameObject *)>& objectCreated) {
-    return scene->world->CreateObjectFromJson(this, jsonStream, objectCreated);
 }
 
 GameObject* GameObject::CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate) {
@@ -314,7 +310,7 @@ GameObject* GameObject::CreateChildCloneInternal(std::vector<CloneReferenceCompo
     for (int i=0; i<source->activeComponents.Size(); ++i) {
         if (source->activeComponents[i]) {
         
-            int ownerIndex = scene->world->components[i].container->GetOwner(source->componentIndicies[i]);
+            int ownerIndex = scene->storage->components[i].container->GetOwner(source->componentIndicies[i]);
             bool isReference = (ownerIndex != source->index);// && ownerIndex>=0;
             if (isReference) {
                 referenceComponents.push_back({clone, i, ownerIndex});
@@ -337,7 +333,7 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
         if (referenceComponent.referenceObjectId<0) {
             continue; // this reference object is removed
         }
-        GameObject* referenceObject = (GameObject*)World()->objects.Get(referenceComponent.referenceObjectId);
+        GameObject* referenceObject = (GameObject*)World()->storage->objects.Get(referenceComponent.referenceObjectId);
         if (referenceObject->HasAncestor(source)) {
             int referenceIndex = 0;
             source->Recurse([&referenceIndex, &referenceObject] (const GameObject* o) {
@@ -409,29 +405,29 @@ InputManager& GameObject::Input() const { return scene->world->Input(); }
 
 std::vector<TypeInfo> GameObject::GetComponentTypes(const std::function<bool(int componentID)>& predicate) const {
     std::vector<TypeInfo> infos;
-    GameWorld* world = scene->world;
-    for (int i=0; i<world->components.size(); ++i) {
-        if (!world->components[i].getTypeInfo) continue; // component has no type
+    GameStorage* storage = scene->storage;
+    for (int i=0; i<storage->components.size(); ++i) {
+        if (!storage->components[i].getTypeInfo) continue; // component has no type
         if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
-        infos.emplace_back(world->components[i].getTypeInfo(this));
-        infos[infos.size()-1].name = world->components[i].name;
+        infos.emplace_back(storage->components[i].getTypeInfo(this));
+        infos[infos.size()-1].name = storage->components[i].name;
     }
     return infos;
 }
 
 std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const std::function<bool(int componentID)>& predicate) const {
     std::vector<GameObject::ComponentEditor> editors;
-    GameWorld* world = scene->world;
-    for (int i=0; i<world->components.size(); ++i) {
+    GameStorage* storage = scene->storage;
+    for (int i=0; i<storage->components.size(); ++i) {
         if (!activeComponents[i]) continue; // gameobject hasn't got component
         if (predicate && !predicate(i)) continue; // component type not allowed
-        bool isReference = index != world->components[i].container->GetOwner(componentIndicies[i]);
+        bool isReference = index != storage->components[i].container->GetOwner(componentIndicies[i]);
         if (isReference) {
             TypeInfo type;
-            type.name = world->components[i].name;
+            type.name = storage->components[i].name;
             GameObject::ReferenceComponent referenceComponent;
-            referenceComponent.name = world->components[i].name;
+            referenceComponent.name = storage->components[i].name;
             referenceComponent.componentId = i;
             referenceComponent.object = (GameObject*)this;
             IFieldEditor* editor = FieldEditorCreator<GameObject::ReferenceComponent>::Create(&referenceComponent);
@@ -439,18 +435,18 @@ std::vector<GameObject::ComponentEditor> GameObject::GetComponentEditors(const s
             continue;
         }
         
-        if (!world->components[i].getFieldEditor) {
+        if (!storage->components[i].getFieldEditor) {
             TypeInfo type;
-            type.name = world->components[i].name;
+            type.name = storage->components[i].name;
             EmptyComponentEditor* emptyComponentEditor = new EmptyComponentEditor();
             emptyComponentEditor->SetField(&type);
             editors.push_back({ type, emptyComponentEditor });
             continue;
         } // component has no type
-        IFieldEditor* editor = world->components[i].getFieldEditor(this);
+        IFieldEditor* editor = storage->components[i].getFieldEditor(this);
         if (!editor) continue;
-        TypeInfo info = world->components[i].getTypeInfo(this);
-        info.name = world->components[i].name;
+        TypeInfo info = storage->components[i].getTypeInfo(this);
+        info.name = storage->components[i].name;
         editors.push_back({ info, editor });
     }
     return editors;
@@ -471,12 +467,12 @@ GameWorld* GameObject::World() const {
 }
 
 TypeInfo GameObject::GetComponentTypeInfo(int index) const {
-    GameWorld* world = scene->world;
-    if (index>=world->components.size()) return TypeInfo();
+    GameStorage* storage = scene->storage;
+    if (index>=storage->components.size()) return TypeInfo();
     if (!activeComponents[index]) TypeInfo(); // gameobject hasn't got component
-    if (!world->components[index].getTypeInfo) return TypeInfo(); // component has no type
-    TypeInfo info = world->components[index].getTypeInfo(this);
-    info.name = world->components[index].name;
+    if (!storage->components[index].getTypeInfo) return TypeInfo(); // component has no type
+    TypeInfo info = storage->components[index].getTypeInfo(this);
+    info.name = storage->components[index].name;
     return info;
 }
 
@@ -513,197 +509,14 @@ GameObject* GameObject::Deserialize(const std::string &data) {
     return handle.operator->();
 }
 
-//SERIALIZATION
-
-void GameObject::ToJson(std::ostream& stream, const SerializePredicate& predicate) const {
-    minijson::writer_configuration config;
-    config = config.pretty_printing(true);
-    minijson::object_writer writer(stream, config);
-    WriteJson(writer, predicate);
-    writer.close();
-}
-
-void GameObject::WriteJson(minijson::object_writer& writer, const SerializePredicate& predicate) const {
-
-    minijson::object_writer gameObject = writer.nested_object("GameObject");
-
-    if (IsRoot()) {
-        gameObject.write("id", rootId);
-        gameObject.write("guid", scene->guid);
-        gameObject.write("counter", scene->idCounter);
-    } else {
-        gameObject.write("id", rootId);
-    }
-    
-    WriteJsonComponents(gameObject, predicate);
-    
-    if (!children.empty()) {
-        minijson::array_writer children_object = gameObject.nested_array("Children");
-        for(auto child : children) {
-            if (predicate && !predicate(child, -1)) {
-                continue;
-            }
-            minijson::object_writer child_object = children_object.nested_object();
-            child->WriteJson(child_object, predicate);
-            child_object.close();
-        }
-        children_object.close();
-    }
-    
-    gameObject.close();
-}
-
-void GameObject::WriteJsonComponents(minijson::object_writer& writer, const SerializePredicate& predicate) const {
-
-    minijson::array_writer components = writer.nested_array("Components");
-    
-    GameWorld* world = scene->world;
-    
-    if (activeComponents.Size()>0) {
-        for(int i=0; i<world->components.size(); ++i) {
-            if (activeComponents[i] && !(predicate && !predicate(this, i))) {
-            
-                int ownerIndex = world->components[i].container->GetOwner(componentIndicies[i]);
-                bool isReference = (ownerIndex != index) && ownerIndex>=0;
-                GameObject* componentOwner;
-                if (isReference) {
-                    componentOwner = &world->objects.entries[ownerIndex];
-                    if (predicate && !predicate(componentOwner, i)) {
-                        continue;
-                    }
-                } else {
-                    componentOwner = 0;
-                }
-                SerializeComponent(i, components, isReference, componentOwner);
-            }
-        }
-    }
-    components.close();
-}
-
 void GameObject::RemoveComponents(const SerializePredicate& predicate) {
-    for(int i=0; i<scene->world->components.size(); ++i) {
+    for(int i=0; i<scene->storage->components.size(); ++i) {
         if (activeComponents[i] && !(predicate && !predicate(this, i))) {
             RemoveComponent(i);
         }
     }
 }
 
-void GameObject::SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject ) const {
-    minijson::object_writer componentWriter = writer.nested_object();
-    
-    GameWorld* world = scene->world;
-    
-    GameWorld::ComponentInfo& componentInfo = world->components[componentID];
-    
-    if (!isReference) {
-        minijson::object_writer jsonComponent = componentWriter.nested_object(componentInfo.name.c_str());
-        if (componentInfo.getTypeInfo) {
-            auto type = componentInfo.getTypeInfo(this);
-            type.Serialize(jsonComponent);
-        }
-        jsonComponent.close();
-    } else {
-        std::string referenceName = componentInfo.name + ":ref";
-        minijson::object_writer jsonComponent = componentWriter.nested_object(referenceName.c_str());
-        if (!referenceObject) {
-            jsonComponent.write("id", "");
-        } else {
-            if (referenceObject->scene == scene) {
-                jsonComponent.write("id", referenceObject->rootId);
-            } else {
-                std::stringstream s;
-                s<<referenceObject->rootId;
-                jsonComponent.write("id", referenceObject->scene->guid +":"+s.str());
-            }
-        }
-        jsonComponent.close();
-    }
-    componentWriter.close();
-}
-
-void GameObject::AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName) {
-    GameWorld* world = scene->world;
-    int componentID;
-    bool isReference;
-    if (world->TryGetComponentIndex(componentName, componentID, isReference) && !activeComponents[componentID]) {
-        if (!isReference) {
-            AddComponent(componentID);
-            GameWorld::ComponentInfo& componentInfo = world->components[componentID];
-            if (componentInfo.getTypeInfo) {
-                auto type = componentInfo.getTypeInfo(this);
-                type.Deserialize(context);
-                
-                for(auto& f : type.fields) {
-                    if (f->GetTypeIndex() == TypeIndexList::Index<GameObjectHandle>()) {
-                        FieldInfo<GameObjectHandle>* handleField = static_cast<FieldInfo<GameObjectHandle>*>(f.get());
-                        handleField->field->SetWorld(World());
-                    }
-                }
-                
-            } else {
-                minijson::ignore(context);
-            }
-        } else {
-            std::string referenceID = "";
-            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-                std::string id = n;
-                if (id == "id") {
-                    addReferenceComponents.push_back({ this, componentID, v.as_string() });
-                } else {
-                    minijson::ignore(context);
-                }
-            });
-        }
-    } else {
-        minijson::ignore(context);
-    }
-}
-
-std::map<std::pair<std::string, GameScene*>, GameObject*> addReferenceComponentObjects;
-
-bool GameObject::GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, GameObject** referenceObject) {
-    if (addReferenceComponents.empty()) return false;
-    auto& refObj = addReferenceComponents.back();
-    *object = refObj.object;
-    componentID = refObj.componentID;
-    
-    GameScene* scene = refObj.object->scene;
-    
-    auto pair = std::make_pair(refObj.referenceId, scene);
-    auto it = addReferenceComponentObjects.find(pair);
-    
-    if (it == addReferenceComponentObjects.end()) {
-    
-        size_t colonLocation = refObj.referenceId.rfind(":");
-        GameScene* referenceScene;
-        int objectId;
-        if (colonLocation==-1) {
-            referenceScene = scene;
-            objectId = ::atoi(refObj.referenceId.c_str());
-        } else {
-            std::string sceneId = refObj.referenceId.substr(0, colonLocation);
-            std::string objectIdStr = refObj.referenceId.substr(colonLocation+1, refObj.referenceId.size() - colonLocation-1);
-            referenceScene = scene->world->TryGetScene(sceneId);
-            objectId = ::atoi(objectIdStr.c_str());
-        }
-        
-        if (!referenceScene) return false;
-        
-        *referenceObject = referenceScene->FindObject(objectId);
-        addReferenceComponentObjects.insert(std::make_pair(pair, *referenceObject));
-    } else {
-        *referenceObject = it->second;
-    }
-    addReferenceComponents.pop_back();
-    return true;
-}
-
-void GameObject::EndGetAddReferenceComponent() {
-    addReferenceComponentObjects.clear();
-}
-
-//END SERIALIZATION
 
 
 

@@ -22,8 +22,8 @@ GameScene::GameScene() : idCounter(0),
 GameScene::~GameScene() {
     for (int i=0; i<systemsIndexed.size(); ++i) {
         if (!systemsIndexed[i]) continue;
-        if (world->systems[i].deleteFunction) {
-            world->systems[i].deleteFunction(systemsIndexed[i]);
+        if (storage->systems[i].deleteFunction) {
+            storage->systems[i].deleteFunction(systemsIndexed[i]);
         } else {
             delete systemsIndexed[i];
         }
@@ -81,7 +81,7 @@ IGameSystem* GameScene::CreateSystem(int systemId) {
     }
 
     if (!systemsIndexed[systemId]) {
-        IGameSystem* system = world->systems[systemId].createFunction(root);
+        IGameSystem* system = storage->systems[systemId].createFunction(root);
         systemsIndexed[systemId] = system;
         system->SetIndex(systemId);
         system->Initialize();
@@ -108,10 +108,28 @@ void GameScene::RemoveSystem(int systemId) {
     });
     system->Destroy();
     
-    if (world->systems[systemId].deleteFunction) {
-        world->systems[systemId].deleteFunction(system);
+    if (storage->systems[systemId].deleteFunction) {
+        storage->systems[systemId].deleteFunction(system);
     } else {
         delete system;
     }
     systemsIndexed[systemId] = 0;
 }
+
+GameObject* GameScene::CreateEmptyObject(GameObject *parent, GameScene* scene, bool assignId) {
+    int index = storage->objects.CreateNoInit(0);
+    GameObject* object = &storage->objects.entries[index];
+    object->scene = this;
+    object->index = index;
+    if (assignId) {
+        object->rootId = ++scene->idCounter;
+    }
+    object->Reset();
+    object->Parent = parent;
+    if (ObjectCreated) {
+        ObjectCreated(object);
+    }
+    return object;
+}
+
+

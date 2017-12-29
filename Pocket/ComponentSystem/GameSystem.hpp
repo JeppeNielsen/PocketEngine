@@ -9,7 +9,7 @@
 #pragma once
 #include <vector>
 #include <map>
-#include "GameWorld.hpp"
+#include "GameStorage.hpp"
 #include "GameObjectHandle.hpp"
 
 namespace Pocket {
@@ -17,7 +17,7 @@ namespace Pocket {
     class GameSystemBase : public IGameSystem {
     protected:
         GameObject* const root;
-        friend class GameWorld;
+        friend class GameStorage;
         GameSystemBase();
         virtual ~GameSystemBase();
         virtual void Initialize() override;
@@ -48,7 +48,7 @@ namespace Pocket {
         int index;
     
         ObjectCollection objects;
-        friend class GameWorld;
+        friend class GameStorage;
     public:
         Property<int> Order;
         const ObjectCollection& Objects() const;
@@ -58,29 +58,29 @@ namespace Pocket {
     class GameSystem : public GameSystemBase {
     private:
         template<typename Last>
-        static void ExtractComponents(GameWorld& world, std::vector<ComponentId>& components) {
-            world.AddComponentType<Last>();
+        static void ExtractComponents(GameStorage& storage, std::vector<ComponentId>& components) {
+            storage.AddComponentType<Last>();
             ComponentId id = GameIdHelper::GetComponentID<Last>();
             components.push_back(id);
         }
         
         template<typename First, typename Second, typename ...Rest>
-        static void ExtractComponents(GameWorld& world, std::vector<int>& components) {
-            ExtractComponents<First>(world, components);
-            ExtractComponents<Second, Rest...>(world, components);
+        static void ExtractComponents(GameStorage& storage, std::vector<int>& components) {
+            ExtractComponents<First>(storage, components);
+            ExtractComponents<Second, Rest...>(storage, components);
         }
     
-        static void ExtractAllComponents(GameWorld& world, std::vector<ComponentId>& components) {
-            ExtractComponents<T...>(world, components);
+        static void ExtractAllComponents(GameStorage& storage, std::vector<ComponentId>& components) {
+            ExtractComponents<T...>(storage, components);
         }
         
-        friend class GameWorld;
+        friend class GameStorage;
     };
     
     class GameConcept : public GameSystemBase {
     private:
-        static void ExtractAllComponents(GameWorld& world, std::vector<int>& components) {
+        static void ExtractAllComponents(GameStorage& storage, std::vector<int>& components) {
         }
-        friend class GameWorld;
+        friend class GameStorage;
     };
 }

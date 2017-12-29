@@ -1110,14 +1110,14 @@ bool ScriptWorld::FindComponentIndex(std::string componentName, bool &staticComp
     return false;
 }
 
-void ScriptWorld::SetWorldType(GameWorld& world, const std::function<bool(int)>& componentTypePredicate) {
+void ScriptWorld::SetStorage(GameStorage& storage, const std::function<bool(int)>& componentTypePredicate) {
     if (baseSystemIndex>=0) return;
 
     worldComponentNames.clear();
-    for(int i=0; i<world.components.size(); ++i) {
+    for(int i=0; i<storage.components.size(); ++i) {
         if (componentTypePredicate && !componentTypePredicate(i)) continue;
     
-        std::string& name = world.components[i].name;
+        std::string& name = storage.components[i].name;
         size_t namespaceColons = name.find("::");
         std::string nameWithoutNamespace;
         if (namespaceColons!=std::string::npos) {
@@ -1130,8 +1130,8 @@ void ScriptWorld::SetWorldType(GameWorld& world, const std::function<bool(int)>&
         }
     }
     
-    baseComponentIndex = (int)world.components.size();
-    baseSystemIndex = (int)world.systems.size();
+    baseComponentIndex = (int)storage.components.size();
+    baseSystemIndex = (int)storage.systems.size();
 }
 
 ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {
@@ -1153,7 +1153,7 @@ ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {
     return systems;
 
 }
-
+/*
 bool ScriptWorld::AddGameWorld(GameWorld& world) {
     if (!libHandle) return false;
     
@@ -1251,6 +1251,7 @@ void ScriptWorld::RemoveGameWorld(GameWorld& world) {
         });
     }
 }
+*/
 
 TypeInfo ScriptWorld::GetTypeInfo(const GameObject& object, ComponentId id) {
     void* component = object.GetComponent(id);

@@ -42,17 +42,19 @@ public:
                   const std::vector<std::string>& sourceFiles,
                   const std::vector<std::string>& headerFiles);
     
-    void SetWorldType(GameWorld& world, const std::function<bool(int)>& componentTypePredicate = 0);
+    void SetStorage(GameStorage& storage, const std::function<bool(int)>& componentTypePredicate = 0);
     void Build(bool enableOutput, const std::string &pathToPocketEngineLib, const std::function<void(const Error&)>& onError);
     bool LoadLib();
     void UnloadLib();
+
+    //TODO: FIX!!!!
+//    bool AddGameWorld(GameWorld& world);
+//    void AddGameRoot(GameObject* root);
+//    void AddAllGameRoots(GameWorld& world);
+//    void RemoveGameRoot(GameObject* root);
+//    void RemoveGameWorld(GameWorld& world);
     
-    bool AddGameWorld(GameWorld& world);
-    void AddGameRoot(GameObject* root);
-    void AddAllGameRoots(GameWorld& world);
-    void RemoveGameRoot(GameObject* root);
     
-    void RemoveGameWorld(GameWorld& world);
     TypeInfo GetTypeInfo(const GameObject& object, ComponentId id);
     
     int ComponentCount();

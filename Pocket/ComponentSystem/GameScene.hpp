@@ -11,12 +11,14 @@
 #include <functional>
 #include "GameObject.hpp"
 #include "Property.hpp"
+#include "GameStorage.hpp"
 
 namespace Pocket {
     class GameWorld;
     class IGameSystem;
     class ScriptWorld;
     class GameObjectHandle;
+    class GameObjectJsonSerializer;
     class GameScene {
     private:
         friend class GameWorld;
@@ -24,8 +26,10 @@ namespace Pocket {
         friend class std::allocator<GameScene>;
         friend class ScriptWorld;
         friend class GameObjectHandle;
+        friend class GameObjectJsonSerializer;
         
         GameWorld* world;
+        GameStorage* storage;
         GameObject* root;
         int index;
         std::vector<IGameSystem*> systemsIndexed;
@@ -53,6 +57,8 @@ namespace Pocket {
         
         std::function<void(GameObject* object, ComponentId componentId)> ComponentCreated;
         std::function<void(GameObject* object, ComponentId componentId)> ComponentRemoved;
+        
+        GameObject* CreateEmptyObject(GameObject *parent, GameScene* scene, bool assignId);
         
         friend class Container<GameScene>;
     };

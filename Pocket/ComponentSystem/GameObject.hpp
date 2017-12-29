@@ -24,6 +24,8 @@ namespace Pocket {
     class GameObject;
     class IGameSystem;
     class GameObjectHandle;
+    class GameStorage;
+    class GameObjectJsonSerializer;
     
     using ObjectCollection = std::vector<GameObject*>;
     
@@ -37,6 +39,8 @@ namespace Pocket {
         friend class std::allocator<GameObject>;
         friend class ScriptWorld;
         friend class GameObjectHandle;
+        friend class GameStorage;
+        friend class GameObjectJsonSerializer;
         
         using ComponentIndicies = std::vector<int>;
         
@@ -67,14 +71,6 @@ namespace Pocket {
         };
         
     private:
-    
-        struct AddReferenceComponent {
-            GameObject* object;
-            int componentID;
-            std::string referenceId;
-        };
-        
-        using AddReferenceComponentList = std::vector<AddReferenceComponent>;
         
         struct CloneReferenceComponent {
             GameObject* object;
@@ -93,15 +89,9 @@ namespace Pocket {
         void SetEnabled(bool enabled);
         void TryAddToSystem(int systemId);
         void TryRemoveFromSystem(int systemId);
-        void WriteJson(minijson::object_writer& writer, const SerializePredicate& predicate) const;
-        void WriteJsonComponents(minijson::object_writer& writer, const SerializePredicate& predicate) const;
+        
         void RemoveComponents(const SerializePredicate& predicate);
         
-        void SerializeComponent(int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject) const;
-        void AddComponent(AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName);
-        
-        static bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, Pocket::GameObject** referenceObject);
-        static void EndGetAddReferenceComponent();
         GameObject* CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
     public:
         bool Recurse(const std::function<bool(const GameObject* object)>& function) const;
@@ -152,6 +142,9 @@ namespace Pocket {
             EnableComponent(GameIdHelper::GetComponentID<T>(), enable);
         }
         
+        template<typename T>
+        T* GetSystem();
+        
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0) const ;
         
         struct ComponentEditor {
@@ -170,11 +163,8 @@ namespace Pocket {
         GameObject* CreateChild();
         GameObject* CreateObject();
         GameObject* Root() const;
-        GameObject* CreateChildFromJson(std::istream& jsonStream, const std::function<void(GameObject*)>& objectCreated = 0);
         GameObject* CreateChildClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
         GameObject* CreateCopy(const std::function<bool(GameObject*)>& predicate = 0);
-        
-        void ToJson(std::ostream& stream, const SerializePredicate& predicate = 0) const;
         
         bool IsRoot() const;
         
@@ -183,12 +173,6 @@ namespace Pocket {
         
         int RootId() const;
         std::string& RootGuid() const;
-        
-        template<typename T>
-        T* CreateSystem();
-        
-        template<typename T>
-        void RemoveSystem();
         
         GameWorld* World() const;
         
