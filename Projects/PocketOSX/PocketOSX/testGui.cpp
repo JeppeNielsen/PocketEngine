@@ -1,5 +1,4 @@
 #include "Engine.hpp"
-#include "Gui.hpp"
 #include <fstream>
 #include "Timer.hpp"
 #include <sstream>
