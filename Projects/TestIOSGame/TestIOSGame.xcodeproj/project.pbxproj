@@ -7,29 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		7214E02C1EFAFD6900F61526 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */; };
-		7214E0311EFB035600F61526 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E0301EFB035600F61526 /* main.cpp */; };
 		7214E0331EFB040500F61526 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0321EFB040500F61526 /* OpenGLES.framework */; };
 		7214E03D1EFB083700F61526 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E03C1EFB083700F61526 /* Foundation.framework */; };
-		7214E03F1EFB086000F61526 /* libPocketEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E03E1EFB086000F61526 /* libPocketEngine.a */; };
+		7214E03F1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E03E1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a */; };
 		7214E0411EFB087C00F61526 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0401EFB087C00F61526 /* UIKit.framework */; };
 		7214E0431EFB08BD00F61526 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0421EFB08BD00F61526 /* QuartzCore.framework */; };
 		7214E0451EFB08DC00F61526 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0441EFB08DC00F61526 /* CoreGraphics.framework */; };
 		7214E0471EFB091B00F61526 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7214E0461EFB091B00F61526 /* OpenAL.framework */; };
+		7214E0651EFF076E00F61526 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 7214E0621EFF076E00F61526 /* Default-568h@2x.png */; };
+		7214E0661EFF076E00F61526 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7214E0631EFF076E00F61526 /* Info.plist */; };
+		7214E0671EFF076E00F61526 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7214E0641EFF076E00F61526 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		7214E0111EFAFC8000F61526 /* TestIOSGame.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestIOSGame.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		7214E0251EFAFC8000F61526 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		7214E0301EFB035600F61526 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		7214E0321EFB040500F61526 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		7214E03C1EFB083700F61526 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		7214E03E1EFB086000F61526 /* libPocketEngine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPocketEngine.a; sourceTree = "<group>"; };
+		7214E03E1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a"; sourceTree = "<group>"; };
 		7214E0401EFB087C00F61526 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		7214E0421EFB08BD00F61526 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		7214E0441EFB08DC00F61526 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		7214E0461EFB091B00F61526 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		7214E0621EFF076E00F61526 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		7214E0631EFF076E00F61526 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7214E0641EFF076E00F61526 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +43,7 @@
 				7214E0431EFB08BD00F61526 /* QuartzCore.framework in Frameworks */,
 				7214E0411EFB087C00F61526 /* UIKit.framework in Frameworks */,
 				7214E03D1EFB083700F61526 /* Foundation.framework in Frameworks */,
-				7214E03F1EFB086000F61526 /* libPocketEngine.a in Frameworks */,
+				7214E03F1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a in Frameworks */,
 				7214E0331EFB040500F61526 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,7 +54,7 @@
 		7214E0081EFAFC8000F61526 = {
 			isa = PBXGroup;
 			children = (
-				7214E0131EFAFC8000F61526 /* TestIOSGame */,
+				7214E0611EFF076E00F61526 /* TestIOSGame */,
 				7214E0121EFAFC8000F61526 /* Products */,
 				7214E02D1EFB022700F61526 /* Frameworks */,
 			);
@@ -67,16 +68,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		7214E0131EFAFC8000F61526 /* TestIOSGame */ = {
-			isa = PBXGroup;
-			children = (
-				7214E02B1EFAFD6900F61526 /* Default-568h@2x.png */,
-				7214E0251EFAFC8000F61526 /* Info.plist */,
-				7214E0301EFB035600F61526 /* main.cpp */,
-			);
-			path = TestIOSGame;
-			sourceTree = "<group>";
-		};
 		7214E02D1EFB022700F61526 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -84,11 +75,21 @@
 				7214E0441EFB08DC00F61526 /* CoreGraphics.framework */,
 				7214E0421EFB08BD00F61526 /* QuartzCore.framework */,
 				7214E0401EFB087C00F61526 /* UIKit.framework */,
-				7214E03E1EFB086000F61526 /* libPocketEngine.a */,
+				7214E03E1EFB086000F61526 /* /Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos/libPocketEngine.a */,
 				7214E03C1EFB083700F61526 /* Foundation.framework */,
 				7214E0321EFB040500F61526 /* OpenGLES.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7214E0611EFF076E00F61526 /* TestIOSGame */ = {
+			isa = PBXGroup;
+			children = (
+				7214E0621EFF076E00F61526 /* Default-568h@2x.png */,
+				7214E0631EFF076E00F61526 /* Info.plist */,
+				7214E0641EFF076E00F61526 /* main.cpp */,
+			);
+			path = TestIOSGame;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -150,7 +151,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7214E02C1EFAFD6900F61526 /* Default-568h@2x.png in Resources */,
+				7214E0661EFF076E00F61526 /* Info.plist in Resources */,
+				7214E0651EFF076E00F61526 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -161,7 +163,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7214E0311EFB035600F61526 /* main.cpp in Sources */,
+				7214E0671EFF076E00F61526 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,6 +263,7 @@
 		7214E0291EFAFC8000F61526 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = 24H2455352;
@@ -311,18 +314,22 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dk.jeppenielsen.TestIOSGame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = armv7;
 			};
 			name = Debug;
 		};
 		7214E02A1EFAFC8000F61526 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = armv7;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = 24H2455352;
+				GCC_PREPROCESSOR_DEFINITIONS = "IPHONE=1";
 				HEADER_SEARCH_PATHS = (
 					"\"$(SRCROOT)/../../Pocket/ComponentSystem\"",
 					"\"$(SRCROOT)/../../Pocket/ComponentSystem/Meta\"",
@@ -366,9 +373,11 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
+					"/Projects/PocketEngine/Projects/Libraries/iOS/PocketEngine/Build/Build/Products/Debug-iphoneos",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = dk.jeppenielsen.TestIOSGame;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				VALID_ARCHS = armv7;
 			};
 			name = Release;
 		};
@@ -391,6 +400,7 @@
 				7214E02A1EFAFC8000F61526 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
