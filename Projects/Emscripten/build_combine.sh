@@ -9,7 +9,7 @@ POCKET_PATH="../../Pocket"
 
 #-s ALLOW_MEMORY_GROWTH=1 \
 
-python $EMSCRIPTEN_PATH/emcc -O0 -g4 -s FULL_ES2=1 -s ASSERTIONS=1 \
+python $EMSCRIPTEN_PATH/emcc -O3 -s FULL_ES2=1 -s ASSERTIONS=1 \
 --preload-file resources \
 -s DISABLE_EXCEPTION_CATCHING=0 \
 PocketEngine.bc PocketEngine_c.bc -o PocketEngine.html -std=c++14 \

@@ -9,7 +9,7 @@ POCKET_PATH="../../Pocket"
 
 #-s ALLOW_MEMORY_GROWTH=1 \
 
-python $EMSCRIPTEN_PATH/emcc -O0 -g4 -FT2_BUILD_LIBRARY=1 -s ASSERTIONS=1 -o PocketEngine_c.bc \
+python $EMSCRIPTEN_PATH/emcc -O3 -FT2_BUILD_LIBRARY=1 -s ASSERTIONS=1 -o PocketEngine_c.bc \
 \
 -s DISABLE_EXCEPTION_CATCHING=0 \
 --memory-init-file 0 \
