@@ -63,23 +63,6 @@ void LogicTests::RunTests() {
         return wasOne && root->Children().size() == 0;
     });
 
-    AddTest("Object Handle operator->, ", [] {
-        GameWorld world;
-        GameObject* root = world.CreateRoot();
-        Handle<GameObject> handle = root;
-        return handle.operator->() == root;
-    });
-
-    AddTest("Handle invalid on removed object ", [] {
-        GameWorld world;
-        GameObject* root = world.CreateRoot();
-        Handle<GameObject> handle = root;
-        bool wasValid = handle ? true : false;
-        root->Remove();
-        world.Update(0);
-        return wasValid && !handle;
-    });
-    
     AddTest("GameSystem::Initialize", [] {
         static bool isSystemInitialized = false;
         struct Transform {};

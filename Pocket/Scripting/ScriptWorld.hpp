@@ -13,6 +13,7 @@
 #include "GameWorld.hpp"
 #include "TypeInfo.hpp"
 #include "ScriptData.hpp"
+#include "GameObjectHandle.hpp"
 
 namespace Pocket {
 
