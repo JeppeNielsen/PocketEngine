@@ -60,4 +60,13 @@ void AssetImporters::OnCreate() {
             object->AddComponent<TextureComponent>();
         };
     }
+    {
+        GameObject* trueTypeImporter = context->ContextRoot().CreateObject();
+        trueTypeImporter->AddComponent<AssetImporter>()->extension = "otf";
+        trueTypeImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
+            object->AddComponent<AssetLoader>();
+            object->AddComponent<Font>();
+            object->AddComponent<TextureComponent>();
+        };
+    }
 }
