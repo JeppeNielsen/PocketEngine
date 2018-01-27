@@ -18,23 +18,19 @@
 #include "IGameSystem.hpp"
 #include "GameScene.hpp"
 #include "InputManager.hpp"
-#include "GameStorage.hpp"
 
 namespace Pocket {
-
+    class GameStorage;
     class ScriptWorld;
     class GameObjectHandle;
-    
-    
+    class Hierarchy;
     
     class GameWorld {
     private:
-        
         GameStorage* storage;
         
         Container<GameScene> scenes;
-        std::vector<GameScene*> activeScenes;
-        std::vector<GameObject*> roots;
+        std::vector<GameObject*> sceneRoots;
         
         struct ActiveSystem {
             IGameSystem* system;
@@ -54,17 +50,10 @@ namespace Pocket {
         
         using Handles = std::vector<GameObjectHandle*>;
         Handles handles;
-    public:
-        using SceneLayers = std::map<int, GameObject*>;
-    private:
-        SceneLayers sceneLayers;
+    
+        void DoActions(Actions& actions);
+        void RemoveScene(GameObject* sceneRoot);
         
-        void DoActions(Actions &actions);
-        void RemoveRoot(GameObject* root);
-        GameScene* TryGetScene(const std::string& guid);
-        GameObject* FindObject(const std::string& guid, int objectId);
-        std::string TryFindScenePath(const std::string& guid);
-       
         void AddActiveSystem(IGameSystem* system, GameScene* scene);
         void RemoveActiveSystem(IGameSystem* system);
         void SortActiveSystems();
@@ -77,53 +66,28 @@ namespace Pocket {
         
         void Initialize(GameStorage& storage);
     
-        GameObject* CreateRoot();
-        GameObject* TryFindRoot(const std::string& guid);
+        GameObject* CreateScene();
+        GameObject* CreateScene(GameObject* prefab);
         
-        const ObjectCollection& Roots();
+        const ObjectCollection& Scenes();
         
         void Update(float dt);
-        void UpdateRoot(float dt, GameObject* root);
-        void UpdateActions();
         void Render();
-        
-        void DebugSystems();
         
         void Clear();
         
         InputManager& Input();
         
-        std::function<GameObject*(const std::string& guid)> GuidToRoot;
-        std::function<std::string(const std::string& guid)> GuidToPath;
-        std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
-        
-        static std::string ReadGuidFromJson(std::istream& jsonStream);
-        
         void InvokeChangeToHandles(GameObject* object);
         
-        Container<GameScene>& Scenes();
-        
-        void SetLayerScene(int layerNo, GameObject* scene);
-        
-        const SceneLayers& GetSceneLayers();
-        
-        Event<> LayersChanged;
-        
-        Event<GameObject*> RootCreated;
-        Event<GameObject*> RootRemoved;
-        
-        void SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate& predicate);
-        void DeserializeAndAddComponents(std::istream& jsonStream);
-        
-    private:
-        void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
-                                const std::function<void (int, int)>& callback,
-                                const std::function<bool (const std::string& componentName)>& componentCallback);
-    public:
+        Event<GameObject*> SceneCreated;
+        Event<GameObject*> SceneRemoved;
+
         friend class GameScene;
         friend class GameObject;
         friend class ScriptWorld;
         friend class GameObjectHandle;
+        friend class Hierarchy;
     };
     
     template<typename T>

@@ -37,9 +37,11 @@ void GameObjectJsonSerializer::WriteJson(GameObject* object, minijson::object_wr
     
     WriteJsonComponents(object, gameObject, predicate);
     
-    if (!object->children.empty()) {
+    Hierarchy& h = object->Hierarchy();
+    
+    if (!h.Children().empty()) {
         minijson::array_writer children_object = gameObject.nested_array("Children");
-        for(auto child : object->children) {
+        for(auto child : h.Children()) {
             if (predicate && !predicate(child, -1)) {
                 continue;
             }
@@ -115,7 +117,7 @@ void GameObjectJsonSerializer::SerializeComponent(GameObject* object, int compon
 }
 
 
-void GameObjectJsonSerializer::AddComponent(GameObject* object, AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName) {
+void GameObjectJsonSerializer::AddComponent(GameObject* object, AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, const std::string& componentName) {
     GameStorage* storage = object->scene->storage;
     int componentID;
     bool isReference;
@@ -197,13 +199,12 @@ void GameObjectJsonSerializer::EndGetAddReferenceComponent() {
 }
 
 
-GameObject* GameObjectJsonSerializer::Deserialize(Pocket::GameScene *scene, std::istream &stream, const std::function<void (GameObject *)> &objectCreated) {
+GameObject* GameObjectJsonSerializer::Deserialize(GameObject* object, std::istream &stream, const std::function<void (GameObject *)> &objectCreated) {
 
     minijson::istream_context context(stream);
-    GameObject* object = 0;
     try {
         AddReferenceComponentList addReferenceComponents;
-        object = LoadObject(addReferenceComponents, scene->root, context, objectCreated);
+        LoadObject(addReferenceComponents, object, context, objectCreated);
         
         GameObject* object;
         int componentID;
@@ -220,15 +221,9 @@ GameObject* GameObjectJsonSerializer::Deserialize(Pocket::GameScene *scene, std:
     return object;
 }
 
-GameObject* GameObjectJsonSerializer::LoadObject(AddReferenceComponentList& addReferenceComponents, GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated) {
-    GameObject* object = 0;
+void GameObjectJsonSerializer::LoadObject(AddReferenceComponentList& addReferenceComponents, GameObject* object, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated) {
      minijson::parse_object(context, [&] (const char* n, minijson::value v) {
         if (v.type() == minijson::Object) {
-            if (parent->IsRoot()) {
-                object = parent;
-            } else {
-                object = parent->scene->CreateEmptyObject(parent, parent->scene, false);
-            }
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::Number) {
@@ -243,11 +238,12 @@ GameObject* GameObjectJsonSerializer::LoadObject(AddReferenceComponentList& addR
                     });
                 } else if (name == "Children" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
-                        LoadObject(addReferenceComponents, object, context, objectCreated);
+                        GameObject* child = object->CreateChild();
+                        LoadObject(addReferenceComponents, child, context, objectCreated);
                     });
-                } else if (!parent && name == "guid" && v.type() == minijson::String) {
+                } else if (name == "guid" && v.type() == minijson::String) {
                     object->scene->guid = std::string(v.as_string());
-                } else if (!parent && name == "counter" && v.type() == minijson::Number) {
+                } else if (name == "counter" && v.type() == minijson::Number) {
                     object->scene->idCounter = (int)v.as_long();
                 }
                 
@@ -257,7 +253,79 @@ GameObject* GameObjectJsonSerializer::LoadObject(AddReferenceComponentList& addR
             });
         }
     });
-    return object;
+}
+
+
+std::string GameObjectJsonSerializer::ReadGuidFromJson(std::istream &jsonStream) {
+    std::string guid;
+    minijson::istream_context context(jsonStream);
+    
+    try {
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            if (v.type() == minijson::Object) {
+                minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                    std::string name = n;
+                    if (name == "guid" && v.type() == minijson::String) {
+                        guid = std::string(v.as_string());
+                    } else {
+                        minijson::ignore(context);
+                    }
+                });
+            } else {
+                minijson::ignore(context);
+            }
+        });
+    } catch (minijson::parse_error e) {
+        std::cout << e.what() << std::endl;
+    }
+    return guid;
+}
+
+void GameObjectJsonSerializer::TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
+                                   const std::function<void (int, int)>& callback,
+                                   const std::function<bool (const std::string& componentName)>& componentCallback) {
+     bool recurseChildren = true;
+     int objectId = -1;
+     minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+        if (v.type() == minijson::Object) {
+            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                std::string name = n;
+                if (name == "id" && v.type() == minijson::Number) {
+                    objectId = (int)v.as_long();
+                } else if (name == "Components" && v.type() == minijson::Array && objectId!=-1) {
+                    minijson::parse_array(context, [&] (minijson::value v) {
+                        if (v.type() == minijson::Object) {
+                            minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                                std::string name = n;
+                                if (componentName == name && componentName!="") {
+                                    callback(parent, objectId);
+                                }
+                                if (componentCallback && !componentCallback(name)) {
+                                    recurseChildren = false;
+                                }
+                                minijson::ignore(context);
+                            });
+                        } else {
+                            minijson::ignore(context);
+                        }
+                    });
+                } else if (name == "Children" && v.type() == minijson::Array && objectId!=-1) {
+                    if (recurseChildren) {
+                        minijson::parse_array(context, [&] (minijson::value v) {
+                            TryParseJsonObject(objectId, context, componentName, callback, componentCallback);
+                        });
+                    }
+                } else {
+                    minijson::ignore(context);
+                }
+                if (componentName=="") {
+                    callback(parent, objectId);
+                }
+            });
+        } else {
+            minijson::ignore(context);
+        }
+    });
 }
 
 

@@ -47,6 +47,9 @@ public:
     bool LoadLib();
     void UnloadLib();
 
+    bool AddStorage(GameStorage& storage);
+    void RemoveStorage(GameStorage& storage);
+
     //TODO: FIX!!!!
 //    bool AddGameWorld(GameWorld& world);
 //    void AddGameRoot(GameObject* root);

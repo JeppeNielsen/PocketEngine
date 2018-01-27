@@ -14,22 +14,25 @@
 namespace Pocket {
     class GameObjectJsonSerializer : public GameObjectSerializer {
     public:
-        GameObject* Deserialize(GameScene* scene, std::istream &stream, const std::function<void (GameObject *)>& objectCreated) override;
-        bool Serialize(GameObject* object, std::ostream& stream, const SerializePredicate& predicate) override;
-        
+        GameObject* Deserialize(GameObject* object, std::istream &stream, const std::function<void (GameObject *)>& objectCreated = nullptr) override;
+        bool Serialize(GameObject* object, std::ostream& stream, const SerializePredicate& predicate = nullptr) override;
+        static std::string ReadGuidFromJson(std::istream& jsonStream);
+    
     private:
         void WriteJson(GameObject* object, minijson::object_writer& writer, const SerializePredicate& predicate) const;
         void WriteJsonComponents(GameObject* object,minijson::object_writer& writer, const SerializePredicate& predicate) const;
         void SerializeComponent(GameObject* object,int componentID, minijson::array_writer& writer, bool isReference, const GameObject* referenceObject ) const;
         
         
-        void AddComponent(GameObject* object, AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, std::string componentName);
+        void AddComponent(GameObject* object, AddReferenceComponentList& addReferenceComponents, minijson::istream_context& context, const std::string& componentName);
         bool GetAddReferenceComponent(AddReferenceComponentList& addReferenceComponents, Pocket::GameObject **object, int &componentID, GameObject** referenceObject);
         void EndGetAddReferenceComponent();
         
-        
-    private:
-        GameObject* LoadObject(AddReferenceComponentList& addReferenceComponents, GameObject* parent, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated);
+    
+        void TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,
+                                const std::function<void (int, int)>& callback,
+                                const std::function<bool (const std::string& componentName)>& componentCallback);
+        void LoadObject(AddReferenceComponentList& addReferenceComponents, GameObject* object, minijson::istream_context &context, const std::function<void(GameObject*)>& objectCreated);
         
     };
 }

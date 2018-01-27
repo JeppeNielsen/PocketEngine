@@ -7,6 +7,7 @@
 //
 
 #include "GameObjectHandle.hpp"
+#include "GameStorage.hpp"
 
 using namespace Pocket;
 
@@ -65,7 +66,7 @@ GameObject* GameObjectHandle::Get() {
         if (ptr->rootId == rootId) return ptr;
     }
     
-    GameScene* scene = world->TryGetScene(sceneGuid);
+    GameScene* scene = nullptr;//world->TryGetScene(sceneGuid);
     if (!scene) return 0;
     GameObject* foundObject = scene->FindObject(rootId);
     if (foundObject) {

@@ -13,10 +13,7 @@
 #include "IGameObject.hpp"
 #include "InputManager.hpp"
 #include "TypeInfo.hpp"
-
-namespace minijson {
-  class array_writer;
-}
+#include "Hierarchy.hpp"
 
 namespace Pocket {
     class GameWorld;
@@ -41,6 +38,7 @@ namespace Pocket {
         friend class GameObjectHandle;
         friend class GameStorage;
         friend class GameObjectJsonSerializer;
+        friend class Hierarchy;
         
         using ComponentIndicies = std::vector<int>;
         
@@ -49,21 +47,11 @@ namespace Pocket {
         
         Bitset activeComponents;
         Bitset enabledComponents;
-    public:
-        Property<GameObject*> Parent;
-        
-    private:
-        ObjectCollection children;
         
         bool removed;
         int index;
         int rootId;
-        
-    public:
-        Property<bool> Enabled;
-        DirtyProperty<bool> WorldEnabled;
-        Property<int> Order;
-        
+    
         struct ReferenceComponent {
             GameObject* object;
             int componentId;
@@ -82,7 +70,6 @@ namespace Pocket {
         ~GameObject();
         GameObject(const GameObject& other);
     
-        void ParentChanged();
         void Reset();
         void TrySetComponentEnabled(ComponentId id, bool enable);
         void SetWorldEnableDirty();
@@ -92,7 +79,9 @@ namespace Pocket {
         
         void RemoveComponents(const SerializePredicate& predicate);
         
-        GameObject* CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
+        void ApplyCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
+        void ApplyClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
+        
     public:
         bool Recurse(const std::function<bool(const GameObject* object)>& function) const;
         bool HasComponent(ComponentId id) const override;
@@ -168,9 +157,6 @@ namespace Pocket {
         
         bool IsRoot() const;
         
-        const ObjectCollection& Children() const;
-        int ChildIndex() const;
-        
         int RootId() const;
         std::string& RootGuid() const;
         
@@ -181,11 +167,7 @@ namespace Pocket {
         Property<bool>& UpdateEnabled();
         Property<float>& TimeScale();
         Property<bool>& RenderEnabled();
-        
-        GameObject* FindObject(int objectId) const;
-        
-        std::string TryGetRootPath() const;
-        
+
         template<typename T>
         GameObject* GetComponentOwner();
         
@@ -202,6 +184,8 @@ namespace Pocket {
             stream<<object.RootGuid()<<":"<<object.rootId;
             return stream;
         }
+        
+        class Hierarchy& Hierarchy() const;
         
         static GameObject* Deserialize(const std::string& data);
     };

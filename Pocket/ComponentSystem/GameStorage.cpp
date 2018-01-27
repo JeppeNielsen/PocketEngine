@@ -8,11 +8,13 @@
 
 #include "GameStorage.hpp"
 #include "GameScene.hpp"
+#include "Hierarchy.hpp"
 
 using namespace Pocket;
 
-GameStorage::GameStorage() : componentTypesCount(0) {
+GameStorage::GameStorage() : componentTypesCount(0), systemIdCounter(0), componentIdCounter(0) {
     objects.count = 0;
+    AddComponentType<Hierarchy>();
 }
 
 void GameStorage::AddComponentType(ComponentId componentId, const ComponentTypeFunction& function) {
@@ -174,4 +176,26 @@ void GameStorage::DeserializeAndAddComponents(std::istream &jsonStream) {
 //    }
 //    GameObject::EndGetAddReferenceComponent();
 }
+
+GameObject* GameStorage::TryGetPrefab(const std::string &guid, int objectId) {
+    for(auto& prefab : prefabs) {
+        if (prefab.guid == guid) {
+            return objectId == 1 ? prefab.root : prefab.FindObject(objectId);
+        }
+    }
+    GameObject* root = GuidToRoot(guid);
+    return objectId == 1 ? root : root->scene->FindObject(objectId);
+}
+
+GameObject* GameStorage::LoadPrefab(const std::string &guid, std::istream &stream) {
+    prefabs.resize(prefabs.size() + 1);
+    GameScene& scene = prefabs.back();
+    scene.world = nullptr;
+    scene.storage = this;
+    scene.root = scene.CreateEmptyObject(nullptr, false);
+    scene.guid = guid;
+    serializer->Deserialize(scene.root, stream);
+    return scene.root;
+}
+
 

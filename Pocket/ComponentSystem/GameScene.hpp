@@ -11,7 +11,6 @@
 #include <functional>
 #include "GameObject.hpp"
 #include "Property.hpp"
-#include "GameStorage.hpp"
 
 namespace Pocket {
     class GameWorld;
@@ -19,6 +18,9 @@ namespace Pocket {
     class ScriptWorld;
     class GameObjectHandle;
     class GameObjectJsonSerializer;
+    class GameStorage;
+    class Hierarchy;
+    
     class GameScene {
     private:
         friend class GameWorld;
@@ -27,27 +29,24 @@ namespace Pocket {
         friend class ScriptWorld;
         friend class GameObjectHandle;
         friend class GameObjectJsonSerializer;
+        friend class GameStorage;
+        friend class Hierarchy;
         
+        std::string guid;
         GameWorld* world;
         GameStorage* storage;
         GameObject* root;
-        int index;
         std::vector<IGameSystem*> systemsIndexed;
         int idCounter;
-        std::string guid;
-        Property<float> timeScale;
-        Property<bool> updateEnabled;
-        Property<bool> renderEnabled;
+        int index;
         
         GameScene();
         ~GameScene();
-        GameScene(const GameScene& other);
-        void Update(float dt);
-        void Render();
-        void DestroySystems();
-        GameObject* FindObject(int objectId);
         
-        IGameSystem* CreateSystem(int systemId);
+        void Initialize(GameWorld* world, GameStorage* storage, int index);
+        void Destroy();
+        
+        void CreateSystem(int systemId);
         void RemoveSystem(int systemId);
         
         void IterateObjects(const std::function<void(GameObject*)>& callback);
@@ -58,8 +57,10 @@ namespace Pocket {
         std::function<void(GameObject* object, ComponentId componentId)> ComponentCreated;
         std::function<void(GameObject* object, ComponentId componentId)> ComponentRemoved;
         
-        GameObject* CreateEmptyObject(GameObject *parent, GameScene* scene, bool assignId);
+        GameObject* CreateEmptyObject(GameObject *parent, bool assignId);
         
         friend class Container<GameScene>;
+        
+        GameObject* FindObject(int objectId);
     };
 }

@@ -15,6 +15,7 @@
 #include "StringHelper.hpp"
 #include "FileHelper.hpp"
 #include "GameObjectHandle.hpp"
+#include "GameStorage.hpp"
 
 using namespace std;
 using namespace Pocket;
@@ -1153,16 +1154,16 @@ ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {
     return systems;
 
 }
-/*
-bool ScriptWorld::AddGameWorld(GameWorld& world) {
+
+bool ScriptWorld::AddStorage(GameStorage& storage) {
     if (!libHandle) return false;
-    
+
     //assert(baseComponentIndex == (int)world.components.size());
     //assert(baseSystemIndex == (int)world.systems.size());
     
     for(int i=0; i<componentCount; ++i) {
         int componentIndex = baseComponentIndex + i;
-        world.AddComponentType(componentIndex, [this, componentIndex](GameWorld::ComponentInfo& componentInfo) {
+        storage.AddComponentType(componentIndex, [this, componentIndex](GameStorage::ComponentInfo& componentInfo) {
             Container<ScriptComponent>* container = new Container<ScriptComponent>();
             container->defaultObject.world = this;
             container->defaultObject.componentID = componentIndex;
@@ -1182,13 +1183,13 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         
         const char* name = getComponentName(componentIndex);
         std::string componentName = std::string(name);
-        world.components[componentIndex].name = componentName;
+        storage.components[componentIndex].name = componentName;
     }
     
     int index = 0;
     for (auto& scriptSystem : scriptSystems) {
         int systemIndex = baseSystemIndex + index;
-        world.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameWorld::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
+        storage.AddSystemType(systemIndex, [this, &scriptSystem, systemIndex] (GameStorage::SystemInfo& systemInfo, std::vector<ComponentId>& components) {
             
             for(int c : scriptSystem) {
                 components.push_back(c);
@@ -1206,8 +1207,8 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
         index++;
     }
     
-    int endComponentIndex = (int)world.components.size();
-    world.objects.Iterate([endComponentIndex](GameObject* o) {
+    int endComponentIndex = (int)storage.components.size();
+    storage.objects.Iterate([endComponentIndex](GameObject* o) {
         o->activeComponents.Resize(endComponentIndex);
         o->enabledComponents.Resize(endComponentIndex);
     });
@@ -1215,6 +1216,28 @@ bool ScriptWorld::AddGameWorld(GameWorld& world) {
     return true;
 }
 
+void ScriptWorld::RemoveStorage(GameStorage& storage) {
+    if (baseSystemIndex == -1) return;
+    int endSystemIndex = (int)storage.systems.size();
+    for(int i=baseSystemIndex; i<endSystemIndex; ++i){
+        storage.RemoveSystemType(i);
+    }
+    storage.systems.resize(baseSystemIndex);
+    storage.components.resize(baseComponentIndex);
+    storage.objects.Iterate([this](GameObject* o) {
+        o->activeComponents.Resize(baseComponentIndex);
+        o->enabledComponents.Resize(baseComponentIndex);
+    });
+    storage.components.resize(baseComponentIndex);
+    for(int i=0; i<baseComponentIndex; ++i) {
+        auto& list = storage.components[i].systemsUsingComponent;
+        std::remove_if(list.begin(), list.end(), [this, endSystemIndex] (int n) {
+            return n>=baseSystemIndex && n<=endSystemIndex;
+        });
+    }
+}
+
+/*
 void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
     
     GameScene* scene = root->scene;

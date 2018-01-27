@@ -9,12 +9,14 @@
 #include "GameObject.hpp"
 #include "GameWorld.hpp"
 #include "GameObjectHandle.hpp"
+#include "GameStorage.hpp"
+#include "Hierarchy.hpp"
 
 using namespace Pocket;
 
 static bool forceSetNextParent = false;
 
-GameObject::GameObject() { Parent = 0; }
+GameObject::GameObject() { }
 
 GameObject::~GameObject() { }
 
@@ -22,57 +24,16 @@ GameObject::GameObject(const GameObject& other) {
     activeComponents.Resize(other.activeComponents.Size());
     enabledComponents.Resize(other.activeComponents.Size());
     componentIndicies.resize(other.activeComponents.Size());
-    
-    Parent = 0;
-    
-    Parent.Changed.Bind(this, &GameObject::ParentChanged);
-    
-    WorldEnabled.Method = [this](bool& value) {
-        value = (Parent) ? Parent()->WorldEnabled && Enabled : Enabled;
-    }; 
-}
-
-void GameObject::ParentChanged() {
-    assert(!IsRoot()); // roots are not allowed to have a parent
-    assert(Parent!=this); // parent cannot be self
-    if (!forceSetNextParent) {
-        assert(Parent()->scene == this->scene); // parent needs to be within the same scene/root
-        assert(Parent());// objects must have a parent
-    }
-    GameObject* prevParent = Parent.PreviousValue();
-    GameObject* currentParent = Parent;
-    
-    if (removed && !forceSetNextParent) return;
-    
-    if (prevParent) {
-        auto& children = prevParent->children;
-        children.erase(std::find(children.begin(), children.end(), this));
-        prevParent->WorldEnabled.HasBecomeDirty.Unbind(this, &GameObject::SetWorldEnableDirty);
-    }
-    
-    if (currentParent) {
-        auto& children = currentParent->children;
-        children.push_back(this);
-        currentParent->WorldEnabled.HasBecomeDirty.Bind(this, &GameObject::SetWorldEnableDirty);
-        
-        bool prevWorldEnabled = WorldEnabled;
-        WorldEnabled.MakeDirty();
-        if (WorldEnabled()!=prevWorldEnabled) {
-            SetWorldEnableDirty();
-        }
-    }
 }
 
 void GameObject::Reset() {
-    Enabled.Changed.Clear();
     removed = false;
-    forceSetNextParent = true;
-    Parent = 0;
-    forceSetNextParent = false;
-    Enabled = true;
-    children.clear();
-    Order = 0;
-    Enabled.Changed.Bind(this, &GameObject::SetWorldEnableDirty);
+    ComponentId id = GameIdHelper::GetComponentID<class Hierarchy>();
+    auto& container = scene->storage->components[id].container;
+    componentIndicies[id] = container->Create(index);
+    activeComponents.Set(id, true);
+    class Hierarchy* h = (class Hierarchy*)container->Get(componentIndicies[id]);
+    h->owner = this;
 }
 
 bool GameObject::HasComponent(ComponentId id) const {
@@ -97,17 +58,19 @@ void GameObject::AddComponent(ComponentId id) {
 
     componentIndicies[id] = scene->storage->components[id].container->Create(index);
     activeComponents.Set(id, true);
-    scene->world->delayedActions.emplace_back([this, id]() {
-        if (scene->ComponentCreated) {
-            scene->ComponentCreated(this, id);
-        }
-        TrySetComponentEnabled(id, true);
-    });
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this, id]() {
+            if (scene->ComponentCreated) {
+                scene->ComponentCreated(this, id);
+            }
+            TrySetComponentEnabled(id, true);
+        });
+    }
 }
 
 void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     assert(id<activeComponents.Size());
-    assert(scene->world == referenceObject->scene->world);
+    assert(scene->storage == referenceObject->scene->storage);
     if (removed) return;
     if (activeComponents[id]) return;
     if (!referenceObject->activeComponents[id]) return;
@@ -115,29 +78,37 @@ void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     componentIndicies[id] = referenceObject->componentIndicies[id];
     scene->storage->components[id].container->Reference(referenceObject->componentIndicies[id]);
     activeComponents.Set(id, true);
-    scene->world->delayedActions.emplace_back([this, id]() {
-        if (scene->ComponentCreated) {
-            scene->ComponentCreated(this, id);
-        }
-        TrySetComponentEnabled(id, true);
-    });
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this, id]() {
+            if (scene->ComponentCreated) {
+                scene->ComponentCreated(this, id);
+            }
+            TrySetComponentEnabled(id, true);
+        });
+    }
 }
 
 void GameObject::RemoveComponent(ComponentId id) {
     assert(id<activeComponents.Size());
     if (removed) return;
     if (!activeComponents[id]) return;
-    scene->world->delayedActions.emplace_back([this, id]() {
-        if (!activeComponents[id]) {
-           return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
-        }
-        if (scene->ComponentRemoved) {
-            scene->ComponentRemoved(this, id);
-        }
-        TrySetComponentEnabled(id, false);
+    
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this, id]() {
+            if (!activeComponents[id]) {
+               return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
+            }
+            if (scene->ComponentRemoved) {
+                scene->ComponentRemoved(this, id);
+            }
+            TrySetComponentEnabled(id, false);
+            scene->storage->components[id].container->Delete(componentIndicies[id], index);
+            activeComponents.Set(id, false);
+        });
+    } else {
         scene->storage->components[id].container->Delete(componentIndicies[id], index);
         activeComponents.Set(id, false);
-    });
+    }
 }
 
 void GameObject::CloneComponent(ComponentId id, GameObject* object) {
@@ -147,22 +118,28 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     if (!object->activeComponents[id]) return;
     componentIndicies[id] = scene->storage->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
-    scene->world->delayedActions.emplace_back([this, id]() {
-        if (scene->ComponentCreated) {
-            scene->ComponentCreated(this, id);
-        }
-        TrySetComponentEnabled(id, true);
-    });
+    
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this, id]() {
+            if (scene->ComponentCreated) {
+                scene->ComponentCreated(this, id);
+            }
+            TrySetComponentEnabled(id, true);
+        });
+    }
 }
 
 void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
     if (removed) return;
-    scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
-        RemoveComponent(id);
+    
+    if (scene->world) {
         scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
-            AddComponent(id, referenceObject);
+            RemoveComponent(id);
+            scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
+                AddComponent(id, referenceObject);
+            });
         });
-    });
+    }
 }
 
 GameObject* GameObject::GetComponentOwner(ComponentId componentId) const {
@@ -181,11 +158,15 @@ int GameObject::ComponentCount() const {
 }
 
 void GameObject::SetWorldEnableDirty() {
-    WorldEnabled.MakeDirty();
-    scene->world->delayedActions.emplace_back([this](){
-        SetEnabled(WorldEnabled);
-    });
+    /*WorldEnabled.MakeDirty();
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this](){
+            SetEnabled(WorldEnabled);
+        });
+    }
+    */
 }
+
 
 void GameObject::SetEnabled(bool enabled) {
     for(int i=0; i<activeComponents.Size(); ++i) {
@@ -196,9 +177,11 @@ void GameObject::SetEnabled(bool enabled) {
 }
 
 void GameObject::EnableComponent(ComponentId id, bool enable) {
-    scene->world->delayedActions.emplace_back([id, enable, this](){
-        TrySetComponentEnabled(id, enable);
-    });
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([id, enable, this](){
+            TrySetComponentEnabled(id, enable);
+        });
+    }
 }
 
 void GameObject::TryAddToSystem(int systemId) {
@@ -235,7 +218,7 @@ void GameObject::TryRemoveFromSystem(int systemId) {
 
 void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
     
-    enable = enable && WorldEnabled();
+    //enable = enable && WorldEnabled();
 
     bool isEnabled = enabledComponents[id];
     if (isEnabled==enable) {
@@ -260,15 +243,28 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
 void GameObject::Remove() {
     if (removed) return;
     int localIndex = index;
-    scene->world->delayedActions.emplace_back([this, localIndex]() {
-        SetEnabled(false);
-        forceSetNextParent = true;
-        if (IsRoot()) {
-            scene->world->RemoveRoot(this);
-        } else {
-            Parent = 0;
-        }
-        forceSetNextParent = false;
+    if (scene->world) {
+        scene->world->delayedActions.emplace_back([this, localIndex]() {
+            SetEnabled(false);
+            forceSetNextParent = true;
+            if (IsRoot()) {
+                scene->world->RemoveScene(this);
+            } else {
+                Hierarchy().Parent = nullptr;
+            }
+            forceSetNextParent = false;
+            for(int i=0; i<activeComponents.Size(); ++i) {
+                if (activeComponents[i]) {
+                    scene->storage->components[i].container->Delete(componentIndicies[i], index);
+                    activeComponents.Set(i, false);
+                }
+            }
+            scene->storage->objects.Delete(index, 0);
+            if (scene->ObjectRemoved) {
+                scene->ObjectRemoved(this);
+            }
+        });
+    } else {
         for(int i=0; i<activeComponents.Size(); ++i) {
             if (activeComponents[i]) {
                 scene->storage->components[i].container->Delete(componentIndicies[i], index);
@@ -276,12 +272,10 @@ void GameObject::Remove() {
             }
         }
         scene->storage->objects.Delete(index, 0);
-        if (scene->ObjectRemoved) {
-            scene->ObjectRemoved(this);
-        }
-    });
+    }
     removed = true;
-    for(auto child : children) {
+    class Hierarchy& h = Hierarchy();
+    for(auto child : h.children) {
         child->Remove();
     }
 }
@@ -295,45 +289,43 @@ int GameObject::RootId() const {
 }
 
 GameObject* GameObject::CreateChild() {
-    return scene->CreateEmptyObject(this, scene, true);
+    return scene->CreateEmptyObject(this, true);
 }
 
 GameObject* GameObject::CreateObject() {
     return scene->root->CreateChild();
 }
 
-GameObject* GameObject::CreateChildCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate) {
-    if (predicate && !predicate(source)) return 0;
-    
-    GameObject* clone = CreateChild();
+void GameObject::ApplyCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate) {
+    if (predicate && !predicate(source)) return;
     
     for (int i=0; i<source->activeComponents.Size(); ++i) {
         if (source->activeComponents[i]) {
-        
             int ownerIndex = scene->storage->components[i].container->GetOwner(source->componentIndicies[i]);
             bool isReference = (ownerIndex != source->index);// && ownerIndex>=0;
             if (isReference) {
-                referenceComponents.push_back({clone, i, ownerIndex});
+                referenceComponents.push_back({this, i, ownerIndex});
             } else {
-                clone->CloneComponent(i, source);
+                this->CloneComponent(i, source);
             }
         }
     }
-    for(auto child : source->children) {
-        clone->CreateChildCloneInternal(referenceComponents, child, predicate);
+    class Hierarchy& h = source->Hierarchy();
+    for(auto child : h.children) {
+        GameObject* childClone = CreateChild();
+        childClone->ApplyCloneInternal(referenceComponents, child, predicate);
     }
-    return clone;
 }
 
-GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
+void GameObject::ApplyClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
     std::vector<CloneReferenceComponent> referenceComponents;
-    GameObject* clone = CreateChildCloneInternal(referenceComponents, source, predicate);
+    ApplyCloneInternal(referenceComponents, source, predicate);
     
     for(auto& referenceComponent : referenceComponents) {
         if (referenceComponent.referenceObjectId<0) {
             continue; // this reference object is removed
         }
-        GameObject* referenceObject = (GameObject*)World()->storage->objects.Get(referenceComponent.referenceObjectId);
+        GameObject* referenceObject = (GameObject*)scene->storage->objects.Get(referenceComponent.referenceObjectId);
         if (referenceObject->HasAncestor(source)) {
             int referenceIndex = 0;
             source->Recurse([&referenceIndex, &referenceObject] (const GameObject* o) {
@@ -346,7 +338,7 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
             });
         
             int indexCounter = 0;
-            clone->Recurse([&referenceIndex, &indexCounter, &referenceObject] (const GameObject* o) {
+            this->Recurse([&referenceIndex, &indexCounter, &referenceObject] (const GameObject* o) {
                 if (indexCounter == referenceIndex) {
                     referenceObject = (GameObject*)o;
                     return true;
@@ -358,21 +350,26 @@ GameObject* GameObject::CreateChildClone(Pocket::GameObject *source, const std::
         }
         referenceComponent.object->AddComponent(referenceComponent.componentId, referenceObject);
     }
-    
-    return clone;
+}
+
+GameObject* GameObject::CreateChildClone(GameObject* source, const std::function<bool(GameObject*)>& predicate) {
+    GameObject* child = CreateChild();
+    child->ApplyClone(source, predicate);
+    return child;
 }
 
 bool GameObject::Recurse(const std::function<bool(const GameObject* object)>& function) const {
     if (function(this)) return true;
-    for(auto child : children) {
+    class Hierarchy& h = Hierarchy();
+    for(auto child : h.children) {
         if (child->Recurse(function)) return true;
     }
     return false;
 }
 
 GameObject* GameObject::CreateCopy(const std::function<bool(GameObject*)>& predicate) {
-    if (IsRoot()) return 0;
-    return Parent()->CreateChildClone(this, predicate);
+    if (IsRoot()) return nullptr;
+    return Hierarchy().Parent()->CreateChildClone(this, predicate);
 }
 
 GameObject* GameObject::Root() const {
@@ -385,20 +382,6 @@ bool GameObject::IsRoot() const {
 
 std::string& GameObject::RootGuid() const {
     return scene->guid;
-}
-
-const ObjectCollection& GameObject::Children() const {
-    return children;
-}
-
-int GameObject::ChildIndex() const {
-    GameObject* parent = Parent();
-    if (!parent) return 0;
-    auto& children = parent->children;
-    for(int i=0; i<children.size(); ++i) {
-        if (children[i] == this) return i;
-    }
-    return 0;
 }
 
 InputManager& GameObject::Input() const { return scene->world->Input(); }
@@ -476,18 +459,6 @@ TypeInfo GameObject::GetComponentTypeInfo(int index) const {
     return info;
 }
 
-Property<bool>& GameObject::UpdateEnabled() { return scene->updateEnabled; }
-Property<float>& GameObject::TimeScale() { return scene->timeScale; }
-Property<bool>& GameObject::RenderEnabled() { return scene->renderEnabled; }
-
-GameObject* GameObject::FindObject(int objectId) const{
-    return scene->FindObject(objectId);
-}
-
-std::string GameObject::TryGetRootPath() const {
-    return World()->TryFindScenePath(scene->guid);
-}
-
 void GameObject::SetCallbacks(const std::function<void (GameObject *)> &ObjectCreated, const std::function<void (GameObject *)> &ObjectRemoved, const std::function<void (GameObject *, ComponentId)> &ComponentCreated, const std::function<void (GameObject *, ComponentId)> &ComponentRemoved) const {
     scene->ObjectCreated = ObjectCreated;
     scene->ObjectRemoved = ObjectRemoved;
@@ -499,7 +470,7 @@ bool GameObject::HasAncestor(Pocket::GameObject *ancestor) const {
     const GameObject* object = this;
     while (true) {
         if (object == ancestor) return true;
-        object = object->Parent();
+        object = object->Hierarchy().Parent;
         if (!object) return false;
     }
 }
@@ -517,6 +488,9 @@ void GameObject::RemoveComponents(const SerializePredicate& predicate) {
     }
 }
 
+class Hierarchy& GameObject::Hierarchy() const {
+    return *GetComponent<class Hierarchy>();
+}
 
 
 

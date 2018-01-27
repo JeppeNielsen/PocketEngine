@@ -13,11 +13,11 @@
 #include <vector>
 
 namespace Pocket {
-    class GameWorld;
+    class GameStorage;
     class GameObject;
     class FileWorld {
     public:
-        void AddGameWorld(GameWorld& world);
+        void Initialize(GameStorage& storage);
         void FindRoots(const std::string& path, const std::vector<std::string>& extensions);
         
         std::function<void(GameObject* root)> OnRootCreated;

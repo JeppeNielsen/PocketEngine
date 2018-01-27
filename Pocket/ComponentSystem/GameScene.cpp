@@ -7,46 +7,46 @@
 //
 
 #include "GameScene.hpp"
-#include "GameWorld.hpp"
 #include "StringHelper.hpp"
+#include "GameWorld.hpp"
+#include "GameStorage.hpp"
 
 using namespace Pocket;
 
 GameScene::GameScene() : idCounter(0),
 	ObjectCreated(0), ObjectRemoved(0), ComponentCreated(0), ComponentRemoved(0) {
-    updateEnabled = true;
-    renderEnabled = true;
-    timeScale = 1.0f;
 }
 
 GameScene::~GameScene() {
-    for (int i=0; i<systemsIndexed.size(); ++i) {
-        if (!systemsIndexed[i]) continue;
-        if (storage->systems[i].deleteFunction) {
-            storage->systems[i].deleteFunction(systemsIndexed[i]);
-        } else {
-            delete systemsIndexed[i];
+    Destroy();
+}
+
+void GameScene::Initialize(GameWorld* world, GameStorage* storage, int index) {
+    this->world = world;
+    this->storage = storage;
+    this->index = index;
+    
+    guid = StringHelper::CreateGuid();
+    root = CreateEmptyObject(nullptr, true);
+    for (int i=0; i<this->storage->systems.size(); ++i) {
+        if (this->storage->systems[i].createFunction) {
+            CreateSystem(i);
         }
     }
 }
 
-GameScene::GameScene(const GameScene& other) {
-    systemsIndexed.clear();
-    updateEnabled = true;
-    renderEnabled = true;
-    timeScale = 1.0f;
-}
-
-void GameScene::DestroySystems() {
+void GameScene::Destroy() {
     for (int i=0; i<systemsIndexed.size(); ++i) {
         if (systemsIndexed[i]) {
             systemsIndexed[i]->Destroy();
+            if (storage->systems[i].deleteFunction) {
+                storage->systems[i].deleteFunction(systemsIndexed[i]);
+            } else {
+                delete systemsIndexed[i];
+            }
         }
     }
-}
-
-void GameScene::Render() {
-    if (!renderEnabled()) return;
+    systemsIndexed.clear();
 }
 
 GameObject* GameScene::FindObject(int objectId) {
@@ -57,10 +57,11 @@ GameObject* GameScene::FindObject(int objectId) {
         GameObject* current = nodesToVisit.back();
         if (current->rootId == objectId) return current;
         nodesToVisit.pop_back();
-        nodesToVisit.insert(nodesToVisit.begin(), current->Children().begin(), current->Children().end());
+        Hierarchy& h = current->Hierarchy();
+        nodesToVisit.insert(nodesToVisit.begin(), h.Children().begin(), h.Children().end());
     }
     
-    return 0;
+    return nullptr;
 }
 
 void GameScene::IterateObjects(const std::function<void (GameObject *)> &callback) {
@@ -71,13 +72,14 @@ void GameScene::IterateObjects(const std::function<void (GameObject *)> &callbac
         GameObject* current = nodesToVisit.back();
         callback(current);
         nodesToVisit.pop_back();
-        nodesToVisit.insert(nodesToVisit.end(), current->Children().begin(), current->Children().end());
+        Hierarchy& h = current->Hierarchy();
+        nodesToVisit.insert(nodesToVisit.end(), h.Children().begin(), h.Children().end());
     }
 }
 
-IGameSystem* GameScene::CreateSystem(int systemId) {
+void GameScene::CreateSystem(int systemId) {
     if (systemId>=systemsIndexed.size()) {
-        systemsIndexed.resize(systemId + 1, 0);
+        systemsIndexed.resize(systemId + 1, nullptr);
     }
 
     if (!systemsIndexed[systemId]) {
@@ -85,15 +87,10 @@ IGameSystem* GameScene::CreateSystem(int systemId) {
         systemsIndexed[systemId] = system;
         system->SetIndex(systemId);
         system->Initialize();
-        //system->Order.Changed.Bind([this] () {
-            world->delayedActions.emplace_back([this] () { world->SortActiveSystems(); });
-        //});
-        
         IterateObjects([systemId](GameObject* object) {
             object->TryAddToSystem(systemId);
         });
     }
-    return systemsIndexed[systemId];
 }
 
 void GameScene::RemoveSystem(int systemId) {
@@ -116,16 +113,16 @@ void GameScene::RemoveSystem(int systemId) {
     systemsIndexed[systemId] = 0;
 }
 
-GameObject* GameScene::CreateEmptyObject(GameObject *parent, GameScene* scene, bool assignId) {
+GameObject* GameScene::CreateEmptyObject(GameObject *parent, bool assignId) {
     int index = storage->objects.CreateNoInit(0);
     GameObject* object = &storage->objects.entries[index];
     object->scene = this;
     object->index = index;
     if (assignId) {
-        object->rootId = ++scene->idCounter;
+        object->rootId = ++idCounter;
     }
     object->Reset();
-    object->Parent = parent;
+    object->Hierarchy().Parent = parent;
     if (ObjectCreated) {
         ObjectCreated(object);
     }

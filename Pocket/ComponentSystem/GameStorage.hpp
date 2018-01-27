@@ -13,11 +13,11 @@
 #include "Container.hpp"
 #include "TypeInfo.hpp"
 #include "IGameSystem.hpp"
-#include "GameObject.hpp"
+#include "GameWorld.hpp"
+#include "GameObjectSerializer.hpp"
 
 namespace Pocket {
 
-    class GameWorld;
     class GameObjectJsonSerializer;
     class ScriptWorld;
 
@@ -38,9 +38,6 @@ namespace Pocket {
             std::function<IFieldEditor*(const GameObject*)> getFieldEditor;
             std::vector<int> systemsUsingComponent;
         };
-    
-        using Components = std::vector<ComponentInfo>;
-        Components components;
         
         struct SystemInfo {
             SystemInfo() : createFunction(0), deleteFunction(0) {}
@@ -50,11 +47,22 @@ namespace Pocket {
             std::string name;
         };
         
+        using Components = std::vector<ComponentInfo>;
+        Components components;
+        
         using Systems = std::vector<SystemInfo>;
         Systems systems;
         
         Container<GameObject> objects;
         int componentTypesCount;
+        
+        using Prefabs = std::deque<GameScene>;
+        Prefabs prefabs;
+        
+        std::unique_ptr<GameObjectSerializer> serializer;
+        
+        int systemIdCounter;
+        int componentIdCounter;
         
         using ComponentTypeFunction = std::function<void(ComponentInfo&)>;
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
@@ -64,7 +72,7 @@ namespace Pocket {
         void RemoveSystemType(SystemId systemId);
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
-    
+        
     public:
     
         GameStorage();
@@ -121,6 +129,18 @@ namespace Pocket {
         
         void SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate &predicate);
         void DeserializeAndAddComponents(std::istream &jsonStream);
+        
+        template<typename T>
+        void CreateSerializer() {
+            serializer = std::make_unique<T>();
+        }
+        
+        GameObject* LoadPrefab(const std::string& guid, std::istream& stream);
+        GameObject* TryGetPrefab(const std::string& guid, int objectId);
+        
+        std::function<GameObject*(const std::string& guid)> GuidToRoot;
+        std::function<std::string(const std::string& guid)> GuidToPath;
+        std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
         
         friend class GameObjectHandle;
         friend class GameWorld;

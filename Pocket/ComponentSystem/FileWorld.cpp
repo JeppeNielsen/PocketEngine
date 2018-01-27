@@ -9,26 +9,27 @@
 #include "FileWorld.hpp"
 #include "GameWorld.hpp"
 #include "FileHelper.hpp"
+#include "GameStorage.hpp"
 #include <fstream>
 #include <set>
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
-void FileWorld::AddGameWorld(Pocket::GameWorld &w) {
-    GameWorld* world = &w;
-    world->GuidToRoot = [this, world] (const std::string& guid) -> GameObject* {
+void FileWorld::Initialize(Pocket::GameStorage& storage) {
+    storage.GuidToRoot = [this, &storage] (const std::string& guid) -> GameObject* {
         auto it = guidToPath.find(guid);
-        if (it==guidToPath.end()) return 0;
+        if (it==guidToPath.end()) return nullptr;
         std::ifstream file;
         file.open(it->second);
-        if (!file.is_open()) return 0;
-        return nullptr; //TODO: FIX!!! //world->CreateRootFromJson(file, OnRootCreated, OnChildCreated);
+        if (!file.is_open()) return nullptr;
+        return storage.LoadPrefab(guid, file);
     };
-    world->GuidToPath = [this, world] (const std::string& guid) {
+    storage.GuidToPath = [this] (const std::string& guid) {
         auto it = guidToPath.find(guid);
         return it == guidToPath.end() ? "" : it->second;
     };
-    world->GetPaths = [this, world] (std::vector<std::string>& guids, std::vector<std::string>& paths) {
+    storage.GetPaths = [this] (std::vector<std::string>& guids, std::vector<std::string>& paths) {
         for(auto p : guidToPath) {
             guids.push_back(p.first);
             paths.push_back(p.second);
@@ -48,7 +49,7 @@ void FileWorld::FindRoots(const std::string &path, const std::vector<std::string
         std::ifstream file;
         file.open(path);
         if (!file.is_open()) continue;
-        std::string guid = GameWorld::ReadGuidFromJson(file);
+        std::string guid = GameObjectJsonSerializer::ReadGuidFromJson(file);
         if (guid!="") {
             guidToPath[guid] = path;
         }
