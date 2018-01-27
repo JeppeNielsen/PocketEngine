@@ -7,8 +7,10 @@
 //
 
 #include "ScriptTests.hpp"
+#include "GameStorage.hpp"
 #include "GameWorld.hpp"
 #include "ScriptWorld.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -24,6 +26,7 @@ void ScriptTests::RunTests() {
         std::vector<std::string> defaultIncludes =
         {
             "/Projects/PocketEngine/Pocket/Data/Property.hpp",
+            "/Projects/PocketEngine/Pocket/Data/Timeline.hpp",
             "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
             "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
@@ -54,18 +57,18 @@ void ScriptTests::RunTests() {
         
         scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [] (auto& error) {});
         scriptWorld.LoadLib();
-    
-        //scriptWorld.AddGameWorld(world);
-    
-        GameObject* root = world.CreateRoot();
-        //scriptWorld.AddGameRoot(root);
-        root->AddComponent(0);
-        root->AddComponent(1);
         
-        GameObject* root2 = world.CreateRoot();
-        //scriptWorld.AddGameRoot(root2);
-        root2->AddComponent(0);
+        scriptWorld.AddStorage(storage);
+        //scriptWorld.RemoveStorage(storage);
+        
+        GameObject* root = world.CreateScene();
+        
+        root->AddComponent(1);
+        root->AddComponent(2);
+        
+        GameObject* root2 = world.CreateScene();
         root2->AddComponent(1);
+        root2->AddComponent(2);
         
         auto types = root2->GetComponentTypes([](int i) {
             return true;
@@ -100,8 +103,11 @@ void ScriptTests::RunTests() {
             writer.close();
         }
         
-        //root2->ToJson(std::cout, 0);
-    
+        GameObjectJsonSerializer serializer;
+        
+        serializer.Serialize(root, std::cout);
+        
+        
         return true;
     });
     

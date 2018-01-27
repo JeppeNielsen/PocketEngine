@@ -1,0 +1,40 @@
+{
+    "GameObject": {
+        "id": 1,
+        "guid": "V7ey7J4UTkmvxHyiEWPRhA==",
+        "counter": 2,
+        "Components": [
+            {
+                "SerializationTestsComponents::Transform": {
+                    "x": 123,
+                    "y": 0
+                }
+            },
+            {
+                "SerializationTestsComponents::Nameable": {
+                    "name": "Jeppe"
+                }
+            }
+        ],
+        "Children": [
+            {
+                "GameObject": {
+                    "id": 2,
+                    "Components": [
+                        {
+                            "SerializationTestsComponents::Transform": {
+                                "x": 456,
+                                "y": 0
+                            }
+                        },
+                        {
+                            "SerializationTestsComponents::Nameable": {
+                                "name": "SubChild"
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}

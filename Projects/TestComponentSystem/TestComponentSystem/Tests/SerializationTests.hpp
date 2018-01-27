@@ -8,8 +8,12 @@
 
 #pragma once
 #include "LogicTest.hpp"
+#include "GameStorage.hpp"
+#include "FileWorld.hpp"
 
 class SerializationTests : public LogicTest {
 protected:
+    Pocket::GameStorage storage;
+    Pocket::FileWorld fileWorld;
     virtual void RunTests();
 };

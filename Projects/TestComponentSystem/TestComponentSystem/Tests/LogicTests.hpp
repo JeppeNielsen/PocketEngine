@@ -8,8 +8,10 @@
 
 #pragma once
 #include "LogicTest.hpp"
+#include "GameStorage.hpp"
 
 class LogicTests : public LogicTest {
 protected:
+    Pocket::GameStorage storage;
     virtual void RunTests();
 };

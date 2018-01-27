@@ -11,12 +11,12 @@
 using namespace Pocket;
 
 struct Position {
-    Position() : position(0) { }
+    Position() : position(123) { }
     int position;
 };
 
 struct Velocity {
-    Velocity() : velocity(0) { }
+    Velocity() : velocity(456) { }
     int velocity;
 };
 

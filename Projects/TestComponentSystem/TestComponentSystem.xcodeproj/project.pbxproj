@@ -77,6 +77,9 @@
 		724E324F1D0E14150007E8CA /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724E324E1D0E14150007E8CA /* OpenGL.framework */; };
 		724E32511D0E141C0007E8CA /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 724E32501D0E141C0007E8CA /* OpenAL.framework */; };
 		72772F651D0763FD005AC1D8 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72772F641D0763FD005AC1D8 /* main.cpp */; };
+		72AA3C0D1FFC339600CD6088 /* SerializationTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AA3C0C1FFC339600CD6088 /* SerializationTests.cpp */; };
+		72AA3C122000187900CD6088 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AA3C102000187900CD6088 /* Hierarchy.cpp */; };
+		72AA3C192013E3FA00CD6088 /* ScriptTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AA3C172013E3FA00CD6088 /* ScriptTest.cpp */; };
 		72B3AD8B1EE5FD2F000A6258 /* ScriptTests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */; };
 		72B491E41DBD15A50063518A /* libclang.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 72B491E31DBD15A50063518A /* libclang.dylib */; };
 		72CC61141FF6E8730066B1F9 /* GameStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72CC61121FF6E8730066B1F9 /* GameStorage.cpp */; };
@@ -257,6 +260,14 @@
 		724E32501D0E141C0007E8CA /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		72772F611D0763FD005AC1D8 /* TestComponentSystem */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = TestComponentSystem; sourceTree = BUILT_PRODUCTS_DIR; };
 		72772F641D0763FD005AC1D8 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		72AA3C0A1FFC336800CD6088 /* Prefab.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = Prefab.json; path = Assets/Prefab.json; sourceTree = "<group>"; };
+		72AA3C0B1FFC339600CD6088 /* SerializationTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SerializationTests.hpp; sourceTree = "<group>"; };
+		72AA3C0C1FFC339600CD6088 /* SerializationTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SerializationTests.cpp; sourceTree = "<group>"; };
+		72AA3C0F1FFC372900CD6088 /* Prefab.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Prefab.json; sourceTree = "<group>"; };
+		72AA3C102000187900CD6088 /* Hierarchy.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
+		72AA3C112000187900CD6088 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
+		72AA3C172013E3FA00CD6088 /* ScriptTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTest.cpp; sourceTree = "<group>"; };
+		72AA3C182013E3FA00CD6088 /* ScriptTest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTest.hpp; sourceTree = "<group>"; };
 		72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTests.cpp; sourceTree = "<group>"; };
 		72B3AD8A1EE5FD2F000A6258 /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
 		72B491E31DBD15A50063518A /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = TestComponentSystem/clang/lib/libclang.dylib; sourceTree = "<group>"; };
@@ -338,6 +349,8 @@
 				7201D2F71ED3134F0074C053 /* Meta */,
 				72CC61121FF6E8730066B1F9 /* GameStorage.cpp */,
 				72CC61131FF6E8730066B1F9 /* GameStorage.hpp */,
+				72AA3C102000187900CD6088 /* Hierarchy.cpp */,
+				72AA3C112000187900CD6088 /* Hierarchy.hpp */,
 			);
 			path = ComponentSystem;
 			sourceTree = "<group>";
@@ -595,6 +608,8 @@
 		724E323D1D0DFB9F0007E8CA /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				72AA3C0C1FFC339600CD6088 /* SerializationTests.cpp */,
+				72AA3C0B1FFC339600CD6088 /* SerializationTests.hpp */,
 				72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */,
 				72B3AD8A1EE5FD2F000A6258 /* ScriptTests.hpp */,
 				724E323E1D0DFB9F0007E8CA /* LogicTests.cpp */,
@@ -630,14 +645,34 @@
 		72772F631D0763FD005AC1D8 /* TestComponentSystem */ = {
 			isa = PBXGroup;
 			children = (
+				72AA3C132013E3DE00CD6088 /* Scripts */,
+				72AA3C0E1FFC372900CD6088 /* Assets */,
 				72B4920C1DBEAB430063518A /* ScriptInclude */,
 				724E323D1D0DFB9F0007E8CA /* Tests */,
 				72772F641D0763FD005AC1D8 /* main.cpp */,
 				72FBB07B1F0EDA1A0036AC7A /* serializeTemplateTypes.cpp */,
 				72FBB07D1F12BE5F0036AC7A /* testConstexpr.cpp */,
 				7227450D1F16A492009B0528 /* testInitializer.cpp */,
+				72AA3C0A1FFC336800CD6088 /* Prefab.json */,
 			);
 			path = TestComponentSystem;
+			sourceTree = "<group>";
+		};
+		72AA3C0E1FFC372900CD6088 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				72AA3C0F1FFC372900CD6088 /* Prefab.json */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		72AA3C132013E3DE00CD6088 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				72AA3C172013E3FA00CD6088 /* ScriptTest.cpp */,
+				72AA3C182013E3FA00CD6088 /* ScriptTest.hpp */,
+			);
+			path = Scripts;
 			sourceTree = "<group>";
 		};
 		72B4920C1DBEAB430063518A /* ScriptInclude */ = {
@@ -737,12 +772,14 @@
 				724E32461D0DFB9F0007E8CA /* LogicTests.cpp in Sources */,
 				7201D9B71ED313520074C053 /* Profiler.cpp in Sources */,
 				72CC61171FF6FC220066B1F9 /* GameObjectJsonSerializer.cpp in Sources */,
+				72AA3C122000187900CD6088 /* Hierarchy.cpp in Sources */,
 				7201D9C31ED313520074C053 /* ScriptWorld.cpp in Sources */,
 				7201D9B01ED313520074C053 /* OSXWindowCreator.mm in Sources */,
 				7201D7EC1ED313510074C053 /* GameSystem.cpp in Sources */,
 				7201D8011ED313510074C053 /* Worker.cpp in Sources */,
 				7201D8D51ED313510074C053 /* Quaternion.cpp in Sources */,
 				7201D7F01ED313510074C053 /* GameState.cpp in Sources */,
+				72AA3C0D1FFC339600CD6088 /* SerializationTests.cpp in Sources */,
 				7201D8CB1ED313510074C053 /* BoundingBox.cpp in Sources */,
 				7201D7FD1ED313510074C053 /* Pointer.cpp in Sources */,
 				7201D8DD1ED313510074C053 /* ChromecastUser.cpp in Sources */,
@@ -775,6 +812,7 @@
 				7201D8CE1ED313510074C053 /* Interpolator.cpp in Sources */,
 				7201D8D71ED313510074C053 /* Rect.cpp in Sources */,
 				7201D7EB1ED313510074C053 /* GameScene.cpp in Sources */,
+				72AA3C192013E3FA00CD6088 /* ScriptTest.cpp in Sources */,
 				7201D8DC1ED313510074C053 /* ChromecastReceiver.cpp in Sources */,
 				7201D7EE1ED313510074C053 /* Engine.cpp in Sources */,
 				7201D8031ED313510074C053 /* UnitTest.cpp in Sources */,
