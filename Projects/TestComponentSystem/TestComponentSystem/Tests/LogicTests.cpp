@@ -128,7 +128,7 @@ void LogicTests::RunTests() {
         world.CreateScene();
         world.CreateScene();
         return initializedSystems.size() == 2 &&
-        initializedSystems[0]!=initializedSystems[1] &&
+        initializedSystems[0] != initializedSystems[1] &&
         initializedSystems[0] && initializedSystems[1];
     });
     
