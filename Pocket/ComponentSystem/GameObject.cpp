@@ -285,7 +285,7 @@ bool GameObject::IsRemoved() const {
 }
 
 int GameObject::RootId() const {
-    return rootId;
+    return id;
 }
 
 GameObject* GameObject::CreateChild() {

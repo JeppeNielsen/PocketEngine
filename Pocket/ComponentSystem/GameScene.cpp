@@ -55,7 +55,7 @@ GameObject* GameScene::FindObject(int objectId) {
     
     while (!nodesToVisit.empty()) {
         GameObject* current = nodesToVisit.back();
-        if (current->rootId == objectId) return current;
+        if (current->id == objectId) return current;
         nodesToVisit.pop_back();
         Hierarchy& h = current->Hierarchy();
         nodesToVisit.insert(nodesToVisit.begin(), h.Children().begin(), h.Children().end());
@@ -119,7 +119,7 @@ GameObject* GameScene::CreateEmptyObject(GameObject *parent, bool assignId) {
     object->scene = this;
     object->index = index;
     if (assignId) {
-        object->rootId = ++idCounter;
+        object->id = ++idCounter;
     }
     object->Reset();
     object->Hierarchy().Parent = parent;

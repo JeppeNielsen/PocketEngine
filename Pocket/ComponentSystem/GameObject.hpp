@@ -50,7 +50,7 @@ namespace Pocket {
         
         bool removed;
         int index;
-        int rootId;
+        int id;
     
         struct ReferenceComponent {
             GameObject* object;
@@ -181,7 +181,7 @@ namespace Pocket {
         bool HasAncestor(GameObject* ancestor) const;
         
         inline friend std::ostream& operator<<(std::ostream& stream, const GameObject& object) {
-            stream<<object.RootGuid()<<":"<<object.rootId;
+            stream<<object.RootGuid()<<":"<<object.id;
             return stream;
         }
         

@@ -28,11 +28,11 @@ void GameObjectJsonSerializer::WriteJson(GameObject* object, minijson::object_wr
     minijson::object_writer gameObject = writer.nested_object("GameObject");
 
     if (object->IsRoot()) {
-        gameObject.write("id", object->rootId);
+        gameObject.write("id", object->id);
         gameObject.write("guid", object->scene->guid);
         gameObject.write("counter", object->scene->idCounter);
     } else {
-        gameObject.write("id", object->rootId);
+        gameObject.write("id", object->id);
     }
     
     WriteJsonComponents(object, gameObject, predicate);
@@ -104,10 +104,10 @@ void GameObjectJsonSerializer::SerializeComponent(GameObject* object, int compon
             jsonComponent.write("id", "");
         } else {
             if (referenceObject->scene == object->scene) {
-                jsonComponent.write("id", referenceObject->rootId);
+                jsonComponent.write("id", referenceObject->id);
             } else {
                 std::stringstream s;
-                s<<referenceObject->rootId;
+                s<<referenceObject->id;
                 jsonComponent.write("id", referenceObject->scene->guid +":"+s.str());
             }
         }
@@ -227,7 +227,7 @@ void GameObjectJsonSerializer::LoadObject(AddReferenceComponentList& addReferenc
             minijson::parse_object(context, [&] (const char* n, minijson::value v) {
                 std::string name = n;
                 if (name == "id" && v.type() == minijson::Number) {
-                    object->rootId = (int)v.as_long();
+                    object->id = (int)v.as_long();
                 } else if (name == "Components" && v.type() == minijson::Array && object) {
                     minijson::parse_array(context, [&] (minijson::value v) {
                         if (v.type() == minijson::Object) {

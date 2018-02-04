@@ -54,7 +54,7 @@ void GameObjectHandle::operator=(const GameObjectHandle& handle) {
 void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
     SetWorld(ptr->World());
     index = ptr->index;
-    rootId = ptr->rootId;
+    rootId = ptr->id;
     sceneGuid = ptr->scene->guid;
 }
 
@@ -63,7 +63,7 @@ GameObject* GameObjectHandle::Get() {
     
     if (index>=0 && index<world->storage->objects.entries.size() && world->storage->objects.versions[index] == version) {
         GameObject* ptr = &world->storage->objects.entries[index];
-        if (ptr->rootId == rootId) return ptr;
+        if (ptr->id == rootId) return ptr;
     }
     
     GameScene* scene = nullptr;//world->TryGetScene(sceneGuid);
