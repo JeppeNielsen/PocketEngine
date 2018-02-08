@@ -74,6 +74,9 @@ namespace Pocket {
             ExtractComponents<T...>(storage, components);
         }
         
+        static void CreateSubSystems(GameStorage& storage) { }
+        
+    public:
         friend class GameStorage;
     };
     

@@ -13,9 +13,7 @@
 
 using namespace Pocket;
 
-GameWorld::GameWorld() : storage(nullptr) {
-    scenes.defaultObject.world = this;
-}
+GameWorld::GameWorld() : storage(nullptr) { }
 
 GameWorld::GameWorld(GameStorage& storage) : GameWorld() {
     Initialize(storage);
@@ -64,8 +62,9 @@ void GameWorld::DoActions(Actions &actions) {
 const ObjectCollection& GameWorld::Scenes() { return sceneRoots; }
 
 GameObject* GameWorld::CreateScene() {
-    int sceneIndex = scenes.Create(0);
-    GameScene* scene = &scenes.entries[sceneIndex];
+    int sceneIndex = storage->scenes.Create(0);
+    GameScene* scene = &storage->scenes.entries[sceneIndex];
+    scene->world = this;
     scene->Initialize(this, storage, sceneIndex);
     sceneRoots.push_back(scene->root);
     SceneCreated(scene->root);
@@ -83,7 +82,7 @@ void GameWorld::RemoveScene(Pocket::GameObject *sceneRoot) {
     delayedActions.emplace_back([this, scene, sceneRoot] {
         sceneRoots.erase(std::find(sceneRoots.begin(), sceneRoots.end(), sceneRoot));
         scene->Destroy();
-        scenes.Delete(scene->index, 0);
+        storage->scenes.Delete(scene->index, 0);
         SceneRemoved(sceneRoot);
     });
 }

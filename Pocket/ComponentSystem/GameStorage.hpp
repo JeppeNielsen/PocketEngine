@@ -56,6 +56,8 @@ namespace Pocket {
         Container<GameObject> objects;
         int componentTypesCount;
         
+        Container<GameScene> scenes;
+        
         using Prefabs = std::deque<GameScene>;
         Prefabs prefabs;
         
@@ -68,7 +70,7 @@ namespace Pocket {
         using SystemTypeFunction = std::function<void(SystemInfo&, std::vector<ComponentId>&)>;
     
         void AddComponentType(ComponentId componentId, const ComponentTypeFunction& function);
-        void AddSystemType(SystemId systemId, const SystemTypeFunction& function);
+        void AddSystemType(SystemId systemId, const SystemTypeFunction& function, const std::function<void()>& finished);
         void RemoveSystemType(SystemId systemId);
         bool TryGetComponentIndex(const std::string& componentName, int& index);
         bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
@@ -113,6 +115,8 @@ namespace Pocket {
                     delete ((T*)system);
                 };
                 systemInfo.name = GameIdHelper::GetClassName<T>();
+            }, [this] () {
+                T::CreateSubSystems(*this);
             });
         }
         

@@ -18,6 +18,7 @@
 #include "IGameSystem.hpp"
 #include "GameScene.hpp"
 #include "InputManager.hpp"
+#include "GameStorage.hpp"
 
 namespace Pocket {
     class GameStorage;
@@ -28,8 +29,6 @@ namespace Pocket {
     class GameWorld {
     private:
         GameStorage* storage;
-        
-        Container<GameScene> scenes;
         std::vector<GameObject*> sceneRoots;
         
         struct ActiveSystem {
@@ -88,6 +87,7 @@ namespace Pocket {
         friend class ScriptWorld;
         friend class GameObjectHandle;
         friend class Hierarchy;
+        friend class GameStorage;
     };
     
     template<typename T>
@@ -119,6 +119,7 @@ namespace Pocket {
     
     template<typename T>
     T* GameObject::GetSystem() {
-        return static_cast<T*>(scene->systemsIndexed[GameIdHelper::GetSystemID<T>()]);
+        const SystemId id = GameIdHelper::GetSystemID<T>();
+        return id<scene->systemsIndexed.size() ? static_cast<T*>(scene->systemsIndexed[id]) : nullptr;
     }
 }

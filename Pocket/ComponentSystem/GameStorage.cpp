@@ -37,7 +37,7 @@ void GameStorage::AddComponentType(ComponentId componentId, const ComponentTypeF
     }
 }
 
-void GameStorage::AddSystemType(SystemId systemId, const SystemTypeFunction& function) {
+void GameStorage::AddSystemType(SystemId systemId, const SystemTypeFunction& function, const std::function<void()>& finished) {
     if (systemId>=systems.size()) {
         systems.resize(systemId + 1);
     }
@@ -56,28 +56,32 @@ void GameStorage::AddSystemType(SystemId systemId, const SystemTypeFunction& fun
             components[c].systemsUsingComponent.push_back(systemId);
         }
         systemInfo.bitset = systemBitset;
+        
+        if (finished) {
+            finished();
+        }
     }
 }
 
 void GameStorage::RemoveSystemType(SystemId systemId) {
     SystemInfo& systemInfo = systems[systemId];
     if (!systemInfo.createFunction) return;
-//    scenes.Iterate([this, &systemInfo, systemId] (GameScene* scene) {
-//        if (systemId>=scene->systemsIndexed.size()) return;
-//        IGameSystem* system = scene->systemsIndexed[systemId];
-//        if (!system) return;
-//        if (system->ObjectCount()>0) {
-//            scene->IterateObjects([&systemInfo, system] (GameObject* object) {
-//                if ( systemInfo.bitset.Contains(object->enabledComponents)) {
-//                    system->ObjectRemoved(object);
-//                    system->RemoveObject(object);
-//                }
-//            });
-//            RemoveActiveSystem(system);
-//        }
-//        systemInfo.deleteFunction(system);
-//        scene->systemsIndexed[systemId] = 0;
-//    });
+    scenes.Iterate([this, &systemInfo, systemId] (GameScene* scene) {
+        if (systemId>=scene->systemsIndexed.size()) return;
+        IGameSystem* system = scene->systemsIndexed[systemId];
+        if (!system) return;
+        if (system->ObjectCount()>0) {
+            scene->IterateObjects([&systemInfo, system] (GameObject* object) {
+                if ( systemInfo.bitset.Contains(object->enabledComponents)) {
+                    system->ObjectRemoved(object);
+                    system->RemoveObject(object);
+                }
+            });
+            scene->world->RemoveActiveSystem(system);
+        }
+        systemInfo.deleteFunction(system);
+        scene->systemsIndexed[systemId] = nullptr;
+    });
 
     for(int i=0; i<systemInfo.bitset.Size(); ++i) {
         if (systemInfo.bitset[i]) {
@@ -127,54 +131,25 @@ ComponentTypeCollection GameStorage::GetComponentTypes() const {
 }
 
 void GameStorage::SerializeAndRemoveComponents(std::ostream& stream, const SerializePredicate &predicate) {
-//    minijson::writer_configuration config;
-//    config = config.pretty_printing(true);
-//    minijson::object_writer writer(stream, config);
-//    objects.Iterate([&writer, &predicate](GameObject* object) {
-//        object->WriteJsonComponents(writer, predicate);
-//        object->RemoveComponents(predicate);
-//    });
-//    writer.close();
+
+    std::vector<GameObject*> objectsToSerialize;
+    objects.Iterate([&objectsToSerialize](GameObject* object) {
+        objectsToSerialize.push_back(object);
+    });
+
+    serializer->SerializeComponents(objectsToSerialize, stream, predicate);
+
+    for(auto o : objectsToSerialize) {
+        o->RemoveComponents(predicate);
+    }
 }
 
 void GameStorage::DeserializeAndAddComponents(std::istream &jsonStream) {
-//    minijson::istream_context context(jsonStream);
-//
-//    try {
-//        GameObject::AddReferenceComponentList addReferenceComponents;
-//
-//        std::vector<GameObject*> objectsList;
-//        objects.Iterate([&](GameObject* object) {
-//            objectsList.push_back(object);
-//        });
-//
-//        int index = 0;
-//        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-//            GameObject* object = objectsList[index];
-//            index++;
-//            if (v.type() == minijson::Array) {
-//                minijson::parse_array(context, [&] (minijson::value v) {
-//                    if (v.type() == minijson::Object) {
-//                        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
-//                            object->AddComponent(addReferenceComponents, context, n);
-//                        });
-//                    }
-//                });
-//            }
-//        });
-//
-//        GameObject* object;
-//        int componentID;
-//        GameObject* referenceObject;
-//        while (GameObject::GetAddReferenceComponent(addReferenceComponents, &object, componentID, &referenceObject)) {
-//            if (referenceObject) {
-//                object->AddComponent(componentID, referenceObject);
-//            }
-//        }
-//    } catch (minijson::parse_error e) {
-//        std::cout << e.what() << std::endl;
-//    }
-//    GameObject::EndGetAddReferenceComponent();
+    std::vector<GameObject*> objectsToDeserialize;
+    objects.Iterate([&objectsToDeserialize](GameObject* object) {
+        objectsToDeserialize.push_back(object);
+    });
+    serializer->DeserializeAndAddComponents(objectsToDeserialize, jsonStream);
 }
 
 GameObject* GameStorage::TryGetPrefab(const std::string &guid, int objectId) {

@@ -328,7 +328,49 @@ void GameObjectJsonSerializer::TryParseJsonObject(int parent, minijson::istream_
     });
 }
 
+void GameObjectJsonSerializer::SerializeComponents(const std::vector<GameObject *> objects, std::ostream &stream, const SerializePredicate& predicate) {
+    minijson::writer_configuration config;
+    config = config.pretty_printing(true);
+    minijson::object_writer writer(stream, config);
+    for(auto o : objects) {
+        WriteJsonComponents(o, writer, predicate);
+    }
+    writer.close();
+}
 
+void GameObjectJsonSerializer::DeserializeAndAddComponents(const std::vector<GameObject *> objects, std::istream &stream) {
+    minijson::istream_context context(stream);
 
+    try {
+        AddReferenceComponentList addReferenceComponents;
+
+        int index = 0;
+        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+            GameObject* object = objects[index];
+            index++;
+            if (v.type() == minijson::Array) {
+                minijson::parse_array(context, [&] (minijson::value v) {
+                    if (v.type() == minijson::Object) {
+                        minijson::parse_object(context, [&] (const char* n, minijson::value v) {
+                            AddComponent(object, addReferenceComponents, context, n);
+                        });
+                    }
+                });
+            }
+        });
+
+        GameObject* object;
+        int componentID;
+        GameObject* referenceObject;
+        while (GetAddReferenceComponent(addReferenceComponents, &object, componentID, &referenceObject)) {
+            if (referenceObject) {
+                object->AddComponent(componentID, referenceObject);
+            }
+        }
+    } catch (minijson::parse_error e) {
+        std::cout << e.what() << std::endl;
+    }
+    EndGetAddReferenceComponent();
+}
 
 

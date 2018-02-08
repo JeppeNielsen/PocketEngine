@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "GameIdHelper.hpp"
+#include "GameIDHelper.hpp"
 
 namespace Pocket {
     class GameObject;

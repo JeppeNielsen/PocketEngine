@@ -24,6 +24,9 @@ namespace Pocket {
         virtual GameObject* Deserialize(GameObject* object, std::istream &stream, const std::function<void (GameObject *)>& objectCreated = nullptr) = 0;
         virtual bool Serialize(GameObject* object, std::ostream& stream, const SerializePredicate& predicate = nullptr) = 0;
         
+        virtual void SerializeComponents(const std::vector<GameObject*> objects, std::ostream& stream, const SerializePredicate& predicate = nullptr) = 0;
+        virtual void DeserializeAndAddComponents(const std::vector<GameObject *> objects, std::istream &stream) = 0;
+
     protected:
         struct AddReferenceComponent {
             GameObject* object;

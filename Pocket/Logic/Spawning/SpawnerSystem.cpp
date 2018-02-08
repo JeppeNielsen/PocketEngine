@@ -40,9 +40,9 @@ void SpawnerSystem::Update(float dt) {
     for(auto o : spawningObjects) {
         Spawner* spawner = o->GetComponent<Spawner>();
         if (spawner->Source) {
-            spawner->Source()->Enabled = false;
+            //spawner->Source()->Enabled = false;
             auto clone = o->CreateChildClone(spawner->Source);
-            clone->Parent = o->Root();
+            clone->Hierarchy().Parent = o->Root();
         }
     }
     spawningObjects.clear();

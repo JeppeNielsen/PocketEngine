@@ -1203,7 +1203,7 @@ bool ScriptWorld::AddStorage(GameStorage& storage) {
             systemInfo.deleteFunction = [this] (IGameSystem* system) {
                 deleteSystem(system);
             };
-        });
+        }, nullptr);
         index++;
     }
     
