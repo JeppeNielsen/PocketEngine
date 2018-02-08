@@ -47,6 +47,14 @@ struct VelocitySystem : public GameSystem<Transform, Velocity> {
 
 struct RenderSystem : public GameSystem<Transform, Renderable> { };
 
+struct TestSubSystemsSystem : public GameSystem<Transform> {
+    struct SubSystem : public GameSystem<Renderable> { };
+public:
+    static void CreateSubSystems(GameStorage& storage) {
+        storage.AddSystemType<SubSystem>();
+    }
+};
+
 }
 
 using namespace LogicTestsComponents;
@@ -788,6 +796,42 @@ void LogicTests::RunTests() {
         bool isWorldEnabled = child->Hierarchy().WorldEnabled();
         
         return !wasWorldEnabled && isWorldEnabled;
+    });
+    
+    
+    AddTest("Test subsystem", [this] () {
+        
+        GameStorage storage;
+        storage.AddSystemType<TestSubSystemsSystem>();
+        GameWorld world(storage);
+        
+        auto scene = world.CreateScene();
+        auto system1 = scene->GetSystem<TestSubSystemsSystem>();
+        auto system2 = scene->GetSystem<TestSubSystemsSystem::SubSystem>();
+        
+        return system1 && system2;
+    });
+    
+    AddTest("GameWorld dtor will call dtor on system", [this] () {
+        
+        struct DestroyedComponent {};
+        
+        static bool wasDestroyed = false;
+        
+        struct DestroyedSystem : GameSystem<DestroyedComponent> {
+            ~DestroyedSystem () {
+                wasDestroyed = true;
+            }
+        };
+        
+        GameStorage storage;
+        storage.AddSystemType<DestroyedSystem>();
+        
+        {
+            GameWorld world(storage);
+            auto scene = world.CreateScene();
+        }
+        return wasDestroyed;
     });
  
 }

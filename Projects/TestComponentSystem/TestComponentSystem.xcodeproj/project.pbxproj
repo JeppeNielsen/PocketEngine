@@ -268,6 +268,8 @@
 		72AA3C112000187900CD6088 /* Hierarchy.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
 		72AA3C172013E3FA00CD6088 /* ScriptTest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTest.cpp; sourceTree = "<group>"; };
 		72AA3C182013E3FA00CD6088 /* ScriptTest.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTest.hpp; sourceTree = "<group>"; };
+		72AA3C3C202CE3BE00CD6088 /* ScriptTestRecompile1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ScriptTestRecompile1.hpp; sourceTree = "<group>"; };
+		72AA3C3D202CE3BE00CD6088 /* ScriptTestRecompile1.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTestRecompile1.cpp; sourceTree = "<group>"; };
 		72B3AD891EE5FD2F000A6258 /* ScriptTests.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScriptTests.cpp; sourceTree = "<group>"; };
 		72B3AD8A1EE5FD2F000A6258 /* ScriptTests.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ScriptTests.hpp; sourceTree = "<group>"; };
 		72B491E31DBD15A50063518A /* libclang.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libclang.dylib; path = TestComponentSystem/clang/lib/libclang.dylib; sourceTree = "<group>"; };
@@ -669,6 +671,8 @@
 		72AA3C132013E3DE00CD6088 /* Scripts */ = {
 			isa = PBXGroup;
 			children = (
+				72AA3C3D202CE3BE00CD6088 /* ScriptTestRecompile1.cpp */,
+				72AA3C3C202CE3BE00CD6088 /* ScriptTestRecompile1.hpp */,
 				72AA3C172013E3FA00CD6088 /* ScriptTest.cpp */,
 				72AA3C182013E3FA00CD6088 /* ScriptTest.hpp */,
 			);

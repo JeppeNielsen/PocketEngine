@@ -36,7 +36,7 @@ template<> void Pocket::GameObject::EnableComponent<Velocity>(bool enable) { Ena
 #include "Colour.hpp"
 #include "Touchable.hpp"
 #include "InputController.hpp"
-#include "ScriptTest.hpp"
+#include "ScriptTestRecompile1.hpp"
 
 #include <string>
 #include <vector>
