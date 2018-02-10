@@ -181,8 +181,15 @@ void ScriptTests::RunTests() {
         scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [] (auto& error) {});
         scriptWorld.LoadLib();
         
+        GameObjectJsonSerializer debug;
+        
+        
         scriptWorld.AddStorage(storage);
+        debug.Serialize(root, std::cout);
+        
         storage.DeserializeAndAddComponents(savedComponents);
+        
+        debug.Serialize(root, std::cout);
         
         
         bool secondTest = false;
