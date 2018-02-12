@@ -72,11 +72,16 @@ namespace Pocket {
         void AddComponentType(ComponentId componentId, const ComponentTypeFunction& function);
         void AddSystemType(SystemId systemId, const SystemTypeFunction& function, const std::function<void()>& finished);
         void RemoveSystemType(SystemId systemId);
-        bool TryGetComponentIndex(const std::string& componentName, int& index);
-        bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference);
         
-    public:
+        
     
+    public:
+        
+        bool TryGetComponentIndex(const std::string& componentName, int& index) const;
+        bool TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference) const;
+        void TryParseComponent(std::istream &stream, int componentId,
+                                            const std::function<void (int, int)>& callback,
+                                            const std::function<bool (const std::string& componentName)>& componentCallback = nullptr) const;
         GameStorage();
     
         template<typename T>
@@ -140,7 +145,7 @@ namespace Pocket {
         }
         
         GameObject* LoadPrefab(const std::string& guid, std::istream& stream);
-        GameObject* TryGetPrefab(const std::string& guid, int objectId);
+        GameObject* TryGetPrefab(const std::string& guid, int objectId = 1);
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         std::function<std::string(const std::string& guid)> GuidToPath;

@@ -20,6 +20,7 @@ namespace Pocket {
         void ObjectAdded(GameObject *object);
         void ObjectRemoved(GameObject *object);
         void Update(float dt);
+        static void CreateSubSystems(GameStorage& storage);
     private:
     
         void TouchDown(TouchData d, GameObject* object);

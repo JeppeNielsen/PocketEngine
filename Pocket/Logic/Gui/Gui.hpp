@@ -41,6 +41,7 @@ namespace Pocket {
         using Fonts = std::vector<GameObject*>;
         
         void Initialize();
+        static void CreateSubSystems(GameStorage& storage);
         void Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport);
         void Setup(GameObject *atlas, const Rect &viewport);
         GameObject* GetCamera();

@@ -51,6 +51,8 @@ namespace Pocket {
         bool removed;
         int index;
         int id;
+        
+    public:
     
         struct ReferenceComponent {
             GameObject* object;
@@ -164,10 +166,6 @@ namespace Pocket {
         
         TypeInfo GetComponentTypeInfo(int index) const;
     
-        Property<bool>& UpdateEnabled();
-        Property<float>& TimeScale();
-        Property<bool>& RenderEnabled();
-
         template<typename T>
         GameObject* GetComponentOwner();
         
@@ -184,6 +182,8 @@ namespace Pocket {
             stream<<object.RootGuid()<<":"<<object.id;
             return stream;
         }
+        
+        std::string TryGetScenePath() const;
         
         class Hierarchy& Hierarchy() const;
         

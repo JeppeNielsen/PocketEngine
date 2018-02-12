@@ -10,42 +10,61 @@
 #include "FontTextureSystem.hpp"
 #include "FileReader.hpp"
 #include <fstream>
+#include "GameObjectJsonSerializer.hpp"
+#include "VirtualTreeListSystem.hpp"
+#include "VirtualTreeListSpawnerSystem.hpp"
 
 using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
 void Gui::Initialize() {
-    renderer = root->CreateSystem<RenderSystem>();
-    textboxSystem = root->CreateSystem<TextBoxSystem>();
-    touchSystem = root->CreateSystem<TouchSystem>();
+    renderer = root->GetSystem<RenderSystem>();
+    textboxSystem = root->GetSystem<TextBoxSystem>();
+    touchSystem = root->GetSystem<TouchSystem>();
     
-    root->CreateSystem<TransformHierarchy>();
+    root->GetSystem<HierarchyOrder>()->Order = 1000;
+    root->GetSystem<FontTextureSystem>()->Order = -1;
+    root->GetSystem<PanelDropSystem>()->Order = -1;
+    root->GetSystem<PanelSystem>()->Order = -1;
+    root->GetSystem<PanelAreaSystem>()->Order = -1;
     
-    root->CreateSystem<SpriteMeshSystem>();
-    root->CreateSystem<SpriteTextureSystem>();
-    root->CreateSystem<HierarchyOrder>()->Order = 1000;
-    root->CreateSystem<DraggableSystem>();
-    root->CreateSystem<LayoutSystem>();
-    root->CreateSystem<ColorSystem>();
-    root->CreateSystem<DraggableMotionSystem>();
-    root->CreateSystem<VelocitySystem>();
-    root->CreateSystem<LimitableSystem>();
-    root->CreateSystem<SelectedColorerSystem>();
-    root->CreateSystem<DroppableSystem>();
-    root->CreateSystem<DraggableMotionSystem>();
-    root->CreateSystem<LayoutSystem>();
-    root->CreateSystem<FontTextureSystem>()->Order = -1;
-    root->CreateSystem<LabelMeshSystem>();
-    root->CreateSystem<TextBoxLabelSystem>();
+    hoverSystem = root->GetSystem<HoverSystem>();
+}
+
+void Gui::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<RenderSystem>();
+    storage.AddSystemType<TextBoxSystem>();
+    storage.AddSystemType<TouchSystem>();
     
-    root->CreateSystem<PanelDropSystem>()->Order = -1;
-    root->CreateSystem<PanelSystem>()->Order = -1;
-    root->CreateSystem<PanelAreaSystem>()->Order = -1;
-    root->CreateSystem<TouchCancelSystem>();
+    storage.AddSystemType<TransformHierarchy>();
     
-    hoverSystem = root->CreateSystem<HoverSystem>();
-    root->CreateSystem<ScrollWheelMoverSystem>();
+    storage.AddSystemType<SpriteMeshSystem>();
+    storage.AddSystemType<SpriteTextureSystem>();
+    storage.AddSystemType<HierarchyOrder>();
+    storage.AddSystemType<DraggableSystem>();
+    storage.AddSystemType<LayoutSystem>();
+    storage.AddSystemType<ColorSystem>();
+    storage.AddSystemType<DraggableMotionSystem>();
+    storage.AddSystemType<VelocitySystem>();
+    storage.AddSystemType<LimitableSystem>();
+    storage.AddSystemType<SelectedColorerSystem>();
+    storage.AddSystemType<DroppableSystem>();
+    storage.AddSystemType<DraggableMotionSystem>();
+    storage.AddSystemType<LayoutSystem>();
+    storage.AddSystemType<FontTextureSystem>();
+    storage.AddSystemType<LabelMeshSystem>();
+    storage.AddSystemType<TextBoxLabelSystem>();
+    
+    storage.AddSystemType<PanelDropSystem>();
+    storage.AddSystemType<PanelSystem>();
+    storage.AddSystemType<PanelAreaSystem>();
+    storage.AddSystemType<TouchCancelSystem>();
+    
+    storage.AddSystemType<HoverSystem>();
+    storage.AddSystemType<ScrollWheelMoverSystem>();
+    storage.AddSystemType<VirtualTreeListSystem>();
+    storage.AddSystemType<VirtualTreeListSpawnerSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {
@@ -53,7 +72,9 @@ void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, co
     auto atlasFile = FileReader::GetFile(atlasXml);
     std::ifstream file;
     file.open(atlasFile);
-    atlas = root->CreateChildFromJson(file);
+    GameObjectJsonSerializer serializer;
+    atlas = root->CreateChild();
+    serializer.Deserialize(atlas, file);
     file.close();
     Texture& texture = atlas->AddComponent<TextureComponent>()->Texture();
     texture.LoadFromFile(atlasTexture);

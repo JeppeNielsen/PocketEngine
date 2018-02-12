@@ -81,6 +81,8 @@ namespace Pocket {
         
         Event<GameObject*> SceneCreated;
         Event<GameObject*> SceneRemoved;
+        
+        GameStorage& Storage() const;
 
         friend class GameScene;
         friend class GameObject;

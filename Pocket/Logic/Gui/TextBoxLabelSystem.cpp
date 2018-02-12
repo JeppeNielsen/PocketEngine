@@ -65,7 +65,7 @@ void TextBoxLabelSystem::TextBoxActiveChanged(GameObject *object) {
         
         cursor = object->CreateObject();
         cursor->AddComponent<Transform>();
-        cursor->Parent = object;
+        cursor->Hierarchy().Parent = object;
         cursor->AddComponent<Mesh>()->GetMesh<Vertex>().AddQuad(0, {cursorWidth,object->GetComponent<Label>()->FontSize * 1.1f}, Colour::Black());
         cursor->AddComponent<Renderable>();
         cursor->AddComponent<Orderable>();
@@ -101,6 +101,6 @@ void TextBoxLabelSystem::Update(float dt) {
         MoveCursor(activeTextureObject);
     }
     timer += dt;
-    cursor->Enabled = fmodf(timer, 0.8f)<0.4f;
+    cursor->Hierarchy().Enabled = fmodf(timer, 0.8f)<0.4f;
 }
 

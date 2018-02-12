@@ -33,7 +33,7 @@ void FileSystemListenerSystem::ObjectRemoved(Pocket::GameObject *object) {
 }
 
 void FileSystemListenerSystem::SomethingChanged(Pocket::GameObject *object) {
-    for (auto child : object->Children()) {
+    for (auto child : object->Hierarchy().Children()) {
         child->Remove();
     }
     FileSystemListener* listener = object->GetComponent<FileSystemListener>();

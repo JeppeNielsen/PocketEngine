@@ -14,14 +14,14 @@
 
 using namespace Pocket;
 
-void AssetManager::Initialize() {
-    root->CreateSystem<AssetLoaderSystem<TextureComponent>>();
-    root->CreateSystem<AssetLoaderSystem<ShaderComponent>>();
-    root->CreateSystem<AssetLoaderSystem<Font>>();
+void AssetManager::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
+    root->GetSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
+    root->GetSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
+    root->GetSystem<AssetLoaderSystem<Font>>()->SetFileWatcher(watcher);
 }
 
-void AssetManager::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
-    root->CreateSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
-    root->CreateSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
-    root->CreateSystem<AssetLoaderSystem<Font>>()->SetFileWatcher(watcher);
+void AssetManager::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<AssetLoaderSystem<TextureComponent>>();
+    storage.AddSystemType<AssetLoaderSystem<ShaderComponent>>();
+    storage.AddSystemType<AssetLoaderSystem<Font>>();
 }

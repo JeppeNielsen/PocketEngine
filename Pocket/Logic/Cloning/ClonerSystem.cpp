@@ -14,19 +14,19 @@
 
 using namespace Pocket;
 
-void ClonerSystem::Initialize() {
-    root->World()->AddComponentType<CloneVariable>();
+void ClonerSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddComponentType<CloneVariable>();
 }
 
 void ClonerSystem::ObjectAdded(Pocket::GameObject *object) {
     object->GetComponent<Cloner>()->Source.Changed.Bind(this, &ClonerSystem::CloneSourceChanged, object);
-    if (object->Children().empty()) {
+    if (object->Hierarchy().Children().empty()) {
         CloneSourceChanged(object);
     } else {
         Cloner* cloner = object->GetComponent<Cloner>();
         std::vector<std::shared_ptr<IFieldInfo>> variables;
         cloner->components.clear();
-        FindVariables(variables, object, object->Children()[0]);
+        FindVariables(variables, object, object->Hierarchy().Children()[0]);
         cloner->variables = variables;
     }
 }
@@ -45,7 +45,7 @@ void ClonerSystem::CloneSourceChanged(Pocket::GameObject *object) {
         object->RemoveComponent(componentId);
     }
     cloner->components.clear();
-    for(auto child : object->Children()) {
+    for(auto child : object->Hierarchy().Children()) {
         child->Remove();
     }
     GameObject* source = cloner->Source;
@@ -74,7 +74,7 @@ void ClonerSystem::FindVariables(std::vector<std::shared_ptr<IFieldInfo>>& varia
     if (vars) {
         for(auto& var : vars->Variables ) {
             int index;
-            if (root->World()->TryGetComponentIndex(var.componentName, index)) {
+            if (root->World()->Storage().TryGetComponentIndex(var.componentName, index)) {
                 if (objectWithVariable->HasComponent(index)) {
                     auto typeInfo = objectWithVariable->GetComponentTypeInfo(index);
                     auto fieldInfo = typeInfo.GetField(var.fieldName);
@@ -88,8 +88,7 @@ void ClonerSystem::FindVariables(std::vector<std::shared_ptr<IFieldInfo>>& varia
             }
         }
     }
-    for(auto child : objectWithVariable->Children()) {
+    for(auto child : objectWithVariable->Hierarchy().Children()) {
         FindVariables(variables, cloner, child);
     }
 }
-

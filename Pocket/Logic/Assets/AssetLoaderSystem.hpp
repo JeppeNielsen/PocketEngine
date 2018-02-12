@@ -47,7 +47,7 @@ namespace Pocket {
         void LoadAsset(GameObject* object) {
             AssetLoader* assetLoader = object->GetComponent<AssetLoader>();
             GameObject* ownerObject = object->GetComponentOwner<T>();
-            std::string rootFilename = ownerObject->TryGetRootPath();
+            std::string rootFilename = ownerObject->TryGetScenePath();
             if (rootFilename == ownerObject->RootGuid()) {
                 assetLoader->pathLoaded = rootFilename + "-asset";
                 T* asset = object->GetComponent<T>();

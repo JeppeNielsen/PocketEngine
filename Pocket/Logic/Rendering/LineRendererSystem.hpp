@@ -22,6 +22,7 @@ namespace Pocket {
         void Render() override;
     private:
         RenderSystem* renderSystem;
+        GameStorage storage;
         GameWorld world;
         Mesh* lineMesh;
     };

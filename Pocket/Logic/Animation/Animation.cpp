@@ -27,8 +27,8 @@ void Animation::Path::Set(Pocket::GameObject *root, Pocket::GameObject *child) {
     GameObject* current = child;
     
     while (true) {
-        indices.push_back(current->ChildIndex());
-        current = current->Parent;
+        indices.push_back(current->Hierarchy().ChildIndex());
+        current = current->Hierarchy().Parent;
         if (!current || current == root) break;
     }
     std::reverse(indices.begin(), indices.end());
@@ -39,7 +39,7 @@ GameObject* Animation::Path::TryFindObject(Pocket::GameObject *root) {
     
     GameObject* parent = root;
     for (int i=0; i<indices.size(); i++) {
-        auto& children = parent->Children();
+        auto& children = parent->Hierarchy().Children();
         int index = indices[i];
         if (index>=children.size()) {
             return 0;
@@ -109,7 +109,7 @@ void Animation::Apply(GameObject* root, float time) {
         for(auto& componentTimeline : target.components) {
             
             int index;
-            if (object->World()->TryGetComponentIndex(componentTimeline.first, index)) {
+            if (object->World()->Storage().TryGetComponentIndex(componentTimeline.first, index)) {
                 TypeInfo info = object->GetComponentTypeInfo(index);
                 for(auto& fieldTimeline : componentTimeline.second) {
                     if (!fieldTimeline.second) continue;

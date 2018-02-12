@@ -30,8 +30,11 @@ namespace Pocket {
         bool IsDragging();
         
         int TouchDepth;
+        
+        static void CreateSubSystems(GameStorage& storage);
             
     private:
+        GameStorage renderStorage;
         GameWorld renderWorld;
         RenderSystem* renderer;
         

@@ -26,7 +26,7 @@ void HierarchyEditorSystem::ObjectRemoved(GameObject *object) {
 void HierarchyEditorSystem::Update(float dt) {
     for (auto o : Objects()) {
         HierarchyEditor* editor = o->GetComponent<HierarchyEditor>();
-        if (editor->Object && editor->prevChildrenCount!=editor->Object()->Children().size()) {
+        if (editor->Object && editor->prevChildrenCount!=editor->Object()->Hierarchy().Children().size()) {
             ObjectChanged(o);
         }
     }
@@ -35,8 +35,8 @@ void HierarchyEditorSystem::Update(float dt) {
 void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
     HierarchyEditor *editor = object->GetComponent<HierarchyEditor>();
     if (object->IsRemoved()) return;
-    editor->prevChildrenCount = editor->Object()->Children().size();
-    for (auto child : object->Children()) {
+    editor->prevChildrenCount = editor->Object()->Hierarchy().Children().size();
+    for (auto child : object->Hierarchy().Children()) {
         child->Remove();
     }
     if (!(editor->Object)) {
@@ -48,10 +48,10 @@ void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
     std::stringstream s;
     s<<(editor->Object)<<"  " << depth;
     
-    ObjectCollection children = editor->Object()->Children();
+    ObjectCollection children = editor->Object()->Hierarchy().Children();
     
     std::sort(children.begin(), children.end(), [] (GameObject* a, GameObject* b) {
-        return a->Order()<b->Order();
+        return a->Hierarchy().Order()<b->Hierarchy().Order();
     });
     
     for (auto child : children) {
@@ -66,7 +66,7 @@ void HierarchyEditorSystem::ObjectChanged(GameObject* object) {
     }
     
     GameObject* gameObjectName = gui->CreateTextBox(object, "Box", {20.0f * depth,0}, {200-depth*20.0f,20}, 0, s.str(), 14);
-    gameObjectName->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+    gameObjectName->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
     //gameObjectName->AddComponent<Layoutable>();
     gameObjectName->AddComponent<Selectable>(editor->Object);
     gameObjectName->GetComponent<Colorable>()->Color = Colour::White(0.5f);
@@ -79,15 +79,15 @@ int HierarchyEditorSystem::CountDepth(Pocket::GameObject *object) {
     int depth = -1;
     while (object) {
         depth++;
-        object = object->Parent();
+        object = object->Hierarchy().Parent();
     }
     return depth;
 }
 
 void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject *editorObject) {
     for (TouchData& touchData : d.droppedTouches) {
-        if (!touchData.object->Parent()) continue;
-        HierarchyEditor* editor = touchData.object->Parent()->GetComponent<HierarchyEditor>();
+        if (!touchData.object->Hierarchy().Parent()) continue;
+        HierarchyEditor* editor = touchData.object->Hierarchy().Parent()->GetComponent<HierarchyEditor>();
         if (!editor) continue;
         GameObject* newParent = editor->Object;
         
@@ -96,10 +96,9 @@ void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject 
         }
         Transform* transform = editorObject->GetComponent<Transform>();
         Vector3 worldPosition = transform->World().TransformPosition(0);
-        editorObject->Parent = newParent;
+        editorObject->Hierarchy().Parent = newParent;
         Vector3 localPosition = transform->World().Invert().TransformPosition(worldPosition);
         transform->Position = transform->Local().TransformPosition(localPosition);
-        
         break;
     }
 }
@@ -107,7 +106,7 @@ void HierarchyEditorSystem::OnDropped(Pocket::DroppedData d, Pocket::GameObject 
 bool HierarchyEditorSystem::IsParentLegal(Pocket::GameObject *parent, Pocket::GameObject *ancestor) {
     while (parent) {
         if (parent == ancestor) return false;
-        parent = parent->Parent();
+        parent = parent->Hierarchy().Parent();
     }
     return true;
 }

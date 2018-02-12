@@ -28,8 +28,12 @@ PhysicsSystem2d::~PhysicsSystem2d() {
 }
 
 void PhysicsSystem2d::Initialize() {
-    jointSystem = root->CreateSystem<JointSystem>();
+    jointSystem = root->GetSystem<JointSystem>();
     jointSystem->physicsSystem = this;
+}
+
+void PhysicsSystem2d::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<JointSystem>();
 }
 
 void PhysicsSystem2d::ObjectAdded(Pocket::GameObject *object) {

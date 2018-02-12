@@ -176,16 +176,13 @@ bool GameObjectJsonSerializer::GetAddReferenceComponent(AddReferenceComponentLis
         if (colonLocation==-1) {
             referenceScene = scene;
             objectId = ::atoi(refObj.referenceId.c_str());
+            *referenceObject = scene->FindObject(objectId);
         } else {
             std::string sceneId = refObj.referenceId.substr(0, colonLocation);
             std::string objectIdStr = refObj.referenceId.substr(colonLocation+1, refObj.referenceId.size() - colonLocation-1);
-            //referenceScene = scene->world->TryGetScene(sceneId);
             objectId = ::atoi(objectIdStr.c_str());
+            *referenceObject = scene->storage->TryGetPrefab(sceneId, objectId);
         }
-        
-        if (!referenceScene) return false;
-        
-        *referenceObject = referenceScene->FindObject(objectId);
         addReferenceComponentObjects.insert(std::make_pair(pair, *referenceObject));
     } else {
         *referenceObject = it->second;
@@ -279,6 +276,17 @@ std::string GameObjectJsonSerializer::ReadGuidFromJson(std::istream &jsonStream)
         std::cout << e.what() << std::endl;
     }
     return guid;
+}
+
+void GameObjectJsonSerializer::TryParse(std::istream &jsonStream, const std::string& componentName,
+    const std::function<void (int, int)>& callback,
+    const std::function<bool (const std::string& componentName)>& componentCallback) {
+    minijson::istream_context context(jsonStream);
+    try {
+        TryParseJsonObject(-1, context, componentName, callback, componentCallback);
+    } catch (minijson::parse_error e) {
+        std::cout << e.what() << std::endl;
+    }
 }
 
 void GameObjectJsonSerializer::TryParseJsonObject(int parent, minijson::istream_context &context, const std::string& componentName,

@@ -14,15 +14,15 @@
 using namespace Pocket;
 
 void LineRendererSystem::Initialize() {
-    renderSystem = root->CreateSystem<RenderSystem>();
+    renderSystem = root->GetSystem<RenderSystem>();
 
-    GameObject* root = world.CreateRoot();
-    
-    
+    storage.AddSystemType<RenderSystem>();
+    world.Initialize(storage);
+    GameObject* root = world.CreateScene();
     
     BoundingBox bounds(0, Vector3(3000, 3000, 3000.0f));
     
-    root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds(bounds);
+    root->GetSystem<RenderSystem>()->Octree().SetWorldBounds(bounds);
     root->AddComponent<Transform>();
     lineMesh = root->AddComponent<Mesh>();
     root->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;

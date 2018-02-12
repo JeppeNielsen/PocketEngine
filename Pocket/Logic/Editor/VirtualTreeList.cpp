@@ -39,19 +39,18 @@ void VirtualTreeList::SetNodeExpanded(Pocket::GameObject *node, bool expand) {
         ExpandedNode& expandedNode = expandedNodes[hash];
         expandedNode.Height.Method = [this, node](auto& v) {
             v = 1;
-            for(auto o : node->Children()) {
+            for(auto o : node->Hierarchy().Children()) {
                 v += this->GetNodeHeight(o);
             }
         };
         expandedNode.Height.MakeDirty();
-        
-        if (node->Parent()) {
-            expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
+        if (node->Hierarchy().Parent()) {
+            expandedNodes[ExpandedHashFunction(node->Hierarchy().Parent())].Height.MakeDirty();
         }
     } else if (!expand && it!=expandedNodes.end()) {
         expandedNodes.erase(it);
-        if (node->Parent()) {
-            expandedNodes[ExpandedHashFunction(node->Parent())].Height.MakeDirty();
+        if (node->Hierarchy().Parent()) {
+            expandedNodes[ExpandedHashFunction(node->Hierarchy().Parent())].Height.MakeDirty();
         }
     }
     
@@ -72,7 +71,7 @@ bool VirtualTreeList::IsNodeExpanded(Pocket::GameObject *node) {
 int VirtualTreeList::GetNodeHeight(Pocket::GameObject *node) {
     if (!ShowRoot && node == Root) {
         int v = 1;
-        for(auto o : node->Children()) {
+        for(auto o : node->Hierarchy().Children()) {
             v += this->GetNodeHeight(o);
         }
         return v;
@@ -103,7 +102,7 @@ void VirtualTreeList::GetNodesRecursive(Pocket::GameObject *object, int lower, i
     if (height>1) {
         int endIndex = height + index-1;
         if (!(upper<index || lower>=endIndex)) {
-            for(auto child : object->Children()) {
+            for(auto child : object->Hierarchy().Children()) {
                 GetNodesRecursive(child, lower, upper, index, depth+1, nodesFound);
             }
         } else {

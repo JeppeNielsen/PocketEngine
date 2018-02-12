@@ -48,7 +48,7 @@ void VirtualTreeListSpawnerSystem::NodeCreated(VirtualTreeList::Node e, Pocket::
     node.parent->AddComponent<Sizeable>()->Size = { object->GetComponent<Sizeable>()->Size().x - treeList->Margins().x - treeList->Margins().y, treeList->ItemHeight };
     node.height = treeList->ItemHeight;
     node.foldOutButton = 0;
-    node.hasChildren = !spawner->HasChildren ? !e.node->Children().empty() : spawner->HasChildren(e.node);
+    node.hasChildren = !spawner->HasChildren ? !e.node->Hierarchy().Children().empty() : spawner->HasChildren(e.node);
     node.depth = e.depth;
     node.position = e.position;
     if (spawner->OnCreate) {

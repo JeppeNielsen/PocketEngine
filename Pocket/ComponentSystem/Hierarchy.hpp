@@ -33,8 +33,10 @@ namespace Pocket {
         Property<GameObject*> Parent;
         const ChildrenCollection& Children();
         Property<bool> Enabled;
+        Property<int> Order;
         bool WorldEnabled() const;
         Event<> WorldEnabledChanged;
+        int ChildIndex() const;
         
         friend class GameObject;
         

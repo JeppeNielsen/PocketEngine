@@ -65,7 +65,7 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
     }
     editor->editors.clear();
     
-    for (auto child : object->Children()) {
+    for (auto child : object->Hierarchy().Children()) {
         child->Remove();
     }
     if (!editor->Object()) return;
@@ -81,10 +81,10 @@ void GameObjectEditorSystem::CreateEditors(GameObject* object) {
     std::vector<GameObject*> controls;
 
     for(auto componentEditor : editor->editors) {
-        int countBefore = (int)control->Children().size();
+        int countBefore = (int)control->Hierarchy().Children().size();
         componentEditor.editor->Create(componentEditor.type.name, gui, control, editor->Object());
-        if (control->Children().size()>countBefore) {
-            GameObject* editorControl = control->Children()[control->Children().size()-1];
+        if (control->Hierarchy().Children().size()>countBefore) {
+            GameObject* editorControl = control->Hierarchy().Children()[control->Hierarchy().Children().size()-1];
             controls.push_back(editorControl);
             if (!editorControl->GetComponent<Touchable>()) {
                 editorControl->AddComponent<Touchable>();

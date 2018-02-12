@@ -94,7 +94,7 @@ void GameStorage::RemoveSystemType(SystemId systemId) {
     systemInfo.bitset.Reset();
 }
 
-bool GameStorage::TryGetComponentIndex(const std::string& componentName, int& index) {
+bool GameStorage::TryGetComponentIndex(const std::string& componentName, int& index) const {
     for(int i=0; i<components.size(); ++i) {
         if (components[i].name == componentName) {
             index = i;
@@ -104,7 +104,7 @@ bool GameStorage::TryGetComponentIndex(const std::string& componentName, int& in
     return false;
 }
 
-bool GameStorage::TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference) {
+bool GameStorage::TryGetComponentIndex(const std::string& componentName, int& index, bool& isReference) const {
     if (TryGetComponentIndex(componentName, index)) {
         isReference = false;
         return true;
@@ -173,4 +173,8 @@ GameObject* GameStorage::LoadPrefab(const std::string &guid, std::istream &strea
     return scene.root;
 }
 
-
+void GameStorage::TryParseComponent(std::istream &stream, int componentId,
+    const std::function<void (int, int)>& callback,
+    const std::function<bool (const std::string& componentName)>& componentCallback) const {
+    serializer->TryParse(stream, componentId<0 ? "" : components[componentId].name, callback, componentCallback);
+}

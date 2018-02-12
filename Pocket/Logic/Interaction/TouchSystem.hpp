@@ -30,8 +30,7 @@ namespace Pocket {
         Picker picker;
         
     public:
-        
-    
+
         TouchSystem();
         ~TouchSystem();
         
@@ -41,7 +40,7 @@ namespace Pocket {
         void ObjectAdded(GameObject* object) override;
         void ObjectRemoved(GameObject* object) override;
         void Update(float dt) override;
-        
+        static void CreateSubSystems(GameStorage& storage);
         void EnqueueDown(GameObject* touchObject, TouchData touchData);
         
         int TouchDepth;

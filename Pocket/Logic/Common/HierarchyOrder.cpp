@@ -11,14 +11,14 @@
 using namespace Pocket;
 
 void HierarchyOrder::ObjectAdded(GameObject *object) {
-    object->Parent.Changed.Bind(this, &HierarchyOrder::SetDirty);
-    object->Order.Changed.Bind(this, &HierarchyOrder::SetDirty);
+    object->Hierarchy().Parent.Changed.Bind(this, &HierarchyOrder::SetDirty);
+    object->Hierarchy().Order.Changed.Bind(this, &HierarchyOrder::SetDirty);
     orderIsDirty = true;
 }
 
 void HierarchyOrder::ObjectRemoved(GameObject *object) {
-   object->Parent.Changed.Unbind(this, &HierarchyOrder::SetDirty);
-   object->Order.Changed.Unbind(this, &HierarchyOrder::SetDirty);
+   object->Hierarchy().Parent.Changed.Unbind(this, &HierarchyOrder::SetDirty);
+   object->Hierarchy().Order.Changed.Unbind(this, &HierarchyOrder::SetDirty);
 }
 
 void HierarchyOrder::SetDirty() {
@@ -40,12 +40,12 @@ void HierarchyOrder::CalculateOrder(int& orderOffset, GameObject *object) {
     Orderable* orderable = object->GetComponent<Orderable>();
     if (orderable) orderable->Order = orderOffset;
     
-    const auto& children = object->Children();
+    const auto& children = object->Hierarchy().Children();
     if (children.empty()) return;
     
     auto sortedChildren = children;
     std::sort(sortedChildren.begin(), sortedChildren.end(), [] (GameObject* a, GameObject* b) {
-        return a->Order()<b->Order();
+        return a->Hierarchy().Order()<b->Hierarchy().Order();
     });
     
     for(auto child : sortedChildren) {

@@ -20,5 +20,6 @@ namespace Pocket {
         void ObjectAdded(GameObject* object) override;
         void ObjectRemoved(GameObject* object) override;
         void Dropped(DroppedData d);
+        static void CreateSubSystems(GameStorage& storage);
     };
 }

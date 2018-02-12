@@ -50,7 +50,7 @@ void PanelSystem::AreaSizeChanged(GameObject* object) {
     
     PanelArea* panelArea = area->GetComponent<PanelArea>();
     
-    object->Parent = area;
+    object->Hierarchy().Parent = area;
     
     Sizeable* areaSizeable = area->GetComponent<Sizeable>();
     Rect rect = panel->location.GetRect(areaSizeable->Size(), [panelArea] (const std::string& id) {

@@ -249,9 +249,8 @@ void GameObject::Remove() {
             forceSetNextParent = true;
             if (IsRoot()) {
                 scene->world->RemoveScene(this);
-            } else {
-                Hierarchy().Parent = nullptr;
             }
+            Hierarchy().Parent = nullptr;
             forceSetNextParent = false;
             for(int i=0; i<activeComponents.Size(); ++i) {
                 if (activeComponents[i]) {
@@ -492,5 +491,8 @@ class Hierarchy& GameObject::Hierarchy() const {
     return *GetComponent<class Hierarchy>();
 }
 
+std::string GameObject::TryGetScenePath() const {
+    return scene->storage->GuidToPath(scene->guid);
+}
 
 

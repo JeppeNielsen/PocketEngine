@@ -13,7 +13,6 @@ namespace Pocket {
     class AssetManager : public GameConcept {
     public:
         void SetFileWatcher(FileSystemWatcher* watcher);
-    protected:
-        void Initialize();
+        static void CreateSubSystems(GameStorage& storage);
     };
 }

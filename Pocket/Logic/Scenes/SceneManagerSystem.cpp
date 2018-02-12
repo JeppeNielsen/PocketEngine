@@ -12,16 +12,16 @@ using namespace Pocket;
 
 void SceneManagerSystem::Initialize() {
     layersAreChanging = false;
-    root->World()->LayersChanged.Bind(this, &SceneManagerSystem::LayersChanged);
+    //root->World()->LayersChanged.Bind(this, &SceneManagerSystem::LayersChanged);
 }
 
 void SceneManagerSystem::Destroy() {
-    root->World()->LayersChanged.Unbind(this, &SceneManagerSystem::LayersChanged);
+    //root->World()->LayersChanged.Unbind(this, &SceneManagerSystem::LayersChanged);
 }
 
 void SceneManagerSystem::LayersChanged() {
 
-    std::map<int, GameObjectHandle> activeScenes;
+    /*std::map<int, GameObjectHandle> activeScenes;
     auto& sceneLayers = root->World()->GetSceneLayers();
     for(auto& s : sceneLayers) {
         activeScenes[s.first] = GameObjectHandle(s.second);
@@ -35,6 +35,7 @@ void SceneManagerSystem::LayersChanged() {
         sceneManager->SetScenes = empty;
     }
     layersAreChanging = false;
+    */
 }
 
 void SceneManagerSystem::ObjectAdded(Pocket::GameObject *object) {
@@ -53,6 +54,6 @@ void SceneManagerSystem::ScenesSet(Pocket::GameObject *object) {
     for(auto s : scenesSet) {
         auto& handle = s.second;
         handle.SetWorld(root->World());
-        root->World()->SetLayerScene(s.first, handle());
+        //root->World()->SetLayerScene(s.first, handle());
     }
 }

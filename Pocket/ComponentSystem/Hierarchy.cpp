@@ -16,6 +16,7 @@ using namespace Pocket;
 Hierarchy::Hierarchy() {
     owner = nullptr;
     Enabled = true;
+    Order = 0;
     worldEnabled = true;
     childIndex = 0;
     Parent = nullptr;
@@ -78,6 +79,7 @@ Hierarchy::Hierarchy(const Hierarchy& other) {
     Enabled = true;
     worldEnabled = true;
     childIndex = 0;
+    Order = 0;
     Parent = nullptr;
     Parent.Changed.Bind([this] {
         GameObject* prev = Parent.PreviousValue();
@@ -113,3 +115,5 @@ const Hierarchy::ChildrenCollection& Hierarchy::Children() {
 bool Hierarchy::WorldEnabled() const {
     return worldEnabled;
 }
+
+int Hierarchy::ChildIndex() const { return childIndex; }

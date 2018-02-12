@@ -13,9 +13,15 @@
 using namespace Pocket;
 
 void PanelAreaSystem::Initialize() {
-    root->CreateSystem<PanelSplitterSystem>()->Order = -1;
-    panels = root->CreateSystem<PanelSystem>();
-    gui = root->CreateSystem<Gui>();
+    root->GetSystem<PanelSplitterSystem>()->Order = -1;
+    panels = root->GetSystem<PanelSystem>();
+    gui = root->GetSystem<class Gui>();
+}
+
+void PanelAreaSystem::CreateSubSystems(GameStorage& storage) {
+    storage.AddSystemType<PanelSplitterSystem>();
+    storage.AddSystemType<PanelSystem>();
+    storage.AddSystemType<Gui>();
 }
 
 void PanelAreaSystem::Update(float dt) {
@@ -29,7 +35,7 @@ void PanelAreaSystem::Update(float dt) {
 }
 
 void PanelAreaSystem::CreateSplitters(GameObject* object, PanelArea* area) {
-    for(auto o : object->Children()) {
+    for(auto o : object->Hierarchy().Children()) {
         if (o->GetComponent<PanelSplitter>()) {
             o->Remove();
         }
@@ -68,10 +74,6 @@ void PanelAreaSystem::CreateSplitters(GameObject* object, PanelArea* area) {
     
     area->Splits = newSplits;
 }
-
-
-
-
 
 void PanelAreaSystem::PanelSplitterSystem::ObjectAdded(GameObject* object) {
     object->GetComponent<PanelSplitter>()->area->GetComponent<Sizeable>()->Size.Changed.Bind(this, &PanelSplitterSystem::AreaSizeChanged, object);

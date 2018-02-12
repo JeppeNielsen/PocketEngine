@@ -18,6 +18,10 @@ namespace Pocket {
         bool Serialize(GameObject* object, std::ostream& stream, const SerializePredicate& predicate = nullptr) override;
         void SerializeComponents(const std::vector<GameObject*> objects, std::ostream& stream, const SerializePredicate& predicate = nullptr) override;
         void DeserializeAndAddComponents(const std::vector<GameObject *> objects, std::istream &stream) override;
+        
+        void TryParse(std::istream &stream, const std::string& componentName,
+                      const std::function<void (int, int)>& callback,
+                      const std::function<bool (const std::string& componentName)>& componentCallback) override;
 
         static std::string ReadGuidFromJson(std::istream& jsonStream);
         

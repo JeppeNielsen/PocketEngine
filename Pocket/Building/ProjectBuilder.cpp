@@ -14,6 +14,7 @@
 #include "FileReader.hpp"
 #include "FileArchive.hpp"
 #include "GameWorld.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -85,14 +86,14 @@ bool ProjectBuilder::CreateResources(const std::string &outputFile) {
         if (FileHelper::FileExists(metaPath)) {
             std::ifstream file;
             file.open(metaPath);
-            std::string guid = GameWorld::ReadGuidFromJson(file);
+            std::string guid = GameObjectJsonSerializer::ReadGuidFromJson(file);
             if (guid == "") return "";
             return guid + "-asset";
         } else {
             
             std::ifstream file;
             file.open(path);
-            return GameWorld::ReadGuidFromJson(file);
+            return GameObjectJsonSerializer::ReadGuidFromJson(file);
         }
     });
 

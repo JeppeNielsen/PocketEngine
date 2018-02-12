@@ -56,7 +56,7 @@ void Trigger::CreateVariables(GameObject* root) {
 }
 
 void Trigger::FindVariables(std::vector<std::shared_ptr<IFieldInfo>>& variables, Pocket::GameObject *objectWithVariable) {
-    int size = (int)objectWithVariable->World()->GetComponentTypes().size();
+    int size = (int)objectWithVariable->World()->Storage().GetComponentTypes().size();
     
     for (int i=0; i<size; ++i) {
         if (!objectWithVariable->HasComponent(i)) continue;

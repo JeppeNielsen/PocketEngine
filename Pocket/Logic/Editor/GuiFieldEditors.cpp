@@ -12,6 +12,7 @@
 #include "GameObjectHandle.hpp"
 #include "Cloner.hpp"
 #include "GameObjectFieldEditor.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -35,13 +36,13 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
         for(int i=0; i<Size; ++i) {
             GameObject* textBox = gui->CreateTextBox(control, "TextBox", 0, 0, 0, "", 15.0f);
             textBox->GetComponent<Touchable>()->ClickThrough = true;
-            textBox->Children()[0]->GetComponent<TextBox>()->Active.Changed.Bind(this, &FieldInfoEditorTextboxes<T, Size>::TextChanged, textBox);
-            textBox->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+            textBox->Hierarchy().Children()[0]->GetComponent<TextBox>()->Active.Changed.Bind(this, &FieldInfoEditorTextboxes<T, Size>::TextChanged, textBox);
+            textBox->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
             textBox->AddComponent<Layouter>()->Min = {20, 20};
             textBox->GetComponent<Layouter>()->Desired = {100, 20};
             textBox->GetComponent<Layouter>()->Max = {5000, 20};
             if (LeftAlign()) {
-                textBox->Children()[0]->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
+                textBox->Hierarchy().Children()[0]->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
             }
             textBoxes[i] = textBox;
         }
@@ -51,13 +52,13 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
     
     void Destroy() override {
         for(int i=0; i<Size; ++i) {
-             textBoxes[i]->Children()[0]->template GetComponent<TextBox>()->Active.Changed.Unbind(this, &FieldInfoEditorTextboxes<T, Size>::TextChanged, textBoxes[i]);
+             textBoxes[i]->Hierarchy().Children()[0]->template GetComponent<TextBox>()->Active.Changed.Unbind(this, &FieldInfoEditorTextboxes<T, Size>::TextChanged, textBoxes[i]);
              textBoxes[i]->Remove();
         }
     }
     
     void TextChanged(GameObject* textBoxGO) {
-        TextBox* textBox = textBoxGO->Children()[0]->GetComponent<TextBox>();
+        TextBox* textBox = textBoxGO->Hierarchy().Children()[0]->GetComponent<TextBox>();
         if (textBox->Active) return;
         
         for(int i=0; i<Size; ++i) {
@@ -72,10 +73,10 @@ struct FieldInfoEditorTextboxes : public GuiFieldEditor {
         if (changed) {
             forceUpdate = false;
             for(int i=0; i<Size; ++i) {
-                if (!textBoxes[i]->Children()[0]->template GetComponent<TextBox>()->Active()) {
+                if (!textBoxes[i]->Hierarchy().Children()[0]->template GetComponent<TextBox>()->Active()) {
                     std::stringstream s;
                     UpdateTextbox(i,s);
-                    textBoxes[i]->Children()[0]->template GetComponent<TextBox>()->Text = s.str();
+                    textBoxes[i]->Hierarchy().Children()[0]->template GetComponent<TextBox>()->Text = s.str();
                 }
             }
         }
@@ -261,7 +262,7 @@ struct FieldInfoEditorBool : public GuiFieldEditor {
     }
     
     void UpdateVisuals() {
-        checkBox->Enabled = *field;
+        checkBox->Hierarchy().Enabled = *field;
     }
     
     void Update(float dt) override {
@@ -440,7 +441,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         GameObject* owner = component.object->GetComponentOwner(component.componentId);
         std::string text;
         if (owner) {
-            std::string path = owner->TryGetRootPath();
+            std::string path = owner->TryGetScenePath();
             text = FileHelper::GetFileNameFromPath(path);
             
             std::stringstream ss;
@@ -461,7 +462,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
     };
     
     void MenuClicked() {
-        if (!component.object->World()->GetPaths) {
+        if (!component.object->World()->Storage().GetPaths) {
             return;
         }
         
@@ -473,7 +474,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         
         std::vector<std::string> guids;
         std::vector<std::string> paths;
-        world->GetPaths(guids, paths);
+        world->Storage().GetPaths(guids, paths);
         
         menu = gui->CreateControl(0, "TextBox", 0, {200,200});
         menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
@@ -492,8 +493,7 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
             //    std::cout << " parent: " << parent << "  object: " << object << std::endl;
             //});
 
-        
-            world->TryParseJson(file, component.componentId, [&, this](int parentId, int id) {
+            world->Storage().TryParseComponent(file, component.componentId, [&, this](int parentId, int id) {
                 GameObject* button = gui->CreateControl(menu, "Box");
                 button->AddComponent<Layouter>()->Desired = { 200, 30 };
                 button->GetComponent<Layouter>()->Min = {50,30};
@@ -525,9 +525,8 @@ struct ReferenceComponentEditor : public GuiFieldEditor {
         
         std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
         
-        GameObject* root = component.object->World()->TryFindRoot(d.guid);
-        if (!root) return;
-        GameObject* object = root->FindObject(d.objectId);
+        GameObject* object = component.object->World()->Storage().TryGetPrefab(d.guid, d.objectId);
+        if (!object) return;
         component.object->ReplaceComponent(component.componentId, object);
         
         UpdateLabel();
@@ -593,7 +592,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         GameObject* target = handle->operator->();
         
         
-        std::string path = !target ? "" : target->TryGetRootPath();
+        std::string path = !target ? "" : target->TryGetScenePath();
         std::string text = FileHelper::GetFileNameFromPath(path);
         
         if (target) {
@@ -633,7 +632,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         
         GameWorld* world = fieldObject->World();
     
-        if (!world->GetPaths) {
+        if (!world->Storage().GetPaths) {
             return;
         }
         
@@ -643,11 +642,13 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         
         std::vector<std::string> guids;
         std::vector<std::string> paths;
-        world->GetPaths(guids, paths);
+        world->Storage().GetPaths(guids, paths);
         
         menu = gui->CreateControl(0, "TextBox", 0, {200,200});
         menu->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
         menu->GetComponent<Transform>()->Position = control->GetComponent<Transform>()->World().TransformPosition(0);
+        
+        GameObjectJsonSerializer serializer;
         
         for (int i=0; i<guids.size(); ++i) {
         
@@ -661,7 +662,7 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
             
             bool hasCreatedItem = false;
             
-            world->TryParseJson(file, -1, [&, this](int parentId, int id) {
+            serializer.TryParse(file, "", [&, this](int parentId, int id) {
             
                 if (hasCreatedItem) return;
                 GameObject* button = gui->CreateControl(menu, "Box");
@@ -699,9 +700,8 @@ struct GameObjectHandleEditor : public GuiFieldEditor {
         
         std::cout << "Guid : " << d.guid << "  object id :"<< d.objectId<<std::endl;
         
-        GameObject* root = fieldObject->World()->TryFindRoot(d.guid);
-        if (!root) return;
-        GameObject* object = root->FindObject(d.objectId);
+        GameObject* object = fieldObject->World()->Storage().TryGetPrefab(d.guid, d.objectId);
+        if (!object) return;
         
         handle->operator=(object);
         

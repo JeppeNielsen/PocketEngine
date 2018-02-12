@@ -22,7 +22,7 @@ void SwitchEnablerSystem::ObjectRemoved(Pocket::GameObject *object) {
 
 void SwitchEnablerSystem::SwitchChanged(Pocket::GameObject *object) {
     bool on = object->GetComponent<Switch>()->On;
-    for(auto child : object->Children()) {
-        child->Enabled = on;
+    for(auto child : object->Hierarchy().Children()) {
+        child->Hierarchy().Enabled = on;
     }
 }

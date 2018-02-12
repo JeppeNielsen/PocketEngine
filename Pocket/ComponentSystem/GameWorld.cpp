@@ -127,3 +127,7 @@ void GameWorld::InvokeChangeToHandles(Pocket::GameObject *object) {
         h->Changed();
     }
 }
+
+GameStorage& GameWorld::Storage() const {
+    return *storage;
+}

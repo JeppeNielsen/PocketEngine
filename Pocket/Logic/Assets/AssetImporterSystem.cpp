@@ -104,12 +104,12 @@ void AssetImporterSystem::AssetCreated(Pocket::AssetImporter *assetImporter, con
     if (doesMetaExists) {
         
     } else {
-        GameObject* root =world.CreateRoot();
+        GameObject* root =world.CreateScene();
         assetImporter->OnCreated(root);
         
         std::ofstream file;
         file.open(metaPath);
-        root->ToJson(file);
+        //root->ToJson(file);
         file.close();
     }
 }

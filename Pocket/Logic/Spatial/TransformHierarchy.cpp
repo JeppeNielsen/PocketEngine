@@ -11,8 +11,8 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
     Transform* transform = object->GetComponent<Transform>();
     
     transform->World.Method = [object, transform] (Matrix4x4& world) {
-        if (object->Parent()) {
-            Transform* parentTransform = object->Parent()->GetComponent<Transform>();
+        if (object->Hierarchy().Parent()) {
+            Transform* parentTransform = object->Hierarchy().Parent()->GetComponent<Transform>();
             if (!parentTransform) {
                 world = transform->Local();
             } else {
@@ -25,8 +25,8 @@ void TransformHierarchy::ObjectAdded(GameObject* object) {
     
     transform->World.MakeDirty();
     transform->WorldInverse.MakeDirty();
-    object->Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
-    HookParent(transform, object->Parent());
+    object->Hierarchy().Parent.Changed.Bind(this, &TransformHierarchy::ParentChanged, object);
+    HookParent(transform, object->Hierarchy().Parent());
 }
 
 void TransformHierarchy::ObjectRemoved(GameObject* object) {
@@ -36,9 +36,9 @@ void TransformHierarchy::ObjectRemoved(GameObject* object) {
 
     Transform* transform = object->GetComponent<Transform>();
     transform->ResetWorldCalculation();
-    object->Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
-    if (object->Parent()) {
-        Transform* parentTransform = object->Parent()->GetComponent<Transform>();
+    object->Hierarchy().Parent.Changed.Unbind(this, &TransformHierarchy::ParentChanged, object);
+    if (object->Hierarchy().Parent()) {
+        Transform* parentTransform = object->Hierarchy().Parent()->GetComponent<Transform>();
         if (parentTransform) {
             transform->UnHookOther(parentTransform);
         }
@@ -60,8 +60,8 @@ void TransformHierarchy::ParentChanged(GameObject* object) {
     transform->World.MakeDirty();
     transform->WorldInverse.MakeDirty();
     
-    Transform* oldParentTransform = object->Parent.PreviousValue() ?
-    object->Parent.PreviousValue()->GetComponent<Transform>()
+    Transform* oldParentTransform = object->Hierarchy().Parent.PreviousValue() ?
+    object->Hierarchy().Parent.PreviousValue()->GetComponent<Transform>()
     :
     0;
 
@@ -69,8 +69,8 @@ void TransformHierarchy::ParentChanged(GameObject* object) {
         transform->UnHookOther(oldParentTransform);
     }
     
-    Transform* newParentTransform = object->Parent() ?
-    object->Parent()->GetComponent<Transform>()
+    Transform* newParentTransform = object->Hierarchy().Parent() ?
+    object->Hierarchy().Parent()->GetComponent<Transform>()
     :
     0;
     

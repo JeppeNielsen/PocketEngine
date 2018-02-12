@@ -75,7 +75,6 @@ namespace Pocket {
         }
         
         static void CreateSubSystems(GameStorage& storage) { }
-        
     public:
         friend class GameStorage;
     };
@@ -84,5 +83,6 @@ namespace Pocket {
     private:
         static void ExtractAllComponents(GameStorage& storage, std::vector<int>& components) { }
         friend class GameStorage;
+        static void CreateSubSystems(GameStorage& storage) { }
     };
 }

@@ -33,6 +33,11 @@ void GameScene::Initialize(GameWorld* world, GameStorage* storage, int index) {
             CreateSystem(i);
         }
     }
+    for (int i=0; i<systemsIndexed.size(); ++i) {
+        if (systemsIndexed[i]) {
+            systemsIndexed[i]->Initialize();
+        }
+    }
 }
 
 void GameScene::Destroy() {
@@ -86,7 +91,6 @@ void GameScene::CreateSystem(int systemId) {
         IGameSystem* system = storage->systems[systemId].createFunction(root);
         systemsIndexed[systemId] = system;
         system->SetIndex(systemId);
-        system->Initialize();
         IterateObjects([systemId](GameObject* object) {
             object->TryAddToSystem(systemId);
         });

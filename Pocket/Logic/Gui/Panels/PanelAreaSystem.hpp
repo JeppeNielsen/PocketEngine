@@ -24,7 +24,7 @@ namespace Pocket {
         void Initialize() override;
         void Update(float dt) override;
         void CreateSplitters(GameObject* object, PanelArea* area);
-        
+        static void CreateSubSystems(GameStorage& storage);
         
         struct PanelSplitter {
             GameObject* area;
