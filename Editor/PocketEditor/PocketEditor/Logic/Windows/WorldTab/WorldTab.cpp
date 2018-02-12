@@ -21,9 +21,9 @@ void WorldTab::OnInitialize() {
 }
 
 void WorldTab::OnCreate() {
-    window->Parent()->GetComponent<Transform>()->Position = {300,100};
-    window->Parent()->RemoveComponent<Renderable>();
-    window->Parent()->GetComponent<Touchable>()->ClickThrough = true;
+    window->Hierarchy().Parent()->GetComponent<Transform>()->Position = {300,100};
+    window->Hierarchy().Parent()->RemoveComponent<Renderable>();
+    window->Hierarchy().Parent()->GetComponent<Touchable>()->ClickThrough = true;
 
     renderArea = context->Gui().CreatePivot(window);
     renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
@@ -62,18 +62,19 @@ void WorldTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (old) {
         old->IsPlaying.Changed.Unbind(this, &WorldTab::IsPlayingChanged, current);
         if (old->GetRunningWorld()) {
-            old->GetRunningWorld()->World().RootCreated.Unbind(this, &WorldTab::RootCreated, old);
-            old->GetRunningWorld()->World().RootRemoved.Unbind(this, &WorldTab::RootRemoved, old);
+            old->GetRunningWorld()->World().SceneCreated.Unbind(this, &WorldTab::RootCreated, old);
+            old->GetRunningWorld()->World().SceneRemoved.Unbind(this, &WorldTab::RootRemoved, old);
             old->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &WorldTab::ActiveSceneChanged, old->GetRunningWorld());
         }
         ClearTabs();
     }
     
     if (current) {
+        renderArea->GetComponent<GameWorldViewport>()->World = current->World();
         current->IsPlaying.Changed.Bind(this, &WorldTab::IsPlayingChanged, current);
         if (current->GetRunningWorld()) {
-            current->GetRunningWorld()->World().RootCreated.Bind(this, &WorldTab::RootCreated, current);
-            current->GetRunningWorld()->World().RootRemoved.Bind(this, &WorldTab::RootRemoved, current);
+            current->GetRunningWorld()->World().SceneCreated.Bind(this, &WorldTab::RootCreated, current);
+            current->GetRunningWorld()->World().SceneRemoved.Bind(this, &WorldTab::RootRemoved, current);
             current->GetRunningWorld()->ActiveScene.Changed.Bind(this, &WorldTab::ActiveSceneChanged, current->GetRunningWorld());
         }
         UpdateWorld(current);
@@ -122,7 +123,7 @@ void WorldTab::CreatePlayButtons() {
     {
         GameObject* testButton = gui.CreateLabelControl(editModePivot, "TextBox", 0, {100,30},0, "Test", 20);
         gui.AddLayouter(testButton, 30, {2000,30}, {2000,30});
-        testButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        testButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         testButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
             if (!currentWorld) return;
             context->preActions.emplace_back([this] {
@@ -142,7 +143,7 @@ void WorldTab::CreatePlayButtons() {
         GameObject* stopButton = gui.CreateLabelControl(buttons, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
         gui.AddLayouter(stopButton, 30, {2000,30}, {2000,30});
         
-        stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        stopButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         stopButton->GetComponent<Touchable>()->Click.Bind([this] (TouchData d) {
             if (!currentWorld) return;
             context->preActions.emplace_back([this] {
@@ -154,7 +155,7 @@ void WorldTab::CreatePlayButtons() {
         GameObject* pauseButton = gui.CreateLabelControl(buttons, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
         gui.AddLayouter(pauseButton, 30, {2000,30}, {2000,30});
         
-        pauseButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        pauseButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         pauseButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
             if (!currentWorld) return;
             currentWorld->IsPaused = !currentWorld->IsPaused();
@@ -168,17 +169,17 @@ void WorldTab::CreatePlayButtons() {
     }
     
     
-    editModePivot->Enabled = false;
-    gameModePivot->Enabled = false;
+    editModePivot->Hierarchy().Enabled = false;
+    gameModePivot->Hierarchy().Enabled = false;
 }
 
 void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
     if (openWorld) {
-        editModePivot->Enabled = !openWorld->IsPlaying();
-        gameModePivot->Enabled = openWorld->IsPlaying();
+        editModePivot->Hierarchy().Enabled = !openWorld->IsPlaying();
+        gameModePivot->Hierarchy().Enabled = openWorld->IsPlaying();
     } else {
-        editModePivot->Enabled = false;
-        gameModePivot->Enabled = false;
+        editModePivot->Hierarchy().Enabled = false;
+        gameModePivot->Hierarchy().Enabled = false;
     }
     
     if (openWorld) {
@@ -191,14 +192,14 @@ void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
 void WorldTab::IsPlayingChanged(OpenWorld* world) {
     if (world->IsPlaying) {
         if (world->GetRunningWorld()) {
-            world->GetRunningWorld()->World().RootCreated.Bind(this, &WorldTab::RootCreated, world);
-            world->GetRunningWorld()->World().RootRemoved.Bind(this, &WorldTab::RootRemoved, world);
+            world->GetRunningWorld()->World().SceneCreated.Bind(this, &WorldTab::RootCreated, world);
+            world->GetRunningWorld()->World().SceneRemoved.Bind(this, &WorldTab::RootRemoved, world);
             world->GetRunningWorld()->ActiveScene.Changed.Bind(this, &WorldTab::ActiveSceneChanged, world->GetRunningWorld());
         }
     } else {
         if (world->GetRunningWorld()) {
-            world->GetRunningWorld()->World().RootCreated.Unbind(this, &WorldTab::RootCreated, world);
-            world->GetRunningWorld()->World().RootRemoved.Unbind(this, &WorldTab::RootRemoved, world);
+            world->GetRunningWorld()->World().SceneCreated.Unbind(this, &WorldTab::RootCreated, world);
+            world->GetRunningWorld()->World().SceneRemoved.Unbind(this, &WorldTab::RootRemoved, world);
             world->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &WorldTab::ActiveSceneChanged, world->GetRunningWorld());
         }
     }
@@ -210,7 +211,7 @@ void WorldTab::UpdateWorld(OpenWorld *world) {
     if (!world->IsPlaying) return;
     auto& runningWorld = world->GetRunningWorld()->World();
     
-    for (auto r : runningWorld.Roots()) {
+    for (auto r : runningWorld.Scenes()) {
         if (r!=world->GetRunningWorld()->EditorRoot()) {
             AddTab(world, r);
         }
@@ -223,7 +224,7 @@ void WorldTab::AddTab(OpenWorld* world, GameObject* scene) {
     Gui& gui = context->Gui();
 
     GameObject* button = gui.CreateLayoutControl(rootPanel, "Box", {200,25}, {200,25}, {200,25}, Layouter::LayoutMode::Horizontal);
-    GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
+    GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, "SCENE, FIX",12);// FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
     label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
     label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     label->GetComponent<Colorable>()->Color = Colour::Black();
@@ -249,7 +250,7 @@ void WorldTab::AddTab(OpenWorld* world, GameObject* scene) {
 }
 
 void WorldTab::ClearTabs() {
-    for (auto o : rootPanel->Children()) {
+    for (auto o : rootPanel->Hierarchy().Children()) {
         o->Remove();
     }
 }

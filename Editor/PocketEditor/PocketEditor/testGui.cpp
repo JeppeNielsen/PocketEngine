@@ -407,6 +407,7 @@ struct LayouterSystem : public GameSystem<Layouter, Transform, Sizeable> {
 
 class Game : public GameState<Game> {
 public:
+    GameStorage storage;
     GameWorld world;
     GameObject* box;
     GameObject* dragger;
@@ -418,10 +419,12 @@ public:
     
     void Initialize() {
         
+        storage.AddSystemType<Gui>();
+        storage.AddSystemType<LayoutSystem>();
         
-        GameObject* root = world.CreateRoot();
-        Gui* gui = root->CreateSystem<Gui>();
-        root->CreateSystem<LayoutSystem>();
+        world.Initialize(storage);
+        GameObject* root = world.CreateScene();
+        Gui* gui = root->GetSystem<Gui>();
         
         gui->Setup("images.png", "images.xml", Context().Viewport());
         

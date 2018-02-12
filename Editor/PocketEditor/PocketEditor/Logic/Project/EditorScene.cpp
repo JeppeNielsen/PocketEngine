@@ -19,7 +19,7 @@
 
 bool EditorScene::IsClonerInAncestry(GameObject* object) {
     while(true) {
-        object = object->Parent;
+        object = object->Hierarchy().Parent;
         if (!object) return false;
         if (object->HasComponent<Cloner>()) return true;
     }
@@ -96,7 +96,7 @@ void EditorScene::AddEditorObject(Pocket::GameObject *object) {
             proxyIt.second.add(object, editorGameObject);
         }
     }
-    for (auto child : object->Children()) {
+    for (auto child : object->Hierarchy().Children()) {
         AddEditorObject(child);
     }
 }
@@ -140,8 +140,7 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
         }
     };
     
-    editorRoot = sceneRoot->World()->CreateRoot();
-    SystemHelper::AddEditorSystems(*editorRoot);
+    editorRoot = sceneRoot->World()->CreateScene();
     
     AddEditorObject(sceneRoot);
     
@@ -151,8 +150,8 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     editorCamera->GetComponent<Camera>()->FieldOfView = 70;
     editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
     
-    editorRoot->Order = 100;
-    sceneRoot->CreateSystem<RenderSystem>()->SetCameras(editorRoot->CreateSystem<RenderSystem>()->GetCameras());
+    editorRoot->Hierarchy().Order = 100;
+    sceneRoot->GetSystem<RenderSystem>()->SetCameras(editorRoot->GetSystem<RenderSystem>()->GetCameras());
     
     BindToRoot(sceneRoot);
 }
@@ -167,7 +166,7 @@ void EditorScene::Destroy() {
     
     sceneRoot->SetCallbacks(0, 0, 0, 0);
     editorRoot->Remove();
-    sceneRoot->CreateSystem<RenderSystem>()->SetCameras(sceneRoot->CreateSystem<RenderSystem>()->GetOriginalCameras());
+    sceneRoot->GetSystem<RenderSystem>()->SetCameras(sceneRoot->GetSystem<RenderSystem>()->GetOriginalCameras());
     sceneRoot = 0;
     editorRoot = 0;
 }

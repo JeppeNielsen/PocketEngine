@@ -25,13 +25,13 @@ void InspectorWindow::OnInitialize() {
     
     GameObject& guiRoot = context->GuiRoot();
     
-    guiRoot.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
-    guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
-    guiRoot.CreateSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
+    guiRoot.GetSystem<FieldEditorSystem>()->gui = &context->Gui();
+    guiRoot.GetSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.GetSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
         return componentId != GameIdHelper::GetComponentID<EditorObject>();
     };
     
-    guiRoot.CreateSystem<LayoutSystem>();
+    //guiRoot.GetSystem<LayoutSystem>();
 
     selectables = 0;
     
@@ -39,7 +39,7 @@ void InspectorWindow::OnInitialize() {
     removeComponentMenu.AddChild("Add Reference").Clicked.Bind([this] () {
         if (!currentWorld) return;
         int componentIndex;
-        if (!context->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
+        if (!context->Storage().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
             return;
         }
         
@@ -57,7 +57,7 @@ void InspectorWindow::OnInitialize() {
     removeComponentMenu.AddChild("Remove").Clicked.Bind([this] () {
         if (!currentWorld) return;
         int componentIndex;
-        if (!context->World().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
+        if (!context->Storage().TryGetComponentIndex(clickedComponent.typeInfo.name, componentIndex)) {
             return;
         }
         for(auto o : selectables->Selected()) {
@@ -88,10 +88,10 @@ void InspectorWindow::EditorRootChanged(OpenWorld *world) {
 
 void InspectorWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObject *current) {
     if (old) {
-        old->CreateSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+        old->GetSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
     }
     if (current) {
-        selectables = current->CreateSystem<SelectableCollection<EditorObject>>();
+        selectables = current->GetSystem<SelectableCollection<EditorObject>>();
         selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     } else {
         selectables = 0;
@@ -104,14 +104,14 @@ void InspectorWindow::OnCreate() {
     GameObject& guiWorld = context->GuiRoot();
     Gui& gui = context->Gui();
     
-    guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
-    GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.CreateSystem<GameObjectEditorSystem>();
+    guiWorld.GetSystem<FieldEditorSystem>()->gui = &gui;
+    GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.GetSystem<GameObjectEditorSystem>();
     gameObjectEditorSystem->gui = &gui;
-    gameObjectEditorSystem->scriptWorld = &context->Project().ScriptWorld();
+    gameObjectEditorSystem->scriptWorld = &context->ScriptWorld();
     
     addComponentButton = gui.CreateLabelControl(window, "Box", {0,400-40}, 40, 0, "+", 10);
     addComponentButton->GetComponent<Touchable>()->Click.Bind(this, &InspectorWindow::AddComponentClicked);
-    addComponentButton->Enabled = false;
+    addComponentButton->Hierarchy().Enabled = false;
     
     GameObject* space = gui.CreatePivot(window);
     space->AddComponent<Sizeable>();
@@ -145,7 +145,7 @@ void InspectorWindow::ComponentClicked(Pocket::TouchData d, GameObjectEditor::Co
 
 void InspectorWindow::SelectionChanged(SelectableCollection<EditorObject> *selectables) {
     inspectorEditor->GetComponent<GameObjectEditor>()->Object = selectables->Selected().empty() ? nullptr : selectables->Selected()[0]->GetComponent<EditorObject>()->gameObject;
-    addComponentButton->Enabled = !selectables->Selected().empty();
+    addComponentButton->Hierarchy().Enabled = !selectables->Selected().empty();
     numberOfComponents =  inspectorEditor->GetComponent<GameObjectEditor>()->Object() ?  inspectorEditor->GetComponent<GameObjectEditor>()->Object()->ComponentCount() : 0;
 }
 
@@ -163,7 +163,7 @@ void InspectorWindow::ShowSelectionBox(EditorObject *editorObject) {
 
     selectionBox = gui.CreateControl(window);
     
-    auto componentTypes = context->World().GetComponentTypes();
+    auto componentTypes = context->Storage().GetComponentTypes();
     
     Vector2 pos;
     pos.x = window->GetComponent<Sizeable>()->Size().x;
@@ -199,7 +199,7 @@ GameObject* InspectorWindow::TryGetFirstObjectWithComponent(int componentId) {
     
     std::vector<std::string> guids;
     std::vector<std::string> paths;
-    context->World().GetPaths(guids, paths);
+    context->Storage().GetPaths(guids, paths);
     for (int i=0; i<paths.size(); ++i) {
         
         std::ifstream file;
@@ -215,18 +215,15 @@ GameObject* InspectorWindow::TryGetFirstObjectWithComponent(int componentId) {
 
         bool objectFound = false;
         int objectId = 0;
-        context->World().TryParseJson(file, componentId, [&](int parentId, int id) {
+        context->Storage().TryParseComponent(file, componentId, [&](int parentId, int id) {
             objectFound = true;
             objectId = id;
         });
         
         if (objectFound) {
-            GameObject* root = context->World().TryFindRoot(guids[i]);
-            if (root) {
-                GameObject* object = root->FindObject(objectId);
-                if (object) {
-                    return object;
-                }
+            GameObject* object = context->Storage().TryGetPrefab(guids[i]);
+            if (object) {
+                return object;
             }
         }
     }

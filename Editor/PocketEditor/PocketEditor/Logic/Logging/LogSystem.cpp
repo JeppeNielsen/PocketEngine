@@ -11,7 +11,6 @@
 using namespace Pocket;
 
 void LogSystem::Initialize() {
-    root->World()->AddComponentType<LogMessage>();
     logRoot = root->CreateChild();
 }
 
@@ -25,3 +24,6 @@ GameObject* LogSystem::LogRoot() {
     return logRoot;
 }
 
+void LogSystem::CreateSubSystems(GameStorage &storage) {
+    storage.AddComponentType<LogMessage>();
+}

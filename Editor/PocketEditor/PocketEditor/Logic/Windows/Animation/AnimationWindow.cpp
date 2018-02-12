@@ -24,10 +24,10 @@ Vector2 AnimationWindow::Size() {
 
 void AnimationWindow::OnInitialize() {
     GameObject& guiRoot = context->GuiRoot();
-    guiRoot.CreateSystem<VirtualTreeListSystem>();
-    guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
-    guiRoot.CreateSystem<SelectedColorerSystem>();
-    guiRoot.CreateSystem<DraggableSystem>();
+//    guiRoot.CreateSystem<VirtualTreeListSystem>();
+//    guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
+//    guiRoot.CreateSystem<SelectedColorerSystem>();
+//    guiRoot.CreateSystem<DraggableSystem>();
     
     animationRoot = nullptr;
     
@@ -69,10 +69,10 @@ void AnimationWindow::EditorRootChanged(OpenWorld *world) {
 void AnimationWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObject *current) {
     Clear();
     if (old) {
-        old->CreateSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &AnimationWindow::SelectionChanged);
+        old->GetSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &AnimationWindow::SelectionChanged);
     }
     if (current) {
-        selectables = current->CreateSystem<SelectableCollection<EditorObject>>();
+        selectables = current->GetSystem<SelectableCollection<EditorObject>>();
         selectables->SelectionChanged.Bind(this, &AnimationWindow::SelectionChanged);
     } else {
         selectables = 0;
@@ -100,7 +100,7 @@ void AnimationWindow::Refresh() {
         animationRoot->Remove();
         animationRoot = nullptr;
     }
-    animationRoot = context->World().CreateRoot();
+    animationRoot = context->World().CreateScene();
     timelines.clear();
     
     for(auto& t : animation->GetTargets()) {
@@ -196,7 +196,7 @@ void AnimationWindow::OnCreate() {
     treeView->Root = nullptr;
     treeView->Pivot = listBox;
     treeView->PredicateFunction = [] (GameObject* object) {
-        if (object->Parent() && object->Parent()->GetComponent<Cloner>()) return false;
+        if (object->Hierarchy().Parent() && object->Hierarchy().Parent()->GetComponent<Cloner>()) return false;
         return true;
     };
     treeView->ItemIndent = 0;
@@ -216,7 +216,7 @@ void AnimationWindow::OnCreate() {
     
     spawner->HasChildren = [] (GameObject* object) {
         if (object->GetComponent<Cloner>()) return false;
-        return !object->Children().empty();
+        return !object->Hierarchy().Children().empty();
     };
     
     spawner->OnCreate = [&, this](VirtualTreeListSpawner::SpawnedNode& n) {
@@ -314,7 +314,7 @@ void AnimationWindow::Record(float dt) {
                 
                 if (previousValues[index]!=currentValues[index]) {
                     int componentId;
-                    if (gameObject->World()->TryGetComponentIndex(type.name, componentId)) {
+                    if (gameObject->World()->Storage().TryGetComponentIndex(type.name, componentId)) {
                         if (std::find(nonRecordableComponents.begin(), nonRecordableComponents.end(), componentId) == nonRecordableComponents.end()) {
                             animation->AddNode(animationObject, gameObject, componentId, field->name, animator->Time);
                             anyChanges = true;

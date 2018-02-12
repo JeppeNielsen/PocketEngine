@@ -46,7 +46,7 @@ void SceneTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (old) {
         old->IsPlaying.Changed.Unbind(this, &SceneTab::IsPlayingChanged, current);
         if (old->GetRunningWorld()) {
-            old->GetRunningWorld()->World().LayersChanged.Unbind(this, &SceneTab::LayersChanged, old);
+            //old->GetRunningWorld()->World().LayersChanged.Unbind(this, &SceneTab::LayersChanged, old);
             old->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &SceneTab::ActiveSceneChanged, old->GetRunningWorld());
         }
         ClearTabs();
@@ -55,7 +55,7 @@ void SceneTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (current) {
         current->IsPlaying.Changed.Bind(this, &SceneTab::IsPlayingChanged, current);
         if (current->GetRunningWorld()) {
-            current->GetRunningWorld()->World().LayersChanged.Bind(this, &SceneTab::LayersChanged, current);
+            //current->GetRunningWorld()->World().LayersChanged.Bind(this, &SceneTab::LayersChanged, current);
             current->GetRunningWorld()->ActiveScene.Changed.Bind(this, &SceneTab::ActiveSceneChanged, current->GetRunningWorld());
         }
         UpdateWorld(current);
@@ -65,12 +65,12 @@ void SceneTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
 void SceneTab::IsPlayingChanged(OpenWorld* world) {
     if (world->IsPlaying) {
         if (world->GetRunningWorld()) {
-            world->GetRunningWorld()->World().LayersChanged.Bind(this, &SceneTab::LayersChanged, world);
+            //world->GetRunningWorld()->World().LayersChanged.Bind(this, &SceneTab::LayersChanged, world);
             world->GetRunningWorld()->ActiveScene.Changed.Bind(this, &SceneTab::ActiveSceneChanged, world->GetRunningWorld());
         }
     } else {
         if (world->GetRunningWorld()) {
-            world->GetRunningWorld()->World().LayersChanged.Unbind(this, &SceneTab::LayersChanged, world);
+            //world->GetRunningWorld()->World().LayersChanged.Unbind(this, &SceneTab::LayersChanged, world);
             world->GetRunningWorld()->ActiveScene.Changed.Unbind(this, &SceneTab::ActiveSceneChanged, world->GetRunningWorld());
         }
     }
@@ -86,10 +86,11 @@ void SceneTab::UpdateWorld(OpenWorld *world) {
     if (!world->IsPlaying) return;
     auto& r = world->GetRunningWorld()->World();
     
-    auto& layers = r.GetSceneLayers();
+    /*auto& layers = r.GetSceneLayers();
     for(auto& layer : layers) {
         AddTab(world, layer.second);
     }
+    */
     
     /*
     for(auto r : r.Roots()) {
@@ -102,7 +103,7 @@ void SceneTab::UpdateWorld(OpenWorld *world) {
 void SceneTab::AddTab(OpenWorld* world, GameObject* scene) {
     Gui& gui = context->Gui();
     GameObject* button = gui.CreateLayoutControl(tabArea, "Box", 25, {200,25}, {200,25});
-    GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
+    GameObject* label = gui.CreateLabel(button, 0, {200,30}, 0, "Scene", 12);//FileHelper::GetFileNameFromPath(scene->TryGetRootPath()), 12);
     label->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
     label->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     label->GetComponent<Colorable>()->Color = Colour::Black();

@@ -18,7 +18,7 @@ using namespace Pocket;
 
 void AutocompleterTextEditorSystem::Initialize() {
     activeTextEditor = 0;
-    gui = root->CreateSystem<Gui>();
+    gui = root->GetSystem<Gui>();
     listBox = 0;
 }
 
@@ -209,7 +209,7 @@ AutocompleterEntry* AutocompleterTextEditorSystem::FindAutocompleterEntryByIndex
     std::string autocompleteText = textEditor->GetAutoCompleteString();
     
     int i = 0;
-    for(auto child : treeView->Root()->Children()) {
+    for(auto child : treeView->Root()->Hierarchy().Children()) {
         AutocompleterEntry* entry = child->GetComponent<AutocompleterEntry>();
         bool found = StringHelper::StartsWith(entry->entry.GetText(), autocompleteText); //entry->text.find(autocompleteText) != std::string::npos;
         if (!found) continue;

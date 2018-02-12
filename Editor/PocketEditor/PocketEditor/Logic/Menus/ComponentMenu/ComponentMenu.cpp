@@ -21,7 +21,7 @@ void ComponentMenu::OnInitialize() {
 
 void ComponentMenu::OnCreate() {
 
-    auto components = ComponentHelper::GetSortedComponents(*this->context->ContextRoot().World());
+    auto components = ComponentHelper::GetSortedComponents(context->Storage());
 
     for(auto& category : components) {
         auto& componentMenu = menu->AddChild(category.first);

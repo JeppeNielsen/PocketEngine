@@ -24,7 +24,7 @@ struct ComponentHelper {
     
     using ComponentCollection = std::map<std::string, std::vector<ComponentInfo>>;
 
-    static ComponentCollection GetSortedComponents(GameWorld& world);
+    static ComponentCollection GetSortedComponents(GameStorage& storage);
     
-    static ComponentCollection GetSortedScriptComponents(GameWorld& world, Pocket::ScriptWorld& scriptWorld);
+    static ComponentCollection GetSortedScriptComponents(GameStorage& storage, Pocket::ScriptWorld& scriptWorld);
 };

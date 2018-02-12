@@ -8,8 +8,12 @@
 
 #include "EditorCameraSelection.hpp"
 
+void EditorCameraSelection::AddSubSystems(GameStorage& storage) {
+    storage.AddSystemType<CameraLineRenderer>();
+}
+
 void EditorCameraSelection::Initialize() {
-    root->CreateSystem<CameraLineRenderer>();
+//    root->CreateSystem<CameraLineRenderer>();
 }
 
 void EditorCameraSelection::CreateObject(GameObject* object, GameObject* selectionObject) {

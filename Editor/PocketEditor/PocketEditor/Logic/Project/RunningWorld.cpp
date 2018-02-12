@@ -22,52 +22,29 @@ RunningWorld::RunningWorld() {
         editorScene.Destroy();
         if (ActiveScene) {
             editorScene.Initialize(ActiveScene);
-            for(auto root : world.Roots()) {
-                if (root!=editorScene.EditorRoot()) {
-                    root->RenderEnabled() = (root == ActiveScene);
-                }
-            }
+            
         } else {
-            for(auto o : world.Roots()) {
-                o->RenderEnabled() = true;
-            }
+            
         }
     });
 }
 
-void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, ScriptWorld& scriptWorld) {
+void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, GameStorage& storage) {
 
-    world.RootRemoved.Bind([this] (GameObject* root) {
+    world.Initialize(storage);
+    world.SceneRemoved.Bind([this] (GameObject* root) {
         if (ActiveScene == root) {
             editorScene.Destroy();
         }
     });
-
-    fileWorld.AddGameWorld(world);
-    fileWorld.FindRoots(path, {".json", ".meta" });
-    fileWorld.OnRootCreated = [this, &scriptWorld] (GameObject* root) {
-        SystemHelper::AddGameSystems(*root);
-        
-        scriptWorld.AddGameRoot(root);
-    };
-    //world.AddComponentType<Cloner>();
-    //world.AddComponentType<CloneVariable>();
-    //world.AddComponentType<EditorDropTarget>();
-    //world.AddComponentType<ProjectSettings>();
     
-    GameObject* initRoot = world.CreateRoot();
-    SystemHelper::AddGameSystems(*initRoot);
-    //OpenWorld::CreateEditorSystems(*initRoot);
-    initRoot->CreateSystem<AssetManager>();
-    initRoot->Remove();
-    scriptWorld.AddGameWorld(world);
-    
-    int layerNo = 0;
+    /*int layerNo = 0;
     for(auto& startScene : startScenes) {
         world.SetLayerScene(layerNo, world.TryFindRoot(startScene));
         layerNo++;
     }
-    this->scriptWorld = &scriptWorld;
+    */
+    world.CreateScene(storage.TryGetPrefab(startScenes[0]));
 }
 
 GameWorld& RunningWorld::World() {
@@ -76,7 +53,6 @@ GameWorld& RunningWorld::World() {
 
 void RunningWorld::Destroy() {
     editorScene.Destroy();
-    scriptWorld->RemoveGameWorld(world);
 }
 
 GameObject* RunningWorld::EditorRoot() {
@@ -84,20 +60,9 @@ GameObject* RunningWorld::EditorRoot() {
 }
 
 void RunningWorld::PreCompile() {
-    world.SerializeAndRemoveComponents(serializedComponents, [this] (const GameObject* o, int componentId) {
-        return componentId>=scriptWorld->GetBaseComponentIndex();
-    });
-    
-    world.UpdateActions();
-    scriptWorld->RemoveGameWorld(world);
-    
-    std::cout << serializedComponents.str() << std::endl;
+
 }
 
 void RunningWorld::PostCompile() {
-    scriptWorld->AddGameWorld(world);
-    scriptWorld->AddAllGameRoots(world);
-    world.DeserializeAndAddComponents(serializedComponents);
-    world.UpdateActions();
-    serializedComponents.clear();
+
 }

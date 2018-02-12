@@ -14,12 +14,15 @@
 #include "SystemHelper.hpp"
 #include "FilePath.hpp"
 #include "GameWorldViewportSystem.hpp"
+#include "DragSelector.hpp"
 
+GameStorage& EditorContext::Storage() { return storage; }
 GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
+ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
 GameObject& EditorContext::ContextRoot() { return *contextRoot; }
 GameWorld& EditorContext::GuiWorld() { return guiWorld; }
-GameObject& EditorContext::GuiRoot() { return *guiRoot; }
+GameObject& EditorContext::GuiRoot() { return *guiScene; }
 Gui& EditorContext::Gui() { return *gui; }
 EngineContext& EditorContext::EngineContext() { return *engineContext; }
 Project& EditorContext::Project() { return project; }
@@ -27,48 +30,41 @@ Project& EditorContext::Project() { return project; }
 void EditorContext::Initialize(class EngineContext& engineContext) {
     this->engineContext = &engineContext;
     
-    fileWorld.AddGameWorld(world);
+    world.Initialize(storage);
+    guiWorld.Initialize(storage);
+    
+    storage.CreateSerializer<GameObjectJsonSerializer>();
+    
+    
+    
+    
+    SystemHelper::AddGameSystems(storage);
+    SystemHelper::AddEditorSystems(storage);
+    
+    fileWorld.Initialize(storage);
     fileWorld.OnRootCreated = [this] (GameObject* root) {
-        root->CreateSystem<AssetManager>()->SetFileWatcher(Project().FileSystemWatcher());
-    };
-    fileWorld.OnChildCreated = [this] (GameObject* child) {
-    //    child->AddComponent<EditorObject>();
+        root->GetSystem<AssetManager>()->SetFileWatcher(Project().FileSystemWatcher());
     };
     
+    guiScene = guiWorld.CreateScene();
     
-    guiRoot = guiWorld.CreateRoot();
-    
-    gui = guiRoot->CreateSystem<class Gui>();
-    guiRoot->CreateSystem<TouchSystem>()->TouchDepth = 10;
-    guiRoot->CreateSystem<TouchSystem>()->Order = -200;
-    guiRoot->CreateSystem<GameWorldViewportSystem>();
+    gui = guiScene->GetSystem<class Gui>();
+    guiScene->GetSystem<TouchSystem>()->TouchDepth = 10;
+    guiScene->GetSystem<TouchSystem>()->Order = -200;
+    guiScene->GetSystem<DragSelector>()->Setup(engineContext.Viewport());
     
     gui->Setup("NewUI.tga", "NewUI.json", engineContext.Viewport());
     gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");
 
-    guiRoot->CreateSystem<RenderSystem>()->Order = 10;
+    guiScene->GetSystem<RenderSystem>()->Order = 10;
     
-    contextRoot = world.CreateRoot();
-    contextRoot->Order = -100;
+    contextRoot = world.CreateScene();
+    contextRoot->Hierarchy().Order = -100;
     
-    world.AddComponentType<Cloner>();
-    world.AddComponentType<CloneVariable>();
-    world.AddComponentType<EditorDropTarget>();
-    world.AddComponentType<ProjectSettings>();
-    world.AddComponentType<FilePath>();
+    project.Initialize(storage, fileWorld, scriptWorld);
     
-    GameObject* initRoot = world.CreateRoot();
-    
-    SystemHelper::AddGameSystems(*initRoot);
-    SystemHelper::AddEditorSystems(*initRoot);
-    
-    initRoot->CreateSystem<AssetManager>();
-    initRoot->Remove();
-    
-    project.Initialize(world, fileWorld);
-    
-    logRoot = world.CreateRoot();
-    log = logRoot->CreateSystem<LogSystem>();
+    logRoot = world.CreateScene();
+    //log = logRoot->CreateSystem<LogSystem>();
 }
 
 void EditorContext::Update(float dt) {

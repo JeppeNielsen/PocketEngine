@@ -16,6 +16,7 @@
 #include "FileReader.hpp"
 #include "StringHelper.hpp"
 #include "FileHelper.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -24,18 +25,26 @@ bool AssetHelper::CreateFolder(const std::string& path) {
 }
 
 bool AssetHelper::CreateScene(const std::string &path) {
-    GameWorld world;
+
+    GameStorage storage;
+    storage.AddComponentType<Transform>();
+    storage.AddComponentType<Mesh>();
+    storage.AddComponentType<Renderable>();
     
-    GameObject* root = world.CreateRoot();
+    GameWorld world(storage);
+    
+    GameObject* root = world.CreateScene();
     
     GameObject* cube = root->CreateObject();
     cube->AddComponent<Transform>();
     cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
     cube->AddComponent<Renderable>();
     
+    GameObjectJsonSerializer serializer;
+    
     std::ofstream file;
     file.open(path);
-    root->ToJson(file);
+    serializer.Serialize(root, file);
     file.close();
 
     return true;
@@ -43,18 +52,19 @@ bool AssetHelper::CreateScene(const std::string &path) {
 
 bool AssetHelper::CreateEmptyPrefab(const std::string& path) {
     GameWorld world;
-    GameObject* root = world.CreateRoot();
+    GameObject* root = world.CreateScene();
+    
+    GameObjectJsonSerializer serializer;
     
     std::ofstream file;
     file.open(path);
-    root->ToJson(file);
+    serializer.Serialize(root, file);
     file.close();
+
     return true;
 }
 
 bool AssetHelper::CreateHeader(const std::string& path) {
-    
-    
     
     return true;
 }

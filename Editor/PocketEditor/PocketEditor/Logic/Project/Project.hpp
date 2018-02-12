@@ -26,11 +26,12 @@ using namespace Pocket;
 class Project {
 private:
     
-    GameWorld* world;
-    FileWorld* fileWorld;
-    ScriptWorld scriptWorld;
-    std::string path;
     std::vector<std::string> defaultIncludes;
+    GameStorage* storage;
+    FileWorld* fileWorld;
+    ScriptWorld* scriptWorld;
+    
+    std::string path;
     FileSystemWatcher fileSystemWatcher;
     Worker worker;
     
@@ -43,10 +44,9 @@ public:
 
     Project();
     
-    void Initialize(GameWorld& world, FileWorld& fileWorld);
+    void Initialize(GameStorage& storage, FileWorld& fileWorld, ScriptWorld& scriptWorld);
     
     void Open(const std::string& path);
-    ScriptWorld& ScriptWorld();
     void CreateDefaultScene(GameWorld& editorWorld, GameObject* gameRoot, InputManager& input);
     bool Compile();
     

@@ -10,7 +10,7 @@
 #include <algorithm>
 #include "ScriptWorld.hpp"
 
-ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket::GameWorld &world) {
+ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket::GameStorage& storage) {
 
     using namespace std;
     
@@ -100,7 +100,7 @@ ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket
         std::vector<ComponentInfo> componentInfos;
         for(auto& component : category.second) {
             int index;
-            if (world.TryGetComponentIndex(component, index)) {
+            if (storage.TryGetComponentIndex(component, index)) {
                 componentInfos.push_back({ component, index, category.first });
             }
         }
@@ -112,12 +112,12 @@ ComponentHelper::ComponentCollection ComponentHelper::GetSortedComponents(Pocket
     return components;
 }
 
-ComponentHelper::ComponentCollection ComponentHelper::GetSortedScriptComponents(Pocket::GameWorld &world, Pocket::ScriptWorld& scriptWorld) {
+ComponentHelper::ComponentCollection ComponentHelper::GetSortedScriptComponents(Pocket::GameStorage &storage, Pocket::ScriptWorld& scriptWorld) {
 
     using namespace std;
 
     int componentCount = scriptWorld.ComponentCount();
-    auto componentTypes = world.GetComponentTypes();
+    auto componentTypes = storage.GetComponentTypes();
     
     int startIndex = (int)componentTypes.size() - componentCount;
     

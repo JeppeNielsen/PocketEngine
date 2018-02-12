@@ -44,7 +44,7 @@ void EditorSizeableSystem::SelectionChanged(Pocket::GameObject *object) {
 void EditorSizeableSystem::TryRemoveTransformObject(Pocket::GameObject *object) {
     auto it = transformObjects.find(object);
     if (it!=transformObjects.end()) {
-        GameObject* dragger = it->second->Children()[0];
+        GameObject* dragger = it->second->Hierarchy().Children()[0];
         DraggerEvent e { dragger, object };
         dragger->GetComponent<Transform>()->Position.Changed.Unbind(this, &EditorSizeableSystem::DraggerPositionChanged, e);
         it->second->Remove();

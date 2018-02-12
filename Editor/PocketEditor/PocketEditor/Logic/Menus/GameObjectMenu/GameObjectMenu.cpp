@@ -41,7 +41,7 @@ void GameObjectMenu::OnCreate() {
             GameObject* source = o->GetComponent<EditorObject>()->gameObject;
             if (source->IsRoot()) continue;
             source->CreateCopy([] (GameObject* object) {
-                if (object->Parent() && object->Parent()->GetComponent<Cloner>()) {
+                if (object->Hierarchy().Parent() && object->Hierarchy().Parent()->GetComponent<Cloner>()) {
                     return false;
                 }
                 return true;

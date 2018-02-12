@@ -19,4 +19,5 @@ private:
 public:
     Pocket::GameObject* Log(const std::string& message);
     Pocket::GameObject* LogRoot();
+    static void CreateSubSystems(Pocket::GameStorage& storage);
 };

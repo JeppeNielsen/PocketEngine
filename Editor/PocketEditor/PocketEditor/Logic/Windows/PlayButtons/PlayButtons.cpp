@@ -24,7 +24,7 @@ void PlayButtons::OnCreate() {
     editModePivot = gui.CreatePivot(window);
     {
         GameObject* testButton = gui.CreateLabelControl(editModePivot, "TextBox", 0, {100,30},0, "Test", 20);
-        testButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        testButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         testButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
             if (!currentWorld) return;
             context->preActions.emplace_back([this] {
@@ -37,7 +37,7 @@ void PlayButtons::OnCreate() {
     gameModePivot = gui.CreatePivot(window);
     {
         GameObject* stopButton = gui.CreateLabelControl(gameModePivot, "TextBox", {100,0}, {100,30}, 0, "Stop", 20);
-        stopButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        stopButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         stopButton->GetComponent<Touchable>()->Click.Bind([this] (TouchData d) {
             if (!currentWorld) return;
             context->preActions.emplace_back([this] {
@@ -47,15 +47,15 @@ void PlayButtons::OnCreate() {
         });
     
         GameObject* pauseButton = gui.CreateLabelControl(gameModePivot, "TextBox", {0,0}, {100,30}, 0, "Pause", 20);
-        pauseButton->Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
+        pauseButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         pauseButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
             if (!currentWorld) return;
             currentWorld->IsPaused = !currentWorld->IsPaused();
         });
     }
     
-    editModePivot->Enabled = false;
-    gameModePivot->Enabled = false;
+    editModePivot->Hierarchy().Enabled = false;
+    gameModePivot->Hierarchy().Enabled = false;
     
     window->RemoveComponent<Renderable>();
     ScreenSizeChanged();
@@ -75,12 +75,12 @@ void PlayButtons::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
     if (current) {
         UpdateStates(current);
     } else {
-        editModePivot->Enabled = false;
-        gameModePivot->Enabled = false;
+        editModePivot->Hierarchy().Enabled = false;
+        gameModePivot->Hierarchy().Enabled = false;
     }
 }
 
 void PlayButtons::UpdateStates(OpenWorld *openWorld) {
-    editModePivot->Enabled = !openWorld->IsPlaying();
-    gameModePivot->Enabled = openWorld->IsPlaying();
+    editModePivot->Hierarchy().Enabled = !openWorld->IsPlaying();
+    gameModePivot->Hierarchy().Enabled = openWorld->IsPlaying();
 }

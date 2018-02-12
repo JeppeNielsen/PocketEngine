@@ -9,8 +9,9 @@
 #include "EditorSizeableSelection.hpp"
 
 
-void EditorSizeableSelection::Initialize() {
-    root->CreateSystem<SizeableLineRenderer>();
+
+void EditorSizeableSelection::CreateSubSystems(GameStorage& storage) {
+    storage.AddSystemType<SizeableLineRenderer>();
 }
 
 void EditorSizeableSelection::CreateObject(GameObject* object, GameObject* selectionObject) {

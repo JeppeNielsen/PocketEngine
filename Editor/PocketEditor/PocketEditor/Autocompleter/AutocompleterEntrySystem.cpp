@@ -21,7 +21,7 @@ void AutocompleterEntrySystem::AutoCompleteDone(std::vector<Autocompleter::Resul
     
     //std::cout << "AutoCompleteDone" << std::endl;
     
-    for(auto child : object->Children()) {
+    for(auto child : object->Hierarchy().Children()) {
         child->Remove();
     }
     

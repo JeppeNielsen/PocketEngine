@@ -19,7 +19,7 @@ public:
 
     RunningWorld();
 
-    void Initialize(const std::string& path, const std::vector<std::string>& startScenes, ScriptWorld& scriptWorld);
+    void Initialize(const std::string& path, const std::vector<std::string>& startScenes, GameStorage& storage);
     void Destroy();
     
     GameWorld& World();
@@ -32,10 +32,7 @@ public:
 
 private:
     GameWorld world;
-    FileWorld fileWorld;
-    
     EditorScene editorScene;
-    ScriptWorld* scriptWorld;
     
     std::stringstream serializedComponents;
 };

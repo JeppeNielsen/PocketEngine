@@ -15,14 +15,14 @@
 #include "EditorContext.hpp"
 #include "SystemHelper.hpp"
 
-OpenWorld::OpenWorld() : root(0), runningWorld(0) {
+OpenWorld::OpenWorld() : runningWorld(nullptr) {
     IsPlaying = false;
     EditorRoot = 0;
 }
 
 bool IsClonerInAncestry(GameObject* object) {
     while(true) {
-        object = object->Parent;
+        object = object->Hierarchy().Parent;
         if (!object) return false;
         if (object->HasComponent<Cloner>()) return true;
     }
@@ -35,9 +35,9 @@ bool OpenWorld::Save() {
         succes = true;
         std::ofstream file;
         file.open(Path);
-        root->ToJson(file, [] (const GameObject* go, int componentID) {
+        serializer.Serialize(scene, file, [] (const GameObject* go, int componentID) {
             if (componentID == Pocket::GameIdHelper::GetComponentID<EditorObject>()) return false;
-            if (go->Parent() && go->Parent()->GetComponent<Cloner>()) return false;
+            if (go->Hierarchy().Parent() && go->Hierarchy().Parent()->GetComponent<Cloner>()) return false;
             return true;
         });
         file.close();
@@ -52,100 +52,59 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
     Filename = filename;
     this->context = context;
     
-    GameWorld* world = &context->World();
-    ScriptWorld* scriptWorld = &context->Project().ScriptWorld();
-    
     if (path != "") {
         std::ifstream file;
         
         file.open(path);
-        std::string guid = world->ReadGuidFromJson(file);
+        std::string guid = serializer.ReadGuidFromJson(file);
         file.close();
         
-        root = world->TryFindRoot(guid);
-        if (!root) {
+        GameObject* prefab = context->Storage().TryGetPrefab(guid);
+        if (!prefab) {
             return false;
         }
+        world.Initialize(context->Storage());
+        scene = world.CreateScene(prefab);
     } else {
         return false;
     }
     
-    root->TimeScale() = 0;
-
-    SystemHelper::AddGameSystems(*root);
+    editorScene.Initialize(scene);
     
-    if (context->Project().IsCompiling) {
-        scriptWorld->AddGameRoot(root);
-    }
-    
-    editorScene.Initialize(root);
-    
-    GameRoot = root;
+    GameRoot = scene;
     EditorRoot = editorScene.EditorRoot();
     return true;
 }
 
 GameObject* OpenWorld::Root() {
-    return root;
+    return scene;
 }
 
 void OpenWorld::Close() {
     Stop();
-    root->Remove();
+    scene->Remove();
     editorScene.Destroy();
 }
 
 void OpenWorld::Enable() {
-    root->UpdateEnabled() = !IsPlaying();
-    root->RenderEnabled() = !IsPlaying();
+    /*scene->UpdateEnabled() = !IsPlaying();
+    scene->RenderEnabled() = !IsPlaying();
     if (editorScene.EditorRoot()) {
         editorScene.EditorRoot()->UpdateEnabled() = !IsPlaying();
         editorScene.EditorRoot()->RenderEnabled() = !IsPlaying();
     }
+    */
 }
 
 void OpenWorld::Disable() {
-    root->UpdateEnabled() = false;
-    root->RenderEnabled() = false;
+    /*scene->UpdateEnabled() = false;
+    scene->RenderEnabled() = false;
     if (editorScene.EditorRoot()) {
         editorScene.EditorRoot()->UpdateEnabled() = false;
         editorScene.EditorRoot()->RenderEnabled() = false;
     }
+    */
 }
-
-/*
-void OpenWorld::UpdatePlayMode() {
-    if (root) {
-        
-        RenderSystem* worldRenderSystem = root->CreateSystem<RenderSystem>();
-        RenderSystem* editorRenderSystem = editorRoot->CreateSystem<RenderSystem>();
-        
-        TouchSystem* worldTouchSystem = root->CreateSystem<TouchSystem>();
-        TouchSystem* editorTouchSystem = editorRoot->CreateSystem<TouchSystem>();
-        
-        if (!IsPlaying || worldRenderSystem->GetOriginalCameras()->ObjectCount() == 0) {
-            editorTouchSystem->SetCameras(editorTouchSystem->GetOriginalCameras());
-            editorRenderSystem->SetCameras(editorRenderSystem->GetOriginalCameras());
-            
-            worldTouchSystem->SetCameras(editorTouchSystem->GetOriginalCameras());
-            worldRenderSystem->SetCameras(editorRenderSystem->GetOriginalCameras());
-            
-            editorRoot->RenderEnabled() = true;
-        } else {
-        
-            editorTouchSystem->SetCameras(worldTouchSystem->GetOriginalCameras());
-            editorRenderSystem->SetCameras(worldRenderSystem->GetOriginalCameras());
-            
-            worldTouchSystem->SetCameras(worldTouchSystem->GetOriginalCameras());
-            worldRenderSystem->SetCameras(worldRenderSystem->GetOriginalCameras());
-            
-            editorRoot->RenderEnabled() = false;
-        }
-
-        root->TimeScale() = IsPlaying ? 1.0f : 0.0f;
-    }
-}
-*/
 
 void OpenWorld::PreCompile() {
     if (runningWorld) {
@@ -154,9 +113,6 @@ void OpenWorld::PreCompile() {
 }
 
 void OpenWorld::PostCompile() {
-
-    context->Project().ScriptWorld().AddGameRoot(root);
-
     if (runningWorld) {
         runningWorld->PostCompile();
     }
@@ -165,11 +121,11 @@ void OpenWorld::PostCompile() {
 void OpenWorld::Play() {
     if (IsPlaying) return;
     
-    this->GameRoot = 0;
-    this->EditorRoot = 0;
+    this->GameRoot = nullptr;
+    this->EditorRoot = nullptr;
         
     runningWorld = new RunningWorld();
-    runningWorld->Initialize(context->Project().Path(), { root->RootGuid() }, context->Project().ScriptWorld());
+    runningWorld->Initialize(context->Project().Path(), { scene->RootGuid() }, context->Storage());
     runningWorld->ActiveScene.Changed.Bind([this] () {
         this->GameRoot = runningWorld->ActiveScene();
         this->EditorRoot = runningWorld->EditorRoot();
@@ -182,7 +138,7 @@ void OpenWorld::Play() {
 void OpenWorld::Stop() {
     if (!IsPlaying) return;
     IsPlaying = false;
-    GameRoot = root;
+    GameRoot = scene;
     EditorRoot = editorScene.EditorRoot();
     runningWorld->Destroy();
     RunningWorld* delayedWorld = runningWorld;
@@ -204,11 +160,16 @@ void OpenWorld::Update(InputDevice& input, float dt) {
 //    } else {
 //        runningWorld->World().Update(dt);
 //    }
+    //input.UpdateInputManager(&world.Input());
+    //world.Update(dt);
 }
 
 void OpenWorld::Render() {
 //    if (!runningWorld) return;
 //    runningWorld->World().Render();
+    //world.Render();
 }
 
 RunningWorld* OpenWorld::GetRunningWorld() { return runningWorld; }
+
+GameWorld* OpenWorld::World() { return &world; }

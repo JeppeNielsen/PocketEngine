@@ -26,7 +26,7 @@ void ScriptComponentMenu::OnCreate() {
 }
 
 void ScriptComponentMenu::CompilationFinished() {
-    auto components = ComponentHelper::GetSortedScriptComponents(*this->context->ContextRoot().World(), this->context->Project().ScriptWorld());
+    auto components = ComponentHelper::GetSortedScriptComponents(this->context->Storage(), this->context->ScriptWorld());
 
     menu->Clear();
 

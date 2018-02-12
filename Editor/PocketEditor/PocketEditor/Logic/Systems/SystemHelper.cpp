@@ -16,6 +16,7 @@
 //Assets
 #include "AssetManager.hpp"
 
+
 //Audio
 #include "SoundSystem.hpp"
 
@@ -30,15 +31,7 @@
 #include "ParticleUpdaterSystem.hpp"
 
 //Gui
-#include "DroppableSystem.hpp"
-#include "FontTextureSystem.hpp"
-#include "LabelMeshSystem.hpp"
-#include "LayoutSystem.hpp"
-#include "SlicedQuadMeshSystem.hpp"
-#include "SpriteMeshSystem.hpp"
-#include "SpriteTextureSystem.hpp"
-#include "TextBoxLabelSystem.hpp"
-#include "TextBoxSystem.hpp"
+#include "Gui.hpp"
 
 //Input
 #include "InputMapperSystem.hpp"
@@ -92,132 +85,137 @@
 #include "EditorObject.hpp"
 #include "EditorCameraSelection.hpp"
 #include "EditorSizeableSelection.hpp"
+#include "AssetImporterSystem.hpp"
+#include "FieldEditorSystem.hpp"
+#include "EditorDropTarget.hpp"
+#include "ProjectSettings.hpp"
+#include "FilePath.hpp"
+#include "GameWorldViewportSystem.hpp"
+#include "GameObjectEditorSystem.hpp"
+#include "FileSystemListenerSystem.hpp"
+#include "EditorGui.hpp"
+#include "GameObjectFieldEditor.hpp"
 
 using namespace Pocket;
 
-void SystemHelper::AddGameSystems(Pocket::GameObject &world) {
+void SystemHelper::AddGameSystems(Pocket::GameStorage& storage) {
     
     //spawning
-    world.CreateSystem<SpawnerSystem>();
+    storage.AddSystemType<SpawnerSystem>();
     
     //Animations
-    world.CreateSystem<AnimatorSystem>();
+    storage.AddSystemType<AnimatorSystem>();
 
     //Assets
-    world.CreateSystem<AssetManager>();
+    storage.AddSystemType<AssetManager>();
 
     //Audio
-    world.CreateSystem<SoundSystem>();
+    storage.AddSystemType<SoundSystem>();
 
     //Cloning
-    world.CreateSystem<ClonerSystem>();
+    storage.AddSystemType<ClonerSystem>();
 
     //Common
-    world.CreateSystem<HierarchyOrder>();
+    storage.AddSystemType<HierarchyOrder>();
 
     //Effects
-    world.CreateSystem<ParticleMeshUpdater>();
-    world.CreateSystem<ParticleUpdaterSystem>();
+    storage.AddSystemType<ParticleMeshUpdater>();
+    storage.AddSystemType<ParticleUpdaterSystem>();
 
     //Gui
-    world.CreateSystem<DroppableSystem>();
-    world.CreateSystem<FontTextureSystem>();
-    world.CreateSystem<LabelMeshSystem>();
-    world.CreateSystem<LayoutSystem>();
-    world.CreateSystem<SlicedQuadMeshSystem>();
-    world.CreateSystem<SpriteMeshSystem>();
-    world.CreateSystem<SpriteTextureSystem>();
-    world.CreateSystem<TextBoxLabelSystem>();
-    world.CreateSystem<TextBoxSystem>();
-
+    storage.AddSystemType<Gui>();
+    
     //Input
-    world.CreateSystem<InputMapperSystem>();
+    storage.AddSystemType<InputMapperSystem>();
 
     //Interaction
-    world.CreateSystem<TouchCancelSystem>();
-    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
+    storage.AddSystemType<TouchCancelSystem>();
+    storage.AddSystemType<TouchSystem>();//->TouchDepth = 0;
 
     //Movement
-    world.CreateSystem<DraggableMotionSystem>();
-    world.CreateSystem<DraggableSystem>();
-    world.CreateSystem<FirstPersonMoverSystem>();
-    world.CreateSystem<LimitableSystem>();
-    world.CreateSystem<VelocitySystem>();
+    storage.AddSystemType<DraggableMotionSystem>();
+    storage.AddSystemType<DraggableSystem>();
+    storage.AddSystemType<FirstPersonMoverSystem>();
+    storage.AddSystemType<LimitableSystem>();
+    storage.AddSystemType<VelocitySystem>();
 
     //Physics
-    world.CreateSystem<PhysicsSystem>();
-    world.CreateSystem<PhysicsSystem2d>();
+    storage.AddSystemType<PhysicsSystem>();
+    storage.AddSystemType<PhysicsSystem2d>();
 
     //Rendering
-    world.CreateSystem<ColorSystem>();
-    world.CreateSystem<DistanceScalerSystem>();
-    world.CreateSystem<LineRendererSystem>();
-    world.CreateSystem<RenderSystem>();
+    storage.AddSystemType<ColorSystem>();
+    storage.AddSystemType<DistanceScalerSystem>();
+    storage.AddSystemType<LineRendererSystem>();
+    storage.AddSystemType<RenderSystem>();
 
     //Scenes
-    world.CreateSystem<SceneManagerSystem>();
+    storage.AddSystemType<SceneManagerSystem>();
 
     //Selection
-    world.CreateSystem<ClickSelectorSystem>();
-    world.CreateSystem<DragSelector>();
-    world.CreateSystem<SelectableDragSystem>();
-    world.CreateSystem<SelectedColorerSystem>();
+    storage.AddSystemType<ClickSelectorSystem>();
+    storage.AddSystemType<DragSelector>();
+    storage.AddSystemType<SelectableDragSystem>();
+    storage.AddSystemType<SelectedColorerSystem>();
 
     //Spatial
-    world.CreateSystem<TransformHierarchy>();
+    storage.AddSystemType<TransformHierarchy>();
 
     //Triggering
-    world.CreateSystem<TriggerSystem>();
-    world.CreateSystem<TriggerTouchSystem>();
+    storage.AddSystemType<TriggerSystem>();
+    storage.AddSystemType<TriggerTouchSystem>();
     
     
+    //Gui
     
 
 
 /*
-    world.CreateSystem<RenderSystem>();
-    world.CreateSystem<TransformHierarchy>();
-    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
-    world.CreateSystem<ClonerSystem>();
-    world.CreateSystem<InputMapperSystem>();
-    world.CreateSystem<VelocitySystem>();
-    world.CreateSystem<Gui>();
-//    world.CreateSystem<SwitchSystem>();
-//    world.CreateSystem<SwitchEnablerSystem>();
-//    world.CreateSystem<TouchSwitchSystem>();
-    world.CreateSystem<SlicedQuadMeshSystem>();
-    world.CreateSystem<TriggerSystem>();
-    world.CreateSystem<TriggerTouchSystem>();
-    world.CreateSystem<SceneManagerSystem>();
-    world.CreateSystem<AssetManager>();
+    world.AddSystemType<RenderSystem>();
+    world.AddSystemType<TransformHierarchy>();
+    world.AddSystemType<TouchSystem>()->TouchDepth = 0;
+    world.AddSystemType<ClonerSystem>();
+    world.AddSystemType<InputMapperSystem>();
+    world.AddSystemType<VelocitySystem>();
+    world.AddSystemType<Gui>();
+//    world.AddSystemType<SwitchSystem>();
+//    world.AddSystemType<SwitchEnablerSystem>();
+//    world.AddSystemType<TouchSwitchSystem>();
+    world.AddSystemType<SlicedQuadMeshSystem>();
+    world.AddSystemType<TriggerSystem>();
+    world.AddSystemType<TriggerTouchSystem>();
+    world.AddSystemType<SceneManagerSystem>();
+    world.AddSystemType<AssetManager>();
     
     */
 }
 
-void SystemHelper::AddEditorSystems(Pocket::GameObject& editorWorld) {
-    editorWorld.CreateSystem<RenderSystem>();
-    editorWorld.CreateSystem<TouchSystem>();
-    editorWorld.CreateSystem<DraggableSystem>();
-    editorWorld.CreateSystem<EditorTransformSystem>();
-    editorWorld.CreateSystem<EditorMeshSystem>();
-    editorWorld.CreateSystem<EditorSizeableSystem>();
+void SystemHelper::AddEditorSystems(Pocket::GameStorage& storage) {
+    storage.AddSystemType<EditorTransformSystem>();
+    storage.AddSystemType<EditorMeshSystem>();
+    storage.AddSystemType<EditorSizeableSystem>();
     
-    editorWorld.CreateSystem<TransformHierarchy>();
+    storage.AddSystemType<SelectableCollection<EditorObject>>();
     
-    editorWorld.CreateSystem<ClickSelectorSystem>();
-    editorWorld.CreateSystem<DragSelector>()->Setup({2000,2000});
-    editorWorld.CreateSystem<SelectableDragSystem>();
-    editorWorld.CreateSystem<TouchSystem>()->TouchDepth = 5;
-    editorWorld.CreateSystem<SelectedColorerSystem>();
-    editorWorld.CreateSystem<FirstPersonMoverSystem>();
-    editorWorld.CreateSystem<SelectableCollection<EditorObject>>();
+    storage.AddSystemType<EditorCameraSelection>();
     
-    editorWorld.CreateSystem<LineRendererSystem>();
+    storage.AddSystemType<EditorSizeableSelection>();
     
-    editorWorld.CreateSystem<EditorCameraSelection>();
+    storage.AddSystemType<AssetImporterSystem>();
+    storage.AddSystemType<FieldEditorSystem>();
     
-    editorWorld.CreateSystem<DistanceScalerSystem>();
-    editorWorld.CreateSystem<EditorSizeableSelection>();
+    storage.AddComponentType<EditorDropTarget>();
+    storage.AddComponentType<ProjectSettings>();
+    storage.AddComponentType<FilePath>();
+    
+    storage.AddSystemType<GameWorldViewportSystem>();
+    
+    storage.AddSystemType<GameObjectEditorSystem>();
+    
+    storage.AddSystemType<FileSystemListenerSystem>();
+    storage.AddSystemType<EditorGui>();
+    
+    storage.AddComponentType<GameObjectFieldEditor>();
 }
 
 bool SystemHelper::IsComponentEditorSpecific(int componentType) {

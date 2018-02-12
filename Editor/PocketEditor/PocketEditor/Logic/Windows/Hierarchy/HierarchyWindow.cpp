@@ -19,11 +19,12 @@ std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
 void HierarchyWindow::OnInitialize() {
     GameObject& guiRoot = context->GuiRoot();
-    guiRoot.CreateSystem<VirtualTreeListSystem>();
+    /*guiRoot.CreateSystem<VirtualTreeListSystem>();
     guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
     guiRoot.CreateSystem<SelectedColorerSystem>();
     guiRoot.CreateSystem<DraggableSystem>();
-    editorGui = guiRoot.CreateSystem<EditorGui>();
+    */
+    editorGui = guiRoot.GetSystem<EditorGui>();
 }
 
 void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
@@ -51,11 +52,13 @@ void HierarchyWindow::OnCreate() {
     GameObject* treeViewGo = editorGui->CreateTreeList(window, nullptr,
         nullptr,
         [] (GameObject* object) {
-            if (object->Parent() && object->Parent()->GetComponent<Cloner>()) return false;
+            if (object->IsRemoved()) return false;
+            Hierarchy* hier = &object->Hierarchy();
+            if (hier->Parent() && hier->Parent()->GetComponent<Cloner>()) return false;
             return true;
         }, [] (GameObject* object) {
             if (object->GetComponent<Cloner>()) return false;
-            return !object->Children().empty();
+            return !object->Hierarchy().Children().empty();
         },
         [this] (auto& n, GameObject* button, std::string& text) {
             
@@ -82,10 +85,10 @@ void HierarchyWindow::OnCreate() {
                 GameObject* enableButton = gui.CreateControl(button, "CheckBox_on", {25, 0}, {25,25});
                 gui.AddLayouter(enableButton, 12, 12, 12);
                 enableButton->GetComponent<Touchable>()->Click.Bind([editorObject] (TouchData d) {
-                    editorObject->gameObject->Enabled = !editorObject->gameObject->Enabled;
+                    editorObject->gameObject->Hierarchy().Enabled = !editorObject->gameObject->Hierarchy().Enabled;
                 });
-                editorObject->gameObject->Enabled.Changed.Bind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
-                SetNodeEnabled(enableButton, editorObject->gameObject->Enabled);
+                editorObject->gameObject->Hierarchy().Enabled.Changed.Bind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
+                SetNodeEnabled(enableButton, editorObject->gameObject->Hierarchy().Enabled);
                 objectToEnableButton[editorObject->gameObject] = enableButton;
                 
                 button->AddComponent<Droppable>()->Dropped.Bind(this, &HierarchyWindow::Dropped, n.node);
@@ -111,7 +114,7 @@ void HierarchyWindow::OnCreate() {
                 }
                 
                 {
-                    editorObject->gameObject->Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
+                    editorObject->gameObject->Hierarchy().Enabled.Changed.Unbind(this, &::HierarchyWindow::EnabledChanged, editorObject->gameObject);
                     auto it = objectToEnableButton.find(editorObject->gameObject);
                     if (it!=objectToEnableButton.end()) {
                         objectToEnableButton.erase(it);
@@ -133,7 +136,7 @@ void HierarchyWindow::SetNodeSelected(Pocket::GameObject *node, bool enabled) {
 }
 
 void HierarchyWindow::EnabledChanged(Pocket::GameObject *object) {
-    SetNodeEnabled(objectToEnableButton[object], object->Enabled);
+    SetNodeEnabled(objectToEnableButton[object], object->Hierarchy().Enabled);
 }
 
 void HierarchyWindow::SetNodeEnabled(Pocket::GameObject *node, bool enabled) {
@@ -169,11 +172,11 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
         
         if (destination) {
             if (source!=destination && IsParentValid(source->gameObject, destination->gameObject)) {
-                source->gameObject->Parent = destination->gameObject;
+                source->gameObject->Hierarchy().Parent = destination->gameObject;
                 return;
             }
         } else if (t.object == rootItem) {
-            source->gameObject->Parent = source->gameObject->Root();
+            source->gameObject->Hierarchy().Parent = source->gameObject->Root();
         } else {
         
             GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
@@ -188,7 +191,7 @@ bool HierarchyWindow::IsParentValid(Pocket::GameObject *object, Pocket::GameObje
     GameObject* o = possibleParent;
     while (o) {
         if (o == object) return false;
-        o = o->Parent();
+        o = o->Hierarchy().Parent();
     }
     return true;
 }

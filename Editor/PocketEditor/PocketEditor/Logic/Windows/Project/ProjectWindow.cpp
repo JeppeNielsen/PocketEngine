@@ -22,7 +22,7 @@ std::string ProjectWindow::Name() { return "Project"; }
 
 void ProjectWindow::OnInitialize() {
 
-    
+    /*
     GameObject& contextRoot = context->ContextRoot();
     contextRoot.CreateSystem<FileSystemListenerSystem>();
     
@@ -32,6 +32,10 @@ void ProjectWindow::OnInitialize() {
     guiRoot.CreateSystem<SelectedColorerSystem>();
     guiRoot.CreateSystem<ClickSelectorSystem>();
     editorGui = guiRoot.CreateSystem<EditorGui>();
+     */
+    
+    GameObject& guiRoot = context->GuiRoot();
+    editorGui = guiRoot.GetSystem<EditorGui>();
 
     popupMenu.InitializePopUp();
     {
@@ -105,7 +109,7 @@ void ProjectWindow::OnInitialize() {
             Gui& gui = context->Gui();
             
             GameObject* textBox = gui.CreateTextBox(selectedNode.guiNodeObject, "TextBox", 0, selectedNode.guiNodeObject->GetComponent<Sizeable>()->Size, 0, selectedNode.filePath->filename, 12);
-            GameObject* textBoxLabel = textBox->Children()[0];
+            GameObject* textBoxLabel = textBox->Hierarchy().Children()[0];
             
             textBoxLabel->GetComponent<Label>()->HAlignment = Font::HAlignment::Left;
             textBoxLabel->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
@@ -226,6 +230,8 @@ void ProjectWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object) {
     
     //text = n.node!=fileRoot ? filePath->filename : context->Project().GetFolderName();
     
+    GameObjectJsonSerializer serializer;
+    
     for(auto& t : d.droppedTouches) {
         GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
         if (goField && goField->SetObject) {
@@ -233,10 +239,10 @@ void ProjectWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object) {
             std::ifstream file;
         
             file.open(filePath->GetFilePath());
-            std::string guid = context->World().ReadGuidFromJson(file);
+            std::string guid = serializer.ReadGuidFromJson(file);
             file.close();
             
-            GameObject* root = context->World().TryFindRoot(guid);
+            GameObject* root = context->Storage().TryGetPrefab(guid);
             if (root) {
                 goField->SetObject(root);
                 return;

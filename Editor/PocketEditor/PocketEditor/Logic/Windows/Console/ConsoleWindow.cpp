@@ -66,10 +66,10 @@ void ConsoleWindow::OnCreate() {
     compilingText->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;
     compilingText->GetComponent<Label>()->VAlignment = Font::VAlignment::Middle;
     
-    compilingText->Enabled = false;
+    compilingText->Hierarchy().Enabled = false;
     
     context->Project().IsCompiling.Changed.Bind([this] {
-        compilingText->Enabled = context->Project().IsCompiling;
+        compilingText->Hierarchy().Enabled = context->Project().IsCompiling;
     });
 }
 

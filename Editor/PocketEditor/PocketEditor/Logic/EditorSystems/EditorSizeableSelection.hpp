@@ -24,8 +24,7 @@ private:
     private:
         std::set<GameObject*> dirtyObjects;
     };
-
 public:
-    void Initialize() override;
     void CreateObject(GameObject* object, GameObject* selectionObject) override;
+    static void CreateSubSystems(GameStorage& storage);
 };

@@ -14,41 +14,9 @@
 #include <fstream>
 #include "FileArchive.hpp"
 #include "SystemHelper.hpp"
+#include "ProjectSettings.hpp"
 
 Project::Project() {
-    scriptWorld.Types.Add<Vector3>();
-
-    scriptWorld.SetClangSdkPath("/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/");
-    
-    defaultIncludes =
-    {
-            "/Projects/PocketEngine/Pocket/Data/Property.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
-            "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Rendering/Renderable.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
-            "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Input/InputController.hpp",
-            "/Projects/PocketEngine/Pocket/Logic/Movement/Velocity.hpp",
-            "/Projects/PocketEngine/Pocket/Math/MathHelper.hpp",
-        };
-    
-    /*
-    scriptWorld.SetFiles(
-        "ScriptExample.so",
-        "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
-        {
-            "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptCode/ScriptExample.hpp",
-        },
-        defaultIncludes
-    );
-    */
-    
     Worlds.ActiveWorld.Changed.Bind([this] () {
         OpenWorld* current = Worlds.ActiveWorld();
         OpenWorld* old = Worlds.ActiveWorld.PreviousValue();
@@ -62,25 +30,40 @@ Project::Project() {
     });
 }
 
-void Project::Initialize(GameWorld &world, FileWorld& fileWorld) {
-    this->world = &world;
+void Project::Initialize(GameStorage &storage, FileWorld& fileWorld, class ScriptWorld& scriptWorld) {
+    this->storage = &storage;
     this->fileWorld = &fileWorld;
-}
+    this->scriptWorld = &scriptWorld;
+    
+    scriptWorld.Types.Add<Vector3>();
 
-ScriptWorld& Project::ScriptWorld() { return scriptWorld; }
+    scriptWorld.SetClangSdkPath("/Users/Jeppe/Downloads/clang+llvm-3.7.0-x86_64-apple-darwin/");
+    
+    defaultIncludes =
+    {
+        "/Projects/PocketEngine/Pocket/Data/Property.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Spatial/Transform.hpp",
+        "/Projects/PocketEngine/Pocket/Math/Vector2.hpp",
+        "/Projects/PocketEngine/Pocket/Math/Vector3.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Rendering/Mesh.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Rendering/Renderable.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Gui/Sizeable.hpp",
+        "/Projects/PocketEngine/Pocket/Rendering/VertexMesh.hpp",
+        "/Projects/PocketEngine/Pocket/Rendering/TextureAtlas.hpp",
+        "/Projects/PocketEngine/Pocket/Rendering/Colour.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Interaction/Touchable.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Input/InputController.hpp",
+        "/Projects/PocketEngine/Pocket/Logic/Movement/Velocity.hpp",
+        "/Projects/PocketEngine/Pocket/Math/MathHelper.hpp",
+    };
+}
 
 void Project::Open(const std::string& path) {
     this->path = path;
     Worlds.Clear();
     
-    RefreshSourceFiles();
-    
-    scriptWorld.SetWorldType(*world, [] (int componentType) {
-        return !SystemHelper::IsComponentEditorSpecific(componentType);
-    });
-    
-    scriptWorld.LoadLib();
-    scriptWorld.AddGameWorld(*world);
+    scriptWorld->LoadLib();
+    scriptWorld->AddStorage(*storage);
     fileSystemWatcher.Start(path);
     Opened();
 }
@@ -100,26 +83,28 @@ bool Project::Compile() {
     worker.DoTask([this] () -> std::vector<ScriptWorld::Error> {
         RefreshSourceFiles();
         std::vector<ScriptWorld::Error> errors;
-        scriptWorld.Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [&errors] (const auto& error) {
+        scriptWorld->Build(true, "/Projects/PocketEngine/Projects/PocketEngine/Build/Build/Products/Debug/libPocketEngine.a", [&errors] (const auto& error) {
             errors.push_back(error);
         });
         return errors;
     }, [this] (std::vector<ScriptWorld::Error> errors) {
         if (errors.empty()) {
             Worlds.PreCompile();
+            
             std::stringstream savedComponents;
-            world->SerializeAndRemoveComponents(savedComponents, [this] (const GameObject* object, int componentId) {
-                return componentId>=scriptWorld.GetBaseComponentIndex();
+            storage->SerializeAndRemoveComponents(savedComponents, [this] (const GameObject* object, int componentId) {
+                return componentId>=scriptWorld->GetBaseComponentIndex();
             });
             
-            scriptWorld.RemoveGameWorld(*world);
-            scriptWorld.UnloadLib();
-            scriptWorld.LoadLib();
-            scriptWorld.AddGameWorld(*world);
-            world->UpdateActions();
+            scriptWorld->RemoveStorage(*storage);
+            scriptWorld->UnloadLib();
             
-            world->DeserializeAndAddComponents(savedComponents);
-            world->UpdateActions();
+            scriptWorld->LoadLib();
+            scriptWorld->AddStorage(*storage);
+            //world->UpdateActions();
+            
+            storage->DeserializeAndAddComponents(savedComponents);
+           
             Worlds.PostCompile();
         }
         compilationTimer.End();
@@ -150,14 +135,14 @@ void Project::RefreshSourceFiles() {
         std::cout << "Source : "<< s <<std::endl;
     }
     
-    scriptWorld.SetFiles(
+    scriptWorld->SetFiles(
         "ScriptExample.so",
         "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/ScriptInclude",
         foundSourceFiles,
         foundIncludeFiles
     );
     
-    projectBuilder.Initialize("/Projects/PocketEngine/Pocket", "/Projects/PocketEngine/Editor/TestXCodeProject/WorkingDirectory", path, scriptWorld);
+    projectBuilder.Initialize("/Projects/PocketEngine/Pocket", "/Projects/PocketEngine/Editor/TestXCodeProject/WorkingDirectory", path, *scriptWorld);
     projectBuilder.SetSourceFiles(foundSourceFiles, foundIncludeFiles);
 }
 
@@ -192,23 +177,25 @@ void Project::BuildExecutable(Platform platform, const std::string& outputPath, 
 void Project::CreateNewWorld(const std::string &worldPath) {
     GameWorld world;
     
-    GameObject* root = world.CreateRoot();
+    GameObject* root = world.CreateScene();
     
     GameObject* cube = root->CreateObject();
     cube->AddComponent<Transform>();
     cube->AddComponent<Mesh>()->GetMesh<Vertex>().AddCube(0, 1);
     cube->AddComponent<Renderable>();
     
+    GameObjectJsonSerializer serializer;
+    
     std::ofstream file;
     file.open(worldPath);
-    root->ToJson(file);
+    serializer.Serialize(root, file);
     file.close();
 }
 
 SelectableCollection<EditorObject>* Project::GetSelectables() {
     if (!Worlds.ActiveWorld()) return 0;
     auto world = Worlds.ActiveWorld();
-    return world->EditorRoot() ? world->EditorRoot()->CreateSystem<SelectableCollection<EditorObject>>() : 0;
+    return world->EditorRoot() ? world->EditorRoot()->GetSystem<SelectableCollection<EditorObject>>() : 0;
 }
 
 void Project::SaveWorld() {
@@ -223,7 +210,7 @@ void Project::SaveWorld() {
     OpenWorld* activeWorld = Worlds.ActiveWorld;
     if (!activeWorld) return;
     activeWorld->Save();
-    world->InvokeChangeToHandles(activeWorld->Root());
+    //world->InvokeChangeToHandles(activeWorld->Root()); // TODO: fix!!
 }
 
 std::string& Project::Path() { return path; }
@@ -233,12 +220,13 @@ FileSystemWatcher* Project::FileSystemWatcher() { return &fileSystemWatcher; }
 void Project::CreateSettings(const std::string &path, const std::string& name) {
     GameWorld world;
     
-    GameObject* root = world.CreateRoot();
+    GameObject* root = world.CreateScene();
     root->AddComponent<ProjectSettings>()->name = name;
     
+    GameObjectJsonSerializer serializer;
     std::ofstream file;
     file.open(path);
-    root->ToJson(file);
+    serializer.Serialize(root, file);
     file.close();
 }
 
@@ -249,13 +237,15 @@ std::string Project::GetFolderName() {
 ProjectSettings* Project::GetProjectSettings() {
     std::vector<std::string> guids;
     std::vector<std::string> paths;
-    world->GetPaths(guids, paths);
+    storage->GetPaths(guids, paths);
+    GameObjectJsonSerializer serializer;
     for (int i=0; i<guids.size(); ++i) {
     
         std::ifstream file;
         file.open(paths[i]);
         int foundId = -1;
-        world->TryParseJson(file, GameIdHelper::GetComponentID<ProjectSettings>(), [&, this](int parentId, int id) {
+
+        serializer.TryParse(file, GameIdHelper::GetClassName<ProjectSettings>(), [&, this](int parentId, int id) {
             if (foundId != -1) return;
             foundId = id;
         }, [&, this](const std::string& componentName) -> bool {
@@ -265,7 +255,7 @@ ProjectSettings* Project::GetProjectSettings() {
         std::cout << "guid: " << guids[i] << "  path:" << paths[i] << std::endl;
         
         if (foundId!=-1) {
-            GameObject* object = world->TryFindRoot(guids[i])->FindObject(foundId);
+            GameObject* object = storage->TryGetPrefab(guids[i], foundId);
             return object->GetComponent<ProjectSettings>();
         }
     }

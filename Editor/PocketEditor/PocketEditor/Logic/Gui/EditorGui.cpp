@@ -13,7 +13,7 @@
 using namespace Pocket;
 
 void EditorGui::Initialize() {
-    gui = root->CreateSystem<Gui>();
+    gui = root->GetSystem<Gui>();
 }
 
 GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
@@ -95,7 +95,7 @@ GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,
     };
     
     spawner->OnRemove = [=] (const VirtualTreeListSpawner::SpawnedNode& n) {
-        OnRemove(n, n.parent->Children()[0]);
+        OnRemove(n, n.parent->Hierarchy().Children()[0]);
     };
     
     spawner->OnFoldoutChanged = [treeView, this] (auto& n) {

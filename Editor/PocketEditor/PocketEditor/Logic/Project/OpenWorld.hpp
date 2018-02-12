@@ -15,6 +15,7 @@
 #include <sstream>
 #include "RunningWorld.hpp"
 #include "EditorScene.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -56,10 +57,14 @@ public:
     
     RunningWorld* GetRunningWorld();
     
+    GameWorld* World();
+    
 private:
+    GameObjectJsonSerializer serializer;
     EditorContext* context;
     
-    GameObject* root;
+    GameWorld world;
+    GameObject* scene;
     RunningWorld* runningWorld;
     
     EditorScene editorScene;

@@ -17,6 +17,7 @@
 #include "Timer.hpp"
 #include "Atlas.hpp"
 #include <fstream>
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -149,10 +150,12 @@ bool AtlasCreator::CreateAtlas(const std::string& inputPath, const std::string &
     
     double duration = timer.End();
     
-    GameWorld world;
-    auto root = world.CreateRoot();
+    GameStorage storage;
+    storage.AddComponentType<class Atlas>();
+    GameWorld world(storage);
+    auto root = world.CreateScene();
     auto atlasObject = root->CreateChild();
-    auto atlas = atlasObject->AddComponent<Atlas>();
+    auto atlas = atlasObject->AddComponent<class Atlas>();
     
     Vector2 halfPixel = Vector2(0.5f / (float)packer.GetW(), 0.5f / (float)packer.GetH());
     
@@ -184,9 +187,11 @@ bool AtlasCreator::CreateAtlas(const std::string& inputPath, const std::string &
     }
     atlas->textureSize = { (float)packer.GetW(), (float)packer.GetH() };
     
+    GameObjectJsonSerializer serializer;
+    
     std::ofstream atlasFile;
     atlasFile.open(atlasPath);
-    atlasObject->ToJson(atlasFile);
+    serializer.Serialize(atlasObject, atlasFile);
     atlasFile.close();
     
     std::cout << "Packing took : "<<duration<<" seconds"<<std::endl;

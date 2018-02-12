@@ -30,4 +30,5 @@ private:
 public:
     void Initialize() override;
     void CreateObject(GameObject* object, GameObject* selectionObject) override;
+    static void AddSubSystems(GameStorage& storage);
 };

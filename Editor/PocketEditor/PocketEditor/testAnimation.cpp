@@ -15,14 +15,19 @@
 #include "GameWorld.hpp"
 #include "Mesh.hpp"
 #include <iostream>
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
 int main_Animation() {
 
-    GameWorld world;
+    GameObjectJsonSerializer serializer;
+
+    GameStorage storage;
     
-    auto root = world.CreateRoot();
+    GameWorld world(storage);
+    
+    auto root = world.CreateScene();
     
     auto animationObject = root->CreateObject();
     auto animation = animationObject->AddComponent<Animation>();
@@ -71,12 +76,12 @@ int main_Animation() {
     tr->Scale = {3,3,3};
     animation->AddNode<Transform>(cube, child, "Scale", 2.0f);
 
-    clonedAnimationObject->ToJson(std::cout);
+    serializer.Serialize(clonedAnimationObject, std::cout);
     
     animationObject->ToJson(std::cout);
 
     std::stringstream s;
-    animationObject->ToJson(s);
+    serializer.Serialize(animationObject,s);
 
     GameObject* newAnimObject = root->CreateChildFromJson(s);
     

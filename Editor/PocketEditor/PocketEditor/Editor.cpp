@@ -113,29 +113,28 @@ public:
         loc.Push(PanelDirection::Right);
         area->GetComponent<PanelArea>()->SetSplitValue(loc.Id(), 0.333333f);
         
-        Panel* p1 = windows[1]->Window()->Parent()->GetComponent<Panel>();
+        Panel* p1 = windows[1]->Window()->Hierarchy().Parent()->GetComponent<Panel>();
         p1->Area = area;
         p1->location.Push(PanelDirection::Left);
         
-        Panel* p2 = windows[2]->Window()->Parent()->GetComponent<Panel>();
+        Panel* p2 = windows[2]->Window()->Hierarchy().Parent()->GetComponent<Panel>();
         p2->Area = area;
         p2->location.Push(PanelDirection::Right);
         p2->location.Push(PanelDirection::Right);
         p2->location.Push(PanelDirection::Left);
         
         
-        Panel* p3 = windows[3]->Window()->Parent()->GetComponent<Panel>();
+        Panel* p3 = windows[3]->Window()->Hierarchy().Parent()->GetComponent<Panel>();
         p3->Area = area;
         p3->location.Push(PanelDirection::Right);
         p3->location.Push(PanelDirection::Left);
         
         
-        Panel* p4 = windows[4]->Window()->Parent()->GetComponent<Panel>();
+        Panel* p4 = windows[4]->Window()->Hierarchy().Parent()->GetComponent<Panel>();
         p4->Area = area;
         p4->location.Push(PanelDirection::Right);
         p4->location.Push(PanelDirection::Right);
         p4->location.Push(PanelDirection::Right);
-        
         
         context.Project().Open("/Projects/PocketEngine/EditorProjects/BallRunners");
         
