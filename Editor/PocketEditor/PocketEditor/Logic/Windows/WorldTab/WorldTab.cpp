@@ -26,8 +26,8 @@ void WorldTab::OnCreate() {
     window->Hierarchy().Parent()->GetComponent<Touchable>()->ClickThrough = true;
 
     renderArea = context->Gui().CreatePivot(window);
-    renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
-    renderArea->GetComponent<GameWorldViewport>()->RenderTextureSize = {2880, 1800};
+   // renderArea->AddComponent<GameWorldViewport>()->World = &context->World();
+    renderArea->AddComponent<GameWorldViewport>()->RenderTextureSize = {2880, 1800};
     
     renderArea->AddComponent<Touchable>();
     renderArea->AddComponent<TextureComponent>();
@@ -182,11 +182,12 @@ void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
         gameModePivot->Hierarchy().Enabled = false;
     }
     
-    if (openWorld) {
+   /* if (openWorld) {
         renderArea->GetComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? &context->World() : &openWorld->GetRunningWorld()->World();
     } else {
         renderArea->GetComponent<GameWorldViewport>()->World = &context->World();
     }
+    */
 }
 
 void WorldTab::IsPlayingChanged(OpenWorld* world) {

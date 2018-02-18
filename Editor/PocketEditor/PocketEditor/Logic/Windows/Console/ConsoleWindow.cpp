@@ -31,8 +31,8 @@ void ConsoleWindow::OnCreate() {
     pivot->GetComponent<Transform>()->Position = {0,400};
     
     treeView = pivot->AddComponent<VirtualTreeList>();
-    treeView->Root = context->Log().LogRoot();
-    treeView->SetNodeExpanded(context->Log().LogRoot(), true);
+    //treeView->Root = context->Log().LogRoot();
+    //treeView->SetNodeExpanded(context->Log().LogRoot(), true);
     treeView->Pivot = listBox;
     treeView->ExpandedHashFunction = [this] (GameObject* go) {
         return treeView->DefaultExpandedHashFunction(go);

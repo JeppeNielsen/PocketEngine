@@ -100,7 +100,7 @@ void AnimationWindow::Refresh() {
         animationRoot->Remove();
         animationRoot = nullptr;
     }
-    animationRoot = context->World().CreateScene();
+    animationRoot = context->GuiWorld().CreateScene();
     timelines.clear();
     
     for(auto& t : animation->GetTargets()) {

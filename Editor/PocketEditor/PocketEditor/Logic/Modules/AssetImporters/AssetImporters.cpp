@@ -16,10 +16,10 @@ void AssetImporters::OnInitialize() {
 }
 
 void AssetImporters::OnCreate() {
-    AssetImporterSystem* assetImporterSystem = context->ContextRoot().GetSystem<AssetImporterSystem>();
+    AssetImporterSystem* assetImporterSystem = context->GuiRoot().GetSystem<AssetImporterSystem>();
     assetImporterSystem->SetFileWatcher(context->Project().FileSystemWatcher());
     {
-        GameObject* pngImporter = context->ContextRoot().CreateObject();
+        GameObject* pngImporter = context->GuiRoot().CreateObject();
         pngImporter->AddComponent<AssetImporter>()->extension = "png";
         pngImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();
@@ -27,7 +27,7 @@ void AssetImporters::OnCreate() {
         };
     }
     {
-        GameObject* pngImporter = context->ContextRoot().CreateObject();
+        GameObject* pngImporter = context->GuiRoot().CreateObject();
         pngImporter->AddComponent<AssetImporter>()->extension = "psd";
         pngImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();
@@ -36,7 +36,7 @@ void AssetImporters::OnCreate() {
     }
     assetImporterSystem->SetFileWatcher(context->Project().FileSystemWatcher());
     {
-        GameObject* pngImporter = context->ContextRoot().CreateObject();
+        GameObject* pngImporter = context->GuiRoot().CreateObject();
         pngImporter->AddComponent<AssetImporter>()->extension = "jpg";
         pngImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();
@@ -44,7 +44,7 @@ void AssetImporters::OnCreate() {
         };
     }
     {
-        GameObject* shaderImporter = context->ContextRoot().CreateObject();
+        GameObject* shaderImporter = context->GuiRoot().CreateObject();
         shaderImporter->AddComponent<AssetImporter>()->extension = "shader";
         shaderImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();
@@ -52,7 +52,7 @@ void AssetImporters::OnCreate() {
         };
     }
     {
-        GameObject* trueTypeImporter = context->ContextRoot().CreateObject();
+        GameObject* trueTypeImporter = context->GuiRoot().CreateObject();
         trueTypeImporter->AddComponent<AssetImporter>()->extension = "ttf";
         trueTypeImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();
@@ -61,7 +61,7 @@ void AssetImporters::OnCreate() {
         };
     }
     {
-        GameObject* trueTypeImporter = context->ContextRoot().CreateObject();
+        GameObject* trueTypeImporter = context->GuiRoot().CreateObject();
         trueTypeImporter->AddComponent<AssetImporter>()->extension = "otf";
         trueTypeImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
             object->AddComponent<AssetLoader>();

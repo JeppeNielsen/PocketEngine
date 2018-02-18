@@ -17,10 +17,8 @@
 #include "DragSelector.hpp"
 
 GameStorage& EditorContext::Storage() { return storage; }
-GameWorld& EditorContext::World() { return world; }
 FileWorld& EditorContext::FileWorld() { return fileWorld; }
 ScriptWorld& EditorContext::ScriptWorld() { return scriptWorld; }
-GameObject& EditorContext::ContextRoot() { return *contextRoot; }
 GameWorld& EditorContext::GuiWorld() { return guiWorld; }
 GameObject& EditorContext::GuiRoot() { return *guiScene; }
 Gui& EditorContext::Gui() { return *gui; }
@@ -29,14 +27,10 @@ Project& EditorContext::Project() { return project; }
 
 void EditorContext::Initialize(class EngineContext& engineContext) {
     this->engineContext = &engineContext;
-    
-    world.Initialize(storage);
+
     guiWorld.Initialize(storage);
     
     storage.CreateSerializer<GameObjectJsonSerializer>();
-    
-    
-    
     
     SystemHelper::AddGameSystems(storage);
     SystemHelper::AddEditorSystems(storage);
@@ -58,13 +52,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
 
     guiScene->GetSystem<RenderSystem>()->Order = 10;
     
-    contextRoot = world.CreateScene();
-    contextRoot->Hierarchy().Order = -100;
-    
     project.Initialize(storage, fileWorld, scriptWorld);
-    
-    logRoot = world.CreateScene();
-    //log = logRoot->CreateSystem<LogSystem>();
 }
 
 void EditorContext::Update(float dt) {
@@ -95,5 +83,3 @@ void EditorContext::DoActions(Actions& actions) {
     }
     actions.clear();
 }
-
-LogSystem& EditorContext::Log() { return *log; }

@@ -423,6 +423,7 @@
 		72AE74D51DAC254E00CEB998 /* InputMapper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D31DAC254E00CEB998 /* InputMapper.cpp */; };
 		72AE74D81DAC284D00CEB998 /* InputMapperSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74D61DAC284D00CEB998 /* InputMapperSystem.cpp */; };
 		72AE74EF1DB2D5E400CEB998 /* Guid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AE74ED1DB2D5E400CEB998 /* Guid.cpp */; };
+		72AF82112034CBAA00380BC1 /* RenderTest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72AF82102034CBAA00380BC1 /* RenderTest.cpp */; };
 		72B4925E1DCE59D10063518A /* GameIdHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492501DCE59D10063518A /* GameIdHelper.cpp */; };
 		72B4925F1DCE59D10063518A /* GameObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492521DCE59D10063518A /* GameObject.cpp */; };
 		72B492601DCE59D10063518A /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72B492541DCE59D10063518A /* GameScene.cpp */; };
@@ -1545,6 +1546,7 @@
 		72AE74D71DAC284D00CEB998 /* InputMapperSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = InputMapperSystem.hpp; sourceTree = "<group>"; };
 		72AE74ED1DB2D5E400CEB998 /* Guid.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Guid.cpp; sourceTree = "<group>"; };
 		72AE74EE1DB2D5E400CEB998 /* Guid.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Guid.hpp; sourceTree = "<group>"; };
+		72AF82102034CBAA00380BC1 /* RenderTest.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RenderTest.cpp; sourceTree = "<group>"; };
 		72B4924F1DCE59D10063518A /* Container.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Container.hpp; sourceTree = "<group>"; };
 		72B492501DCE59D10063518A /* GameIdHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameIdHelper.cpp; sourceTree = "<group>"; };
 		72B492511DCE59D10063518A /* GameIdHelper.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameIdHelper.hpp; sourceTree = "<group>"; };
@@ -2302,6 +2304,7 @@
 				7287F21F1C9DB496005D05FA /* libclang.dylib */,
 				7287F10A1C9B41B3005D05FA /* Assets */,
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
+				72AF82102034CBAA00380BC1 /* RenderTest.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -4119,6 +4122,7 @@
 				7201DA081EE1F2510074C053 /* EditorSizeableSelection.cpp in Sources */,
 				722745431F3492D8009B0528 /* PanelDropSystem.cpp in Sources */,
 				729954721C99F76100DAAE5D /* btSphereSphereCollisionAlgorithm.cpp in Sources */,
+				72AF82112034CBAA00380BC1 /* RenderTest.cpp in Sources */,
 				7299549E1C99F76100DAAE5D /* btGImpactQuantizedBvh.cpp in Sources */,
 				729954E91C99F76100DAAE5D /* MiniCLTask.cpp in Sources */,
 				7299545A1C99F76100DAAE5D /* btDispatcher.cpp in Sources */,

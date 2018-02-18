@@ -23,29 +23,22 @@ using namespace Pocket;
 class EditorContext {
 private:
     GameStorage storage;
-    GameWorld world;
     FileWorld fileWorld;
     ScriptWorld scriptWorld;
-    GameObject* contextRoot;
     GameWorld guiWorld;
     GameObject* guiScene;
     Gui* gui;
     EngineContext* engineContext;
     Project project;
-    LogSystem* log;
-    GameObject* logRoot;
 public:
     GameStorage& Storage();
-    GameWorld& World();
     FileWorld& FileWorld();
     ScriptWorld& ScriptWorld();
-    GameObject& ContextRoot();
     GameWorld& GuiWorld();
     GameObject& GuiRoot();
     Gui& Gui();
     EngineContext& EngineContext();
     Project& Project();
-    LogSystem& Log();
     using Action = std::function<void()>;
     using Actions = std::deque<Action>;
     Actions preActions;

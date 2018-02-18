@@ -141,13 +141,16 @@ void ProjectWindow::UpdateFileWorld() {
 }
 
 void ProjectWindow::OnCreate() {
-    GameObject& contextRoot = context->ContextRoot();
+    GameObject& root = context->GuiRoot();
     
-    fileRoot = contextRoot.CreateObject();
+    fileRoot = root.CreateObject();
     fileSystemListener = fileRoot->AddComponent<FileSystemListener>();
     fileSystemListener->Extension = "";
     fileSystemListener->watcher.Changed.Bind([this] {
         UpdateFileWorld();
+        
+        
+        
     });
     fileSystemListener->Path.Changed.Bind([this] {
         UpdateFileWorld();
