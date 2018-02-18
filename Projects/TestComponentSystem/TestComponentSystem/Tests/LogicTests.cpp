@@ -833,5 +833,96 @@ void LogicTests::RunTests() {
         }
         return wasDestroyed;
     });
+    
+    AddTest("Event listeners reset on component reset", [this] () {
+        
+        struct Bomb {
+            void InvokeExplode() {
+                Exploded(1);
+            }
+            Event<int> Exploded;
+        };
+        
+        struct BombSystem : GameSystem<Bomb> {
+            
+        };
+        
+        GameStorage storage;
+        storage.AddSystemType<BombSystem>();
+        GameWorld world(storage);
+        auto scene = world.CreateScene();
+        
+        auto bombObject = scene->CreateObject();
+        auto bomb = bombObject->AddComponent<Bomb>();
+        bomb->Exploded.Bind([] (int n) {
+            
+        });
+        bool wasNotEmpty = !bomb->Exploded.Empty();
+        world.Update(0);
+        bombObject->Remove();
+        world.Update(0);
+        
+        auto bombObject2 = scene->CreateObject();
+        auto bomb2 = bombObject2->AddComponent<Bomb>();
+        bool isEmpty = bomb2->Exploded.Empty();
+        world.Update(0);
+        
+        return wasNotEmpty && isEmpty && bomb == bomb2;
+    });
+    
+    AddTest("Event listeners reset on properties on component reset", [this] () {
+        
+        struct Bomb {
+            Property<int> Size;
+        };
+        
+        struct BombSystem : GameSystem<Bomb> {
+            
+        };
+        
+        GameStorage storage;
+        storage.AddSystemType<BombSystem>();
+        GameWorld world(storage);
+        auto scene = world.CreateScene();
+        
+        auto bombObject = scene->CreateObject();
+        auto bomb = bombObject->AddComponent<Bomb>();
+        bomb->Size.Changed.Bind([] {});
+        bool wasNotEmpty = !bomb->Size.Changed.Empty();
+        world.Update(0);
+        bombObject->Remove();
+        world.Update(0);
+        
+        auto bombObject2 = scene->CreateObject();
+        auto bomb2 = bombObject2->AddComponent<Bomb>();
+        bool isEmpty = bomb2->Size.Changed.Empty();
+        world.Update(0);
+        
+        return wasNotEmpty && isEmpty && bomb == bomb2;
+    });
+    
+    AddTest("Hierarchy Enabled event reset on new object", [this] () {
+        
+        GameStorage storage;
+        GameWorld world(storage);
+        auto scene = world.CreateScene();
+        
+        bool changed = false;
+        auto object1 = scene->CreateObject();
+        object1->Hierarchy().Enabled = false;
+        object1->Hierarchy().Enabled.Changed.Bind([&] {
+            changed = true;
+        });
+        world.Update(0);
+        bool wasChanged = !changed;
+        object1->Remove();
+        world.Update(0);
+        auto object2 = scene->CreateObject();
+
+        bool isChanged = !changed;
+        
+        return wasChanged && isChanged;
+    });
+    
  
 }
