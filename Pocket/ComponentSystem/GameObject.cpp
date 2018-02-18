@@ -250,6 +250,9 @@ void GameObject::Remove() {
             if (IsRoot()) {
                 scene->world->RemoveScene(this);
             }
+            Hierarchy().Parent.Changed.ClearNonDefaults();
+            Hierarchy().Enabled.Changed.ClearNonDefaults();
+            Hierarchy().Order.Changed.ClearNonDefaults();
             Hierarchy().Parent = nullptr;
             forceSetNextParent = false;
             for(int i=0; i<activeComponents.Size(); ++i) {
