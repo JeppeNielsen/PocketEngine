@@ -233,6 +233,12 @@ bool RenderSystem::SortTransparentObjects(const VisibleObject& a, const VisibleO
             return orderA<orderB;
         }
     }
+    
+    if (a.orderable && !b.orderable) {
+        return false;
+    } else if (!a.orderable && b.orderable) {
+        return true;
+    }
 
     return a.distanceToCamera>b.distanceToCamera;
 }
