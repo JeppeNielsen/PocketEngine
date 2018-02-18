@@ -141,7 +141,7 @@ public:
         Input.ButtonDown.Bind([this](ButtonEvent e) {
             if (e.Id == "p") {
                 //context.World().DebugSystems();
-                context.Log().Log("Test message");
+                //context.Log().Log("Test message");
             }
         });
         
