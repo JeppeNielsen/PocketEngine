@@ -14,6 +14,10 @@ void EditorSizeableSelection::CreateSubSystems(GameStorage& storage) {
     storage.AddSystemType<SizeableLineRenderer>();
 }
 
+void EditorSizeableSelection::Initialize() {
+    root->CreateSystem<SizeableLineRenderer>();
+}
+
 void EditorSizeableSelection::CreateObject(GameObject* object, GameObject* selectionObject) {
     selectionObject->AddComponent<Sizeable>(object);
     selectionObject->AddComponent<Transform>(object);

@@ -15,9 +15,9 @@
 using namespace Pocket;
 
 void AssetManager::SetFileWatcher(Pocket::FileSystemWatcher *watcher) {
-    root->GetSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
-    root->GetSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
-    root->GetSystem<AssetLoaderSystem<Font>>()->SetFileWatcher(watcher);
+    root->CreateSystem<AssetLoaderSystem<TextureComponent>>()->SetFileWatcher(watcher);
+    root->CreateSystem<AssetLoaderSystem<ShaderComponent>>()->SetFileWatcher(watcher);
+    root->CreateSystem<AssetLoaderSystem<Font>>()->SetFileWatcher(watcher);
 }
 
 void AssetManager::CreateSubSystems(Pocket::GameStorage &storage) {

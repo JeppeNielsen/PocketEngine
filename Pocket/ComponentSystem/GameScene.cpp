@@ -28,16 +28,6 @@ void GameScene::Initialize(GameWorld* world, GameStorage* storage, int index) {
     
     guid = StringHelper::CreateGuid();
     root = CreateEmptyObject(nullptr, true);
-    for (int i=0; i<this->storage->systems.size(); ++i) {
-        if (this->storage->systems[i].createFunction) {
-            CreateSystem(i);
-        }
-    }
-    for (int i=0; i<systemsIndexed.size(); ++i) {
-        if (systemsIndexed[i]) {
-            systemsIndexed[i]->Initialize();
-        }
-    }
 }
 
 void GameScene::Destroy() {
@@ -88,9 +78,13 @@ void GameScene::CreateSystem(int systemId) {
     }
 
     if (!systemsIndexed[systemId]) {
+        assert(systemId<storage->systems.size());
+        assert(storage->systems[systemId].createFunction);
+        
         IGameSystem* system = storage->systems[systemId].createFunction(root);
         systemsIndexed[systemId] = system;
         system->SetIndex(systemId);
+        system->Initialize();
         IterateObjects([systemId](GameObject* object) {
             object->TryAddToSystem(systemId);
         });

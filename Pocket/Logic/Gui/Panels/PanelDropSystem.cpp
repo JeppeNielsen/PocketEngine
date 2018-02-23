@@ -12,8 +12,12 @@
 
 using namespace Pocket;
 
+void PanelDropSystem::CreateSubSystems(Pocket::GameStorage& storage) {
+    storage.AddSystemType<PanelSystem>();
+}
+
 void PanelDropSystem::Initialize() {
-    panels = root->GetSystem<PanelSystem>();
+    panels = root->CreateSystem<PanelSystem>();
 }
 
 void PanelDropSystem::ObjectAdded(GameObject* object) {
@@ -114,8 +118,4 @@ void PanelDropSystem::Dropped(DroppedData d) {
         
         return;
     }
-}
-
-void PanelDropSystem::CreateSubSystems(Pocket::GameStorage& storage) {
-    storage.AddSystemType<PanelSystem>();
 }

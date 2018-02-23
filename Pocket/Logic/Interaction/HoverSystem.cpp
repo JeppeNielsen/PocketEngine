@@ -10,9 +10,14 @@
 
 using namespace Pocket;
 
+void HoverSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<OctreeSystem>();
+    storage.AddSystemType<HoverSystem::CameraSystem>();
+}
+
 void HoverSystem::Initialize() {
-    octree = root->GetSystem<OctreeSystem>();
-    cameras = root->GetSystem<HoverSystem::CameraSystem>();
+    octree = root->CreateSystem<OctreeSystem>();
+    cameras = root->CreateSystem<HoverSystem::CameraSystem>();
 }
 
 HoverSystem::OctreeSystem& HoverSystem::Octree() { return *octree; }
@@ -80,10 +85,5 @@ Pocket::HoverSystem::CameraSystem * HoverSystem::GetCameras() {
 }
 
 Pocket::HoverSystem::CameraSystem* HoverSystem::GetOriginalCameras() {
-    return root->GetSystem<CameraSystem>();
-}
-
-void HoverSystem::CreateSubSystems(Pocket::GameStorage &storage) {
-    storage.AddSystemType<OctreeSystem>();
-    storage.AddSystemType<HoverSystem::CameraSystem>();
+    return root->CreateSystem<CameraSystem>();
 }

@@ -67,6 +67,7 @@ namespace Pocket {
     
         GameObject* CreateScene();
         GameObject* CreateScene(GameObject* prefab);
+        GameObject* FindScene(const std::string& guid);
         
         const ObjectCollection& Scenes();
         
@@ -120,8 +121,9 @@ namespace Pocket {
     }
     
     template<typename T>
-    T* GameObject::GetSystem() {
+    T* GameObject::CreateSystem() {
         const SystemId id = GameIdHelper::GetSystemID<T>();
+        scene->CreateSystem(id);
         return id<scene->systemsIndexed.size() ? static_cast<T*>(scene->systemsIndexed[id]) : nullptr;
     }
 }

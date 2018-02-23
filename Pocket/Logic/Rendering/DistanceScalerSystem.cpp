@@ -12,7 +12,7 @@
 using namespace Pocket;
 
 void DistanceScalerSystem::Initialize() {
-    renderSystem = root->GetSystem<RenderSystem>();
+    renderSystem = root->CreateSystem<RenderSystem>();
 }
 
 void DistanceScalerSystem::Update(float dt) {

@@ -12,8 +12,12 @@
 
 using namespace Pocket;
 
+void DroppableSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<TouchSystem>();
+}
+
 void DroppableSystem::Initialize() {
-    touchSystem = root->GetSystem<TouchSystem>();
+    touchSystem = root->CreateSystem<TouchSystem>();
 }
 
 void DroppableSystem::ObjectAdded(GameObject *object) {
@@ -41,10 +45,6 @@ void DroppableSystem::Update(float dt) {
             ++it;
         }
     }
-}
-
-void DroppableSystem::CreateSubSystems(Pocket::GameStorage &storage) {
-    storage.AddSystemType<TouchSystem>();
 }
 
 void DroppableSystem::TouchDown(Pocket::TouchData d, Pocket::GameObject *object) {

@@ -14,7 +14,7 @@
 using namespace Pocket;
 
 void LineRendererSystem::Initialize() {
-    renderSystem = root->GetSystem<RenderSystem>();
+    renderSystem = root->CreateSystem<RenderSystem>();
 
     storage.AddSystemType<RenderSystem>();
     world.Initialize(storage);
@@ -22,7 +22,7 @@ void LineRendererSystem::Initialize() {
     
     BoundingBox bounds(0, Vector3(3000, 3000, 3000.0f));
     
-    root->GetSystem<RenderSystem>()->Octree().SetWorldBounds(bounds);
+    root->CreateSystem<RenderSystem>()->Octree().SetWorldBounds(bounds);
     root->AddComponent<Transform>();
     lineMesh = root->AddComponent<Mesh>();
     root->AddComponent<Renderable>()->BlendMode = BlendModeType::Alpha;
@@ -185,5 +185,6 @@ void LineRendererSystem::Update(float dt) {
 }
 
 void LineRendererSystem::Render() {
+    Update(0);
     world.Render();
 }

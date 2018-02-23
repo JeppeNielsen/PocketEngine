@@ -16,6 +16,8 @@
 #include "FirstPersonMover.hpp"
 #include "EditorProxyComponent.hpp"
 #include "Sizeable.hpp"
+#include "DragSelector.hpp"
+#include "TouchSystem.hpp"
 
 bool EditorScene::IsClonerInAncestry(GameObject* object) {
     while(true) {
@@ -141,6 +143,7 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     };
     
     editorRoot = sceneRoot->World()->CreateScene();
+    SystemHelper::AddEditorSystems(*editorRoot);
     
     AddEditorObject(sceneRoot);
     
@@ -151,7 +154,10 @@ void EditorScene::Initialize(Pocket::GameObject *sceneRoot) {
     editorCamera->AddComponent<FirstPersonMover>()->SetTouchIndices(2, 1);
     
     editorRoot->Hierarchy().Order = 100;
-    sceneRoot->GetSystem<RenderSystem>()->SetCameras(editorRoot->GetSystem<RenderSystem>()->GetCameras());
+    sceneRoot->CreateSystem<RenderSystem>()->SetCameras(editorRoot->CreateSystem<RenderSystem>()->GetCameras());
+    editorRoot->CreateSystem<DragSelector>()->Setup({0,0,2000,2000});
+    editorRoot->CreateSystem<DragSelector>()->TouchDepth = 50;
+    editorRoot->CreateSystem<TouchSystem>()->TouchDepth = 100;
     
     BindToRoot(sceneRoot);
 }
@@ -166,7 +172,7 @@ void EditorScene::Destroy() {
     
     sceneRoot->SetCallbacks(0, 0, 0, 0);
     editorRoot->Remove();
-    sceneRoot->GetSystem<RenderSystem>()->SetCameras(sceneRoot->GetSystem<RenderSystem>()->GetOriginalCameras());
+    sceneRoot->CreateSystem<RenderSystem>()->SetCameras(sceneRoot->CreateSystem<RenderSystem>()->GetOriginalCameras());
     sceneRoot = 0;
     editorRoot = 0;
 }

@@ -9,12 +9,19 @@
 #include "GameStorage.hpp"
 #include "GameScene.hpp"
 #include "Hierarchy.hpp"
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 
 GameStorage::GameStorage() : componentTypesCount(0), systemIdCounter(0), componentIdCounter(0) {
     objects.count = 0;
     AddComponentType<Hierarchy>();
+    prefabWorld = new GameWorld();
+    prefabWorld->Initialize(*this);
+}
+
+GameStorage::~GameStorage() {
+    delete prefabWorld;
 }
 
 void GameStorage::AddComponentType(ComponentId componentId, const ComponentTypeFunction& function) {
@@ -153,24 +160,28 @@ void GameStorage::DeserializeAndAddComponents(std::istream &jsonStream) {
 }
 
 GameObject* GameStorage::TryGetPrefab(const std::string &guid, int objectId) {
-    for(auto& prefab : prefabs) {
-        if (prefab.guid == guid) {
-            return objectId == 1 ? prefab.root : prefab.FindObject(objectId);
-        }
+    GameObject* scene = prefabWorld->FindScene(guid);
+    
+    if (!scene) {
+        scene = GuidToRoot(guid);
     }
-    GameObject* root = GuidToRoot(guid);
-    return objectId == 1 ? root : root->scene->FindObject(objectId);
+    
+    if (scene) {
+        return objectId == 1 ? scene : scene->scene->FindObject(objectId);
+    } else {
+        return nullptr;
+    }
 }
 
 GameObject* GameStorage::LoadPrefab(const std::string &guid, std::istream &stream) {
-    prefabs.resize(prefabs.size() + 1);
-    GameScene& scene = prefabs.back();
-    scene.world = nullptr;
-    scene.storage = this;
-    scene.root = scene.CreateEmptyObject(nullptr, false);
-    scene.guid = guid;
-    serializer->Deserialize(scene.root, stream);
-    return scene.root;
+    GameObject* prefab = prefabWorld->CreateScene();
+    prefab->scene->guid = guid;
+    if (PrefabLoaded) {
+        PrefabLoaded(prefab);
+    }
+    serializer->Deserialize(prefab, stream);
+    prefabWorld->Update(0.0f);
+    return prefab;
 }
 
 void GameStorage::TryParseComponent(std::istream &stream, int componentId,

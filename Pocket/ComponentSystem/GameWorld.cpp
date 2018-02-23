@@ -77,6 +77,13 @@ GameObject* GameWorld::CreateScene(GameObject* prefab) {
     return scene;
 }
 
+GameObject* GameWorld::FindScene(const std::string& guid) {
+    for(auto scene : sceneRoots) {
+        if (scene->scene->guid == guid) return scene;
+    }
+    return nullptr;
+}
+
 void GameWorld::RemoveScene(Pocket::GameObject *sceneRoot) {
     GameScene* scene = sceneRoot->scene;
     delayedActions.emplace_back([this, scene, sceneRoot] {

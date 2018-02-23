@@ -18,7 +18,7 @@ using namespace Pocket;
 
 void AutocompleterTextEditorSystem::Initialize() {
     activeTextEditor = 0;
-    gui = root->GetSystem<Gui>();
+    gui = root->CreateSystem<Gui>();
     listBox = 0;
 }
 

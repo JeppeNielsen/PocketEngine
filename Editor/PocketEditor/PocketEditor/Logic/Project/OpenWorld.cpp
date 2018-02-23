@@ -64,13 +64,12 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
             return false;
         }
         world.Initialize(context->Storage());
-        scene = world.CreateScene(prefab);
+        scene = world.CreateScene();
+        editorScene.Initialize(scene);
+        scene->ApplyClone(prefab);
     } else {
         return false;
     }
-    
-    editorScene.Initialize(scene);
-    
     GameRoot = scene;
     EditorRoot = editorScene.EditorRoot();
     return true;

@@ -10,8 +10,12 @@
 
 using namespace Pocket;
 
+void ClickSelectorSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<SelectableCollection<Transform>>();
+}
+
 void ClickSelectorSystem::Initialize() {
-    selectables = root->GetSystem<SelectableCollection<Transform>>();
+    selectables = root->CreateSystem<SelectableCollection<Transform>>();
 }
 
 void ClickSelectorSystem::ObjectAdded(GameObject *object) {
@@ -25,8 +29,4 @@ void ClickSelectorSystem::ObjectRemoved(GameObject *object) {
 void ClickSelectorSystem::TouchableClick(Pocket::TouchData d, GameObject* object) {
     selectables->ClearSelection();
     object->GetComponent<Selectable>()->Selected = true;//!object->GetComponent<Selectable>()->Selected;
-}
-
-void ClickSelectorSystem::CreateSubSystems(Pocket::GameStorage &storage) {
-    storage.AddSystemType<SelectableCollection<Transform>>();
 }

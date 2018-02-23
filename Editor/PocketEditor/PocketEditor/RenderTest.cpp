@@ -33,7 +33,7 @@ public:
         
         {
             GameObject* scene = world1.CreateScene();
-            auto gui = scene->GetSystem<Gui>();
+            auto gui = scene->CreateSystem<Gui>();
             gui->Setup("NewUI.tga", "NewUI.json", Context().Viewport());
             gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");
             
@@ -45,7 +45,7 @@ public:
         
         {
             GameObject* scene = world2.CreateScene();
-            auto gui = scene->GetSystem<Gui>();
+            auto gui = scene->CreateSystem<Gui>();
             gui->Setup("NewUI.tga", "NewUI.json", Context().Viewport());
             gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");
             

@@ -10,7 +10,8 @@
 #include "GameWorld.hpp"
 
 struct SystemHelper {
-    static void AddGameSystems(Pocket::GameStorage& storage);
-    static void AddEditorSystems(Pocket::GameStorage& storage);
+    static void InitializeStorage(Pocket::GameStorage& storage);
+    static void AddGameSystems(Pocket::GameObject& scene);
+    static void AddEditorSystems(Pocket::GameObject& scene);
     static bool IsComponentEditorSpecific(int componentType);
 };

@@ -24,7 +24,7 @@ void HierarchyWindow::OnInitialize() {
     guiRoot.CreateSystem<SelectedColorerSystem>();
     guiRoot.CreateSystem<DraggableSystem>();
     */
-    editorGui = guiRoot.GetSystem<EditorGui>();
+    editorGui = guiRoot.CreateSystem<EditorGui>();
 }
 
 void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {

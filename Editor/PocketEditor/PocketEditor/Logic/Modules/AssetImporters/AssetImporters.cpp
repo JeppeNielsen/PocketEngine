@@ -16,7 +16,7 @@ void AssetImporters::OnInitialize() {
 }
 
 void AssetImporters::OnCreate() {
-    AssetImporterSystem* assetImporterSystem = context->GuiRoot().GetSystem<AssetImporterSystem>();
+    AssetImporterSystem* assetImporterSystem = context->GuiRoot().CreateSystem<AssetImporterSystem>();
     assetImporterSystem->SetFileWatcher(context->Project().FileSystemWatcher());
     {
         GameObject* pngImporter = context->GuiRoot().CreateObject();

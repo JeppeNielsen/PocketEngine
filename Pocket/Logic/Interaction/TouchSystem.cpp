@@ -16,9 +16,14 @@ TouchSystem::TouchSystem() : TouchDepth(0) { }
 
 TouchSystem::~TouchSystem() { }
 
+void TouchSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<OctreeSystem>();
+    storage.AddSystemType<TouchSystem::CameraSystem>();
+}
+
 void TouchSystem::Initialize() {
-    octree = root->GetSystem<OctreeSystem>();
-    cameras = root->GetSystem<TouchSystem::CameraSystem>();
+    octree = root->CreateSystem<OctreeSystem>();
+    cameras = root->CreateSystem<TouchSystem::CameraSystem>();
 
     root->Input().TouchDown.Bind(this, &TouchSystem::TouchDown);
     root->Input().TouchUp.Bind(this, &TouchSystem::TouchUp);
@@ -93,11 +98,6 @@ void TouchSystem::Update(float dt) {
         }
     }
     ups.clear();
-}
-
-void TouchSystem::CreateSubSystems(Pocket::GameStorage &storage) {
-    storage.AddSystemType<OctreeSystem>();
-    storage.AddSystemType<TouchSystem::CameraSystem>();
 }
 
 bool TouchSystem::IsTouchValid(const Pocket::TouchData &touchData) {
@@ -192,5 +192,5 @@ Pocket::TouchSystem::CameraSystem * TouchSystem::GetCameras() {
 }
 
 Pocket::TouchSystem::CameraSystem* TouchSystem::GetOriginalCameras() {
-    return root->GetSystem<CameraSystem>();
+    return root->CreateSystem<CameraSystem>();
 }

@@ -18,20 +18,6 @@ using namespace Pocket;
 
 GameObject* Gui::GetAtlas() { return atlas; }
 
-void Gui::Initialize() {
-    renderer = root->GetSystem<RenderSystem>();
-    textboxSystem = root->GetSystem<TextBoxSystem>();
-    touchSystem = root->GetSystem<TouchSystem>();
-    
-    root->GetSystem<HierarchyOrder>()->Order = 1000;
-    root->GetSystem<FontTextureSystem>()->Order = -1;
-    root->GetSystem<PanelDropSystem>()->Order = -1;
-    root->GetSystem<PanelSystem>()->Order = -1;
-    root->GetSystem<PanelAreaSystem>()->Order = -1;
-    
-    hoverSystem = root->GetSystem<HoverSystem>();
-}
-
 void Gui::CreateSubSystems(Pocket::GameStorage &storage) {
     storage.AddSystemType<RenderSystem>();
     storage.AddSystemType<TextBoxSystem>();
@@ -65,6 +51,41 @@ void Gui::CreateSubSystems(Pocket::GameStorage &storage) {
     storage.AddSystemType<ScrollWheelMoverSystem>();
     storage.AddSystemType<VirtualTreeListSystem>();
     storage.AddSystemType<VirtualTreeListSpawnerSystem>();
+}
+
+void Gui::Initialize() {
+    renderer = root->CreateSystem<RenderSystem>();
+    textboxSystem = root->CreateSystem<TextBoxSystem>();
+    touchSystem = root->CreateSystem<TouchSystem>();
+    
+    root->CreateSystem<TransformHierarchy>();
+    
+    root->CreateSystem<SpriteMeshSystem>();
+    root->CreateSystem<SpriteTextureSystem>();
+    root->CreateSystem<HierarchyOrder>()->Order = 1000;
+    root->CreateSystem<DraggableSystem>();
+    root->CreateSystem<LayoutSystem>();
+    root->CreateSystem<ColorSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<VelocitySystem>();
+    root->CreateSystem<LimitableSystem>();
+    root->CreateSystem<SelectedColorerSystem>();
+    root->CreateSystem<DroppableSystem>();
+    root->CreateSystem<DraggableMotionSystem>();
+    root->CreateSystem<LayoutSystem>();
+    root->CreateSystem<FontTextureSystem>()->Order = -1;
+    root->CreateSystem<LabelMeshSystem>();
+    root->CreateSystem<TextBoxLabelSystem>();
+    
+    root->CreateSystem<PanelDropSystem>()->Order = -1;
+    root->CreateSystem<PanelSystem>()->Order = -1;
+    root->CreateSystem<PanelAreaSystem>()->Order = -1;
+    root->CreateSystem<TouchCancelSystem>();
+    
+    hoverSystem = root->CreateSystem<HoverSystem>();
+    root->CreateSystem<ScrollWheelMoverSystem>();
+    root->CreateSystem<VirtualTreeListSystem>();
+    root->CreateSystem<VirtualTreeListSpawnerSystem>();
 }
 
 void Gui::Setup(const std::string &atlasTexture, const std::string &atlasXml, const Rect& viewport) {

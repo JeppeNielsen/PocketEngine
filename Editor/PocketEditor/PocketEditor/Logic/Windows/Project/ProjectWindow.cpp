@@ -35,7 +35,7 @@ void ProjectWindow::OnInitialize() {
      */
     
     GameObject& guiRoot = context->GuiRoot();
-    editorGui = guiRoot.GetSystem<EditorGui>();
+    editorGui = guiRoot.CreateSystem<EditorGui>();
 
     popupMenu.InitializePopUp();
     {

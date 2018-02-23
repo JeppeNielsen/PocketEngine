@@ -82,9 +82,8 @@ namespace Pocket {
         void RemoveComponents(const SerializePredicate& predicate);
         
         void ApplyCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
-        void ApplyClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
-        
     public:
+        void ApplyClone(GameObject* source, const std::function<bool(GameObject*)>& predicate = 0);
         bool Recurse(const std::function<bool(const GameObject* object)>& function) const;
         bool HasComponent(ComponentId id) const override;
         void* GetComponent(ComponentId id) const override;
@@ -134,7 +133,7 @@ namespace Pocket {
         }
         
         template<typename T>
-        T* GetSystem();
+        T* CreateSystem();
         
         std::vector<TypeInfo> GetComponentTypes(const std::function<bool(int componentID)>& predicate = 0) const ;
         

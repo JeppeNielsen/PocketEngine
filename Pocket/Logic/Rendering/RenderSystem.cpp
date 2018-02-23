@@ -15,10 +15,17 @@ using namespace Pocket;
 RenderSystem::ObjectRenderers RenderSystem::objectRenderers;
 int RenderSystem::objectRenderersRefCounter = 0;
 
+void RenderSystem::CreateSubSystems(Pocket::GameStorage &storage) {
+    storage.AddSystemType<CameraSystem>();
+    storage.AddSystemType<OctreeSystem>();
+    storage.AddSystemType<TextureSystem>();
+}
+
 void RenderSystem::Initialize() {
     
-    cameras = root->GetSystem<CameraSystem>();
-    meshOctreeSystem = root->GetSystem<OctreeSystem>();
+    cameras = root->CreateSystem<CameraSystem>();
+    meshOctreeSystem = root->CreateSystem<OctreeSystem>();
+    root->CreateSystem<TextureSystem>();
     
     Shaders.Initialize();
     DefaultShader = &Shaders.Colored;
@@ -30,12 +37,6 @@ void RenderSystem::Initialize() {
         }
     }
     objectRenderersRefCounter++;
-}
-
-void RenderSystem::CreateSubSystems(Pocket::GameStorage &storage) {
-    storage.AddSystemType<CameraSystem>();
-    storage.AddSystemType<OctreeSystem>();
-    storage.AddSystemType<TextureSystem>();
 }
 
 void RenderSystem::Destroy() {
@@ -252,5 +253,5 @@ Pocket::RenderSystem::CameraSystem * RenderSystem::GetCameras() {
 }
 
 Pocket::RenderSystem::CameraSystem* RenderSystem::GetOriginalCameras() {
-    return root->GetSystem<CameraSystem>();
+    return root->CreateSystem<CameraSystem>();
 }

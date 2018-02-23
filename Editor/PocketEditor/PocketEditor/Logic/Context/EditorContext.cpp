@@ -27,30 +27,31 @@ Project& EditorContext::Project() { return project; }
 
 void EditorContext::Initialize(class EngineContext& engineContext) {
     this->engineContext = &engineContext;
+    
+    storage.PrefabLoaded = [this] (GameObject* prefab) {
+        prefab->CreateSystem<AssetManager>()->SetFileWatcher(Project().FileSystemWatcher());
+    };
+
+    SystemHelper::InitializeStorage(storage);
 
     guiWorld.Initialize(storage);
     
     storage.CreateSerializer<GameObjectJsonSerializer>();
     
-    SystemHelper::AddGameSystems(storage);
-    SystemHelper::AddEditorSystems(storage);
-    
     fileWorld.Initialize(storage);
-    fileWorld.OnRootCreated = [this] (GameObject* root) {
-        root->GetSystem<AssetManager>()->SetFileWatcher(Project().FileSystemWatcher());
-    };
     
     guiScene = guiWorld.CreateScene();
+    SystemHelper::AddEditorSystems(*guiScene);
     
-    gui = guiScene->GetSystem<class Gui>();
-    guiScene->GetSystem<TouchSystem>()->TouchDepth = 10;
-    guiScene->GetSystem<TouchSystem>()->Order = -200;
-    guiScene->GetSystem<DragSelector>()->Setup(engineContext.Viewport());
+    gui = guiScene->CreateSystem<class Gui>();
+    guiScene->CreateSystem<TouchSystem>()->TouchDepth = 10;
+    guiScene->CreateSystem<TouchSystem>()->Order = -200;
+    guiScene->CreateSystem<DragSelector>()->Setup(engineContext.Viewport());
     
     gui->Setup("NewUI.tga", "NewUI.json", engineContext.Viewport());
     gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");
 
-    guiScene->GetSystem<RenderSystem>()->Order = 10;
+    guiScene->CreateSystem<RenderSystem>()->Order = 10;
     
     project.Initialize(storage, fileWorld, scriptWorld);
 }

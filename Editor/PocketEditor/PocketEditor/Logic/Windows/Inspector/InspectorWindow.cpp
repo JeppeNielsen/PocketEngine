@@ -25,9 +25,9 @@ void InspectorWindow::OnInitialize() {
     
     GameObject& guiRoot = context->GuiRoot();
     
-    guiRoot.GetSystem<FieldEditorSystem>()->gui = &context->Gui();
-    guiRoot.GetSystem<GameObjectEditorSystem>()->gui = &context->Gui();
-    guiRoot.GetSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
+    guiRoot.CreateSystem<FieldEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->gui = &context->Gui();
+    guiRoot.CreateSystem<GameObjectEditorSystem>()->Predicate = [] (int componentId) -> bool {
         return componentId != GameIdHelper::GetComponentID<EditorObject>();
     };
     
@@ -88,10 +88,10 @@ void InspectorWindow::EditorRootChanged(OpenWorld *world) {
 
 void InspectorWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObject *current) {
     if (old) {
-        old->GetSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
+        old->CreateSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &InspectorWindow::SelectionChanged);
     }
     if (current) {
-        selectables = current->GetSystem<SelectableCollection<EditorObject>>();
+        selectables = current->CreateSystem<SelectableCollection<EditorObject>>();
         selectables->SelectionChanged.Bind(this, &InspectorWindow::SelectionChanged);
     } else {
         selectables = 0;
@@ -104,8 +104,8 @@ void InspectorWindow::OnCreate() {
     GameObject& guiWorld = context->GuiRoot();
     Gui& gui = context->Gui();
     
-    guiWorld.GetSystem<FieldEditorSystem>()->gui = &gui;
-    GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.GetSystem<GameObjectEditorSystem>();
+    guiWorld.CreateSystem<FieldEditorSystem>()->gui = &gui;
+    GameObjectEditorSystem* gameObjectEditorSystem = guiWorld.CreateSystem<GameObjectEditorSystem>();
     gameObjectEditorSystem->gui = &gui;
     gameObjectEditorSystem->scriptWorld = &context->ScriptWorld();
     

@@ -13,9 +13,9 @@
 using namespace Pocket;
 
 void PanelAreaSystem::Initialize() {
-    root->GetSystem<PanelSplitterSystem>()->Order = -1;
-    panels = root->GetSystem<PanelSystem>();
-    gui = root->GetSystem<class Gui>();
+    root->CreateSystem<PanelSplitterSystem>()->Order = -1;
+    panels = root->CreateSystem<PanelSystem>();
+    gui = root->CreateSystem<class Gui>();
 }
 
 void PanelAreaSystem::CreateSubSystems(GameStorage& storage) {

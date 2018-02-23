@@ -31,7 +31,7 @@ namespace Pocket {
     class GameStorage {
     private:
         struct ComponentInfo {
-            ComponentInfo() : getTypeInfo(0) {}
+            ComponentInfo() : getTypeInfo(nullptr) {}
             std::unique_ptr<IContainer> container;
             std::string name;
             std::function<TypeInfo(const GameObject*)> getTypeInfo;
@@ -40,7 +40,7 @@ namespace Pocket {
         };
         
         struct SystemInfo {
-            SystemInfo() : createFunction(0), deleteFunction(0) {}
+            SystemInfo() : createFunction(nullptr), deleteFunction(nullptr) {}
             Bitset bitset;
             std::function<IGameSystem*(GameObject*)> createFunction;
             std::function<void(IGameSystem*)> deleteFunction;
@@ -58,8 +58,7 @@ namespace Pocket {
         
         Container<GameScene> scenes;
         
-        using Prefabs = std::deque<GameScene>;
-        Prefabs prefabs;
+        GameWorld* prefabWorld;
         
         std::unique_ptr<GameObjectSerializer> serializer;
         
@@ -73,8 +72,6 @@ namespace Pocket {
         void AddSystemType(SystemId systemId, const SystemTypeFunction& function, const std::function<void()>& finished);
         void RemoveSystemType(SystemId systemId);
         
-        
-    
     public:
         
         bool TryGetComponentIndex(const std::string& componentName, int& index) const;
@@ -83,6 +80,7 @@ namespace Pocket {
                                             const std::function<void (int, int)>& callback,
                                             const std::function<bool (const std::string& componentName)>& componentCallback = nullptr) const;
         GameStorage();
+        ~GameStorage();
     
         template<typename T>
         void AddComponentType() {
@@ -150,6 +148,7 @@ namespace Pocket {
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         std::function<std::string(const std::string& guid)> GuidToPath;
         std::function<void(std::vector<std::string>& guids, std::vector<std::string>& paths)> GetPaths;
+        std::function<void(GameObject* prefab)> PrefabLoaded;
         
         friend class GameObjectHandle;
         friend class GameWorld;

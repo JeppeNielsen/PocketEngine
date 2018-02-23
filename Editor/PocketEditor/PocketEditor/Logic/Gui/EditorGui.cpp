@@ -13,7 +13,7 @@
 using namespace Pocket;
 
 void EditorGui::Initialize() {
-    gui = root->GetSystem<Gui>();
+    gui = root->CreateSystem<Gui>();
 }
 
 GameObject* EditorGui::CreateTreeList(GameObject* parent, GameObject* root,

@@ -69,10 +69,10 @@ void AnimationWindow::EditorRootChanged(OpenWorld *world) {
 void AnimationWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObject *current) {
     Clear();
     if (old) {
-        old->GetSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &AnimationWindow::SelectionChanged);
+        old->CreateSystem<SelectableCollection<EditorObject>>()->SelectionChanged.Unbind(this, &AnimationWindow::SelectionChanged);
     }
     if (current) {
-        selectables = current->GetSystem<SelectableCollection<EditorObject>>();
+        selectables = current->CreateSystem<SelectableCollection<EditorObject>>();
         selectables->SelectionChanged.Bind(this, &AnimationWindow::SelectionChanged);
     } else {
         selectables = 0;

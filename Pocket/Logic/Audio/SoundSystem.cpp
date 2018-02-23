@@ -42,16 +42,17 @@ SoundSystem::~SoundSystem() {
     }
 }
 
-void SoundSystem::Initialize() {
-    float f[]={0,0,-1,0,1,0};
-    alListenerfv(AL_ORIENTATION, f);
-    SoundTransformSystem* transformSystem = root->GetSystem<SoundTransformSystem>();
-    transformSystem->soundSystem = this;
-}
-
 void SoundSystem::CreateSubSystems(Pocket::GameStorage &storage) {
     storage.AddSystemType<ListenerSystem>();
     storage.AddSystemType<SoundTransformSystem>();
+}
+
+void SoundSystem::Initialize() {
+    float f[]={0,0,-1,0,1,0};
+    alListenerfv(AL_ORIENTATION, f);
+    root->CreateSystem<ListenerSystem>();
+    SoundTransformSystem* transformSystem = root->CreateSystem<SoundTransformSystem>();
+    transformSystem->soundSystem = this;
 }
 
 void SoundSystem::ObjectAdded(GameObject* object) {
