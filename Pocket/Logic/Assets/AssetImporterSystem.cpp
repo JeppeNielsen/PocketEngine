@@ -11,6 +11,7 @@
 #include "FileHelper.hpp"
 #include <fstream>
 #include "StringHelper.hpp"
+#include "GameObjectJsonSerializer.hpp"
 
 using namespace Pocket;
 
@@ -99,17 +100,17 @@ void AssetImporterSystem::AssetCreated(Pocket::AssetImporter *assetImporter, con
     
     bool doesMetaExists = FileHelper::FileExists(metaPath);
     
-    GameWorld world;
+    if (!doesMetaExists) {
+        GameWorld world(this->root->World()->Storage());
     
-    if (doesMetaExists) {
-        
-    } else {
-        GameObject* root =world.CreateScene();
+        GameObject* root = world.CreateScene();
         assetImporter->OnCreated(root);
+        
+        GameObjectJsonSerializer serializer;
         
         std::ofstream file;
         file.open(metaPath);
-        //root->ToJson(file);
+        serializer.Serialize(root, file);
         file.close();
     }
 }
