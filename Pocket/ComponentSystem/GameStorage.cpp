@@ -184,6 +184,21 @@ GameObject* GameStorage::LoadPrefab(const std::string &guid, std::istream &strea
     return prefab;
 }
 
+void GameStorage::ApplyPrefab(Pocket::GameObject *prefab, Pocket::GameObject *scene) {
+    assert(prefab->scene->world == prefabWorld);
+
+    for (int i=0; i<componentTypesCount; i++) {
+        if (GameIdHelper::GetComponentID<Hierarchy>()!=i) {
+            prefab->RemoveComponent(i);
+        }
+    }
+    for(auto child : prefab->Hierarchy().Children()) {
+        child->Remove();
+    }
+    prefabWorld->Update(0.0f);
+    prefab->ApplyClone(scene);
+}
+
 void GameStorage::TryParseComponent(std::istream &stream, int componentId,
     const std::function<void (int, int)>& callback,
     const std::function<bool (const std::string& componentName)>& componentCallback) const {
