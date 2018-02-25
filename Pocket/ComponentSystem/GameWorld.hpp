@@ -47,9 +47,6 @@ namespace Pocket {
         
         InputManager input;
         
-        using Handles = std::vector<GameObjectHandle*>;
-        Handles handles;
-    
         void DoActions(Actions& actions);
         void RemoveScene(GameObject* sceneRoot);
         
@@ -77,8 +74,6 @@ namespace Pocket {
         void Clear();
         
         InputManager& Input();
-        
-        void InvokeChangeToHandles(GameObject* object);
         
         Event<GameObject*> SceneCreated;
         Event<GameObject*> SceneRemoved;

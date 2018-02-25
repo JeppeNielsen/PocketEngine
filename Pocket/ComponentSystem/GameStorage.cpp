@@ -10,6 +10,7 @@
 #include "GameScene.hpp"
 #include "Hierarchy.hpp"
 #include "GameWorld.hpp"
+#include "GameObjectHandle.hpp"
 
 using namespace Pocket;
 
@@ -197,6 +198,7 @@ void GameStorage::ApplyPrefab(Pocket::GameObject *prefab, Pocket::GameObject *sc
     }
     prefabWorld->Update(0.0f);
     prefab->ApplyClone(scene);
+    InvokeChangeToHandles(prefab);
 }
 
 void GameStorage::TryParseComponent(std::istream &stream, int componentId,
@@ -204,3 +206,22 @@ void GameStorage::TryParseComponent(std::istream &stream, int componentId,
     const std::function<bool (const std::string& componentName)>& componentCallback) const {
     serializer->TryParse(stream, componentId<0 ? "" : components[componentId].name, callback, componentCallback);
 }
+
+
+void GameStorage::InvokeChangeToHandles(Pocket::GameObject *object) {
+
+    std::vector<GameObjectHandle*> handlesToChange;
+    
+    const std::string& id = object->RootGuid();
+    
+    for(GameObjectHandle* h : handles) {
+        if (h->sceneGuid == id) {
+           handlesToChange.push_back(h);
+        }
+    }
+    
+    for(auto h : handlesToChange) {
+        h->Changed();
+    }
+}
+

@@ -8,20 +8,20 @@
 
 #pragma once
 #include "GameObject.hpp"
-#include "GameWorld.hpp"
 #include "Event.hpp"
 #include "TypeInterpolator.hpp"
 
 namespace Pocket {
 
+    class GameStorage;
     class IGameObjectHandleRetriever {
     public:
-        virtual GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) = 0;
+        virtual GameObject* Get(GameStorage* storage, int index, int version, int rootId, std::string sceneGuid) = 0;
     };
     
     class GameObjectHandleRetriever : public IGameObjectHandleRetriever {
     public:
-        GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) override;
+        GameObject* Get(GameStorage* storage, int index, int version, int rootId, std::string sceneGuid) override;
     };
     
     class GameObjectHandle {
@@ -62,9 +62,7 @@ namespace Pocket {
         
         const std::string& SceneGuid();
         
-        bool HasRoot();
-        
-        void SetWorld(GameWorld* world);
+        void SetStorage(GameStorage* storage);
     
     private:
     
@@ -72,13 +70,13 @@ namespace Pocket {
         GameObject* Get();
         
         
-        GameWorld* world;
+        GameStorage* storage;
         int index;
         int version;
         int rootId;
         std::string sceneGuid;
         
-        friend class GameWorld;
+        friend class GameStorage;
         friend class GameObjectHandleRetriever;
         friend class GameObject;
     };

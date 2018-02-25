@@ -7,6 +7,7 @@
 //
 
 #include "Trigger.hpp"
+#include "GameWorld.hpp"
 using namespace Pocket;
 
 Trigger::Trigger() : clone(0) {}

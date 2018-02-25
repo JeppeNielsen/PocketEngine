@@ -132,7 +132,7 @@ void GameObjectJsonSerializer::AddComponent(GameObject* object, AddReferenceComp
                 for(auto& f : type.fields) {
                     if (f->GetTypeIndex() == TypeIndexList::Index<GameObjectHandle>()) {
                         FieldInfo<GameObjectHandle>* handleField = static_cast<FieldInfo<GameObjectHandle>*>(f.get());
-                        handleField->field->SetWorld(object->World());
+                        handleField->field->SetStorage(&object->World()->Storage());
                     }
                 }
                 

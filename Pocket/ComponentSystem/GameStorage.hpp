@@ -62,6 +62,9 @@ namespace Pocket {
         
         std::unique_ptr<GameObjectSerializer> serializer;
         
+        using Handles = std::vector<GameObjectHandle*>;
+        Handles handles;
+        
         int systemIdCounter;
         int componentIdCounter;
         
@@ -145,6 +148,7 @@ namespace Pocket {
         GameObject* LoadPrefab(const std::string& guid, std::istream& stream);
         GameObject* TryGetPrefab(const std::string& guid, int objectId = 1);
         void ApplyPrefab(GameObject* prefab, GameObject* scene);
+        void InvokeChangeToHandles(GameObject* object);
         
         std::function<GameObject*(const std::string& guid)> GuidToRoot;
         std::function<std::string(const std::string& guid)> GuidToPath;

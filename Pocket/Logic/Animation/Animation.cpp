@@ -7,6 +7,7 @@
 //
 
 #include "Animation.hpp"
+#include "GameWorld.hpp"
 
 using namespace Pocket;
 

@@ -11,14 +11,14 @@
 
 using namespace Pocket;
 
-GameObjectHandle::GameObjectHandle() : world(0), index(-1) {}
+GameObjectHandle::GameObjectHandle() : storage(nullptr), index(-1) {}
 
-GameObjectHandle::GameObjectHandle(const GameObjectHandle& other) : world(0), index(-1) { operator=(other); }
+GameObjectHandle::GameObjectHandle(const GameObjectHandle& other) : storage(nullptr), index(-1) { operator=(other); }
 
-GameObjectHandle::GameObjectHandle(GameObject* object) : world(0), index(-1) { operator=(object); }
+GameObjectHandle::GameObjectHandle(GameObject* object) : storage(nullptr), index(-1) { operator=(object); }
 
 GameObjectHandle::~GameObjectHandle() {
-    SetWorld(0);
+    SetStorage(nullptr);
 }
 
 GameObject* GameObjectHandle::operator->() {
@@ -44,7 +44,7 @@ void GameObjectHandle::operator=(Pocket::GameObject *v) {
 }
 
 void GameObjectHandle::operator=(const GameObjectHandle& handle) {
-    SetWorld(handle.world);
+    SetStorage(handle.storage);
     index = handle.index;
     version = handle.version;
     rootId = handle.rootId;
@@ -52,21 +52,21 @@ void GameObjectHandle::operator=(const GameObjectHandle& handle) {
 }
 
 void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
-    SetWorld(ptr->World());
+    SetStorage(ptr->scene->storage);
     index = ptr->index;
     rootId = ptr->id;
     sceneGuid = ptr->scene->guid;
 }
 
 GameObject* GameObjectHandle::Get() {
-    if (!world) return nullptr;
+    if (!storage) return nullptr;
     
-    if (index>=0 && index<world->storage->objects.entries.size() && world->storage->objects.versions[index] == version) {
-        GameObject* ptr = &world->storage->objects.entries[index];
+    if (index>=0 && index<storage->objects.entries.size() && storage->objects.versions[index] == version) {
+        GameObject* ptr = &storage->objects.entries[index];
         if (ptr->id == rootId) return ptr;
     }
     
-    GameObject* prefab = world->storage->TryGetPrefab(sceneGuid, rootId);
+    GameObject* prefab = storage->TryGetPrefab(sceneGuid, rootId);
     if (!prefab) return nullptr;
     Set(prefab);
     return prefab;
@@ -83,27 +83,24 @@ GameObjectHandle GameObjectHandle::Deserialize(const std::string &data) {
     return handle;
 }
 
-void GameObjectHandle::SetWorld(Pocket::GameWorld *world) {
-    if (this->world) {
-        auto it = std::find(this->world->handles.begin(), this->world->handles.end(), this);
-        if (it!=this->world->handles.end()) {
-            this->world->handles.erase(it);
+void GameObjectHandle::SetStorage(Pocket::GameStorage* storage) {
+    if (this->storage) {
+        auto it = std::find(this->storage->handles.begin(), this->storage->handles.end(), this);
+        if (it!=this->storage->handles.end()) {
+            this->storage->handles.erase(it);
         }
     }
-    this->world = world;
-    if (this->world) {
-        this->world->handles.push_back(this);
+    this->storage = storage;
+    if (this->storage) {
+        this->storage->handles.push_back(this);
     }
 }
 
 const std::string& GameObjectHandle::SceneGuid() { return sceneGuid; }
 
-bool GameObjectHandle::HasRoot() { return world !=nullptr; }
-
- 
-GameObject* GameObjectHandleRetriever::Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) {
+GameObject* GameObjectHandleRetriever::Get(GameStorage* storage, int index, int version, int rootId, std::string sceneGuid) {
     GameObjectHandle handle;
-    handle.SetWorld(world);
+    handle.SetStorage(storage);
     handle.index = index;
     handle.version = version;
     handle.rootId = rootId;

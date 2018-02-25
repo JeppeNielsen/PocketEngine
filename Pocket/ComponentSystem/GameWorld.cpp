@@ -116,25 +116,6 @@ void GameWorld::Clear() {
 
 InputManager& GameWorld::Input() { return input; }
 
-void GameWorld::InvokeChangeToHandles(Pocket::GameObject *object) {
-
-    std::vector<GameObjectHandle*> handlesToChange;
-    
-    const std::string& id = object->RootGuid();
-    
-    for(GameObjectHandle* h : handles) {
-        if (h->sceneGuid == id) {
-            //std::cout << "GameObjectHandle invoked : guid : " << h->sceneGuid << " index " << h->index << " rootId "<<h->rootId << std::endl;
-            handlesToChange.push_back(h);
-            //h->Changed();
-        }
-    }
-    
-    for(auto h : handlesToChange) {
-        h->Changed();
-    }
-}
-
 GameStorage& GameWorld::Storage() const {
     return *storage;
 }
