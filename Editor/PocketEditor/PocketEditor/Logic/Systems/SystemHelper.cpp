@@ -32,6 +32,7 @@
 
 //Gui
 #include "Gui.hpp"
+#include "SlicedQuadMeshSystem.hpp"
 
 //Input
 #include "InputMapperSystem.hpp"
@@ -124,6 +125,7 @@ void SystemHelper::InitializeStorage(GameStorage& storage) {
 
     //Gui
     storage.AddSystemType<Gui>();
+    storage.AddSystemType<SlicedQuadMeshSystem>();
     
     //Input
     storage.AddSystemType<InputMapperSystem>();
@@ -222,6 +224,7 @@ void SystemHelper::AddGameSystems(Pocket::GameObject& scene) {
 
     //Gui
     scene.CreateSystem<Gui>();
+    scene.CreateSystem<SlicedQuadMeshSystem>();
     
     //Input
     scene.CreateSystem<InputMapperSystem>();
