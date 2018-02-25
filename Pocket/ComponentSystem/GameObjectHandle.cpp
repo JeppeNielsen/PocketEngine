@@ -59,22 +59,17 @@ void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
 }
 
 GameObject* GameObjectHandle::Get() {
-    if (!world) return 0;
+    if (!world) return nullptr;
     
     if (index>=0 && index<world->storage->objects.entries.size() && world->storage->objects.versions[index] == version) {
         GameObject* ptr = &world->storage->objects.entries[index];
         if (ptr->id == rootId) return ptr;
     }
     
-    GameScene* scene = nullptr;//world->TryGetScene(sceneGuid);
-    if (!scene) return 0;
-    GameObject* foundObject = scene->FindObject(rootId);
-    if (foundObject) {
-        Set(foundObject);
-        return foundObject;
-    } else {
-        return 0;
-    }
+    GameObject* prefab = world->storage->TryGetPrefab(sceneGuid, rootId);
+    if (!prefab) return nullptr;
+    Set(prefab);
+    return prefab;
 }
 
 GameObjectHandle GameObjectHandle::Deserialize(const std::string &data) {
