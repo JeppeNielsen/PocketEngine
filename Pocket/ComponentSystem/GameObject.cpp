@@ -313,6 +313,7 @@ void GameObject::ApplyCloneInternal(std::vector<CloneReferenceComponent>& refere
         }
     }
     class Hierarchy& h = source->Hierarchy();
+    Hierarchy().Enabled = h.Enabled;
     for(auto child : h.children) {
         GameObject* childClone = CreateChild();
         childClone->ApplyCloneInternal(referenceComponents, child, predicate);
