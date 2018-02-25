@@ -78,6 +78,8 @@ void WorldTab::ActiveWorldChanged(OpenWorld *old, OpenWorld *current) {
             current->GetRunningWorld()->ActiveScene.Changed.Bind(this, &WorldTab::ActiveSceneChanged, current->GetRunningWorld());
         }
         UpdateWorld(current);
+    } else {
+        renderArea->GetComponent<GameWorldViewport>()->World = nullptr;
     }
 }
 
