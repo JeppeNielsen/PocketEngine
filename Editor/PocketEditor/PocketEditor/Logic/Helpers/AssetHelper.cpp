@@ -51,14 +51,16 @@ bool AssetHelper::CreateScene(const std::string &path) {
 }
 
 bool AssetHelper::CreateEmptyPrefab(const std::string& path) {
-    GameWorld world;
-    GameObject* root = world.CreateScene();
+    GameStorage storage;
+    GameWorld world(storage);
+    
+    GameObject* prefab = world.CreateScene();
     
     GameObjectJsonSerializer serializer;
     
     std::ofstream file;
     file.open(path);
-    serializer.Serialize(root, file);
+    serializer.Serialize(prefab, file);
     file.close();
 
     return true;
