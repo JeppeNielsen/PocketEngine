@@ -221,7 +221,7 @@ GameObject* InspectorWindow::TryGetFirstObjectWithComponent(int componentId) {
         });
         
         if (objectFound) {
-            GameObject* object = context->Storage().TryGetPrefab(guids[i]);
+            GameObject* object = context->Storage().TryGetPrefab(guids[i], objectId);
             if (object) {
                 return object;
             }
