@@ -35,7 +35,9 @@ bool OpenWorld::Save() {
         succes = true;
         std::ofstream file;
         file.open(Path);
-        serializer.Serialize(scene, file, [] (const GameObject* go, int componentID) {
+        
+        context->Storage().ApplyPrefab(prefab, scene);
+        serializer.Serialize(prefab, file, [] (const GameObject* go, int componentID) {
             if (componentID == Pocket::GameIdHelper::GetComponentID<EditorObject>()) return false;
             if (go->Hierarchy().Parent() && go->Hierarchy().Parent()->GetComponent<Cloner>()) return false;
             return true;
@@ -59,12 +61,13 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
         std::string guid = serializer.ReadGuidFromJson(file);
         file.close();
         
-        GameObject* prefab = context->Storage().TryGetPrefab(guid);
+        prefab = context->Storage().TryGetPrefab(guid);
         if (!prefab) {
             return false;
         }
         world.Initialize(context->Storage());
         scene = world.CreateScene();
+        SystemHelper::AddGameSystems(*scene);
         editorScene.Initialize(scene);
         scene->ApplyClone(prefab);
     } else {

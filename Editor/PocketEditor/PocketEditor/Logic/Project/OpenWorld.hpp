@@ -64,6 +64,7 @@ private:
     EditorContext* context;
     
     GameWorld world;
+    GameObject* prefab;
     GameObject* scene;
     RunningWorld* runningWorld;
     
