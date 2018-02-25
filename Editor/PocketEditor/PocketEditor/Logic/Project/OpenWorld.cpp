@@ -127,7 +127,7 @@ void OpenWorld::Play() {
     this->EditorRoot = nullptr;
         
     runningWorld = new RunningWorld();
-    runningWorld->Initialize(context->Project().Path(), { scene->RootGuid() }, context->Storage());
+    runningWorld->Initialize(context->Project().Path(), { prefab->RootGuid() }, context->Storage());
     runningWorld->ActiveScene.Changed.Bind([this] () {
         this->GameRoot = runningWorld->ActiveScene();
         this->EditorRoot = runningWorld->EditorRoot();

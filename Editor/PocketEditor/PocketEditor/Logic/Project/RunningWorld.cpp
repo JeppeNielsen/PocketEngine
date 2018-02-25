@@ -32,8 +32,8 @@ RunningWorld::RunningWorld() {
 void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, GameStorage& storage) {
 
     world.Initialize(storage);
-    world.SceneRemoved.Bind([this] (GameObject* root) {
-        if (ActiveScene == root) {
+    world.SceneRemoved.Bind([this] (GameObject* scene) {
+        if (ActiveScene == scene) {
             editorScene.Destroy();
         }
     });
@@ -44,7 +44,11 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
         layerNo++;
     }
     */
-    world.CreateScene(storage.TryGetPrefab(startScenes[0]));
+    
+    GameObject* prefab = storage.TryGetPrefab(startScenes[0]);
+    GameObject* scene = world.CreateScene();
+    SystemHelper::AddGameSystems(*scene);
+    scene->ApplyClone(prefab);
 }
 
 GameWorld& RunningWorld::World() {

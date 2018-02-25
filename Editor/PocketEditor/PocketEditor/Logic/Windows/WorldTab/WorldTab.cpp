@@ -184,12 +184,11 @@ void WorldTab::UpdatePlayButtons(OpenWorld *openWorld) {
         gameModePivot->Hierarchy().Enabled = false;
     }
     
-   /* if (openWorld) {
-        renderArea->GetComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? &context->World() : &openWorld->GetRunningWorld()->World();
+    if (openWorld) {
+        renderArea->GetComponent<GameWorldViewport>()->World = !openWorld->IsPlaying() ? openWorld->World() : &openWorld->GetRunningWorld()->World();
     } else {
-        renderArea->GetComponent<GameWorldViewport>()->World = &context->World();
+        renderArea->GetComponent<GameWorldViewport>()->World = nullptr;
     }
-    */
 }
 
 void WorldTab::IsPlayingChanged(OpenWorld* world) {
