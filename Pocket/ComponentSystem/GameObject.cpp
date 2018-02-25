@@ -299,7 +299,6 @@ GameObject* GameObject::CreateObject() {
 }
 
 void GameObject::ApplyCloneInternal(std::vector<CloneReferenceComponent>& referenceComponents, GameObject* source, const std::function<bool(GameObject*)>& predicate) {
-    if (predicate && !predicate(source)) return;
     
     for (int i=0; i<source->activeComponents.Size(); ++i) {
         if (source->activeComponents[i]) {
@@ -315,12 +314,14 @@ void GameObject::ApplyCloneInternal(std::vector<CloneReferenceComponent>& refere
     class Hierarchy& h = source->Hierarchy();
     Hierarchy().Enabled = h.Enabled;
     for(auto child : h.children) {
+        if (predicate && !predicate(child)) continue;
         GameObject* childClone = CreateChild();
         childClone->ApplyCloneInternal(referenceComponents, child, predicate);
     }
 }
 
 void GameObject::ApplyClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
+    if (predicate && !predicate(source)) return;
     std::vector<CloneReferenceComponent> referenceComponents;
     ApplyCloneInternal(referenceComponents, source, predicate);
     
