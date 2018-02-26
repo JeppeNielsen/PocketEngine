@@ -79,7 +79,7 @@ void LayoutSystem::ObjectRemoved(GameObject* object) {
 void LayoutSystem::TryInvokeChangesToParent(Pocket::GameObject *object) {
     GameObject* current = object->Hierarchy().Parent;
     Layouter* currentLayouter = current ? current->GetComponent<Layouter>() : nullptr;
-    if (currentLayouter) {
+    if (currentLayouter && current && !current->IsRemoved()) {
         currentLayouter->GlobalMin.MakeDirty();
         currentLayouter->GlobalMax.MakeDirty();
         currentLayouter->GlobalDesired.MakeDirty();
