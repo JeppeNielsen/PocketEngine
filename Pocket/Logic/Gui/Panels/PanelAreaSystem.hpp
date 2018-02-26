@@ -18,6 +18,12 @@ namespace Pocket {
     class Gui;
     class PanelSystem;
     
+    struct PanelSplitter {
+        GameObject* area;
+        PanelLocation location;
+        bool isHorizontal;
+    };
+
     struct PanelAreaSystem : public GameSystem<PanelArea> {
         PanelSystem* panels;
         Gui* gui;
@@ -26,12 +32,6 @@ namespace Pocket {
         void CreateSplitters(GameObject* object, PanelArea* area);
         static void CreateSubSystems(GameStorage& storage);
         
-        struct PanelSplitter {
-            GameObject* area;
-            PanelLocation location;
-            bool isHorizontal;
-        };
-
         struct PanelSplitterSystem : public GameSystem<PanelSplitter, Draggable, Transform> {
             std::set<GameObject*> splittersNeedingAlignment;
             void ObjectAdded(GameObject* object) override;
