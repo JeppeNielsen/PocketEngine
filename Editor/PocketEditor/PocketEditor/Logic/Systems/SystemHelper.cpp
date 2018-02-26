@@ -309,3 +309,9 @@ bool SystemHelper::IsComponentEditorSpecific(int componentType) {
     if (componentType == GameIdHelper::GetComponentID<EditorProxyComponent<Camera>>()) return true;
     return false;
 }
+
+void SystemHelper::SetScriptStorage(Pocket::GameStorage& storage, Pocket::ScriptWorld& scriptWorld) {
+    scriptWorld.SetStorage(storage, [] (int componentId) {
+        return componentId!=GameIdHelper::GetComponentID<EditorProxyComponent<Camera>>();
+    });
+}

@@ -35,7 +35,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     SystemHelper::InitializeStorage(storage);
 
     guiWorld.Initialize(storage);
-    
+    SystemHelper::SetScriptStorage(storage, scriptWorld);
     storage.CreateSerializer<GameObjectJsonSerializer>();
     
     fileWorld.Initialize(storage);
