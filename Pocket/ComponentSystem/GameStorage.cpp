@@ -149,6 +149,7 @@ void GameStorage::SerializeAndRemoveComponents(std::ostream& stream, const Seria
 
     for(auto o : objectsToSerialize) {
         o->RemoveComponents(predicate);
+        o->scene->world->DoActions(o->scene->world->delayedActions);
     }
 }
 

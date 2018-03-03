@@ -52,7 +52,7 @@ public:
 
     //TODO: FIX!!!!
 //    bool AddGameWorld(GameWorld& world);
-//    void AddGameRoot(GameObject* root);
+      void AddGameScene(GameObject* scene);
 //    void AddAllGameRoots(GameWorld& world);
 //    void RemoveGameRoot(GameObject* root);
 //    void RemoveGameWorld(GameWorld& world);
@@ -157,6 +157,7 @@ private:
     ScriptData data;
     
     std::unique_ptr<IGameObjectHandleRetriever> handleRetriever;
+    std::vector<GameObject*> scenesWithScriptSystems;
     
 public:
     friend class ScriptComponent;

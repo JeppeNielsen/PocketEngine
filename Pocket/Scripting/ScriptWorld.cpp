@@ -1213,12 +1213,25 @@ bool ScriptWorld::AddStorage(GameStorage& storage) {
         o->enabledComponents.Resize(endComponentIndex);
     });
     
+    for(auto scene : scenesWithScriptSystems) {
+        AddGameScene(scene);
+    }
+    scenesWithScriptSystems.clear();
+    
     return true;
 }
 
 void ScriptWorld::RemoveStorage(GameStorage& storage) {
     if (baseSystemIndex == -1) return;
     int endSystemIndex = (int)storage.systems.size();
+    
+    scenesWithScriptSystems.clear();
+    storage.scenes.Iterate([this] (GameScene* scene) {
+        if (scene->systemsIndexed.size()>baseSystemIndex) {
+            scenesWithScriptSystems.push_back(scene->root);
+        }
+    });
+    
     for(int i=baseSystemIndex; i<endSystemIndex; ++i){
         storage.RemoveSystemType(i);
     }
@@ -1237,17 +1250,16 @@ void ScriptWorld::RemoveStorage(GameStorage& storage) {
     }
 }
 
-/*
-void ScriptWorld::AddGameRoot(Pocket::GameObject *root) {
-    
-    GameScene* scene = root->scene;
-    
+
+void ScriptWorld::AddGameScene(Pocket::GameObject* sceneObject) {
+    GameScene* scene = sceneObject->scene;
     for (int i=0; i<scriptSystems.size(); ++i) {
         int systemIndex = baseSystemIndex + i;
         scene->CreateSystem(systemIndex);
     }
 }
 
+/*
 void ScriptWorld::AddAllGameRoots(Pocket::GameWorld& world) {
     world.Scenes().Iterate([this](GameScene* scene) {
         AddGameRoot(scene->root);
