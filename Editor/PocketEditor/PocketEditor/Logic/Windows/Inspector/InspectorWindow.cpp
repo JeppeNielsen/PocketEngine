@@ -96,7 +96,7 @@ void InspectorWindow::ChangeEditorRoot(Pocket::GameObject *old, Pocket::GameObje
     } else {
         selectables = 0;
     }
-    inspectorEditor->GetComponent<GameObjectEditor>()->Object = 0;
+    inspectorEditor->GetComponent<GameObjectEditor>()->Object = nullptr;
 }
 
 void InspectorWindow::OnCreate() {
