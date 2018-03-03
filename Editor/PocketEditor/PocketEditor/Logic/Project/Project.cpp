@@ -62,6 +62,7 @@ void Project::Open(const std::string& path) {
     this->path = path;
     Worlds.Clear();
     
+    RefreshSourceFiles();
     scriptWorld->LoadLib();
     scriptWorld->AddStorage(*storage);
     fileSystemWatcher.Start(path);
@@ -101,7 +102,6 @@ bool Project::Compile() {
             
             scriptWorld->LoadLib();
             scriptWorld->AddStorage(*storage);
-            //world->UpdateActions();
             
             storage->DeserializeAndAddComponents(savedComponents);
            

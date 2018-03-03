@@ -29,7 +29,7 @@ RunningWorld::RunningWorld() {
     });
 }
 
-void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, GameStorage& storage) {
+void RunningWorld::Initialize(const std::string &path, const std::vector<std::string> &startScenes, GameStorage& storage, ScriptWorld& scriptWorld) {
 
     world.Initialize(storage);
     world.SceneRemoved.Bind([this] (GameObject* scene) {
@@ -48,6 +48,7 @@ void RunningWorld::Initialize(const std::string &path, const std::vector<std::st
     GameObject* prefab = storage.TryGetPrefab(startScenes[0]);
     GameObject* scene = world.CreateScene();
     SystemHelper::AddGameSystems(*scene);
+    scriptWorld.AddGameScene(scene);
     scene->ApplyClone(prefab);
 }
 

@@ -11,6 +11,7 @@
 #include "GameWorld.hpp"
 #include "FileWorld.hpp"
 #include "EditorScene.hpp"
+#include "ScriptWorld.hpp"
 
 using namespace Pocket;
 
@@ -19,7 +20,7 @@ public:
 
     RunningWorld();
 
-    void Initialize(const std::string& path, const std::vector<std::string>& startScenes, GameStorage& storage);
+    void Initialize(const std::string& path, const std::vector<std::string>& startScenes, GameStorage& storage, ScriptWorld& scriptWorld);
     void Destroy();
     
     GameWorld& World();
