@@ -604,6 +604,9 @@ template<typename T>
 struct FieldEditorCreator<std::shared_ptr<T>> {
     static IFieldEditor* Create(std::shared_ptr<T>* ptr) {
         T* p = ptr->get();
+        if (!p) {
+            return nullptr;
+        }
         return FieldEditorCreator<T*>::Create(&p);
     }
 };
