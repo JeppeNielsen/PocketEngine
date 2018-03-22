@@ -147,6 +147,7 @@ namespace Pocket {
         
         GameObject* LoadPrefab(const std::string& guid, std::istream& stream);
         GameObject* TryGetPrefab(const std::string& guid, int objectId = 1);
+        
         void ApplyPrefab(GameObject* prefab, GameObject* scene);
         void InvokeChangeToHandles(GameObject* object);
         

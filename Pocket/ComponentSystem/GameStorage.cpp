@@ -97,8 +97,8 @@ void GameStorage::RemoveSystemType(SystemId systemId) {
             list.erase(std::find(list.begin(), list.end(), systemId));
         }
     }
-    systemInfo.createFunction = 0;
-    systemInfo.deleteFunction = 0;
+    systemInfo.createFunction = nullptr;
+    systemInfo.deleteFunction = nullptr;
     systemInfo.bitset.Reset();
 }
 
@@ -207,7 +207,6 @@ void GameStorage::TryParseComponent(std::istream &stream, int componentId,
     const std::function<bool (const std::string& componentName)>& componentCallback) const {
     serializer->TryParse(stream, componentId<0 ? "" : components[componentId].name, callback, componentCallback);
 }
-
 
 void GameStorage::InvokeChangeToHandles(Pocket::GameObject *object) {
 
