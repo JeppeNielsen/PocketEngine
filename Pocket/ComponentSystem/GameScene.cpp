@@ -108,7 +108,7 @@ void GameScene::RemoveSystem(int systemId) {
     } else {
         delete system;
     }
-    systemsIndexed[systemId] = 0;
+    systemsIndexed[systemId] = nullptr;
 }
 
 GameObject* GameScene::CreateEmptyObject(GameObject *parent, bool assignId) {
