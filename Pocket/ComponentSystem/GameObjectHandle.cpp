@@ -56,6 +56,7 @@ void GameObjectHandle::Set(const Pocket::GameObject *ptr) {
     index = ptr->index;
     rootId = ptr->id;
     sceneGuid = ptr->scene->guid;
+    version = storage->objects.versions[index];
 }
 
 GameObject* GameObjectHandle::Get() {
