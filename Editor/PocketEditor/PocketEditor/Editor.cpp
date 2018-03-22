@@ -52,8 +52,8 @@ public:
     void Initialize() {
     
         std::string inputPath = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI";
-    std::string outputFile = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.tga";
-    std::string outputAtlas = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.json";
+        std::string outputFile = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.tga";
+        std::string outputAtlas = "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI.json";
     
         atlasCreator.CreateAtlas(
         "/Projects/PocketEngine/Editor/PocketEditor/PocketEditor/Assets/NewUI",

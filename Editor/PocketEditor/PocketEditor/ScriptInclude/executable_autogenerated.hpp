@@ -56,6 +56,7 @@ Rotatable* component = object->GetComponent<Rotatable>();
 TypeInfo typeInfo;
 	      typeInfo.name = "Rotatable";
 	      typeInfo.AddField(component->angularVelocity, "angularVelocity");
+	      typeInfo.AddField(component->name, "name");
 return typeInfo;
 };
 componentToFunction[GameIDHelper::GetComponentID<TransformFollower>()] = [](GameObject* object) -> TypeInfo {

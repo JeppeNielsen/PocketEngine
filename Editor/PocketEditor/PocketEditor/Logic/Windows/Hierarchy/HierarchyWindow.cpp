@@ -42,9 +42,12 @@ void HierarchyWindow::ActiveWorldChanged(OpenWorld* old, OpenWorld* current) {
 
 void HierarchyWindow::GameSceneChanged(OpenWorld *world) {
     GameObject* root =  world ? world->GameRoot : nullptr;
+    treeView->Root = root;
+    /*
     context->preActions.emplace_back([this, root] () {
         treeView->Root = root;
     });
+    */
 }
 
 void HierarchyWindow::OnCreate() {
@@ -178,11 +181,12 @@ void HierarchyWindow::Dropped(Pocket::DroppedData d, Pocket::GameObject *object)
         } else if (t.object == rootItem) {
             source->gameObject->Hierarchy().Parent = source->gameObject->Root();
         } else {
-        
             GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
             if (goField && goField->SetObject) {
                 goField->SetObject(source->gameObject);
+                break;
             }
+            //GameObjectFieldEditor* goField = t.object->GetComponent<GameObjectFieldEditor>();
         }
     }
 }

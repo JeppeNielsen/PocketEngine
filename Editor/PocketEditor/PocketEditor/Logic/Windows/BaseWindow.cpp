@@ -46,7 +46,6 @@ void BaseWindow::Create() {
         label->GetComponent<Colorable>()->Color = Colour::Black();
         */
         
-        windowObject->AddComponent<Draggable>();
         windowObject->AddComponent<Panel>();
         windowObject->AddComponent<Layouter>()->ChildrenLayoutMode = Layouter::LayoutMode::Vertical;
         

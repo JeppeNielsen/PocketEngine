@@ -36,13 +36,14 @@ bool OpenWorld::Save() {
         std::ofstream file;
         file.open(Path);
         
-        context->Storage().ApplyPrefab(prefab, scene);
+        //context->Storage().ApplyPrefab(prefab, scene);
         serializer.Serialize(prefab, file, [] (const GameObject* go, int componentID) {
             if (componentID == Pocket::GameIdHelper::GetComponentID<EditorObject>()) return false;
             if (go->Hierarchy().Parent() && go->Hierarchy().Parent()->GetComponent<Cloner>()) return false;
             return true;
         });
         file.close();
+        context->Storage().InvokeChangeToHandles(prefab);
     } catch (std::exception e) {
         succes = false;
     }
@@ -66,10 +67,10 @@ bool OpenWorld::Load(const std::string &path, const std::string &filename, Edito
             return false;
         }
         world.Initialize(context->Storage());
-        scene = world.CreateScene();
+        world.CreatePrefabScene(prefab);
+        scene = prefab;
         SystemHelper::AddGameSystems(*scene);
         editorScene.Initialize(scene);
-        scene->ApplyClone(prefab);
     } else {
         return false;
     }
@@ -84,7 +85,7 @@ GameObject* OpenWorld::Root() {
 
 void OpenWorld::Close() {
     Stop();
-    scene->Remove();
+    world.RemovePrefabScene(prefab);
     editorScene.Destroy();
 }
 

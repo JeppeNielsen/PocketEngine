@@ -41,12 +41,11 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     fileWorld.Initialize(storage);
     
     guiScene = guiWorld.CreateScene();
-    SystemHelper::AddEditorSystems(*guiScene);
+    SystemHelper::AddGuiSystems(*guiScene);
     
     gui = guiScene->CreateSystem<class Gui>();
     guiScene->CreateSystem<TouchSystem>()->TouchDepth = 10;
     guiScene->CreateSystem<TouchSystem>()->Order = -200;
-    guiScene->CreateSystem<DragSelector>()->Setup(engineContext.Viewport());
     
     gui->Setup("NewUI.tga", "NewUI.json", engineContext.Viewport());
     gui->CreateFont("SanFranciscoText-Bold.otf");//, "Font");

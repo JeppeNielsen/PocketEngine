@@ -268,6 +268,25 @@ void SystemHelper::AddGameSystems(Pocket::GameObject& scene) {
     
 }
 
+void SystemHelper::AddGuiSystems(Pocket::GameObject& scene) {
+   
+    scene.CreateSystem<AssetImporterSystem>();
+    scene.CreateSystem<FieldEditorSystem>();
+    
+    scene.CreateSystem<GameWorldViewportSystem>();
+    
+    scene.CreateSystem<GameObjectEditorSystem>();
+    
+    scene.CreateSystem<FileSystemListenerSystem>();
+    scene.CreateSystem<EditorGui>();
+    
+    scene.CreateSystem<Gui>();
+
+    scene.CreateSystem<SelectedColorerSystem>();
+    
+    scene.CreateSystem<ColorSystem>();
+}
+
 void SystemHelper::AddEditorSystems(Pocket::GameObject& scene) {
     scene.CreateSystem<EditorTransformSystem>();
     scene.CreateSystem<EditorMeshSystem>();

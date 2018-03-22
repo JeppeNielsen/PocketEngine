@@ -709,6 +709,7 @@ extern "C" Pocket::TypeInfo* GetTypeInfo(int componentID, void* componentPtr) {
 	      Pocket::TypeInfo* info = new Pocket::TypeInfo();
 	      info->name = "Rotatable";
 	      info->AddScriptField(component->angularVelocity, "angularVelocity");
+	      info->AddScriptField(component->name, "name");
       return info;
       break; }
       case 73: {

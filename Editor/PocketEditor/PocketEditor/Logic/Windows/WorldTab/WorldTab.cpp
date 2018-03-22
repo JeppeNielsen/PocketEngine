@@ -128,10 +128,14 @@ void WorldTab::CreatePlayButtons() {
         testButton->Hierarchy().Children()[0]->GetComponent<Colorable>()->Color = Colour::Black();
         testButton->GetComponent<Touchable>()->Click.Bind([this](TouchData d) {
             if (!currentWorld) return;
-            context->preActions.emplace_back([this] {
+            currentWorld->Play();
+            UpdatePlayButtons(currentWorld);
+            
+            /*context->preActions.emplace_back([this] {
                 currentWorld->Play();
                 UpdatePlayButtons(currentWorld);
             });
+            */
         });
     }
 
