@@ -28,7 +28,7 @@ bool Bitset::Contains(const Pocket::Bitset &bitset) const {
             return false;
         }
     }
-    return true;
+    return bits.size()>0;
 }
 
 void Bitset::Reset() {
