@@ -66,6 +66,9 @@ namespace Pocket {
         GameObject* CreateScene(GameObject* prefab);
         GameObject* FindScene(const std::string& guid);
         
+        void CreatePrefabScene(GameObject* prefab);
+        void RemovePrefabScene(GameObject* prefab);
+        
         const ObjectCollection& Scenes();
         
         void Update(float dt);

@@ -31,7 +31,10 @@ void GameWorld::AddActiveSystem(IGameSystem *system, GameScene *scene) {
 }
 
 void GameWorld::RemoveActiveSystem(Pocket::IGameSystem *system) {
-    activeSystems.erase(std::find(activeSystems.begin(), activeSystems.end(), ActiveSystem{ system, 0 }));
+    auto it =std::find(activeSystems.begin(), activeSystems.end(), ActiveSystem{ system, 0 });
+    if (it != activeSystems.end()) {
+        activeSystems.erase(it);
+    }
 }
 
 void GameWorld::SortActiveSystems() {
@@ -92,6 +95,23 @@ void GameWorld::RemoveScene(Pocket::GameObject *sceneRoot) {
         storage->scenes.Delete(scene->index, 0);
         SceneRemoved(sceneRoot);
     });
+}
+
+void GameWorld::CreatePrefabScene(Pocket::GameObject *prefab) {
+    for (int i=0; i<prefab->scene->systemsIndexed.size(); ++i) {
+        prefab->scene->RemoveSystem(i);
+    }
+    prefab->scene->world = this;
+    sceneRoots.push_back(prefab);
+}
+
+void GameWorld::RemovePrefabScene(Pocket::GameObject *prefab) {
+    for (int i=0; i<prefab->scene->systemsIndexed.size(); ++i) {
+        prefab->scene->RemoveSystem(i);
+    }
+    sceneRoots.erase(std::find(sceneRoots.begin(), sceneRoots.end(), prefab));
+    prefab->scene->world = storage->prefabWorld;
+    storage->PrefabLoaded(prefab);
 }
 
 void GameWorld::Update(float dt) {
