@@ -64,7 +64,9 @@ void Hierarchy::CalculateEnabled(GameObject* parent, GameObject *object) {
     if (prevWorldEnabled!=worldEnabled) {
     
         object->scene->world->delayedActions.emplace_back([hierarchy](){
-            hierarchy->owner->SetEnabled(hierarchy->worldEnabled);
+            if (hierarchy->owner) {
+                hierarchy->owner->SetEnabled(hierarchy->worldEnabled);
+            }
         });
     
         hierarchy->WorldEnabledChanged();

@@ -21,6 +21,7 @@ namespace Pocket {
         virtual int CreateNoInit(int owner) = 0;
         virtual void Reference(int index) = 0;
         virtual void Delete(int index, int owner) = 0;
+        virtual void DeleteNoReset(int index, int owner) = 0;
         virtual int Clone(int index, int owner) = 0;
         virtual void* Get(int index) = 0;
         virtual void Clear() = 0;
@@ -44,13 +45,13 @@ namespace Pocket {
                 versions.emplace_back(maxVersion);
                 entries.resize(freeIndex + 1);
                 owners.emplace_back(owner);
+                entries[freeIndex] = defaultObject;
             } else {
                 freeIndex = freeIndicies.back();
                 freeIndicies.pop_back();
                 references[freeIndex] = 1;
                 owners[freeIndex] = owner;
             }
-            entries[freeIndex] = defaultObject;
             
             ++count;
             return freeIndex;
@@ -80,6 +81,19 @@ namespace Pocket {
         }
         
         void Delete(int index, int owner) override {
+            --references[index];
+            if (references[index]==0) {
+                ++versions[index];
+                --count;
+                freeIndicies.push_back(index);
+                owners[index] = -1;
+                entries[index] = defaultObject;
+            } else if (owners[index] == owner) {
+                owners[index] = -1;
+            }
+        }
+        
+        void DeleteNoReset(int index, int owner) override {
             --references[index];
             if (references[index]==0) {
                 ++versions[index];

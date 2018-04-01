@@ -109,3 +109,14 @@ GameObject* GameObjectHandleRetriever::Get(GameStorage* storage, int index, int 
     return handle();
 }
 
+void GameObjectHandleRetriever::AddHandle(Pocket::GameObjectHandle *handle) {
+    this->storage->handles.push_back(handle);
+}
+
+void GameObjectHandleRetriever::RemoveHandle(Pocket::GameObjectHandle *handle) {
+    auto it = std::find(this->storage->handles.begin(), this->storage->handles.end(), handle);
+    if (it!=this->storage->handles.end()) {
+        this->storage->handles.erase(it);
+    }
+}
+

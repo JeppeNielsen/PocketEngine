@@ -89,12 +89,12 @@ GameObject* GameWorld::FindScene(const std::string& guid) {
 
 void GameWorld::RemoveScene(Pocket::GameObject *sceneRoot) {
     GameScene* scene = sceneRoot->scene;
-    delayedActions.emplace_back([this, scene, sceneRoot] {
+    //delayedActions.emplace_back([this, scene, sceneRoot] {
         sceneRoots.erase(std::find(sceneRoots.begin(), sceneRoots.end(), sceneRoot));
         scene->Destroy();
-        storage->scenes.Delete(scene->index, 0);
         SceneRemoved(sceneRoot);
-    });
+        storage->scenes.DeleteNoReset(scene->index, 0);
+    //});
 }
 
 void GameWorld::CreatePrefabScene(Pocket::GameObject *prefab) {

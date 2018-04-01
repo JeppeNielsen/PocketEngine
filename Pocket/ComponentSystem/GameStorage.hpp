@@ -20,6 +20,7 @@ namespace Pocket {
 
     class GameObjectJsonSerializer;
     class ScriptWorld;
+    class GameObjectHandleRetriever;
 
     struct ComponentType {
         std::string name;
@@ -162,5 +163,6 @@ namespace Pocket {
         friend class GameScene;
         friend class GameObjectJsonSerializer;
         friend class ScriptWorld;
+        friend class GameObjectHandleRetriever;
     };
 }

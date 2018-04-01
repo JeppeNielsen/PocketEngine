@@ -1133,6 +1133,9 @@ void ScriptWorld::SetStorage(GameStorage& storage, const std::function<bool(int)
     
     baseComponentIndex = (int)storage.components.size();
     baseSystemIndex = (int)storage.systems.size();
+    
+    GameObjectHandleRetriever* gameObjectHandleRetriever = static_cast<GameObjectHandleRetriever*>(handleRetriever.get());
+    gameObjectHandleRetriever->storage = &storage;
 }
 
 ScriptWorld::ScriptSystems ScriptWorld::GetScriptSystemsFromPtr(int *ptr) {

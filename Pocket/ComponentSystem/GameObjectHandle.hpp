@@ -17,11 +17,16 @@ namespace Pocket {
     class IGameObjectHandleRetriever {
     public:
         virtual GameObject* Get(GameStorage* storage, int index, int version, int rootId, std::string sceneGuid) = 0;
+        virtual void AddHandle(GameObjectHandle* handle) = 0;
+        virtual void RemoveHandle(GameObjectHandle* handle) = 0;
     };
     
     class GameObjectHandleRetriever : public IGameObjectHandleRetriever {
     public:
+        GameStorage* storage;
         GameObject* Get(GameStorage* storage, int index, int version, int rootId, std::string sceneGuid) override;
+        void AddHandle(GameObjectHandle* handle) override;
+        void RemoveHandle(GameObjectHandle* handle) override;
     };
     
     class GameObjectHandle {

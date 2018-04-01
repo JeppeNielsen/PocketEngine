@@ -58,14 +58,13 @@ void GameObject::AddComponent(ComponentId id) {
 
     componentIndicies[id] = scene->storage->components[id].container->Create(index);
     activeComponents.Set(id, true);
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([this, id]() {
-            if (scene->ComponentCreated) {
-                scene->ComponentCreated(this, id);
-            }
-            TrySetComponentEnabled(id, true);
-        });
-    }
+
+    scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
+        TrySetComponentEnabled(id, true);
+    });
 }
 
 void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
@@ -78,14 +77,12 @@ void GameObject::AddComponent(ComponentId id, GameObject* referenceObject) {
     componentIndicies[id] = referenceObject->componentIndicies[id];
     scene->storage->components[id].container->Reference(referenceObject->componentIndicies[id]);
     activeComponents.Set(id, true);
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([this, id]() {
-            if (scene->ComponentCreated) {
-                scene->ComponentCreated(this, id);
-            }
-            TrySetComponentEnabled(id, true);
-        });
-    }
+    scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
+        TrySetComponentEnabled(id, true);
+    });
 }
 
 void GameObject::RemoveComponent(ComponentId id) {
@@ -93,22 +90,17 @@ void GameObject::RemoveComponent(ComponentId id) {
     if (removed) return;
     if (!activeComponents[id]) return;
     
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([this, id]() {
-            if (!activeComponents[id]) {
-               return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
-            }
-            if (scene->ComponentRemoved) {
-                scene->ComponentRemoved(this, id);
-            }
-            TrySetComponentEnabled(id, false);
-            scene->storage->components[id].container->Delete(componentIndicies[id], index);
-            activeComponents.Set(id, false);
-        });
-    } else {
+    scene->world->delayedActions.emplace_back([this, id]() {
+        if (!activeComponents[id]) {
+           return; // might have been removed by earlier remove action, eg if two consecutive RemoveComponent<> was called
+        }
+        if (scene->ComponentRemoved) {
+            scene->ComponentRemoved(this, id);
+        }
+        TrySetComponentEnabled(id, false);
         scene->storage->components[id].container->Delete(componentIndicies[id], index);
         activeComponents.Set(id, false);
-    }
+    });
 }
 
 void GameObject::CloneComponent(ComponentId id, GameObject* object) {
@@ -119,27 +111,23 @@ void GameObject::CloneComponent(ComponentId id, GameObject* object) {
     componentIndicies[id] = scene->storage->components[id].container->Clone(object->componentIndicies[id], index);
     activeComponents.Set(id, true);
     
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([this, id]() {
-            if (scene->ComponentCreated) {
-                scene->ComponentCreated(this, id);
-            }
-            TrySetComponentEnabled(id, true);
-        });
-    }
+    scene->world->delayedActions.emplace_back([this, id]() {
+        if (scene->ComponentCreated) {
+            scene->ComponentCreated(this, id);
+        }
+        TrySetComponentEnabled(id, true);
+    });
 }
 
 void GameObject::ReplaceComponent(ComponentId id, GameObject *referenceObject) {
     if (removed) return;
     
-    if (scene->world) {
+    scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
+        RemoveComponent(id);
         scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
-            RemoveComponent(id);
-            scene->world->delayedActions.emplace_back([this, id, referenceObject]() {
-                AddComponent(id, referenceObject);
-            });
+            AddComponent(id, referenceObject);
         });
-    }
+    });
 }
 
 GameObject* GameObject::GetComponentOwner(ComponentId componentId) const {
@@ -177,11 +165,9 @@ void GameObject::SetEnabled(bool enabled) {
 }
 
 void GameObject::EnableComponent(ComponentId id, bool enable) {
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([id, enable, this](){
-            TrySetComponentEnabled(id, enable);
-        });
-    }
+    scene->world->delayedActions.emplace_back([id, enable, this](){
+        TrySetComponentEnabled(id, enable);
+    });
 }
 
 void GameObject::TryAddToSystem(int systemId) {
@@ -242,43 +228,40 @@ void GameObject::TrySetComponentEnabled(ComponentId id, bool enable) {
 
 void GameObject::Remove() {
     if (removed) return;
-    int localIndex = index;
-    if (scene->world) {
-        scene->world->delayedActions.emplace_back([this, localIndex]() {
-            SetEnabled(false);
-            forceSetNextParent = true;
-            if (IsRoot()) {
-                scene->world->RemoveScene(this);
-            }
-            Hierarchy().Parent.Changed.ClearNonDefaults();
-            Hierarchy().Enabled.Changed.ClearNonDefaults();
-            Hierarchy().Order.Changed.ClearNonDefaults();
-            Hierarchy().Parent = nullptr;
-            forceSetNextParent = false;
-            for(int i=0; i<activeComponents.Size(); ++i) {
-                if (activeComponents[i]) {
-                    scene->storage->components[i].container->Delete(componentIndicies[i], index);
-                    activeComponents.Set(i, false);
-                }
-            }
-            scene->storage->objects.Delete(index, 0);
-            if (scene->ObjectRemoved) {
-                scene->ObjectRemoved(this);
-            }
-        });
-    } else {
+    scene->world->delayedActions.emplace_back([this]() {
+        SetEnabled(false);
+        forceSetNextParent = true;
+        
+        Hierarchy().Parent.Changed.ClearNonDefaults();
+        Hierarchy().Enabled.Changed.ClearNonDefaults();
+        Hierarchy().Order.Changed.ClearNonDefaults();
+        Hierarchy().Parent = nullptr;
+        forceSetNextParent = false;
         for(int i=0; i<activeComponents.Size(); ++i) {
             if (activeComponents[i]) {
                 scene->storage->components[i].container->Delete(componentIndicies[i], index);
                 activeComponents.Set(i, false);
             }
         }
-        scene->storage->objects.Delete(index, 0);
-    }
+        if (scene->ObjectRemoved) {
+            scene->ObjectRemoved(this);
+        }
+        if (!IsRoot()) {
+            scene->storage->objects.DeleteNoReset(index, 0);
+        }
+    });
     removed = true;
     class Hierarchy& h = Hierarchy();
     for(auto child : h.children) {
         child->Remove();
+    }
+    
+    if (IsRoot()) {
+        scene->world->delayedActions.emplace_back([this]() {
+            GameStorage* storage = scene->storage;
+            scene->world->RemoveScene(this);
+            storage->objects.DeleteNoReset(index, 0);
+        });
     }
 }
 
@@ -323,7 +306,43 @@ void GameObject::ApplyCloneInternal(std::vector<CloneReferenceComponent>& refere
 void GameObject::ApplyClone(Pocket::GameObject *source, const std::function<bool(GameObject*)>& predicate) {
     if (predicate && !predicate(source)) return;
     std::vector<CloneReferenceComponent> referenceComponents;
+    
+    size_t prevObjectHandles = World()->storage->handles.size();
     ApplyCloneInternal(referenceComponents, source, predicate);
+    size_t currentObjectHandles = World()->storage->handles.size();
+    
+    if (currentObjectHandles>prevObjectHandles) {
+        GameStorage::Handles handles = World()->storage->handles;
+        for (size_t i=prevObjectHandles; i<currentObjectHandles; i++) {
+            GameObjectHandle* gameObjectHandle = handles[i];
+            GameObject* objectPointedTo = gameObjectHandle->Get();
+            if (objectPointedTo && objectPointedTo->scene == source->scene) {
+                int referenceIndex = 0;
+                source->Recurse([&referenceIndex, &objectPointedTo] (const GameObject* o) {
+                    if (o == objectPointedTo) {
+                        return true;
+                    } else {
+                        referenceIndex++;
+                        return false;
+                    }
+                });
+            
+                int indexCounter = 0;
+                this->Recurse([&referenceIndex, &indexCounter, &objectPointedTo] (const GameObject* o) {
+                    if (indexCounter == referenceIndex) {
+                        objectPointedTo = (GameObject*)o;
+                        return true;
+                    } else {
+                        indexCounter++;
+                        return false;
+                    }
+                });
+                
+                gameObjectHandle->Set(objectPointedTo);
+            }
+        }
+    }
+    
     
     for(auto& referenceComponent : referenceComponents) {
         if (referenceComponent.referenceObjectId<0) {
