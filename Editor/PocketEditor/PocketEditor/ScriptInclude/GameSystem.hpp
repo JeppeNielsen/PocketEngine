@@ -118,10 +118,12 @@ extern "C" Pocket::IGameObjectHandleRetriever* SetGameObjectHandleRetriever(Pock
 
 namespace Pocket {
     class GameWorld;
-    
+    class GameObjectHandle;
     class IGameObjectHandleRetriever {
     public:
         virtual GameObject* Get(GameWorld* world, int index, int version, int rootId, std::string sceneGuid) = 0;
+        virtual void AddHandle(GameObjectHandle* handle) = 0;
+        virtual void RemoveHandle(GameObjectHandle* handle) = 0;
     };
     
     static IGameObjectHandleRetriever* gameObjectHandleRetriever = nullptr;
@@ -136,7 +138,21 @@ namespace Pocket {
             return (index!=other.index || version!=other.version || rootId!=other.version || sceneGuid!=other.sceneGuid);
         }
         
-        GameObjectHandle() : world(0), index(-1) {}
+        GameObjectHandle() : world(nullptr), index(-1) {}
+        
+        void operator=(const GameObjectHandle& handle) {
+            world = handle.world;
+            index = handle.index;
+            version = handle.version;
+            rootId = handle.rootId;
+            sceneGuid = handle.sceneGuid;
+        
+            if (handle.world) {
+                SetGameObjectHandleRetriever(nullptr)->AddHandle(this);
+            } else {
+                SetGameObjectHandleRetriever(nullptr)->RemoveHandle(this);
+            }
+        }
         
         explicit operator bool() {
             return operator->();
