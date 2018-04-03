@@ -70,6 +70,7 @@
 		72308D131E13D55F00B92B8D /* AssetImporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D111E13D55F00B92B8D /* AssetImporter.cpp */; };
 		72308D171E1449BC00B92B8D /* BaseModule.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D151E1449BC00B92B8D /* BaseModule.cpp */; };
 		72308D1B1E144D8200B92B8D /* AssetImporters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72308D191E144D8200B92B8D /* AssetImporters.cpp */; };
+		7230D1252071949500CC5622 /* TestExeMain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D1242071949500CC5622 /* TestExeMain.cpp */; };
 		723689A71D873A4E006480F0 /* ProjectWindow.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A51D873A4E006480F0 /* ProjectWindow.cpp */; };
 		723689AA1D888BD6006480F0 /* OpenWorld.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689A81D888BD6006480F0 /* OpenWorld.cpp */; };
 		723689AD1D888D9E006480F0 /* OpenWorldCollection.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 723689AB1D888D9E006480F0 /* OpenWorldCollection.cpp */; };
@@ -628,6 +629,7 @@
 		72308D161E1449BC00B92B8D /* BaseModule.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = BaseModule.hpp; sourceTree = "<group>"; };
 		72308D191E144D8200B92B8D /* AssetImporters.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AssetImporters.cpp; sourceTree = "<group>"; };
 		72308D1A1E144D8200B92B8D /* AssetImporters.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = AssetImporters.hpp; sourceTree = "<group>"; };
+		7230D1242071949500CC5622 /* TestExeMain.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TestExeMain.cpp; sourceTree = "<group>"; };
 		723689A51D873A4E006480F0 /* ProjectWindow.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProjectWindow.cpp; sourceTree = "<group>"; };
 		723689A61D873A4E006480F0 /* ProjectWindow.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProjectWindow.hpp; sourceTree = "<group>"; };
 		723689A81D888BD6006480F0 /* OpenWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OpenWorld.cpp; sourceTree = "<group>"; };
@@ -2305,6 +2307,7 @@
 				7287F10A1C9B41B3005D05FA /* Assets */,
 				7287F1071C9B3F4C005D05FA /* Editor.cpp */,
 				72AF82102034CBAA00380BC1 /* RenderTest.cpp */,
+				7230D1242071949500CC5622 /* TestExeMain.cpp */,
 			);
 			path = PocketEditor;
 			sourceTree = "<group>";
@@ -4387,6 +4390,7 @@
 				7299541F1C99F76100DAAE5D /* Transform.cpp in Sources */,
 				72AA3C1F201D289E00CD6088 /* GameStorage.cpp in Sources */,
 				729954251C99F76100DAAE5D /* MathHelper.cpp in Sources */,
+				7230D1252071949500CC5622 /* TestExeMain.cpp in Sources */,
 				729954411C99F76100DAAE5D /* b2Math.cpp in Sources */,
 				729953CF1C99F76100DAAE5D /* StringHelper.cpp in Sources */,
 				729954861C99F76100DAAE5D /* btEmptyShape.cpp in Sources */,
