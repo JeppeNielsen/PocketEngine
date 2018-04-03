@@ -53,7 +53,7 @@ std::vector<std::string> ProjectBuilder::GetEngineHeaders() {
     "Logic/Effects",
     "Logic/Gui",
     "Logic/Gui/Layout",
-    "Logic/Gui/Menu",
+    "Logic/Gui/Panels",
     
     "Logic/Interaction",
     

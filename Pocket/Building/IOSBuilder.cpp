@@ -56,9 +56,9 @@ void IOSBuilder::Build(const std::string &outputPath, const std::string &pocketE
         */
         
         p.world->WriteExecutableMain(cppFile, [this] (std::string& code){
-            code += "world.SetLayerScene(0, world.TryFindRoot(\"";
-            code += project->startupSceneGUID;
-            code += "\"));";
+            code += "auto startScenePrefab = storage.TryGetPrefab(\""+project->startupSceneGUID+"\");";
+            code += "auto startScene = world.CreateScene(startScenePrefab);";
+            code += "CreateDefaultSystems(*startScene)";
         });
     }
     

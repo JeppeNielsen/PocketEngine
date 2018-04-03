@@ -72,9 +72,9 @@ void OSXBuilder::Build(const std::string &outputPath, const std::string &pocketE
     std::string outputExe = exeFolder +"/Game";
 
     p.world->BuildExecutable(pocketEngineLibPath, outputExe, [this] (std::string& code) {
-        code += "world.SetLayerScene(0, world.TryFindRoot(\"";
-        code += project->startupSceneGUID;
-        code += "\"));";
+code += "auto startScenePrefab = storage.TryGetPrefab(\""+project->startupSceneGUID+"\");";
+code += "auto startScene = world.CreateScene(startScenePrefab);";
+code += "CreateDefaultSystems(*startScene);";
     });
 }
 

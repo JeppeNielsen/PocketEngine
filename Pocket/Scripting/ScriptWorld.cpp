@@ -253,7 +253,7 @@ bool ScriptWorld::BuildExecutable(const std::string &pathToPocketEngineLib, cons
     compilerFlags += POCKET_PATH + "Logic/Effects";
     compilerFlags += POCKET_PATH + "Logic/Gui";
     compilerFlags += POCKET_PATH + "Logic/Gui/Layout";
-    compilerFlags += POCKET_PATH + "Logic/Gui/Menu";
+    compilerFlags += POCKET_PATH + "Logic/Gui/Panels";
     
     compilerFlags += POCKET_PATH + "Logic/Interaction";
     
@@ -791,6 +791,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"Engine.hpp\""<<std::endl;
     file<<"#include \"File.hpp\""<<std::endl;
     file<<"#include \"FileArchive.hpp\""<<std::endl;
+    file<<"#include \"GameObjectJsonSerializer.hpp\""<<std::endl;
     
     //Animation
     file<<"#include \"AnimatorSystem.hpp\""<<std::endl;
@@ -812,6 +813,7 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     file<<"#include \"ParticleUpdaterSystem.hpp\""<<std::endl;
 
     //Gui
+    file<<"#include \"Gui.hpp\""<<std::endl;
     file<<"#include \"DroppableSystem.hpp\""<<std::endl;
     file<<"#include \"FontTextureSystem.hpp\""<<std::endl;
     file<<"#include \"LabelMeshSystem.hpp\""<<std::endl;
@@ -876,92 +878,165 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     
     using namespace Pocket;
     
-    void CreateDefaultSystems(Pocket::GameObject &world) {
-   
-    world.CreateSystem<AnimatorSystem>();
-
-    //Assets
-    world.CreateSystem<AssetManager>();
-
-    //Audio
-    world.CreateSystem<SoundSystem>();
-
-    //Cloning
-    world.CreateSystem<ClonerSystem>();
-
-    //Common
-    world.CreateSystem<HierarchyOrder>();
-
-    //Effects
-    world.CreateSystem<ParticleMeshUpdater>();
-    world.CreateSystem<ParticleUpdaterSystem>();
-
-    //Gui
-    world.CreateSystem<DroppableSystem>();
-    world.CreateSystem<FontTextureSystem>();
-    world.CreateSystem<LabelMeshSystem>();
-    world.CreateSystem<LayoutSystem>();
-    world.CreateSystem<SlicedQuadMeshSystem>();
-    world.CreateSystem<SpriteMeshSystem>();
-    world.CreateSystem<SpriteTextureSystem>();
-    world.CreateSystem<TextBoxLabelSystem>();
-    world.CreateSystem<TextBoxSystem>();
-
-    //Input
-    world.CreateSystem<InputMapperSystem>();
-
-    //Interaction
-    world.CreateSystem<HoverSystem>();
-    world.CreateSystem<TouchCancelSystem>();
-    world.CreateSystem<TouchSystem>()->TouchDepth = 0;
-
-    //Movement
-    world.CreateSystem<DraggableMotionSystem>();
-    world.CreateSystem<DraggableSystem>();
-    world.CreateSystem<FirstPersonMoverSystem>();
-    world.CreateSystem<LimitableSystem>();
-    world.CreateSystem<VelocitySystem>();
-    world.CreateSystem<ScrollWheelMoverSystem>();
-
-    //Physics
-    //world.CreateSystem<PhysicsSystem>();
-    //world.CreateSystem<PhysicsSystem2d>();
-
-    //Rendering
-    world.CreateSystem<ColorSystem>();
-    world.CreateSystem<DistanceScalerSystem>();
-    world.CreateSystem<LineRendererSystem>();
-    world.CreateSystem<RenderSystem>();
-
-    //Scenes
-    world.CreateSystem<SceneManagerSystem>();
-
-    //Selection
-    world.CreateSystem<ClickSelectorSystem>();
-    world.CreateSystem<DragSelector>();
-    world.CreateSystem<SelectableDragSystem>();
-    world.CreateSystem<SelectedColorerSystem>();
-
-    //Spatial
-    world.CreateSystem<TransformHierarchy>();
+    void InitializeScriptSystems(Pocket::GameStorage& storage);
     
-    //Spawning
-    world.CreateSystem<SpawnerSystem>();
+    void InitializeDefaultSystems(Pocket::GameStorage& storage) {
+   
+        //spawning
+        storage.AddSystemType<SpawnerSystem>();
+        
+        //Animations
+        storage.AddSystemType<AnimatorSystem>();
 
-    //Triggering
-    world.CreateSystem<TriggerSystem>();
-    world.CreateSystem<TriggerTouchSystem>();
+        //Assets
+        storage.AddSystemType<AssetManager>();
+
+        //Audio
+        storage.AddSystemType<SoundSystem>();
+
+        //Cloning
+        storage.AddSystemType<ClonerSystem>();
+
+        //Common
+        storage.AddSystemType<HierarchyOrder>();
+
+        //Effects
+        storage.AddSystemType<ParticleMeshUpdater>();
+        storage.AddSystemType<ParticleUpdaterSystem>();
+
+        //Gui
+        storage.AddSystemType<Gui>();
+        storage.AddSystemType<SlicedQuadMeshSystem>();
+        
+        //Input
+        storage.AddSystemType<InputMapperSystem>();
+
+        //Interaction
+        storage.AddSystemType<TouchCancelSystem>();
+        storage.AddSystemType<TouchSystem>();
+
+        //Movement
+        storage.AddSystemType<DraggableMotionSystem>();
+        storage.AddSystemType<DraggableSystem>();
+        storage.AddSystemType<FirstPersonMoverSystem>();
+        storage.AddSystemType<LimitableSystem>();
+        storage.AddSystemType<VelocitySystem>();
+
+        //Physics
+        //storage.AddSystemType<PhysicsSystem>();
+        //storage.AddSystemType<PhysicsSystem2d>();
+
+        //Rendering
+        storage.AddSystemType<ColorSystem>();
+        storage.AddSystemType<DistanceScalerSystem>();
+        storage.AddSystemType<LineRendererSystem>();
+        storage.AddSystemType<RenderSystem>();
+
+        //Scenes
+        storage.AddSystemType<SceneManagerSystem>();
+
+        //Selection
+        storage.AddSystemType<ClickSelectorSystem>();
+        storage.AddSystemType<DragSelector>();
+        storage.AddSystemType<SelectableDragSystem>();
+        storage.AddSystemType<SelectedColorerSystem>();
+
+        //Spatial
+        storage.AddSystemType<TransformHierarchy>();
+
+        //Triggering
+        storage.AddSystemType<TriggerSystem>();
+        storage.AddSystemType<TriggerTouchSystem>();
+     
+        InitializeScriptSystems(storage);
+    }
+    
+    void CreateScriptSystems(Pocket::GameObject& scene);
+    
+    void CreateDefaultSystems(Pocket::GameObject& scene) {
+   
+        //Spawning
+        scene.CreateSystem<SpawnerSystem>();
+        
+        //Animations
+        scene.CreateSystem<AnimatorSystem>();
+
+        //Assets
+        scene.CreateSystem<AssetManager>();
+
+        //Audio
+        scene.CreateSystem<SoundSystem>();
+
+        //Cloning
+        scene.CreateSystem<ClonerSystem>();
+
+        //Common
+        scene.CreateSystem<HierarchyOrder>();
+
+        //Effects
+        scene.CreateSystem<ParticleMeshUpdater>();
+        scene.CreateSystem<ParticleUpdaterSystem>();
+
+        //Gui
+        scene.CreateSystem<Gui>();
+        scene.CreateSystem<SlicedQuadMeshSystem>();
+        
+        //Input
+        scene.CreateSystem<InputMapperSystem>();
+
+        //Interaction
+        scene.CreateSystem<TouchCancelSystem>();
+        scene.CreateSystem<TouchSystem>();
+
+        //Movement
+        scene.CreateSystem<DraggableMotionSystem>();
+        scene.CreateSystem<DraggableSystem>();
+        scene.CreateSystem<FirstPersonMoverSystem>();
+        scene.CreateSystem<LimitableSystem>();
+        scene.CreateSystem<VelocitySystem>();
+
+        //Physics
+        //scene.CreateSystem<PhysicsSystem>();
+        //scene.CreateSystem<PhysicsSystem2d>();
+
+        //Rendering
+        scene.CreateSystem<ColorSystem>();
+        scene.CreateSystem<DistanceScalerSystem>();
+        scene.CreateSystem<LineRendererSystem>();
+        scene.CreateSystem<RenderSystem>();
+
+        //Scenes
+        scene.CreateSystem<SceneManagerSystem>();
+
+        //Selection
+        scene.CreateSystem<ClickSelectorSystem>();
+        scene.CreateSystem<DragSelector>();
+        scene.CreateSystem<SelectableDragSystem>();
+        scene.CreateSystem<SelectedColorerSystem>();
+
+        //Spatial
+        scene.CreateSystem<TransformHierarchy>();
+
+        //Triggering
+        scene.CreateSystem<TriggerSystem>();
+        scene.CreateSystem<TriggerTouchSystem>();
+        
+        CreateScriptSystems(scene);
+    }
     
     ) << std::endl;
+    
+    file << "void InitializeScriptSystems(Pocket::GameStorage& storage) {"<<std::endl;
+    for(auto& systems : data.systems) {
+        file << "storage.AddSystemType<"<<systems.name<<">();";
+    }
+    file<< "}"<<std::endl;
 
-    file << "}"<<std::endl;
-    
-    
-    file << "void CreateScriptSystems(Pocket::GameObject &world) {"<<std::endl;
+    file << "void CreateScriptSystems(Pocket::GameObject& scene) {"<<std::endl;
     
     for(auto& component : data.components) {
         
-        file<<"world.World()->AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
+        file<<"scene.World()->Storage().AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
         file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
         file<< "      Pocket::TypeInfo typeInfo;"<<std::endl;
         file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
@@ -979,43 +1054,53 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     }
     
     for(auto& system : data.systems) {
-        file << "world.CreateSystem<"<<system.name<< ">();"<<std::endl;
+        file << "scene.CreateSystem<"<<system.name<< ">();"<<std::endl;
     }
     
     file<< "}"<<std::endl;
 
-    
-    
-        
     std::string source = FILE_SOURCE(
 
 class GameCode : public Pocket::GameState<GameCode> {
 public:
+    Pocket::GameStorage storage;
     Pocket::GameWorld world;
     Pocket::FileArchive fileArchive;
     
     void Initialize() {
+    
+        storage.CreateSerializer < GameObjectJsonSerializer > ();
+        storage.PrefabLoaded = [this] (GameObject* prefab) {
+            prefab->CreateSystem<AssetManager>();
+        };
+        InitializeDefaultSystems(storage);
+        
+        world.Initialize(storage);
     
         std::string zipFile = "resources";
     
         fileArchive.Initialize(zipFile);
         File::SetArchive(fileArchive);
         
-        world.GuidToRoot = [this] (const std::string& guid) {
-            GameObject* root = 0;
-            if (!fileArchive.TryLoadData(guid, [&root, this] (void* data, size_t size) {
+        storage.GuidToRoot = [this] (const std::string& guid) {
+            GameObject* root = nullptr;
+            if (!fileArchive.TryLoadData(guid, [&root, &guid, this] (void* data, size_t size) {
                 std::stringstream ss;
                 ss.write((const char*)data, size);
-                root = world.CreateRootFromJson(ss, [](GameObject* root) {
+                
+                root = storage.LoadPrefab(guid, ss);
+                
+                /*root = world.CreateRootFromJson(ss, [](GameObject* root) {
                     CreateDefaultSystems(*root);
                     CreateScriptSystems(*root);
                 });
+                */
             })) {
                 std::cout << "unable to load: "<<guid <<std::endl;
             }
             return root;
         };
-        world.GuidToPath = [] (const std::string& guid) { return guid; };
+        storage.GuidToPath = [] (const std::string& guid) { return guid; };
 
 );
 
