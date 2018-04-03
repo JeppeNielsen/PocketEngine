@@ -56,6 +56,14 @@
 		7220F62B1E64FFD70063EAD5 /* TriggerSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F6251E64FFD70063EAD5 /* TriggerSystem.hpp */; };
 		7220F62C1E64FFD70063EAD5 /* TriggerTouchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7220F6261E64FFD70063EAD5 /* TriggerTouchSystem.cpp */; };
 		7220F62D1E64FFD70063EAD5 /* TriggerTouchSystem.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7220F6271E64FFD70063EAD5 /* TriggerTouchSystem.hpp */; };
+		7230D11820718FF900CC5622 /* Hierarchy.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11420718FF800CC5622 /* Hierarchy.hpp */; };
+		7230D11920718FF900CC5622 /* Hierarchy.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D11520718FF800CC5622 /* Hierarchy.cpp */; };
+		7230D11A20718FF900CC5622 /* GameStorage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D11620718FF800CC5622 /* GameStorage.cpp */; };
+		7230D11B20718FF900CC5622 /* GameStorage.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11720718FF800CC5622 /* GameStorage.hpp */; };
+		7230D1202071901500CC5622 /* GameObjectJsonSerializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D11C2071901400CC5622 /* GameObjectJsonSerializer.cpp */; };
+		7230D1212071901500CC5622 /* GameObjectSerializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D11D2071901400CC5622 /* GameObjectSerializer.cpp */; };
+		7230D1222071901500CC5622 /* GameObjectJsonSerializer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11E2071901400CC5622 /* GameObjectJsonSerializer.hpp */; };
+		7230D1232071901500CC5622 /* GameObjectSerializer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11F2071901400CC5622 /* GameObjectSerializer.hpp */; };
 		72A4B0C71E4BACFE00A856F5 /* ftconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC51E4BACFD00A856F5 /* ftconfig.h */; };
 		72A4B0C81E4BACFE00A856F5 /* ftheader.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC61E4BACFD00A856F5 /* ftheader.h */; };
 		72A4B0C91E4BACFE00A856F5 /* ftmodule.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC71E4BACFD00A856F5 /* ftmodule.h */; };
@@ -553,6 +561,14 @@
 		7220F6251E64FFD70063EAD5 /* TriggerSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerSystem.hpp; sourceTree = "<group>"; };
 		7220F6261E64FFD70063EAD5 /* TriggerTouchSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TriggerTouchSystem.cpp; sourceTree = "<group>"; };
 		7220F6271E64FFD70063EAD5 /* TriggerTouchSystem.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TriggerTouchSystem.hpp; sourceTree = "<group>"; };
+		7230D11420718FF800CC5622 /* Hierarchy.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Hierarchy.hpp; sourceTree = "<group>"; };
+		7230D11520718FF800CC5622 /* Hierarchy.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Hierarchy.cpp; sourceTree = "<group>"; };
+		7230D11620718FF800CC5622 /* GameStorage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameStorage.cpp; sourceTree = "<group>"; };
+		7230D11720718FF800CC5622 /* GameStorage.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameStorage.hpp; sourceTree = "<group>"; };
+		7230D11C2071901400CC5622 /* GameObjectJsonSerializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectJsonSerializer.cpp; sourceTree = "<group>"; };
+		7230D11D2071901400CC5622 /* GameObjectSerializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectSerializer.cpp; sourceTree = "<group>"; };
+		7230D11E2071901400CC5622 /* GameObjectJsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectJsonSerializer.hpp; sourceTree = "<group>"; };
+		7230D11F2071901400CC5622 /* GameObjectSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectSerializer.hpp; sourceTree = "<group>"; };
 		72A4AFC51E4BACFD00A856F5 /* ftconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftconfig.h; sourceTree = "<group>"; };
 		72A4AFC61E4BACFD00A856F5 /* ftheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftheader.h; sourceTree = "<group>"; };
 		72A4AFC71E4BACFD00A856F5 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftmodule.h; sourceTree = "<group>"; };
@@ -1679,6 +1695,10 @@
 		72B492301DCE56600063518A /* ComponentSystem */ = {
 			isa = PBXGroup;
 			children = (
+				7230D11620718FF800CC5622 /* GameStorage.cpp */,
+				7230D11720718FF800CC5622 /* GameStorage.hpp */,
+				7230D11520718FF800CC5622 /* Hierarchy.cpp */,
+				7230D11420718FF800CC5622 /* Hierarchy.hpp */,
 				72A4B3841E4BB1CC00A856F5 /* FileWorld.cpp */,
 				72A4B3851E4BB1CC00A856F5 /* FileWorld.hpp */,
 				72A4B3861E4BB1CC00A856F5 /* GameObjectHandle.cpp */,
@@ -1964,6 +1984,10 @@
 		72EC10051D2D912C00B69802 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
+				7230D11C2071901400CC5622 /* GameObjectJsonSerializer.cpp */,
+				7230D11E2071901400CC5622 /* GameObjectJsonSerializer.hpp */,
+				7230D11D2071901400CC5622 /* GameObjectSerializer.cpp */,
+				7230D11F2071901400CC5622 /* GameObjectSerializer.hpp */,
 				7206DDEC1F7989AB0069B8E9 /* IFieldEditor.hpp */,
 				7206DDED1F7989AB0069B8E9 /* ObjectConstructor.hpp */,
 				7206DDEE1F7989AB0069B8E9 /* TypeInterpolator.hpp */,
@@ -2035,6 +2059,7 @@
 				72C82FAC1FB8E0A400B86855 /* LineRendererSystem.hpp in Headers */,
 				72EC10551D2D912C00B69802 /* Property.hpp in Headers */,
 				72A4B0F31E4BACFE00A856F5 /* ftdriver.h in Headers */,
+				7230D11B20718FF900CC5622 /* GameStorage.hpp in Headers */,
 				72A4B0E81E4BACFE00A856F5 /* ftsnames.h in Headers */,
 				72EC10361D2D912C00B69802 /* GamePadManager.hpp in Headers */,
 				72EC13471D2D912C00B69802 /* DeferredBuffers.hpp in Headers */,
@@ -2198,8 +2223,10 @@
 				72A4B3381E4BB00500A856F5 /* Velocity.hpp in Headers */,
 				7206DE3E1F8BFF5F0069B8E9 /* RenderTexture.hpp in Headers */,
 				72A4B2D21E4BB00500A856F5 /* Orderable.hpp in Headers */,
+				7230D11820718FF900CC5622 /* Hierarchy.hpp in Headers */,
 				72EC11351D2D912C00B69802 /* Vector3.hpp in Headers */,
 				7206DDEA1F7989010069B8E9 /* Animator.hpp in Headers */,
+				7230D1222071901500CC5622 /* GameObjectJsonSerializer.hpp in Headers */,
 				72EC134E1D2D912C00B69802 /* Texture.hpp in Headers */,
 				72EC10631D2D912C00B69802 /* UnitTest.hpp in Headers */,
 				72C82FAA1FB8E0A400B86855 /* LineRenderer.hpp in Headers */,
@@ -2295,6 +2322,7 @@
 				72A4B0DA1E4BACFE00A856F5 /* ftimage.h in Headers */,
 				72A4B0D41E4BACFE00A856F5 /* fterrdef.h in Headers */,
 				72A4B3111E4BB00500A856F5 /* SlicedQuadMeshSystem.hpp in Headers */,
+				7230D1232071901500CC5622 /* GameObjectSerializer.hpp in Headers */,
 				72A4B3801E4BB1B700A856F5 /* FileHelper.hpp in Headers */,
 				72A4B0F81E4BACFE00A856F5 /* ftrfork.h in Headers */,
 			);
@@ -2371,6 +2399,7 @@
 				7206DE301F8BFECA0069B8E9 /* GameWorldViewport.cpp in Sources */,
 				72EC10391D2D912C00B69802 /* InputDevice.cpp in Sources */,
 				72A4B3691E4BB00600A856F5 /* SelectableDragSystem.cpp in Sources */,
+				7230D11A20718FF900CC5622 /* GameStorage.cpp in Sources */,
 				72A4B2DD1E4BB00500A856F5 /* HierarchyEditor.cpp in Sources */,
 				72A4B3361E4BB00500A856F5 /* LimitableSystem.cpp in Sources */,
 				72C82FA71FB8E0A400B86855 /* LineRendererSystem.cpp in Sources */,
@@ -2379,6 +2408,7 @@
 				72EC13401D2D912C00B69802 /* Profiler.cpp in Sources */,
 				72A4B14D1E4BACFE00A856F5 /* ftsystem.c in Sources */,
 				72B492491DCE56600063518A /* GameWorld.cpp in Sources */,
+				7230D1212071901500CC5622 /* GameObjectSerializer.cpp in Sources */,
 				72A4B3591E4BB00500A856F5 /* SlicedTexture.cpp in Sources */,
 				72A4B3B31E4BB6B900A856F5 /* ImageLoader.cpp in Sources */,
 				72EC11321D2D912C00B69802 /* Vector2.cpp in Sources */,
@@ -2403,6 +2433,7 @@
 				72EC132E1D2D912C00B69802 /* File.mm in Sources */,
 				72A4B2FD1E4BB00500A856F5 /* Gui.cpp in Sources */,
 				72A4B2E11E4BB00500A856F5 /* VirtualTreeList.cpp in Sources */,
+				7230D11920718FF900CC5622 /* Hierarchy.cpp in Sources */,
 				72EC11241D2D912C00B69802 /* Plane.cpp in Sources */,
 				7220F62A1E64FFD70063EAD5 /* TriggerSystem.cpp in Sources */,
 				72A4B3741E4BB00600A856F5 /* TransformHierarchy.cpp in Sources */,
@@ -2441,6 +2472,7 @@
 				72EC132F1D2D912C00B69802 /* FileReader.mm in Sources */,
 				72A4B2ED1E4BB00500A856F5 /* ParticleMeshUpdater.cpp in Sources */,
 				72C82FB31FB8E1CD00B86855 /* Spawner.cpp in Sources */,
+				7230D1202071901500CC5622 /* GameObjectJsonSerializer.cpp in Sources */,
 				72EC112E1D2D912C00B69802 /* Rect.cpp in Sources */,
 				72A4B3201E4BB00500A856F5 /* InputMapperSystem.cpp in Sources */,
 				7220F6281E64FFD70063EAD5 /* Trigger.cpp in Sources */,
