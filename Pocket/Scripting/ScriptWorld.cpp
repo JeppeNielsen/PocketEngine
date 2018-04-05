@@ -1027,31 +1027,34 @@ void ScriptWorld::WriteExecutableMain(const std::string &path, const std::functi
     ) << std::endl;
     
     file << "void InitializeScriptSystems(Pocket::GameStorage& storage) {"<<std::endl;
-    for(auto& systems : data.systems) {
-        file << "storage.AddSystemType<"<<systems.name<<">();";
-    }
-    file<< "}"<<std::endl;
-
-    file << "void CreateScriptSystems(Pocket::GameObject& scene) {"<<std::endl;
+    
     
     for(auto& component : data.components) {
         
-        file<<"scene.World()->Storage().AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
+        file<<"storage.AddComponentTypeWithGetType<"<<component.name<<">([] (const Pocket::GameObject* object) -> Pocket::TypeInfo {"<< std::endl;
         file<<component.name<<"* component = object->GetComponent<"<<component.name<<">();"<<std::endl;
         file<< "      Pocket::TypeInfo typeInfo;"<<std::endl;
-        file<<"	      typeInfo.name = \""<<component.name<<"\";"<<std::endl;
+        file<<"          typeInfo.name = \""<<component.name<<"\";"<<std::endl;
         std::set<std::string> uniqueFields;
         for(auto& f : component.fields) {
             uniqueFields.insert(f.name);
         }
         
         for(auto& field : uniqueFields) {
-            file<<"	      typeInfo.AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
+            file<<"          typeInfo.AddField(component->"<< field <<", \""<<field<<"\");"<<std::endl;
         }
 
         file<< "return typeInfo;"<<std::endl;
         file<< "});"<<std::endl;
     }
+    
+    for(auto& systems : data.systems) {
+        file << "storage.AddSystemType<"<<systems.name<<">();"<<std::endl;
+    }
+    
+    file<< "}"<<std::endl;
+
+    file << "void CreateScriptSystems(Pocket::GameObject& scene) {"<<std::endl;
     
     for(auto& system : data.systems) {
         file << "scene.CreateSystem<"<<system.name<< ">();"<<std::endl;
