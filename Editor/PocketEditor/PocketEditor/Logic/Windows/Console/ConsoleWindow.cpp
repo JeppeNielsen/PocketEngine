@@ -9,21 +9,19 @@
 #include "ConsoleWindow.hpp"
 #include "VirtualTreeList.hpp"
 #include "VirtualTreeListSpawner.hpp"
+#include "EditorGui.hpp"
 
-std::string ConsoleWindow::Name() { return "Console"; }
+std::string ConsoleWindow::Name() { return "Log"; }
 
 void ConsoleWindow::OnInitialize() {
-
-}
-
-Vector2 ConsoleWindow::Size() {
-    return {500, 200 };
+    GameObject& guiRoot = context->GuiRoot();
+    editorGui = guiRoot.CreateSystem<EditorGui>();
 }
 
 void ConsoleWindow::OnCreate() {
     Gui& gui = context->Gui();
 
-    
+    /*
     GameObject* pivot;
     listBox = gui.CreateListbox(window, "Box", {0,0}, {500,window->GetComponent<Sizeable>()->Size().y-50}, &pivot);
     listBox->RemoveComponent<Sprite>();
@@ -60,7 +58,28 @@ void ConsoleWindow::OnCreate() {
     spawner->OnRemove = [] (auto n) {
         
     };
+    */
     
+    
+    
+    GameObject* treeViewGo = editorGui->CreateTreeList(window, nullptr,
+        nullptr,
+        [] (GameObject* object) {
+            return true;
+        }, [] (GameObject* object) {
+            return !object->Hierarchy().Children().empty();
+        },
+        [this] (auto& n, GameObject* button, std::string& text) {
+            LogMessage* message = n.node->template GetComponent<LogMessage>();
+            text = message ? message->message : "Log";
+        },
+        [this] (auto& n, GameObject* button) {
+            
+        },
+        true
+    );
+    treeView = treeViewGo->GetComponent<VirtualTreeList>();
+    treeView->Root = context->Log().LogRoot();
     
     compilingText = gui.CreateLabel(window, 0, Size(), 0, "Compiling!!!", 20);
     compilingText->GetComponent<Label>()->HAlignment = Font::HAlignment::Center;

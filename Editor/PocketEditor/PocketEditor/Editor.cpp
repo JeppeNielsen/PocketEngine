@@ -72,7 +72,7 @@ public:
         windows.push_back(new ProjectWindow());
         windows.push_back(new HierarchyWindow());
         windows.push_back(new InspectorWindow());
-        //windows.push_back(new ConsoleWindow());
+        windows.push_back(new ConsoleWindow());
         //windows.push_back(new AnimationWindow());
         
         menus.push_back(new FileMenu());
@@ -136,12 +136,16 @@ public:
         p4->location.Push(PanelDirection::Right);
         p4->location.Push(PanelDirection::Right);
         
+        Panel* p5 = windows[5]->Window()->Hierarchy().Parent()->GetComponent<Panel>();
+        p5->Area = area;
+        p5->location.Push(PanelDirection::Left);
+        p5->location.Push(PanelDirection::Bottom);
+        
         context.Project().Open("/Projects/PocketEngine/EditorProjects/BallRunners");
         
         Input.ButtonDown.Bind([this](ButtonEvent e) {
             if (e.Id == "p") {
-                //context.World().DebugSystems();
-                //context.Log().Log("Test message");
+                context.Log().Log("Test message");
             }
         });
         

@@ -30,6 +30,7 @@ private:
     Gui* gui;
     EngineContext* engineContext;
     Project project;
+    LogSystem* logSystem;
 public:
     GameStorage& Storage();
     FileWorld& FileWorld();
@@ -37,6 +38,7 @@ public:
     GameWorld& GuiWorld();
     GameObject& GuiRoot();
     Gui& Gui();
+    LogSystem& Log();
     EngineContext& EngineContext();
     Project& Project();
     using Action = std::function<void()>;

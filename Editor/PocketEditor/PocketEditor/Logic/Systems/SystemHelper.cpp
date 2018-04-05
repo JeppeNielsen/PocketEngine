@@ -96,6 +96,7 @@
 #include "FileSystemListenerSystem.hpp"
 #include "EditorGui.hpp"
 #include "GameObjectFieldEditor.hpp"
+#include "LogSystem.hpp"
 
 using namespace Pocket;
 
@@ -194,7 +195,7 @@ void SystemHelper::InitializeStorage(GameStorage& storage) {
     storage.AddSystemType<EditorGui>();
     
     storage.AddComponentType<GameObjectFieldEditor>();
-
+    storage.AddSystemType<LogSystem>();
 }
 
 void SystemHelper::AddGameSystems(Pocket::GameObject& scene) {

@@ -11,7 +11,7 @@
 #include "GameSystem.hpp"
 #include "LogMessage.hpp"
 
-class LogSystem : public Pocket::GameConcept {
+class LogSystem : public Pocket::GameSystem<LogMessage> {
 protected:
     void Initialize() override;
 private:

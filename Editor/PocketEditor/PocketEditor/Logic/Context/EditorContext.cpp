@@ -24,6 +24,7 @@ GameObject& EditorContext::GuiRoot() { return *guiScene; }
 Gui& EditorContext::Gui() { return *gui; }
 EngineContext& EditorContext::EngineContext() { return *engineContext; }
 Project& EditorContext::Project() { return project; }
+LogSystem& EditorContext::Log() { return *logSystem; }
 
 void EditorContext::Initialize(class EngineContext& engineContext) {
     this->engineContext = &engineContext;
@@ -42,6 +43,7 @@ void EditorContext::Initialize(class EngineContext& engineContext) {
     
     guiScene = guiWorld.CreateScene();
     SystemHelper::AddGuiSystems(*guiScene);
+    logSystem = guiScene->CreateSystem<LogSystem>();
     
     gui = guiScene->CreateSystem<class Gui>();
     guiScene->CreateSystem<TouchSystem>()->TouchDepth = 10;

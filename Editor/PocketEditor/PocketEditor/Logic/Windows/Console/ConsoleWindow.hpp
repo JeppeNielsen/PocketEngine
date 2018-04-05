@@ -8,6 +8,7 @@
 
 #pragma once
 #include "BaseWindow.hpp"
+#include "EditorGui.hpp"
 
 namespace Pocket {
     class VirtualTreeList;
@@ -15,15 +16,18 @@ namespace Pocket {
 
 class ConsoleWindow : public BaseWindow {
 protected:
-    std::string Name() override;
     void OnInitialize() override;
     void OnCreate() override;
-    Vector2 Size() override;
+    std::string Name() override;
 private:
 
     void Clicked(TouchData d, GameObject* node);
 
-    GameObject* listBox;
-    VirtualTreeList* treeView;
     GameObject* compilingText;
+    
+    VirtualTreeList* treeView;
+    GameObject* rootItem;
+    std::map<GameObject*, GameObject*> objectToSelectButton;
+    std::map<GameObject*, GameObject*> objectToEnableButton;
+    EditorGui* editorGui;
 };

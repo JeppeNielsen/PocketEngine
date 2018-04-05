@@ -19,11 +19,6 @@ std::string HierarchyWindow::Name() { return "Hierarchy"; }
 
 void HierarchyWindow::OnInitialize() {
     GameObject& guiRoot = context->GuiRoot();
-    /*guiRoot.CreateSystem<VirtualTreeListSystem>();
-    guiRoot.CreateSystem<VirtualTreeListSpawnerSystem>();
-    guiRoot.CreateSystem<SelectedColorerSystem>();
-    guiRoot.CreateSystem<DraggableSystem>();
-    */
     editorGui = guiRoot.CreateSystem<EditorGui>();
 }
 
