@@ -45,13 +45,14 @@ namespace Pocket {
             GameObject* node;
             int position;
             int depth;
-            
+            bool hasChildren;
+
             inline bool operator ==(const Node &other) const{
-                return !(node!=other.node || position!=other.position || depth!=other.depth);
+                return !(node!=other.node || position!=other.position || depth!=other.depth || hasChildren!=other.hasChildren);
             }
 
             inline  bool operator !=(const Node &other) const{
-                return (node!=other.node || position!=other.position || depth!=other.depth);
+                return (node!=other.node || position!=other.position || depth!=other.depth || hasChildren!=other.hasChildren);
             }
             
             inline bool operator < (const Node& other) const {
@@ -59,8 +60,6 @@ namespace Pocket {
                 if (position!=other.position) return position<other.position;
                 return depth<other.depth;
             }
-            
-            GameObject* data;
         };
         
         using Nodes = std::vector<Node>;
