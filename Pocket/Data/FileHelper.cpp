@@ -13,6 +13,8 @@
 #include <dirent.h>
 #include <fstream>
 #include <sys/stat.h>
+#include <streambuf>
+#include <istream>
 
 using namespace Pocket;
 
@@ -76,3 +78,21 @@ std::string FileHelper::GetFolderPath(const std::string &path) {
         return path.substr(0, pos);
     }
 }
+
+void FileHelper::ParseBuffer(unsigned char *unsignedBuffer, size_t size, const std::function<void (const std::string &)> &onLine) {
+    struct membuf : std::streambuf {
+        membuf(char* begin, char* end) {
+            this->setg(begin, begin, end);
+        }
+    };
+
+    char* buffer = reinterpret_cast<char*>(unsignedBuffer);
+    membuf sbuf(buffer, buffer + size);
+    std::istream in(&sbuf);
+    std::string line;
+    while (std::getline(in, line)) {
+        onLine(line);
+    }
+}
+
+
