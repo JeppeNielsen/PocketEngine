@@ -111,6 +111,9 @@ public:
         info.AddField(vertexMesh, "VertexMesh");
         return info;
     }
+    
+    void LoadAsset(const std::string& path);
+    
 private:
     IVertexMesh* vertexMesh;
     int vertexType;
