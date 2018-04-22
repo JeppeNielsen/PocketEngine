@@ -69,4 +69,12 @@ void AssetImporters::OnCreate() {
             object->AddComponent<TextureComponent>();
         };
     }
+    {
+        GameObject* trueTypeImporter = context->GuiRoot().CreateObject();
+        trueTypeImporter->AddComponent<AssetImporter>()->extension = "obj";
+        trueTypeImporter->GetComponent<AssetImporter>()->OnCreated = [] (GameObject* object){
+            object->AddComponent<AssetLoader>();
+            object->AddComponent<Mesh>();
+        };
+    }
 }
