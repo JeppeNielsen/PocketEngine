@@ -485,6 +485,7 @@ void ScriptWorld::WriteMainIncludes(std::ofstream &file) {
         uniqueIncludes.insert(system.second.sourceFile);
     }*/
     
+    file<<"#include \"Timeline.hpp\""<<std::endl;
     file<<"#include \"TypeInfo.hpp\""<<std::endl;
     
     for(auto& headerName : headerNames) {
