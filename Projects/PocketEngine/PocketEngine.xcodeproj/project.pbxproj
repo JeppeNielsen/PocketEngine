@@ -64,6 +64,7 @@
 		7230D1212071901500CC5622 /* GameObjectSerializer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7230D11D2071901400CC5622 /* GameObjectSerializer.cpp */; };
 		7230D1222071901500CC5622 /* GameObjectJsonSerializer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11E2071901400CC5622 /* GameObjectJsonSerializer.hpp */; };
 		7230D1232071901500CC5622 /* GameObjectSerializer.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 7230D11F2071901400CC5622 /* GameObjectSerializer.hpp */; };
+		72568EF6208CC42300C67659 /* Mesh.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 72568EF5208CC42300C67659 /* Mesh.cpp */; };
 		72A4B0C71E4BACFE00A856F5 /* ftconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC51E4BACFD00A856F5 /* ftconfig.h */; };
 		72A4B0C81E4BACFE00A856F5 /* ftheader.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC61E4BACFD00A856F5 /* ftheader.h */; };
 		72A4B0C91E4BACFE00A856F5 /* ftmodule.h in Headers */ = {isa = PBXBuildFile; fileRef = 72A4AFC71E4BACFD00A856F5 /* ftmodule.h */; };
@@ -569,6 +570,7 @@
 		7230D11D2071901400CC5622 /* GameObjectSerializer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameObjectSerializer.cpp; sourceTree = "<group>"; };
 		7230D11E2071901400CC5622 /* GameObjectJsonSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectJsonSerializer.hpp; sourceTree = "<group>"; };
 		7230D11F2071901400CC5622 /* GameObjectSerializer.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameObjectSerializer.hpp; sourceTree = "<group>"; };
+		72568EF5208CC42300C67659 /* Mesh.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mesh.cpp; sourceTree = "<group>"; };
 		72A4AFC51E4BACFD00A856F5 /* ftconfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftconfig.h; sourceTree = "<group>"; };
 		72A4AFC61E4BACFD00A856F5 /* ftheader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftheader.h; sourceTree = "<group>"; };
 		72A4AFC71E4BACFD00A856F5 /* ftmodule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ftmodule.h; sourceTree = "<group>"; };
@@ -1600,6 +1602,7 @@
 		72A4B26E1E4BB00500A856F5 /* Rendering */ = {
 			isa = PBXGroup;
 			children = (
+				72568EF5208CC42300C67659 /* Mesh.cpp */,
 				72C82FA11FB8E0A300B86855 /* DistanceScaler.cpp */,
 				72C82FA51FB8E0A400B86855 /* DistanceScaler.hpp */,
 				72C82F9E1FB8E0A200B86855 /* DistanceScalerSystem.cpp */,
@@ -2453,6 +2456,7 @@
 				72EC11201D2D912C00B69802 /* Matrix3x3.cpp in Sources */,
 				72EC11221D2D912C00B69802 /* Matrix4x4.cpp in Sources */,
 				72A4B3251E4BB00500A856F5 /* TouchCancelSystem.cpp in Sources */,
+				72568EF6208CC42300C67659 /* Mesh.cpp in Sources */,
 				7206DE2A1F8BFEA00069B8E9 /* Hoverable.cpp in Sources */,
 				72EC112A1D2D912C00B69802 /* Quaternion.cpp in Sources */,
 				72A4B37D1E4BB1B700A856F5 /* FileArchive.cpp in Sources */,
