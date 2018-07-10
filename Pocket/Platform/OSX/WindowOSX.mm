@@ -68,7 +68,8 @@ bool WindowOSX::Update() {
 void WindowOSX::PreRender() {
     glViewport(0, 0, backingPixelWidth, backingPixelHeight);
     glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);    
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_CULL_FACE);
 }
 
 void WindowOSX::PostRender() {
