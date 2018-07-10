@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <algorithm>
 
 namespace Pocket {
     struct VectorHelper {
