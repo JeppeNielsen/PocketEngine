@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "OpenGl.hpp"
+#include "OpenGL.hpp"
 #include <vector>
 #include "Vertex.hpp"
 #include "VertexRenderer.hpp"
@@ -68,6 +68,18 @@ public:
         "precision highp int;"
         "precision lowp sampler2D;"
         + fragmentShader;
+#elif RASPBERRY_PI
+         vertexShader =
+        "precision highp float;"
+        "precision highp int;"
+        + vertexShader;
+        
+        fragmentShader =
+        "precision highp float;"
+        "precision highp int;"
+        "precision lowp sampler2D;"
+        + fragmentShader;
+        
 #elif WIN32
 		vertexShader =
 			"precision highp float;"
@@ -92,7 +104,7 @@ public:
         
         //std::cout << "Shader::Initialize()"<<std::endl;
         
-        glUseProgram(shaderProgram);
+        ASSERT_GL(glUseProgram(shaderProgram));
         
         if (!FindAttributes()) {
             return false;
@@ -108,17 +120,17 @@ public:
     std::string name;
     
     void Use() {
-        glUseProgram(shaderProgram);
+        ASSERT_GL(glUseProgram(shaderProgram));
         for (auto& a : attributes) {
-            glVertexAttribPointer(a.glAttribute, a.size, a.type, a.normalized, description.Stride(), (GLvoid*)(size_t)a.offset);
+            ASSERT_GL(glVertexAttribPointer(a.glAttribute, a.size, a.type, a.normalized, description.Stride(), (GLvoid*)(size_t)a.offset));
         }
         for (auto& a : attributes) {
-            glEnableVertexAttribArray(a.glAttribute);
+            ASSERT_GL(glEnableVertexAttribArray(a.glAttribute));
         }
        // //std::cout<<"Using shader : " << name<<"  shader program " << shaderProgram<<" attributes:  " << attributes.size()<< std::endl;
        
         for (size_t i=0; i<textureUniforms.size(); ++i) {
-            glUniform1i(textureUniforms[i].location, i);
+            ASSERT_GL(glUniform1i(textureUniforms[i].location, i));
         }
     }
     
@@ -147,7 +159,7 @@ public:
         }
         for(auto& uniform : uniforms) {
             if (uniform.type == uniformType) {
-                glUseProgram(shaderProgram);
+                ASSERT_GL(glUseProgram(shaderProgram));
                 ShaderVariableType<T>::SetValue(uniform.location, value);
                 break;
             }
@@ -175,7 +187,7 @@ public:
             //std::cout << " Shader variable types mismatch "<< std::endl;
             return false;
         }
-        glUseProgram(shaderProgram);
+        ASSERT_GL(glUseProgram(shaderProgram));
         ShaderVariableType<T>::SetValue(uniform->location, value);
         return true;
     }
@@ -184,7 +196,7 @@ private:
 
     bool FindAttributes() {
         GLint numberOfAttributes;
-        glGetProgramiv(shaderProgram, GL_ACTIVE_ATTRIBUTES, &numberOfAttributes);
+        ASSERT_GL(glGetProgramiv(shaderProgram, GL_ACTIVE_ATTRIBUTES, &numberOfAttributes));
         
         attributes.clear();
         
@@ -196,7 +208,7 @@ private:
             GLint size;
             GLenum type;
             
-            glGetActiveAttrib(shaderProgram, (GLuint)i, sizeof(name), &length, &size, &type, &name[0]);
+            ASSERT_GL(glGetActiveAttrib(shaderProgram, (GLuint)i, sizeof(name), &length, &size, &type, &name[0]));
             
             std::string attributeName = std::string(name);
             
@@ -228,13 +240,13 @@ private:
         viewProjectionUniform = -1;
         GLint numberOfUniforms;
         //std::cout<<"Uniforms : " << std::endl;
-        glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &numberOfUniforms);
+        ASSERT_GL(glGetProgramiv(shaderProgram, GL_ACTIVE_UNIFORMS, &numberOfUniforms));
         for (int i=0; i<numberOfUniforms; i++) {
             GLchar name[256];
             GLsizei length;
             GLint size;
             GLenum type;
-            glGetActiveUniform(shaderProgram, (GLuint)i, sizeof(name), &length, &size, &type, &name[0]);
+            ASSERT_GL(glGetActiveUniform(shaderProgram, (GLuint)i, sizeof(name), &length, &size, &type, &name[0]));
             std::string uniformName = std::string(name);
             Uniform uniform = { uniformName, glGetUniformLocation(shaderProgram, uniformName.c_str()), type };
             uniforms.push_back( uniform );
@@ -261,15 +273,15 @@ private:
         if (!fragmentShader) return false;
         
         shaderProgram = glCreateProgram();
-        glAttachShader(shaderProgram, vertexShader);
-        glAttachShader(shaderProgram, fragmentShader);
-        glLinkProgram(shaderProgram);
+        ASSERT_GL(glAttachShader(shaderProgram, vertexShader));
+        ASSERT_GL(glAttachShader(shaderProgram, fragmentShader));
+        ASSERT_GL(glLinkProgram(shaderProgram));
         
         GLint linkSuccess;
-        glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkSuccess);
+        ASSERT_GL(glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkSuccess));
         if (linkSuccess == GL_FALSE) {
             GLchar messages[256];
-            glGetProgramInfoLog(shaderProgram, sizeof(messages), 0, &messages[0]);
+            ASSERT_GL(glGetProgramInfoLog(shaderProgram, sizeof(messages), 0, &messages[0]));
             std::cout<<messages<<std::endl;
             return false;
         }
@@ -281,14 +293,14 @@ private:
         if (shaderSource=="") return 0;
         
         GLuint shader = glCreateShader(isFragment ? GL_FRAGMENT_SHADER : GL_VERTEX_SHADER);
-        
+        ASSERT_GL();
         const char* shaderSourceGL = shaderSource.c_str();
         int length = (int)shaderSource.length();
-        glShaderSource(shader, 1, &shaderSourceGL, &length);
-        glCompileShader(shader);
+        ASSERT_GL(glShaderSource(shader, 1, &shaderSourceGL, &length));
+        ASSERT_GL(glCompileShader(shader));
         
         GLint compileSuccess;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &compileSuccess);
+        ASSERT_GL(glGetShaderiv(shader, GL_COMPILE_STATUS, &compileSuccess));
         if (compileSuccess == GL_FALSE) {
             GLchar messages[256];
             glGetShaderInfoLog(shader, sizeof(messages), 0, &messages[0]);
@@ -323,7 +335,7 @@ public:
 
     virtual void SetViewProjection(const float* viewProjection) {
         if (viewProjectionUniform == -1) return;
-        glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection);
+        ASSERT_GL(glUniformMatrix4fv(uniforms[viewProjectionUniform].location, 1, GL_FALSE, viewProjection));
     }   
 
     virtual void RenderObject(Pocket::VertexRenderer<V>& renderer, const typename Pocket::VertexMesh<V>::Vertices& vertices, const Pocket::IVertexMesh::Triangles& triangles, const Pocket::Matrix4x4& world);
