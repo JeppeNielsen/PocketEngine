@@ -1,4 +1,4 @@
-#include "Quadtree.hpp"
+#include "QuadTree.hpp"
 #include <iostream> 
 using namespace Pocket;
 
