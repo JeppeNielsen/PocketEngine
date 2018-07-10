@@ -11,7 +11,7 @@
 #include "Vector3.hpp"
 #include "Colour.hpp"
 #include "Matrix4x4.hpp"
-#include "OpenGl.hpp"
+#include "OpenGL.hpp"
 #include <vector>
 #include <map>
 #include "StringHelper.hpp"
@@ -54,6 +54,8 @@ template<class T>
 struct VertexAttributeType {
     static const VertexAttribute attribute;
 };
+
+template<typename T> const VertexAttribute VertexAttributeType<T>::attribute;
 
 template<class Vertex>
 class VertexDescription {
