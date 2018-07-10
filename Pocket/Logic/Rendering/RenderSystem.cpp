@@ -65,7 +65,7 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         const Rect& viewport = camera->Viewport;
         const Vector2& screenSize = Engine::Context().ScreenSize * Engine::Context().ScreenScalingFactor;
         Rect screenRect = viewport * screenSize;
-        glViewport(screenRect.x, screenRect.y, screenRect.width, screenRect.height);
+        ASSERT_GL(glViewport(screenRect.x, screenRect.y, screenRect.width, screenRect.height));
     //}
     
     const Matrix4x4 viewProjection = camera->Projection().Multiply(cameraTransform->WorldInverse);
@@ -128,12 +128,12 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
     }
     objectsInFrustum.clear();
     
-    glEnable(GL_DEPTH_TEST);
+    ASSERT_GL(glEnable(GL_DEPTH_TEST));
     
     if (!opaqueObjects.empty()) {
         std::sort(opaqueObjects.begin(), opaqueObjects.end(), SortOpaqueObjects);
-        glDisable(GL_BLEND);
-        glDepthMask(true);
+        ASSERT_GL(glDisable(GL_BLEND));
+        ASSERT_GL(glDepthMask(true));
         RenderVisibleObjects(opaqueObjects);
         opaqueObjects.clear();
     }
@@ -142,12 +142,12 @@ void RenderSystem::RenderCamera(GameObject* cameraObject) {
         
         std::sort(transparentObjects.begin(), transparentObjects.end(), SortTransparentObjects);
         
-        glEnable(GL_BLEND);
-        glDepthMask(false);
+        ASSERT_GL(glEnable(GL_BLEND));
+        ASSERT_GL(glDepthMask(false));
         //clipper.UseDepth = false;
         
         RenderTransparentVisibleObjects(transparentObjects);
-        glDepthMask(true);
+        ASSERT_GL(glDepthMask(true));
         transparentObjects.clear();
     }
 }
