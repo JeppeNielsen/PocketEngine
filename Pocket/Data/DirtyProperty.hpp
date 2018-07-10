@@ -25,9 +25,10 @@ namespace Pocket {
             value = other.value;
         }
     
-	    void operator = (DirtyProperty<Value> &other) {
+	    DirtyProperty<Value>& operator = (const DirtyProperty<Value> &other) {
             isDirty = true;
             value = other.value;
+            return *this;
         }
         
         std::function<void(Value&)> Method;
