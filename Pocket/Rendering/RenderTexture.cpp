@@ -9,9 +9,25 @@
 #include "RenderTexture.hpp"
 #include "OpenGL.hpp"
 
+
+#ifdef RASPBERRY_PI
+#include "EGL/egl.h" //for eglGetProcAddress
+#include "EGL/eglext.h" //for eglGetProcAddress
+
+PFNGLDRAWBUFFERSNVPROC glDrawBuffers;
+
+static void initFP(){
+   glDrawBuffers =  (PFNGLDRAWBUFFERSNVPROC) eglGetProcAddress("glDrawBuffersNV");
+}
+#endif
+
 using namespace Pocket;
 
-RenderTexture::RenderTexture() : framebuffer(0), texure(0), old_fbo(0) {}
+RenderTexture::RenderTexture() : framebuffer(0), texure(0), old_fbo(0) {
+#ifdef RASPBERRY_PI
+    initFP();
+#endif
+}
 RenderTexture::~RenderTexture() { Free(); }
 
 void RenderTexture::Initialize(int width, int height) {
