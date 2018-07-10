@@ -7,7 +7,7 @@
 //
 
 #pragma once
-#include "OpenGl.hpp"
+#include "OpenGL.hpp"
 
 namespace Pocket {
 
@@ -19,23 +19,23 @@ public:
 template<class Vertex>
 class VertexRenderer : public IVertexRenderer {
 public:
-    const static unsigned int MAX_VERTICES = 30000;
-    const static unsigned int MAX_TRIANGLES = (MAX_VERTICES / 4) * 6;
+    const static unsigned int MAX_VERTICES = 1<<16;
+    const static unsigned int MAX_TRIANGLES = 1<<16;
 
     VertexRenderer() {
-        glGenBuffers(1, &vertexBuffer);
-        glGenBuffers(1, &indexBuffer);
+        ASSERT_GL(glGenBuffers(1, &vertexBuffer));
+        ASSERT_GL(glGenBuffers(1, &indexBuffer));
         
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_VERTICES, 0, GL_DYNAMIC_DRAW);
+        ASSERT_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+        ASSERT_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * MAX_VERTICES, 0, GL_DYNAMIC_DRAW));
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * MAX_TRIANGLES, 0, GL_DYNAMIC_DRAW);
+        ASSERT_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer));
+        ASSERT_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * MAX_TRIANGLES, 0, GL_DYNAMIC_DRAW));
     }
 
     ~VertexRenderer() {
-        glDeleteBuffers(1, &vertexBuffer);
-        glDeleteBuffers(1, &indexBuffer);
+        ASSERT_GL(glDeleteBuffers(1, &vertexBuffer));
+        ASSERT_GL(glDeleteBuffers(1, &indexBuffer));
     }
 
 public:
@@ -59,16 +59,14 @@ public:
     void Render() {
         if (vertexIndex==0) return;
         
-        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexIndex, vertices, GL_DYNAMIC_DRAW);
+        ASSERT_GL(glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer));
+        ASSERT_GL(glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexIndex, vertices, GL_DYNAMIC_DRAW));
         
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * triangleIndex, triangles, GL_DYNAMIC_DRAW);
+        ASSERT_GL(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer));
+        ASSERT_GL(glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLshort) * triangleIndex, triangles, GL_DYNAMIC_DRAW));
         
-		glDrawElements(GL_TRIANGLES, (int)triangleIndex, GL_UNSIGNED_SHORT, 0);
+		ASSERT_GL(glDrawElements(GL_TRIANGLES, (int)triangleIndex, GL_UNSIGNED_SHORT, 0));
 
-		
-		
         drawCalls++;
         verticesRendered += vertexIndex;
         vertexIndex = 0;
