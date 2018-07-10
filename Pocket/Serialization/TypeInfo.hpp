@@ -506,8 +506,6 @@ struct TypeEditorTitle {
     }
 };
 
-//TypeEditorTitle::Callback TypeEditorTitle::Title = 0;
-
 template<typename T>
 struct TypeEditor : public IFieldEditor {
     
