@@ -8,6 +8,7 @@
 
 #pragma once
 #include <vector>
+#include <functional>
 #include "Rect.hpp"
 
 namespace Pocket {
