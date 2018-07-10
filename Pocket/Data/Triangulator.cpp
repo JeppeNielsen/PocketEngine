@@ -137,6 +137,6 @@ bool Triangulator::Triangulate(const Vertices& vertices, IndiciesVector &indicie
         }
     }
     
-    delete V;
+    delete[] V;
     return true;
 }
