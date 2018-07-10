@@ -71,8 +71,9 @@ public:
     Event(Event<T...>& other) {
         ClearNonDefaults();
     }
-    void operator=(Event<T...>& other) {
+    Event<T...>& operator=(const Event<T...>& other) {
         ClearNonDefaults();
+        return *this;
     }
     
     Event(Event&& other) {
