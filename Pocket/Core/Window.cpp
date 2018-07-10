@@ -16,6 +16,10 @@
 
 #include "WindowAndroid.hpp"
 
+#elif RASPBERRY_PI
+
+#include "WindowRaspberryPi.hpp"
+
 #else
 
 #include "WindowWin.hpp"
@@ -51,6 +55,8 @@ Window* Window::CreatePlatformWindow() {
     return new WindowWeb();
 #elif ANDROID
     return new WindowAndroid();
+#elif RASPBERRY_PI
+    return new WindowRaspberryPi();
 #else
     return new WindowWin();
 #endif
