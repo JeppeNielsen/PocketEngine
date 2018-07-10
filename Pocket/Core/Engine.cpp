@@ -3,7 +3,6 @@
 #include <iostream>
 #include "Timer.hpp"
 #include "../Debugging/Assert.hpp"
-#include "OpenGL.hpp"
 using namespace Pocket;
 
 Engine::Engine() {
@@ -34,7 +33,6 @@ void Engine::StartLoop(IGameState* rootState, int width, int height, bool fullSc
 
 void Engine::Loop(bool* exit) {
     
-    
     static float targetDelta = 1.0f / 60.0f;
     
     float delta = (float)timer->End();
@@ -59,7 +57,6 @@ void Engine::Loop(bool* exit) {
     Render();
 }
 
-
 bool Engine::Update(float dt) {
     context.InputDevice().StartFrame(rootState);
 	bool running = window->Update();
@@ -69,13 +66,6 @@ bool Engine::Update(float dt) {
 }
 
 void Engine::Render() {
-#ifdef ASSERT_GL
-    ASSERT_GL(glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
-    ASSERT_GL(glEnable(GL_CULL_FACE));
-#else
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glEnable(GL_CULL_FACE);
-#endif
 	window->PreRender();
 	rootState->DoRender();
 	window->PostRender();
