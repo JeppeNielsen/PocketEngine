@@ -49,6 +49,11 @@ extern PFNGLUNMAPBUFFEROESPROC glUnmapBuffer;
     #include <EGL/egl.h>
     #include <GLES2/gl2.h>
 
+#elif RASPBERRY_PI
+
+    #include "GLES2/gl2.h"
+    #include "GLES2/gl2ext.h"
+
 #else
 
     #include <OpenGL/gl.h>
@@ -128,7 +133,9 @@ static const char* _glStatusString(GLenum error)
         STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT);
 #ifndef EMSCRIPTEN
 #ifndef ANDROID
+#ifndef RASPBERRY_PI
         STATUS_CASE(GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE);
+#endif
 #endif
 #endif
         STATUS_CASE(GL_FRAMEBUFFER_UNSUPPORTED);
